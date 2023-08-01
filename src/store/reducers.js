@@ -29,6 +29,12 @@ const AuthReducer = (state=initialState,action) => {
                 error: action.error,
                 loading: false,
             };
+        case "LOGOUT_REQUEST":
+            return {
+                ...state,
+                user: null,
+                loading: false,
+            };
         case "FORGOT_PASS_REQUEST_REQUEST":
             return {
                 ...state,
@@ -56,4 +62,4 @@ const AuthReducer = (state=initialState,action) => {
 export const combinedReducers = combineReducers({
     form : formReducer,
     Auth : AuthReducer
-}) 
+})

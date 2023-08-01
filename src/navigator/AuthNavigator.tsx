@@ -12,8 +12,8 @@ const AuthNavigator = () => {
     }
 
     return (
-        <Stack.Navigator screenOptions={stackNavigatorOptions}>
-            <Stack.Screen name="Login" component={Login} />
+        <Stack.Navigator initialRouteName='Login'>
+            <Stack.Screen name="Login" component={Login} options={{headerShown: false}} />
             <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
         </Stack.Navigator>
     )

@@ -9,10 +9,19 @@ import {
   ScrollView,
 } from 'react-native';
 
-const DashboardListing = () => {
+const DashboardListing = ({navigation}:{navigation:any}) => {
   return (
     <ScrollView style={styles.Container}>
-      <TouchableOpacity style={styles.MenuContainer}>
+      <View style={{flex: 1, flexDirection: 'row', padding: 10, justifyContent: 'space-between', marginBottom: 10, backgroundColor: '#F5F5F5'}}>
+        <Text style={{fontSize: 18, color: '#333', fontWeight: 'bold',}}>Hello User</Text>
+        <TouchableOpacity>
+          <Text style={{fontSize: 18, color: '#333', fontWeight: 'bold',}}>Logout</Text>
+        </TouchableOpacity>
+      </View>
+      <TouchableOpacity style={styles.MenuContainer} onPress={() => {
+          navigation.navigate('MyWork');
+          navigation.closeDrawer();
+        }}>
         <Image style={styles.TopMenuIcon} source={require('./../../images/dashboard/my-work-icon.png')} />
         <View style={styles.textContainer}>
           <Text style={styles.TextBold}>My Work</Text>

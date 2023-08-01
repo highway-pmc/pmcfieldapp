@@ -3,20 +3,16 @@ import React from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import Main from './Main';
 import DashboardListing from '../../screens/Dashboard/DashboardListing';
+import CustomDrawer from './CustomDrawer';
 const Drawer = createDrawerNavigator();
 const DrawerNavigator = () => {
   return (
     // drawerContent={props => <CustomDrawer {...props} />}
-    <Drawer.Navigator>
-      <Drawer.Screen
-        name="Main"
-        component={Main}
-        options={{headerShown: true}}
-      />
+    <Drawer.Navigator drawerContent={props => <CustomDrawer {...props} />}>
       <Drawer.Screen
         name="Dashboard"
         component={DashboardListing}
-        options={{headerShown: false}}
+        options={{headerShown: true}}
       />
     </Drawer.Navigator>
   );

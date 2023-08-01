@@ -12,19 +12,23 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 import { loginUser } from './actions'
+import { emailRequired, validateEmail } from '../../utils/Validations';
 
 const Login = ({ navigation }: { navigation: any }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const loading = useSelector(state => state.Auth.loading)
-  const errorMessageLogin = useSelector(state => state.Auth.error)
+  let errorMessageLogin = useSelector(state => state.Auth.error)
 
   const dispatch = useDispatch()
 
-  // const onSubmit = (values) => dispatch(loginUser(values))
+  const onSubmit = () => {
+    if (!username || !password) return;
+    dispatch(loginUser(username, password));
+  }
 
   const handleNavigateToDetails = () => {
-    navigation.navigate('ForgotPassword');
+   // navigation.navigate('ForgotPassword');
   };
 
   return (
@@ -49,7 +53,7 @@ const Login = ({ navigation }: { navigation: any }) => {
                   </Text>
                 </View>
                 {errorMessageLogin && <View style={{ alignItems: 'center', marginTop: 20 }}>
-                  <Text style={styles.errorMessage}>{errorMessageLogin}</Text>
+                  <Text style={styles.errorText}>{errorMessageLogin}</Text>
                 </View>}
               </View>
               <Text>Email</Text>
@@ -89,7 +93,7 @@ const Login = ({ navigation }: { navigation: any }) => {
                 </TouchableOpacity>
               </View>
               <TouchableOpacity style={styles.buttonStyle} activeOpacity={0.5}
-                onPress={() => dispatch(loginUser(username, password))}>
+                onPress={() => onSubmit()}>
                 <Text style={styles.buttonTextStyle}>Sign In</Text>
               </TouchableOpacity>
             </View>
@@ -172,6 +176,9 @@ const styles = StyleSheet.create({
   },
   orangeText: {
     color: '#F78720',
+  },
+  errorText: {
+    color: '#f11f1f',
   },
   container: {
     alignItems: 'center',

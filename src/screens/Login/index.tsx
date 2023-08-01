@@ -10,6 +10,7 @@ import {
   Keyboard,
   TouchableOpacity,
   KeyboardAvoidingView,
+  Image,
 } from 'react-native';
 import { loginUser } from './actions'
 import { emailRequired, validateEmail } from '../../utils/Validations';
@@ -41,6 +42,12 @@ const Login = ({ navigation }: { navigation: any }) => {
           alignContent: 'center',
         }}>
         <View>
+          <View style={{alignItems: 'center', marginBottom: 25,}}>
+          <Image
+            style={styles.HeaderTopMenuIcon}
+            source={require('./../../images/login-logo.png')} 
+          />
+          </View>
           <KeyboardAvoidingView enabled>
             <View style={styles.MainContainerStyle}>
               <View style={styles.TitleSection}>
@@ -192,5 +199,9 @@ const styles = StyleSheet.create({
     width: 128,
     marginBottom: 30,
     marginTop: 30,
-  }
+  },
+  HeaderTopMenuIcon: {
+    width: 127,
+    height: 127,
+  },
 });

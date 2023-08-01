@@ -24,6 +24,7 @@ Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _roo
 
 ### For Android
 
+### npx react-native start --reset-cache
 ```bash
 # using npm
 npm run android
@@ -31,12 +32,6 @@ npm run android
 # OR using Yarn
 yarn android
 ```
-
-## emulator -list-avds
-## emulator -avd name-of-your-emulator
-## adb -s RZ8M931M24D reverse tcp:8081 tcp:8081   # run on device
-
-### npx react-native bundle --platform android --dev true --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
 
 ### For iOS
 

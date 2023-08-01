@@ -6,7 +6,7 @@ const endpoint = {
 }
 
 export const userLogin = async (user) => {
-    return "rajivse2007@gmail.com"
+    return user.username;
     const response = await fetch(endpoint.login,{
         method : 'POST',
         headers : { 
@@ -20,5 +20,4 @@ export const userLogin = async (user) => {
     })
     //if(!response.ok) throw new Error('Something Went Wrong!!');
     //const responseData = await response.json()
-    return "rajivse2007@gmail.com"
 }

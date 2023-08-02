@@ -33,6 +33,7 @@ const AuthReducer = (state=initialState,action) => {
             return {
                 ...state,
                 user: null,
+                error: null,
                 loading: false,
             };
         case "FORGOT_PASS_REQUEST_REQUEST":

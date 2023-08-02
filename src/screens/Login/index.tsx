@@ -13,19 +13,59 @@ import {
   Image,
 } from 'react-native';
 import { loginUser } from './actions'
-import { emailRequired, validateEmail } from '../../utils/Validations';
+import { emailRequired, passwordRequired, validateEmail } from '../../utils/Validations';
 
 const Login = ({ navigation }: { navigation: any }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [emailError, setEmailError] = useState("")
+  const [passwordError, setPasswordError] = useState("")
+  const [formSubmitted, setFormSubmitted] = useState(false)
   const loading = useSelector(state => state.Auth.loading)
   let errorMessageLogin = useSelector(state => state.Auth.error)
 
   const dispatch = useDispatch()
 
   const onSubmit = () => {
-    if (!username || !password) return;
+    setEmailError('');
+    setPasswordError('');
+    setFormSubmitted(true);
+    
+    if (handleEmailError(username) || handlePasswordError(password)) {
+      return false;
+    }
+
     dispatch(loginUser(username, password));
+  }
+
+  const handleEmailError = (email = "") => {
+    const emailError = emailRequired(email)
+    if(emailError) {
+      setEmailError(emailError);
+    } else {
+      setEmailError("");
+    }
+
+    if(!emailError) {
+      const emailError = validateEmail(email);
+      if (emailError) {
+        setEmailError(emailError);
+      } else {
+        setEmailError("");
+      }
+    }
+    return emailError;
+  }
+
+  const handlePasswordError = (pwd = "") => {
+    const pwdError = passwordRequired(pwd);
+    if(pwdError) {
+      setPasswordError(pwdError);
+    } else {
+      setPasswordError("");
+    }
+
+    return pwdError;
   }
 
   const handleNavigateToDetails = () => {
@@ -59,7 +99,7 @@ const Login = ({ navigation }: { navigation: any }) => {
                     Please log in into your account
                   </Text>
                 </View>
-                {errorMessageLogin && <View style={{ alignItems: 'center', marginTop: 20 }}>
+                {errorMessageLogin && formSubmitted && <View style={{ alignItems: 'center', marginTop: 20 }}>
                   <Text style={styles.errorText}>{errorMessageLogin}</Text>
                 </View>}
               </View>
@@ -74,10 +114,14 @@ const Login = ({ navigation }: { navigation: any }) => {
                   underlineColorAndroid="#f000"
                   blurOnSubmit={false}
                   onChangeText={(text) => {
-                    setUsername(text)
+                    setUsername(text);
+                    handleEmailError(text);
                   }}
                 />
               </View>
+              {(emailError && formSubmitted) && <View style={styles.ErrorSectionStyle}>
+                  <Text style={styles.errorText}>{emailError}</Text>
+                </View>}
               <Text>Password</Text>
               <View style={styles.SectionStyle}>
                 <TextInput
@@ -90,10 +134,14 @@ const Login = ({ navigation }: { navigation: any }) => {
                   underlineColorAndroid="#f000"
                   returnKeyType="next"
                   onChangeText={(text) => {
-                    setPassword(text)
+                    setPassword(text);
+                    handlePasswordError(text);
                   }}
                 />
               </View>
+              {(passwordError && formSubmitted) && <View style={styles.ErrorSectionStyle}>
+                  <Text style={styles.errorText}>{passwordError}</Text>
+                </View>}
               <View style={styles.AlignRight}>
                 <TouchableOpacity onPress={handleNavigateToDetails}>
                   <Text style={styles.orangeText}>Forgot Password?</Text>
@@ -147,6 +195,10 @@ const styles = StyleSheet.create({
     height: 40,
     marginBottom: 10,
     marginTop: 5,
+  },
+  ErrorSectionStyle: {
+    flexDirection: 'row',
+    marginBottom: 20,
   },
   buttonStyle: {
     backgroundColor: '#1C58C0',

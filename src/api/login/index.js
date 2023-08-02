@@ -10,14 +10,14 @@ export const userLogin = async (user) => {
       return getUserInfo(response.data.data.authToken).then((responseInfo) => {
         return responseInfo.data.data.name;
       }).catch((error) => {
-        throw new Error('Something went wrong!!');
+        throw new Error('Username or Password is incorrect.');
       });
     }
     catch (e) {
-        throw new Error('Something went wrong!!');
+        throw new Error('Username or Password is incorrect.');
     }
   }).catch((err) => {
-    throw new Error('Something went wrong!!');
+    throw new Error('Username or Password is incorrect.');
   });
 }
 

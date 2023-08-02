@@ -1,12 +1,14 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import DrawerNavigator from '../../navigator/drawer/DrawerNavigator'
+import { DrawerActions } from '@react-navigation/native';
 
 const Dashboard = ({navigation}:{navigation: any}) => {
+  
   return (
     <View style={{flex: 1}}>
       <View style={styles.Container}>
-        <TouchableOpacity style={styles.HeaderMenuContainer} onPress={() => {navigation.openDrawer()}}>
+        <TouchableOpacity style={styles.HeaderMenuContainer} onPress={() => {navigation.dispatch(DrawerActions.openDrawer())}}>
           <Image
             style={styles.HeaderTopMenuIcon}
             source={require('./../../images/menu-icon.png')} 
@@ -21,36 +23,6 @@ const Dashboard = ({navigation}:{navigation: any}) => {
         </TouchableOpacity>
       </View>
       <DrawerNavigator />
-      <View style={styles.Container}>
-        <TouchableOpacity style={styles.MenuContainer}>
-          <Image
-            style={styles.TopMenuIcon}
-            source={require('./../../images/home-icon.png')}
-          />
-          <Text style={styles.TextBold}>Home</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.MenuContainer}>
-          <Image
-            style={styles.TopMenuIcon}
-            source={require('./../../images/rfi-icon.png')}
-          />
-          <Text style={styles.TextBold}>RFI's</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.MenuContainer}>
-          <Image
-            style={styles.TopMenuIcon}
-            source={require('./../../images/report-icon.png')}
-          />
-          <Text style={styles.TextBold}>Report</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.MenuContainer}>
-          <Image
-            style={styles.TopMenuIcon}
-            source={require('./../../images/notification-icon.png')}
-          />
-          <Text style={styles.TextBold}>Notification</Text>
-        </TouchableOpacity>
-      </View>
     </View>
   );
 }

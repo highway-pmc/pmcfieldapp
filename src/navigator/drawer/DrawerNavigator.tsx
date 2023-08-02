@@ -8,11 +8,10 @@ import MyWork from '../../screens/MyWork/MyWork';
 const Drawer = createDrawerNavigator();
 const DrawerNavigator = () => {
   return (
-    // drawerContent={props => <CustomDrawer {...props} />}
     <Drawer.Navigator drawerContent={props => <CustomDrawer {...props} />}>
       <Drawer.Screen
-        name="Dashboard"
-        component={DashboardListing}
+        name="Main"
+        component={Main}
         options={{headerShown: false}}
       />
       <Drawer.Screen

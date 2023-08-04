@@ -1,15 +1,15 @@
-import { detectSpacesRegex , passwordRegex, mobilenoRegex, emailRegex } from "./regex"
+import { detectSpacesRegex , passwordRegex, mobilenoRegex, emailRegex } from "./RegexApp"
 
 const validationStrings = {
     usernameRequired : 'Username is required',
     passwordRequired : 'Password is required',
     fullNameRequired : 'Name is required',
-    emailRequired : 'Email is required',
+    emailRequired : 'Email or mobile is required',
     mobileNoRequired : 'Mobile no is required',
     invalidUsername : 'Invalid username',
     invalidpassword : 'Invalid password',
     invalidMobileNo : 'Invalid mobile number',
-    invalidEmail : 'Invalid email'
+    invalidEmail : 'Invalid email or mobile'
 }
 
 

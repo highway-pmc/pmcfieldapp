@@ -14,7 +14,7 @@ import { logoutUser } from '../Login/actions';
 const DashboardListing = ({navigation}:{navigation:any}) => {
   const dispatch = useDispatch()
 
-  const userEmail = useSelector(state => state.Auth.user);
+  const userEmail = useSelector(state => state.Auth.user.name);
 
   const logout = () => {
     dispatch(logoutUser());

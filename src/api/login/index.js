@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { API_URL } from '../config/constants';
+import { Alert } from 'react-native';
 
 export const userLogin = async (user) => {
    return axios.post(`${API_URL}v1/login`, {
@@ -7,17 +8,22 @@ export const userLogin = async (user) => {
     password: user.password
   }).then((response) => {
     try {
-      return getUserInfo(response.data.data.authToken).then((responseInfo) => {
-        return responseInfo.data.data.name;
-      }).catch((error) => {
-        throw new Error('Username or Password is incorrect.');
-      });
+      if(response.data.code === 200) {
+        return getUserInfo(response.data.data.authToken).then((responseInfo) => {
+          return responseInfo.data.data;
+        }).catch((error) => {
+          throw new Error('Email/Mobile or Password is incorrect.');
+        });
+      } else {
+        throw new Error(response.data.message);
+      }
     }
     catch (e) {
-        throw new Error('Username or Password is incorrect.');
+        throw new Error('Username/Mobile or Password is incorrect.');
     }
   }).catch((err) => {
-    throw new Error('Username or Password is incorrect.');
+    const errorMessge = err.response.data.message || 'Username/Mobile or Password is incorrect.';
+    throw new Error(errorMessge);
   });
 }
 

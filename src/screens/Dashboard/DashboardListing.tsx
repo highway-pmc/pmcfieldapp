@@ -8,27 +8,10 @@ import {
   Image,
   ScrollView,
 } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux'
-import { logoutUser } from '../Login/actions';
 
 const DashboardListing = ({navigation}:{navigation:any}) => {
-  const dispatch = useDispatch()
-
-  const userEmail = useSelector(state => state.Auth.user.name);
-
-  const logout = () => {
-    dispatch(logoutUser());
-    navigation.navigate('Login');
-  };
-
   return (
     <ScrollView style={styles.Container}>
-      <View style={{flex: 1, flexDirection: 'row', padding: 10, justifyContent: 'space-between', marginBottom: 10, backgroundColor: '#F5F5F5'}}>
-        <Text style={{fontSize: 18, color: '#333', fontWeight: 'bold',}}>Hello {userEmail}</Text>
-        <TouchableOpacity onPress={logout}>
-          <Text style={{fontSize: 18, color: '#333', fontWeight: 'bold',}}>Logout</Text>
-        </TouchableOpacity>
-      </View>
       <TouchableOpacity style={styles.MenuContainer} onPress={() => {
           navigation.navigate('MyWork');
           navigation.closeDrawer();

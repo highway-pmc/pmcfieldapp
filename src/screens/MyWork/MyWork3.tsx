@@ -1,11 +1,12 @@
 import { View, Text, NativeEventEmitter, ScrollView, Button, StyleSheet } from 'react-native'
 import React from 'react'
 import { useIsFocused } from '@react-navigation/native';
+import { HeaderItems } from "../../constants/constants"
 
 const MyWork3 = ({navigation}) => {
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();
-    eventEmitter.emit('headerEvent', { showBack: true, title: 'My Work 3', backScreen: 'MyWork2' });
+    eventEmitter.emit('headerEvent', HeaderItems.myWork3);
   }
   return (
     <ScrollView style={styles.Container}>

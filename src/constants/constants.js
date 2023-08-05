@@ -1,3 +1,9 @@
+export const HeaderItems = {
+    dashboard: {title: 'Dashboard', showBack: false},
+    myWork: { showBack: false, title: 'My Work' },
+    myWork2: { showBack: true, title: 'My Work 2' },
+    myWork3: { showBack: true, title: 'My Work 3' }
+};
 export const Dashboard = [
     {
         role: "project-head",

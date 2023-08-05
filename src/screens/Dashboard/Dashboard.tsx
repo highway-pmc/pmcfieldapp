@@ -3,10 +3,10 @@ import React, {useEffect, useState} from 'react'
 import DrawerNavigator from '../../navigator/drawer/DrawerNavigator'
 import { DrawerActions } from '@react-navigation/native';
 import { StackActions } from '@react-navigation/native';
+import { HeaderItems } from "../../constants/constants"
 
 const Dashboard = ({navigation}:{navigation: any}) => {
-  const headerDetails = {title: 'Dashboard', showBack: false, backScreen: ''};
-  const [headerInfo, setHeaderInfo] = useState(headerDetails);
+  const [headerInfo, setHeaderInfo] = useState(HeaderItems.dashboard);
   useEffect(() => {
     const eventEmitter = new NativeEventEmitter();
     eventEmitter.addListener('headerEvent', event => {

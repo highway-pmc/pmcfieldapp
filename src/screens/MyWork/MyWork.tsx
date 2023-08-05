@@ -1,11 +1,12 @@
 import { View, Text, Button, NativeEventEmitter, Alert, StyleSheet, ScrollView  } from 'react-native'
 import React, {useEffect, useState} from 'react'
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
+import { HeaderItems } from "../../constants/constants"
 
 const MyWork = ({ navigation }) => {
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();
-    eventEmitter.emit('headerEvent', { showBack: false, title: 'My Work' });
+    eventEmitter.emit('headerEvent', HeaderItems.myWork);
   }
 
   return (

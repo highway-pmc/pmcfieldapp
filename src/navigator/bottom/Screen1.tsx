@@ -3,7 +3,7 @@ import React from 'react';
 import { useSelector } from 'react-redux'
 
 const Screen1 = ({navigation}) => {
-    const userEmail = useSelector(state => state.Auth.user)
+    const userEmail = useSelector(state => state.Auth.user.name)
 
   return (
     <View

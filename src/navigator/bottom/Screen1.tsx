@@ -3,8 +3,6 @@ import React from 'react';
 import { useSelector } from 'react-redux'
 
 const Screen1 = ({navigation}) => {
-    const userEmail = useSelector(state => state.Auth.user.name)
-
   return (
     <View
       style={{
@@ -13,7 +11,7 @@ const Screen1 = ({navigation}) => {
         alignItems: 'center',
         backgroundColor: 'white',
       }}>
-        <Text style={{fontSize: 30}}>Hi, {userEmail}</Text>
+        <Text style={{fontSize: 30}}></Text>
       {/* <Text
         style={{fontSize: 30}}
         onPress={() => {

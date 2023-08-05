@@ -1,23 +1,25 @@
-import {View, Text} from 'react-native';
 import React from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import Main from './Main';
-import DashboardListing from '../../screens/Dashboard/DashboardListing';
 import CustomDrawer from './CustomDrawer';
-import MyWork from '../../screens/MyWork/MyWork';
+import { MyWorkStackNavigator } from './StackNavigator';
 const Drawer = createDrawerNavigator();
 const DrawerNavigator = () => {
   return (
-    <Drawer.Navigator drawerContent={props => <CustomDrawer {...props} />}>
+    <Drawer.Navigator drawerContent={props => <CustomDrawer {...props}></CustomDrawer>}>
       <Drawer.Screen
-        name="Main"
+        name="Home"
         component={Main}
-        options={{headerShown: false}}
-      />
+        options={{
+           headerShown: false
+        }}
+    />
       <Drawer.Screen
         name="MyWork"
-        component={MyWork}
-        options={{headerShown: false}}
+        component={MyWorkStackNavigator}
+        options={{
+          headerShown: false
+        }}
       />
     </Drawer.Navigator>
   );

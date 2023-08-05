@@ -3,6 +3,10 @@ import { API_URL } from '../config/constants';
 import { Alert } from 'react-native';
 
 export const userLogin = async (user) => {
+  return {
+    name: "Rajiv"
+  };
+
    return axios.post(`${API_URL}v1/login`, {
     email: user.username,
     password: user.password

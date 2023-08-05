@@ -1,19 +1,44 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import { Image, StyleSheet, Text, TouchableOpacity, View, NativeEventEmitter } from 'react-native'
+import React, {useEffect, useState} from 'react'
 import DrawerNavigator from '../../navigator/drawer/DrawerNavigator'
 import { DrawerActions } from '@react-navigation/native';
+import { StackActions } from '@react-navigation/native';
 
 const Dashboard = ({navigation}:{navigation: any}) => {
+  const headerDetails = {title: 'Dashboard', showBack: false, backScreen: ''};
+  const [headerInfo, setHeaderInfo] = useState(headerDetails);
+  useEffect(() => {
+    const eventEmitter = new NativeEventEmitter();
+    eventEmitter.addListener('headerEvent', event => {
+      setHeaderInfo(event);
+    });
+  }, []);
+
   
   return (
     <View style={{flex: 1}}>
       <View style={styles.Container}>
-        <TouchableOpacity style={styles.HeaderMenuContainer} onPress={() => {navigation.dispatch(DrawerActions.openDrawer())}}>
+      
+        <TouchableOpacity style={styles.HeaderMenuContainer}>
+        {headerInfo && headerInfo.showBack && 
+        <TouchableOpacity style={styles.HeaderMenuContainer} onPress={(props) => {
+          const popAction = StackActions.pop(1);
+          navigation.dispatch(popAction);
+        }}>
           <Image
-            style={styles.HeaderTopMenuIcon}
-            source={require('./../../images/menu-icon.png')} 
-          />
-          <Text style={styles.HeaderTextBold}>Dashboard</Text>
+              style={styles.TopMenuIcon}
+              source={require('./../../images/dashboard/back-icon.png')} 
+            />
+          </TouchableOpacity>
+          }
+          <TouchableOpacity style={styles.HeaderMenuContainer} onPress={() => {navigation.dispatch(DrawerActions.openDrawer())}}>
+
+            <Image
+              style={styles.HeaderTopMenuIcon}
+              source={require('./../../images/menu-icon.png')} 
+            />
+            <Text style={styles.HeaderTextBold}>{headerInfo.title}</Text>
+          </TouchableOpacity>
         </TouchableOpacity>
         <TouchableOpacity style={styles.HeaderMenuContainer}>
           <Image

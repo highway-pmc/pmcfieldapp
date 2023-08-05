@@ -69,7 +69,7 @@ const Login = ({ navigation }: { navigation: any }) => {
   }
 
   const handleNavigateToDetails = () => {
-   // navigation.navigate('ForgotPassword');
+    navigation.navigate('ForgotPasswordStep1');
   };
 
   return (

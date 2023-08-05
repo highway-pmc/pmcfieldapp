@@ -18,7 +18,7 @@ import {
   Linking,
 } from 'react-native';
 
-function ForgotPassword(): any {
+function ForgotPasswordStep3({navigation}): any {
   return (
     <View style={styles.mainBody}>
       <ScrollView
@@ -33,7 +33,7 @@ function ForgotPassword(): any {
             <View style={styles.MainContainerStyle}>
               <View style={styles.TitleSection}>
                 <View>
-                  <Text style={styles.SignInText}>Forgot Password</Text>
+                  <Text style={styles.SignInText}>Change Password</Text>
                 </View>
               </View>
               <Text>New Password</Text>
@@ -62,14 +62,9 @@ function ForgotPassword(): any {
                   returnKeyType="next"
                 />
               </View>
-              <View style={styles.AlignRight}>
-                <Text
-                  onPress={() => Linking.openURL('http://google.com')}
-                  style={styles.orangeText}>
-                  Forgot Password?
-                </Text>
-              </View>
-              <TouchableOpacity style={styles.buttonStyle} activeOpacity={0.5}>
+              <TouchableOpacity style={styles.buttonStyle} activeOpacity={0.5} onPress={() => {
+                navigation.navigate('Login');
+              }}>
                 <Text style={styles.buttonTextStyle}>Confirm</Text>
               </TouchableOpacity>
             </View>
@@ -165,4 +160,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ForgotPassword;
+export default ForgotPasswordStep3;

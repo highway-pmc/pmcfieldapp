@@ -6,7 +6,7 @@ import MyWork from '../../screens/MyWork/MyWork';
 const Drawer = createDrawerNavigator();
 const DrawerNavigator = () => {
   return (
-    <Drawer.Navigator drawerContent={props => <CustomDrawer {...props} />}>
+    <Drawer.Navigator screenOptions={{drawerStyle: {width: '100%'}}} drawerContent={props => <CustomDrawer {...props} />}>
       <Drawer.Screen
         name="Main"
         component={Main}

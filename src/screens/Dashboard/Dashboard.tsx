@@ -40,12 +40,12 @@ const Dashboard = ({navigation}:{navigation: any}) => {
             <Text style={styles.HeaderTextBold}>{headerInfo.title}</Text>
           </TouchableOpacity>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.HeaderMenuContainer}>
+        {/* <TouchableOpacity style={styles.HeaderMenuContainer}>
           <Image
             style={styles.TopMenuIcon}
             source={require('./../../images/avtar.png')}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       <DrawerNavigator />
     </View>

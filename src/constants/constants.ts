@@ -1,5 +1,5 @@
 export const HeaderItems = {
-    dashboard: { title: 'Dashboard' },
+    dashboard: { showBack: false, title: 'Dashboard' },
     myWork: { showBack: false, title: 'My Work' },
     myWork2: { showBack: true, title: 'My Work 2' },
     myWork3: { showBack: true, title: 'My Work 3' },

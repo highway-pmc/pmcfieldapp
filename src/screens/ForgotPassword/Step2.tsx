@@ -42,11 +42,11 @@ function ForgotPasswordStep2({navigation}): any {
                   <Text style={styles.SubText}>A four-digit code should have come to your email address that you indicated.</Text>
                 </View>
               </View>
-              <Text>New Password</Text>
               <View style={styles.SectionStyle}>
               <TextInput
                   style={styles.inputStyle}
                   keyboardType="default"
+                  placeholder='Enter 4 digit code'
                   onSubmitEditing={Keyboard.dismiss}
                   blurOnSubmit={false}
                   underlineColorAndroid="#f000"
@@ -65,7 +65,9 @@ function ForgotPasswordStep2({navigation}): any {
                 }}>
                   <Text style={styles.buttonTextStyle}>Confirm</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.buttonStyleWhite} activeOpacity={0.5}>
+                <TouchableOpacity style={styles.buttonStyleWhite} activeOpacity={0.5} onPress={() => {
+                  navigation.navigate('Login');
+                }}>
                   <Text style={styles.buttonTextStyleWhite}>Cancel</Text>
                 </TouchableOpacity>
               </View>
@@ -85,7 +87,7 @@ const styles = StyleSheet.create({
     alignContent: 'center',
   },
   TitleSection: {
-    marginBottom: 80,
+    marginBottom: 40,
     justifyContent: 'flex-start',
   },
   SignInText: {

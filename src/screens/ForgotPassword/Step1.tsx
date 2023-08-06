@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     height: 127,
   },
   forGotText: {
-    width: 120,
+    width: 150,
     marginBottom: 10
   }
 });

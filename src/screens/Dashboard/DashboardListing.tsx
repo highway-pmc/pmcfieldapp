@@ -9,18 +9,39 @@ import {
   Image,
   ScrollView,
   NativeEventEmitter,
+  FlatList,
 } from 'react-native';
-import { HeaderItems } from '../../constants/constants';
+import { Dashboard_MENU, HeaderItems } from '../../constants/constants';
+import { useSelector } from 'react-redux';
 
-const DashboardListing = ({navigation}:{navigation:any}) => {
+const DashboardListing = ({ navigation }: { navigation: any }) => {
+
+  const loggedInUser = useSelector(state => state.Auth.user);
+
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();
     eventEmitter.emit('headerEvent', HeaderItems.dashboard);
   }
-  
+
   return (
     <ScrollView style={styles.Container}>
-      <TouchableOpacity style={styles.MenuContainer} onPress={() => {
+      <FlatList data={Dashboard_MENU}
+        renderItem={({ item }) =>
+          item.permissions.indexOf(loggedInUser.role) != -1 &&
+          <TouchableOpacity style={styles.MenuContainer} onPress={() => {
+            navigation.navigate(item.route);
+            navigation.closeDrawer();
+          }}>
+            <Image style={styles.TopMenuIcon} source={item.icon} />
+            <View style={styles.textContainer}>
+              <Text style={styles.TextBold}>{item.title}</Text>
+              <Text style={styles.SubText}>{item.subTitle}</Text>
+            </View>
+          </TouchableOpacity>
+        }
+      />
+
+      {/* <TouchableOpacity style={styles.MenuContainer} onPress={() => {
           navigation.navigate('MyWork');
           navigation.closeDrawer();
         }}>
@@ -69,7 +90,7 @@ const DashboardListing = ({navigation}:{navigation:any}) => {
           <Text style={styles.TextBold}>Manage RFIs</Text>
           <Text style={styles.SubText}>RFI</Text>
         </View>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </ScrollView>
   )
 };
@@ -86,7 +107,7 @@ const styles = StyleSheet.create({
     marginRight: 15,
   },
   MenuContainer: {
-    flexDirection: 'row', 
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
     backgroundColor: '#fff',

@@ -5,11 +5,11 @@ import { Alert } from 'react-native';
 export const userLogin = async (user) => {
   return {
     _id: "64bcd25156b42faba9f88f77",
-    name: "Pretty Zinta",
+    name: "Rajiv Ranjan",
     email: "pretty.zinta@pmc.com",
     phone: "7599509238",
     isPasswordSet: false,
-    role: "super-admin"
+    role: "structure-head"
 };
 
    return axios.post(`${API_URL}v1/login`, {

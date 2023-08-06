@@ -1,9 +1,9 @@
-import {View, Text, StyleSheet, Button, Image, NativeEventEmitter} from 'react-native';
+import {View, Text, StyleSheet, Button, Image, NativeEventEmitter, FlatList} from 'react-native';
 import React from 'react';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser } from '../../screens/Login/actions';
-import { UserRoles } from "../../constants/constants"
+import { Dashboard_MENU, UserRoles } from "../../constants/constants"
 
 const CustomDrawer = ({navigation}: {navigation: any}) => {
 
@@ -41,7 +41,16 @@ const CustomDrawer = ({navigation}: {navigation: any}) => {
           <Image style={styles.MenuIcon} source={require('./../../images/menu/mywork-icon.png')} />
           <Text style={styles.MenuText}>Home</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.MenuContainer} onPress={() => { navigation.navigate('MyWork'); navigation.closeDrawer();}}>
+        <FlatList data={Dashboard_MENU}
+        renderItem={({ item }) =>
+          item.permissions.indexOf(loggedInUser.role) != -1 &&
+          <TouchableOpacity style={styles.MenuContainer} onPress={() => { navigation.navigate(item.route); navigation.closeDrawer();}}>
+          <Image style={styles.MenuIcon} source={item.iconMenu} />
+          <Text style={styles.MenuText}>{item.title}</Text>
+        </TouchableOpacity>
+        }
+      />
+        {/* <TouchableOpacity style={styles.MenuContainer} onPress={() => { navigation.navigate('MyWork'); navigation.closeDrawer();}}>
           <Image style={styles.MenuIcon} source={require('./../../images/menu/manage-icon.png')} />
           <Text style={styles.MenuText}>My Work</Text>
         </TouchableOpacity>
@@ -60,7 +69,7 @@ const CustomDrawer = ({navigation}: {navigation: any}) => {
         <TouchableOpacity style={styles.MenuContainer} onPress={() => { navigation.navigate('RFIs'); navigation.closeDrawer();}}>
           <Image style={styles.MenuIcon} source={require('./../../images/menu/manage-rfi-icom.png')} />
           <Text style={styles.MenuText}>Manage FRI’s</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity style={styles.MenuContainer} onPress={logout}>
           <Image style={styles.MenuIcon} source={require('./../../images/menu/logout-icon.png')} />
           <Text style={styles.MenuText}>Logout</Text>

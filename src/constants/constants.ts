@@ -27,6 +27,7 @@ export const Dashboard_MENU = [
     {
         id: "1",
         icon: require("./../images/dashboard/my-work-icon.png"),
+        iconMenu: require("./../images/menu/manage-icon.png"),
         title: "My Work",
         subTitle: "Check your task",
         route: 'MyWork',
@@ -35,6 +36,7 @@ export const Dashboard_MENU = [
     {
         id: "1",
         icon: require("./../images/dashboard/my-work-icon.png"),
+        iconMenu: require("./../images/menu/mywork-icon.png"),
         title: "My Task",
         subTitle: "Check your task",
         route: 'MyTask',
@@ -43,6 +45,7 @@ export const Dashboard_MENU = [
     {
         id: "2",
         icon: require("./../images/dashboard/manage-user-icon.png"),
+        iconMenu: require("./../images/menu/manage-icon.png"),
         title: "Manage User",
         subTitle: "Check user",
         route: 'ManageUsers',
@@ -51,6 +54,7 @@ export const Dashboard_MENU = [
     {
         id: "3",
         icon: require("./../images/dashboard/report-list-icon.png"),
+        iconMenu: require("./../images/menu/report-menu-icon.png"),
         title: "Report",
         subTitle: "Report",
         route: 'Reports',
@@ -59,6 +63,7 @@ export const Dashboard_MENU = [
     {
         id: "4",
         icon: require("./../images/dashboard/progress-icon.png"),
+        iconMenu: require("./../images/menu/progress-dash-icon.png"),
         title: "Progress Dashboard",
         subTitle: "Progress",
         route: 'Progress',
@@ -67,6 +72,7 @@ export const Dashboard_MENU = [
     {
         id: "5",
         icon: require("./../images/dashboard/manage-rfi-icon.png"),
+        iconMenu: require("./../images/menu/manage-rfi-icom.png"),
         title: "Manage RFIs",
         subTitle: "RFI",
         route: 'RFIs',

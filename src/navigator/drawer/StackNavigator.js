@@ -3,8 +3,14 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import MyWork from "../../screens/MyWork/MyWork";
 import MyWork2 from "../../screens/MyWork/MyWork2";
-import CustomHeader from "../../screens/Dashboard/CustomHeader";
 import MyWork3 from "../../screens/MyWork/MyWork3";
+import ManageUsers from "../../screens/ManageUsers/ManageUsers";
+import Notifications from "../../screens/Notifications/Notifications";
+import Progress from "../../screens/Progress/Progress";
+import Reports from "../../screens/Reports/Reports";
+import RFIs from "../../screens/RFIs/RFIs";
+import Profile from "../../screens/Profile/Profile";
+import MyTask from "../../screens/MyTask/MyTask";
 
 const Stack = createStackNavigator();
 
@@ -16,16 +22,6 @@ const screenOptionStyle = {
   headerBackTitle: "Back",
 };
 
-// const MainStackNavigator = () => {
-//   return (
-//     <Stack.Navigator screenOptions={screenOptionStyle}>
-//       <Stack.Screen name="Home" component={Home} options={{headerShown: false}} />
-//       <Stack.Screen name="About" component={About} />
-//       <Stack.Screen name="About2" component={About2} />
-//     </Stack.Navigator>
-//   );
-// };
-
 const MyWorkStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
@@ -36,4 +32,61 @@ const MyWorkStackNavigator = () => {
   );
 };
 
-export { /*MainStackNavigator,*/ MyWorkStackNavigator };
+const MyTaskStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen name="MyTask" component={MyTask} options={{headerShown: false}} />
+    </Stack.Navigator>
+  );
+};
+
+const ManageUsersStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen name="ManageUsers" component={ManageUsers} options={{headerShown: false}} />
+    </Stack.Navigator>
+  );
+};
+
+const NotificationsStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen name="Notifications" component={Notifications} options={{headerShown: false}} />
+    </Stack.Navigator>
+  );
+};
+
+const ProgressStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen name="Progress" component={Progress} options={{headerShown: false}} />
+    </Stack.Navigator>
+  );
+};
+
+const ReportsStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen name="Reports" component={Reports} options={{headerShown: false}} />
+    </Stack.Navigator>
+  );
+};
+
+const RFIsStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen name="RFIs" component={RFIs} options={{headerShown: false}} />
+    </Stack.Navigator>
+  );
+};
+
+const ProfileStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen name="Profile" component={Profile} options={{headerShown: false}} />
+    </Stack.Navigator>
+  );
+};
+
+export { MyWorkStackNavigator, MyTaskStackNavigator, ManageUsersStackNavigator, NotificationsStackNavigator,
+  ProgressStackNavigator, ReportsStackNavigator, RFIsStackNavigator, ProfileStackNavigator };

@@ -3,10 +3,9 @@ import React from 'react';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser } from '../../screens/Login/actions';
-import { HeaderItems } from "../../constants/constants"
+import { UserRoles } from "../../constants/constants"
 
 const CustomDrawer = ({navigation}: {navigation: any}) => {
-  const eventEmitter = new NativeEventEmitter();
 
   const dispatch = useDispatch()
 
@@ -25,9 +24,9 @@ const CustomDrawer = ({navigation}: {navigation: any}) => {
             <Image style={styles.ProfileIcon} source={require('./../../images/avtar.png')} />
           </View>
           <Text style={styles.ProfileName}>{loggedInUser.name}</Text>
-          <Text style={styles.ProfileRole}>{loggedInUser.role}</Text>
-          <TouchableOpacity style={styles.ViewButton}>
-            <Text style={styles.ViewText}>View</Text>
+          <Text style={styles.ProfileRole}>{UserRoles[loggedInUser.role]}</Text>
+          <TouchableOpacity style={styles.ViewButton} onPress={() => { navigation.navigate('Profile'); navigation.closeDrawer();}}>
+            <Text style={styles.ViewText}>Edit profile</Text>
           </TouchableOpacity>
         </View>
         <TouchableOpacity style={styles.CloseContainer}  onPress={() => {navigation.closeDrawer()}}>
@@ -38,7 +37,6 @@ const CustomDrawer = ({navigation}: {navigation: any}) => {
         <TouchableOpacity style={styles.MenuContainer} onPress={() => { 
           navigation.navigate('Home');
           navigation.closeDrawer();
-          eventEmitter.emit('headerEvent', HeaderItems.dashboard);
           }}>
           <Image style={styles.MenuIcon} source={require('./../../images/menu/mywork-icon.png')} />
           <Text style={styles.MenuText}>Home</Text>
@@ -47,19 +45,19 @@ const CustomDrawer = ({navigation}: {navigation: any}) => {
           <Image style={styles.MenuIcon} source={require('./../../images/menu/manage-icon.png')} />
           <Text style={styles.MenuText}>My Work</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.MenuContainer} onPress={() => { navigation.navigate('MyWork'); navigation.closeDrawer();}}>
+        <TouchableOpacity style={styles.MenuContainer} onPress={() => { navigation.navigate('ManageUsers'); navigation.closeDrawer();}}>
           <Image style={styles.MenuIcon} source={require('./../../images/menu/manage-icon.png')} />
           <Text style={styles.MenuText}>Manage User</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.MenuContainer} onPress={() => { navigation.navigate('MyWork'); navigation.closeDrawer();}}>
+        <TouchableOpacity style={styles.MenuContainer} onPress={() => { navigation.navigate('Reports'); navigation.closeDrawer();}}>
           <Image style={styles.MenuIcon} source={require('./../../images/menu/report-menu-icon.png')} />
           <Text style={styles.MenuText}>Report</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.MenuContainer} onPress={() => { navigation.navigate('MyWork'); navigation.closeDrawer();}}>
+        <TouchableOpacity style={styles.MenuContainer} onPress={() => { navigation.navigate('Progress'); navigation.closeDrawer();}}>
           <Image style={styles.MenuIcon} source={require('./../../images/menu/progress-dash-icon.png')} />
           <Text style={styles.MenuText}>Progress Dashboard</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.MenuContainer} onPress={() => { navigation.navigate('MyWork'); navigation.closeDrawer();}}>
+        <TouchableOpacity style={styles.MenuContainer} onPress={() => { navigation.navigate('RFIs'); navigation.closeDrawer();}}>
           <Image style={styles.MenuIcon} source={require('./../../images/menu/manage-rfi-icom.png')} />
           <Text style={styles.MenuText}>Manage FRI’s</Text>
         </TouchableOpacity>
@@ -100,7 +98,7 @@ const styles = StyleSheet.create({
     color: '#AAC7FF'
   },
   ViewButton: {
-    width: 60,
+    width: 85,
     height: 30,
     alignItems: 'center',
     justifyContent: 'center',

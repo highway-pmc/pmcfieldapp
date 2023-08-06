@@ -1,4 +1,5 @@
 // HomeScreen.js
+import { useIsFocused } from '@react-navigation/native';
 import React from 'react';
 import {
   StyleSheet,
@@ -7,9 +8,16 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  NativeEventEmitter,
 } from 'react-native';
+import { HeaderItems } from '../../constants/constants';
 
 const DashboardListing = ({navigation}:{navigation:any}) => {
+  if (useIsFocused()) {
+    const eventEmitter = new NativeEventEmitter();
+    eventEmitter.emit('headerEvent', HeaderItems.dashboard);
+  }
+  
   return (
     <ScrollView style={styles.Container}>
       <TouchableOpacity style={styles.MenuContainer} onPress={() => {
@@ -22,28 +30,40 @@ const DashboardListing = ({navigation}:{navigation:any}) => {
           <Text style={styles.SubText}>Check your task</Text>
         </View>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.MenuContainer}>
+      <TouchableOpacity style={styles.MenuContainer} onPress={() => {
+          navigation.navigate('ManageUsers');
+          navigation.closeDrawer();
+        }}>
         <Image style={styles.TopMenuIcon} source={require('./../../images/dashboard/manage-user-icon.png')} />
         <View style={styles.textContainer}>
           <Text style={styles.TextBold}>Manage User</Text>
           <Text style={styles.SubText}>Check user</Text>
         </View>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.MenuContainer}>
+      <TouchableOpacity style={styles.MenuContainer} onPress={() => {
+          navigation.navigate('Reports');
+          navigation.closeDrawer();
+        }}>
         <Image style={styles.TopMenuIcon} source={require('./../../images/dashboard/report-list-icon.png')} />
         <View style={styles.textContainer}>
           <Text style={styles.TextBold}>Report</Text>
           <Text style={styles.SubText}>Report</Text>
         </View>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.MenuContainer}>
+      <TouchableOpacity style={styles.MenuContainer} onPress={() => {
+          navigation.navigate('Progress');
+          navigation.closeDrawer();
+        }}>
         <Image style={styles.TopMenuIcon} source={require('./../../images/dashboard/progress-icon.png')} />
         <View style={styles.textContainer}>
           <Text style={styles.TextBold}>Progress Dashboard</Text>
           <Text style={styles.SubText}>Progress</Text>
         </View>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.MenuContainer}>
+      <TouchableOpacity style={styles.MenuContainer} onPress={() => {
+          navigation.navigate('RFIs');
+          navigation.closeDrawer();
+        }}>
         <Image style={styles.TopMenuIcon} source={require('./../../images/dashboard/manage-rfi-icon.png')} />
         <View style={styles.textContainer}>
           <Text style={styles.TextBold}>Manage RFIs</Text>

@@ -1,7 +1,7 @@
 import React from 'react'
 import { createStackNavigator , TransitionPresets } from '@react-navigation/stack'
 
-import { Login, ForgotPassword } from '../screens'
+import { Login } from '../screens'
 import ForgotPasswordStep1 from '../screens/ForgotPassword/Step1'
 import ForgotPasswordStep2 from '../screens/ForgotPassword/Step2'
 import ForgotPasswordStep3 from '../screens/ForgotPassword/Step3'

@@ -1,10 +1,8 @@
 import { View, Text, Image } from 'react-native';
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Screen3 from './Screen3';
-import Screen2 from './Screen2';
-import Screen1 from './Screen1';
 import DashboardListing from '../../screens/Dashboard/DashboardListing';
+import { NotificationsStackNavigator, RFIsStackNavigator, ReportsStackNavigator } from '../drawer/StackNavigator';
 const Bottom = createBottomTabNavigator();
 const BottomNavigator = () => {
     return (
@@ -17,15 +15,22 @@ const BottomNavigator = () => {
                 }}
             />
             <Bottom.Screen
-                name="Screen2"
-                component={Screen2}
+                name="RFIs"
+                component={RFIsStackNavigator}
                 options={{
                     headerShown: false
                 }}
             />
             <Bottom.Screen
-                name="Screen3"
-                component={Screen3}
+                name="Report"
+                component={ReportsStackNavigator}
+                options={{
+                    headerShown: false
+                }}
+            />
+            <Bottom.Screen
+                name="Notifications"
+                component={NotificationsStackNavigator}
                 options={{
                     headerShown: false
                 }}

@@ -32,18 +32,14 @@ function ForgotPasswordStep2({navigation}): any {
           <KeyboardAvoidingView enabled>
             <View style={styles.MainContainerStyle}>
               <View style={styles.TitleSection}>
-                <View>
+                <View style={{marginBottom: 20}}>
                   <Text style={styles.SignInText}>OTP</Text>
                 </View>
-              </View>
-              <View style={styles.TitleSection}>
-                <View>
-                  <Text style={styles.SignInText}>Enter 4 digit code</Text>
+                <View style={{marginBottom: 10}}>
+                  <Text style={[styles.SubText, {fontSize: 18, fontWeight: '700'}]}>Enter 4 digit code</Text>
                 </View>
-              </View>
-              <View style={styles.TitleSection}>
                 <View>
-                  <Text style={styles.SignInText}>A four-digit code should have come to your email address that you indicated.</Text>
+                  <Text style={styles.SubText}>A four-digit code should have come to your email address that you indicated.</Text>
                 </View>
               </View>
               <Text>New Password</Text>
@@ -63,14 +59,16 @@ function ForgotPasswordStep2({navigation}): any {
                   Resend OTP
                 </Text>
               </View>
-              <TouchableOpacity style={styles.buttonStyle} activeOpacity={0.5} onPress={() => {
-                navigation.navigate('ForgotPasswordStep3');
-              }}>
-                <Text style={styles.buttonTextStyle}>Confirm</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.buttonStyle} activeOpacity={0.5}>
-                <Text style={styles.buttonTextStyle}>Cancel</Text>
-              </TouchableOpacity>
+              <View style={styles.footerButton}>
+                <TouchableOpacity style={styles.buttonStyle} activeOpacity={0.5} onPress={() => {
+                  navigation.navigate('ForgotPasswordStep3');
+                }}>
+                  <Text style={styles.buttonTextStyle}>Confirm</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.buttonStyleWhite} activeOpacity={0.5}>
+                  <Text style={styles.buttonTextStyleWhite}>Cancel</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </KeyboardAvoidingView>
         </View>
@@ -87,7 +85,7 @@ const styles = StyleSheet.create({
     alignContent: 'center',
   },
   TitleSection: {
-    marginBottom: 20,
+    marginBottom: 80,
     justifyContent: 'flex-start',
   },
   SignInText: {
@@ -123,9 +121,28 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginTop: 20,
     marginBottom: 25,
+    paddingHorizontal: 30,
+  },
+  buttonStyleWhite: {
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    color: '#1C58C0',
+    borderColor: '#1C58C0',
+    height: 40,
+    alignItems: 'center',
+    borderRadius: 8,
+    marginTop: 20,
+    marginBottom: 25,
+    paddingHorizontal: 30,
   },
   buttonTextStyle: {
     color: '#FFFFFF',
+    paddingVertical: 10,
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  buttonTextStyleWhite: {
+    color: '#1C58C0',
     paddingVertical: 10,
     fontSize: 16,
     fontWeight: '600',
@@ -161,6 +178,10 @@ const styles = StyleSheet.create({
     width: 128,
     marginBottom: 30,
     marginTop: 30,
+  },
+  footerButton: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   }
 });
 

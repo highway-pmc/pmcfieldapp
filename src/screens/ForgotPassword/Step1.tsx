@@ -32,13 +32,13 @@ function ForgotPasswordStep1({navigation}): any {
           <KeyboardAvoidingView enabled>
             <View style={styles.MainContainerStyle}>
               <View style={styles.TitleSection}>
-                <View>
+                <View style={styles.forGotText}>
                   <Text style={styles.SignInText}>Forgot Password?</Text>
                 </View>
-              </View>
-              <View style={styles.TitleSection}>
                 <View>
-                  <Text style={styles.SignInText}>Enter your email for the verification process, we will send verification code to your email</Text>
+                  <Text style={styles.SubText}>
+                    Enter your email for the verification process, we will send verification code to your email
+                  </Text>
                 </View>
               </View>
               <Text>Email</Text>
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     alignContent: 'center',
   },
   TitleSection: {
-    marginBottom: 20,
+    marginBottom: 80,
     justifyContent: 'flex-start',
   },
   SignInText: {
@@ -101,6 +101,10 @@ const styles = StyleSheet.create({
     height: 40,
     marginBottom: 10,
     marginTop: 5,
+  },
+  ErrorSectionStyle: {
+    flexDirection: 'row',
+    marginBottom: 20,
   },
   buttonStyle: {
     backgroundColor: '#1C58C0',
@@ -138,6 +142,9 @@ const styles = StyleSheet.create({
   orangeText: {
     color: '#F78720',
   },
+  errorText: {
+    color: '#f11f1f',
+  },
   container: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -150,6 +157,14 @@ const styles = StyleSheet.create({
     width: 128,
     marginBottom: 30,
     marginTop: 30,
+  },
+  HeaderTopMenuIcon: {
+    width: 127,
+    height: 127,
+  },
+  forGotText: {
+    width: 120,
+    marginBottom: 10
   }
 });
 

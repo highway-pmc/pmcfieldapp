@@ -104,10 +104,10 @@ const Login = ({ navigation }: { navigation: any }) => {
                 </View>}
               </View>
               <Text>Email</Text>
-              <View style={styles.SectionStyle}>
+              <View style={styles.SectionStyle}> 
                 <TextInput
                   style={styles.inputStyle}
-                  placeholder="Enter Email"
+                  placeholder="Enter Email or mobile"
                   autoCapitalize="none"
                   keyboardType="email-address"
                   returnKeyType="next"

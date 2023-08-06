@@ -20,17 +20,18 @@ const Dashboard = ({navigation}:{navigation: any}) => {
       <View style={styles.Container}>
       
         <TouchableOpacity style={styles.HeaderMenuContainer}>
-        {headerInfo && headerInfo.showBack && 
+        {headerInfo && headerInfo.showBack ?
         <TouchableOpacity style={styles.HeaderMenuContainer} onPress={(props) => {
           const popAction = StackActions.pop(1);
           navigation.dispatch(popAction);
         }}>
           <Image
               style={styles.TopMenuIcon}
-              source={require('./../../images/dashboard/back-icon.png')} 
+              source={require('./../../images/back-button.png')} 
             />
+            <Text style={styles.HeaderTextBold}>{headerInfo.title}</Text>
           </TouchableOpacity>
-          }
+          :
           <TouchableOpacity style={styles.HeaderMenuContainer} onPress={() => {navigation.dispatch(DrawerActions.openDrawer())}}>
 
             <Image
@@ -39,6 +40,7 @@ const Dashboard = ({navigation}:{navigation: any}) => {
             />
             <Text style={styles.HeaderTextBold}>{headerInfo.title}</Text>
           </TouchableOpacity>
+          }
         </TouchableOpacity>
         {/* <TouchableOpacity style={styles.HeaderMenuContainer}>
           <Image
@@ -64,6 +66,7 @@ const styles = StyleSheet.create({
   TopMenuIcon: {
     width: 28,
     height: 28,
+    marginRight: 10
   },
   MenuContainer: {
     flexDirection: 'column', 

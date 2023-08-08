@@ -31,7 +31,7 @@ export const Dashboard_MENU = [
         title: "My Work",
         subTitle: "Check your task",
         route: 'MyWork',
-        permissions: ["project-head", "structure-head", "highway-head", "otherworks-head", "category-users"]
+        permissions: ["project-head", "structure-head", "highway-head", "otherworks-head"]
     },
     {
         id: "1",
@@ -58,7 +58,7 @@ export const Dashboard_MENU = [
         title: "Report",
         subTitle: "Report",
         route: 'Reports',
-        permissions: ["project-head", "structure-head", "highway-head", "otherworks-head", "quality-head", "category-users", "quality-users"]
+        permissions: ["project-head", "structure-head", "highway-head", "otherworks-head", "quality-head", "quality-users"]
     },
     {
         id: "4",
@@ -67,7 +67,7 @@ export const Dashboard_MENU = [
         title: "Progress Dashboard",
         subTitle: "Progress",
         route: 'Progress',
-        permissions: ["project-head", "structure-head", "highway-head", "otherworks-head", "quality-head", "category-users", "quality-users"]
+        permissions: ["project-head", "structure-head", "highway-head", "otherworks-head", "quality-head", "quality-users"]
     },
     {
         id: "5",
@@ -76,6 +76,6 @@ export const Dashboard_MENU = [
         title: "Manage RFIs",
         subTitle: "RFI",
         route: 'RFIs',
-        permissions: ["project-head", "structure-head", "highway-head", "otherworks-head", "quality-head", "category-users", "quality-users"]
+        permissions: ["project-head", "structure-head", "highway-head", "otherworks-head", "quality-head", "quality-users"]
     }
 ];

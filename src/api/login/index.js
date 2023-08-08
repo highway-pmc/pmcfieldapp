@@ -3,15 +3,14 @@ import { API_URL } from '../config/constants';
 import { Alert } from 'react-native';
 
 export const userLogin = async (user) => {
-  return {
-    _id: "64bcd25156b42faba9f88f77",
-    name: "Rajiv Ranjan",
-    email: "pretty.zinta@pmc.com",
-    phone: "7599509238",
-    isPasswordSet: false,
-    role: "structure-head"
-};
-
+//   return {
+//     _id: "64bcd25156b42faba9f88f77",
+//     name: "Rajiv Ranjan",
+//     email: "rajiv.ranjan@pmc.com",
+//     phone: "7599509238",
+//     isPasswordSet: false,
+//     role: "quality-users" // project-head, quality-head", "quality-users"
+// };
    return axios.post(`${API_URL}v1/login`, {
     email: user.username,
     password: user.password
@@ -31,7 +30,7 @@ export const userLogin = async (user) => {
         throw new Error('Username/Mobile or Password is incorrect.');
     }
   }).catch((err) => {
-    const errorMessge = err.response.data.message || 'Username/Mobile or Password is incorrect.';
+    const errorMessge = err.response?.data?.message || 'Username/Mobile or Password is incorrect.';
     throw new Error(errorMessge);
   });
 }

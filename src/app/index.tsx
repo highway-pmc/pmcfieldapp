@@ -11,17 +11,33 @@ import SplashScreen from 'react-native-splash-screen';
 import messaging from '@react-native-firebase/messaging'
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import Clipboard from '@react-native-clipboard/clipboard'
+import {dbMigrations} from '../database/dbmigrations'
+import { schema } from '../database/schema'
+import { createUser, listUsers } from '../database/db'
 
 LogBox.ignoreAllLogs()
 
 const App = () => {
   //Code for Splash Screen
   useEffect(() => {
-    SplashScreen.hide();
+    //SplashScreen.hide();
     //console.log("==================");
     //getDeviceToken();
-
+    setUpDb();
   }, []);
+
+  const setUpDb = () => {
+    let config = dbMigrations.config;
+    config.name = "userId"+config.name;
+    
+    schema.connect(config).runMigrations(() => {
+      SplashScreen.hide();
+      console.log("Db migrations scripts executed!");
+
+      createUser();
+      listUsers();
+    });
+  }
 
   // useEffect(() => {
   //   const unsubscribe = messaging().onMessage(async remoteMessage => {
@@ -53,7 +69,7 @@ const App = () => {
 
   const handleDynamicLink = (link: any) => {
     // Handle dynamic link inside your own application
-    if (link.url === 'https://invertase.io/offer') {
+    if (link?.url === 'https://invertase.io/offer') {
       // ...navigate to your offers screen
       Alert.alert('Matched 1');
     }
@@ -72,7 +88,7 @@ const App = () => {
     dynamicLinks()
       .getInitialLink()
       .then((link: any) => {
-        if (link.url === 'https://invertase.io/offer') {
+        if (link?.url === 'https://invertase.io/offer') {
           // ...set initial route as offers screen
           Alert.alert('Matched 2');
         }
@@ -81,11 +97,11 @@ const App = () => {
 
   return (
     <SafeAreaProvider>
-      {/* <NavigationContainer>
+      <NavigationContainer>
             <RootNavigator />
-        </NavigationContainer> */}
+        </NavigationContainer>
       {/* <RootContainer></RootContainer> */}
-      <Text>Welcome</Text>
+      {/* <Text>Welcome</Text>
       <Text>{generatedLink}</Text>
 
       <TouchableOpacity onPress={() => {
@@ -98,7 +114,7 @@ const App = () => {
         Clipboard.setString(generatedLink);
       }}>
         <Text >Copy</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </SafeAreaProvider>
   )
 }

@@ -1,9 +1,9 @@
 import { globals } from "../app/globals";
 import SQLite from "react-native-sqlite-storage"
 import { dbMigrations } from "./dbmigrations";
-var postMigrationCallback, database;
+let postMigrationCallback, database;
 
-var schema = {};
+const schema = {};
 
 schema.connect = (config) => {
     if (!globals.database);
@@ -22,7 +22,7 @@ schema.runMigrations = (callback) => {
     bootstrap(computeDelta);
 };
 
-var bootstrap = (successCallback) => {
+const bootstrap = (successCallback) => {
     var executor = (txn) => {
         txn.executeSql('CREATE TABLE IF NOT EXISTS SCHEMA_CHANGES (name TEXT PRIMARY KEY)');
     };
@@ -30,12 +30,12 @@ var bootstrap = (successCallback) => {
     }, successCallback);
 };
 
-var computeDelta = () => {
+const computeDelta = () => {
     database.transaction((txn) => {
         txn.executeSql('SELECT name FROM SCHEMA_CHANGES', [], (tx, results) => {
-            var appliedChanges = getAppliedChanges(results);
-            var delta = {};
-            for (var property in dbMigrations.changeset) {
+            const appliedChanges = getAppliedChanges(results);
+            const delta = {};
+            for (let property in dbMigrations.changeset) {
                 if (appliedChanges.indexOf(property) == -1) {
                     delta[property] = dbMigrations.changeset[property];
                 }
@@ -45,18 +45,18 @@ var computeDelta = () => {
     });
 };
 
-var getAppliedChanges = (results) => {
-    var len = results.rows.length;
-    var appliedChanges = [];
-    for (var index = 0; index < len; index++) {
+const getAppliedChanges = (results) => {
+    let len = results.rows.length;
+    let appliedChanges = [];
+    for (let index = 0; index < len; index++) {
         appliedChanges[index] = results.rows.item(index).name;
     }
     return appliedChanges;
 };
 
-var applyChanges = (changes) => {
+const applyChanges = (changes) => {
     database.transaction((txn) => {
-        for (var name in changes) {
+        for (let name in changes) {
             txn.executeSql(changes[name]);
             txn.executeSql('INSERT INTO SCHEMA_CHANGES (name) VALUES ("' + name + '") ');
         }

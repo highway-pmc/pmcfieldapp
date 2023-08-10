@@ -12,14 +12,6 @@ dbMigrations.changeset = {
     createMember: 'CREATE TABLE IF NOT EXISTS user(id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, name TEXT, phone TEXT, password TEXT, role TEXT, isPasswordSet BOOLEAN)',
 };
 
-dbMigrations.setTest = (val) => {
-    _value = val;
-}
-
-dbMigrations.getTest = () => {
-    return _value;
-}
-
 export {
     dbMigrations
 }

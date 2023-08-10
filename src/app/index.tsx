@@ -13,7 +13,7 @@ import dynamicLinks from '@react-native-firebase/dynamic-links';
 import Clipboard from '@react-native-clipboard/clipboard'
 import {dbMigrations} from '../database/dbmigrations'
 import { schema } from '../database/schema'
-import { createUser, listUsers } from '../database/db'
+import { db } from '../database/db'
 
 LogBox.ignoreAllLogs()
 
@@ -33,9 +33,6 @@ const App = () => {
     schema.connect(config).runMigrations(() => {
       SplashScreen.hide();
       console.log("Db migrations scripts executed!");
-
-      createUser();
-      listUsers();
     });
   }
 

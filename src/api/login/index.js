@@ -46,6 +46,7 @@ export const getUserInfo = async (authToken) => {
             email: "pretty.zinta@pmc.com",
             phone: "7599509238",
             isPasswordSet: false,
+            authToken: authToken,
             role: "quality-users" // project-head, quality-head", "quality-users"
           }
         }

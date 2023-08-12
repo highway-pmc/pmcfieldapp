@@ -10,7 +10,7 @@ const sanitizeValue = (value) => {
   }
 
 const valueToInsert = (value) => {
-    return typeof(value) == "number" ? value : ("'" + value + "'");
+    return typeof(value) == "number" ? value : typeof(value) == "boolean" ? (value ? 1 : 0) : ("'" + value + "'");
   };
 
 if (!Object.keys) {

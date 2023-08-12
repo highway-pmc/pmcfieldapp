@@ -17,18 +17,11 @@ import {
   KeyboardAvoidingView,
   Linking,
 } from 'react-native';
-import { useSelector } from 'react-redux';
 
 const ForgotPasswordStep3 = ({navigation}) => {
-
-  const isAuth = useSelector(state => state.Auth.userInfo)
   
   const navigateToBack = () => {
-    if (isAuth && isAuth.isPasswordSet) {
-      navigation.navigate('Dashboard'); 
-    } else {
-      navigation.navigate('Login'); 
-    }
+    navigation.navigate('Login');
   }
   return (
     <View style={styles.mainBody}>

@@ -42,7 +42,7 @@ const Login = ({ navigation }: { navigation: any }) => {
 
     const isInternetAvailable = await NetworkUtils.isNetworkAvailable();
 
-    if (isInternetAvailable) {
+    if (!isInternetAvailable) {
       console.log("======== Internet available ========");
       dispatch(loginUser(username, password));
     } else {
@@ -80,11 +80,13 @@ const Login = ({ navigation }: { navigation: any }) => {
       users.findByEmail(user.email).then((userDb) => {
         if (userDb) {
           const userApi: user = {
+            _id: user._id,
             id: userDb.id,
             email: user.email,
             name: user.name,
             phone: user.phone, 
-            role: user.role
+            role: user.role,
+            authToken: user.authToken
           };
 
           if (password) {
@@ -106,12 +108,14 @@ const Login = ({ navigation }: { navigation: any }) => {
           })
         } else { //first time user loggedin
           const userApi: user = {
+            _id: user._id,
             email: user.email,
             name: user.name,
             phone: user.phone, 
             role: user.role,
             password: password,
-            isPasswordSet: user.isPasswordSet
+            isPasswordSet: user.isPasswordSet,
+            authToken: user.authToken
           };
           users.save(userApi).then((dbUser) => {
             if (dbUser.id) {

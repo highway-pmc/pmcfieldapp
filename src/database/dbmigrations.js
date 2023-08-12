@@ -13,7 +13,7 @@ dbMigrations.tables = {
 };
 
 dbMigrations.changeset = {
-    createMember: 'CREATE TABLE IF NOT EXISTS ' + dbMigrations.tables.user + '(id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, name TEXT, phone TEXT, password TEXT, role TEXT, isPasswordSet BOOLEAN)',
+    createMember: 'CREATE TABLE IF NOT EXISTS ' + dbMigrations.tables.user + '(id INTEGER PRIMARY KEY AUTOINCREMENT, _id TEXT, email TEXT, name TEXT, phone TEXT, password TEXT, role TEXT, authToken TEXT, isPasswordSet INTEGER DEFAULT 0)',
 };
 
 export {

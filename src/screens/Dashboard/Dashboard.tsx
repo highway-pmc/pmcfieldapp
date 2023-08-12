@@ -16,6 +16,7 @@ const Dashboard = ({navigation}:{navigation: any}) => {
 
   
   return (
+    
     <View style={{flex: 1}}>
       <View style={styles.Container}>
       

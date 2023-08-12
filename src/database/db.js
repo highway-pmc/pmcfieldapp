@@ -31,7 +31,7 @@ const db = {};
 db.executeSql = (sql, params = []) => new Promise((resolve, reject) => {
     database().transaction((trans) => {
         trans.executeSql(sql, params, (trans, results) => {
-            resolve(results);
+            resolve(results.rows);
         },
             (error) => {
                 reject(error);
@@ -130,7 +130,7 @@ db.update = (tableName, entity = {}) => new Promise((resolve, reject) => {
     for (let key in entity) {
         if (key != 'id') {
             updateValues = updateValues + (key + '=' + valueToInsert(sanitizeValue(entity[key])));
-            if (index < (len - 2)) {
+            if (index < (len - 1)) {
                 updateValues = updateValues + ", ";
             }
         }

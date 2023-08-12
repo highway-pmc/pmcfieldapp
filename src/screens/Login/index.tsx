@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import {
@@ -11,9 +11,14 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Image,
+  Alert,
 } from 'react-native';
 import { loginUser } from './actions'
 import { emailRequired, passwordRequired, validateEmail } from '../../utils/Validations';
+import NetworkUtils from '../../utils/NetworkUtil';
+import { users } from '../../models/users';
+import { user } from '../../models/user';
+
 
 const Login = ({ navigation }: { navigation: any }) => {
   const [username, setUsername] = useState('');
@@ -21,12 +26,12 @@ const Login = ({ navigation }: { navigation: any }) => {
   const [emailError, setEmailError] = useState("")
   const [passwordError, setPasswordError] = useState("")
   const [formSubmitted, setFormSubmitted] = useState(false)
-  const loading = useSelector(state => state.Auth.loading)
-  let errorMessageLogin = useSelector(state => state.Auth.error)
+  const {user, loading, error} = useSelector(state => state.Auth)
+  const [errorMessage, setErrorMessage] = useState("")
 
   const dispatch = useDispatch()
 
-  const onSubmit = () => {
+  const onSubmit = async() => {
     setEmailError('');
     setPasswordError('');
     setFormSubmitted(true);
@@ -35,8 +40,100 @@ const Login = ({ navigation }: { navigation: any }) => {
       return false;
     }
 
-    dispatch(loginUser(username, password));
+    const isInternetAvailable = await NetworkUtils.isNetworkAvailable();
+
+    if (isInternetAvailable) {
+      console.log("======== Internet available ========");
+      dispatch(loginUser(username, password));
+    } else {
+      console.log("======== No Internet ========");
+      users.getAll().then((result) => { 
+        if (result.length === 0) {
+          Alert.alert("No internet", "Please connect to internet and try again");
+        } else {
+          users.login(username, password).then((result) => {
+            console.log("====", result)
+            if (result) {
+              dispatch({
+                type: "LOGGED_IN_USER",
+                response: result,
+              })
+            } else {
+              setErrorMessage("Invalid username or password.");
+            }
+          }).catch((error) => {
+            console.log(error)
+          });
+        }
+      }).catch((error) => {
+        console.log(error)
+      });
+       
+    }
   }
+
+  useEffect(() => {
+    console.log('loading', loading) 
+    console.log('Usera', user)
+    console.log('error', error)
+    if (user) {
+      users.findByEmail(user.email).then((userDb) => {
+        if (userDb) {
+          const userApi: user = {
+            id: userDb.id,
+            email: user.email,
+            name: user.name,
+            phone: user.phone, 
+            role: user.role
+          };
+
+          if (password) {
+            userApi.password = password;
+          }
+          users.update(userApi).then((rowsAffected) => {
+            if (rowsAffected) {
+              console.log("User updated successfully");
+            } else {
+              console.log("Unable to update user");
+            }
+
+            dispatch({
+              type: "LOGGED_IN_USER",
+              response: user,
+            })
+          }).catch((error) => {
+            console.log(error);
+          })
+        } else { //first time user loggedin
+          const userApi: user = {
+            email: user.email,
+            name: user.name,
+            phone: user.phone, 
+            role: user.role,
+            password: password,
+            isPasswordSet: user.isPasswordSet
+          };
+          users.save(userApi).then((dbUser) => {
+            if (dbUser.id) {
+              console.log("User added sucessfully");
+              dispatch({
+                type: "LOGGED_IN_USER",
+                response: dbUser,
+              })
+            } else {
+              console.log("Unable to add user");
+            }
+          }).catch((error) => {
+            console.log(error);
+          })
+        }
+      }).catch((error) => {
+        console.log(error);
+      });
+    } else if(error) {
+      setErrorMessage(error);
+    }
+  }, [user, error]);
 
   const handleEmailError = (email = "") => {
     const emailError = emailRequired(email)
@@ -99,8 +196,8 @@ const Login = ({ navigation }: { navigation: any }) => {
                     Please log in into your account
                   </Text>
                 </View>
-                {errorMessageLogin && formSubmitted && <View style={{ alignItems: 'center', marginTop: 20 }}>
-                  <Text style={styles.errorText}>{errorMessageLogin}</Text>
+                {errorMessage && formSubmitted && <View style={{ alignItems: 'center', marginTop: 20 }}>
+                  <Text style={styles.errorText}>{errorMessage}</Text>
                 </View>}
               </View>
               <Text>Email</Text>

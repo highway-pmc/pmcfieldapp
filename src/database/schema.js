@@ -7,6 +7,7 @@ const schema = {};
 
 schema.connect = (config) => {
     if (!globals.database);
+    //SQLite.enablePromise(true);
     globals.database = SQLite.openDatabase(config, () => {
         console.log("Database connected!")
     }, (error) => {
@@ -15,6 +16,14 @@ schema.connect = (config) => {
 
     database = globals.database;
     return schema;
+};
+
+schema.resetDb = (config) => {
+    schema.connect(config);
+    database.transaction(function(tx) {
+        tx.executeSql("DROP TABLE IF EXISTS " + dbMigrations.tables.user);
+        tx.executeSql("DROP TABLE IF EXISTS schema_changes");
+    });
 };
 
 schema.runMigrations = (callback) => {

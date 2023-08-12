@@ -5,7 +5,8 @@ import { reducer as formReducer } from 'redux-form';
 const initialState = {
     loading : false,
     user : null,
-    error : null
+    error : null,
+    userInfo: null
 }
 
 const AuthReducer = (state=initialState,action) => {
@@ -23,6 +24,13 @@ const AuthReducer = (state=initialState,action) => {
                 loading: false,
             };
 
+        case "LOGGED_IN_USER":
+            console.log("========", action.response)
+            return {
+                ...state,
+                userInfo: action.response,
+                loading: false,
+            };
         case "LOGIN_FAILURE":
             return {
                 ...state,
@@ -33,6 +41,7 @@ const AuthReducer = (state=initialState,action) => {
             return {
                 ...state,
                 user: null,
+                userInfo: null,
                 error: null,
                 loading: false,
             };

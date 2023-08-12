@@ -3,11 +3,16 @@ import { createStackNavigator } from '@react-navigation/stack'
 import Dashboard from '../screens/Dashboard/Dashboard'
 import { ScrollView } from 'react-native-gesture-handler'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { useSelector } from 'react-redux'
+import SetPassword from '../screens/SetPassword/Step3'
 
 const AppNavigator = () => {
+    const isAuth = useSelector(state => state.Auth.userInfo)
+
     const Stack = createStackNavigator()
     return (
         <Stack.Navigator>
+          {(isAuth && !isAuth.isPasswordSet) && <Stack.Screen name="SetPassword" component={SetPassword} options={{headerShown: false}} />}
             <Stack.Screen name="Dashboard" component={Dashboard} options={{headerShown: false}} />
         </Stack.Navigator>
     )

@@ -1,3 +1,5 @@
+export const API_URL = "https://api.highwaypmc.in/"
+
 export const HeaderItems = {
     dashboard: { showBack: false, title: 'Dashboard' },
     myWork: { showBack: false, title: 'My Work' },
@@ -12,7 +14,7 @@ export const HeaderItems = {
     profile: { showBack: false, title: 'Edit Profile' }
 };
 
-export const UserRoles: any = {
+export const UserRoles = {
     "super-admin": "Super admin",
     "project-head": "Project Head",
     "structure-head": "Stucture Head",
@@ -34,7 +36,7 @@ export const Dashboard_MENU = [
         permissions: ["project-head", "structure-head", "highway-head", "otherworks-head"]
     },
     {
-        id: "1",
+        id: "2",
         icon: require("./../images/dashboard/my-work-icon.png"),
         iconMenu: require("./../images/menu/mywork-icon.png"),
         title: "My Task",
@@ -43,7 +45,7 @@ export const Dashboard_MENU = [
         permissions: ["quality-head", "quality-users"]
     },
     {
-        id: "2",
+        id: "3",
         icon: require("./../images/dashboard/manage-user-icon.png"),
         iconMenu: require("./../images/menu/manage-icon.png"),
         title: "Manage User",
@@ -52,7 +54,7 @@ export const Dashboard_MENU = [
         permissions: ["project-head", "structure-head", "highway-head", "otherworks-head", "quality-head"]
     },
     {
-        id: "3",
+        id: "4",
         icon: require("./../images/dashboard/report-list-icon.png"),
         iconMenu: require("./../images/menu/report-menu-icon.png"),
         title: "Report",
@@ -61,7 +63,7 @@ export const Dashboard_MENU = [
         permissions: ["project-head", "structure-head", "highway-head", "otherworks-head", "quality-head", "quality-users"]
     },
     {
-        id: "4",
+        id: "5",
         icon: require("./../images/dashboard/progress-icon.png"),
         iconMenu: require("./../images/menu/progress-dash-icon.png"),
         title: "Progress Dashboard",
@@ -70,7 +72,7 @@ export const Dashboard_MENU = [
         permissions: ["project-head", "structure-head", "highway-head", "otherworks-head", "quality-head", "quality-users"]
     },
     {
-        id: "5",
+        id: "6",
         icon: require("./../images/dashboard/manage-rfi-icon.png"),
         iconMenu: require("./../images/menu/manage-rfi-icom.png"),
         title: "Manage RFIs",

@@ -16,7 +16,7 @@ import { useSelector } from 'react-redux';
 
 const DashboardListing = ({ navigation }: { navigation: any }) => {
 
-  const loggedInUser = useSelector(state => state.Auth.user);
+  const loggedInUser = useSelector(state => state.Auth.userInfo);
 
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();

@@ -9,11 +9,10 @@ const CustomDrawer = ({navigation}: {navigation: any}) => {
 
   const dispatch = useDispatch()
 
-  const loggedInUser = useSelector(state => state.Auth.user);
+  const loggedInUser = useSelector(state => state.Auth.userInfo);
 
   const logout = () => {
     dispatch(logoutUser());
-    navigation.navigate('Login');
   };
   
   return (

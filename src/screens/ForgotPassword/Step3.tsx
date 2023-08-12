@@ -17,8 +17,19 @@ import {
   KeyboardAvoidingView,
   Linking,
 } from 'react-native';
+import { useSelector } from 'react-redux';
 
-function ForgotPasswordStep3({navigation}): any {
+const ForgotPasswordStep3 = ({navigation}) => {
+
+  const isAuth = useSelector(state => state.Auth.userInfo)
+  
+  const navigateToBack = () => {
+    if (isAuth && isAuth.isPasswordSet) {
+      navigation.navigate('Dashboard'); 
+    } else {
+      navigation.navigate('Login'); 
+    }
+  }
   return (
     <View style={styles.mainBody}>
       <ScrollView
@@ -62,9 +73,7 @@ function ForgotPasswordStep3({navigation}): any {
                   returnKeyType="next"
                 />
               </View>
-              <TouchableOpacity style={styles.buttonStyle} activeOpacity={0.5} onPress={() => {
-                navigation.navigate('Login');
-              }}>
+              <TouchableOpacity style={styles.buttonStyle} activeOpacity={0.5} onPress={() => {navigateToBack()}}>
                 <Text style={styles.buttonTextStyle}>Confirm</Text>
               </TouchableOpacity>
             </View>

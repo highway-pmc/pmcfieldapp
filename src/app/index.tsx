@@ -14,104 +14,29 @@ import Clipboard from '@react-native-clipboard/clipboard'
 import {dbMigrations} from '../database/dbmigrations'
 import { schema } from '../database/schema'
 import { db } from '../database/db'
+import { users } from '../models/users'
 
 LogBox.ignoreAllLogs()
 
 const App = () => {
-  //Code for Splash Screen
   useEffect(() => {
-    //SplashScreen.hide();
-    //console.log("==================");
-    //getDeviceToken();
     setUpDb();
   }, []);
 
   const setUpDb = () => {
-    let config = dbMigrations.config;
-    config.name = "userId"+config.name;
-    
-    schema.connect(config).runMigrations(() => {
+    schema.connect(dbMigrations.config).runMigrations(() => {
       SplashScreen.hide();
       console.log("Db migrations scripts executed!");
     });
+
+    //schema.resetDb(dbMigrations.config);
   }
-
-  // useEffect(() => {
-  //   const unsubscribe = messaging().onMessage(async remoteMessage => {
-  //     Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
-  //   });
-
-  //   return unsubscribe;
-  // }, []);
-
-  // const getDeviceToken = async() => {
-  //   let token = await messaging().getToken();
-  //   console.log(token);
-  // }
-  const [generatedLink, setGeneratedLink] = useState("");
-  const buildLink = async () => {
-    const link = await dynamicLinks().buildLink({
-      link: 'https://invertase.io/offer',
-      // domainUriPrefix is created in your Firebase console
-      domainUriPrefix: 'https://deeplinkhighwaypmc.page.link',
-      // optional setup which updates Firebase analytics campaign
-      // "banner". This also needs setting up before hand
-      analytics: {
-        campaign: 'banner',
-      },
-    });
-
-    setGeneratedLink(link);
-  }
-
-  const handleDynamicLink = (link: any) => {
-    // Handle dynamic link inside your own application
-    if (link?.url === 'https://invertase.io/offer') {
-      // ...navigate to your offers screen
-      Alert.alert('Matched 1');
-    }
-  };
-
-  // Foreground events
-  useEffect(() => {
-    const unsubscribe = dynamicLinks().onLink(handleDynamicLink);
-    // When the component is unmounted, remove the listener
-    return () => unsubscribe();
-  }, []);
-
-
-  // Background/Quit events
-  useEffect(() => {
-    dynamicLinks()
-      .getInitialLink()
-      .then((link: any) => {
-        if (link?.url === 'https://invertase.io/offer') {
-          // ...set initial route as offers screen
-          Alert.alert('Matched 2');
-        }
-      });
-  }, []);
 
   return (
     <SafeAreaProvider>
       <NavigationContainer>
             <RootNavigator />
         </NavigationContainer>
-      {/* <RootContainer></RootContainer> */}
-      {/* <Text>Welcome</Text>
-      <Text>{generatedLink}</Text>
-
-      <TouchableOpacity onPress={() => {
-        buildLink();
-      }}>
-        <Text >Generate</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity onPress={() => {
-        Clipboard.setString(generatedLink);
-      }}>
-        <Text >Copy</Text>
-      </TouchableOpacity> */}
     </SafeAreaProvider>
   )
 }

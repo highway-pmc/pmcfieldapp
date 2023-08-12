@@ -11,6 +11,7 @@ import Reports from "../../screens/Reports/Reports";
 import RFIs from "../../screens/RFIs/RFIs";
 import Profile from "../../screens/Profile/Profile";
 import MyTask from "../../screens/MyTask/MyTask";
+import ForgotPasswordStep3 from "../../screens/ForgotPassword/Step3";
 
 const Stack = createStackNavigator();
 

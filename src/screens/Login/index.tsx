@@ -18,6 +18,7 @@ import { emailRequired, passwordRequired, validateEmail } from '../../utils/Vali
 import NetworkUtils from '../../utils/NetworkUtil';
 import { users } from '../../models/users';
 import { user } from '../../models/user';
+import LoadingAnimation from '../Common/LoadingAnimation';
 
 
 const Login = ({ navigation }: { navigation: any }) => {
@@ -42,7 +43,7 @@ const Login = ({ navigation }: { navigation: any }) => {
 
     const isInternetAvailable = await NetworkUtils.isNetworkAvailable();
 
-    if (!isInternetAvailable) {
+    if (isInternetAvailable) {
       console.log("======== Internet available ========");
       dispatch(loginUser(username, password));
     } else {
@@ -256,6 +257,7 @@ const Login = ({ navigation }: { navigation: any }) => {
           </KeyboardAvoidingView>
         </View>
       </ScrollView>
+      <LoadingAnimation loading={loading}></LoadingAnimation>
     </View>
   );
 }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 // import { store } from 'store'
-import { Alert, LogBox, Text, TouchableOpacity } from 'react-native'
+import { ActivityIndicator, Alert, LogBox, Text, TouchableOpacity } from 'react-native'
 // import RootNavigator from 'navigator'
 import { Provider as ReduxProvider } from 'react-redux'
 import { NavigationContainer } from '@react-navigation/native'
@@ -8,9 +8,6 @@ import { SafeAreaProvider } from 'react-native-safe-area-context'
 import RootNavigator from '../navigator'
 import { store } from '../store'
 import SplashScreen from 'react-native-splash-screen';
-import messaging from '@react-native-firebase/messaging'
-import dynamicLinks from '@react-native-firebase/dynamic-links';
-import Clipboard from '@react-native-clipboard/clipboard'
 import {dbMigrations} from '../database/dbmigrations'
 import { schema } from '../database/schema'
 import { db } from '../database/db'

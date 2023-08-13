@@ -18,7 +18,7 @@ import {
   Linking,
 } from 'react-native';
 
-function ForgotPasswordStep2({navigation}): any {
+const ForgotPasswordStep2 = ({navigation}) => {
   return (
     <View style={styles.mainBody}>
       <ScrollView

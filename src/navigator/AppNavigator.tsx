@@ -4,7 +4,7 @@ import Dashboard from '../screens/Dashboard/Dashboard'
 import { ScrollView } from 'react-native-gesture-handler'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { useSelector } from 'react-redux'
-import SetPassword from '../screens/SetPassword/Step3'
+import SetPassword from '../screens/SetPassword/SetPassword'
 
 const AppNavigator = () => {
     const isAuth = useSelector(state => state.Auth.userInfo)

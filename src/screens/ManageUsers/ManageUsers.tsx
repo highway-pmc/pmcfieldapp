@@ -1,7 +1,19 @@
-import { View, Text, NativeEventEmitter, Alert, StyleSheet, ScrollView, TouchableOpacity, TextInput, Image, Modal, Pressable, } from 'react-native'
-import React, {useEffect, useState} from 'react'
-import { useFocusEffect, useIsFocused } from '@react-navigation/native';
-import { HeaderItems } from "../../constants/constants"
+import {
+  View,
+  Text,
+  NativeEventEmitter,
+  Alert,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  TextInput,
+  Image,
+  Modal,
+  Pressable,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {useFocusEffect, useIsFocused} from '@react-navigation/native';
+import {HeaderItems} from '../../constants/constants';
 import CheckBox from '@react-native-community/checkbox';
 
 const ManageUsers = () => {
@@ -9,11 +21,10 @@ const ManageUsers = () => {
     const eventEmitter = new NativeEventEmitter();
     eventEmitter.emit('headerEvent', HeaderItems.manageUsers);
   }
-  
+
   const [isSelected, setSelection] = useState(false);
   const [isAssignPopOpen, openAssignPopup] = useState(false);
   const [isRoleSelected, getRoleSelecte] = useState(false);
-  
 
   return (
     <View style={styles.Container}>
@@ -26,8 +37,11 @@ const ManageUsers = () => {
             <Text style={styles.TextStyle}>Assign Role</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.SectionStyle}> 
-          <Image source={require('./../../images/search-icon.png')} style={styles.ImageSearch} />
+        <View style={styles.SectionStyle}>
+          <Image
+            source={require('./../../images/search-icon.png')}
+            style={styles.ImageSearch}
+          />
           <TextInput
             style={styles.inputStyle}
             placeholder="Search user"
@@ -40,38 +54,50 @@ const ManageUsers = () => {
         </View>
       </View>
       <ScrollView style={isSelected ? styles.Height80 : styles.Height100}>
-          <View style={styles.UserCategory}>
-            <View style={styles.FlexRowCenter}>
-              <Image source={require('./../../images/avtar.png')} style={styles.UserImage} />
-              <View>
-                <View style={styles.FlexRowCenter}>
-                  <Text style={styles.UserName}>Ravi Prakash</Text>
-                  <View style={styles.assignTag}><Text style={styles.assignTagText}>Project Head</Text></View>
-                </View>
-                <Text style={styles.UserRole}>User Designation</Text>
-              </View>
-            </View>
+        <View style={styles.UserCategory}>
+          <View style={styles.FlexRowCenter}>
+            <Image
+              source={require('./../../images/avtar.png')}
+              style={styles.UserImage}
+            />
             <View>
-              <CheckBox
-                value={isSelected}
-                onValueChange={setSelection}
-                style={styles.checkbox}
-                tintColors={{ true: '#0F56B3', false: '#818181' }}
-              />
+              <View style={styles.FlexRowCenter}>
+                <Text style={styles.UserName}>Ravi Prakash</Text>
+                <View style={styles.assignTag}>
+                  <Text style={styles.assignTagText}>Project Head</Text>
+                </View>
+              </View>
+              <Text style={styles.UserRole}>User Designation</Text>
             </View>
           </View>
+          <View>
+            <CheckBox
+              value={isSelected}
+              onValueChange={setSelection}
+              style={styles.checkbox}
+              tintColors={{true: '#0F56B3', false: '#818181'}}
+            />
+          </View>
+        </View>
+
+        {/* No Data Found */}
+        <View style={styles.NoDataContainer}>
+          <Image style={styles.WthHeight} source={require('./../../images/no-data-found.png')} /> 
+          <Text style={styles.NodataHeadText}>Sorry, no result found!</Text>
+          <Text style={styles.NodataSubText}>Please try to search another keywork...</Text>
+        </View>
       </ScrollView>
 
       {/* Footer Assign CTA Start */}
-      {isSelected &&
-      <View>
-        <Pressable
-        style={[styles.button, styles.buttonAssign]}
-        onPress={() => openAssignPopup(true)}>
-          <Text style={styles.textStyle}>Assign Category</Text>
-        </Pressable>
-      </View>
-      }
+      {isSelected && (
+        <View>
+          <Pressable
+            style={[styles.button, styles.buttonAssign]}
+            onPress={() => openAssignPopup(true)}>
+            <Text style={styles.textStyle}>Assign Category</Text>
+          </Pressable>
+        </View>
+      )}
 
       {/* Modal Start */}
       <Modal
@@ -81,64 +107,68 @@ const ManageUsers = () => {
         onRequestClose={() => {
           openAssignPopup(!isAssignPopOpen);
         }}>
-
-          <View style={{flex:1 , backgroundColor: 'rgba(0,0,0,0.3)'}}>
-            <View style={styles.centeredView}>
+        <View style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.3)'}}>
+          <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <View style={styles.ModalHeader}>
                 <Text style={styles.modalText}>Assign Category</Text>
-                <TouchableOpacity style={styles.buttonClose}
+                <TouchableOpacity
+                  style={styles.buttonClose}
                   onPress={() => openAssignPopup(!isAssignPopOpen)}>
-                  <Image style={styles.CloseIcon} tintColor={'#333'} source={require('./../../images/menu/close-icon.png')} />
+                  <Image
+                    style={styles.CloseIcon}
+                    tintColor={'#333'}
+                    source={require('./../../images/menu/close-icon.png')}
+                  />
                 </TouchableOpacity>
               </View>
               <View style={styles.ModalInnerContainer}>
                 <View style={styles.CategoryType}>
-                <View style={styles.FlexRowCenter}>
-                <CheckBox
-                    value={isRoleSelected}
-                    onValueChange={getRoleSelecte}
-                    style={styles.checkbox}
-                    tintColors={{ true: '#0F56B3', false: '#818181' }}
-                  />
-                  <View>
-                    <Text style={styles.AssignRoleText}>Structure Work</Text>
-                  </View>
-                </View>
-                </View>
-                <View style={styles.CategoryType}>
-                <View style={styles.FlexRowCenter}>
-                <CheckBox
-                    value={isRoleSelected}
-                    onValueChange={getRoleSelecte}
-                    style={styles.checkbox}
-                    tintColors={{ true: '#0F56B3', false: '#818181' }}
-                  />
-                  <View>
-                    <Text style={styles.AssignRoleText}>Highway Work</Text>
-                  </View>
-                </View>
-                </View>
-                <View style={styles.CategoryType}>
-                <View style={styles.FlexRowCenter}>
-                <CheckBox
-                    value={isRoleSelected}
-                    onValueChange={getRoleSelecte}
-                    style={styles.checkbox}
-                    tintColors={{ true: '#0F56B3', false: '#818181' }}
-                  />
-                  <View>
-                    <Text style={styles.AssignRoleText}>Other Work</Text>
-                  </View>
-                </View>
-                </View>
-                <View style={styles.CategoryType}>
                   <View style={styles.FlexRowCenter}>
-                  <CheckBox
+                    <CheckBox
                       value={isRoleSelected}
                       onValueChange={getRoleSelecte}
                       style={styles.checkbox}
-                      tintColors={{ true: '#0F56B3', false: '#818181' }}
+                      tintColors={{true: '#0F56B3', false: '#818181'}}
+                    />
+                    <View>
+                      <Text style={styles.AssignRoleText}>Structure Work</Text>
+                    </View>
+                  </View>
+                </View>
+                <View style={styles.CategoryType}>
+                  <View style={styles.FlexRowCenter}>
+                    <CheckBox
+                      value={isRoleSelected}
+                      onValueChange={getRoleSelecte}
+                      style={styles.checkbox}
+                      tintColors={{true: '#0F56B3', false: '#818181'}}
+                    />
+                    <View>
+                      <Text style={styles.AssignRoleText}>Highway Work</Text>
+                    </View>
+                  </View>
+                </View>
+                <View style={styles.CategoryType}>
+                  <View style={styles.FlexRowCenter}>
+                    <CheckBox
+                      value={isRoleSelected}
+                      onValueChange={getRoleSelecte}
+                      style={styles.checkbox}
+                      tintColors={{true: '#0F56B3', false: '#818181'}}
+                    />
+                    <View>
+                      <Text style={styles.AssignRoleText}>Other Work</Text>
+                    </View>
+                  </View>
+                </View>
+                <View style={styles.CategoryType}>
+                  <View style={styles.FlexRowCenter}>
+                    <CheckBox
+                      value={isRoleSelected}
+                      onValueChange={getRoleSelecte}
+                      style={styles.checkbox}
+                      tintColors={{true: '#0F56B3', false: '#818181'}}
                     />
                     <View>
                       <Text style={styles.AssignRoleText}>Quality Work</Text>
@@ -152,12 +182,11 @@ const ManageUsers = () => {
               </View>
             </View>
           </View>
-          </View>
-        
+        </View>
       </Modal>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   Container: {
@@ -165,9 +194,27 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     padding: 15,
   },
+  NoDataContainer: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginTop: '30%',
+  },
+  WthHeight: {
+    width: 150,
+    height: 150
+  },
+  NodataHeadText: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#27272A',
+  },
+  NodataSubText: {
+    fontSize: 16,
+    color: '#27272A',
+  },
   FlexRowCenter: {
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   assignTag: {
     backgroundColor: '#1C58C0',
@@ -176,21 +223,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingTop: 2,
     paddingBottom: 3,
-    marginLeft: 10
+    marginLeft: 10,
   },
   assignTagText: {
     fontSize: 12,
-    color: '#fff'
+    color: '#fff',
   },
   TopHeaderFixed: {
-    marginBottom: 15
+    marginBottom: 15,
   },
   TopButtonContainer: {
     flexDirection: 'row',
     marginBottom: 15,
     marginTop: 10,
     justifyContent: 'flex-end',
-    gap: 10
+    gap: 10,
   },
   ButtonStyle: {
     backgroundColor: '#C2D7F1',
@@ -204,7 +251,7 @@ const styles = StyleSheet.create({
   TextStyle: {
     fontSize: 12,
     fontWeight: '400',
-    color: '#0F56B3'
+    color: '#0F56B3',
   },
   inputStyle: {
     flex: 1,
@@ -217,14 +264,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     fontWeight: '600',
     paddingVertical: 5,
-    height: 45
+    height: 45,
   },
   SectionStyle: {
     flexDirection: 'row',
     height: 40,
     marginBottom: 10,
     marginTop: 5,
-    position: 'relative'
+    position: 'relative',
   },
   ImageSearch: {
     position: 'absolute',
@@ -232,7 +279,7 @@ const styles = StyleSheet.create({
     height: 24,
     zIndex: 9,
     left: 10,
-    top: '27%'
+    top: '27%',
   },
   UserCategory: {
     flexDirection: 'row',
@@ -256,11 +303,10 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   checkbox: {
-    transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }]
+    transform: [{scaleX: 1.2}, {scaleY: 1.2}],
   },
   label: {
     margin: 8,
-    
   },
   UserImage: {
     width: 45,
@@ -269,21 +315,21 @@ const styles = StyleSheet.create({
     borderColor: '#BECADA',
     borderStyle: 'solid',
     borderRadius: 36,
-    marginRight: 15
+    marginRight: 15,
   },
   UserName: {
     fontSize: 18,
     fontWeight: '500',
-    color: '#27272A'
+    color: '#27272A',
   },
   UserRole: {
     fontSize: 16,
     fontWeight: '400',
-    color: '#808089'
+    color: '#808089',
   },
   centeredView: {
     marginTop: 'auto',
-    backgroundColor:'#fff',
+    backgroundColor: '#fff',
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
     borderRadius: 12,
@@ -299,9 +345,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 60,
   },
-  PopHeader: {
-    
-  },
+  PopHeader: {},
   modalView: {
     minHeight: 150,
   },
@@ -312,7 +356,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     borderBottomEndRadius: 0,
     paddingVertical: 20,
-    marginHorizontal: -15
+    marginHorizontal: -15,
   },
   buttonOpen: {
     backgroundColor: '#F194FF',
@@ -332,10 +376,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   Height80: {
-    height: '80%'
+    height: '80%',
   },
   Height100: {
-    height: '100%'
+    height: '100%',
   },
   CloseIcon: {
     width: 30,
@@ -349,12 +393,11 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     borderBottomWidth: 1,
     borderColor: '#EBEBF0',
-    borderStyle: 'solid'
+    borderStyle: 'solid',
   },
   buttonClose: {
     position: 'absolute',
-    right: 15
-
+    right: 15,
   },
   CategoryType: {
     flexDirection: 'row',
@@ -369,7 +412,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '400',
     color: '#27272A',
-    marginLeft: 5
+    marginLeft: 5,
   },
   assignTagButoon: {
     backgroundColor: '#1C58C0',
@@ -380,13 +423,13 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
     marginBottom: 10,
     marginTop: 10,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   assignTagButoonText: {
     fontSize: 16,
     color: '#fff',
-    fontWeight: '500'
-  }
+    fontWeight: '500',
+  },
 });
 
-export default ManageUsers
+export default ManageUsers;

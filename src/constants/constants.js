@@ -1,4 +1,4 @@
-export const API_URL = "https://api.highwaypmc.in/"
+export const API_URL = "https://api.highwaypmc.in"
 
 export const HeaderItems = {
     dashboard: { showBack: false, title: 'Dashboard' },

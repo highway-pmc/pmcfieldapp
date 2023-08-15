@@ -1,6 +1,6 @@
 
 import { put, takeLatest } from 'redux-saga/effects';
-import { forgotPassword } from '../../api/forgotpassword';
+import { forgotPassword } from '../../services/forgotpassword';
 
 function* forgotPasswordUser({ payload }) {
     try {

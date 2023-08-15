@@ -25,7 +25,6 @@ const AuthReducer = (state=initialState,action) => {
             };
 
         case "LOGGED_IN_USER":
-            console.log("========", action.response)
             return {
                 ...state,
                 userInfo: action.response,

@@ -10,11 +10,13 @@ import {
   Image,
   Modal,
   Pressable,
+  FlatList,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import {HeaderItems} from '../../constants/constants';
 import CheckBox from '@react-native-community/checkbox';
+import { RadioButton } from 'react-native-paper';
 
 const ManageUsers = () => {
   if (useIsFocused()) {
@@ -22,6 +24,44 @@ const ManageUsers = () => {
     eventEmitter.emit('headerEvent', HeaderItems.manageUsers);
   }
 
+  const Assign_Category = [
+    {
+      id: '1',
+      icon: require('./../../images/avtar.png'),
+      title: 'Ravi Prakash',
+      subTitle: 'Project Manager',
+    },
+    {
+      id: '2',
+      icon: require('./../../images/avtar.png'),
+      title: 'Pradeep kumar',
+      subTitle: 'Lead Engineer',
+    },
+    {
+      id: '3',
+      icon: require('./../../images/avtar.png'),
+      title: 'Rishi Kant',
+      subTitle: 'UI Module Lead',
+    },
+    {
+      id: '4',
+      icon: require('./../../images/avtar.png'),
+      title: 'Shubham Varma',
+      subTitle: 'Node Module Lead',
+    },
+    {
+      id: '5',
+      icon: require('./../../images/avtar.png'),
+      title: 'Rajiv Ranjan',
+      subTitle: 'Module Lead',
+    },
+  ];
+  
+  const [checked, setChecked] = useState('');
+
+  const handleRadioChange = (value: any) => {
+    setChecked(value);
+  };
   const [isSelected, setSelection] = useState(false);
   const [isAssignPopOpen, openAssignPopup] = useState(false);
   const [isRoleSelected, getRoleSelecte] = useState(false);
@@ -29,14 +69,14 @@ const ManageUsers = () => {
   return (
     <View style={styles.Container}>
       <View style={styles.TopHeaderFixed}>
-        <View style={styles.TopButtonContainer}>
+        {/* <View style={styles.TopButtonContainer}>
           <TouchableOpacity style={styles.ButtonStyle}>
             <Text style={styles.TextStyle}>Assign Category</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> 
           <TouchableOpacity style={styles.ButtonStyle}>
             <Text style={styles.TextStyle}>Assign Role</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
         <View style={styles.SectionStyle}>
           <Image
             source={require('./../../images/search-icon.png')}
@@ -53,51 +93,74 @@ const ManageUsers = () => {
           />
         </View>
       </View>
-      <ScrollView style={isSelected ? styles.Height80 : styles.Height100}>
-        <View style={styles.UserCategory}>
-          <View style={styles.FlexRowCenter}>
-            <Image
-              source={require('./../../images/avtar.png')}
-              style={styles.UserImage}
-            />
-            <View>
-              <View style={styles.FlexRowCenter}>
-                <Text style={styles.UserName}>Ravi Prakash</Text>
-                <View style={styles.assignTag}>
-                  <Text style={styles.assignTagText}>Project Head</Text>
+      <ScrollView style={styles.Height80}>
+      <RadioButton.Group onValueChange={handleRadioChange} value={checked}>
+        {Assign_Category.map((item, index) => (
+          <View style={styles.UserCategory}>
+            <View style={styles.FlexRowCenter}>
+              <Image
+                source={require('./../../images/avtar.png')}
+                style={styles.UserImage}
+              />
+              <View>
+                <View style={styles.FlexRowCenter}>
+                  <Text style={styles.UserName}>{item.title}</Text>
+                  {/* <View style={styles.assignTag}>
+                    <Text style={styles.assignTagText}>{item.title}</Text>
+                  </View> */}
                 </View>
+                <Text style={styles.UserRole}>{item.subTitle}</Text>
               </View>
-              <Text style={styles.UserRole}>User Designation</Text>
+            </View>
+            <View>
+              <RadioButton
+                value={item.title}
+                color="#1C58C0"
+                uncheckedColor="gray"
+              />
             </View>
           </View>
-          <View>
-            <CheckBox
-              value={isSelected}
-              onValueChange={setSelection}
-              style={styles.checkbox}
-              tintColors={{true: '#0F56B3', false: '#818181'}}
-            />
-          </View>
-        </View>
-
+        ))}
+      </RadioButton.Group>
         {/* No Data Found */}
-        <View style={styles.NoDataContainer}>
-          <Image style={styles.WthHeight} source={require('./../../images/no-data-found.png')} /> 
-          <Text style={styles.NodataHeadText}>Sorry, no result found!</Text>
-          <Text style={styles.NodataSubText}>Please try to search another keywork...</Text>
-        </View>
+        {!Assign_Category.length && 
+          <View style={styles.NoDataContainer}>
+            <Image
+              style={styles.WthHeight}
+              source={require('./../../images/no-data-found.png')}
+            />
+            <Text style={styles.NodataHeadText}>Sorry, no result found!</Text>
+            <Text style={styles.NodataSubText}>
+              Please try to search another keywork...
+            </Text>
+          </View>
+        }
       </ScrollView>
 
       {/* Footer Assign CTA Start */}
-      {isSelected && (
-        <View>
-          <Pressable
-            style={[styles.button, styles.buttonAssign]}
-            onPress={() => openAssignPopup(true)}>
-            <Text style={styles.textStyle}>Assign Category</Text>
-          </Pressable>
-        </View>
-      )}
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginHorizontal: -15,
+          backgroundColor: '#1C58C0',
+        }}>
+        <Pressable
+          style={[
+            !checked ? styles.DisabledButton : styles.buttonAssign,
+            styles.SeperatorBorder,
+          ]}
+          disabled={!checked}
+          onPress={() => openAssignPopup(true)}>
+          <Text style={styles.textStyle}>Assign Category</Text>
+        </Pressable>
+
+        <Pressable
+          style={[checked ? styles.DisabledButton : styles.buttonAssign]}>
+          <Text style={styles.textStyle}>Assign Task</Text>
+        </Pressable>
+      </View>
 
       {/* Modal Start */}
       <Modal
@@ -240,18 +303,18 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   ButtonStyle: {
-    backgroundColor: '#C2D7F1',
+    backgroundColor: '#fff',
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 4,
     borderWidth: 1,
     borderStyle: 'solid',
-    borderColor: '#6D9BD3',
+    borderColor: '#333',
   },
   TextStyle: {
-    fontSize: 12,
-    fontWeight: '400',
-    color: '#0F56B3',
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#333',
   },
   inputStyle: {
     flex: 1,
@@ -292,7 +355,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     paddingHorizontal: 15,
     paddingVertical: 15,
-    marginBottom: 10,
+    marginBottom: 20,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -363,6 +426,20 @@ const styles = StyleSheet.create({
   },
   buttonAssign: {
     backgroundColor: '#1C58C0',
+    paddingVertical: 20,
+    paddingHorizontal: 30,
+    width: '50%'
+  },
+  SeperatorBorder: {
+    borderRightWidth: 1,
+    borderColor: '#fff'
+  },
+  DisabledButton: {
+    opacity: .5,
+    backgroundColor: '#1C58C0',
+    paddingVertical: 20,
+    paddingHorizontal: 30,
+    width: '50%'
   },
   textStyle: {
     color: 'white',
@@ -376,7 +453,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   Height80: {
-    height: '80%',
+    height: '87%',
   },
   Height100: {
     height: '100%',

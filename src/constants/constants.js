@@ -42,7 +42,7 @@ export const Dashboard_MENU = [
         title: "My Task",
         subTitle: "Check your task",
         route: 'MyTask',
-        permissions: ["quality-head", "quality-users"]
+        permissions: ["quality-head", "quality-users", "project-head"]
     },
     {
         id: "3",

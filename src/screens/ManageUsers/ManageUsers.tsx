@@ -157,7 +157,7 @@ const ManageUsers = () => {
         </Pressable>
 
         <Pressable
-          style={[checked ? styles.DisabledButton : styles.buttonAssign]}>
+          style={[styles.buttonAssign]}>
           <Text style={styles.textStyle}>Assign Task</Text>
         </Pressable>
       </View>

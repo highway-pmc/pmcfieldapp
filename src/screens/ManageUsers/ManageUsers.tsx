@@ -99,7 +99,7 @@ const ManageUsers = () => {
           <View style={styles.UserCategory}>
             <View style={styles.FlexRowCenter}>
               <Image
-                source={require('./../../images/avtar.png')}
+                source={item.icon}
                 style={styles.UserImage}
               />
               <View>

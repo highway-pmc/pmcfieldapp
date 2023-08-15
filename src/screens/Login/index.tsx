@@ -44,7 +44,7 @@ const Login = ({ navigation }: { navigation: any }) => {
 
     const isInternetAvailable = await NetworkUtils.isNetworkAvailable();
 
-    if (!isInternetAvailable) {
+    if (isInternetAvailable) {
       console.log("======== Internet available ========");
       dispatch(loginUser(username, password));
     } else {
@@ -57,7 +57,7 @@ const Login = ({ navigation }: { navigation: any }) => {
             if (result) {
               appConfig.setToken(result.authToken);
               appConfig.setUserInfo(result);
-              
+
               dispatch({
                 type: "LOGGED_IN_USER",
                 response: result,

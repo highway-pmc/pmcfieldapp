@@ -49,7 +49,6 @@ users.login = async(email, password) => {
 // }
 
 users.save = async(entity) => {
-    console.log("======",entity)
     return db.save(tableName, entity).then((result) => {
         entity.id = result.insertId;
         return entity;

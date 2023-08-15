@@ -19,6 +19,7 @@ import NetworkUtils from '../../utils/NetworkUtil';
 import { users } from '../../models/users';
 import { user } from '../../models/user';
 import LoadingAnimation from '../Common/LoadingAnimation';
+import appConfig from '../../common/app.config';
 
 
 const Login = ({ navigation }: { navigation: any }) => {
@@ -53,8 +54,10 @@ const Login = ({ navigation }: { navigation: any }) => {
           Alert.alert("No internet", "Please connect to internet and try again");
         } else {
           users.login(username, password).then((result) => {
-            console.log("====", result)
             if (result) {
+              appConfig.setToken(result.authToken);
+              appConfig.setUserInfo(result);
+
               dispatch({
                 type: "LOGGED_IN_USER",
                 response: result,
@@ -64,19 +67,18 @@ const Login = ({ navigation }: { navigation: any }) => {
             }
           }).catch((error) => {
             console.log(error)
+            setErrorMessage("E00001: An exception occurred. Please try again.");
           });
         }
       }).catch((error) => {
         console.log(error)
+        setErrorMessage("E00002: An exception occurred. Please try again.");
       });
        
     }
   }
 
   useEffect(() => {
-    console.log('loading', loading) 
-    console.log('Usera', user)
-    console.log('error', error)
     if (user) {
       users.findByEmail(user.email).then((userDb) => {
         if (userDb) {
@@ -105,7 +107,7 @@ const Login = ({ navigation }: { navigation: any }) => {
               response: user,
             })
           }).catch((error) => {
-            console.log(error);
+            setErrorMessage("E00006: An exception occurred. Please try again.");
           })
         } else { //first time user loggedin
           const userApi: user = {
@@ -126,14 +128,15 @@ const Login = ({ navigation }: { navigation: any }) => {
                 response: dbUser,
               })
             } else {
-              console.log("Unable to add user");
+              setErrorMessage("E00003: An exception occurred. Please try again.");
             }
           }).catch((error) => {
-            console.log(error);
+            setErrorMessage("E00004: An exception occurred. Please try again.");
           })
         }
       }).catch((error) => {
         console.log(error);
+        setErrorMessage("E00005: An exception occurred. Please try again.");
       });
     } else if(error) {
       setErrorMessage(error);

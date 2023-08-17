@@ -12,7 +12,7 @@ const AppNavigator = () => {
     const Stack = createStackNavigator()
     return (
         <Stack.Navigator>
-          {(isAuth && (!isAuth.isPasswordSet || isAuth.isPasswordSet === "false")) && <Stack.Screen name="SetPassword" component={SetPassword} options={{headerShown: false}} />}
+          {(isAuth && (isAuth.isPasswordSet || isAuth.isPasswordSet === "true")) && <Stack.Screen name="SetPassword" component={SetPassword} options={{headerShown: false}} />}
             <Stack.Screen name="Dashboard" component={Dashboard} options={{headerShown: false}} />
         </Stack.Navigator>
     )

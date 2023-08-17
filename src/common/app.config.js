@@ -1,5 +1,8 @@
 const appConfig = {};
 
+//appConfig.API_URL = "https://api.highwaypmc.in"
+appConfig.API_URL = "http://192.168.1.5:3001"
+
 appConfig.setUserInfo = (userInfo) => {
     this.userInfo = userInfo;
 }

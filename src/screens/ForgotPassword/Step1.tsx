@@ -1,11 +1,4 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   TextInput,
@@ -16,9 +9,70 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Linking,
+  Alert,
 } from 'react-native';
+import { emailRequired, validateEmail } from '../../utils/Validations';
+import NetworkUtils from '../../utils/NetworkUtil';
+import LoadingAnimation from '../Common/LoadingAnimation';
+import { useDispatch, useSelector } from 'react-redux';
+import { forgotPassword } from './actions';
 
-const ForgotPasswordStep1 = ({navigation}) => {
+const ForgotPasswordStep1 = ({navigation}: { navigation: any }) => {
+  const [username, setUsername] = useState('');
+  const [emailError, setEmailError] = useState("")
+  const [formSubmitted, setFormSubmitted] = useState(false)
+  const {user, loading, error} = useSelector(state => state.ForgotPassword)
+  const dispatch = useDispatch()
+
+  const handleEmailError = (email = "") => {
+    const emailError = emailRequired(email)
+    if(emailError) {
+      setEmailError(emailError);
+    } else {
+      setEmailError("");
+    }
+
+    if(!emailError) {
+      const emailError = validateEmail(email);
+      if (emailError) {
+        setEmailError(emailError);
+      } else {
+        setEmailError("");
+      }
+    }
+    return emailError;
+  }
+
+  const onSubmit = async() => {
+    setEmailError('');
+    setFormSubmitted(true);
+
+    if (handleEmailError(username)) {
+      return false;
+    }
+
+    const isInternetAvailable = await NetworkUtils.isNetworkAvailable();
+
+    if (!isInternetAvailable) {
+      Alert.alert("No internet", "Please connect to internet and try again");
+      return;
+    }
+
+    dispatch(forgotPassword(username));
+  };
+
+  useEffect(() => {
+    if (user) {
+      setTimeout(() => {
+        navigation.navigate('ForgotPasswordStep2', {
+          username: username
+        });
+      });
+    } else if(error) {
+      //setErrorMessage(error);
+    }
+  }, [user, error]);
+
   return (
     <View style={styles.mainBody}>
       <ScrollView
@@ -51,19 +105,24 @@ const ForgotPasswordStep1 = ({navigation}) => {
                   blurOnSubmit={false}
                   underlineColorAndroid="#f000"
                   returnKeyType="next"
+                  onChangeText={(text) => {
+                    setUsername(text);
+                    handleEmailError(text);
+                  }}
                 />
               </View>
+              {(emailError && formSubmitted) && <View style={styles.ErrorSectionStyle}>
+                  <Text style={styles.errorText}>{emailError}</Text>
+                </View>}
               
-              
-              <TouchableOpacity style={styles.buttonStyle} activeOpacity={0.5} onPress={() => {
-                navigation.navigate('ForgotPasswordStep2');
-              }}>
+              <TouchableOpacity style={styles.buttonStyle} activeOpacity={0.5} onPress={() => onSubmit()}>
                 <Text style={styles.buttonTextStyle}>Continue</Text>
               </TouchableOpacity>
             </View>
           </KeyboardAvoidingView>
         </View>
       </ScrollView>
+      <LoadingAnimation loading={loading}></LoadingAnimation>
     </View>
   );
 }

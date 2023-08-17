@@ -18,11 +18,14 @@ import {HeaderItems} from '../../constants/constants';
 import CheckBox from '@react-native-community/checkbox';
 import { RadioButton } from 'react-native-paper';
 
-const ManageUsers = ({navigation}) => {
+const ManageUsers = ({navigation}:{navigation: any}) => {
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();
     eventEmitter.emit('headerEvent', HeaderItems.manageUsers);
   }
+
+  const [checked, setChecked] = useState('');
+  const [isAssignPopOpen, openAssignPopup] = useState(false);
 
   const Assign_Category = [
     {
@@ -56,27 +59,50 @@ const ManageUsers = ({navigation}) => {
       subTitle: 'Module Lead',
     },
   ];
-  
-  const [checked, setChecked] = useState('');
+
+  const [userData, setUserCheckboxes] = useState([
+    {
+      id: '1',
+      title: 'Structure Work',
+      isChecked: false,
+    },
+    {
+      id: '2',
+      title: 'Highway Work',
+      isChecked: false,
+    },
+    {
+      id: '3',
+      title: 'Other Work',
+      isChecked: false,
+    },
+    {
+      id: '4',
+      title: 'Quality Work',
+      isChecked: false,
+    },
+  ]);
 
   const handleRadioChange = (value: any) => {
     setChecked(value);
   };
-  const [isSelected, setSelection] = useState(false);
-  const [isAssignPopOpen, openAssignPopup] = useState(false);
-  const [isRoleSelected, getRoleSelecte] = useState(false);
+
+  const handleUserData = (index: any) => {
+    const updatedCheckboxes = [...userData];
+    updatedCheckboxes[index].isChecked = !updatedCheckboxes[index].isChecked;
+    setUserCheckboxes(updatedCheckboxes);
+  };
+
+  const openAssignClose = () => {
+    userData.forEach(items => {
+        items.isChecked = false;
+    });
+    openAssignPopup(!isAssignPopOpen);
+  };
 
   return (
     <View style={styles.Container}>
       <View style={styles.TopHeaderFixed}>
-        {/* <View style={styles.TopButtonContainer}>
-          <TouchableOpacity style={styles.ButtonStyle}>
-            <Text style={styles.TextStyle}>Assign Category</Text>
-          </TouchableOpacity> 
-          <TouchableOpacity style={styles.ButtonStyle}>
-            <Text style={styles.TextStyle}>Assign Role</Text>
-          </TouchableOpacity>
-        </View> */}
         <View style={styles.SectionStyle}>
           <Image
             source={require('./../../images/search-icon.png')}
@@ -177,7 +203,7 @@ const ManageUsers = ({navigation}) => {
                 <Text style={styles.modalText}>Assign Category</Text>
                 <TouchableOpacity
                   style={styles.buttonClose}
-                  onPress={() => openAssignPopup(!isAssignPopOpen)}>
+                  onPress={() => openAssignClose()}>
                   <Image
                     style={styles.CloseIcon}
                     tintColor={'#333'}
@@ -186,59 +212,23 @@ const ManageUsers = ({navigation}) => {
                 </TouchableOpacity>
               </View>
               <View style={styles.ModalInnerContainer}>
-                <View style={styles.CategoryType}>
-                  <View style={styles.FlexRowCenter}>
-                    <CheckBox
-                      value={isRoleSelected}
-                      onValueChange={getRoleSelecte}
-                      style={styles.checkbox}
-                      tintColors={{true: '#0F56B3', false: '#818181'}}
-                    />
-                    <View>
-                      <Text style={styles.AssignRoleText}>Structure Work</Text>
+              {userData.map((item, index) => (
+                  <View style={styles.CategoryType}>
+                    <View style={styles.FlexRowCenter}>
+                      <CheckBox
+                        value={item.isChecked}
+                        onValueChange={() => handleUserData(index)}
+                        style={styles.checkbox}
+                        tintColors={{true: '#0F56B3', false: '#818181'}}
+                      />
+                      <View>
+                        <Text style={styles.AssignRoleText}>
+                          {item.title}
+                        </Text>
+                      </View>
                     </View>
                   </View>
-                </View>
-                <View style={styles.CategoryType}>
-                  <View style={styles.FlexRowCenter}>
-                    <CheckBox
-                      value={isRoleSelected}
-                      onValueChange={getRoleSelecte}
-                      style={styles.checkbox}
-                      tintColors={{true: '#0F56B3', false: '#818181'}}
-                    />
-                    <View>
-                      <Text style={styles.AssignRoleText}>Highway Work</Text>
-                    </View>
-                  </View>
-                </View>
-                <View style={styles.CategoryType}>
-                  <View style={styles.FlexRowCenter}>
-                    <CheckBox
-                      value={isRoleSelected}
-                      onValueChange={getRoleSelecte}
-                      style={styles.checkbox}
-                      tintColors={{true: '#0F56B3', false: '#818181'}}
-                    />
-                    <View>
-                      <Text style={styles.AssignRoleText}>Other Work</Text>
-                    </View>
-                  </View>
-                </View>
-                <View style={styles.CategoryType}>
-                  <View style={styles.FlexRowCenter}>
-                    <CheckBox
-                      value={isRoleSelected}
-                      onValueChange={getRoleSelecte}
-                      style={styles.checkbox}
-                      tintColors={{true: '#0F56B3', false: '#818181'}}
-                    />
-                    <View>
-                      <Text style={styles.AssignRoleText}>Quality Work</Text>
-                    </View>
-                  </View>
-                </View>
-
+                ))}
                 <TouchableOpacity style={styles.assignTagButoon}>
                   <Text style={styles.assignTagButoonText}>Assign</Text>
                 </TouchableOpacity>

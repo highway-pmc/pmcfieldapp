@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { API_URL } from '../constants/constants';
 import appConfig from '../common/app.config';
 
 const apiService = {};
@@ -11,7 +10,26 @@ apiService.postRequest = (url, body, auth = true) => {
     if (auth) {
         headers['Authorization'] = appConfig.getToken();
     }
-    return axios.post(`${API_URL}/${url}`, body, { headers }).then((response) => {
+    return axios.post(`${appConfig.API_URL}/${url}`, body, { headers }).then((response) => {
+        if (response.data.code === 200) {
+            return response.data?.data;
+        }
+
+        throw new Error(response.data.message);
+    }).catch((error) => {
+        console.log(error);
+        throw new Error(error.response?.data?.message);
+    });
+};
+
+apiService.patchRequest = (url, body, auth = true) => {
+    let headers = {
+        'Content-Type': 'application/json'
+    }
+    if (auth) {
+        headers['Authorization'] = appConfig.getToken();
+    }
+    return axios.patch(`${appConfig.API_URL}/${url}`, body, { headers }).then((response) => {
         if (response.data.code === 200) {
             return response.data?.data;
         }
@@ -29,7 +47,7 @@ apiService.getRequest = (url, auth = true) => {
     if (auth) {
         headers['Authorization'] = appConfig.getToken();
     }
-    return axios.get(`${API_URL}/${url}`, { headers }).then((response) => {
+    return axios.get(`${appConfig.API_URL}/${url}`, { headers }).then((response) => {
         //return response.data?.data;
         return {
             _id: "64bcd25156b42faba9f88f77",

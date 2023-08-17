@@ -1,11 +1,4 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   TextInput,
@@ -15,10 +8,62 @@ import {
   Keyboard,
   TouchableOpacity,
   KeyboardAvoidingView,
-  Linking,
+  Alert,
 } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { otpRequired } from '../../utils/Validations';
+import NetworkUtils from '../../utils/NetworkUtil';
+import { verifyEmail } from './actions';
 
-const ForgotPasswordStep2 = ({navigation}) => {
+const ForgotPasswordStep2 = ({route, navigation}: { route: any, navigation: any }) => {
+  const [otp, setOtp] = useState('');
+  const { username } = route.params;
+  const [otpError, setOtpError] = useState("")
+  const [formSubmitted, setFormSubmitted] = useState(false)
+  const {verifyOtp, loading, error} = useSelector(state => state.ForgotPassword)
+  const dispatch = useDispatch()
+
+  const handleOtpError = (otp = "") => {
+    const otpError = otpRequired(otp)
+    if(otpError) {
+      setOtpError(otpError);
+    } else {
+      setOtpError("");
+    }
+    return otpError;
+  }
+
+  const onSubmit = async() => {
+    setOtpError('');
+    setFormSubmitted(true);
+
+    if (handleOtpError(otp)) {
+      return false;
+    }
+
+    const isInternetAvailable = await NetworkUtils.isNetworkAvailable();
+
+    if (!isInternetAvailable) {
+      Alert.alert("No internet", "Please connect to internet and try again");
+      return;
+    }
+
+    dispatch(verifyEmail(username, otp));
+  };
+
+  useEffect(() => {
+    console.log("sssssss", verifyOtp);
+    if (verifyOtp) {
+      setTimeout(() => {
+        navigation.navigate('ForgotPasswordStep3', {
+          username: username,
+          otp: otp
+        });
+      });
+    } else if(error) {
+      //setErrorMessage(error);
+    }
+  }, [verifyOtp, error]);
   return (
     <View style={styles.mainBody}>
       <ScrollView
@@ -51,8 +96,15 @@ const ForgotPasswordStep2 = ({navigation}) => {
                   blurOnSubmit={false}
                   underlineColorAndroid="#f000"
                   returnKeyType="next"
+                  onChangeText={(text) => {
+                    setOtp(text);
+                    handleOtpError(text);
+                  }}
                 />
               </View>
+              {(otpError && formSubmitted) && <View style={styles.ErrorSectionStyle}>
+                  <Text style={styles.errorText}>{otpError}</Text>
+                </View>}
               <View style={styles.AlignRight}>
                 <Text
                   style={styles.orangeText}>
@@ -60,9 +112,7 @@ const ForgotPasswordStep2 = ({navigation}) => {
                 </Text>
               </View>
               <View style={styles.footerButton}>
-                <TouchableOpacity style={styles.buttonStyle} activeOpacity={0.5} onPress={() => {
-                  navigation.navigate('ForgotPasswordStep3');
-                }}>
+                <TouchableOpacity style={styles.buttonStyle} activeOpacity={0.5} onPress={() => onSubmit()}>
                   <Text style={styles.buttonTextStyle}>Confirm</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.buttonStyleWhite} activeOpacity={0.5} onPress={() => {
@@ -80,6 +130,9 @@ const ForgotPasswordStep2 = ({navigation}) => {
 }
 
 const styles = StyleSheet.create({
+  errorText: {
+    color: '#f11f1f',
+  },
   mainBody: {
     flex: 1,
     justifyContent: 'center',
@@ -89,6 +142,10 @@ const styles = StyleSheet.create({
   TitleSection: {
     marginBottom: 40,
     justifyContent: 'flex-start',
+  },
+  ErrorSectionStyle: {
+    flexDirection: 'row',
+    marginBottom: 20,
   },
   SignInText: {
     fontSize: 28,

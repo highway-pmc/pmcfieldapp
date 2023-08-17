@@ -1,5 +1,3 @@
-export const API_URL = "https://api.highwaypmc.in"
-
 export const HeaderItems = {
     dashboard: { showBack: false, title: 'Dashboard' },
     myWork: { showBack: false, title: 'My Work' },

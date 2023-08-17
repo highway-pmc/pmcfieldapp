@@ -5,7 +5,7 @@
  * @format
  */
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   TextInput,
@@ -16,13 +16,62 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Linking,
+  Alert,
 } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { passwordRequired } from '../../utils/Validations';
+import NetworkUtils from '../../utils/NetworkUtil';
+import { resetPassword } from './actions';
 
-const ForgotPasswordStep3 = ({navigation}) => {
-  
-  const navigateToBack = () => {
-    navigation.navigate('Login');
+const ForgotPasswordStep3 = ({route, navigation}: { route: any, navigation: any }) => {
+
+  const { username, otp } = route.params;
+  const [password, setPassword] = useState('');
+  const [passwordError, setPasswordError] = useState("")
+  const [formSubmitted, setFormSubmitted] = useState(false)
+  const {passwordUpdated, loading, error} = useSelector(state => state.ForgotPassword)
+  const dispatch = useDispatch()
+
+  const handlePasswordError = (pwd = "") => {
+    const pwdError = passwordRequired(pwd);
+    if(pwdError) {
+      setPasswordError(pwdError);
+    } else {
+      setPasswordError("");
+    }
+
+    return pwdError;
   }
+
+  const onSubmit = async() => {
+    setPasswordError('');
+    setFormSubmitted(true);
+
+    if (handlePasswordError(password)) {
+      return false;
+    }
+
+    const isInternetAvailable = await NetworkUtils.isNetworkAvailable();
+
+    if (!isInternetAvailable) {
+      Alert.alert("No internet", "Please connect to internet and try again");
+      return;
+    }
+
+    dispatch(resetPassword(username, otp, password));
+  };
+
+  useEffect(() => {
+    console.log("sssssss", passwordUpdated);
+    if (passwordUpdated) {
+      Alert.alert("Success", "Password has been reset successfully");
+      setTimeout(() => {
+        navigation.navigate('Login');
+      }, 5000);
+    } else if(error) {
+      //setErrorMessage(error);
+    }
+  }, [passwordUpdated, error]);
   return (
     <View style={styles.mainBody}>
       <ScrollView
@@ -51,8 +100,15 @@ const ForgotPasswordStep3 = ({navigation}) => {
                   secureTextEntry={true}
                   underlineColorAndroid="#f000"
                   returnKeyType="next"
+                  onChangeText={(text) => {
+                    setPassword(text);
+                    handlePasswordError(text);
+                  }}
                 />
               </View>
+              {(passwordError && formSubmitted) && <View style={styles.ErrorSectionStyle}>
+                  <Text style={styles.errorText}>{passwordError}</Text>
+                </View>}
               <Text>Confirm Password</Text>
               <View style={styles.SectionStyle}>
                 <TextInput
@@ -66,7 +122,7 @@ const ForgotPasswordStep3 = ({navigation}) => {
                   returnKeyType="next"
                 />
               </View>
-              <TouchableOpacity style={styles.buttonStyle} activeOpacity={0.5} onPress={() => {navigateToBack()}}>
+              <TouchableOpacity style={styles.buttonStyle} activeOpacity={0.5} onPress={() => onSubmit()}>
                 <Text style={styles.buttonTextStyle}>Confirm</Text>
               </TouchableOpacity>
             </View>
@@ -78,6 +134,13 @@ const ForgotPasswordStep3 = ({navigation}) => {
 }
 
 const styles = StyleSheet.create({
+  ErrorSectionStyle: {
+    flexDirection: 'row',
+    marginBottom: 20,
+  },
+  errorText: {
+    color: '#f11f1f',
+  },
   mainBody: {
     flex: 1,
     justifyContent: 'center',

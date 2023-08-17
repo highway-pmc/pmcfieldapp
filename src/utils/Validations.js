@@ -3,6 +3,7 @@ import { detectSpacesRegex , passwordRegex, mobilenoRegex, emailRegex } from "./
 const validationStrings = {
     usernameRequired : 'Username is required',
     passwordRequired : 'Password is required',
+    otpRequired : 'Otp is required',
     fullNameRequired : 'Name is required',
     emailRequired : 'Email or mobile is required',
     mobileNoRequired : 'Mobile no is required',
@@ -16,6 +17,8 @@ const validationStrings = {
 export const emailRequired = (value) => value? undefined : validationStrings.emailRequired
 
 export const passwordRequired = (value) => value? undefined : validationStrings.passwordRequired
+
+export const otpRequired = (value) => value? undefined : validationStrings.otpRequired
 
 export const mobileNoRequired = (value) => value? undefined : validationStrings.mobileNoRequired
 

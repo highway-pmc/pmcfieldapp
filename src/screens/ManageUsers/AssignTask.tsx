@@ -125,6 +125,7 @@ const AssignTask = ({navigation}: {navigation: any}) => {
                 value={item.isChecked}
                 onValueChange={() => handleRadioChange(index)}
                 style={styles.checkbox}
+                tintColors={{true: '#0F56B3', false: '#818181'}}
               />
               <View>
                 <Text style={styles.UserRole}>{item.title}</Text>

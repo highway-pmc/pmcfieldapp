@@ -48,15 +48,15 @@ apiService.getRequest = (url, auth = true) => {
         headers['Authorization'] = appConfig.getToken();
     }
     return axios.get(`${appConfig.API_URL}/${url}`, { headers }).then((response) => {
-        //return response.data?.data;
-        return {
-            _id: "64bcd25156b42faba9f88f77",
-            name: "Pretty Zinta",
-            email: "pretty.zinta@pmc.com",
-            phone: "7599509238",
-            isPasswordSet: true,
-           // role: "project-head" // project-head, quality-head", "quality-users"
-          };
+        return response.data?.data;
+        // return {
+        //     _id: "64bcd25156b42faba9f88f77",
+        //     name: "Pretty Zinta",
+        //     email: "pretty.zinta@pmc.com",
+        //     phone: "7599509238",
+        //     isPasswordSet: true,
+        //    // role: "project-head" // project-head, quality-head", "quality-users"
+        //   };
     }).catch((error) => {
         throw new Error(error.response?.data?.message);
     });

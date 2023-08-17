@@ -138,7 +138,6 @@ db.update = (tableName, entity = {}) => new Promise((resolve, reject) => {
     }
     
     const sql = `UPDATE ${tableName} SET ${updateValues} WHERE id=${entity.id}`;
-    console.log(sql)
     database().transaction((trans) => {
         trans.executeSql(sql, [], (trans, result) => {
             resolve(result);

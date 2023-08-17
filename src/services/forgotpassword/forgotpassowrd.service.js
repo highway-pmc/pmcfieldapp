@@ -37,16 +37,3 @@ export const resetPasswordApi = async (user) => {
         throw new Error(errorMessge);
     });
 }
-
-export const setPasswordApi = async (user) => {
-    return apiService.patchRequest('v1/changepassword', {
-        password: user.password,
-        newPassword: user.newPassword
-    }).then((response) => {
-        appConfig.setToken(response.authToken);
-        return true;
-    }).catch((err) => {
-        const errorMessge = err.message || 'Unable to change your password.';
-        throw new Error(errorMessge);
-    });
-}

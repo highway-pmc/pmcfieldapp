@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { otpRequired } from '../../utils/Validations';
 import NetworkUtils from '../../utils/NetworkUtil';
 import { verifyEmail } from './actions';
+import LoadingAnimation from '../Common/LoadingAnimation';
 
 const ForgotPasswordStep2 = ({route, navigation}: { route: any, navigation: any }) => {
   const [otp, setOtp] = useState('');
@@ -125,6 +126,7 @@ const ForgotPasswordStep2 = ({route, navigation}: { route: any, navigation: any 
           </KeyboardAvoidingView>
         </View>
       </ScrollView>
+      <LoadingAnimation loading={loading}></LoadingAnimation>
     </View>
   );
 }

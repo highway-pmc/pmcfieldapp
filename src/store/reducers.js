@@ -128,8 +128,33 @@ const ForgotPasswordReducer = (state = initialState, action) => {
     }
 }
 
+const UserProfileReducer = (state = initialState, action) => {
+    switch (action.type) {
+        case "SET_PASSWORD_REQUEST":
+            return {
+                ...state,
+                loading: true,
+            };
+        case "SET_PASSWORD_SUCCESS":
+            return {
+                ...state,
+                authToken: action.response,
+                loading: false,
+            };
+        case "SET_PASSWORD_FAILURE":
+            return {
+                ...state,
+                error: action.error,
+                loading: false,
+            };
+        default:
+            return state;
+    }
+}
+
 export const combinedReducers = combineReducers({
     form: formReducer,
     Auth: AuthReducer,
-    ForgotPassword: ForgotPasswordReducer
+    ForgotPassword: ForgotPasswordReducer,
+    UserProfile: UserProfileReducer
 })

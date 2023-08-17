@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { passwordRequired } from '../../utils/Validations';
 import NetworkUtils from '../../utils/NetworkUtil';
 import { resetPassword } from './actions';
+import LoadingAnimation from '../Common/LoadingAnimation';
 
 const ForgotPasswordStep3 = ({route, navigation}: { route: any, navigation: any }) => {
 
@@ -72,6 +73,7 @@ const ForgotPasswordStep3 = ({route, navigation}: { route: any, navigation: any 
       //setErrorMessage(error);
     }
   }, [passwordUpdated, error]);
+  
   return (
     <View style={styles.mainBody}>
       <ScrollView
@@ -129,6 +131,7 @@ const ForgotPasswordStep3 = ({route, navigation}: { route: any, navigation: any 
           </KeyboardAvoidingView>
         </View>
       </ScrollView>
+      <LoadingAnimation loading={loading}></LoadingAnimation>
     </View>
   );
 }

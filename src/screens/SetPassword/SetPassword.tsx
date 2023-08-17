@@ -1,11 +1,4 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   TextInput,
@@ -15,15 +8,126 @@ import {
   Keyboard,
   TouchableOpacity,
   KeyboardAvoidingView,
-  Linking,
+  Alert,
 } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import LoadingAnimation from '../Common/LoadingAnimation';
+import { passwordRequired } from '../../utils/Validations';
+import NetworkUtils from '../../utils/NetworkUtil';
+import { changePassword } from './actions';
+import appConfig from '../../common/app.config';
+import { users } from '../../models/users';
 
-const SetPassword = ({navigation}) => {
+const SetPassword = ({navigation}: { navigation: any }) => {
+  const [password, setPassword] = useState('');
+  const [passwordError, setPasswordError] = useState("")
 
-  const navigateToBack = () => {
-    navigation.navigate('Dashboard');
+  const [newPassword, setNewPassword] = useState('');
+  const [newPasswordError, setNewPasswordError] = useState("")
+
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [confirmPasswordError, setConfirmPasswordError] = useState("")
+
+  const [formSubmitted, setFormSubmitted] = useState(false)
+  const {authToken, loading, error} = useSelector((state: any) => state.UserProfile)
+  const dispatch = useDispatch()
+
+  const handlePasswordError = (pwd = "") => {
+    const pwdError = passwordRequired(pwd);
+    if(pwdError) {
+      setPasswordError(pwdError);
+    } else {
+      setPasswordError("");
+    }
+
+    return pwdError;
   }
+
+  const handleNewPasswordError = (pwd = "") => {
+    const pwdError = passwordRequired(pwd);
+    if(pwdError) {
+      setNewPasswordError(pwdError);
+    } else {
+      setNewPasswordError("");
+    }
+
+    return pwdError;
+  }
+
+  const onSubmit = async() => {
+    setPasswordError('');
+    setNewPasswordError('');
+    setConfirmPasswordError('');
+
+    setFormSubmitted(true);
+
+    if (handlePasswordError(password) || handleNewPasswordError(newPassword)) {
+      return false;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setConfirmPasswordError('New password and conform password must be matched')
+      return false;
+    }
+
+    const isInternetAvailable = await NetworkUtils.isNetworkAvailable();
+
+    if (!isInternetAvailable) {
+      Alert.alert("No internet", "Please connect to internet and try again");
+      return;
+    }
+
+    dispatch(changePassword(password, newPassword));
+  };
+
+  useEffect(() => {
+    if (authToken) {
+      console.log("================");
+      Alert.alert("Success", "Password has been updated successfully...");
+      setTimeout(() => {
+        const userInfo = appConfig.getUserInfo();        
+        users.findByEmail(userInfo.email).then((userDb) => {
+          const updateUserInfo = {
+            _id: userInfo._id,
+            id: userDb.id,
+            authToken: userInfo.authToken,
+            isPasswordSet: false,
+            password: newPassword
+          }
+
+        users.update(updateUserInfo).then((rowsAffected) => {
+          userInfo.isPasswordSet = false;
+          userInfo.authToken = authToken;
+          userInfo.password = newPassword;
+          appConfig.setUserInfo(userInfo);
+          if (rowsAffected) {
+            console.log("User updated successfully");
+          } else {
+            console.log("Unable to update user");
+          }
+
+          dispatch({
+            type: "LOGGED_IN_USER",
+            response: userInfo,
+          })
+          navigation.navigate('Dashboard');
+        }).catch((error) => {
+          //setErrorMessage("E00006: An exception occurred. Please try again.");
+        })
+
+      }).catch((error) => {
+        console.log(error);
+        //setErrorMessage("E00005: An exception occurred. Please try again.");
+      });
+      }, 5000);
+    } else if(error) {
+      //setErrorMessage(error);
+    }
+  }, [authToken, error]);
+
+  // const navigateToBack = () => {
+  //   navigation.navigate('Dashboard');
+  // }
   return (
     <View style={styles.mainBody}>
       <ScrollView
@@ -52,8 +156,15 @@ const SetPassword = ({navigation}) => {
                   secureTextEntry={true}
                   underlineColorAndroid="#f000"
                   returnKeyType="next"
+                  onChangeText={(text) => {
+                    setPassword(text);
+                    handlePasswordError(text);
+                  }}
                 />
               </View>
+              {(passwordError && formSubmitted) && <View style={styles.ErrorSectionStyle}>
+                  <Text style={styles.errorText}>{passwordError}</Text>
+                </View>}
               <Text>New Password</Text>
               <View style={styles.SectionStyle}>
               <TextInput
@@ -65,8 +176,15 @@ const SetPassword = ({navigation}) => {
                   secureTextEntry={true}
                   underlineColorAndroid="#f000"
                   returnKeyType="next"
+                  onChangeText={(text) => {
+                    setNewPassword(text);
+                    handleNewPasswordError(text);
+                  }}
                 />
               </View>
+              {(newPasswordError && formSubmitted) && <View style={styles.ErrorSectionStyle}>
+                  <Text style={styles.errorText}>{newPasswordError}</Text>
+                </View>}
               <Text>Confirm Password</Text>
               <View style={styles.SectionStyle}>
                 <TextInput
@@ -78,15 +196,22 @@ const SetPassword = ({navigation}) => {
                   secureTextEntry={true}
                   underlineColorAndroid="#f000"
                   returnKeyType="next"
+                  onChangeText={(text) => {
+                    setConfirmPassword(text);
+                  }}
                 />
               </View>
-              <TouchableOpacity style={styles.buttonStyle} activeOpacity={0.5} onPress={() => {navigateToBack()}}>
+              {(confirmPasswordError && formSubmitted) && <View style={styles.ErrorSectionStyle}>
+                  <Text style={styles.errorText}>{confirmPasswordError}</Text>
+                </View>}
+              <TouchableOpacity style={styles.buttonStyle} activeOpacity={0.5} onPress={() => onSubmit()}>
                 <Text style={styles.buttonTextStyle}>Confirm</Text>
               </TouchableOpacity>
             </View>
           </KeyboardAvoidingView>
         </View>
       </ScrollView>
+      <LoadingAnimation loading={loading}></LoadingAnimation>
     </View>
   );
 }
@@ -101,6 +226,13 @@ const styles = StyleSheet.create({
   TitleSection: {
     marginBottom: 20,
     justifyContent: 'flex-start',
+  },
+  ErrorSectionStyle: {
+    flexDirection: 'row',
+    marginBottom: 20,
+  },
+  errorText: {
+    color: '#f11f1f',
   },
   SignInText: {
     fontSize: 28,

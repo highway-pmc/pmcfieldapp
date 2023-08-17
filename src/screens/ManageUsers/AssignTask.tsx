@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Image,
   Modal,
+  TextInput,
 } from 'react-native';
 import React, {useState} from 'react';
 import {useIsFocused} from '@react-navigation/native';
@@ -99,6 +100,23 @@ const AssignTask = ({navigation}: {navigation: any}) => {
 
   return (
     <View style={styles.Container}>
+        <View style={styles.TopHeaderFixed}>
+        <View style={styles.SectionStyle}>
+          <Image
+            source={require('./../../images/search-icon.png')}
+            style={styles.ImageSearch}
+          />
+          <TextInput
+            style={styles.inputStyle}
+            placeholder="Search user"
+            autoCapitalize="none"
+            keyboardType="email-address"
+            returnKeyType="next"
+            underlineColorAndroid="#f000"
+            blurOnSubmit={false}
+          />
+        </View>
+      </View>
       <ScrollView>
         {checkboxes.map((item, index) => (
           <View style={styles.UserCategory}>

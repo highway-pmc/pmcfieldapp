@@ -18,7 +18,7 @@ import {HeaderItems} from '../../constants/constants';
 import CheckBox from '@react-native-community/checkbox';
 import { RadioButton } from 'react-native-paper';
 
-const ManageUsers = () => {
+const ManageUsers = ({navigation}) => {
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();
     eventEmitter.emit('headerEvent', HeaderItems.manageUsers);
@@ -157,7 +157,7 @@ const ManageUsers = () => {
         </Pressable>
 
         <Pressable
-          style={[styles.buttonAssign]}>
+          style={[styles.buttonAssign]} onPress={() => navigation.navigate("AssignTask")}>
           <Text style={styles.textStyle}>Assign Task</Text>
         </Pressable>
       </View>

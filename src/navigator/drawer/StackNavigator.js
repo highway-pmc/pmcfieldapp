@@ -12,6 +12,8 @@ import RFIs from "../../screens/RFIs/RFIs";
 import Profile from "../../screens/Profile/Profile";
 import MyTask from "../../screens/MyTask/MyTask";
 import ForgotPasswordStep3 from "../../screens/ForgotPassword/Step3";
+import AssignTask from "../../screens/ManageUsers/AssignTask";
+import FlyoverDetails from "../../screens/ManageUsers/FlyoverDetails";
 
 const Stack = createStackNavigator();
 
@@ -45,6 +47,8 @@ const ManageUsersStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
       <Stack.Screen name="ManageUsers" component={ManageUsers} options={{headerShown: false}} />
+      <Stack.Screen name="AssignTask" component={AssignTask} options={{headerShown: false}} />
+      <Stack.Screen name="FlyoverDetails" component={FlyoverDetails} options={{headerShown: false}} />
     </Stack.Navigator>
   );
 };

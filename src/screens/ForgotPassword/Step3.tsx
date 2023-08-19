@@ -26,12 +26,16 @@ import LoadingAnimation from '../Common/LoadingAnimation';
 
 const ForgotPasswordStep3 = ({route, navigation}: { route: any, navigation: any }) => {
 
-  const { username, otp } = route.params;
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState("")
   const [formSubmitted, setFormSubmitted] = useState(false)
-  const {passwordUpdated, loading, error} = useSelector(state => state.ForgotPassword)
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [confirmPasswordError, setConfirmPasswordError] = useState("")
+
+  const {passwordUpdated, loading, error} = useSelector((state: any) => state.ForgotPassword)
   const dispatch = useDispatch()
+
+  const { username, otp } = route.params;
 
   const handlePasswordError = (pwd = "") => {
     const pwdError = passwordRequired(pwd);
@@ -46,9 +50,15 @@ const ForgotPasswordStep3 = ({route, navigation}: { route: any, navigation: any 
 
   const onSubmit = async() => {
     setPasswordError('');
+    setConfirmPasswordError('');
     setFormSubmitted(true);
 
     if (handlePasswordError(password)) {
+      return false;
+    }
+
+    if (password !== confirmPassword) {
+      setConfirmPasswordError('New password and conform password must be matched')
       return false;
     }
 
@@ -63,7 +73,6 @@ const ForgotPasswordStep3 = ({route, navigation}: { route: any, navigation: any 
   };
 
   useEffect(() => {
-    console.log("sssssss", passwordUpdated);
     if (passwordUpdated) {
       Alert.alert("Success", "Password has been reset successfully");
       setTimeout(() => {
@@ -122,8 +131,14 @@ const ForgotPasswordStep3 = ({route, navigation}: { route: any, navigation: any 
                   secureTextEntry={true}
                   underlineColorAndroid="#f000"
                   returnKeyType="next"
+                  onChangeText={(text) => {
+                    setConfirmPassword(text);
+                  }}
                 />
               </View>
+              {(confirmPasswordError && formSubmitted) && <View style={styles.ErrorSectionStyle}>
+                  <Text style={styles.errorText}>{confirmPasswordError}</Text>
+                </View>}
               <TouchableOpacity style={styles.buttonStyle} activeOpacity={0.5} onPress={() => onSubmit()}>
                 <Text style={styles.buttonTextStyle}>Confirm</Text>
               </TouchableOpacity>

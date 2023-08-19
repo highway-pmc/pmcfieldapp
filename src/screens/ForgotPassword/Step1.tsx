@@ -69,7 +69,7 @@ const ForgotPasswordStep1 = ({navigation}: { navigation: any }) => {
         });
       });
     } else if(error) {
-      //setErrorMessage(error);
+      setEmailError(error);
     }
   }, [user, error]);
 

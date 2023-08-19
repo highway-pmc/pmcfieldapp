@@ -14,7 +14,7 @@ import {
   Alert,
 } from 'react-native';
 import { loginUser } from './actions'
-import { emailRequired, passwordRequired, validateEmail } from '../../utils/Validations';
+import { emailOrMobileRequired, passwordRequired, validateEmailOrMobile } from '../../utils/Validations';
 import NetworkUtils from '../../utils/NetworkUtil';
 import { users } from '../../models/users';
 import { user } from '../../models/user';
@@ -23,8 +23,8 @@ import appConfig from '../../common/app.config';
 
 
 const Login = ({ navigation }: { navigation: any }) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('ahighwaypmc@gmail.com');
+  const [password, setPassword] = useState('New@1234');
   const [emailError, setEmailError] = useState("")
   const [passwordError, setPasswordError] = useState("")
   const [formSubmitted, setFormSubmitted] = useState(false)
@@ -66,12 +66,10 @@ const Login = ({ navigation }: { navigation: any }) => {
               setErrorMessage("Invalid username or password.");
             }
           }).catch((error) => {
-            console.log(error)
             setErrorMessage("E00001: An exception occurred. Please try again.");
           });
         }
       }).catch((error) => {
-        console.log(error)
         setErrorMessage("E00002: An exception occurred. Please try again.");
       });
        
@@ -135,7 +133,6 @@ const Login = ({ navigation }: { navigation: any }) => {
           })
         }
       }).catch((error) => {
-        console.log(error);
         setErrorMessage("E00005: An exception occurred. Please try again.");
       });
     } else if(error) {
@@ -144,7 +141,7 @@ const Login = ({ navigation }: { navigation: any }) => {
   }, [user, error]);
 
   const handleEmailError = (email = "") => {
-    const emailError = emailRequired(email)
+    const emailError = emailOrMobileRequired(email)
     if(emailError) {
       setEmailError(emailError);
     } else {
@@ -152,7 +149,7 @@ const Login = ({ navigation }: { navigation: any }) => {
     }
 
     if(!emailError) {
-      const emailError = validateEmail(email);
+      const emailError = validateEmailOrMobile(email);
       if (emailError) {
         setEmailError(emailError);
       } else {

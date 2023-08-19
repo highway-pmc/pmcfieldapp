@@ -53,49 +53,61 @@ const ForgotPasswordReducer = (state = initialState, action) => {
         case "FORGOT_PASS_OTP_REQUEST":
             return {
                 ...state,
+                user: null,
+                error: null,
                 loading: true,
             };
         case "FORGOT_PASS_OTP_SUCCESS":
             return {
                 ...state,
                 user: action.response,
+                error: null,
                 loading: false,
             };
         case "FORGOT_PASS_OTP_FAILURE":
             return {
                 ...state,
+                user: null,
                 error: action.error,
                 loading: false,
             };
         case "VERIFY_OTP_REQUEST":
             return {
                 ...state,
+                user: null,
                 loading: true,
                 verifyOtp: null,
+                error: null,
             };
         case "VERIFY_OTP_SUCCESS":
             return {
                 ...state,
                 verifyOtp: action.response,
+                user: null,
                 loading: false,
+                error: null
             };
         case "VERIFY_OTP_FAILURE":
             return {
                 ...state,
                 error: action.error,
                 verifyOtp: null,
+                user: null,
                 loading: false,
             };
         case "RESET_PASSWORD_REQUEST":
             return {
                 ...state,
                 loading: true,
+                error: null,
                 passwordUpdated: null
             };
         case "RESET_PASSWORD_SUCCESS":
             return {
                 ...state,
+                error: null,
                 passwordUpdated: action.response,
+                user: null,
                 loading: false,
             };
         case "RESET_PASSWORD_FAILURE":
@@ -103,24 +115,7 @@ const ForgotPasswordReducer = (state = initialState, action) => {
                 ...state,
                 error: action.error,
                 passwordUpdated: null,
-                loading: false,
-            };
-        case "SET_PASSWORD_REQUEST":
-            return {
-                ...state,
-                loading: true,
-            };
-        case "SET_PASSWORD_SUCCESS":
-            return {
-                ...state,
-                user: action.response,
-                loading: false,
-            };
-
-        case "SET_PASSWORD_FAILURE":
-            return {
-                ...state,
-                error: action.error,
+                user: null,
                 loading: false,
             };
         default:
@@ -133,6 +128,7 @@ const UserProfileReducer = (state = initialState, action) => {
         case "SET_PASSWORD_REQUEST":
             return {
                 ...state,
+                authToken: null,
                 loading: true,
             };
         case "SET_PASSWORD_SUCCESS":
@@ -144,6 +140,7 @@ const UserProfileReducer = (state = initialState, action) => {
         case "SET_PASSWORD_FAILURE":
             return {
                 ...state,
+                authToken: null,
                 error: action.error,
                 loading: false,
             };

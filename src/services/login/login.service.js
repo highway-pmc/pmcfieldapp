@@ -13,7 +13,6 @@ export const userLogin = async (user) => {
       userInfo.role = "project-head"; // project-head, quality-head", "quality-users"
       //userInfo.isPasswordSet = true;
       appConfig.setUserInfo(userInfo);
-      console.log("userinfo:", userInfo);
       return userInfo;
     }).catch((error) => {
       throw new Error('Email/Mobile or Password is incorrect.');

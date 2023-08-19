@@ -17,7 +17,6 @@ apiService.postRequest = (url, body, auth = true) => {
 
         throw new Error(response.data.message);
     }).catch((error) => {
-        console.log(error);
         throw new Error(error.response?.data?.message);
     });
 };

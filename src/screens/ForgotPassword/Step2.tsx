@@ -53,7 +53,6 @@ const ForgotPasswordStep2 = ({route, navigation}: { route: any, navigation: any 
   };
 
   useEffect(() => {
-    console.log("sssssss", verifyOtp);
     if (verifyOtp) {
       setTimeout(() => {
         navigation.navigate('ForgotPasswordStep3', {
@@ -62,7 +61,7 @@ const ForgotPasswordStep2 = ({route, navigation}: { route: any, navigation: any 
         });
       });
     } else if(error) {
-      //setErrorMessage(error);
+      setOtpError(error);
     }
   }, [verifyOtp, error]);
   return (
@@ -106,12 +105,12 @@ const ForgotPasswordStep2 = ({route, navigation}: { route: any, navigation: any 
               {(otpError && formSubmitted) && <View style={styles.ErrorSectionStyle}>
                   <Text style={styles.errorText}>{otpError}</Text>
                 </View>}
-              <View style={styles.AlignRight}>
+              {/* <View style={styles.AlignRight}>
                 <Text
                   style={styles.orangeText}>
                   Resend OTP
                 </Text>
-              </View>
+              </View> */}
               <View style={styles.footerButton}>
                 <TouchableOpacity style={styles.buttonStyle} activeOpacity={0.5} onPress={() => onSubmit()}>
                   <Text style={styles.buttonTextStyle}>Confirm</Text>

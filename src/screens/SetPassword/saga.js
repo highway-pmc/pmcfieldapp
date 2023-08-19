@@ -4,7 +4,6 @@ import { setPasswordApi } from '../../services/user/user.service';
 
 function* changePassword({ payload }) {
     try {
-        console.log("=========", payload);
         const response = yield (setPasswordApi(payload));
         yield put({ type: "SET_PASSWORD_SUCCESS", response });
     } catch (error) {

@@ -82,7 +82,6 @@ const SetPassword = ({navigation}: { navigation: any }) => {
 
   useEffect(() => {
     if (authToken) {
-      console.log("================");
       Alert.alert("Success", "Password has been updated successfully...");
       setTimeout(() => {
         const userInfo = appConfig.getUserInfo();        
@@ -112,22 +111,18 @@ const SetPassword = ({navigation}: { navigation: any }) => {
           })
           navigation.navigate('Dashboard');
         }).catch((error) => {
-          //setErrorMessage("E00006: An exception occurred. Please try again.");
+          setConfirmPasswordError(error);
         })
 
       }).catch((error) => {
-        console.log(error);
-        //setErrorMessage("E00005: An exception occurred. Please try again.");
+        setConfirmPasswordError(error);
       });
-      }, 5000);
+      }, 3000);
     } else if(error) {
-      //setErrorMessage(error);
+      setConfirmPasswordError(error);
     }
   }, [authToken, error]);
 
-  // const navigateToBack = () => {
-  //   navigation.navigate('Dashboard');
-  // }
   return (
     <View style={styles.mainBody}>
       <ScrollView

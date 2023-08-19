@@ -11,7 +11,7 @@ export const userLogin = async (user) => {
       const userInfo = result;
       userInfo.authToken = response.authToken
       userInfo.role = "project-head"; // project-head, quality-head", "quality-users"
-      //userInfo.isPasswordSet = true;
+      //userInfo.isPasswordSet = false;
       appConfig.setUserInfo(userInfo);
       return userInfo;
     }).catch((error) => {

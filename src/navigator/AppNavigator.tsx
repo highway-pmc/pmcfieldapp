@@ -7,12 +7,12 @@ import { useSelector } from 'react-redux'
 import SetPassword from '../screens/SetPassword/SetPassword'
 
 const AppNavigator = () => {
-    const isAuth = useSelector(state => state.Auth.userInfo)
+    const isAuth = useSelector((state: any) => state.Auth.userInfo)
 
     const Stack = createStackNavigator()
     return (
         <Stack.Navigator>
-          {(isAuth && (isAuth.isPasswordSet || isAuth.isPasswordSet === "true")) && <Stack.Screen name="SetPassword" component={SetPassword} options={{headerShown: false}} />}
+          {(isAuth && (!isAuth.isPasswordSet || isAuth.isPasswordSet === "false")) && <Stack.Screen name="SetPassword" component={SetPassword} options={{headerShown: false}} />}
             <Stack.Screen name="Dashboard" component={Dashboard} options={{headerShown: false}} />
         </Stack.Navigator>
     )

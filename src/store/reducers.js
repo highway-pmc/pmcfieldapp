@@ -129,12 +129,14 @@ const UserProfileReducer = (state = initialState, action) => {
             return {
                 ...state,
                 authToken: null,
+                error: null,
                 loading: true,
             };
         case "SET_PASSWORD_SUCCESS":
             return {
                 ...state,
                 authToken: action.response,
+                error: null,
                 loading: false,
             };
         case "SET_PASSWORD_FAILURE":

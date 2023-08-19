@@ -90,12 +90,12 @@ const SetPassword = ({navigation}: { navigation: any }) => {
             _id: userInfo._id,
             id: userDb.id,
             authToken: userInfo.authToken,
-            isPasswordSet: false,
+            isPasswordSet: true,
             password: newPassword
           }
 
         users.update(updateUserInfo).then((rowsAffected) => {
-          userInfo.isPasswordSet = false;
+          userInfo.isPasswordSet = true;
           userInfo.authToken = authToken;
           userInfo.password = newPassword;
           appConfig.setUserInfo(userInfo);

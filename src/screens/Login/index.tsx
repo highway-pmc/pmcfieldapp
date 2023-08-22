@@ -87,6 +87,7 @@ const Login = ({ navigation }: { navigation: any }) => {
             name: user.name,
             phone: user.phone, 
             role: user.role,
+            isPasswordSet: user.isPasswordSet,
             authToken: user.authToken
           };
 

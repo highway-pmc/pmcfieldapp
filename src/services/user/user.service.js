@@ -2,7 +2,7 @@ import apiService from '../api.service';
 import appConfig from '../../common/app.config';
 
 export const setPasswordApi = async (user) => {
-    return apiService.patchRequest('v1/auth/pmc-user/changepassword', {
+    return apiService.patchRequest('v1/auth/users/changepassword', {
         password: user.password,
         newPassword: user.newPassword
     }).then((response) => {

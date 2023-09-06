@@ -3,7 +3,7 @@ export const HeaderItems = {
     myWork: { showBack: false, title: 'My Work' },
     myWork2: { showBack: true, title: 'My Work 2' },
     myWork3: { showBack: true, title: 'My Work 3' },
-    myTask: { showBack: true, title: 'My Task' },
+    myTask: { showBack: false, title: 'My Task' },
     manageUsers: { showBack: false, title: 'Manage Users' },
     assignTask: { showBack: true, title: 'Assign Task' },
     flyoverDetails: { showBack: true, title: 'Flyover Details' },

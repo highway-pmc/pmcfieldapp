@@ -7,7 +7,7 @@ export const userLogin = async (user) => {
     password: user.password
   }, false).then((response) => {
     appConfig.setToken(response.authToken);
-    return apiService.getRequest('v1/auth/pmc-user/info').then((result) => {
+    return apiService.getRequest('v1/auth/users/info').then((result) => {
       const userInfo = result;
       userInfo.authToken = response.authToken
       userInfo.role = "project-head"; // project-head, quality-head", "quality-users"

@@ -31,8 +31,8 @@ users.findByEmail = async(email) => {
 }
 
 users.login = async(email, password) => {
-    const sql = `SELECT * FROM ${tableName} WHERE email = ? COLLATE NOCASE AND password = ?`
-    return db.executeSql(sql, [email, password]).then((result) => {
+    const sql = `SELECT * FROM ${tableName} WHERE (email = ? OR phone = ?) COLLATE NOCASE AND password = ?`
+    return db.executeSql(sql, [email, email, password]).then((result) => {
         return result.length ? result.item(0) : null;
     }).catch((error) => {
         throw error;

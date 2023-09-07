@@ -86,7 +86,8 @@ const Login = ({ navigation }: { navigation: any }) => {
             id: userDb.id,
             email: user.email,
             name: user.name,
-            phone: user.phone, 
+            phone: user.phone,
+            designation: user.designation,
             roles: user.roles,
             isPasswordSet: user.isPasswordSet,
             authToken: user.authToken
@@ -117,6 +118,7 @@ const Login = ({ navigation }: { navigation: any }) => {
             phone: user.phone, 
             roles: user.roles,
             password: password,
+            designation: user.designation,
             isPasswordSet: user.isPasswordSet,
             authToken: user.authToken
           };

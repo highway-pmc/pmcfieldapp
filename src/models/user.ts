@@ -5,7 +5,7 @@ export interface user {
     name: string,
     phone: string,
     password?: string,
-    role: string,
+    roles: string,
     isPasswordSet?: number,
     authToken: string
 };

@@ -2,7 +2,7 @@ import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Main from './Main';
 import CustomDrawer from './CustomDrawer';
-import { ManageUsersStackNavigator, MyTaskStackNavigator, MyWorkStackNavigator, ProfileStackNavigator, ProgressStackNavigator, RFIsStackNavigator, ReportsStackNavigator } from './StackNavigator';
+import { ManageUsersStackNavigator, MyTaskStackNavigator, MyTestStackNavigator, MyWorkStackNavigator, ProfileStackNavigator, ProgressStackNavigator, ProjectInfoStackNavigator, RFIsStackNavigator, ReportsStackNavigator } from './StackNavigator';
 import ForgotPasswordStep3 from '../../screens/ForgotPassword/Step3';
 const Drawer = createDrawerNavigator();
 const DrawerNavigator = () => {
@@ -32,6 +32,13 @@ const DrawerNavigator = () => {
       <Drawer.Screen
         name="MyTask"
         component={MyTaskStackNavigator}
+        options={{
+          headerShown: false
+        }}
+      />
+      <Drawer.Screen
+        name="MyTest"
+        component={MyTestStackNavigator}
         options={{
           headerShown: false
         }}
@@ -67,6 +74,13 @@ const DrawerNavigator = () => {
       <Drawer.Screen
         name="Profile"
         component={ProfileStackNavigator}
+        options={{
+          headerShown: false
+        }}
+      />
+      <Drawer.Screen
+        name="ProjectInfo"
+        component={ProjectInfoStackNavigator}
         options={{
           headerShown: false
         }}

@@ -23,11 +23,22 @@ const DashboardListing = ({ navigation }: { navigation: any }) => {
     eventEmitter.emit('headerEvent', HeaderItems.dashboard);
   }
 
+  const checkPermissions = (permissions: string[]) => {
+    let index = -1;
+    permissions.forEach((item) => {
+      if (loggedInUser.roles?.split(',').indexOf(item) != -1) {
+        index = 1;
+      }
+    })
+
+    return index;
+  }
+
   return (
     <ScrollView style={styles.Container}>
       <FlatList data={Dashboard_MENU}
         renderItem={({ item }) =>
-          item.permissions.indexOf(loggedInUser.role) != -1 &&
+        checkPermissions(item.permissions) != -1 &&
           <TouchableOpacity style={styles.MenuContainer} onPress={() => {
             navigation.navigate(item.route);
             navigation.closeDrawer();

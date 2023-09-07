@@ -15,6 +15,26 @@ const CustomDrawer = ({navigation}: {navigation: any}) => {
     dispatch(logoutUser());
   };
   
+  const checkPermissions = (permissions: string[]) => {
+    let index = -1;
+    permissions.forEach((item) => {
+      if (loggedInUser.roles?.split(',').indexOf(item) != -1) {
+        index = 1;
+      }
+    })
+
+    return index;
+  }
+
+  const getRoles = () => {
+    let roleDisplay: any = []
+    loggedInUser.roles?.split(',').forEach((role: any) => {
+      roleDisplay.push(UserRoles[role])
+    });
+
+    return roleDisplay.join(', ');
+  }
+
   return (
     <View style={styles.Container}>
       <View style={styles.ProfileContainer}>
@@ -23,7 +43,7 @@ const CustomDrawer = ({navigation}: {navigation: any}) => {
             <Image style={styles.ProfileIcon} source={require('./../../images/avtar.png')} />
           </View>
           <Text style={styles.ProfileName}>{loggedInUser.name}</Text>
-          <Text style={styles.ProfileRole}>{UserRoles[loggedInUser.role]}</Text>
+          <Text style={styles.ProfileRole}>{getRoles()}</Text>
           <TouchableOpacity style={styles.ViewButton} onPress={() => { navigation.navigate('Profile'); navigation.closeDrawer();}}>
             <Text style={styles.ViewText}>Edit profile</Text>
           </TouchableOpacity>
@@ -42,7 +62,7 @@ const CustomDrawer = ({navigation}: {navigation: any}) => {
         </TouchableOpacity>
         <FlatList data={Dashboard_MENU}
         renderItem={({ item }) =>
-          item.permissions.indexOf(loggedInUser.role) != -1 &&
+          checkPermissions(item.permissions) != -1 &&
           <TouchableOpacity style={styles.MenuContainer} onPress={() => { navigation.navigate(item.route); navigation.closeDrawer();}}>
           <Image style={styles.MenuIcon} source={item.iconMenu} />
           <Text style={styles.MenuText}>{item.title}</Text>

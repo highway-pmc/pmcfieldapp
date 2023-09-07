@@ -14,6 +14,8 @@ import MyTask from "../../screens/MyTask/MyTask";
 import ForgotPasswordStep3 from "../../screens/ForgotPassword/Step3";
 import AssignTask from "../../screens/ManageUsers/AssignTask";
 import FlyoverDetails from "../../screens/ManageUsers/FlyoverDetails";
+import ProjectInfo from "../../screens/ProjectInfo/ProjectInfo";
+import MyTest from "../../screens/MyTest/MyTest";
 
 const Stack = createStackNavigator();
 
@@ -39,6 +41,14 @@ const MyTaskStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
       <Stack.Screen name="MyTask" component={MyTask} options={{headerShown: false}} />
+    </Stack.Navigator>
+  );
+};
+
+const MyTestStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen name="MyTest" component={MyTest} options={{headerShown: false}} />
     </Stack.Navigator>
   );
 };
@@ -93,5 +103,13 @@ const ProfileStackNavigator = () => {
   );
 };
 
-export { MyWorkStackNavigator, MyTaskStackNavigator, ManageUsersStackNavigator, NotificationsStackNavigator,
-  ProgressStackNavigator, ReportsStackNavigator, RFIsStackNavigator, ProfileStackNavigator };
+const ProjectInfoStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen name="ProjectInfo" component={ProjectInfo} options={{headerShown: false}} />
+    </Stack.Navigator>
+  );
+};
+
+export { MyWorkStackNavigator, MyTaskStackNavigator, MyTestStackNavigator, ManageUsersStackNavigator, NotificationsStackNavigator,
+  ProgressStackNavigator, ReportsStackNavigator, RFIsStackNavigator, ProfileStackNavigator, ProjectInfoStackNavigator };

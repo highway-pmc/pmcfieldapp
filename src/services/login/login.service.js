@@ -10,7 +10,7 @@ export const userLogin = async (user) => {
     return apiService.getRequest('v1/auth/users/info').then((result) => {
       const userInfo = result;
       userInfo.authToken = response.authToken
-      userInfo.role = "project-head"; // project-head, quality-head", "quality-users"
+      //userInfo.roles = "project-head"; // project-head, quality-head", "quality-users"
       //userInfo.isPasswordSet = false;
       appConfig.setUserInfo(userInfo);
       return userInfo;

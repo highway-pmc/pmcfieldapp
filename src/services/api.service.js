@@ -54,7 +54,7 @@ apiService.getRequest = (url, auth = true) => {
         //     email: "pretty.zinta@pmc.com",
         //     phone: "7599509238",
         //     isPasswordSet: false,
-        //    // role: "project-head" // project-head, quality-head", "quality-users"
+        //    // roles: "project-head" // project-head, quality-head", "quality-users"
         //   };
     }).catch((error) => {
         throw new Error(error.response?.data?.message);

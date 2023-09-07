@@ -20,6 +20,7 @@ import { users } from '../../models/users';
 import { user } from '../../models/user';
 import LoadingAnimation from '../Common/LoadingAnimation';
 import appConfig from '../../common/app.config';
+import { mobilenoRegex } from '../../utils/RegexApp';
 
 
 const Login = ({ navigation }: { navigation: any }) => {
@@ -46,7 +47,7 @@ const Login = ({ navigation }: { navigation: any }) => {
 
     if (isInternetAvailable) {
       console.log("======== Internet available ========");
-      dispatch(loginUser(username, password));
+      dispatch(loginUser(username, password, username.match(mobilenoRegex)));
     } else {
       console.log("======== No Internet ========");
       users.getAll().then((result) => { 

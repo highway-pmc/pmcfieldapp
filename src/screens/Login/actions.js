@@ -1,8 +1,9 @@
-export const loginUser = (username, password) => ({
+export const loginUser = (username, password, isPhone) => ({
     type: "LOGIN_REQUEST",
     payload: {
         username: username,
-        password: password
+        password: password,
+        isPhone: isPhone
     },
 });
 

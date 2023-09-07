@@ -1,11 +1,16 @@
 import apiService from '../api.service';
 import appConfig from '../../common/app.config';
 
-export const userLogin = async (user) => {
-  return apiService.postRequest('v1/login', {
-    email: user.username,
-    password: user.password
-  }, false).then((response) => {
+export const userLogin = async (payload) => {
+  let _payload = {
+    password: payload.password
+  };
+  if (payload.isPhone) {
+    _payload.phone = payload.username;
+  } else {
+    _payload.email = payload.username;
+  }
+  return apiService.postRequest('v1/login', _payload, false).then((response) => {
     appConfig.setToken(response.authToken);
     return apiService.getRequest('v1/auth/users/info').then((result) => {
       const userInfo = result;

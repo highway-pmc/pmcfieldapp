@@ -57,7 +57,7 @@ const CustomDrawer = ({navigation}: {navigation: any}) => {
           navigation.navigate('Home');
           navigation.closeDrawer();
           }}>
-          <Image style={styles.MenuIcon} source={require('./../../images/menu/mywork-icon.png')} />
+          <Image style={styles.MenuIconHome} source={require('./../../images/home-icon.png')} />
           <Text style={styles.MenuText}>Home</Text>
         </TouchableOpacity>
         <FlatList data={Dashboard_MENU}
@@ -155,6 +155,13 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     marginRight: 10
+  },
+  MenuIconHome: {
+    width: 20,
+    height: 20,
+    marginRight: 10,
+    marginLeft: 8,
+    tintColor: "#fff"
   },
   MenuText: {
     fontSize : 16,

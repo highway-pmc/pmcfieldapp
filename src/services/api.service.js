@@ -39,6 +39,24 @@ apiService.patchRequest = (url, body, auth = true) => {
     });
 };
 
+apiService.putRequest = (url, body, auth = true) => {
+    let headers = {
+        'Content-Type': 'application/json'
+    }
+    if (auth) {
+        headers['Authorization'] = appConfig.getToken();
+    }
+    return axios.put(`${appConfig.API_URL}/${url}`, body, { headers }).then((response) => {
+        if (response.data.code === 200) {
+            return response.data?.data;
+        }
+
+        throw new Error(response.data.message);
+    }).catch((error) => {
+        throw new Error(error.response?.data?.message);
+    });
+};
+
 apiService.getRequest = (url, auth = true) => {
     let headers = {
         'Content-Type': 'application/json'

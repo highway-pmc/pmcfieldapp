@@ -1,19 +1,110 @@
-import { View, Text, Button, NativeEventEmitter, Alert, StyleSheet, ScrollView, Image, TextInput, TouchableOpacity  } from 'react-native'
+import { View, Text, Button, NativeEventEmitter, Alert, StyleSheet, ScrollView, Image, TextInput, TouchableOpacity,   } from 'react-native'
 import React, {useEffect, useState} from 'react'
+import CalendarPicker from 'react-native-calendar-picker';
+
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import { HeaderItems } from "../../constants/constants"
+import { useDispatch, useSelector } from 'react-redux';
+import { getUserProfile, updateUserProfile } from './actions';
+import LoadingAnimation from '../Common/LoadingAnimation';
+import moment from 'moment';
 
 const Profile = () => {
+  const [isEditProfile, saveEditFunction] = useState(false);
+  const {userProfileInfo, userProfileUpdated, loading, error} = useSelector((state: any) => state.UserProfile);
+  const [higherEdu, setHigherEdu] = useState('');
+  const [gender, setGender] = useState('');
+  const [address, setAddress] = useState('');
+  const [bloodGroup, setBloodGroup] = useState('');
+  const [dob, setDOB] = useState('');
+  const [emergencyPhone, setEmergencyPhone] = useState('');
+  const [experience, setExperience] = useState(0);
+  const [fatherName, setFatherName] = useState('');
+  const [language, setLanguage] = useState('');
+  const [maritalStatus, setMaritalStatus] = useState('');
+  const [nationality, setNationality] = useState('');
+  const [previousFirm, setPreviousFirm] = useState('');
+  const [projectsUndertaken, setProjectsUndertaken] = useState('');
+  const [keySkills, setKeySkills] = useState('');
+  const [cityId, setCityId] = useState('');
+
+  const dispatch = useDispatch()
+
+  const getUserProfileData = () => {
+    saveEditFunction(false);
+    dispatch(getUserProfile());
+  }
+
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();
     eventEmitter.emit('headerEvent', HeaderItems.profile);
   }
 
-  const [isViewProfile, saveEditFunction] = useState(false);
+  useEffect(() => {
+    if (userProfileInfo) {
+
+    }
+  }, [userProfileInfo, error]);
+
+  useEffect(() => {
+    if (userProfileUpdated) {
+      Alert.alert("Profile updated successfully.");
+      getUserProfileData();
+    }
+  }, [userProfileUpdated, error]);
+
+  useEffect(() => {
+    getUserProfileData();
+  }, []);
+
+  const onSubmit = () => {
+    if (!isEditProfile) {
+
+      setCityId(userProfileInfo.userProfile.cityId);
+      setGender(userProfileInfo.userProfile.gender);
+      setHigherEdu(userProfileInfo.userProfile.higherEdu);
+      setExperience(userProfileInfo.userProfile.experience);
+      setKeySkills(userProfileInfo.userProfile.keySkills);
+      setProjectsUndertaken(userProfileInfo.userProfile.projectsUndertaken);
+      setPreviousFirm(userProfileInfo.userProfile.previousFirm);
+      setFatherName(userProfileInfo.userProfile.fatherName);
+      setDOB(moment(new Date(userProfileInfo.userProfile.dob)).format('YYYY-MM-DD'));
+      setLanguage(userProfileInfo.userProfile.language);
+      setNationality(userProfileInfo.userProfile.nationality);
+      setMaritalStatus(userProfileInfo.userProfile.maritalStatus);
+      setBloodGroup(userProfileInfo.userProfile.bloodGroup);
+      setEmergencyPhone(userProfileInfo.userProfile.emergencyPhone);
+      setAddress(userProfileInfo.userProfile.address);
+
+      saveEditFunction(!isEditProfile)
+      return;
+    }
+
+    const req = {
+      cityId: cityId,
+      gender: gender,
+      higherEdu: higherEdu,
+      experience: experience,
+      keySkills: keySkills,
+      projectsUndertaken: projectsUndertaken,
+      previousFirm: previousFirm,
+      fatherName: fatherName,
+      dob: dob,
+      language: language,
+      nationality: nationality,
+      maritalStatus: maritalStatus,
+      bloodGroup: bloodGroup,
+      emergencyPhone: emergencyPhone,
+      address: address
+    }
+
+    dispatch(updateUserProfile(req));
+  }
+
 
   return (
-      <View style={isViewProfile ? styles.Container : styles.BgColorGray}>
-        <View style={isViewProfile ? styles.InnerContainer : styles.ViewProfile}>
+      <View style={isEditProfile ? styles.Container : styles.BgColorGray}>
+        <View style={isEditProfile ? styles.InnerContainer : styles.ViewProfile}>
           <View style={styles.ProfileImageContainer}>
             <View style={styles.ProfileImage}>
               <Image
@@ -24,63 +115,27 @@ const Profile = () => {
           </View>
           <ScrollView>
             {/* Edit Profile Details */}
-            { isViewProfile ?
+            { isEditProfile ?
             <View>
             <View style={styles.FormGroup}>
-              <Text style={styles.LabelText}>Fullname</Text>
-              <View style={styles.SectionStyle}> 
-                <TextInput
-                  style={styles.inputStyle}
-                  placeholder="Enter Name"
-                  autoCapitalize="none"
-                  keyboardType="email-address"
-                  returnKeyType="next"
-                  underlineColorAndroid="#f000"
-                  blurOnSubmit={false}
-                />
-              </View>
+              <Text style={styles.LabelText}>Name</Text>
+              <Text style={styles.LabelSubText}>{userProfileInfo?.name}</Text>
             </View>
             <View style={styles.FormGroup}>
               <Text style={styles.LabelText}>Contact No.</Text>
-              <View style={styles.SectionStyle}> 
-                <TextInput
-                  style={styles.inputStyle}
-                  placeholder="Enter Mobile No"
-                  autoCapitalize="none"
-                  keyboardType="email-address"
-                  returnKeyType="next"
-                  underlineColorAndroid="#f000"
-                  blurOnSubmit={false}
-                />
-              </View>
+              <Text style={styles.LabelSubText}>{userProfileInfo?.phone}</Text>
             </View>
             <View style={styles.FormGroup}>
               <Text style={styles.LabelText}>Designation</Text>
-              <View style={styles.SectionStyle}> 
-                <TextInput
-                  style={styles.inputStyle}
-                  placeholder="Project Manager"
-                  autoCapitalize="none"
-                  keyboardType="email-address"
-                  returnKeyType="next"
-                  underlineColorAndroid="#f000"
-                  blurOnSubmit={false}
-                />
-              </View>
+              <Text style={styles.LabelSubText}>{userProfileInfo?.designation}</Text>
             </View>
             <View style={styles.FormGroup}>
               <Text style={styles.LabelText}>Email Address</Text>
-              <View style={styles.SectionStyle}> 
-                <TextInput
-                  style={styles.inputStyle}
-                  placeholder="Email address"
-                  autoCapitalize="none"
-                  keyboardType="email-address"
-                  returnKeyType="next"
-                  underlineColorAndroid="#f000"
-                  blurOnSubmit={false}
-                />
-              </View>
+              <Text style={styles.LabelSubText}>{userProfileInfo?.email}</Text>
+            </View>
+            <View style={styles.FormGroup}>
+              <Text style={styles.LabelText}>Current Firm</Text>
+              <Text style={styles.LabelSubText}>--</Text>
             </View>
             <View style={styles.FormGroup}>
               <Text style={styles.LabelText}>Location</Text>
@@ -93,6 +148,10 @@ const Profile = () => {
                   returnKeyType="next"
                   underlineColorAndroid="#f000"
                   blurOnSubmit={false}
+                  value={cityId}
+                  onChangeText={(text) => {
+                    setCityId(text);
+                  }}
                 />
               </View>
             </View>
@@ -101,12 +160,16 @@ const Profile = () => {
               <View style={styles.SectionStyle}> 
                 <TextInput
                   style={styles.inputStyle}
-                  placeholder="Location"
+                  placeholder="Higher Education"
                   autoCapitalize="none"
                   keyboardType="email-address"
                   returnKeyType="next"
                   underlineColorAndroid="#f000"
                   blurOnSubmit={false}
+                  value={higherEdu}
+                  onChangeText={(text) => {
+                    setHigherEdu(text);
+                  }}
                 />
               </View>
             </View>
@@ -115,12 +178,16 @@ const Profile = () => {
               <View style={styles.SectionStyle}> 
                 <TextInput
                   style={styles.inputStyle}
-                  placeholder="Location"
+                  placeholder="Key Skills"
                   autoCapitalize="none"
                   keyboardType="email-address"
                   returnKeyType="next"
                   underlineColorAndroid="#f000"
                   blurOnSubmit={false}
+                  value={keySkills}
+                  onChangeText={(text) => {
+                    setKeySkills(text);
+                  }}
                 />
               </View>
             </View>
@@ -129,12 +196,16 @@ const Profile = () => {
               <View style={styles.SectionStyle}> 
                 <TextInput
                   style={styles.inputStyle}
-                  placeholder="Location"
+                  placeholder="Experience in year"
                   autoCapitalize="none"
                   keyboardType="email-address"
                   returnKeyType="next"
                   underlineColorAndroid="#f000"
                   blurOnSubmit={false}
+                  value={''+experience}
+                  onChangeText={(text) => {
+                    setExperience(Number(text));
+                  }}
                 />
               </View>
             </View>
@@ -143,26 +214,16 @@ const Profile = () => {
               <View style={styles.SectionStyle}> 
                 <TextInput
                   style={styles.inputStyle}
-                  placeholder="Location"
+                  placeholder="Project Undertaken"
                   autoCapitalize="none"
                   keyboardType="email-address"
                   returnKeyType="next"
                   underlineColorAndroid="#f000"
                   blurOnSubmit={false}
-                />
-              </View>
-            </View>
-            <View style={styles.FormGroup}>
-              <Text style={styles.LabelText}>Current Firm</Text>
-              <View style={styles.SectionStyle}> 
-                <TextInput
-                  style={styles.inputStyle}
-                  placeholder="Location"
-                  autoCapitalize="none"
-                  keyboardType="email-address"
-                  returnKeyType="next"
-                  underlineColorAndroid="#f000"
-                  blurOnSubmit={false}
+                  value={projectsUndertaken}
+                  onChangeText={(text) => {
+                    setProjectsUndertaken(text);
+                  }}
                 />
               </View>
             </View>
@@ -171,60 +232,57 @@ const Profile = () => {
               <View style={styles.SectionStyle}> 
                 <TextInput
                   style={styles.inputStyle}
-                  placeholder="Location"
+                  placeholder="Previous Firm"
                   autoCapitalize="none"
                   keyboardType="email-address"
                   returnKeyType="next"
                   underlineColorAndroid="#f000"
                   blurOnSubmit={false}
+                  value={previousFirm}
+                  onChangeText={(text) => {
+                    setPreviousFirm(text);
+                  }}
                 />
               </View>
             </View>
-            <View style={styles.FormGroup}>
-              <Text style={styles.LabelText}>Current Firm</Text>
-              <View style={styles.SectionStyle}> 
-                <TextInput
-                  style={styles.inputStyle}
-                  placeholder="Location"
-                  autoCapitalize="none"
-                  keyboardType="email-address"
-                  returnKeyType="next"
-                  underlineColorAndroid="#f000"
-                  blurOnSubmit={false}
-                />
-              </View>
-            </View>
-
             <View style={styles.FormGroup}>
               <Text style={styles.LabelText}>Personal Details</Text>
             </View>
 
             <View style={styles.FormGroup}>
-              <Text style={styles.LabelText}>Father’s Name</Text>
+              <Text style={styles.LabelText}>Father's Name</Text>
               <View style={styles.SectionStyle}> 
                 <TextInput
                   style={styles.inputStyle}
-                  placeholder="Location"
+                  placeholder="Father's Name"
                   autoCapitalize="none"
                   keyboardType="email-address"
                   returnKeyType="next"
                   underlineColorAndroid="#f000"
                   blurOnSubmit={false}
+                  value={fatherName}
+                  onChangeText={(text) => {
+                    setFatherName(text);
+                  }}
                 />
               </View>
             </View>
 
             <View style={styles.FormGroup}>
               <Text style={styles.LabelText}>Date of birth</Text>
-              <View style={styles.SectionStyle}> 
+              <View style={styles.SectionStyle}>
                 <TextInput
                   style={styles.inputStyle}
-                  placeholder="Location"
+                  placeholder="Date of birth"
                   autoCapitalize="none"
                   keyboardType="email-address"
                   returnKeyType="next"
                   underlineColorAndroid="#f000"
                   blurOnSubmit={false}
+                  value={dob}
+                  onChangeText={(text) => {
+                    setDOB(text);
+                  }}
                 />
               </View>
             </View>
@@ -234,12 +292,16 @@ const Profile = () => {
               <View style={styles.SectionStyle}> 
                 <TextInput
                   style={styles.inputStyle}
-                  placeholder="Location"
+                  placeholder="Gender"
                   autoCapitalize="none"
                   keyboardType="email-address"
                   returnKeyType="next"
                   underlineColorAndroid="#f000"
                   blurOnSubmit={false}
+                  value={gender}
+                  onChangeText={(text) => {
+                    setGender(text);
+                  }}
                 />
               </View>
             </View>
@@ -249,103 +311,222 @@ const Profile = () => {
               <View style={styles.SectionStyle}> 
                 <TextInput
                   style={styles.inputStyle}
-                  placeholder="Location"
+                  placeholder="Language"
                   autoCapitalize="none"
                   keyboardType="email-address"
                   returnKeyType="next"
                   underlineColorAndroid="#f000"
                   blurOnSubmit={false}
+                  value={language}
+                  onChangeText={(text) => {
+                    setLanguage(text);
+                  }}
                 />
               </View>
             </View>
-
-            <View style={styles.FormGroup}>
-              <Text style={styles.LabelText}>Nationality</Text>
-              <View style={styles.SectionStyle}> 
-                <TextInput
-                  style={styles.inputStyle}
-                  placeholder="Location"
-                  autoCapitalize="none"
-                  keyboardType="email-address"
-                  returnKeyType="next"
-                  underlineColorAndroid="#f000"
-                  blurOnSubmit={false}
-                />
-              </View>
-            </View>
-            
             <View style={styles.FormGroup}>
               <Text style={styles.LabelText}>Marital Status</Text>
               <View style={styles.SectionStyle}> 
                 <TextInput
                   style={styles.inputStyle}
-                  placeholder="Location"
+                  placeholder="Marital Status"
                   autoCapitalize="none"
                   keyboardType="email-address"
                   returnKeyType="next"
                   underlineColorAndroid="#f000"
                   blurOnSubmit={false}
+                  value={maritalStatus}
+                  onChangeText={(text) => {
+                    setMaritalStatus(text);
+                  }}
                 />
               </View>
             </View>
+
+            <View style={styles.FormGroup}>
+              <Text style={styles.LabelText}>Blood Group</Text>
+              <View style={styles.SectionStyle}> 
+                <TextInput
+                  style={styles.inputStyle}
+                  placeholder="Blood Group"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  blurOnSubmit={false}
+                  value={bloodGroup}
+                  onChangeText={(text) => {
+                    setBloodGroup(text);
+                  }}
+                />
+              </View>
+            </View>
+
+            <View style={styles.FormGroup}>
+              <Text style={styles.LabelText}>Emergency Contact No.</Text>
+              <View style={styles.SectionStyle}> 
+                <TextInput
+                  style={styles.inputStyle}
+                  placeholder="Emergency Contact No."
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  blurOnSubmit={false}
+                  value={emergencyPhone}
+                  onChangeText={(text) => {
+                    setEmergencyPhone(text);
+                  }}
+                />
+              </View>
+            </View>
+
+            <View style={styles.FormGroup}>
+              <Text style={styles.LabelText}>Address</Text>
+              <View style={styles.SectionStyle}> 
+                <TextInput
+                  style={styles.inputStyle}
+                  placeholder="Address"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  blurOnSubmit={false}
+                  value={address}
+                  onChangeText={(text) => {
+                    setAddress(text);
+                  }}
+                />
+              </View>
+            </View>
+            <View style={styles.FormGroup}>
+              <Text style={styles.LabelText}>Nationality</Text>
+              <View style={styles.SectionStyle}> 
+                <TextInput
+                  style={styles.inputStyle}
+                  placeholder="Nationality"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  blurOnSubmit={false}
+                  value={nationality}
+                  onChangeText={(text) => {
+                    setNationality(text);
+                  }}
+                />
+              </View>
+            </View>
+
             </View>
             :
             /* View Profile Details */
             <View>
               <View style={styles.FormGroup}>
-                <Text style={styles.LabelText}>Full Name</Text>
-                <Text style={styles.LabelSubText}>Rishi Kant</Text>
+                <Text style={styles.LabelText}>Name</Text>
+                <Text style={styles.LabelSubText}>{userProfileInfo?.name}</Text>
               </View>
               <View style={styles.FormGroup}>
                 <Text style={styles.LabelText}>Designation</Text>
-                <Text style={styles.LabelSubText}>Project manager</Text>
+                <Text style={styles.LabelSubText}>{userProfileInfo?.designation}</Text>
               </View>
               <View style={styles.FormGroup}>
                 <Text style={styles.LabelText}>Email Address</Text>
-                <Text style={styles.LabelSubText}>abc@gmail.com</Text>
+                <Text style={styles.LabelSubText}>{userProfileInfo?.email}</Text>
+              </View>
+              <View style={styles.FormGroup}>
+                <Text style={styles.LabelText}>Mobile</Text>
+                <Text style={styles.LabelSubText}>{userProfileInfo?.phone}</Text>
               </View>
               <View style={styles.FormGroup}>
                 <Text style={styles.LabelText}>Location</Text>
-                <Text style={styles.LabelSubText}>Delhi</Text>
+                <Text style={styles.LabelSubText}>{userProfileInfo?.userProfile?.cityName + ', '}{userProfileInfo?.userProfile?.stateName}</Text>
               </View>
               <View style={styles.FormGroup}>
                 <Text style={styles.LabelText}>Higher Education</Text>
-                <Text style={styles.LabelSubText}>Post Graduate</Text>
+                <Text style={styles.LabelSubText}>{userProfileInfo?.userProfile?.higherEdu}</Text>
               </View>
               <View style={styles.FormGroup}>
                 <Text style={styles.LabelText}>Key Skills</Text>
-                <Text style={styles.LabelSubText}>asdf</Text>
+                <Text style={styles.LabelSubText}>{userProfileInfo?.userProfile?.keySkills}</Text>
               </View>
               <View style={styles.FormGroup}>
                 <Text style={styles.LabelText}>Experience in year</Text>
-                <Text style={styles.LabelSubText}>5 Year</Text>
+                <Text style={styles.LabelSubText}>{userProfileInfo?.userProfile?.experience ? userProfileInfo?.userProfile?.experience + ' Year' : ''}</Text>
               </View>
               <View style={styles.FormGroup}>
                 <Text style={styles.LabelText}>Project Undertaken</Text>
-                <Text style={styles.LabelSubText}>5</Text>
+                <Text style={styles.LabelSubText}>{userProfileInfo?.userProfile?.projectsUndertaken}</Text>
               </View>
               <View style={styles.FormGroup}>
                 <Text style={styles.LabelText}>Current Firm</Text>
-                <Text style={styles.LabelSubText}>Abc</Text>
+                <Text style={styles.LabelSubText}>--</Text>
               </View>
               <View style={styles.FormGroup}>
                 <Text style={styles.LabelText}>Previous Firm</Text>
-                <Text style={styles.LabelSubText}>QWERT</Text>
+                <Text style={styles.LabelSubText}>{userProfileInfo?.userProfile?.previousFirm}</Text>
+              </View>
+
+              <View style={styles.FormGroup}>
+                <Text style={styles.LabelText}>Personal Details</Text>
+              </View>
+              <View style={styles.FormGroup}>
+                <Text style={styles.LabelText}>Father's Name</Text>
+                <Text style={styles.LabelSubText}>{userProfileInfo?.userProfile?.fatherName}</Text>
+              </View>
+              <View style={styles.FormGroup}>
+                <Text style={styles.LabelText}>Date of Birth</Text>
+                <Text style={styles.LabelSubText}>{userProfileInfo?.userProfile?.dob ? moment(new Date(userProfileInfo.userProfile.dob)).format('DD MMMM YYYY') : '--'}</Text>
+              </View>
+              <View style={styles.FormGroup}>
+                <Text style={styles.LabelText}>Blood Group</Text>
+                <Text style={styles.LabelSubText}>{userProfileInfo?.userProfile?.bloodGroup}</Text>
+              </View>
+              <View style={styles.FormGroup}>
+                <Text style={styles.LabelText}>Gender</Text>
+                <Text style={styles.LabelSubText}>{userProfileInfo?.userProfile?.gender}</Text>
+              </View>
+              <View style={styles.FormGroup}>
+                <Text style={styles.LabelText}>Language Known</Text>
+                <Text style={styles.LabelSubText}>{userProfileInfo?.userProfile?.language ? userProfileInfo.userProfile.language.split(',').join(', ') : '--'}</Text>
+              </View>
+              <View style={styles.FormGroup}>
+                <Text style={styles.LabelText}>Marital Status</Text>
+                <Text style={styles.LabelSubText}>{userProfileInfo?.userProfile?.maritalStatus}</Text>
+              </View>
+              <View style={styles.FormGroup}>
+                <Text style={styles.LabelText}>Emergency Phone</Text>
+                <Text style={styles.LabelSubText}>{userProfileInfo?.userProfile?.emergencyPhone}</Text>
+              </View>
+              <View style={styles.FormGroup}>
+                <Text style={styles.LabelText}>Address</Text>
+                <Text style={styles.LabelSubText}>{userProfileInfo?.userProfile?.address}</Text>
+              </View>
+              <View style={styles.FormGroup}>
+                <Text style={styles.LabelText}>Nationality</Text>
+                <Text style={styles.LabelSubText}>{userProfileInfo?.userProfile?.nationality}</Text>
               </View>
             </View>
             }
           </ScrollView>
         </View>
           <View style={styles.ButtonContainer}>
-            <TouchableOpacity onPress={() => saveEditFunction(!isViewProfile)} style={styles.assignTagButoon}>
-                <Text style={styles.assignTagButoonText}>{isViewProfile ? 'Save Profile' : 'Edit Profile'}</Text>
+            <TouchableOpacity onPress={() => onSubmit()} style={styles.assignTagButoon}>
+                <Text style={styles.assignTagButoonText}>{isEditProfile ? 'Save Profile' : 'Edit Profile'}</Text>
             </TouchableOpacity>
           </View>
+
+          <LoadingAnimation loading={loading}></LoadingAnimation>
       </View>
   )
 }
 
 const styles = StyleSheet.create({
+  dpContainer: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    marginTop: 100,
+  },
   Container: {
     backgroundColor: '#fff',
     flex: 1

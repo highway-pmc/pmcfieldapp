@@ -13,3 +13,22 @@ export const setPasswordApi = async (user) => {
         throw new Error(errorMessge);
     });
 }
+
+export const getUserInfo = async (user) => {
+    return apiService.getRequest('v1/auth/users/info').then((response) => {
+        return response;
+    }).catch((err) => {
+        const errorMessge = err.message || 'Unable to get user profile.';
+        throw new Error(errorMessge);
+    });
+}
+
+export const updateUserProfile = async (user) => {
+    console.log("USER:", user);
+    return apiService.putRequest('v1/auth/me', user).then((response) => {
+        return response ? true : false;
+    }).catch((err) => {
+        const errorMessge = err.message || 'User profile updated successfully.';
+        throw new Error(errorMessge);
+    });
+}

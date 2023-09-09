@@ -15,8 +15,6 @@ export const userLogin = async (payload) => {
     return apiService.getRequest('v1/auth/users/info').then((result) => {
       const userInfo = result;
       userInfo.authToken = response.authToken
-      //userInfo.roles = "project-head"; // project-head, quality-head", "quality-users"
-      //userInfo.isPasswordSet = false;
       appConfig.setUserInfo(userInfo);
       return userInfo;
     }).catch((error) => {

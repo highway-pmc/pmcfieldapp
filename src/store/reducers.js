@@ -8,6 +8,12 @@ const initialState = {
     userInfo: null
 }
 
+const userProfileState = {
+    loading: false,
+    userProfileInfo: null,
+    error: null,
+}
+
 const AuthReducer = (state = initialState, action) => {
     switch (action.type) {
         case "LOGIN_REQUEST":
@@ -123,7 +129,7 @@ const ForgotPasswordReducer = (state = initialState, action) => {
     }
 }
 
-const UserProfileReducer = (state = initialState, action) => {
+const UserProfileReducer = (state = userProfileState, action) => {
     switch (action.type) {
         case "SET_PASSWORD_REQUEST":
             return {
@@ -143,6 +149,47 @@ const UserProfileReducer = (state = initialState, action) => {
             return {
                 ...state,
                 authToken: null,
+                error: action.error,
+                loading: false,
+            };
+        case "GET_USER_PROFILE_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "GET_USER_PROFILE_SUCCESS":
+            return {
+                ...state,
+                userProfileInfo: action.response,
+                error: null,
+                loading: false,
+            };
+        case "GET_USER_PROFILE_FAILURE":
+            return {
+                ...state,
+                userProfile: null,
+                error: action.error,
+                loading: false,
+            };
+        case "UPDATE_USER_PROFILE_REQUEST":
+            return {
+                ...state,
+                error: null,
+                userProfileUpdated: false,
+                loading: true,
+            };
+        case "UPDATE_USER_PROFILE_SUCCESS":
+            return {
+                ...state,
+                userProfileUpdated: action.response,
+                error: null,
+                loading: false,
+            };
+        case "UPDATE_USER_PROFILE_FAILURE":
+            return {
+                ...state,
+                userProfileUpdated: action.response,
                 error: action.error,
                 loading: false,
             };

@@ -101,3 +101,38 @@ export const Dashboard_MENU = [
         permissions: ["project-head", "structure-head", "highway-head", "other-work-head", "quality-head", "user"]
     },
 ];
+
+export const MARITALSTATUS = {
+    SINGLE: 'single',
+    MARRIED: 'married',
+    DIVORCED: 'divorced',
+};
+
+export const GENDER = {
+    MALE: 'male',
+    FEMALE: 'female',
+    TRANS: 'trans',
+};
+
+export const LANGUAGE = {
+    HINDI: 'hindi',
+    ENGLISH: 'english',
+    OTHER: 'other',
+};
+
+export const NATIONALITY = {
+    INDIAN: 'indian',
+    NRI: 'nri',
+    FOREIGNER: 'foreigner',
+};
+
+export const BLOODGROUP = {
+    'A+': 'A+',
+    'O+': 'O+',
+    'B+': 'B+',
+    'AB+': 'AB+',
+    'A-': 'A-',
+    'O-': 'O-',
+    'B-': 'B-',
+    'AB-': 'AB-',
+};

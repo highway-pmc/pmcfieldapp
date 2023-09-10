@@ -193,6 +193,26 @@ const UserProfileReducer = (state = userProfileState, action) => {
                 error: action.error,
                 loading: false,
             };
+        case "GET_STATE_CITY_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "GET_STATE_CITY_SUCCESS":
+            return {
+                ...state,
+                states: action.response,
+                error: null,
+                loading: false,
+            };
+        case "GET_STATE_CITY_FAILURE":
+            return {
+                ...state,
+                states: null,
+                error: action.error,
+                loading: false,
+            };
         default:
             return state;
     }

@@ -102,37 +102,78 @@ export const Dashboard_MENU = [
     },
 ];
 
-export const MARITALSTATUS = {
-    SINGLE: 'single',
-    MARRIED: 'married',
-    DIVORCED: 'divorced',
-};
+export const MARITAL_STATUS = [
+    {
+        label: 'Single', value: 'single'
+    },
+    {
+        label: 'Married', value: 'married'
+    },
+    {
+        label: 'Divorced', value: 'divorced'
+    }
+];
 
-export const GENDER = {
-    MALE: 'male',
-    FEMALE: 'female',
-    TRANS: 'trans',
-};
+export const GENDER = [
+    {
+        label: 'Male', value: 'male'
+    },
+    {
+        label: 'Female', value: 'female'
+    },
+    {
+        label: 'Trans', value: 'trans'
+    }
+];
 
-export const LANGUAGE = {
-    HINDI: 'hindi',
-    ENGLISH: 'english',
-    OTHER: 'other',
-};
+export const LANGUAGE = [
+    {
+        label: 'Hindi', value: 'hindi'
+    },
+    {
+        label: 'English', value: 'english'
+    },
+    {
+        label: 'Other', value: 'other'
+    }
+];
 
-export const NATIONALITY = {
-    INDIAN: 'indian',
-    NRI: 'nri',
-    FOREIGNER: 'foreigner',
-};
+export const NATIONALITY = [
+    {
+        label: 'Indian', value: 'indian'
+    },
+    {
+        label: 'NRI', value: 'nri'
+    },
+    {
+        label: 'Foreigner', value: 'foreigner'
+    }
+];
 
-export const BLOODGROUP = {
-    'A+': 'A+',
-    'O+': 'O+',
-    'B+': 'B+',
-    'AB+': 'AB+',
-    'A-': 'A-',
-    'O-': 'O-',
-    'B-': 'B-',
-    'AB-': 'AB-',
-};
+export const BLOOD_GROUP = [
+    {
+        label: 'A+', value: 'A+'
+    },
+    {
+        label: 'O+', value: 'O+'
+    },
+    {
+        label: 'B+', value: 'B+'
+    },
+    {
+        label: 'AB+', value: 'AB+'
+    },
+    {
+        label: 'A-', value: 'A-'
+    },
+    {
+        label: 'O-', value: 'O-'
+    },
+    {
+        label: 'B-', value: 'B-'
+    },
+    {
+        label: 'AB-', value: 'AB-'
+    }
+];
+

@@ -24,11 +24,19 @@ export const getUserInfo = async (user) => {
 }
 
 export const updateUserProfile = async (user) => {
-    console.log("USER:", user);
     return apiService.putRequest('v1/auth/me', user).then((response) => {
         return response ? true : false;
     }).catch((err) => {
         const errorMessge = err.message || 'User profile updated successfully.';
+        throw new Error(errorMessge);
+    });
+}
+
+export const getStates = async () => {
+    return apiService.getRequest('v1/state', false).then((response) => {
+        return response;
+    }).catch((err) => {
+        const errorMessge = err.message || 'Unable to get states list.';
         throw new Error(errorMessge);
     });
 }

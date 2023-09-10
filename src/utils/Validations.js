@@ -6,6 +6,7 @@ const validationStrings = {
     otpRequired : 'Otp is required',
     fullNameRequired : 'Name is required',
     emailRequired : 'Email is required',
+    fieldRequired : ' is required',
     emailOrMobileRequired : 'Email or mobile is required',
     mobileNoRequired : 'Mobile no is required',
     invalidUsername : 'Invalid username',
@@ -14,6 +15,8 @@ const validationStrings = {
     invalidEmail : 'Invalid email or mobile',
     invalidEmailOrMobile : 'Invalid email or mobile'
 }
+
+export const fieldRequired = (value, propertyName) => value? undefined : (propertyName ? propertyName + validationStrings.fieldRequired : 'Required')
 
 export const emailRequired = (value) => value? undefined : validationStrings.emailRequired
 

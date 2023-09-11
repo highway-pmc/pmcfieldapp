@@ -1,0 +1,115 @@
+import React from "react";
+import { createStackNavigator } from "@react-navigation/stack";
+
+import MyWork from "../../screens/MyWork/MyWork";
+import MyWork2 from "../../screens/MyWork/MyWork2";
+import MyWork3 from "../../screens/MyWork/MyWork3";
+import ManageUsers from "../../screens/ManageUsers/ManageUsers";
+import Notifications from "../../screens/Notifications/Notifications";
+import Progress from "../../screens/Progress/Progress";
+import Reports from "../../screens/Reports/Reports";
+import RFIs from "../../screens/RFIs/RFIs";
+import Profile from "../../screens/Profile/Profile";
+import MyTask from "../../screens/MyTask/MyTask";
+import ForgotPasswordStep3 from "../../screens/ForgotPassword/Step3";
+import AssignTask from "../../screens/ManageUsers/AssignTask";
+import FlyoverDetails from "../../screens/ManageUsers/FlyoverDetails";
+import ProjectInfo from "../../screens/ProjectInfo/ProjectInfo";
+import MyTest from "../../screens/MyTest/MyTest";
+
+const Stack = createStackNavigator();
+
+const screenOptionStyle = {
+  headerStyle: {
+    backgroundColor: "#9AC4F8",
+  },
+  headerTintColor: "white",
+  headerBackTitle: "Back",
+};
+
+const MyWorkStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen name="MyWork" component={MyWork} options={{headerShown: false}} />
+      <Stack.Screen name="MyWork2" component={MyWork2} options={{headerShown: false}} />
+      <Stack.Screen name="MyWork3" component={MyWork3} options={{headerShown: false}} />
+    </Stack.Navigator>
+  );
+};
+
+const MyTaskStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen name="MyTask" component={MyTask} options={{headerShown: false}} />
+    </Stack.Navigator>
+  );
+};
+
+const MyTestStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen name="MyTest" component={MyTest} options={{headerShown: false}} />
+    </Stack.Navigator>
+  );
+};
+
+const ManageUsersStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen name="ManageUsers" component={ManageUsers} options={{headerShown: false}} />
+      <Stack.Screen name="AssignTask" component={AssignTask} options={{headerShown: false}} />
+      <Stack.Screen name="FlyoverDetails" component={FlyoverDetails} options={{headerShown: false}} />
+    </Stack.Navigator>
+  );
+};
+
+const NotificationsStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen name="Notifications" component={Notifications} options={{headerShown: false}} />
+    </Stack.Navigator>
+  );
+};
+
+const ProgressStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen name="Progress" component={Progress} options={{headerShown: false}} />
+    </Stack.Navigator>
+  );
+};
+
+const ReportsStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen name="Reports" component={Reports} options={{headerShown: false}} />
+    </Stack.Navigator>
+  );
+};
+
+const RFIsStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen name="RFIs" component={RFIs} options={{headerShown: false}} />
+    </Stack.Navigator>
+  );
+};
+
+const ProfileStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen name="Profile" component={Profile} options={{headerShown: false}} />
+    </Stack.Navigator>
+  );
+};
+
+const ProjectInfoStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen name="ProjectInfo" component={ProjectInfo} options={{headerShown: false}} />
+    </Stack.Navigator>
+  );
+};
+
+export { MyWorkStackNavigator, MyTaskStackNavigator, MyTestStackNavigator, ManageUsersStackNavigator, NotificationsStackNavigator,
+  ProgressStackNavigator, ReportsStackNavigator, RFIsStackNavigator, ProfileStackNavigator, ProjectInfoStackNavigator };

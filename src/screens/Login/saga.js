@@ -1,7 +1,6 @@
 
 import { put, takeLatest } from 'redux-saga/effects';
-import { userLogin } from '../../api/login';
-import { Alert } from 'react-native';
+import { userLogin } from '../../services/login/login.service';
 function* loginUser({ payload }) {
     try {
         const response = yield (userLogin(payload));

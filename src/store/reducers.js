@@ -1,15 +1,21 @@
-import { Alert } from "react-native";
 import { combineReducers } from "redux";
 import { reducer as formReducer } from 'redux-form';
 
 const initialState = {
-    loading : false,
-    user : null,
-    error : null
+    loading: false,
+    user: null,
+    error: null,
+    userInfo: null
 }
 
-const AuthReducer = (state=initialState,action) => {
-    switch(action.type) {
+const userProfileState = {
+    loading: false,
+    userProfileInfo: null,
+    error: null,
+}
+
+const AuthReducer = (state = initialState, action) => {
+    switch (action.type) {
         case "LOGIN_REQUEST":
             return {
                 ...state,
@@ -23,28 +29,187 @@ const AuthReducer = (state=initialState,action) => {
                 loading: false,
             };
 
+        case "LOGGED_IN_USER":
+            return {
+                ...state,
+                userInfo: action.response,
+                loading: false,
+            };
         case "LOGIN_FAILURE":
             return {
                 ...state,
                 error: action.error,
                 loading: false,
             };
-        case "FORGOT_PASS_REQUEST_REQUEST":
+        case "LOGOUT_REQUEST":
             return {
                 ...state,
+                user: null,
+                userInfo: null,
+                error: null,
+                loading: false,
+            };
+        default:
+            return state;
+    }
+}
+
+const ForgotPasswordReducer = (state = initialState, action) => {
+    switch (action.type) {
+        case "FORGOT_PASS_OTP_REQUEST":
+            return {
+                ...state,
+                user: null,
+                error: null,
                 loading: true,
             };
-
-        case "FORGOT_PASS_REQUEST_SUCCESS":
+        case "FORGOT_PASS_OTP_SUCCESS":
             return {
                 ...state,
                 user: action.response,
+                error: null,
                 loading: false,
             };
-
-        case "FORGOT_PASS_REQUEST_FAILURE":
+        case "FORGOT_PASS_OTP_FAILURE":
             return {
                 ...state,
+                user: null,
+                error: action.error,
+                loading: false,
+            };
+        case "VERIFY_OTP_REQUEST":
+            return {
+                ...state,
+                user: null,
+                loading: true,
+                verifyOtp: null,
+                error: null,
+            };
+        case "VERIFY_OTP_SUCCESS":
+            return {
+                ...state,
+                verifyOtp: action.response,
+                user: null,
+                loading: false,
+                error: null
+            };
+        case "VERIFY_OTP_FAILURE":
+            return {
+                ...state,
+                error: action.error,
+                verifyOtp: null,
+                user: null,
+                loading: false,
+            };
+        case "RESET_PASSWORD_REQUEST":
+            return {
+                ...state,
+                loading: true,
+                error: null,
+                passwordUpdated: null
+            };
+        case "RESET_PASSWORD_SUCCESS":
+            return {
+                ...state,
+                error: null,
+                passwordUpdated: action.response,
+                user: null,
+                loading: false,
+            };
+        case "RESET_PASSWORD_FAILURE":
+            return {
+                ...state,
+                error: action.error,
+                passwordUpdated: null,
+                user: null,
+                loading: false,
+            };
+        default:
+            return state;
+    }
+}
+
+const UserProfileReducer = (state = userProfileState, action) => {
+    switch (action.type) {
+        case "SET_PASSWORD_REQUEST":
+            return {
+                ...state,
+                authToken: null,
+                error: null,
+                loading: true,
+            };
+        case "SET_PASSWORD_SUCCESS":
+            return {
+                ...state,
+                authToken: action.response,
+                error: null,
+                loading: false,
+            };
+        case "SET_PASSWORD_FAILURE":
+            return {
+                ...state,
+                authToken: null,
+                error: action.error,
+                loading: false,
+            };
+        case "GET_USER_PROFILE_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "GET_USER_PROFILE_SUCCESS":
+            return {
+                ...state,
+                userProfileInfo: action.response,
+                error: null,
+                loading: false,
+            };
+        case "GET_USER_PROFILE_FAILURE":
+            return {
+                ...state,
+                userProfile: null,
+                error: action.error,
+                loading: false,
+            };
+        case "UPDATE_USER_PROFILE_REQUEST":
+            return {
+                ...state,
+                error: null,
+                userProfileUpdated: false,
+                loading: true,
+            };
+        case "UPDATE_USER_PROFILE_SUCCESS":
+            return {
+                ...state,
+                userProfileUpdated: action.response,
+                error: null,
+                loading: false,
+            };
+        case "UPDATE_USER_PROFILE_FAILURE":
+            return {
+                ...state,
+                userProfileUpdated: action.response,
+                error: action.error,
+                loading: false,
+            };
+        case "GET_STATE_CITY_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "GET_STATE_CITY_SUCCESS":
+            return {
+                ...state,
+                states: action.response,
+                error: null,
+                loading: false,
+            };
+        case "GET_STATE_CITY_FAILURE":
+            return {
+                ...state,
+                states: null,
                 error: action.error,
                 loading: false,
             };
@@ -54,6 +219,8 @@ const AuthReducer = (state=initialState,action) => {
 }
 
 export const combinedReducers = combineReducers({
-    form : formReducer,
-    Auth : AuthReducer
-}) 
+    form: formReducer,
+    Auth: AuthReducer,
+    ForgotPassword: ForgotPasswordReducer,
+    UserProfile: UserProfileReducer
+})

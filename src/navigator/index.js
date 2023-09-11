@@ -5,7 +5,7 @@ import AuthNavigator from './AuthNavigator'
 
 const RootNavigator = () => {
     
-    const isAuth = useSelector(state => state.Auth.user)
+    const isAuth = useSelector(state => state.Auth.userInfo)
     
     return (
         isAuth 

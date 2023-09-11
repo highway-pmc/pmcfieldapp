@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "464730003559",
+    "project_id": "pmcfieldappnotifications",
+    "storage_bucket": "pmcfieldappnotifications.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:464730003559:android:a157fa7bd8ba820c601cc2",
+        "android_client_info": {
+          "package_name": "com.pmcfieldapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "464730003559-00oqo3vldh0gi4posaehnd0sun8rjevs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pmcfieldapp",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "464730003559-s3268uced2emog0qb2j2d0v5p07gqgos.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDHKfL9Sutw5a9xL7Qv9e1k319aVX7TjWU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "464730003559-s3268uced2emog0qb2j2d0v5p07gqgos.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

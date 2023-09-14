@@ -14,87 +14,98 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
-import {HeaderItems} from '../../constants/constants';
+import {HeaderItems, USER_CATEGORIES, USER_CATEGORY} from '../../constants/constants';
 import CheckBox from '@react-native-community/checkbox';
 import { RadioButton } from 'react-native-paper';
+import LoadingAnimation from '../Common/LoadingAnimation';
+import { useDispatch, useSelector } from 'react-redux';
+import { user } from '../../models/user';
+import { addUserCategories, getUsers } from './actions';
 
 const ManageUsers = ({navigation}:{navigation: any}) => {
+  const [selectedUserId, setSelectedUserId] = useState('');
+  const [isAssignPopOpen, openAssignPopup] = useState(false);
+  const [userList, setUserList] = useState([]);
+
+  const { users, usersAdded, loading, error} = useSelector((state: any) => state.UserAssignment);
+
+  const dispatch = useDispatch()
+
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();
     eventEmitter.emit('headerEvent', HeaderItems.manageUsers);
   }
 
-  const [checked, setChecked] = useState('');
-  const [isAssignPopOpen, openAssignPopup] = useState(false);
+  const userIcon = require('./../../images/avtar.png');
 
-  const Assign_Category = [
-    {
-      id: '1',
-      icon: require('./../../images/avtar.png'),
-      title: 'Ravi Prakash',
-      subTitle: 'Project Manager',
-    },
-    {
-      id: '2',
-      icon: require('./../../images/avtar.png'),
-      title: 'Pradeep kumar',
-      subTitle: 'Lead Engineer',
-    },
-    {
-      id: '3',
-      icon: require('./../../images/avtar.png'),
-      title: 'Rishi Kant',
-      subTitle: 'UI Module Lead',
-    },
-    {
-      id: '4',
-      icon: require('./../../images/avtar.png'),
-      title: 'Shubham Varma',
-      subTitle: 'Node Module Lead',
-    },
-    {
-      id: '5',
-      icon: require('./../../images/avtar.png'),
-      title: 'Rajiv Ranjan',
-      subTitle: 'Module Lead',
-    },
-  ];
+  useEffect(() => {
+    if (users) {
+      setUserList(users);
+    }
+  }, [users, error]);
 
-  const [userData, setUserCheckboxes] = useState([
-    {
-      id: '1',
-      title: 'Structure Work',
-      isChecked: false,
-    },
-    {
-      id: '2',
-      title: 'Highway Work',
-      isChecked: false,
-    },
-    {
-      id: '3',
-      title: 'Other Work',
-      isChecked: false,
-    },
-    {
-      id: '4',
-      title: 'Quality Work',
-      isChecked: false,
-    },
-  ]);
+  useEffect(() => {
+    if (usersAdded) {
+      Alert.alert("Success", "User categories added successfully");
+    }
+  }, [usersAdded, error]);
+
+  useEffect(() => {
+    dispatch(getUsers());
+  }, []);
+
+  const onUserCategoryAssignment = () => {
+    const categories = userCategories.filter(item => item.isChecked).map(item => item.value)
+
+    dispatch(addUserCategories({
+      userId: selectedUserId,
+      categories: categories
+    }));
+  }
+
+  const [userCategories, setUserCategories] = useState(USER_CATEGORIES);
 
   const handleRadioChange = (value: any) => {
-    setChecked(value);
+    setSelectedUserId(value);
+
+    const userCate: any = userList.find((u: user) => u._id === value);
+
+    if (userCate && userCate.categories) {
+      userCategories.forEach((cate) => {
+        if (userCate.categories.indexOf(cate.value) != -1) {
+          cate.isChecked = true;
+        } else {
+          cate.isChecked = false;
+        }
+      })
+    } else {
+      userCategories.forEach((cate) => {
+        cate.isChecked = false;
+      })
+    }
   };
 
-  const handleUserData = (index: any) => {
-    const updatedCheckboxes = [...userData];
-    updatedCheckboxes[index].isChecked = !updatedCheckboxes[index].isChecked;
-    setUserCheckboxes(updatedCheckboxes);
+  const handleUserCategories = (item: any) => {
+    // const updatedCheckboxes = [...userCategories];
+    // updatedCheckboxes[index].isChecked = !updatedCheckboxes[index].isChecked;
+    item.isChecked = !item.isChecked;
+    if(item.isChecked && item.value === USER_CATEGORY.QUALITY_WORK) {
+      userCategories.forEach((cate) => {
+        if (cate.value != USER_CATEGORY.QUALITY_WORK) {
+          cate.isChecked = false;
+        }
+      })
+    } else if (item.isChecked) {
+      const qualityWork = userCategories.find(cate => cate.value === USER_CATEGORY.QUALITY_WORK);
+      if (qualityWork) {
+        qualityWork.isChecked = false;
+      }
+    }
+    setUserCategories([...userCategories]);
   };
 
-  const openAssignClose = () => {
-    userData.forEach(items => {
+  const openUserCategoriesOptions = () => {
+    userCategories.forEach(items => {
         items.isChecked = false;
     });
     openAssignPopup(!isAssignPopOpen);
@@ -103,6 +114,9 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
   return (
     <View style={styles.Container}>
       <View style={styles.TopHeaderFixed}>
+      {(error) && <View style={styles.ErrorSectionStyle}>
+                <Text style={styles.errorText}>{error}</Text>
+              </View>}
         <View style={styles.SectionStyle}>
           <Image
             source={require('./../../images/search-icon.png')}
@@ -120,27 +134,27 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
         </View>
       </View>
       <ScrollView style={styles.Height80}>
-      <RadioButton.Group onValueChange={handleRadioChange} value={checked}>
-        {Assign_Category.map((item, index) => (
+      <RadioButton.Group onValueChange={handleRadioChange} value={selectedUserId}>
+        {userList.map((item: user, index) => (
           <View style={styles.UserCategory}>
             <View style={styles.FlexRowCenter}>
               <Image
-                source={item.icon}
+                source={userIcon}
                 style={styles.UserImage}
               />
               <View>
                 <View style={styles.FlexRowCenter}>
-                  <Text style={styles.UserName}>{item.title}</Text>
+                  <Text style={styles.UserName}>{item.name}</Text>
                   {/* <View style={styles.assignTag}>
                     <Text style={styles.assignTagText}>{item.title}</Text>
                   </View> */}
                 </View>
-                <Text style={styles.UserRole}>{item.subTitle}</Text>
+                <Text style={styles.UserRole}>{item.designation}</Text>
               </View>
             </View>
             <View>
               <RadioButton
-                value={item.title}
+                value={item._id}
                 color="#1C58C0"
                 uncheckedColor="gray"
               />
@@ -149,7 +163,7 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
         ))}
       </RadioButton.Group>
         {/* No Data Found */}
-        {!Assign_Category.length && 
+        {!userList.length && 
           <View style={styles.NoDataContainer}>
             <Image
               style={styles.WthHeight}
@@ -174,10 +188,10 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
         }}>
         <Pressable
           style={[
-            !checked ? styles.DisabledButton : styles.buttonAssign,
+            !selectedUserId ? styles.DisabledButton : styles.buttonAssign,
             styles.SeperatorBorder,
           ]}
-          disabled={!checked}
+          disabled={!selectedUserId}
           onPress={() => openAssignPopup(true)}>
           <Text style={styles.textStyle}>Assign Category</Text>
         </Pressable>
@@ -203,7 +217,7 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
                 <Text style={styles.modalText}>Assign Category</Text>
                 <TouchableOpacity
                   style={styles.buttonClose}
-                  onPress={() => openAssignClose()}>
+                  onPress={() => openUserCategoriesOptions()}>
                   <Image
                     style={styles.CloseIcon}
                     tintColor={'#333'}
@@ -212,24 +226,24 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
                 </TouchableOpacity>
               </View>
               <View style={styles.ModalInnerContainer}>
-              {userData.map((item, index) => (
+              {userCategories.map((item, index) => (
                   <View style={styles.CategoryType}>
                     <View style={styles.FlexRowCenter}>
                       <CheckBox
                         value={item.isChecked}
-                        onValueChange={() => handleUserData(index)}
+                        onValueChange={() => handleUserCategories(item)}
                         style={styles.checkbox}
                         tintColors={{true: '#0F56B3', false: '#818181'}}
                       />
                       <View>
                         <Text style={styles.AssignRoleText}>
-                          {item.title}
+                          {item.label}
                         </Text>
                       </View>
                     </View>
                   </View>
                 ))}
-                <TouchableOpacity style={styles.assignTagButoon}>
+                <TouchableOpacity style={styles.assignTagButoon} onPress={() => onUserCategoryAssignment()}>
                   <Text style={styles.assignTagButoonText}>Assign</Text>
                 </TouchableOpacity>
               </View>
@@ -237,11 +251,20 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
           </View>
         </View>
       </Modal>
+
+      <LoadingAnimation loading={loading}></LoadingAnimation>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  ErrorSectionStyle: {
+    flexDirection: 'row',
+    marginBottom: 20,
+  },
+  errorText: {
+    color: '#f11f1f',
+  },
   Container: {
     flexDirection: 'column',
     paddingVertical: 10,

@@ -40,3 +40,21 @@ export const getStates = async () => {
         throw new Error(errorMessge);
     });
 }
+
+export const getUserAssignment = async () => {
+    return apiService.getRequest('v1/auth/users/assignment').then((response) => {
+        return response;
+    }).catch((err) => {
+        const errorMessge = err.message || 'Unable to get list of users to assign categories.';
+        throw new Error(errorMessge);
+    });
+}
+
+export const userCategoriesAssignment = async (userId, categories) => {
+    return apiService.postRequest(`v1/auth/users/${userId}/assignment`, categories || []).then((response) => {
+        return response;
+    }).catch((err) => {
+        const errorMessge = err.message || 'Unable to assign user categories.';
+        throw new Error(errorMessge);
+    });
+}

@@ -184,5 +184,22 @@ export const USER_CATEGORY = {
     HIGHWAY_WORK: 'highway-work',
     OTHER_WORK: 'other-work',
     QUALITY_WORK: 'quality-work',
-  };
+};
+
+export const USER_CATEGORIES = [
+    {
+        label: "Structure Work", value: USER_CATEGORY.STRUCTURE_WORK, isChecked: false
+    },
+    {
+        label: "Highway Work", value: USER_CATEGORY.HIGHWAY_WORK, isChecked: false
+    },
+    {
+        label: "Other Work", value: USER_CATEGORY.OTHER_WORK, isChecked: false
+
+    },
+    {
+        label: "Quality Work", value: USER_CATEGORY.QUALITY_WORK, isChecked: false
+    }
+];
+
 

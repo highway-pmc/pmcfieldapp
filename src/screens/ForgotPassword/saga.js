@@ -5,7 +5,6 @@ import { sendOtpApi, verifyOtpApi, resetPasswordApi } from '../../services/forgo
 function* sendOtp({ payload }) {
     try {
         const response = yield (sendOtpApi(payload));
-        console.log("====", response);
         yield put({ type: "FORGOT_PASS_OTP_SUCCESS", response });
     } catch (error) {
         yield put({ type: "FORGOT_PASS_OTP_FAILURE", error: error.message });

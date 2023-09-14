@@ -11,12 +11,12 @@ import {
   NativeEventEmitter,
   FlatList,
 } from 'react-native';
-import { Dashboard_MENU, HeaderItems, USER_CATEGORY } from '../../constants/constants';
+import { Dashboard_MENU, HeaderItems } from '../../constants/constants';
 import { useSelector } from 'react-redux';
 
 const DashboardListing = ({ navigation }: { navigation: any }) => {
 
-  const loggedInUser = useSelector(state => state.Auth.userInfo);
+  const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
 
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();

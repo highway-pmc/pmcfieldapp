@@ -8,5 +8,6 @@ export interface user {
     designation?: string,
     roles: string,
     isPasswordSet?: number,
-    authToken: string
+    authToken: string,
+    categories?: string
 };

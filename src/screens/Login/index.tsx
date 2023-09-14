@@ -29,7 +29,7 @@ const Login = ({ navigation }: { navigation: any }) => {
   const [emailError, setEmailError] = useState("")
   const [passwordError, setPasswordError] = useState("")
   const [formSubmitted, setFormSubmitted] = useState(false)
-  const {user, loading, error} = useSelector(state => state.Auth)
+  const {user, loading, error} = useSelector((state: any) => state.Auth)
   const [errorMessage, setErrorMessage] = useState("")
 
   const dispatch = useDispatch()
@@ -90,7 +90,8 @@ const Login = ({ navigation }: { navigation: any }) => {
             designation: user.designation,
             roles: user.roles,
             isPasswordSet: user.isPasswordSet,
-            authToken: user.authToken
+            authToken: user.authToken,
+            categories: user.categories
           };
 
           if (password) {
@@ -120,7 +121,8 @@ const Login = ({ navigation }: { navigation: any }) => {
             password: password,
             designation: user.designation,
             isPasswordSet: user.isPasswordSet,
-            authToken: user.authToken
+            authToken: user.authToken,
+            categories: user.categories
           };
           users.save(userApi).then((dbUser) => {
             if (dbUser.id) {

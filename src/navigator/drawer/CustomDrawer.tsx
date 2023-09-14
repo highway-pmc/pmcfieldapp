@@ -9,19 +9,30 @@ const CustomDrawer = ({navigation}: {navigation: any}) => {
 
   const dispatch = useDispatch()
 
-  const loggedInUser = useSelector(state => state.Auth.userInfo);
+  const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
 
   const logout = () => {
     dispatch(logoutUser());
   };
   
-  const checkPermissions = (permissions: string[]) => {
+  const checkPermissions = (permissions: string[], categories?: string[]) => {
     let index = -1;
+    const roles = loggedInUser.roles?.split(',') || [];
     permissions.forEach((item) => {
-      if (loggedInUser.roles?.split(',').indexOf(item) != -1) {
+      if (roles.indexOf(item) != -1) {
         index = 1;
       }
     })
+
+    if (categories && index === -1 && roles.length === 1 && roles[0] === "user") {
+      const userCategories = loggedInUser.categories?.split(',');
+
+      categories.forEach((item) => {
+        if (userCategories.indexOf(item) != -1) {
+          index = 1;
+        }
+      })
+    }
 
     return index;
   }
@@ -62,7 +73,7 @@ const CustomDrawer = ({navigation}: {navigation: any}) => {
         </TouchableOpacity>
         <FlatList data={Dashboard_MENU}
         renderItem={({ item }) =>
-          checkPermissions(item.permissions) != -1 &&
+          checkPermissions(item.permissions, item.categories) != -1 &&
           <TouchableOpacity style={styles.MenuContainer} onPress={() => { navigation.navigate(item.route); navigation.closeDrawer();}}>
           <Image style={styles.MenuIcon} source={item.iconMenu} />
           <Text style={styles.MenuText}>{item.title}</Text>

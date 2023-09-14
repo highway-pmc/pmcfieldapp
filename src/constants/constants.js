@@ -35,7 +35,8 @@ export const Dashboard_MENU = [
         title: "My Work",
         subTitle: "Check your task",
         route: 'MyWork',
-        permissions: ["project-head", "structure-head", "highway-head", "other-work-head"]
+        permissions: ["project-head", "structure-head", "highway-head", "other-work-head"],
+        categories: ["structure-work", "highway-work", "other-work"]
     },
     {
         id: "2",
@@ -44,7 +45,8 @@ export const Dashboard_MENU = [
         title: "My Test",
         subTitle: "My Test",
         route: 'MyTest',
-        permissions: ["project-head", "quality-head"]
+        permissions: ["project-head", "quality-head"],
+        categories: ["quality-work"]
     },
     {
         id: "3",
@@ -176,4 +178,11 @@ export const BLOOD_GROUP = [
         label: 'AB-', value: 'AB-'
     }
 ];
+
+export const USER_CATEGORY = {
+    STRUCTURE_WORK: 'structure-work',
+    HIGHWAY_WORK: 'highway-work',
+    OTHER_WORK: 'other-work',
+    QUALITY_WORK: 'quality-work',
+  };
 

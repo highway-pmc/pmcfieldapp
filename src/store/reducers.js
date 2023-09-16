@@ -230,12 +230,14 @@ const UserAssignmentReducer = (state = userAssignmentState, action) => {
             return {
                 ...state,
                 users: null,
+                usersAdded: null,
                 error: null,
                 loading: true,
             };
         case "GET_USER_ASSIGNMENT_SUCCESS":
             return {
                 ...state,
+                usersAdded: null,
                 users: action.response,
                 error: null,
                 loading: false,
@@ -244,6 +246,7 @@ const UserAssignmentReducer = (state = userAssignmentState, action) => {
             return {
                 ...state,
                 users: null,
+                usersAdded: null,
                 error: action.error,
                 loading: false,
             };
@@ -251,6 +254,7 @@ const UserAssignmentReducer = (state = userAssignmentState, action) => {
             return {
                 ...state,
                 usersAdded: null,
+                users: null,
                 error: null,
                 loading: true,
             };
@@ -258,6 +262,7 @@ const UserAssignmentReducer = (state = userAssignmentState, action) => {
             return {
                 ...state,
                 usersAdded: action.response,
+                users: null,
                 error: null,
                 loading: false,
             };
@@ -265,9 +270,18 @@ const UserAssignmentReducer = (state = userAssignmentState, action) => {
             return {
                 ...state,
                 usersAdded: null,
+                users: null,
                 error: action.error,
                 loading: false,
             };
+            case "CLEAR_USER_ASSIGNMENT":
+                return {
+                    ...state,
+                    usersAdded: null,
+                    users: null,
+                    error: null,
+                    loading: false,
+                };
         default:
             return state;
     }

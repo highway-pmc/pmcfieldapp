@@ -7,3 +7,7 @@ export const addUserCategories = (user) => ({
     payload: user,
 });
 
+export const clearUserAssignment = () => ({
+    type: "CLEAR_USER_ASSIGNMENT"
+});
+

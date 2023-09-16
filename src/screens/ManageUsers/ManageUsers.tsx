@@ -14,19 +14,21 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
-import {HeaderItems, USER_CATEGORIES, USER_CATEGORY} from '../../constants/constants';
+import {HeaderItems, USER_CATEGORIES, USER_CATEGORY, UserRoles} from '../../constants/constants';
 import CheckBox from '@react-native-community/checkbox';
 import { RadioButton } from 'react-native-paper';
 import LoadingAnimation from '../Common/LoadingAnimation';
 import { useDispatch, useSelector } from 'react-redux';
 import { user } from '../../models/user';
-import { addUserCategories, getUsers } from './actions';
+import { addUserCategories, clearUserAssignment, getUsers } from './actions';
 
 const ManageUsers = ({navigation}:{navigation: any}) => {
   const [selectedUserId, setSelectedUserId] = useState('');
   const [isAssignPopOpen, openAssignPopup] = useState(false);
+  const [projectHead, setProjectHead] = useState(false);
   const [userList, setUserList] = useState([]);
 
+  const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
   const { users, usersAdded, loading, error} = useSelector((state: any) => state.UserAssignment);
 
   const dispatch = useDispatch()
@@ -51,8 +53,18 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
   }, [usersAdded, error]);
 
   useEffect(() => {
+    if(loggedInUser.roles) {
+      if (loggedInUser.roles.split(',').find((role: any) => role === "project-head")) {
+        setProjectHead(true);
+      }
+    }
     dispatch(getUsers());
   }, []);
+
+  // unmount
+  useEffect( () => () => {
+    dispatch(clearUserAssignment());
+  }, [] );
 
   const onUserCategoryAssignment = () => {
     const categories = userCategories.filter(item => item.isChecked).map(item => item.value)
@@ -152,13 +164,16 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
                 <Text style={styles.UserRole}>{item.designation}</Text>
               </View>
             </View>
-            <View>
+            {
+              projectHead && <View>
               <RadioButton
                 value={item._id}
                 color="#1C58C0"
                 uncheckedColor="gray"
               />
             </View>
+            }
+            
           </View>
         ))}
       </RadioButton.Group>
@@ -178,7 +193,8 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
       </ScrollView>
 
       {/* Footer Assign CTA Start */}
-      <View
+      {
+        projectHead && <View
         style={{
           flexDirection: 'row',
           alignItems: 'center',
@@ -201,6 +217,7 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
           <Text style={styles.textStyle}>Assign Task</Text>
         </Pressable>
       </View>
+      }
 
       {/* Modal Start */}
       <Modal

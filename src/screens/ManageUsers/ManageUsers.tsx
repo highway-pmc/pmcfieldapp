@@ -20,16 +20,17 @@ import { RadioButton } from 'react-native-paper';
 import LoadingAnimation from '../Common/LoadingAnimation';
 import { useDispatch, useSelector } from 'react-redux';
 import { user } from '../../models/user';
-import { addUserCategories, clearUserAssignment, getUsers } from './actions';
+import { addUserCategories, clearUserAssignment, getUsers, getUserCategories } from './actions';
 
 const ManageUsers = ({navigation}:{navigation: any}) => {
   const [selectedUserId, setSelectedUserId] = useState('');
   const [isAssignPopOpen, openAssignPopup] = useState(false);
   const [projectHead, setProjectHead] = useState(false);
   const [userList, setUserList] = useState([]);
+  const [userCategories, setUserCategories] = useState([]);
 
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const { users, usersAdded, loading, error} = useSelector((state: any) => state.UserAssignment);
+  const { users, usersAdded, categories, loading, error} = useSelector((state: any) => state.UserAssignment);
 
   const dispatch = useDispatch()
 
@@ -47,8 +48,21 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
   }, [users, error]);
 
   useEffect(() => {
+    if (categories) {
+      categories.forEach((cate: any) => {
+        cate.isChecked = false
+      });
+      setUserCategories(categories);
+    }
+  }, [categories, error]);
+
+  useEffect(() => {
     if (usersAdded) {
       Alert.alert("Success", "User categories added successfully");
+      const selectedUser: any = userList.find((u: user) => u._id === selectedUserId);
+      if (selectedUser) {
+        selectedUser.categories = getSelectedUserCategories();
+      } 
     }
   }, [usersAdded, error]);
 
@@ -59,6 +73,7 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
       }
     }
     dispatch(getUsers());
+    dispatch(getUserCategories());
   }, []);
 
   // unmount
@@ -67,31 +82,41 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
   }, [] );
 
   const onUserCategoryAssignment = () => {
-    const categories = userCategories.filter(item => item.isChecked).map(item => item.value)
-
     dispatch(addUserCategories({
       userId: selectedUserId,
-      categories: categories
+      categories: getSelectedUserCategories()
     }));
   }
 
-  const [userCategories, setUserCategories] = useState(USER_CATEGORIES);
+  const getSelectedUserCategories = () => {
+    const categories: any[] = [];//userCategories.filter((item: any) => item.isChecked).forEach();
+    userCategories.forEach((item: any) => {
+      if(item.isChecked) {
+        categories.push({
+          id: item._id,
+          name: item.name
+        })
+      }
+    });
+
+    return categories;
+  }
 
   const handleRadioChange = (value: any) => {
     setSelectedUserId(value);
 
-    const userCate: any = userList.find((u: user) => u._id === value);
+    const selectedUser: any = userList.find((u: user) => u._id === value);
 
-    if (userCate && userCate.categories) {
-      userCategories.forEach((cate) => {
-        if (userCate.categories.indexOf(cate.value) != -1) {
+    if (selectedUser && selectedUser.categories) {
+      userCategories.forEach((cate: any) => {
+        if (selectedUser.categories.find((uCate: any) => uCate.name == cate.name)) {
           cate.isChecked = true;
         } else {
           cate.isChecked = false;
         }
       })
     } else {
-      userCategories.forEach((cate) => {
+      userCategories.forEach((cate: any) => {
         cate.isChecked = false;
       })
     }
@@ -101,14 +126,14 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
     // const updatedCheckboxes = [...userCategories];
     // updatedCheckboxes[index].isChecked = !updatedCheckboxes[index].isChecked;
     item.isChecked = !item.isChecked;
-    if(item.isChecked && item.value === USER_CATEGORY.QUALITY_WORK) {
-      userCategories.forEach((cate) => {
-        if (cate.value != USER_CATEGORY.QUALITY_WORK) {
+    if(item.isChecked && item.name === USER_CATEGORY.QUALITY_WORK) {
+      userCategories.forEach((cate: any) => {
+        if (cate.name != USER_CATEGORY.QUALITY_WORK) {
           cate.isChecked = false;
         }
       })
     } else if (item.isChecked) {
-      const qualityWork = userCategories.find(cate => cate.value === USER_CATEGORY.QUALITY_WORK);
+      const qualityWork: any = userCategories.find((cate: any) => cate.name === USER_CATEGORY.QUALITY_WORK);
       if (qualityWork) {
         qualityWork.isChecked = false;
       }
@@ -117,9 +142,11 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
   };
 
   const openUserCategoriesOptions = () => {
-    userCategories.forEach(items => {
-        items.isChecked = false;
-    });
+    if (!selectedUserId) {
+      userCategories.forEach((cate: any) => {
+        cate.isChecked = false;
+      });
+    }
     openAssignPopup(!isAssignPopOpen);
   };
 
@@ -243,7 +270,7 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
                 </TouchableOpacity>
               </View>
               <View style={styles.ModalInnerContainer}>
-              {userCategories.map((item, index) => (
+              {userCategories.map((item: any, index) => (
                   <View style={styles.CategoryType}>
                     <View style={styles.FlexRowCenter}>
                       <CheckBox
@@ -254,7 +281,7 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
                       />
                       <View>
                         <Text style={styles.AssignRoleText}>
-                          {item.label}
+                          {item.displayName}
                         </Text>
                       </View>
                     </View>

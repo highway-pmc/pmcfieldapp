@@ -226,6 +226,33 @@ const UserProfileReducer = (state = userProfileState, action) => {
 
 const UserAssignmentReducer = (state = userAssignmentState, action) => {
     switch (action.type) {
+        case "GET_USER_CATEGORY_REQUEST":
+            return {
+                ...state,
+                users: null,
+                usersAdded: null,
+                categories: null,
+                error: null,
+                loading: true,
+            };
+        case "GET_USER_CATEGORY_SUCCESS":
+            return {
+                ...state,
+                usersAdded: null,
+                users: null,
+                categories: action.response,
+                error: null,
+                loading: false,
+            };
+        case "GET_USER_CATEGORY_FAILURE":
+            return {
+                ...state,
+                users: null,
+                usersAdded: null,
+                categories: null,
+                error: action.error,
+                loading: false,
+            };
         case "GET_USER_ASSIGNMENT_REQUEST":
             return {
                 ...state,

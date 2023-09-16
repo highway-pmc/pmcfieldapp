@@ -1,6 +1,15 @@
 
 import { put, takeLatest } from 'redux-saga/effects';
-import { getUserAssignment, userCategoriesAssignment } from '../../services/user/user.service';
+import { getUserAssignment, getUserCategory, userCategoriesAssignment } from '../../services/user/user.service';
+function* getUserCategories() {
+    try {
+        const response = yield (getUserCategory());
+        yield put({ type: "GET_USER_CATEGORY_SUCCESS", response });
+    } catch (error) {
+        yield put({ type: "GET_USER_CATEGORY_FAILURE", error: error.message });
+    }
+}
+
 function* getUsers() {
     try {
         const response = yield (getUserAssignment());
@@ -20,6 +29,7 @@ function* addUserCategories({ payload }) {
 }
 
 export default function* userCategoriesAssignmentScreenSaga() {
+    yield takeLatest("GET_USER_CATEGORY_REQUEST", getUserCategories);
     yield takeLatest("GET_USER_ASSIGNMENT_REQUEST", getUsers);
     yield takeLatest("ADD_USER_ASSIGNMENT_REQUEST", addUserCategories);
 }

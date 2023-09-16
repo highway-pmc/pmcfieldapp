@@ -130,7 +130,7 @@ const Profile = () => {
       if (userProfileInfo.userProfile?.dob) {
         setDOB(moment(new Date(userProfileInfo.userProfile.dob)).format('YYYY-MM-DD'));
       }
-      setLanguage(userProfileInfo.userProfile?.language.split(','));
+      setLanguage(userProfileInfo.userProfile?.language?.split(','));
       setNationality(userProfileInfo.userProfile?.nationality);
       setMaritalStatus(userProfileInfo.userProfile?.maritalStatus);
       setBloodGroup(userProfileInfo.userProfile?.bloodGroup);
@@ -283,7 +283,7 @@ const Profile = () => {
             </View>
             <View style={styles.FormGroup}>
               <Text style={styles.LabelText}>Current Firm</Text>
-              <Text style={styles.LabelSubText}>--</Text>
+              <Text style={styles.LabelSubText}>{userProfileInfo?.userProfile?.currentFirm}</Text>
             </View>
             <View style={styles.FormGroup}>
               <Text style={styles.LabelText}>Select State</Text>
@@ -674,7 +674,7 @@ const Profile = () => {
               </View>
               <View style={styles.FormGroup}>
                 <Text style={styles.LabelText}>Current Firm</Text>
-                <Text style={styles.LabelSubText}>--</Text>
+                <Text style={styles.LabelSubText}>{userProfileInfo?.userProfile?.currentFirm}</Text>
               </View>
               <View style={styles.FormGroup}>
                 <Text style={styles.LabelText}>Previous Firm</Text>
@@ -702,7 +702,7 @@ const Profile = () => {
               </View>
               <View style={styles.FormGroup}>
                 <Text style={styles.LabelText}>Language Known</Text>
-                <Text style={styles.LabelSubText}>{userProfileInfo?.userProfile?.language ? userProfileInfo.userProfile.language.split(',').map((lang: any) => {
+                <Text style={styles.LabelSubText}>{userProfileInfo?.userProfile?.language ? userProfileInfo.userProfile.language?.split(',').map((lang: any) => {
                   return LANGUAGE.find(item => item.value === lang)?.label
                 }).join(', ') : '--'}</Text>
               </View>

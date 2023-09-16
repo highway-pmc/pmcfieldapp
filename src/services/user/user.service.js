@@ -58,3 +58,12 @@ export const userCategoriesAssignment = async (userId, categories) => {
         throw new Error(errorMessge);
     });
 }
+
+export const getUserCategory = async () => {
+    return apiService.getRequest('v1/auth/users/category').then((response) => {
+        return response;
+    }).catch((err) => {
+        const errorMessge = err.message || 'Unable to get list user category.';
+        throw new Error(errorMessge);
+    });
+}

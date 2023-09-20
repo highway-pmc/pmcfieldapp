@@ -21,7 +21,7 @@ const ForgotPasswordStep2 = ({route, navigation}: { route: any, navigation: any 
   const { username } = route.params;
   const [otpError, setOtpError] = useState("")
   const [formSubmitted, setFormSubmitted] = useState(false)
-  const {verifyOtp, loading, error} = useSelector(state => state.ForgotPassword)
+  const {verifyOtp, loading, error} = useSelector((state: any) => state.ForgotPassword)
   const dispatch = useDispatch()
 
   const handleOtpError = (otp = "") => {

@@ -5,8 +5,11 @@ export interface user {
     name: string,
     phone: string,
     password?: string,
+    projectId: string,
+    projectName: string,
     designation?: string,
     roles: string,
     isPasswordSet?: number,
-    authToken: string
+    authToken: string,
+    categories?: string
 };

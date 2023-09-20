@@ -14,6 +14,18 @@ const userProfileState = {
     error: null,
 }
 
+const userAssignmentState = {
+    loading: false,
+    users: null,
+    error: null,
+}
+
+const projectInfoState = {
+    loading: false,
+    projectInfo: null,
+    error: null,
+}
+
 const AuthReducer = (state = initialState, action) => {
     switch (action.type) {
         case "LOGIN_REQUEST":
@@ -218,9 +230,135 @@ const UserProfileReducer = (state = userProfileState, action) => {
     }
 }
 
+const UserAssignmentReducer = (state = userAssignmentState, action) => {
+    switch (action.type) {
+        case "GET_USER_CATEGORY_REQUEST":
+            return {
+                ...state,
+                users: null,
+                usersAdded: null,
+                categories: null,
+                error: null,
+                loading: true,
+            };
+        case "GET_USER_CATEGORY_SUCCESS":
+            return {
+                ...state,
+                usersAdded: null,
+                users: null,
+                categories: action.response,
+                error: null,
+                loading: false,
+            };
+        case "GET_USER_CATEGORY_FAILURE":
+            return {
+                ...state,
+                users: null,
+                usersAdded: null,
+                categories: null,
+                error: action.error,
+                loading: false,
+            };
+        case "GET_USER_ASSIGNMENT_REQUEST":
+            return {
+                ...state,
+                users: null,
+                usersAdded: null,
+                error: null,
+                loading: true,
+            };
+        case "GET_USER_ASSIGNMENT_SUCCESS":
+            return {
+                ...state,
+                usersAdded: null,
+                users: action.response,
+                error: null,
+                loading: false,
+            };
+        case "GET_USER_ASSIGNMENT_FAILURE":
+            return {
+                ...state,
+                users: null,
+                usersAdded: null,
+                error: action.error,
+                loading: false,
+            };
+        case "ADD_USER_ASSIGNMENT_REQUEST":
+            return {
+                ...state,
+                usersAdded: null,
+                users: null,
+                error: null,
+                loading: true,
+            };
+        case "ADD_USER_ASSIGNMENT_SUCCESS":
+            return {
+                ...state,
+                usersAdded: action.response,
+                users: null,
+                error: null,
+                loading: false,
+            };
+        case "ADD_USER_ASSIGNMENT_FAILURE":
+            return {
+                ...state,
+                usersAdded: null,
+                users: null,
+                error: action.error,
+                loading: false,
+            };
+        case "CLEAR_USER_ASSIGNMENT":
+            return {
+                ...state,
+                usersAdded: null,
+                users: null,
+                error: null,
+                loading: false,
+            };
+        default:
+            return state;
+    }
+}
+
+const ProjectInfoReducer = (state = projectInfoState, action) => {
+    switch (action.type) {
+        case "GET_PROJECT_INFO_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "GET_PROJECT_INFO_SUCCESS":
+            return {
+                ...state,
+                projectInfo: action.response,
+                error: null,
+                loading: false,
+            };
+        case "GET_PROJECT_INFO_FAILURE":
+            return {
+                ...state,
+                projectInfo: null,
+                error: action.error,
+                loading: false,
+            };
+        case "CLEAR_PROJECT_INFO":
+            return {
+                ...state,
+                projectInfo: null,
+                error: null,
+                loading: false,
+            };
+        default:
+            return state;
+    }
+}
+
 export const combinedReducers = combineReducers({
     form: formReducer,
     Auth: AuthReducer,
     ForgotPassword: ForgotPasswordReducer,
-    UserProfile: UserProfileReducer
+    UserProfile: UserProfileReducer,
+    UserAssignment: UserAssignmentReducer,
+    ProjectInfo: ProjectInfoReducer
 })

@@ -16,20 +16,31 @@ import { useSelector } from 'react-redux';
 
 const DashboardListing = ({ navigation }: { navigation: any }) => {
 
-  const loggedInUser = useSelector(state => state.Auth.userInfo);
+  const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
 
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();
     eventEmitter.emit('headerEvent', HeaderItems.dashboard);
   }
 
-  const checkPermissions = (permissions: string[]) => {
+  const checkPermissions = (permissions: string[], categories?: string[]) => {
     let index = -1;
+    const roles = loggedInUser.roles?.split(',') || [];
     permissions.forEach((item) => {
-      if (loggedInUser.roles?.split(',').indexOf(item) != -1) {
+      if (roles.indexOf(item) != -1) {
         index = 1;
       }
     })
+
+    if (categories && index === -1 && roles.length === 1 && roles[0] === "user") {
+      const userCategories = loggedInUser.categories?.split(',');
+
+      categories.forEach((item) => {
+        if (userCategories.indexOf(item) != -1) {
+          index = 1;
+        }
+      })
+    }
 
     return index;
   }
@@ -38,7 +49,7 @@ const DashboardListing = ({ navigation }: { navigation: any }) => {
     <ScrollView style={styles.Container}>
       <FlatList data={Dashboard_MENU}
         renderItem={({ item }) =>
-        checkPermissions(item.permissions) != -1 &&
+        checkPermissions(item.permissions, item.categories) != -1 &&
           <TouchableOpacity style={styles.MenuContainer} onPress={() => {
             navigation.navigate(item.route);
             navigation.closeDrawer();

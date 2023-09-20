@@ -23,6 +23,7 @@ import { user } from '../../models/user';
 import { addUserCategories, clearUserAssignment, getUsers, getUserCategories } from './actions';
 
 const ManageUsers = ({navigation}:{navigation: any}) => {
+  const [searchText, setSearchText] = useState('');
   const [selectedUserId, setSelectedUserId] = useState('');
   const [isAssignPopOpen, openAssignPopup] = useState(false);
   const [projectHead, setProjectHead] = useState(false);
@@ -169,12 +170,21 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
             returnKeyType="next"
             underlineColorAndroid="#f000"
             blurOnSubmit={false}
+            onChangeText={(text) => {
+              setSearchText(text);
+            }}
           />
         </View>
       </View>
       <ScrollView style={styles.Height80}>
       <RadioButton.Group onValueChange={handleRadioChange} value={selectedUserId}>
-        {userList.map((item: user, index) => (
+        {userList.filter((u: any) => {
+          if (searchText && u.name) {
+            return u.name.toLowerCase().includes(searchText.toLowerCase())
+          } else {
+            return true;
+          }
+        }).map((item: user, index) => (
           <View style={styles.UserCategory}>
             <View style={styles.FlexRowCenter}>
               <Image
@@ -510,7 +520,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   Height80: {
-    height: '87%',
+    height: '83%',
   },
   Height100: {
     height: '100%',

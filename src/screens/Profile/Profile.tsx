@@ -158,7 +158,7 @@ const Profile = () => {
     setFormSubmitted(true);
     const higherEduErrorMgs = fieldRequired(higherEdu, "Higher edu");
     const genderErrorMgs = fieldRequired(gender, "Gender");
-    const addressErrorMgs = fieldRequired(address, "Address");
+    const addressErrorMgs = fieldRequired(address, "Permanent Address");
     const bloodGroupErrorMgs = fieldRequired(bloodGroup, "Blood group");
     const dobErrorMgs = fieldRequired(dob, "Date of birth");
     const emergencyPhoneErrorMgs = fieldRequired(emergencyPhone, "Emergency contact");
@@ -403,7 +403,7 @@ const Profile = () => {
               <Text style={styles.LabelText}>Project Undertaken</Text>
               <View style={styles.SectionStyle}> 
                 <TextInput
-                  style={styles.inputStyle}
+                  style={styles.inputMultilineStyle}
                   multiline={true}
                   numberOfLines={4}
                   maxLength={1000}
@@ -589,11 +589,13 @@ const Profile = () => {
             </View>
 
             <View style={styles.FormGroup}>
-              <Text style={styles.LabelText}>Address</Text>
+              <Text style={styles.LabelText}>Permanent Address</Text>
               <View style={styles.SectionStyle}> 
                 <TextInput
-                  style={styles.inputStyle}
-                  placeholder="Address"
+                  style={styles.inputMultilineStyle}
+                  multiline={true}
+                  numberOfLines={3}
+                  placeholder="Permanent Address"
                   autoCapitalize="none"
                   keyboardType="email-address"
                   returnKeyType="next"
@@ -715,7 +717,7 @@ const Profile = () => {
                 <Text style={styles.LabelSubText}>{userProfileInfo?.userProfile?.emergencyPhone}</Text>
               </View>
               <View style={styles.FormGroup}>
-                <Text style={styles.LabelText}>Address</Text>
+                <Text style={styles.LabelText}>Permanent Address</Text>
                 <Text style={styles.LabelSubText}>{userProfileInfo?.userProfile?.address}</Text>
               </View>
               <View style={styles.FormGroup}>
@@ -796,6 +798,19 @@ const styles = StyleSheet.create({
     height: '100%'
   },
   inputStyle: {
+    flex: 1,
+    color: '#2c2c2c',
+    paddingLeft: 15,
+    paddingRight: 15,
+    borderWidth: 1,
+    borderRadius: 8,
+    borderColor: '#E1E1E1',
+    backgroundColor: '#fff',
+    fontWeight: '600',
+    paddingVertical: 10,
+    height: 45
+  },
+  inputMultilineStyle: {
     flex: 1,
     color: '#2c2c2c',
     paddingLeft: 15,

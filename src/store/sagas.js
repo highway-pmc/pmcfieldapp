@@ -4,6 +4,7 @@ import forgotPasswordScreenSaga from '../screens/ForgotPassword/saga';
 import userScreenSaga from '../screens/SetPassword/saga';
 import userProfileScreenSaga from '../screens/Profile/saga';
 import userCategoriesAssignmentScreenSaga from '../screens/ManageUsers/saga';
+import projectInfoScreenSaga from '../screens/ProjectInfo/saga';
 
 function* rootSaga() {
     yield all([
@@ -11,7 +12,8 @@ function* rootSaga() {
         forgotPasswordScreenSaga(),
         userScreenSaga(),
         userProfileScreenSaga(),
-        userCategoriesAssignmentScreenSaga()
+        userCategoriesAssignmentScreenSaga(),
+        projectInfoScreenSaga()
       ])
 }
 

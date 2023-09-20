@@ -20,6 +20,12 @@ const userAssignmentState = {
     error: null,
 }
 
+const projectInfoState = {
+    loading: false,
+    projectInfo: null,
+    error: null,
+}
+
 const AuthReducer = (state = initialState, action) => {
     switch (action.type) {
         case "LOGIN_REQUEST":
@@ -301,14 +307,48 @@ const UserAssignmentReducer = (state = userAssignmentState, action) => {
                 error: action.error,
                 loading: false,
             };
-            case "CLEAR_USER_ASSIGNMENT":
-                return {
-                    ...state,
-                    usersAdded: null,
-                    users: null,
-                    error: null,
-                    loading: false,
-                };
+        case "CLEAR_USER_ASSIGNMENT":
+            return {
+                ...state,
+                usersAdded: null,
+                users: null,
+                error: null,
+                loading: false,
+            };
+        default:
+            return state;
+    }
+}
+
+const ProjectInfoReducer = (state = projectInfoState, action) => {
+    switch (action.type) {
+        case "GET_PROJECT_INFO_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "GET_PROJECT_INFO_SUCCESS":
+            return {
+                ...state,
+                projectInfo: action.response,
+                error: null,
+                loading: false,
+            };
+        case "GET_PROJECT_INFO_FAILURE":
+            return {
+                ...state,
+                projectInfo: null,
+                error: action.error,
+                loading: false,
+            };
+        case "CLEAR_PROJECT_INFO":
+            return {
+                ...state,
+                projectInfo: null,
+                error: null,
+                loading: false,
+            };
         default:
             return state;
     }
@@ -319,5 +359,6 @@ export const combinedReducers = combineReducers({
     Auth: AuthReducer,
     ForgotPassword: ForgotPasswordReducer,
     UserProfile: UserProfileReducer,
-    UserAssignment: UserAssignmentReducer
+    UserAssignment: UserAssignmentReducer,
+    ProjectInfo: ProjectInfoReducer
 })

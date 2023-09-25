@@ -26,6 +26,14 @@ const projectInfoState = {
     error: null,
 }
 
+const workAssignmentState = {
+    loading: false,
+    projectModules: null,
+    segments: null,
+    subSegments: null,
+    error: null,
+}
+
 const AuthReducer = (state = initialState, action) => {
     switch (action.type) {
         case "LOGIN_REQUEST":
@@ -394,11 +402,88 @@ const ProjectInfoReducer = (state = projectInfoState, action) => {
     }
 }
 
+const WorkAssignmentReducer = (state = workAssignmentState, action) => {
+    switch (action.type) {
+        case "GET_PROJECT_MODULES_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "GET_PROJECT_MODULES_SUCCESS":
+            return {
+                ...state,
+                projectModules: action.response,
+                error: null,
+                loading: false,
+            };
+        case "GET_PROJECT_MODULES_FAILURE":
+            return {
+                ...state,
+                projectModules: null,
+                error: action.error,
+                loading: false,
+            };
+        case "GET_PROJECT_MODULE_SEGMENTS_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "GET_PROJECT_MODULE_SEGMENTS_SUCCESS":
+            return {
+                ...state,
+                segments: action.response,
+                error: null,
+                loading: false,
+            };
+        case "GET_PROJECT_MODULE_SEGMENTS_FAILURE":
+            return {
+                ...state,
+                segments: null,
+                error: action.error,
+                loading: false,
+            };
+        case "GET_PROJECT_MODULE_SUB_SEGMENTS_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "GET_PROJECT_MODULE_SUB_SEGMENTS_SUCCESS":
+            return {
+                ...state,
+                subSegments: action.response,
+                error: null,
+                loading: false,
+            };
+        case "GET_PROJECT_MODULE_SUB_SEGMENTS_FAILURE":
+            return {
+                ...state,
+                subSegments: null,
+                error: action.error,
+                loading: false,
+            };
+        case "GET_PROJECT_MODULES_INFO":
+            return {
+                ...state,
+                projectModules: null,
+                segments: null,
+                subSegments: null,
+                error: null,
+                loading: false,
+            };
+        default:
+            return state;
+    }
+}
+
 export const combinedReducers = combineReducers({
     form: formReducer,
     Auth: AuthReducer,
     ForgotPassword: ForgotPasswordReducer,
     UserProfile: UserProfileReducer,
     UserAssignment: UserAssignmentReducer,
-    ProjectInfo: ProjectInfoReducer
+    ProjectInfo: ProjectInfoReducer,
+    WorkAssignment: WorkAssignmentReducer,
 })

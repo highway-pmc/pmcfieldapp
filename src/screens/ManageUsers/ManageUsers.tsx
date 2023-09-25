@@ -263,8 +263,8 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
         </Pressable>
 
         <Pressable
-          style={[styles.buttonAssign]} onPress={() => navigation.navigate("AssignTask")}>
-          <Text style={styles.textStyle}>Assign Task</Text>
+          style={[styles.buttonAssign]} onPress={() => navigation.navigate("AssignWork")}>
+          <Text style={styles.textStyle}>Assign Work</Text>
         </Pressable>
       </View>
       }

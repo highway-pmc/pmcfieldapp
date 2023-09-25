@@ -1,139 +1,77 @@
-import {
-  View,
-  Text,
-  NativeEventEmitter,
-  TouchableOpacity,
-  StyleSheet,
-  Image,
-  Modal,
-  TextInput,
-} from 'react-native';
-import React, {useState} from 'react';
-import {useIsFocused} from '@react-navigation/native';
-import {HeaderItems} from '../../constants/constants';
+import { View, Text, TouchableOpacity, NativeEventEmitter, StyleSheet, Image } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { useIsFocused } from '@react-navigation/native';
+import { HeaderItems } from '../../constants/constants';
+import { useDispatch, useSelector } from 'react-redux';
+import { getProjectModuleSegments } from './actions';
+import { ScrollView } from 'react-native-gesture-handler';
 import CheckBox from '@react-native-community/checkbox';
-import {ScrollView} from 'react-native-gesture-handler';
+import LoadingAnimation from '../Common/LoadingAnimation';
 
-const AssignTask = ({navigation}: {navigation: any}) => {
+const SegmentsList = ({route, navigation}: { route: any, navigation: any }) => {
+  const { projectModuleId, projectModuleName, type, subType } = route.params;
+  
+  const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
+  const { segments,  loading, error} = useSelector((state: any) => state.WorkAssignment);
+  const [segmentsData, setSegmentsData] = useState([]);
+
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (segments) {
+      // console.log("============", projectModuleName + " > " + subType)
+      // const eventEmitter = new NativeEventEmitter();
+      // eventEmitter.emit('headerEvent', (projectModuleName + " > " + subType));
+      segments.forEach((pModule: any) => {
+        pModule.isChecked = false
+      });
+      setSegmentsData(segments);
+    }
+  }, [segments, error]);
+
+  useEffect(() => {
+    dispatch(getProjectModuleSegments({
+      projectId: loggedInUser.projectId,
+      projectModuleId: projectModuleId
+    }));
+  }, []);
+
+  
+
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();
-    eventEmitter.emit('headerEvent', HeaderItems.assignTask);
+    eventEmitter.emit('headerEvent', HeaderItems.segmentsList);
   }
-  const [isAssignPopOpen, openAssignPopup] = useState(false);
-  const [checkboxes, setCheckboxes] = useState([
-    {
-      id: '1',
-      title: 'Flyover 1',
-      isChecked: false,
-    },
-    {
-      id: '2',
-      title: 'Flyover 2',
-      isChecked: false,
-    },
-    {
-      id: '3',
-      title: 'Flyover 3',
-      isChecked: false,
-    },
-    {
-      id: '4',
-      title: 'Flyover 4',
-      isChecked: false,
-    },
-    {
-      id: '5',
-      title: 'Flyover 5',
-      isChecked: false,
-    },
-  ]);
-
-  const [userData, setUserCheckboxes] = useState([
-    {
-      id: '1',
-      title: 'Rajiv Ranjan',
-      isChecked: false,
-    },
-    {
-      id: '2',
-      title: 'Shubham Varma',
-      isChecked: false,
-    },
-    {
-      id: '3',
-      title: 'Rishi Kant',
-      isChecked: false,
-    },
-    {
-      id: '4',
-      title: 'Pradeep kumar',
-      isChecked: false,
-    },
-    {
-      id: '5',
-      title: 'Ravi Prakash',
-      isChecked: false,
-    },
-  ]);
-  const handleRadioChange = (index: any) => {
-    const updatedCheckboxes = [...checkboxes];
-    updatedCheckboxes[index].isChecked = !updatedCheckboxes[index].isChecked;
-    setCheckboxes(updatedCheckboxes);
-    openAssignPopup(!isAssignPopOpen);
-  };
-
-  const handleUserData = (index: any) => {
-    const updatedCheckboxes = [...userData];
-    updatedCheckboxes[index].isChecked = !updatedCheckboxes[index].isChecked;
-    setUserCheckboxes(updatedCheckboxes);
-  };
-
-  const openAssignClose = () => {
-    checkboxes.forEach(items => {
-      items.isChecked = false;
-    });
-    userData.forEach(items => {
-        items.isChecked = false;
-    });
-    openAssignPopup(!isAssignPopOpen);
-  };
 
   return (
-    <View style={styles.Container}>
-        <View style={styles.TopHeaderFixed}>
-        <View style={styles.SectionStyle}>
-          <Image
-            source={require('./../../images/search-icon.png')}
-            style={styles.ImageSearch}
-          />
-          <TextInput
-            style={styles.inputStyle}
-            placeholder="Search user"
-            autoCapitalize="none"
-            keyboardType="email-address"
-            returnKeyType="next"
-            underlineColorAndroid="#f000"
-            blurOnSubmit={false}
-          />
-        </View>
-      </View>
+    <View>
+      {(error) && <View style={styles.ErrorSectionStyle}>
+                <Text style={styles.errorText}>{error}</Text>
+              </View>}
       <ScrollView>
-        {checkboxes.map((item, index) => (
+        {segmentsData.map((item: any, index) => (
           <View style={styles.UserCategory}>
             <View style={styles.FlexRowCenter}>
               <CheckBox
                 value={item.isChecked}
-                onValueChange={() => handleRadioChange(index)}
+                // onValueChange={() => handleRadioChange(index)}
                 style={styles.checkbox}
                 tintColors={{true: '#0F56B3', false: '#818181'}}
               />
               <View>
-                <Text style={styles.UserRole}>{item.title}</Text>
+                <Text style={styles.UserRole}>{item.name}</Text>
               </View>
             </View>
             <View>
               <TouchableOpacity
-                onPress={() => navigation.navigate('FlyoverDetails')}>
+                onPress={() => navigation.navigate('SubSegmentsList', {
+                  projectModuleId: projectModuleId,
+                  projectModuleName: projectModuleName,
+                  segmentId: item._id,
+                  segmentName: item.name,
+                  type: type,
+                  subType: subType,
+                })}>
                 <Image
                   style={styles.CloseIcon}
                   source={require('./../../images/right-arrow.png')}
@@ -144,65 +82,23 @@ const AssignTask = ({navigation}: {navigation: any}) => {
         ))}
       </ScrollView>
 
-      {/* Modal Start */}
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={isAssignPopOpen}
-        onRequestClose={() => {
-          openAssignPopup(!isAssignPopOpen);
-        }}>
-        <View style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.3)'}}>
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <View style={styles.ModalHeader}>
-                <Text style={styles.modalText}>User's List</Text>
-                <TouchableOpacity
-                  style={styles.buttonClose}
-                  onPress={() => openAssignClose()}>
-                  <Image
-                    style={styles.CloseIcon}
-                    tintColor={'#333'}
-                    source={require('./../../images/menu/close-icon.png')}
-                  />
-                </TouchableOpacity>
-              </View>
-              <View style={styles.ModalInnerContainer}>
-                {userData.map((item, index) => (
-                  <View style={styles.CategoryType}>
-                    <View style={styles.FlexRowCenter}>
-                      <CheckBox
-                        value={item.isChecked}
-                        onValueChange={() => handleUserData(index)}
-                        style={styles.checkbox}
-                        tintColors={{true: '#0F56B3', false: '#818181'}}
-                      />
-                      <View>
-                        <Text style={styles.AssignRoleText}>
-                          {item.title}
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-                ))}
-
-                <TouchableOpacity style={styles.assignTagButoon}>
-                  <Text style={styles.assignTagButoonText}>Assign</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        </View>
-      </Modal>
+      <LoadingAnimation loading={loading}></LoadingAnimation>
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   Container: {
     flexDirection: 'column',
     paddingVertical: 10,
     padding: 15,
+  },
+  ErrorSectionStyle: {
+    flexDirection: 'row',
+    marginBottom: 20,
+  },
+  errorText: {
+    color: '#f11f1f',
   },
   NoDataContainer: {
     flexDirection: 'column',
@@ -456,4 +352,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AssignTask;
+export default SegmentsList

@@ -26,3 +26,7 @@ export const clearUserAssignmentData = () => ({
 export const clearProjectInfoData = () => ({
     type: "CLEAR_PROJECT_INFO",
 });
+
+export const clearWorkAssignmentData = () => ({
+    type: "CLEAR_WORK_ASSIGMENT",
+});

@@ -206,4 +206,9 @@ export const USER_CATEGORIES = [
     }
 ];
 
-
+export const PROJECT_TYPE = {
+    STRUCTURE_WORK: 'structure-work',
+    HIGHWAY_WORK: 'highway-work',
+    OTHER_WORK: 'other-work',
+    QUALITY_WORK: 'quality-work'
+};

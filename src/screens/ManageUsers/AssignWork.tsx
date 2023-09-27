@@ -7,14 +7,15 @@ import {
   Image,
   Modal,
   TextInput,
+  Alert,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useIsFocused} from '@react-navigation/native';
-import {HeaderItems} from '../../constants/constants';
+import {HeaderItems, PROJECT_TYPE} from '../../constants/constants';
 import CheckBox from '@react-native-community/checkbox';
 import {ScrollView} from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProjectModules } from './actions';
+import { clearProjectModulesWorkAssignmentData, getProjectModules, getUsersForWorkAssignment, projectModulesWorkAssignToUsers } from './actions';
 import LoadingAnimation from '../Common/LoadingAnimation';
 
 const AssignWork = ({navigation}: {navigation: any}) => {
@@ -27,7 +28,7 @@ const AssignWork = ({navigation}: {navigation: any}) => {
 
   const [isAssignPopOpen, openAssignPopup] = useState(false);
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const { projectModules,  loading, error} = useSelector((state: any) => state.WorkAssignment);
+  const { projectModules, users, projectModulesWorkAssigned, loading, error} = useSelector((state: any) => state.WorkAssignment);
   
   useEffect(() => {
     if (projectModules) {
@@ -36,56 +37,112 @@ const AssignWork = ({navigation}: {navigation: any}) => {
       });
       setProjectModulesData(projectModules);
     }
-  }, [projectModules, error]);
+
+    if (users) {
+      users.forEach((user: any) => {
+        user.isChecked = false
+      });
+      setUserCheckboxes(users);
+    }
+  }, [projectModules, users, error]);
 
   useEffect(() => {
     dispatch(getProjectModules({
       projectId: loggedInUser.projectId,
-      projectType: 'structure-work'
+      projectType: PROJECT_TYPE.STRUCTURE_WORK // TODO - remove hard-coded
+    }));
+
+    dispatch(getUsersForWorkAssignment({
+      projectId: loggedInUser.projectId
     }));
   }, []);
 
   const [projectModulesData, setProjectModulesData] = useState([]);
+  const [selectedProjectModule, setSelectedProjectModule] = useState({isChecked: false, _id: ""});
 
-  const [userData, setUserCheckboxes] = useState([
-    {
-      id: '1',
-      title: 'Rajiv Ranjan',
-      isChecked: false,
-    },
-    {
-      id: '2',
-      title: 'Shubham Varma',
-      isChecked: false,
-    },
-    {
-      id: '3',
-      title: 'Rishi Kant',
-      isChecked: false,
-    },
-    {
-      id: '4',
-      title: 'Pradeep kumar',
-      isChecked: false,
-    },
-    {
-      id: '5',
-      title: 'Ravi Prakash',
-      isChecked: false,
-    },
-  ]);
+  // const [usersToBeAssigned, setUsersToBeAssigned] = useState([])
+  const [userData, setUserCheckboxes] = useState([]);
+
   const handleRadioChange = (index: any) => {
-    const updatedCheckboxes: any = [...projectModulesData];
-    updatedCheckboxes[index].isChecked = !updatedCheckboxes[index].isChecked;
-    setProjectModulesData(updatedCheckboxes);
+    //const updatedCheckboxes: any = [...projectModulesData];
+    setSelectedProjectModule(projectModulesData[index]);
+    selectedProjectModule.isChecked = !selectedProjectModule.isChecked;
+    // setProjectModulesData(updatedCheckboxes);
+    if (selectedProjectModule.isChecked) {
+      userData.forEach((user: any) => {
+        const workAssignment = user.workAssignment?.find((wa: any) => wa.projectModuleId === selectedProjectModule._id && !wa.segmentId && !wa.subSegmentId);
+        if (workAssignment) {
+          user.isChecked = true;
+        } else {
+          user.isChecked = false;
+        }
+      });
+    }
+
     openAssignPopup(!isAssignPopOpen);
   };
 
   const handleUserData = (index: any) => {
-    const updatedCheckboxes = [...userData];
-    updatedCheckboxes[index].isChecked = !updatedCheckboxes[index].isChecked;
+    const updatedCheckboxes: any = [...userData];
+    const selectedUser: any = updatedCheckboxes[index];
+    selectedUser.isChecked = !selectedUser.isChecked;
+    const workAssignment = selectedUser.workAssignment?.find((wa: any) => wa.projectModuleId === selectedProjectModule._id && !wa.segmentId && !wa.subSegmentId)
+    if (selectedUser.isChecked) {
+      if (workAssignment) {
+        workAssignment.dirty = false;
+        selectedUser.dirty = false;
+      } else {
+        selectedUser.dirty = true;
+      }
+      selectedUser.delete = false;
+    } else {
+      if (!workAssignment) {
+        selectedUser.dirty = false;
+      } else {
+        selectedUser.dirty = true;
+        selectedUser.delete = true;
+        workAssignment.dirty = true;
+      }
+    }
+
     setUserCheckboxes(updatedCheckboxes);
   };
+
+  useEffect(() => {
+    if (projectModulesWorkAssigned) {
+      Alert.alert("Success", "User assigned successfully");
+      dispatch(clearProjectModulesWorkAssignmentData());
+    }
+  }, [projectModulesWorkAssigned, error]);
+
+  const onWorkAssignment = () => {
+    const usersToBeAssign = userData.filter((u: any) => u.dirty);
+
+    let usersToBeAssignArray: any = [];
+
+    usersToBeAssign.forEach((u: any) => {
+      let user: any = {
+        _id: u._id,
+        delete: u.delete || false
+      }
+      const workAssignment = u.workAssignment?.find((wa: any) => wa.dirty);
+      if (workAssignment) {
+        user.workAssignmentId = workAssignment._id;
+      }
+
+      usersToBeAssignArray.push(user);
+    });
+
+    if (usersToBeAssignArray.length) {
+      dispatch(projectModulesWorkAssignToUsers({
+        projectId: loggedInUser.projectId,
+        projectModuleId: selectedProjectModule._id,
+        body: {
+          users: usersToBeAssignArray
+        }
+      }));
+    }
+  }
 
   const openAssignClose = () => {
     projectModulesData.forEach((item: any) => {
@@ -110,7 +167,7 @@ const AssignWork = ({navigation}: {navigation: any}) => {
           />
           <TextInput
             style={styles.inputStyle}
-            placeholder="Search user"
+            placeholder="Search"
             autoCapitalize="none"
             keyboardType="email-address"
             returnKeyType="next"
@@ -175,7 +232,8 @@ const AssignWork = ({navigation}: {navigation: any}) => {
                 </TouchableOpacity>
               </View>
               <View style={styles.ModalInnerContainer}>
-                {userData.map((item, index) => (
+              <ScrollView style={{paddingTop: 10, height: 500}}>
+                {userData.map((item: any, index) => (
                   <View style={styles.CategoryType}>
                     <View style={styles.FlexRowCenter}>
                       <CheckBox
@@ -186,14 +244,15 @@ const AssignWork = ({navigation}: {navigation: any}) => {
                       />
                       <View>
                         <Text style={styles.AssignRoleText}>
-                          {item.title}
+                          {item.name}
                         </Text>
                       </View>
                     </View>
                   </View>
                 ))}
+                </ScrollView>
 
-                <TouchableOpacity style={styles.assignTagButoon}>
+                <TouchableOpacity style={styles.assignTagButoon} onPress={() => onWorkAssignment()}>
                   <Text style={styles.assignTagButoonText}>Assign</Text>
                 </TouchableOpacity>
               </View>

@@ -464,12 +464,61 @@ const WorkAssignmentReducer = (state = workAssignmentState, action) => {
                 error: action.error,
                 loading: false,
             };
-        case "GET_PROJECT_MODULES_INFO":
+        case "GET_USERS_TO_WORK_ASSIGNMENT_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "GET_USERS_TO_WORK_ASSIGNMENT_SUCCESS":
+            return {
+                ...state,
+                users: action.response,
+                error: null,
+                loading: false,
+            };
+        case "GET_USERS_TO_WORK_ASSIGNMENT_FAILURE":
+            return {
+                ...state,
+                users: null,
+                error: action.error,
+                loading: false,
+            };
+        case "PROJECT_MODULE_WORK_ASSIGNMENT_USERS_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "PROJECT_MODULE_WORK_ASSIGNMENT_USERS_SUCCESS":
+            return {
+                ...state,
+                projectModulesWorkAssigned: action.response,
+                error: null,
+                loading: false,
+            };
+        case "PROJECT_MODULE_WORK_ASSIGNMENT_USERS_FAILURE":
+            return {
+                ...state,
+                projectModulesWorkAssigned: null,
+                error: action.error,
+                loading: false,
+            };
+        case "CLEAR_PROJECT_MODULE_WORK_ASSIGNMENT_USERS":
+            return {
+                ...state,
+                projectModulesWorkAssigned: null,
+                error: null,
+                loading: false,
+            };
+        case "CLEAR_WORK_ASSIGMENT":
             return {
                 ...state,
                 projectModules: null,
                 segments: null,
                 subSegments: null,
+                projectModulesWorkAssigned: null,
+                users: null,
                 error: null,
                 loading: false,
             };

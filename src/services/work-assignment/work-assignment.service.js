@@ -26,3 +26,21 @@ export const getProjectModuleSubSegmentsData = async (projectId, projectModuleId
         throw new Error(errorMessge);
     });
 }
+
+export const getUsersForWorkAssignmentData = async (projectId) => {
+    return apiService.getRequest(`v1/auth/projects/${projectId}/users/work-assignment`).then((response) => {
+        return response;
+    }).catch((err) => {
+        const errorMessge = err.message || 'Unable to get list of users.';
+        throw new Error(errorMessge);
+    });
+}
+
+export const projectModulesWorkAssignToUsersApi = async (projectId, projectModuleId, body) => {
+    return apiService.postRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/work-assignment`, body).then((response) => {
+        return response;
+    }).catch((err) => {
+        const errorMessge = err.message || 'Unable to get list of users.';
+        throw new Error(errorMessge);
+    });
+}

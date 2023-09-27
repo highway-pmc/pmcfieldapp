@@ -10,3 +10,7 @@ export const updateUserProfile = (user) => ({
 export const getStates = () => ({
     type: "GET_STATE_CITY_REQUEST"
 });
+
+export const clearUserProfile = () => ({
+    type: "CLEAR_USER_PROFILE_DATA"
+});

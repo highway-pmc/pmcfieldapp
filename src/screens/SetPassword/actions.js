@@ -5,3 +5,7 @@ export const changePassword = (password, newPassword) => ({
         newPassword: newPassword
     },
 });
+
+export const clearUserProfile = () => ({
+    type: "CLEAR_USER_PROFILE_DATA"
+});

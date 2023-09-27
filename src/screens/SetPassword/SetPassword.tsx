@@ -14,11 +14,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import LoadingAnimation from '../Common/LoadingAnimation';
 import { passwordRequired } from '../../utils/Validations';
 import NetworkUtils from '../../utils/NetworkUtil';
-import { changePassword } from './actions';
+import { changePassword, clearUserProfile } from './actions';
 import appConfig from '../../common/app.config';
 import { users } from '../../models/users';
+import CustomAlert from '../Common/CustomAlert';
 
-const SetPassword = ({navigation}: { navigation: any }) => {
+const SetPassword = ({ navigation }: { navigation: any }) => {
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState("")
 
@@ -29,12 +30,14 @@ const SetPassword = ({navigation}: { navigation: any }) => {
   const [confirmPasswordError, setConfirmPasswordError] = useState("")
 
   const [formSubmitted, setFormSubmitted] = useState(false)
-  const {authToken, loading, error} = useSelector((state: any) => state.UserProfile)
+  const { authToken, loading, error } = useSelector((state: any) => state.UserProfile)
+  const [displayAlert, setDisplayAlert] = useState(false)
+
   const dispatch = useDispatch()
 
   const handlePasswordError = (pwd = "") => {
     const pwdError = passwordRequired(pwd);
-    if(pwdError) {
+    if (pwdError) {
       setPasswordError(pwdError);
     } else {
       setPasswordError("");
@@ -45,7 +48,7 @@ const SetPassword = ({navigation}: { navigation: any }) => {
 
   const handleNewPasswordError = (pwd = "") => {
     const pwdError = passwordRequired(pwd);
-    if(pwdError) {
+    if (pwdError) {
       setNewPasswordError(pwdError);
     } else {
       setNewPasswordError("");
@@ -54,7 +57,7 @@ const SetPassword = ({navigation}: { navigation: any }) => {
     return pwdError;
   }
 
-  const onSubmit = async() => {
+  const onSubmit = async () => {
     setPasswordError('');
     setNewPasswordError('');
     setConfirmPasswordError('');
@@ -66,7 +69,7 @@ const SetPassword = ({navigation}: { navigation: any }) => {
     }
 
     if (newPassword !== confirmPassword) {
-      setConfirmPasswordError('New password and conform password must be matched')
+      setConfirmPasswordError('New password and confirm password must be matched')
       return false;
     }
 
@@ -82,46 +85,53 @@ const SetPassword = ({navigation}: { navigation: any }) => {
 
   useEffect(() => {
     if (authToken) {
-      Alert.alert("Success", "Password has been updated successfully...");
-      setTimeout(() => {
-        const userInfo = appConfig.getUserInfo();        
-        users.findByEmail(userInfo.email).then((userDb) => {
-          const updateUserInfo = {
-            _id: userInfo._id,
-            id: userDb.id,
-            authToken: userInfo.authToken,
-            isPasswordSet: true,
-            password: newPassword
-          }
-
-        users.update(updateUserInfo).then((rowsAffected) => {
-          userInfo.isPasswordSet = true;
-          userInfo.authToken = authToken;
-          userInfo.password = newPassword;
-          appConfig.setUserInfo(userInfo);
-          if (rowsAffected) {
-            console.log("User updated successfully");
-          } else {
-            console.log("Unable to update user");
-          }
-
-          dispatch({
-            type: "LOGGED_IN_USER",
-            response: userInfo,
-          })
-          navigation.navigate('Dashboard');
-        }).catch((error) => {
-          setConfirmPasswordError(error);
-        })
-
-      }).catch((error) => {
-        setConfirmPasswordError(error);
-      });
-      }, 3000);
-    } else if(error) {
+      setDisplayAlert(true);
+    } else if (error) {
       setConfirmPasswordError(error);
     }
   }, [authToken, error]);
+
+  const onPressAlertOkButton = () => {
+    const userInfo = appConfig.getUserInfo();
+    users.findByEmail(userInfo.email).then((userDb) => {
+      const updateUserInfo = {
+        _id: userInfo._id,
+        id: userDb.id,
+        authToken: userInfo.authToken,
+        isPasswordSet: true,
+        password: newPassword
+      }
+
+      users.update(updateUserInfo).then((rowsAffected) => {
+        userInfo.isPasswordSet = true;
+        userInfo.authToken = authToken;
+        userInfo.password = newPassword;
+        appConfig.setUserInfo(userInfo);
+        if (rowsAffected) {
+          console.log("User updated successfully");
+        } else {
+          console.log("Unable to update user");
+        }
+
+        dispatch({
+          type: "LOGGED_IN_USER",
+          response: userInfo,
+        })
+        navigation.navigate('Dashboard');
+      }).catch((error) => {
+        setConfirmPasswordError(error);
+      })
+
+    }).catch((error) => {
+      setConfirmPasswordError(error);
+    });
+
+    setDisplayAlert(false)
+  }
+
+  useEffect( () => () => {
+    dispatch(clearUserProfile());
+  }, [] );
 
   return (
     <View style={styles.mainBody}>
@@ -142,7 +152,7 @@ const SetPassword = ({navigation}: { navigation: any }) => {
               </View>
               <Text>Current Password</Text>
               <View style={styles.SectionStyle}>
-              <TextInput
+                <TextInput
                   style={styles.inputStyle}
                   placeholder="*******"
                   keyboardType="default"
@@ -158,11 +168,11 @@ const SetPassword = ({navigation}: { navigation: any }) => {
                 />
               </View>
               {(passwordError && formSubmitted) && <View style={styles.ErrorSectionStyle}>
-                  <Text style={styles.errorText}>{passwordError}</Text>
-                </View>}
+                <Text style={styles.errorText}>{passwordError}</Text>
+              </View>}
               <Text>New Password</Text>
               <View style={styles.SectionStyle}>
-              <TextInput
+                <TextInput
                   style={styles.inputStyle}
                   placeholder="*******"
                   keyboardType="default"
@@ -178,8 +188,8 @@ const SetPassword = ({navigation}: { navigation: any }) => {
                 />
               </View>
               {(newPasswordError && formSubmitted) && <View style={styles.ErrorSectionStyle}>
-                  <Text style={styles.errorText}>{newPasswordError}</Text>
-                </View>}
+                <Text style={styles.errorText}>{newPasswordError}</Text>
+              </View>}
               <Text>Confirm Password</Text>
               <View style={styles.SectionStyle}>
                 <TextInput
@@ -197,8 +207,8 @@ const SetPassword = ({navigation}: { navigation: any }) => {
                 />
               </View>
               {(confirmPasswordError && formSubmitted) && <View style={styles.ErrorSectionStyle}>
-                  <Text style={styles.errorText}>{confirmPasswordError}</Text>
-                </View>}
+                <Text style={styles.errorText}>{confirmPasswordError}</Text>
+              </View>}
               <TouchableOpacity style={styles.buttonStyle} activeOpacity={0.5} onPress={() => onSubmit()}>
                 <Text style={styles.buttonTextStyle}>Confirm</Text>
               </TouchableOpacity>
@@ -206,6 +216,16 @@ const SetPassword = ({navigation}: { navigation: any }) => {
           </KeyboardAvoidingView>
         </View>
       </ScrollView>
+      <CustomAlert
+        displayAlert={displayAlert}
+        displayAlertIcon={false}
+        alertTitleText={'Success'}
+        alertMessageText={'Password has been updated successfully.'}
+        displayOkButton={true}
+        okButtonText={'Ok'}
+        displayCancelButton={false}
+        onPressOkButton={onPressAlertOkButton}
+      />
       <LoadingAnimation loading={loading}></LoadingAnimation>
     </View>
   );

@@ -1,10 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
@@ -15,14 +8,14 @@ import {
   Keyboard,
   TouchableOpacity,
   KeyboardAvoidingView,
-  Linking,
   Alert,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { passwordRequired } from '../../utils/Validations';
 import NetworkUtils from '../../utils/NetworkUtil';
-import { resetPassword } from './actions';
+import { clearForgotPassword, resetPassword } from './actions';
 import LoadingAnimation from '../Common/LoadingAnimation';
+import CustomAlert from '../Common/CustomAlert';
 
 const ForgotPasswordStep3 = ({route, navigation}: { route: any, navigation: any }) => {
 
@@ -33,6 +26,9 @@ const ForgotPasswordStep3 = ({route, navigation}: { route: any, navigation: any 
   const [confirmPasswordError, setConfirmPasswordError] = useState("")
 
   const {passwordUpdated, loading, error} = useSelector((state: any) => state.ForgotPassword)
+
+  const [displayAlert, setDisplayAlert] = useState(false)
+
   const dispatch = useDispatch()
 
   const { username, otp } = route.params;
@@ -58,7 +54,7 @@ const ForgotPasswordStep3 = ({route, navigation}: { route: any, navigation: any 
     }
 
     if (password !== confirmPassword) {
-      setConfirmPasswordError('New password and conform password must be matched')
+      setConfirmPasswordError('New password and confirm password must be matched')
       return false;
     }
 
@@ -74,14 +70,20 @@ const ForgotPasswordStep3 = ({route, navigation}: { route: any, navigation: any 
 
   useEffect(() => {
     if (passwordUpdated) {
-      Alert.alert("Success", "Password has been reset successfully");
-      setTimeout(() => {
-        navigation.navigate('Login');
-      }, 5000);
+      setDisplayAlert(true);
     } else if(error) {
-      //setErrorMessage(error);
+      // setErrorMessage(error);
     }
   }, [passwordUpdated, error]);
+
+  const onPressAlertOkButton = () => {
+    setDisplayAlert(false)
+    navigation.navigate('Login');
+  }
+
+  useEffect( () => () => {
+    dispatch(clearForgotPassword());
+  }, [] );
   
   return (
     <View style={styles.mainBody}>
@@ -146,6 +148,17 @@ const ForgotPasswordStep3 = ({route, navigation}: { route: any, navigation: any 
           </KeyboardAvoidingView>
         </View>
       </ScrollView>
+
+      <CustomAlert
+        displayAlert={displayAlert}
+        displayAlertIcon={false}
+        alertTitleText={'Success'}
+        alertMessageText={'Password has been reset successfully.'}
+        displayOkButton={true}
+        okButtonText={'Ok'}
+        displayCancelButton={false}
+        onPressOkButton={onPressAlertOkButton}
+      />
       <LoadingAnimation loading={loading}></LoadingAnimation>
     </View>
   );

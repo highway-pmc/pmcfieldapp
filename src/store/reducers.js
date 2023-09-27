@@ -136,6 +136,15 @@ const ForgotPasswordReducer = (state = initialState, action) => {
                 user: null,
                 loading: false,
             };
+        case "CLEAR_FORGOT_PASSWORD_DATA":
+            return {
+                ...state,
+                passwordUpdated: false,
+                verifyOtp: null,
+                user: null,
+                error: null,
+                loading: false,
+            };
         default:
             return state;
     }
@@ -223,6 +232,16 @@ const UserProfileReducer = (state = userProfileState, action) => {
                 ...state,
                 states: null,
                 error: action.error,
+                loading: false,
+            };
+        case "CLEAR_USER_PROFILE_DATA":
+            return {
+                ...state,
+                userProfileUpdated: false,
+                userProfile: null,
+                userProfileInfo: null,
+                authToken: null,
+                error: null,
                 loading: false,
             };
         default:

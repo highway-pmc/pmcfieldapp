@@ -26,3 +26,7 @@ export const resetPassword = (email, otp, password) => ({
         password: password
     },
 });
+
+export const clearForgotPassword = () => ({
+    type: "CLEAR_FORGOT_PASSWORD_DATA"
+});

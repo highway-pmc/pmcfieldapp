@@ -1,9 +1,10 @@
 import {View, Text, StyleSheet, Button, Image, NativeEventEmitter, FlatList} from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
-import { logoutUser } from '../../screens/Login/actions';
+import { clearForgotPasswordData, clearProjectInfoData, clearUserAssignmentData, clearUserProfileData, logoutUser } from '../../screens/Login/actions';
 import { Dashboard_MENU, UserRoles } from "../../constants/constants"
+import CustomAlert from '../../screens/Common/CustomAlert';
 
 const CustomDrawer = ({navigation}: {navigation: any}) => {
 
@@ -11,8 +12,10 @@ const CustomDrawer = ({navigation}: {navigation: any}) => {
 
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
 
+  const [displayAlert, setDisplayAlert] = useState(false)
+
   const logout = () => {
-    dispatch(logoutUser());
+    setDisplayAlert(true)
   };
   
   const checkPermissions = (permissions: string[], categories?: string[]) => {
@@ -44,6 +47,19 @@ const CustomDrawer = ({navigation}: {navigation: any}) => {
     });
 
     return roleDisplay.join(', ');
+  }
+
+  const onPressAlertLogoutButton = () => {
+    setDisplayAlert(false)
+    dispatch(logoutUser());
+    dispatch(clearForgotPasswordData());
+    dispatch(clearUserProfileData());
+    dispatch(clearUserAssignmentData());
+    dispatch(clearProjectInfoData());
+  }
+
+  const onPressAlertCancelButton = () => {
+    setDisplayAlert(false)
   }
 
   return (
@@ -105,6 +121,19 @@ const CustomDrawer = ({navigation}: {navigation: any}) => {
           <Text style={styles.MenuText}>Logout</Text>
         </TouchableOpacity>
       </View>
+
+      <CustomAlert
+        displayAlert={displayAlert}
+        displayAlertIcon={false}
+        alertTitleText={'Logout'}
+        alertMessageText={'Are you sure you want to logout?'}
+        displayOkButton={true}
+        okButtonText={'Ok'}
+        displayCancelButton={true}
+        cancelButtonText={'Cancel'}
+        onPressOkButton={onPressAlertLogoutButton}
+        onPressCancelButton={onPressAlertCancelButton}
+      />
     </View>
   );
 };

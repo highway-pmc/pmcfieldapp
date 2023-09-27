@@ -5,7 +5,7 @@ import CalendarPicker from 'react-native-calendar-picker';
 import { useIsFocused } from '@react-navigation/native';
 import { BLOOD_GROUP, GENDER, HeaderItems, LANGUAGE, MARITAL_STATUS, NATIONALITY } from "../../constants/constants"
 import { useDispatch, useSelector } from 'react-redux';
-import { getStates, getUserProfile, updateUserProfile } from './actions';
+import { clearUserProfile, getStates, getUserProfile, updateUserProfile } from './actions';
 import LoadingAnimation from '../Common/LoadingAnimation';
 import moment from 'moment';
 import { fieldRequired } from '../../utils/Validations';
@@ -248,6 +248,10 @@ const Profile = () => {
 
     dispatch(updateUserProfile(req));
   }
+
+  useEffect( () => () => {
+    dispatch(clearUserProfile());
+  }, [] );
 
 
   return (

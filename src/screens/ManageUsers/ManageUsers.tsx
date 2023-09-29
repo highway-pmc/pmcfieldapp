@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
-import {HeaderItems, USER_CATEGORIES, USER_CATEGORY, UserRoles} from '../../constants/constants';
+import {HeaderItems, ROLES, USER_CATEGORIES, USER_CATEGORY, UserRoles} from '../../constants/constants';
 import CheckBox from '@react-native-community/checkbox';
 import { RadioButton } from 'react-native-paper';
 import LoadingAnimation from '../Common/LoadingAnimation';
@@ -76,7 +76,7 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
 
   useEffect(() => {
     if(loggedInUser.roles) {
-      if (loggedInUser.roles.split(',').find((role: any) => role === "project-head")) {
+      if (loggedInUser.roles.split(',').find((role: any) => role === ROLES.PROJECT_HEAD)) {
         setProjectHead(true);
       }
     }
@@ -263,7 +263,7 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
         </Pressable>
 
         <Pressable
-          style={[styles.buttonAssign]} onPress={() => navigation.navigate("AssignWork")}>
+          style={[styles.buttonAssign]} onPress={() => navigation.navigate("MyProjectType")}>
           <Text style={styles.textStyle}>Assign Work</Text>
         </Pressable>
       </View>

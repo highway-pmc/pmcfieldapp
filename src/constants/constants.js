@@ -8,6 +8,7 @@ export const HeaderItems = {
     changePassword: { showBack: false, title: 'Change Password' },
     assignTask: { showBack: true, title: 'Assign Task' },
     flyoverDetails: { showBack: true, title: 'Flyover Details' },
+    myProjectType: { showBack: true, title: 'Project Type' },
     assignWork: { showBack: true, title: 'Assign Work' },
     segmentsList: { showBack: true, title: 'Segment List' },
     subSegmentsList: { showBack: true, title: 'Sub-segment List' },
@@ -29,6 +30,17 @@ export const UserRoles = {
     "quality-head": "Quality Head",
     "quality-users": "Quality Users",
     "user": "Normal User",
+}
+
+export const ROLES = {
+    SUPER_ADMIN: "super-admin",
+    PROJECT_HEAD: "project-head",
+    STRUCTURE_HEAD:"structure-head",
+    HIGHWAY_HEAD: "highway-head",
+    OTHER_WORF_HEAD: "other-work-head",
+    QUALITY_HEAD: "quality-head",
+    QUALITY_USERS: "quality-users",
+    USER: "user"
 }
 
 export const Dashboard_MENU = [

@@ -18,7 +18,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { clearProjectModulesWorkAssignmentData, getProjectModules, getUsersForWorkAssignment, projectModulesWorkAssignToUsers } from './actions';
 import LoadingAnimation from '../Common/LoadingAnimation';
 
-const AssignWork = ({navigation}: {navigation: any}) => {
+const AssignWork = ({route, navigation}: { route: any, navigation: any }) => {
+  const { projectType } = route.params;
+
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();
     eventEmitter.emit('headerEvent', HeaderItems.assignWork);
@@ -49,7 +51,7 @@ const AssignWork = ({navigation}: {navigation: any}) => {
   useEffect(() => {
     dispatch(getProjectModules({
       projectId: loggedInUser.projectId,
-      projectType: PROJECT_TYPE.STRUCTURE_WORK // TODO - remove hard-coded
+      projectType: projectType
     }));
 
     dispatch(getUsersForWorkAssignment({
@@ -68,16 +70,22 @@ const AssignWork = ({navigation}: {navigation: any}) => {
     setSelectedProjectModule(projectModulesData[index]);
     selectedProjectModule.isChecked = !selectedProjectModule.isChecked;
     // setProjectModulesData(updatedCheckboxes);
+
+    const updatedCheckboxes: any = [...userData];
+
     if (selectedProjectModule.isChecked) {
-      userData.forEach((user: any) => {
-        const workAssignment = user.workAssignment?.find((wa: any) => wa.projectModuleId === selectedProjectModule._id && !wa.segmentId && !wa.subSegmentId);
+      updatedCheckboxes.forEach((user: any) => {
+        const workAssignment = user.workAssignment?.find((wa: any) => wa.projectModuleId === projectModulesData[index]._id && !wa.segmentId && !wa.subSegmentId);
         if (workAssignment) {
           user.isChecked = true;
         } else {
           user.isChecked = false;
+          console.log(user.name+"=====", projectModulesData[index]._id, workAssignment)
         }
       });
     }
+
+    setUserCheckboxes(updatedCheckboxes);
 
     openAssignPopup(!isAssignPopOpen);
   };

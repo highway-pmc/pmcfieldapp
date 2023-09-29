@@ -16,6 +16,7 @@ import AssignTask from "../../screens/ManageUsers/AssignTask";
 import FlyoverDetails from "../../screens/ManageUsers/FlyoverDetails";
 import ProjectInfo from "../../screens/ProjectInfo/ProjectInfo";
 import MyTest from "../../screens/MyTest/MyTest";
+import ChangePassword from "../../screens/ChangePassword/ChangePassword";
 
 const Stack = createStackNavigator();
 
@@ -111,5 +112,13 @@ const ProjectInfoStackNavigator = () => {
   );
 };
 
+const ChangePasswordStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen name="ChangePassword" component={ChangePassword} options={{headerShown: false}} />
+    </Stack.Navigator>
+  );
+};
+
 export { MyWorkStackNavigator, MyTaskStackNavigator, MyTestStackNavigator, ManageUsersStackNavigator, NotificationsStackNavigator,
-  ProgressStackNavigator, ReportsStackNavigator, RFIsStackNavigator, ProfileStackNavigator, ProjectInfoStackNavigator };
+  ProgressStackNavigator, ReportsStackNavigator, RFIsStackNavigator, ProfileStackNavigator, ProjectInfoStackNavigator, ChangePasswordStackNavigator };

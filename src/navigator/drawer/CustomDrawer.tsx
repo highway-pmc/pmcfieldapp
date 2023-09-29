@@ -17,6 +17,11 @@ const CustomDrawer = ({navigation}: {navigation: any}) => {
   const logout = () => {
     setDisplayAlert(true)
   };
+
+  const onChangePassword = () => {
+    navigation.navigate("ChangePassword");
+    navigation.closeDrawer();
+  }
   
   const checkPermissions = (permissions: string[], categories?: string[]) => {
     let index = -1;
@@ -116,6 +121,10 @@ const CustomDrawer = ({navigation}: {navigation: any}) => {
           <Image style={styles.MenuIcon} source={require('./../../images/menu/manage-rfi-icom.png')} />
           <Text style={styles.MenuText}>Manage FRI’s</Text>
         </TouchableOpacity> */}
+        <TouchableOpacity style={styles.MenuContainer} onPress={onChangePassword}>
+          <Image style={styles.MenuIcon} source={require('./../../images/menu/manage-icon.png')} />
+          <Text style={styles.MenuText}>Change Password</Text>
+        </TouchableOpacity>
         <TouchableOpacity style={styles.MenuContainer} onPress={logout}>
           <Image style={styles.MenuIcon} source={require('./../../images/menu/logout-icon.png')} />
           <Text style={styles.MenuText}>Logout</Text>

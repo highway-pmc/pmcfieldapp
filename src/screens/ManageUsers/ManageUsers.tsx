@@ -44,6 +44,9 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
 
   useEffect(() => {
     if (users) {
+      users.forEach((u: any) => {
+        u.categoriesDisplay = getUserCategoriesString(u.categories);
+      });
       setUserList(users);
     }
   }, [users, error]);
@@ -63,7 +66,11 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
       const selectedUser: any = userList.find((u: user) => u._id === selectedUserId);
       if (selectedUser) {
         selectedUser.categories = getSelectedUserCategories();
-      } 
+        selectedUser.categoriesDisplay = getUserCategoriesString(selectedUser.categories);
+      }
+      setTimeout(() => {
+        openAssignPopup(false);
+      }, 1000)
     }
   }, [usersAdded, error]);
 
@@ -101,6 +108,11 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
     });
 
     return categories;
+  }
+
+  const getUserCategoriesString = (assignedCategories = []) => {
+    var assignedCate = assignedCategories.map((item: any) => userCategories.find((uc: any) => uc.name === item.name)?.displayName?.split(' ')[0] || '')
+    return assignedCate.join(', ');
   }
 
   const handleRadioChange = (value: any) => {
@@ -199,6 +211,7 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
                   </View> */}
                 </View>
                 <Text style={styles.UserRole}>{item.designation}</Text>
+                <Text style={styles.UserCategoryDisplay}>{item.categoriesDisplay}</Text>
               </View>
             </View>
             {
@@ -456,6 +469,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '400',
     color: '#808089',
+  },
+  UserCategoryDisplay: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#1C58C0',
   },
   centeredView: {
     marginTop: 'auto',

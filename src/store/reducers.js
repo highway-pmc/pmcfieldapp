@@ -173,6 +173,27 @@ const UserProfileReducer = (state = userProfileState, action) => {
                 error: action.error,
                 loading: false,
             };
+        case "CHANGE_PASSWORD_REQUEST":
+            return {
+                ...state,
+                authToken: null,
+                error: null,
+                loading: true,
+            };
+        case "CHANGE_PASSWORD_SUCCESS":
+            return {
+                ...state,
+                authToken: action.response,
+                error: null,
+                loading: false,
+            };
+        case "CHANGE_PASSWORD_FAILURE":
+            return {
+                ...state,
+                authToken: null,
+                error: action.error,
+                loading: false,
+            };
         case "GET_USER_PROFILE_REQUEST":
             return {
                 ...state,

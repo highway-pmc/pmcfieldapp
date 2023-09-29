@@ -8,6 +8,7 @@ export interface user {
     projectId: string,
     projectName: string,
     designation?: string,
+    categoriesDisplay?: string;
     roles: string,
     isPasswordSet?: number,
     authToken: string,

@@ -5,6 +5,7 @@ export const HeaderItems = {
     myWork3: { showBack: true, title: 'My Work 3' },
     myTask: { showBack: false, title: 'My Task' },
     manageUsers: { showBack: false, title: 'Manage Users' },
+    changePassword: { showBack: false, title: 'Change Password' },
     assignTask: { showBack: true, title: 'Assign Task' },
     flyoverDetails: { showBack: true, title: 'Flyover Details' },
     notifications: { showBack: false, title: 'Notifications' },

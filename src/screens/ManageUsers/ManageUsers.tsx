@@ -31,7 +31,7 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
   const [userCategories, setUserCategories] = useState([]);
 
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const { users, usersAdded, categories, loading, error} = useSelector((state: any) => state.UserAssignment);
+  const { users, usersAdded, categories, loading, usersLoading, error} = useSelector((state: any) => state.UserAssignment);
 
   const dispatch = useDispatch()
 
@@ -184,19 +184,20 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
             blurOnSubmit={false}
             onChangeText={(text) => {
               setSearchText(text);
+              setUserList(users.filter((u: any) => {
+                if (text && u.name) {
+                  return u.name.toLowerCase().includes(text.toLowerCase())
+                } else {
+                  return true;
+                }
+              }));
             }}
           />
         </View>
       </View>
       <ScrollView style={styles.Height80}>
       <RadioButton.Group onValueChange={handleRadioChange} value={selectedUserId}>
-        {userList.filter((u: any) => {
-          if (searchText && u.name) {
-            return u.name.toLowerCase().includes(searchText.toLowerCase())
-          } else {
-            return true;
-          }
-        }).map((item: user, index) => (
+        {userList.map((item: user, index) => (
           <View style={styles.UserCategory}>
             <View style={styles.FlexRowCenter}>
               <Image
@@ -228,16 +229,17 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
         ))}
       </RadioButton.Group>
         {/* No Data Found */}
-        {!userList.length && 
+        {(!usersLoading && !userList.length) && 
           <View style={styles.NoDataContainer}>
             <Image
               style={styles.WthHeight}
               source={require('./../../images/no-data-found.png')}
             />
             <Text style={styles.NodataHeadText}>Sorry, no result found!</Text>
-            <Text style={styles.NodataSubText}>
+            {(searchText && <Text style={styles.NodataSubText}>
               Please try to search another keywork...
             </Text>
+            )}
           </View>
         }
       </ScrollView>
@@ -319,7 +321,7 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
         </View>
       </Modal>
 
-      <LoadingAnimation loading={loading}></LoadingAnimation>
+      <LoadingAnimation loading={loading || usersLoading}></LoadingAnimation>
     </View>
   );
 };

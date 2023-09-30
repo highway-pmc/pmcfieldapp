@@ -18,6 +18,7 @@ const userAssignmentState = {
     loading: false,
     users: null,
     error: null,
+    usersLoading: false,
 }
 
 const projectInfoState = {
@@ -32,6 +33,7 @@ const workAssignmentState = {
     segments: null,
     subSegments: null,
     error: null,
+    loadingUsers: false
 }
 
 const AuthReducer = (state = initialState, action) => {
@@ -314,6 +316,7 @@ const UserAssignmentReducer = (state = userAssignmentState, action) => {
                 usersAdded: null,
                 error: null,
                 loading: true,
+                usersLoading: true,
             };
         case "GET_USER_ASSIGNMENT_SUCCESS":
             return {
@@ -322,6 +325,7 @@ const UserAssignmentReducer = (state = userAssignmentState, action) => {
                 users: action.response,
                 error: null,
                 loading: false,
+                usersLoading: false,
             };
         case "GET_USER_ASSIGNMENT_FAILURE":
             return {
@@ -330,6 +334,7 @@ const UserAssignmentReducer = (state = userAssignmentState, action) => {
                 usersAdded: null,
                 error: action.error,
                 loading: false,
+                usersLoading: false,
             };
         case "ADD_USER_ASSIGNMENT_REQUEST":
             return {
@@ -407,6 +412,7 @@ const WorkAssignmentReducer = (state = workAssignmentState, action) => {
         case "GET_PROJECT_MODULES_REQUEST":
             return {
                 ...state,
+                projectModules: [],
                 error: null,
                 loading: true,
             };
@@ -467,8 +473,10 @@ const WorkAssignmentReducer = (state = workAssignmentState, action) => {
         case "GET_USERS_TO_WORK_ASSIGNMENT_REQUEST":
             return {
                 ...state,
+                users: [],
                 error: null,
                 loading: true,
+                loadingUsers: true,
             };
         case "GET_USERS_TO_WORK_ASSIGNMENT_SUCCESS":
             return {
@@ -476,6 +484,7 @@ const WorkAssignmentReducer = (state = workAssignmentState, action) => {
                 users: action.response,
                 error: null,
                 loading: false,
+                loadingUsers: false,
             };
         case "GET_USERS_TO_WORK_ASSIGNMENT_FAILURE":
             return {
@@ -483,6 +492,7 @@ const WorkAssignmentReducer = (state = workAssignmentState, action) => {
                 users: null,
                 error: action.error,
                 loading: false,
+                loadingUsers: false,
             };
         case "PROJECT_MODULE_WORK_ASSIGNMENT_USERS_REQUEST":
             return {

@@ -19,7 +19,7 @@ const MyProjectType = ({navigation}: {navigation: any}) => {
     setRoles([]);
     let rolesArr: any = [];
     if(loggedInUser.roles) {
-      loggedInUser.roles = 'structure-head';
+      //loggedInUser.roles = 'structure-head,highway-head';
       if (loggedInUser.roles.split(',').find((role: any) => role === ROLES.PROJECT_HEAD)) {
         rolesArr = [
           {
@@ -84,7 +84,6 @@ const MyProjectType = ({navigation}: {navigation: any}) => {
           alignItems: 'center',
           justifyContent: 'space-between',
           marginHorizontal: -15,
-          backgroundColor: '#1C58C0',
         }}>
           {
             roles.map((role: any) => (

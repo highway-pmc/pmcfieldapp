@@ -19,6 +19,13 @@ import { clearProjectModulesWorkAssignmentData, getProjectModules, getUsersForWo
 import LoadingAnimation from '../Common/LoadingAnimation';
 
 const AssignWork = ({route, navigation}: { route: any, navigation: any }) => {
+
+  const [projectModulesData, setProjectModulesData] = useState([]);
+  const [selectedProjectModule, setSelectedProjectModule] = useState({isChecked: false, _id: ""});
+
+  // const [usersToBeAssigned, setUsersToBeAssigned] = useState([])
+  const [userData, setUserCheckboxes] = useState([]);
+
   const { projectType } = route.params;
 
   if (useIsFocused()) {
@@ -30,8 +37,14 @@ const AssignWork = ({route, navigation}: { route: any, navigation: any }) => {
 
   const [isAssignPopOpen, openAssignPopup] = useState(false);
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const { projectModules, users, projectModulesWorkAssigned, loading, error} = useSelector((state: any) => state.WorkAssignment);
+  const { projectModules, users, projectModulesWorkAssigned, loading, loadingUsers, error} = useSelector((state: any) => state.WorkAssignment);
   
+  // unmount
+  useEffect( () => () => {
+    setProjectModulesData([]);
+    setUserCheckboxes([]);
+  }, [] );
+
   useEffect(() => {
     if (projectModules) {
       projectModules.forEach((pModule: any) => {
@@ -46,7 +59,7 @@ const AssignWork = ({route, navigation}: { route: any, navigation: any }) => {
       });
       setUserCheckboxes(users);
     }
-  }, [projectModules, users, error]);
+  }, [projectModules, users]);
 
   useEffect(() => {
     dispatch(getProjectModules({
@@ -58,13 +71,7 @@ const AssignWork = ({route, navigation}: { route: any, navigation: any }) => {
       projectId: loggedInUser.projectId
     }));
   }, []);
-
-  const [projectModulesData, setProjectModulesData] = useState([]);
-  const [selectedProjectModule, setSelectedProjectModule] = useState({isChecked: false, _id: ""});
-
-  // const [usersToBeAssigned, setUsersToBeAssigned] = useState([])
-  const [userData, setUserCheckboxes] = useState([]);
-
+  
   const handleRadioChange = (index: any) => {
     //const updatedCheckboxes: any = [...projectModulesData];
     setSelectedProjectModule(projectModulesData[index]);
@@ -80,13 +87,12 @@ const AssignWork = ({route, navigation}: { route: any, navigation: any }) => {
           user.isChecked = true;
         } else {
           user.isChecked = false;
-          console.log(user.name+"=====", projectModulesData[index]._id, workAssignment)
+          //console.log(user.name+"=====", projectModulesData[index]._id, workAssignment)
         }
       });
     }
 
     setUserCheckboxes(updatedCheckboxes);
-
     openAssignPopup(!isAssignPopOpen);
   };
 
@@ -119,7 +125,11 @@ const AssignWork = ({route, navigation}: { route: any, navigation: any }) => {
   useEffect(() => {
     if (projectModulesWorkAssigned) {
       Alert.alert("Success", "User assigned successfully");
+      openAssignClose();
       dispatch(clearProjectModulesWorkAssignmentData());
+      dispatch(getUsersForWorkAssignment({
+        projectId: loggedInUser.projectId
+      }));
     }
   }, [projectModulesWorkAssigned, error]);
 
@@ -214,6 +224,21 @@ const AssignWork = ({route, navigation}: { route: any, navigation: any }) => {
             </View>
           </View>
         ))}
+
+        {/* No Data Found */}
+        {(!loading && !projectModulesData.length) && 
+          <View style={styles.NoDataContainer}>
+            <Image
+              style={styles.WthHeight}
+              source={require('./../../images/no-data-found.png')}
+            />
+            <Text style={styles.NodataHeadText}>Sorry, no result found!</Text>
+            {/* {(searchText && <Text style={styles.NodataSubText}>
+              Please try to search another keywork...
+            </Text>
+            )} */}
+          </View>
+        }
       </ScrollView>
 
       {/* Modal Start */}
@@ -269,7 +294,7 @@ const AssignWork = ({route, navigation}: { route: any, navigation: any }) => {
         </View>
       </Modal>
 
-      <LoadingAnimation loading={loading}></LoadingAnimation>
+      <LoadingAnimation loading={loading || loadingUsers}></LoadingAnimation>
     </View>
   );
 };

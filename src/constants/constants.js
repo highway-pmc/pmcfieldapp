@@ -224,3 +224,25 @@ export const PROJECT_TYPE = {
     OTHER_WORK: 'other-work',
     QUALITY_WORK: 'quality-work'
 };
+
+export const SEGMENT_TYPES = {
+    FOUNDATIONS: 'foundations',
+    SUB_STRUCTURES: 'sub-structures',
+    BEARINGS: 'bearings',
+    SUPER_STRUCTURE: 'super-structure',
+    EXPANSION_JOINTS: 'expansion-joints',
+    DIRT_WALL: 'dirt-wall',
+    GAP_SLAB: 'gap-slab',
+    APPROACH_SLAB: 'approach-slab',
+};
+
+export const SEGMENT_TYPES_DISPLAY = {
+    'foundations': 'Foundations',
+    'sub-structures': 'Sub Structures',
+    'bearings': 'Super Structure',
+    'super-structure': 'Bearings',
+    'expansion-joints': 'Expansion Joints',
+    'dirt-wall': 'Dirt Wall',
+    'gap-slab': 'Gap Slab',
+    'approach-slab': 'Approach Slab',
+};

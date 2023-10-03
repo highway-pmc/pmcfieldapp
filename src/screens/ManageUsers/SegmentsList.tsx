@@ -1,19 +1,22 @@
 import { View, Text, TouchableOpacity, NativeEventEmitter, StyleSheet, Image } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useIsFocused } from '@react-navigation/native';
-import { HeaderItems } from '../../constants/constants';
+import { HeaderItems, SEGMENT_TYPES_DISPLAY } from '../../constants/constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProjectModuleSegments } from './actions';
 import { ScrollView } from 'react-native-gesture-handler';
 import CheckBox from '@react-native-community/checkbox';
 import LoadingAnimation from '../Common/LoadingAnimation';
+import { groupBy } from '../../utils/Utils';
 
 const SegmentsList = ({route, navigation}: { route: any, navigation: any }) => {
   const { projectModuleId, projectModuleName, type, subType } = route.params;
   
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const { segments,  loading, error} = useSelector((state: any) => state.WorkAssignment);
+  const { segments, loading, loadingSegment, error} = useSelector((state: any) => state.WorkAssignment);
   const [segmentsData, setSegmentsData] = useState([]);
+  const [selectedSegmentType, setSelectedSegmentType] = useState('');
+  const [segmentsByGroupOnType, setSegmentsByGroupOnType] = useState(null);
 
   const dispatch = useDispatch()
 
@@ -25,11 +28,19 @@ const SegmentsList = ({route, navigation}: { route: any, navigation: any }) => {
       segments.forEach((pModule: any) => {
         pModule.isChecked = false
       });
-      setSegmentsData(segments);
+     // setSegmentsData(segments);
+
+     // if (segmentsData && segmentsData.length) {
+        console.log("====================")
+        const gbSegmentTypes = groupBy(segments, "type");
+        setSegmentsByGroupOnType(gbSegmentTypes);
+        
+      //}
     }
   }, [segments, error]);
 
   useEffect(() => {
+    setSelectedSegmentType('');
     dispatch(getProjectModuleSegments({
       projectId: loggedInUser.projectId,
       projectModuleId: projectModuleId
@@ -43,13 +54,33 @@ const SegmentsList = ({route, navigation}: { route: any, navigation: any }) => {
     eventEmitter.emit('headerEvent', HeaderItems.segmentsList);
   }
 
+  const onSegmentTypeClick = (type: any) => {
+    setSelectedSegmentType(type);
+    if (segmentsByGroupOnType) {
+      setSegmentsData(segmentsByGroupOnType[type])
+    }
+  }
+
   return (
     <View>
       {(error) && <View style={styles.ErrorSectionStyle}>
                 <Text style={styles.errorText}>{error}</Text>
               </View>}
       <ScrollView>
-        {segmentsData.map((item: any, index) => (
+
+      {
+        !selectedSegmentType && segmentsByGroupOnType && Object.keys(segmentsByGroupOnType).length && Object.keys(segmentsByGroupOnType).map((item) => (
+          <View style={styles.UserCategory}>
+          <TouchableOpacity onPress={() => onSegmentTypeClick(item)}
+                >
+                <Text>{segmentsByGroupOnType[item].length}</Text>
+                <Text>{SEGMENT_TYPES_DISPLAY[item]}</Text>
+              </TouchableOpacity>
+              </View>
+        ))
+      }
+
+        {selectedSegmentType && segmentsData.map((item: any, index) => (
           <View style={styles.UserCategory}>
             <View style={styles.FlexRowCenter}>
               <CheckBox
@@ -82,7 +113,7 @@ const SegmentsList = ({route, navigation}: { route: any, navigation: any }) => {
         ))}
       </ScrollView>
 
-      <LoadingAnimation loading={loading}></LoadingAnimation>
+      <LoadingAnimation loading={loading || loadingSegment}></LoadingAnimation>
     </View>
   )
 }

@@ -434,6 +434,7 @@ const WorkAssignmentReducer = (state = workAssignmentState, action) => {
             return {
                 ...state,
                 error: null,
+                loadingSegment: true,
                 loading: true,
             };
         case "GET_PROJECT_MODULE_SEGMENTS_SUCCESS":
@@ -441,6 +442,7 @@ const WorkAssignmentReducer = (state = workAssignmentState, action) => {
                 ...state,
                 segments: action.response,
                 error: null,
+                loadingSegment: false,
                 loading: false,
             };
         case "GET_PROJECT_MODULE_SEGMENTS_FAILURE":
@@ -449,6 +451,7 @@ const WorkAssignmentReducer = (state = workAssignmentState, action) => {
                 segments: null,
                 error: action.error,
                 loading: false,
+                loadingSegment: false
             };
         case "GET_PROJECT_MODULE_SUB_SEGMENTS_REQUEST":
             return {

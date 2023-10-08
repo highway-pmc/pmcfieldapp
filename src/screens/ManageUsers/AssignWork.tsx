@@ -95,6 +95,9 @@ const AssignWork = ({route, navigation}: { route: any, navigation: any }) => {
         } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModule._id && wa.segmentId && wa.subSegmentId && wa.assignmentLevel === 3) != null) {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL3;
           user.isChecked = true;
+        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModule._id && wa.segmentId && wa.subSegmentId && wa.taskId && wa.assignmentLevel === 4) != null) {
+          user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL4;
+          user.isChecked = true;
         }
       });
     }

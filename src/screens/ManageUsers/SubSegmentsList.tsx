@@ -72,6 +72,9 @@ const SubSegmentsList = ({route, navigation}: { route: any, navigation: any }) =
         } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.assignmentLevel === 2)) {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL2;
           user.isChecked = true;
+        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.subSegmentId === subSegment._id && wa.assignmentLevel === 4)) {
+          user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL4;
+          user.isChecked = true;
         } else {
           const workAssignment = user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.subSegmentId === subSegment._id && wa.assignmentLevel === 3);
           if (workAssignment) {
@@ -187,14 +190,23 @@ const SubSegmentsList = ({route, navigation}: { route: any, navigation: any }) =
                 <Text style={styles.UserRole}>{item.name}</Text>
               </View>
             </View>
-            {/* <View>
-              <TouchableOpacity>
+            <TouchableOpacity
+                onPress={() => navigation.navigate('AssignTasks', {
+                  projectModuleId: projectModuleId,
+                  projectModuleName: projectModuleName,
+                  segmentId: segmentId,
+                  segmentName: segmentName,
+                  subSegmentId: item._id,
+                  subSegmentName: item.name,
+                  type: type,
+                  subType: subType,
+                  projectType: projectType
+                })}>
                 <Image
                   style={styles.CloseIcon}
                   source={require('./../../images/right-arrow.png')}
                 />
               </TouchableOpacity>
-            </View> */}
           </View>
         ))}
       </ScrollView>

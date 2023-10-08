@@ -83,6 +83,9 @@ const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) =>
         } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segment._id && wa.assignmentLevel === 3) != null) {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL3;
           user.isChecked = true;
+        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segment._id && wa.subSegmentId && wa.assignmentLevel === 4) != null) {
+          user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL4;
+          user.isChecked = true;
         } else {
           const workAssignment = user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segment._id && wa.assignmentLevel === 2);
           if (workAssignment) {

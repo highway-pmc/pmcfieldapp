@@ -18,6 +18,7 @@ import MyTest from "../../screens/MyTest/MyTest";
 import ChangePassword from "../../screens/ChangePassword/ChangePassword";
 import SubSegmentsList from "../../screens/ManageUsers/SubSegmentsList";
 import MyProjectType from "../../screens/ManageUsers/MyProjectType";
+import AssignTasks from "../../screens/ManageUsers/AssignTasks";
 
 const Stack = createStackNavigator();
 
@@ -63,6 +64,7 @@ const ManageUsersStackNavigator = () => {
       <Stack.Screen name="AssignWork" component={AssignWork} options={{headerShown: false}} />
       <Stack.Screen name="SegmentsList" component={SegmentsList} options={{headerShown: false}} />
       <Stack.Screen name="SubSegmentsList" component={SubSegmentsList} options={{headerShown: false}} />
+      <Stack.Screen name="AssignTasks" component={AssignTasks} options={{headerShown: false}} />
     </Stack.Navigator>
   );
 };

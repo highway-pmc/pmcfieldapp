@@ -30,6 +30,11 @@ export const getProjectModuleSubSegments = (payload) => ({
     payload: payload,
 });
 
+export const getProjectModuleTasks = (payload) => ({
+    type: "GET_PROJECT_MODULE_TASKS_REQUEST",
+    payload: payload,
+});
+
 export const getUsersForWorkAssignment = (payload) => ({
     type: "GET_USERS_TO_WORK_ASSIGNMENT_REQUEST",
     payload: payload,
@@ -47,6 +52,11 @@ export const segmentWorkAssignToUsers = (payload) => ({
 
 export const subSegmentWorkAssignToUsers = (payload) => ({
     type: "SUB_SEGMENT_WORK_ASSIGNMENT_USERS_REQUEST",
+    payload: payload,
+});
+
+export const taskWorkAssignToUsers = (payload) => ({
+    type: "TASK_WORK_ASSIGNMENT_USERS_REQUEST",
     payload: payload,
 });
 

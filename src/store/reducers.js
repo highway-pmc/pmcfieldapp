@@ -476,6 +476,29 @@ const WorkAssignmentReducer = (state = workAssignmentState, action) => {
                 loadingSubSegment: false,
                 loading: false,
             };
+        case "GET_PROJECT_MODULE_TASKS_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loadingTask: true,
+                loading: true,
+            };
+        case "GET_PROJECT_MODULE_TASKS_SUCCESS":
+            return {
+                ...state,
+                tasks: action.response,
+                error: null,
+                loadingTask: false,
+                loading: false,
+            };
+        case "GET_PROJECT_MODULE_TASKS_FAILURE":
+            return {
+                ...state,
+                tasks: null,
+                error: action.error,
+                loadingTask: false,
+                loading: false,
+            };
         case "GET_USERS_TO_WORK_ASSIGNMENT_REQUEST":
             return {
                 ...state,
@@ -560,12 +583,33 @@ const WorkAssignmentReducer = (state = workAssignmentState, action) => {
                 error: action.error,
                 loading: false,
             };
+        case "TASK_WORK_ASSIGNMENT_USERS_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "TASK_WORK_ASSIGNMENT_USERS_SUCCESS":
+            return {
+                ...state,
+                taskWorkAssigned: action.response,
+                error: null,
+                loading: false,
+            };
+        case "TASK_WORK_ASSIGNMENT_USERS_FAILURE":
+            return {
+                ...state,
+                taskWorkAssigned: null,
+                error: action.error,
+                loading: false,
+            };
         case "CLEAR_PROJECT_MODULE_WORK_ASSIGNMENT_USERS":
             return {
                 ...state,
                 projectModulesWorkAssigned: null,
                 segmentWorkAssigned: null,
                 subSegmentWorkAssigned: null,
+                taskWorkAssigned: null,
                 error: null,
                 loading: false,
             };
@@ -575,13 +619,16 @@ const WorkAssignmentReducer = (state = workAssignmentState, action) => {
                 projectModules: null,
                 segments: null,
                 subSegments: null,
+                segmentWorkAssigned: null,
                 subSegmentWorkAssigned: null,
                 projectModulesWorkAssigned: null,
+                taskWorkAssigned: null,
                 users: null,
                 error: null,
                 loading: false,
                 loadingSegment: false,
                 loadingSubSegment: false,
+                loadingTask: false,
             };
         default:
             return state;

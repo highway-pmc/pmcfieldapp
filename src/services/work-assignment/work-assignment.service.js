@@ -22,7 +22,16 @@ export const getProjectModuleSubSegmentsData = async (projectId, projectModuleId
     return apiService.getRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/segments/${segmentId}/sub-segments`).then((response) => {
         return response;
     }).catch((err) => {
-        const errorMessge = err.message || 'Unable to get list of project module segments.';
+        const errorMessge = err.message || 'Unable to get list of project module sub-segments.';
+        throw new Error(errorMessge);
+    });
+}
+
+export const getProjectModuleTasksData = async (projectId, projectModuleId, segmentId, subSegmentId) => {
+    return apiService.getRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/segments/${segmentId}/sub-segments/${subSegmentId}/tasks`).then((response) => {
+        return response;
+    }).catch((err) => {
+        const errorMessge = err.message || 'Unable to get list of project module tasks.';
         throw new Error(errorMessge);
     });
 }
@@ -54,11 +63,20 @@ export const segmentsWorkAssignToUsersApi = async (projectId, projectModuleId, s
     });
 }
 
-export const subSegmentIdegmentsWorkAssignToUsersApi = async (projectId, projectModuleId, segmentId, subSegmentId, body) => {
+export const subSegmentsWorkAssignToUsersApi = async (projectId, projectModuleId, segmentId, subSegmentId, body) => {
     return apiService.postRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/segments/${segmentId}/sub-segments/${subSegmentId}/work-assignment`, body).then((response) => {
         return response;
     }).catch((err) => {
         const errorMessge = err.message || 'Unable to assign works to users.';
+        throw new Error(errorMessge);
+    });
+}
+
+export const tasksWorkAssignToUsersApi = async (projectId, projectModuleId, segmentId, subSegmentId, taskId, body) => {
+    return apiService.postRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/segments/${segmentId}/sub-segments/${subSegmentId}/tasks/${taskId}/work-assignment`, body).then((response) => {
+        return response;
+    }).catch((err) => {
+        const errorMessge = err.message || 'Unable to assign tasks to users.';
         throw new Error(errorMessge);
     });
 }

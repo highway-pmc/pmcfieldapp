@@ -246,3 +246,10 @@ export const SEGMENT_TYPES_DISPLAY = {
     'gap-slab': 'Gap Slab',
     'approach-slab': 'Approach Slab',
 };
+
+export const WORK_ASSIGNMENT_LEVEL = {
+    LEVEL1: 'Level 1',
+    LEVEL2: 'Level 2',
+    LEVEL3: 'Level 3',
+    LEVEL4: 'Level 4',
+}

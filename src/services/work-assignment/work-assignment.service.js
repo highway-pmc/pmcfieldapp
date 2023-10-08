@@ -27,8 +27,8 @@ export const getProjectModuleSubSegmentsData = async (projectId, projectModuleId
     });
 }
 
-export const getUsersForWorkAssignmentData = async (projectId) => {
-    return apiService.getRequest(`v1/auth/projects/${projectId}/users/work-assignment`).then((response) => {
+export const getUsersForWorkAssignmentData = async (projectId, projectType) => {
+    return apiService.getRequest(`v1/auth/projects/${projectId}/users/${projectType}/work-assignment`).then((response) => {
         return response;
     }).catch((err) => {
         const errorMessge = err.message || 'Unable to get list of users.';
@@ -40,7 +40,25 @@ export const projectModulesWorkAssignToUsersApi = async (projectId, projectModul
     return apiService.postRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/work-assignment`, body).then((response) => {
         return response;
     }).catch((err) => {
-        const errorMessge = err.message || 'Unable to get list of users.';
+        const errorMessge = err.message || 'Unable to assign works to users.';
+        throw new Error(errorMessge);
+    });
+}
+
+export const segmentsWorkAssignToUsersApi = async (projectId, projectModuleId, segmentId, body) => {
+    return apiService.postRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/segments/${segmentId}/work-assignment`, body).then((response) => {
+        return response;
+    }).catch((err) => {
+        const errorMessge = err.message || 'Unable to assign works to users.';
+        throw new Error(errorMessge);
+    });
+}
+
+export const subSegmentIdegmentsWorkAssignToUsersApi = async (projectId, projectModuleId, segmentId, subSegmentId, body) => {
+    return apiService.postRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/segments/${segmentId}/sub-segments/${subSegmentId}/work-assignment`, body).then((response) => {
+        return response;
+    }).catch((err) => {
+        const errorMessge = err.message || 'Unable to assign works to users.';
         throw new Error(errorMessge);
     });
 }

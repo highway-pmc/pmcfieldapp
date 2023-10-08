@@ -1,21 +1,29 @@
-import { View, Text, TouchableOpacity, NativeEventEmitter, StyleSheet, Image } from 'react-native'
+import { View, Text, TouchableOpacity, NativeEventEmitter, StyleSheet, Image, Modal, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useIsFocused } from '@react-navigation/native';
-import { HeaderItems } from '../../constants/constants';
+import { HeaderItems, WORK_ASSIGNMENT_LEVEL } from '../../constants/constants';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProjectModuleSubSegments } from './actions';
+import { clearProjectModulesWorkAssignmentData, getProjectModuleSubSegments, getUsersForWorkAssignment, subSegmentWorkAssignToUsers } from './actions';
 import { ScrollView } from 'react-native-gesture-handler';
 import CheckBox from '@react-native-community/checkbox';
 import LoadingAnimation from '../Common/LoadingAnimation';
 
 const SubSegmentsList = ({route, navigation}: { route: any, navigation: any }) => {
-  const { projectModuleId, projectModuleName, type, subType, segmentId, segmentName } = route.params;
+  const { projectModuleId, projectModuleName, type, subType, segmentId, segmentName, projectType } = route.params;
   
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const { subSegments,  loading, error} = useSelector((state: any) => state.WorkAssignment);
+  const { subSegments, users, loadingUsers, loadingSubSegment, subSegmentWorkAssigned, loading, error} = useSelector((state: any) => state.WorkAssignment);
   const [subSegmentsData, setSubSegmentsData] = useState([]);
+  const [selectedSubSegment, setSelectedSubSegment] = useState({ isChecked: false, _id: "", name: "" });
+  const [userData, setUserCheckboxes] = useState([]);
+  const [isAssignPopOpen, openAssignPopup] = useState(false);
 
   const dispatch = useDispatch()
+
+  if (useIsFocused()) {
+    const eventEmitter = new NativeEventEmitter();
+    eventEmitter.emit('headerEvent', HeaderItems.subSegmentsList);
+  }
 
   useEffect(() => {
     if (subSegments) {
@@ -24,7 +32,14 @@ const SubSegmentsList = ({route, navigation}: { route: any, navigation: any }) =
       });
       setSubSegmentsData(subSegments);
     }
-  }, [subSegments, error]);
+
+    if (users) {
+      users.forEach((user: any) => {
+        user.isChecked = false
+      });
+      setUserCheckboxes(users);
+    }
+  }, [subSegments, users, error]);
 
   useEffect(() => {
     dispatch(getProjectModuleSubSegments({
@@ -32,14 +47,126 @@ const SubSegmentsList = ({route, navigation}: { route: any, navigation: any }) =
       projectModuleId: projectModuleId,
       segmentId: segmentId
     }));
+
+    dispatch(getUsersForWorkAssignment({
+      projectId: loggedInUser.projectId,
+      projectType: projectType
+    }));
   }, []);
 
-  
+  const handleRadioChange = (index: any) => {
+    const subSegment: any = subSegmentsData[index];
 
-  if (useIsFocused()) {
-    const eventEmitter = new NativeEventEmitter();
-    eventEmitter.emit('headerEvent', HeaderItems.subSegmentsList);
+    subSegment.isChecked = !subSegment.isChecked
+    setSelectedSubSegment(subSegment);
+
+    const updatedCheckboxes: any = [...userData];
+
+    if (subSegment.isChecked) {
+      updatedCheckboxes.forEach((user: any) => {
+        user.isChecked = false;
+        delete user.assignmentLevel;
+        if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.assignmentLevel === 1) != null) {
+          user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL1;
+          user.isChecked = true;
+        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.assignmentLevel === 2)) {
+          user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL2;
+          user.isChecked = true;
+        } else {
+          const workAssignment = user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.subSegmentId === subSegment._id && wa.assignmentLevel === 3);
+          if (workAssignment) {
+            user.isChecked = true;
+          }
+        }
+      });
+    }
+
+    setUserCheckboxes(updatedCheckboxes);
+    openAssignPopup(!isAssignPopOpen);
+  };
+
+  const handleUserData = (index: any) => {
+    const updatedCheckboxes: any = [...userData];
+    const selectedUser: any = updatedCheckboxes[index];
+    selectedUser.isChecked = !selectedUser.isChecked;
+    const workAssignment = selectedUser.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.subSegmentId === selectedSubSegment._id && wa.assignmentLevel === 3)
+    if (selectedUser.isChecked) {
+      if (workAssignment) {
+        workAssignment.dirty = false;
+        selectedUser.dirty = false;
+      } else {
+        selectedUser.dirty = true;
+      }
+      selectedUser.delete = false;
+    } else {
+      if (!workAssignment) {
+        selectedUser.dirty = false;
+      } else {
+        selectedUser.dirty = true;
+        selectedUser.delete = true;
+        workAssignment.dirty = true;
+      }
+    }
+
+    setUserCheckboxes(updatedCheckboxes);
+  };
+
+  useEffect(() => {
+    if (subSegmentWorkAssigned) {
+      Alert.alert("Success", "Works assigned successfully");
+      openAssignClose();
+      dispatch(clearProjectModulesWorkAssignmentData());
+      setTimeout(() => {
+        dispatch(getUsersForWorkAssignment({
+          projectId: loggedInUser.projectId,
+          projectType: projectType
+        }));
+      }, 500)
+    }
+  }, [subSegmentWorkAssigned, error]);
+
+  const onWorkAssignment = () => {
+    const usersToBeAssign = userData.filter((u: any) => u.dirty);
+
+    let usersToBeAssignArray: any = [];
+
+    usersToBeAssign.forEach((u: any) => {
+      let user: any = {
+        _id: u._id,
+        delete: u.delete || false
+      }
+      const workAssignment = u.workAssignment?.find((wa: any) => wa.dirty);
+      if (workAssignment) {
+        user.workAssignmentId = workAssignment._id;
+      }
+
+      usersToBeAssignArray.push(user);
+    });
+
+    if (usersToBeAssignArray.length) {
+      dispatch(subSegmentWorkAssignToUsers({
+        projectId: loggedInUser.projectId,
+        projectModuleId: projectModuleId,
+        segmentId: segmentId,
+        subSegmentId: selectedSubSegment._id,
+        body: {
+          users: usersToBeAssignArray,
+          level: 3
+        }
+      }));
+    }
   }
+
+  const openAssignClose = () => {
+    subSegmentsData.forEach((item: any) => {
+      item.isChecked = false;
+    });
+    userData.forEach((item: any) => {
+      item.isChecked = false;
+    });
+    setUserCheckboxes(userData);
+    openAssignPopup(!isAssignPopOpen);
+  };
 
   return (
     <View>
@@ -52,7 +179,7 @@ const SubSegmentsList = ({route, navigation}: { route: any, navigation: any }) =
             <View style={styles.FlexRowCenter}>
               <CheckBox
                 value={item.isChecked}
-                // onValueChange={() => handleRadioChange(index)}
+                onValueChange={() => handleRadioChange(index)}
                 style={styles.checkbox}
                 tintColors={{true: '#0F56B3', false: '#818181'}}
               />
@@ -71,7 +198,70 @@ const SubSegmentsList = ({route, navigation}: { route: any, navigation: any }) =
           </View>
         ))}
       </ScrollView>
-      <LoadingAnimation loading={loading}></LoadingAnimation>
+      {/* Modal Start */}
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={isAssignPopOpen}
+        onRequestClose={() => {
+          openAssignPopup(!isAssignPopOpen);
+        }}>
+        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.3)' }}>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <View style={styles.ModalHeader}>
+                <Text style={styles.modalText}>User's List</Text>
+                <TouchableOpacity
+                  style={styles.buttonClose}
+                  onPress={() => openAssignClose()}>
+                  <Image
+                    style={styles.CloseIcon}
+                    tintColor={'#333'}
+                    source={require('./../../images/menu/close-icon.png')}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View style={styles.ModalInnerContainer}>
+                <View>
+                  <Text style={styles.AssignRoleText}>Sub-segment: {selectedSubSegment.name}</Text>
+                </View>
+                <ScrollView style={{ paddingTop: 10, height: 500 }}>
+                  {userData.map((item: any, index) => (
+                    <View style={styles.CategoryType}>
+                      <View style={styles.FlexRowCenter}>
+                        <CheckBox
+                          value={item.isChecked}
+                          disabled={item.assignmentLevel != null}
+                          onValueChange={() => handleUserData(index)}
+                          style={styles.checkbox}
+                          tintColors={{ true: '#0F56B3', false: '#818181' }}
+                        />
+                        <View style={{ flexDirection: 'row' }}>
+                          <Text style={styles.AssignRoleText}>
+                            {item.name}
+                          </Text>
+                          {
+                            item.assignmentLevel &&
+                            <Text style={styles.userAlreadyAssigned}>
+                              {item.assignmentLevel}
+                            </Text>
+                          }
+
+                        </View>
+                      </View>
+                    </View>
+                  ))}
+                </ScrollView>
+
+                <TouchableOpacity style={styles.assignTagButoon} onPress={() => onWorkAssignment()}>
+                  <Text style={styles.assignTagButoonText}>Assign</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </View>
+      </Modal>
+      <LoadingAnimation loading={loading || loadingUsers || loadingSubSegment}></LoadingAnimation>
     </View>
   )
 }
@@ -332,6 +522,18 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
     marginBottom: 10,
     marginTop: 10,
+    alignItems: 'center',
+  },
+  userAlreadyAssigned: {
+    backgroundColor: '#1C58C0',
+    borderRadius: 30,
+    fontSize: 12,
+    color: '#fff',
+    paddingLeft: 12,
+    marginLeft: 20,
+    width: 60,
+    paddingTop: 5,
+    paddingBottom: 5,
     alignItems: 'center',
   },
   assignTagButoonText: {

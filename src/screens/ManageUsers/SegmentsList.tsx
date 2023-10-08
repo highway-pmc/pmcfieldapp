@@ -1,43 +1,44 @@
-import { View, Text, TouchableOpacity, NativeEventEmitter, StyleSheet, Image } from 'react-native'
+import { View, Text, TouchableOpacity, NativeEventEmitter, StyleSheet, Image, Modal, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useIsFocused } from '@react-navigation/native';
-import { HeaderItems, SEGMENT_TYPES_DISPLAY } from '../../constants/constants';
+import { HeaderItems, SEGMENT_TYPES_DISPLAY, WORK_ASSIGNMENT_LEVEL } from '../../constants/constants';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProjectModuleSegments } from './actions';
+import { clearProjectModulesWorkAssignmentData, getProjectModuleSegments, getUsersForWorkAssignment, segmentWorkAssignToUsers } from './actions';
 import { ScrollView } from 'react-native-gesture-handler';
 import CheckBox from '@react-native-community/checkbox';
 import LoadingAnimation from '../Common/LoadingAnimation';
 import { groupBy } from '../../utils/Utils';
 
-const SegmentsList = ({route, navigation}: { route: any, navigation: any }) => {
-  const { projectModuleId, projectModuleName, type, subType } = route.params;
-  
+const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) => {
+  const { projectModuleId, projectModuleName, type, subType, projectType } = route.params;
+
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const { segments, loading, loadingSegment, error} = useSelector((state: any) => state.WorkAssignment);
+  const { segments, users, segmentWorkAssigned, loading, loadingSegment, loadingUsers, error } = useSelector((state: any) => state.WorkAssignment);
   const [segmentsData, setSegmentsData] = useState([]);
   const [selectedSegmentType, setSelectedSegmentType] = useState('');
   const [segmentsByGroupOnType, setSegmentsByGroupOnType] = useState(null);
+  const [selectedSegment, setSelectedSegment] = useState({ isChecked: false, _id: "", name: "" });
+  const [userData, setUserCheckboxes] = useState([]);
+  const [isAssignPopOpen, openAssignPopup] = useState(false);
 
   const dispatch = useDispatch()
 
   useEffect(() => {
     if (segments) {
-      // console.log("============", projectModuleName + " > " + subType)
-      // const eventEmitter = new NativeEventEmitter();
-      // eventEmitter.emit('headerEvent', (projectModuleName + " > " + subType));
       segments.forEach((pModule: any) => {
         pModule.isChecked = false
       });
-     // setSegmentsData(segments);
-
-     // if (segmentsData && segmentsData.length) {
-        console.log("====================")
-        const gbSegmentTypes = groupBy(segments, "type");
-        setSegmentsByGroupOnType(gbSegmentTypes);
-        
-      //}
+      const gbSegmentTypes = groupBy(segments, "type");
+      setSegmentsByGroupOnType(gbSegmentTypes);
     }
-  }, [segments, error]);
+
+    if (users) {
+      users.forEach((user: any) => {
+        user.isChecked = false
+      });
+      setUserCheckboxes(users);
+    }
+  }, [segments, users, error]);
 
   useEffect(() => {
     setSelectedSegmentType('');
@@ -45,9 +46,12 @@ const SegmentsList = ({route, navigation}: { route: any, navigation: any }) => {
       projectId: loggedInUser.projectId,
       projectModuleId: projectModuleId
     }));
-  }, []);
 
-  
+    dispatch(getUsersForWorkAssignment({
+      projectId: loggedInUser.projectId,
+      projectType: projectType
+    }));
+  }, []);
 
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();
@@ -61,33 +65,146 @@ const SegmentsList = ({route, navigation}: { route: any, navigation: any }) => {
     }
   }
 
+  const handleRadioChange = (index: any) => {
+    const segment: any = segmentsData[index];
+
+    segment.isChecked = !segment.isChecked
+    setSelectedSegment(segment);
+
+    const updatedCheckboxes: any = [...userData];
+
+    if (segment.isChecked) {
+      updatedCheckboxes.forEach((user: any) => {
+        user.isChecked = false;
+        delete user.assignmentLevel;
+        if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.assignmentLevel === 1) != null) {
+          user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL1;
+          user.isChecked = true;
+        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segment._id && wa.assignmentLevel === 3) != null) {
+          user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL3;
+          user.isChecked = true;
+        } else {
+          const workAssignment = user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segment._id && wa.assignmentLevel === 2);
+          if (workAssignment) {
+            user.isChecked = true;
+          }
+        }
+      });
+    }
+
+    setUserCheckboxes(updatedCheckboxes);
+    openAssignPopup(!isAssignPopOpen);
+  };
+
+  const handleUserData = (index: any) => {
+    const updatedCheckboxes: any = [...userData];
+    const selectedUser: any = updatedCheckboxes[index];
+    selectedUser.isChecked = !selectedUser.isChecked;
+    const workAssignment = selectedUser.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === selectedSegment._id && wa.assignmentLevel === 2)
+    if (selectedUser.isChecked) {
+      if (workAssignment) {
+        workAssignment.dirty = false;
+        selectedUser.dirty = false;
+      } else {
+        selectedUser.dirty = true;
+      }
+      selectedUser.delete = false;
+    } else {
+      if (!workAssignment) {
+        selectedUser.dirty = false;
+      } else {
+        selectedUser.dirty = true;
+        selectedUser.delete = true;
+        workAssignment.dirty = true;
+      }
+    }
+
+    setUserCheckboxes(updatedCheckboxes);
+  };
+
+  useEffect(() => {
+    if (segmentWorkAssigned) {
+      Alert.alert("Success", "Works assigned successfully");
+      openAssignClose();
+      dispatch(clearProjectModulesWorkAssignmentData());
+      setTimeout(() => {
+        dispatch(getUsersForWorkAssignment({
+          projectId: loggedInUser.projectId,
+          projectType: projectType
+        }));
+      }, 500)
+    }
+  }, [segmentWorkAssigned, error]);
+
+  const onWorkAssignment = () => {
+    const usersToBeAssign = userData.filter((u: any) => u.dirty);
+
+    let usersToBeAssignArray: any = [];
+
+    usersToBeAssign.forEach((u: any) => {
+      let user: any = {
+        _id: u._id,
+        delete: u.delete || false
+      }
+      const workAssignment = u.workAssignment?.find((wa: any) => wa.dirty);
+      if (workAssignment) {
+        user.workAssignmentId = workAssignment._id;
+      }
+
+      usersToBeAssignArray.push(user);
+    });
+
+    if (usersToBeAssignArray.length) {
+      dispatch(segmentWorkAssignToUsers({
+        projectId: loggedInUser.projectId,
+        projectModuleId: projectModuleId,
+        segmentId: selectedSegment._id,
+        body: {
+          users: usersToBeAssignArray,
+          level: 2
+        }
+      }));
+    }
+  }
+
+  const openAssignClose = () => {
+    segmentsData.forEach((item: any) => {
+      item.isChecked = false;
+    });
+    userData.forEach((item: any) => {
+      item.isChecked = false;
+    });
+    setUserCheckboxes(userData);
+    openAssignPopup(!isAssignPopOpen);
+  };
+
   return (
     <View>
       {(error) && <View style={styles.ErrorSectionStyle}>
-                <Text style={styles.errorText}>{error}</Text>
-              </View>}
+        <Text style={styles.errorText}>{error}</Text>
+      </View>}
       <ScrollView>
 
-      {
-        !selectedSegmentType && segmentsByGroupOnType && Object.keys(segmentsByGroupOnType).length && Object.keys(segmentsByGroupOnType).map((item) => (
-          <View style={styles.UserCategory}>
-          <TouchableOpacity onPress={() => onSegmentTypeClick(item)}
-                >
+        {
+          !selectedSegmentType && segmentsByGroupOnType && Object.keys(segmentsByGroupOnType).length && Object.keys(segmentsByGroupOnType).map((item) => (
+            <View style={styles.UserCategory}>
+              <TouchableOpacity onPress={() => onSegmentTypeClick(item)}
+              >
                 <Text>{segmentsByGroupOnType[item].length}</Text>
                 <Text>{SEGMENT_TYPES_DISPLAY[item]}</Text>
               </TouchableOpacity>
-              </View>
-        ))
-      }
+            </View>
+          ))
+        }
 
         {selectedSegmentType && segmentsData.map((item: any, index) => (
           <View style={styles.UserCategory}>
             <View style={styles.FlexRowCenter}>
               <CheckBox
                 value={item.isChecked}
-                // onValueChange={() => handleRadioChange(index)}
+                onValueChange={() => handleRadioChange(index)}
                 style={styles.checkbox}
-                tintColors={{true: '#0F56B3', false: '#818181'}}
+                tintColors={{ true: '#0F56B3', false: '#818181' }}
               />
               <View>
                 <Text style={styles.UserRole}>{item.name}</Text>
@@ -102,6 +219,7 @@ const SegmentsList = ({route, navigation}: { route: any, navigation: any }) => {
                   segmentName: item.name,
                   type: type,
                   subType: subType,
+                  projectType: projectType
                 })}>
                 <Image
                   style={styles.CloseIcon}
@@ -112,8 +230,70 @@ const SegmentsList = ({route, navigation}: { route: any, navigation: any }) => {
           </View>
         ))}
       </ScrollView>
+      {/* Modal Start */}
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={isAssignPopOpen}
+        onRequestClose={() => {
+          openAssignPopup(!isAssignPopOpen);
+        }}>
+        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.3)' }}>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <View style={styles.ModalHeader}>
+                <Text style={styles.modalText}>User's List</Text>
+                <TouchableOpacity
+                  style={styles.buttonClose}
+                  onPress={() => openAssignClose()}>
+                  <Image
+                    style={styles.CloseIcon}
+                    tintColor={'#333'}
+                    source={require('./../../images/menu/close-icon.png')}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View style={styles.ModalInnerContainer}>
+                <View>
+                  <Text style={styles.AssignRoleText}>{SEGMENT_TYPES_DISPLAY[selectedSegmentType]}: {selectedSegment.name}</Text>
+                </View>
+                <ScrollView style={{ paddingTop: 10, height: 500 }}>
+                  {userData.map((item: any, index) => (
+                    <View style={styles.CategoryType}>
+                      <View style={styles.FlexRowCenter}>
+                        <CheckBox
+                          value={item.isChecked}
+                          disabled={item.assignmentLevel != null}
+                          onValueChange={() => handleUserData(index)}
+                          style={styles.checkbox}
+                          tintColors={{ true: '#0F56B3', false: '#818181' }}
+                        />
+                        <View style={{ flexDirection: 'row' }}>
+                          <Text style={styles.AssignRoleText}>
+                            {item.name}
+                          </Text>
+                          {
+                            item.assignmentLevel &&
+                            <Text style={styles.userAlreadyAssigned}>
+                              {item.assignmentLevel}
+                            </Text>
+                          }
 
-      <LoadingAnimation loading={loading || loadingSegment}></LoadingAnimation>
+                        </View>
+                      </View>
+                    </View>
+                  ))}
+                </ScrollView>
+
+                <TouchableOpacity style={styles.assignTagButoon} onPress={() => onWorkAssignment()}>
+                  <Text style={styles.assignTagButoonText}>Assign</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </View>
+      </Modal>
+      <LoadingAnimation loading={loading || loadingSegment || loadingUsers}></LoadingAnimation>
     </View>
   )
 }
@@ -240,7 +420,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   checkbox: {
-    transform: [{scaleX: 1.2}, {scaleY: 1.2}],
+    transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }],
   },
   label: {
     margin: 8,
@@ -374,6 +554,18 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
     marginBottom: 10,
     marginTop: 10,
+    alignItems: 'center',
+  },
+  userAlreadyAssigned: {
+    backgroundColor: '#1C58C0',
+    borderRadius: 30,
+    fontSize: 12,
+    color: '#fff',
+    paddingLeft: 12,
+    marginLeft: 20,
+    width: 60,
+    paddingTop: 5,
+    paddingBottom: 5,
     alignItems: 'center',
   },
   assignTagButoonText: {

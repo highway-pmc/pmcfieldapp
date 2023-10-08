@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useIsFocused} from '@react-navigation/native';
-import {HeaderItems, PROJECT_TYPE} from '../../constants/constants';
+import {HeaderItems, PROJECT_TYPE, WORK_ASSIGNMENT_LEVEL} from '../../constants/constants';
 import CheckBox from '@react-native-community/checkbox';
 import {ScrollView} from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
@@ -68,26 +68,33 @@ const AssignWork = ({route, navigation}: { route: any, navigation: any }) => {
     }));
 
     dispatch(getUsersForWorkAssignment({
-      projectId: loggedInUser.projectId
+      projectId: loggedInUser.projectId,
+      projectType: projectType
     }));
   }, []);
   
   const handleRadioChange = (index: any) => {
-    //const updatedCheckboxes: any = [...projectModulesData];
-    setSelectedProjectModule(projectModulesData[index]);
-    selectedProjectModule.isChecked = !selectedProjectModule.isChecked;
-    // setProjectModulesData(updatedCheckboxes);
+    const projectModule: any = projectModulesData[index];
+
+    projectModule.isChecked = !projectModule.isChecked;
+    setSelectedProjectModule(projectModule);
 
     const updatedCheckboxes: any = [...userData];
 
-    if (selectedProjectModule.isChecked) {
+    if (projectModule.isChecked) {
       updatedCheckboxes.forEach((user: any) => {
-        const workAssignment = user.workAssignment?.find((wa: any) => wa.projectModuleId === projectModulesData[index]._id && !wa.segmentId && !wa.subSegmentId);
+        user.isChecked = false;
+        delete user.assignmentLevel;
+        const workAssignment = user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModulesData[index]._id && wa.assignmentLevel === 1);
+
         if (workAssignment) {
           user.isChecked = true;
-        } else {
-          user.isChecked = false;
-          //console.log(user.name+"=====", projectModulesData[index]._id, workAssignment)
+        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModule._id && wa.segmentId && wa.assignmentLevel === 2) != null) {
+          user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL2;
+          user.isChecked = true;
+        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModule._id && wa.segmentId && wa.subSegmentId && wa.assignmentLevel === 3) != null) {
+          user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL3;
+          user.isChecked = true;
         }
       });
     }
@@ -100,7 +107,7 @@ const AssignWork = ({route, navigation}: { route: any, navigation: any }) => {
     const updatedCheckboxes: any = [...userData];
     const selectedUser: any = updatedCheckboxes[index];
     selectedUser.isChecked = !selectedUser.isChecked;
-    const workAssignment = selectedUser.workAssignment?.find((wa: any) => wa.projectModuleId === selectedProjectModule._id && !wa.segmentId && !wa.subSegmentId)
+    const workAssignment = selectedUser.workAssignment?.find((wa: any) => wa.projectModule?.id === selectedProjectModule._id && wa.assignmentLevel === 1)
     if (selectedUser.isChecked) {
       if (workAssignment) {
         workAssignment.dirty = false;
@@ -124,11 +131,12 @@ const AssignWork = ({route, navigation}: { route: any, navigation: any }) => {
 
   useEffect(() => {
     if (projectModulesWorkAssigned) {
-      Alert.alert("Success", "User assigned successfully");
+      Alert.alert("Success", "Works assigned successfully");
       openAssignClose();
       dispatch(clearProjectModulesWorkAssignmentData());
       dispatch(getUsersForWorkAssignment({
-        projectId: loggedInUser.projectId
+        projectId: loggedInUser.projectId,
+        projectType: projectType
       }));
     }
   }, [projectModulesWorkAssigned, error]);
@@ -156,7 +164,8 @@ const AssignWork = ({route, navigation}: { route: any, navigation: any }) => {
         projectId: loggedInUser.projectId,
         projectModuleId: selectedProjectModule._id,
         body: {
-          users: usersToBeAssignArray
+          users: usersToBeAssignArray,
+          level: 1
         }
       }));
     }
@@ -215,6 +224,7 @@ const AssignWork = ({route, navigation}: { route: any, navigation: any }) => {
                   projectModuleName: item.name,
                   type: item.type,
                   subType: item.subType,
+                  projectType: projectType
                 })}>
                 <Image
                   style={styles.CloseIcon}
@@ -271,14 +281,21 @@ const AssignWork = ({route, navigation}: { route: any, navigation: any }) => {
                     <View style={styles.FlexRowCenter}>
                       <CheckBox
                         value={item.isChecked}
+                        disabled={item.assignmentLevel != null}
                         onValueChange={() => handleUserData(index)}
                         style={styles.checkbox}
                         tintColors={{true: '#0F56B3', false: '#818181'}}
                       />
-                      <View>
+                      <View style={{ flexDirection: 'row' }}>
                         <Text style={styles.AssignRoleText}>
                           {item.name}
                         </Text>
+                        {
+                            item.assignmentLevel &&
+                            <Text style={styles.userAlreadyAssigned}>
+                              {item.assignmentLevel}
+                            </Text>
+                          }
                       </View>
                     </View>
                   </View>
@@ -555,6 +572,18 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
     marginBottom: 10,
     marginTop: 10,
+    alignItems: 'center',
+  },
+  userAlreadyAssigned: {
+    backgroundColor: '#1C58C0',
+    borderRadius: 30,
+    fontSize: 12,
+    color: '#fff',
+    paddingLeft: 12,
+    marginLeft: 20,
+    width: 60,
+    paddingTop: 5,
+    paddingBottom: 5,
     alignItems: 'center',
   },
   assignTagButoonText: {

@@ -36,6 +36,12 @@ const workAssignmentState = {
     loadingUsers: false
 }
 
+const myWorksState = {
+    loading: false,
+    myWorks: null,
+    error: null,
+}
+
 const AuthReducer = (state = initialState, action) => {
     switch (action.type) {
         case "LOGIN_REQUEST":
@@ -635,6 +641,40 @@ const WorkAssignmentReducer = (state = workAssignmentState, action) => {
     }
 }
 
+const MyWorkReducer = (state = myWorksState, action) => {
+    switch (action.type) {
+        case "GET_MY_WORKS_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "GET_MY_WORKS_SUCCESS":
+            return {
+                ...state,
+                myWorks: action.response,
+                error: null,
+                loading: false,
+            };
+        case "GET_MY_WORKS_FAILURE":
+            return {
+                ...state,
+                myWorks: null,
+                error: action.error,
+                loading: false,
+            };
+        case "CLEAR_MY_WORKS":
+            return {
+                ...state,
+                myWorks: null,
+                error: null,
+                loading: false,
+            };
+        default:
+            return state;
+    }
+}
+
 export const combinedReducers = combineReducers({
     form: formReducer,
     Auth: AuthReducer,
@@ -643,4 +683,5 @@ export const combinedReducers = combineReducers({
     UserAssignment: UserAssignmentReducer,
     ProjectInfo: ProjectInfoReducer,
     WorkAssignment: WorkAssignmentReducer,
+    MyWorks: MyWorkReducer,
 })

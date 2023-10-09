@@ -178,7 +178,7 @@ const AssignTasks = ({route, navigation}: { route: any, navigation: any }) => {
       {(error) && <View style={styles.ErrorSectionStyle}>
                 <Text style={styles.errorText}>{error}</Text>
               </View>}
-      <ScrollView>
+      <ScrollView style={styles.Height100}>
         {tasksData.map((item: any, index) => (
           <View style={styles.UserCategory}>
             <View style={styles.FlexRowCenter}>
@@ -480,7 +480,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   Height80: {
-    height: '87%',
+    height: '80%',
   },
   Height100: {
     height: '100%',

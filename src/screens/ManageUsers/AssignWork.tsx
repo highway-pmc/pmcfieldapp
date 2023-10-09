@@ -21,7 +21,7 @@ import LoadingAnimation from '../Common/LoadingAnimation';
 const AssignWork = ({route, navigation}: { route: any, navigation: any }) => {
 
   const [projectModulesData, setProjectModulesData] = useState([]);
-  const [selectedProjectModule, setSelectedProjectModule] = useState({isChecked: false, _id: ""});
+  const [selectedProjectModule, setSelectedProjectModule] = useState({isChecked: false, _id: "", name: ''});
 
   // const [usersToBeAssigned, setUsersToBeAssigned] = useState([])
   const [userData, setUserCheckboxes] = useState([]);
@@ -206,7 +206,7 @@ const AssignWork = ({route, navigation}: { route: any, navigation: any }) => {
           />
         </View>
       </View>
-      <ScrollView>
+      <ScrollView style={styles.Height100}>
         {projectModulesData.map((item: any, index) => (
           <View style={styles.UserCategory}>
             <View style={styles.FlexRowCenter}>
@@ -278,6 +278,9 @@ const AssignWork = ({route, navigation}: { route: any, navigation: any }) => {
                 </TouchableOpacity>
               </View>
               <View style={styles.ModalInnerContainer}>
+              <View>
+                <Text style={styles.AssignRoleText}>Project Module: {selectedProjectModule.name}</Text>
+              </View>
               <ScrollView style={{paddingTop: 10, height: 500}}>
                 {userData.map((item: any, index) => (
                   <View style={styles.CategoryType}>
@@ -528,7 +531,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   Height80: {
-    height: '87%',
+    height: '80%',
   },
   Height100: {
     height: '100%',

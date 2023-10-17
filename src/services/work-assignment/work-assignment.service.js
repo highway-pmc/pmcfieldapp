@@ -63,6 +63,16 @@ export const segmentsWorkAssignToUsersApi = async (projectId, projectModuleId, s
     });
 }
 
+export const segmentTypeWorkAssignToUsersApi = async (projectId, projectModuleId, type, body) => {
+    console.log('======================', type);
+    return apiService.postRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/segments/type/${type}/work-assignment`, body).then((response) => {
+        return response;
+    }).catch((err) => {
+        const errorMessge = err.message || 'Unable to assign works to users.';
+        throw new Error(errorMessge);
+    });
+}
+
 export const subSegmentsWorkAssignToUsersApi = async (projectId, projectModuleId, segmentId, subSegmentId, body) => {
     return apiService.postRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/segments/${segmentId}/sub-segments/${subSegmentId}/work-assignment`, body).then((response) => {
         return response;

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useIsFocused } from '@react-navigation/native';
 import { HeaderItems, SEGMENT_TYPES_DISPLAY, WORK_ASSIGNMENT_LEVEL } from '../../constants/constants';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearProjectModulesWorkAssignmentData, getProjectModuleSegments, getUsersForWorkAssignment, segmentWorkAssignToUsers } from './actions';
+import { clearProjectModulesWorkAssignmentData, getProjectModuleSegments, getUsersForWorkAssignment, segmentTypeWorkAssignToUsers, segmentWorkAssignToUsers } from './actions';
 import { ScrollView } from 'react-native-gesture-handler';
 import CheckBox from '@react-native-community/checkbox';
 import LoadingAnimation from '../Common/LoadingAnimation';
@@ -16,6 +16,7 @@ const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) =>
   const { segments, users, segmentWorkAssigned, loading, loadingSegment, loadingUsers, error } = useSelector((state: any) => state.WorkAssignment);
   const [segmentsData, setSegmentsData] = useState([]);
   const [selectedSegmentType, setSelectedSegmentType] = useState('');
+  const [segmentTypeToAssignWork, setSegmentTypeToAssignWork] = useState('');
   const [segmentsByGroupOnType, setSegmentsByGroupOnType] = useState(null);
   const [selectedSegment, setSelectedSegment] = useState({ isChecked: false, _id: "", name: "" });
   const [userData, setUserCheckboxes] = useState([]);
@@ -65,6 +66,39 @@ const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) =>
     }
   }
 
+  const handleSegmentTypeChange = (segmentType: any) => {
+    setSegmentTypeToAssignWork(segmentType);
+    if (!isAssignPopOpen) {
+      const updatedCheckboxes: any = [...userData];
+      updatedCheckboxes.forEach((user: any) => {
+        user.isChecked = false;
+        delete user.assignedSegmentType;
+        delete user.assignmentLevel;
+        if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.assignmentLevel === 1) != null) {
+          user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL1;
+          user.isChecked = true;
+        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId && wa.assignmentLevel === 3) != null) {
+          user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL3;
+          user.isChecked = true;
+        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId && wa.subSegmentId && wa.assignmentLevel === 4) != null) {
+          user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL4;
+          user.isChecked = true;
+        } else {
+          const assignedWorkLength = user.workAssignment?.filter((wa: any) => wa.projectModule?.id === projectModuleId && wa.assignmentLevel === 2).length;
+          const segmentTypeLength = segmentsByGroupOnType[segmentType].length;
+
+          console.log('======='+ assignedWorkLength +'===================,', segmentTypeLength);
+          if (assignedWorkLength === segmentTypeLength) {
+            user.isChecked = true;
+            user.assignedSegmentType = 'all';
+          }
+        }
+      });
+      setUserCheckboxes(updatedCheckboxes);
+      openAssignPopup(!isAssignPopOpen);
+    }
+  };
+
   const handleRadioChange = (index: any) => {
     const segment: any = segmentsData[index];
 
@@ -103,7 +137,10 @@ const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) =>
     const updatedCheckboxes: any = [...userData];
     const selectedUser: any = updatedCheckboxes[index];
     selectedUser.isChecked = !selectedUser.isChecked;
-    const workAssignment = selectedUser.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === selectedSegment._id && wa.assignmentLevel === 2)
+    let workAssignment: any = null;
+    if (selectedUser.assignedSegmentType === 'all') {
+      workAssignment = {}
+    }
     if (selectedUser.isChecked) {
       if (workAssignment) {
         workAssignment.dirty = false;
@@ -158,15 +195,27 @@ const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) =>
     });
 
     if (usersToBeAssignArray.length) {
-      dispatch(segmentWorkAssignToUsers({
-        projectId: loggedInUser.projectId,
-        projectModuleId: projectModuleId,
-        segmentId: selectedSegment._id,
-        body: {
-          users: usersToBeAssignArray,
-          level: 2
-        }
-      }));
+      if (selectedSegmentType) {
+        dispatch(segmentWorkAssignToUsers({
+          projectId: loggedInUser.projectId,
+          projectModuleId: projectModuleId,
+          segmentId: selectedSegment._id,
+          body: {
+            users: usersToBeAssignArray,
+            level: 2
+          }
+        }));
+      } else {
+          dispatch(segmentTypeWorkAssignToUsers({
+            projectId: loggedInUser.projectId,
+            projectModuleId: projectModuleId,
+            type: segmentTypeToAssignWork,
+            body: {
+              users: usersToBeAssignArray,
+              level: 2
+            }
+          }));
+      }
     }
   }
 
@@ -191,11 +240,22 @@ const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) =>
         {
           !selectedSegmentType && segmentsByGroupOnType && Object.keys(segmentsByGroupOnType).length && Object.keys(segmentsByGroupOnType).map((item) => (
             <View style={styles.UserCategory}>
+              <View style={[styles.FlexRowCenter, {gap: 10}]}>
+              <CheckBox
+                //value={item.isChecked}
+                onValueChange={() => handleSegmentTypeChange(item)}
+                style={styles.checkbox}
+                tintColors={{ true: '#0F56B3', false: '#818181' }}
+              />
+              <View>
               <TouchableOpacity onPress={() => onSegmentTypeClick(item)}
               >
                 <Text>{segmentsByGroupOnType[item].length}</Text>
                 <Text>{SEGMENT_TYPES_DISPLAY[item]}</Text>
               </TouchableOpacity>
+              </View>
+            </View>
+              
             </View>
           ))
         }

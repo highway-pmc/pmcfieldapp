@@ -569,6 +569,26 @@ const WorkAssignmentReducer = (state = workAssignmentState, action) => {
                 error: action.error,
                 loading: false,
             };
+        case "SEGMENT_TYPE_WORK_ASSIGNMENT_USERS_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "SEGMENT_TYPE_WORK_ASSIGNMENT_USERS_SUCCESS":
+            return {
+                ...state,
+                segmentWorkAssigned: action.response,
+                error: null,
+                loading: false,
+            };
+        case "SEGMENT_TYPE_WORK_ASSIGNMENT_USERS_FAILURE":
+            return {
+                ...state,
+                segmentWorkAssigned: null,
+                error: action.error,
+                loading: false,
+            };
         case "SUB_SEGMENT_WORK_ASSIGNMENT_USERS_REQUEST":
             return {
                 ...state,

@@ -50,6 +50,11 @@ export const segmentWorkAssignToUsers = (payload) => ({
     payload: payload,
 });
 
+export const segmentTypeWorkAssignToUsers = (payload) => ({
+    type: "SEGMENT_TYPE_WORK_ASSIGNMENT_USERS_REQUEST",
+    payload: payload,
+});
+
 export const subSegmentWorkAssignToUsers = (payload) => ({
     type: "SUB_SEGMENT_WORK_ASSIGNMENT_USERS_REQUEST",
     payload: payload,

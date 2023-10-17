@@ -1,7 +1,7 @@
 
 import { put, takeLatest } from 'redux-saga/effects';
 import { getUserAssignment, getUserCategory, userCategoriesAssignment } from '../../services/user/user.service';
-import { getProjectModuleSegmentsData, getProjectModuleSubSegmentsData, getProjectModuleTasksData, getProjectModulesData, getUsersForWorkAssignmentData, projectModulesWorkAssignToUsersApi, segmentsWorkAssignToUsersApi, subSegmentsWorkAssignToUsersApi, tasksWorkAssignToUsersApi } from '../../services/work-assignment/work-assignment.service';
+import { getProjectModuleSegmentsData, getProjectModuleSubSegmentsData, getProjectModuleTasksData, getProjectModulesData, getUsersForWorkAssignmentData, projectModulesWorkAssignToUsersApi, segmentTypeWorkAssignToUsersApi, segmentsWorkAssignToUsersApi, subSegmentsWorkAssignToUsersApi, tasksWorkAssignToUsersApi } from '../../services/work-assignment/work-assignment.service';
 function* getUserCategories() {
     try {
         const response = yield (getUserCategory());
@@ -94,6 +94,15 @@ function* segmentsWorkAssignToUsers({ payload }) {
     }
 }
 
+function* segmentTypeWorkAssignToUsers({ payload }) {
+    try {
+        const response = yield (segmentTypeWorkAssignToUsersApi(payload.projectId, payload.projectModuleId, payload.type, payload.body));
+        yield put({ type: "SEGMENT_TYPE_WORK_ASSIGNMENT_USERS_SUCCESS", response });
+    } catch (error) {
+        yield put({ type: "SEGMENT_TYPE_WORK_ASSIGNMENT_USERS_FAILURE", error: error.message });
+    }
+}
+
 function* subSegmentWorkAssignToUsers({ payload }) {
     try {
         const response = yield (subSegmentsWorkAssignToUsersApi(payload.projectId, payload.projectModuleId, payload.segmentId, payload.subSegmentId, payload.body));
@@ -123,6 +132,7 @@ export default function* userCategoriesAssignmentScreenSaga() {
     yield takeLatest("GET_USERS_TO_WORK_ASSIGNMENT_REQUEST", getUsersForWorkAssignment);
     yield takeLatest("PROJECT_MODULE_WORK_ASSIGNMENT_USERS_REQUEST", projectModulesWorkAssignToUsers);
     yield takeLatest("SEGMENT_WORK_ASSIGNMENT_USERS_REQUEST", segmentsWorkAssignToUsers);
+    yield takeLatest("SEGMENT_TYPE_WORK_ASSIGNMENT_USERS_REQUEST", segmentTypeWorkAssignToUsers);
     yield takeLatest("SUB_SEGMENT_WORK_ASSIGNMENT_USERS_REQUEST", subSegmentWorkAssignToUsers);
     yield takeLatest("TASK_WORK_ASSIGNMENT_USERS_REQUEST", taskWorkAssignToUsers);
 }

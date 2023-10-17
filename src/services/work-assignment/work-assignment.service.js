@@ -64,7 +64,6 @@ export const segmentsWorkAssignToUsersApi = async (projectId, projectModuleId, s
 }
 
 export const segmentTypeWorkAssignToUsersApi = async (projectId, projectModuleId, type, body) => {
-    console.log('======================', type);
     return apiService.postRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/segments/type/${type}/work-assignment`, body).then((response) => {
         return response;
     }).catch((err) => {

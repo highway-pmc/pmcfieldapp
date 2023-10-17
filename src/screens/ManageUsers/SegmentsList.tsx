@@ -138,8 +138,10 @@ const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) =>
     const selectedUser: any = updatedCheckboxes[index];
     selectedUser.isChecked = !selectedUser.isChecked;
     let workAssignment: any = null;
-    if (selectedUser.assignedSegmentType === 'all') {
+    if (!selectedSegmentType && selectedUser.assignedSegmentType === 'all') {
       workAssignment = {}
+    } else {
+      workAssignment = selectedUser.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === selectedSegment._id && wa.assignmentLevel === 2)
     }
     if (selectedUser.isChecked) {
       if (workAssignment) {

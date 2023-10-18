@@ -43,12 +43,9 @@ function* getProjectModuleTasks({ payload }) {
 
 function* getUsersForWorkAssignment({ payload }) {
     try {
-        console.log('================1')
         const response = yield (getUsersForWorkAssignmentData(payload.projectId, payload.projectType));
-        console.log('================2')
         yield put({ type: "GET_USERS_MY_WORK_SUCCESS", response });
     } catch (error) {
-        console.log('================3')
         yield put({ type: "GET_USERS_MY_WORK_FAILURE", error: error.message });
     }
 }

@@ -19,6 +19,11 @@ import ChangePassword from "../../screens/ChangePassword/ChangePassword";
 import SubSegmentsList from "../../screens/ManageUsers/SubSegmentsList";
 import MyProjectType from "../../screens/ManageUsers/MyProjectType";
 import AssignTasks from "../../screens/ManageUsers/AssignTasks";
+import PHMyProjectType from "../../screens/MyWorkProjectHead/PHMyProjectType";
+import PHAssignedWork from "../../screens/MyWorkProjectHead/PHAssignedWork";
+import PHAssignedTasks from "../../screens/MyWorkProjectHead/PHAssignedTasks";
+import PHAssignedSubSegments from "../../screens/MyWorkProjectHead/PHAssignedSubSegments";
+import PHAssignedSegments from "../../screens/MyWorkProjectHead/PHAssignedSegments";
 
 const Stack = createStackNavigator();
 
@@ -65,6 +70,18 @@ const ManageUsersStackNavigator = () => {
       <Stack.Screen name="SegmentsList" component={SegmentsList} options={{headerShown: false}} />
       <Stack.Screen name="SubSegmentsList" component={SubSegmentsList} options={{headerShown: false}} />
       <Stack.Screen name="AssignTasks" component={AssignTasks} options={{headerShown: false}} />
+    </Stack.Navigator>
+  );
+};
+
+const MyWorkPHStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen name="PHMyProjectType" component={PHMyProjectType} options={{headerShown: false}} />
+      <Stack.Screen name="PHAssignedWork" component={PHAssignedWork} options={{headerShown: false}} />
+      <Stack.Screen name="PHAssignedSegments" component={PHAssignedSegments} options={{headerShown: false}} />
+      <Stack.Screen name="PHAssignedSubSegments" component={PHAssignedSubSegments} options={{headerShown: false}} />
+      <Stack.Screen name="PHAssignedTasks" component={PHAssignedTasks} options={{headerShown: false}} />
     </Stack.Navigator>
   );
 };
@@ -125,5 +142,5 @@ const ChangePasswordStackNavigator = () => {
   );
 };
 
-export { MyWorkStackNavigator, MyTaskStackNavigator, MyTestStackNavigator, ManageUsersStackNavigator, NotificationsStackNavigator,
+export { MyWorkStackNavigator, MyWorkPHStackNavigator, MyTaskStackNavigator, MyTestStackNavigator, ManageUsersStackNavigator, NotificationsStackNavigator,
   ProgressStackNavigator, ReportsStackNavigator, RFIsStackNavigator, ProfileStackNavigator, ProjectInfoStackNavigator, ChangePasswordStackNavigator };

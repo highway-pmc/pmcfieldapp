@@ -320,7 +320,7 @@ const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) =>
               </View>
               <View style={styles.ModalInnerContainer}>
                 <View>
-                  <Text style={styles.AssignRoleText}>{SEGMENT_TYPES_DISPLAY[selectedSegmentType]}: {selectedSegment.name}</Text>
+                  <Text style={styles.AssignRoleText}>{selectedSegmentType ? (SEGMENT_TYPES_DISPLAY[selectedSegmentType] + ' : ' + selectedSegment.name) : 'Segment type: ' + SEGMENT_TYPES_DISPLAY[segmentTypeToAssignWork]}</Text>
                 </View>
                 <ScrollView style={{ paddingTop: 10, height: 500 }}>
                   {userData.map((item: any, index) => (

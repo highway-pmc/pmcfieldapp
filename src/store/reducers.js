@@ -42,6 +42,12 @@ const myWorksState = {
     error: null,
 }
 
+const dashboardState = {
+    loading: false,
+    fcmToken: null,
+    error: null,
+}
+
 const AuthReducer = (state = initialState, action) => {
     switch (action.type) {
         case "LOGIN_REQUEST":
@@ -74,6 +80,37 @@ const AuthReducer = (state = initialState, action) => {
                 ...state,
                 user: null,
                 userInfo: null,
+                error: null,
+                loading: false,
+            };
+        default:
+            return state;
+    }
+}
+
+const DashboardReducer = (state = dashboardState, action) => {
+    switch (action.type) {
+        case "SET_FCM_TOKEN_REQUEST":
+            return {
+                ...state,
+                loading: true,
+            };
+        case "SET_FCM_TOKEN_SUCCES":
+            return {
+                ...state,
+                fcmToken: action.response,
+                loading: false,
+            };
+        case "SET_FCM_TOKEN_FAILURE":
+            return {
+                ...state,
+                error: action.error,
+                loading: false,
+            };
+        case "CLEAR_DASHBOARD_EVENT_DATA":
+            return {
+                ...state,
+                fcmToken: null,
                 error: null,
                 loading: false,
             };
@@ -722,6 +759,7 @@ const MyWorkReducer = (state = myWorksState, action) => {
 export const combinedReducers = combineReducers({
     form: formReducer,
     Auth: AuthReducer,
+    Dashboard: DashboardReducer,
     ForgotPassword: ForgotPasswordReducer,
     UserProfile: UserProfileReducer,
     UserAssignment: UserAssignmentReducer,

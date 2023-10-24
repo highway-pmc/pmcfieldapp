@@ -1,6 +1,6 @@
 // HomeScreen.js
 import { useIsFocused } from '@react-navigation/native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   StyleSheet,
   View,
@@ -10,17 +10,40 @@ import {
   ScrollView,
   NativeEventEmitter,
   FlatList,
+  Alert,
 } from 'react-native';
 import { Dashboard_MENU, HeaderItems } from '../../constants/constants';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateFCMToken } from './actions';
+import messaging from '@react-native-firebase/messaging'
 
 const DashboardListing = ({ navigation }: { navigation: any }) => {
 
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
+  const dispatch = useDispatch()
 
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();
     eventEmitter.emit('headerEvent', HeaderItems.dashboard);
+  }
+
+  // useEffect(() => {
+  //   const unsubscribe = messaging().onMessage(async remoteMessage => {
+  //     Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+  //   });
+
+  //   return unsubscribe;
+  // }, []);
+
+  useEffect(() => {
+    if (loggedInUser) {
+      updateDeviceToken()
+    }
+  }, [loggedInUser]);
+
+  const updateDeviceToken = async() => {
+    let token = await messaging().getToken();
+    dispatch(updateFCMToken(token));
   }
 
   const checkPermissions = (permissions: string[], categories?: string[]) => {

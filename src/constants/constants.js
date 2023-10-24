@@ -8,6 +8,16 @@ export const HeaderItems = {
     changePassword: { showBack: false, title: 'Change Password' },
     assignTask: { showBack: true, title: 'Assign Task' },
     flyoverDetails: { showBack: true, title: 'Flyover Details' },
+    myProjectType: { showBack: true, title: 'Project Type' },
+    assignWork: { showBack: true, title: 'Assign Work' },
+    segmentsList: { showBack: true, title: 'Assign Work - Segment' },
+    subSegmentsList: { showBack: true, title: 'Assign Work - Sub-segment' },
+    assignTasks: { showBack: true, title: 'Assign Work - Tasks' },
+    assignedMyProjectType: { showBack: false, title: 'Project Type' },
+    assignedMyWork: { showBack: true, title: 'Assigned Work' },
+    assignedSegments: { showBack: true, title: 'Assigned Work - Segment' },
+    assignedSubSegments: { showBack: true, title: 'Assigned Work - Sub-segment' },
+    assignedTasks: { showBack: true, title: 'Assigned Work - Tasks' },
     notifications: { showBack: false, title: 'Notifications' },
     progress: { showBack: false, title: 'Progress Dashboard' },
     reports: { showBack: false, title: 'Reports' },
@@ -26,6 +36,17 @@ export const UserRoles = {
     "quality-head": "Quality Head",
     "quality-users": "Quality Users",
     "user": "Normal User",
+}
+
+export const ROLES = {
+    SUPER_ADMIN: "super-admin",
+    PROJECT_HEAD: "project-head",
+    STRUCTURE_HEAD:"structure-head",
+    HIGHWAY_HEAD: "highway-head",
+    OTHER_WORF_HEAD: "other-work-head",
+    QUALITY_HEAD: "quality-head",
+    QUALITY_USERS: "quality-users",
+    USER: "user"
 }
 
 export const Dashboard_MENU = [
@@ -203,4 +224,38 @@ export const USER_CATEGORIES = [
     }
 ];
 
+export const PROJECT_TYPE = {
+    STRUCTURE_WORK: 'structure-work',
+    HIGHWAY_WORK: 'highway-work',
+    OTHER_WORK: 'other-work',
+    QUALITY_WORK: 'quality-work'
+};
 
+export const SEGMENT_TYPES = {
+    FOUNDATIONS: 'foundations',
+    SUB_STRUCTURES: 'sub-structures',
+    BEARINGS: 'bearings',
+    SUPER_STRUCTURE: 'super-structure',
+    EXPANSION_JOINTS: 'expansion-joints',
+    DIRT_WALL: 'dirt-wall',
+    GAP_SLAB: 'gap-slab',
+    APPROACH_SLAB: 'approach-slab',
+};
+
+export const SEGMENT_TYPES_DISPLAY = {
+    'foundations': 'Foundations',
+    'sub-structures': 'Sub Structures',
+    'bearings': 'Super Structure',
+    'super-structure': 'Bearings',
+    'expansion-joints': 'Expansion Joints',
+    'dirt-wall': 'Dirt Wall',
+    'gap-slab': 'Gap Slab',
+    'approach-slab': 'Approach Slab',
+};
+
+export const WORK_ASSIGNMENT_LEVEL = {
+    LEVEL1: 'Level 1',
+    LEVEL2: 'Level 2',
+    LEVEL3: 'Level 3',
+    LEVEL4: 'Level 4',
+}

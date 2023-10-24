@@ -2,7 +2,7 @@ import {View, Text, StyleSheet, Button, Image, NativeEventEmitter, FlatList} fro
 import React, { useState } from 'react';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearForgotPasswordData, clearProjectInfoData, clearUserAssignmentData, clearUserProfileData, logoutUser } from '../../screens/Login/actions';
+import { clearForgotPasswordData, clearProjectInfoData, clearUserAssignmentData, clearUserProfileData, clearWorkAssignmentData, logoutUser } from '../../screens/Login/actions';
 import { Dashboard_MENU, UserRoles } from "../../constants/constants"
 import CustomAlert from '../../screens/Common/CustomAlert';
 
@@ -61,6 +61,7 @@ const CustomDrawer = ({navigation}: {navigation: any}) => {
     dispatch(clearUserProfileData());
     dispatch(clearUserAssignmentData());
     dispatch(clearProjectInfoData());
+    dispatch(clearWorkAssignmentData());
   }
 
   const onPressAlertCancelButton = () => {

@@ -18,11 +18,27 @@ const userAssignmentState = {
     loading: false,
     users: null,
     error: null,
+    usersLoading: false,
 }
 
 const projectInfoState = {
     loading: false,
     projectInfo: null,
+    error: null,
+}
+
+const workAssignmentState = {
+    loading: false,
+    projectModules: null,
+    segments: null,
+    subSegments: null,
+    error: null,
+    loadingUsers: false
+}
+
+const myWorksState = {
+    loading: false,
+    myWorks: null,
     error: null,
 }
 
@@ -306,6 +322,7 @@ const UserAssignmentReducer = (state = userAssignmentState, action) => {
                 usersAdded: null,
                 error: null,
                 loading: true,
+                usersLoading: true,
             };
         case "GET_USER_ASSIGNMENT_SUCCESS":
             return {
@@ -314,6 +331,7 @@ const UserAssignmentReducer = (state = userAssignmentState, action) => {
                 users: action.response,
                 error: null,
                 loading: false,
+                usersLoading: false,
             };
         case "GET_USER_ASSIGNMENT_FAILURE":
             return {
@@ -322,6 +340,7 @@ const UserAssignmentReducer = (state = userAssignmentState, action) => {
                 usersAdded: null,
                 error: action.error,
                 loading: false,
+                usersLoading: false,
             };
         case "ADD_USER_ASSIGNMENT_REQUEST":
             return {
@@ -394,11 +413,319 @@ const ProjectInfoReducer = (state = projectInfoState, action) => {
     }
 }
 
+const WorkAssignmentReducer = (state = workAssignmentState, action) => {
+    switch (action.type) {
+        case "GET_PROJECT_MODULES_REQUEST":
+            return {
+                ...state,
+                projectModules: [],
+                error: null,
+                loading: true,
+            };
+        case "GET_PROJECT_MODULES_SUCCESS":
+            return {
+                ...state,
+                projectModules: action.response,
+                error: null,
+                loading: false,
+            };
+        case "GET_PROJECT_MODULES_FAILURE":
+            return {
+                ...state,
+                projectModules: null,
+                error: action.error,
+                loading: false,
+            };
+        case "GET_PROJECT_MODULE_SEGMENTS_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loadingSegment: true,
+                loading: true,
+            };
+        case "GET_PROJECT_MODULE_SEGMENTS_SUCCESS":
+            return {
+                ...state,
+                segments: action.response,
+                error: null,
+                loadingSegment: false,
+                loading: false,
+            };
+        case "GET_PROJECT_MODULE_SEGMENTS_FAILURE":
+            return {
+                ...state,
+                segments: null,
+                error: action.error,
+                loading: false,
+                loadingSegment: false
+            };
+        case "GET_PROJECT_MODULE_SUB_SEGMENTS_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loadingSubSegment: true,
+                loading: true,
+            };
+        case "GET_PROJECT_MODULE_SUB_SEGMENTS_SUCCESS":
+            return {
+                ...state,
+                subSegments: action.response,
+                error: null,
+                loadingSubSegment: false,
+                loading: false,
+            };
+        case "GET_PROJECT_MODULE_SUB_SEGMENTS_FAILURE":
+            return {
+                ...state,
+                subSegments: null,
+                error: action.error,
+                loadingSubSegment: false,
+                loading: false,
+            };
+        case "GET_PROJECT_MODULE_TASKS_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loadingTask: true,
+                loading: true,
+            };
+        case "GET_PROJECT_MODULE_TASKS_SUCCESS":
+            return {
+                ...state,
+                tasks: action.response,
+                error: null,
+                loadingTask: false,
+                loading: false,
+            };
+        case "GET_PROJECT_MODULE_TASKS_FAILURE":
+            return {
+                ...state,
+                tasks: null,
+                error: action.error,
+                loadingTask: false,
+                loading: false,
+            };
+        case "GET_USERS_TO_WORK_ASSIGNMENT_REQUEST":
+            return {
+                ...state,
+                users: [],
+                error: null,
+                loading: true,
+                loadingUsers: true,
+            };
+        case "GET_USERS_TO_WORK_ASSIGNMENT_SUCCESS":
+            return {
+                ...state,
+                users: action.response,
+                error: null,
+                loading: false,
+                loadingUsers: false,
+            };
+        case "GET_USERS_TO_WORK_ASSIGNMENT_FAILURE":
+            return {
+                ...state,
+                users: null,
+                error: action.error,
+                loading: false,
+                loadingUsers: false,
+            };
+        case "GET_USERS_MY_WORK_REQUEST":
+            return {
+                ...state,
+                usersData: [],
+                error: null,
+                loading: true,
+                loadingUsers: true,
+            };
+        case "GET_USERS_MY_WORK_SUCCESS":
+            return {
+                ...state,
+                usersData: action.response,
+                error: null,
+                loading: false,
+                loadingUsers: false,
+            };
+        case "GET_USERS_MY_WORK_FAILURE":
+            return {
+                ...state,
+                usersData: null,
+                error: action.error,
+                loading: false,
+                loadingUsers: false,
+            };
+        case "PROJECT_MODULE_WORK_ASSIGNMENT_USERS_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "PROJECT_MODULE_WORK_ASSIGNMENT_USERS_SUCCESS":
+            return {
+                ...state,
+                projectModulesWorkAssigned: action.response,
+                error: null,
+                loading: false,
+            };
+        case "PROJECT_MODULE_WORK_ASSIGNMENT_USERS_FAILURE":
+            return {
+                ...state,
+                projectModulesWorkAssigned: null,
+                error: action.error,
+                loading: false,
+            };
+        case "SEGMENT_WORK_ASSIGNMENT_USERS_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "SEGMENT_WORK_ASSIGNMENT_USERS_SUCCESS":
+            return {
+                ...state,
+                segmentWorkAssigned: action.response,
+                error: null,
+                loading: false,
+            };
+        case "SEGMENT_WORK_ASSIGNMENT_USERS_FAILURE":
+            return {
+                ...state,
+                segmentWorkAssigned: null,
+                error: action.error,
+                loading: false,
+            };
+        case "SEGMENT_TYPE_WORK_ASSIGNMENT_USERS_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "SEGMENT_TYPE_WORK_ASSIGNMENT_USERS_SUCCESS":
+            return {
+                ...state,
+                segmentWorkAssigned: action.response,
+                error: null,
+                loading: false,
+            };
+        case "SEGMENT_TYPE_WORK_ASSIGNMENT_USERS_FAILURE":
+            return {
+                ...state,
+                segmentWorkAssigned: null,
+                error: action.error,
+                loading: false,
+            };
+        case "SUB_SEGMENT_WORK_ASSIGNMENT_USERS_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "SUB_SEGMENT_WORK_ASSIGNMENT_USERS_SUCCESS":
+            return {
+                ...state,
+                subSegmentWorkAssigned: action.response,
+                error: null,
+                loading: false,
+            };
+        case "SUB_SEGMENT_WORK_ASSIGNMENT_USERS_FAILURE":
+            return {
+                ...state,
+                subSegmentWorkAssigned: null,
+                error: action.error,
+                loading: false,
+            };
+        case "TASK_WORK_ASSIGNMENT_USERS_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "TASK_WORK_ASSIGNMENT_USERS_SUCCESS":
+            return {
+                ...state,
+                taskWorkAssigned: action.response,
+                error: null,
+                loading: false,
+            };
+        case "TASK_WORK_ASSIGNMENT_USERS_FAILURE":
+            return {
+                ...state,
+                taskWorkAssigned: null,
+                error: action.error,
+                loading: false,
+            };
+        case "CLEAR_PROJECT_MODULE_WORK_ASSIGNMENT_USERS":
+            return {
+                ...state,
+                projectModulesWorkAssigned: null,
+                segmentWorkAssigned: null,
+                subSegmentWorkAssigned: null,
+                taskWorkAssigned: null,
+                error: null,
+                loading: false,
+            };
+        case "CLEAR_WORK_ASSIGMENT":
+            return {
+                ...state,
+                projectModules: null,
+                segments: null,
+                subSegments: null,
+                segmentWorkAssigned: null,
+                subSegmentWorkAssigned: null,
+                projectModulesWorkAssigned: null,
+                taskWorkAssigned: null,
+                users: null,
+                error: null,
+                loading: false,
+                loadingSegment: false,
+                loadingSubSegment: false,
+                loadingTask: false,
+            };
+        default:
+            return state;
+    }
+}
+
+const MyWorkReducer = (state = myWorksState, action) => {
+    switch (action.type) {
+        case "GET_MY_WORKS_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "GET_MY_WORKS_SUCCESS":
+            return {
+                ...state,
+                myWorks: action.response,
+                error: null,
+                loading: false,
+            };
+        case "GET_MY_WORKS_FAILURE":
+            return {
+                ...state,
+                myWorks: null,
+                error: action.error,
+                loading: false,
+            };
+        case "CLEAR_MY_WORKS":
+            return {
+                ...state,
+                myWorks: null,
+                error: null,
+                loading: false,
+            };
+        default:
+            return state;
+    }
+}
+
 export const combinedReducers = combineReducers({
     form: formReducer,
     Auth: AuthReducer,
     ForgotPassword: ForgotPasswordReducer,
     UserProfile: UserProfileReducer,
     UserAssignment: UserAssignmentReducer,
-    ProjectInfo: ProjectInfoReducer
+    ProjectInfo: ProjectInfoReducer,
+    WorkAssignment: WorkAssignmentReducer,
+    MyWorks: MyWorkReducer,
 })

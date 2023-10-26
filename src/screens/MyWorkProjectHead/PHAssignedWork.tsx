@@ -8,40 +8,53 @@ import {
   Modal,
   TextInput,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {useIsFocused} from '@react-navigation/native';
-import {HeaderItems} from '../../constants/constants';
+import React, { useEffect, useState } from 'react';
+import { useIsFocused } from '@react-navigation/native';
+import { HeaderItems } from '../../constants/constants';
 import CheckBox from '@react-native-community/checkbox';
-import {ScrollView} from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProjectModules, getUsersForWorkAssignment } from './actions';
 import LoadingAnimation from '../Common/LoadingAnimation';
 
-const PHAssignedWork = ({route, navigation}: { route: any, navigation: any }) => {
+const PHAssignedWork = ({ route, navigation }: { route: any, navigation: any }) => {
 
   const [projectModulesData, setProjectModulesData] = useState([]);
-  const [selectedProjectModule, setSelectedProjectModule] = useState({isChecked: false, _id: "", name: ''});
+  const [selectedProjectModule, setSelectedProjectModule] = useState({ isChecked: false, _id: "", name: '' });
 
   const [userData, setUserCheckboxes] = useState([]);
 
   const { projectType } = route.params;
+  const focus = useIsFocused();
 
-  if (useIsFocused()) {
-    const eventEmitter = new NativeEventEmitter();
-    eventEmitter.emit('headerEvent', HeaderItems.assignedMyWork);
-  }
+
+  useEffect(() => {
+    if (focus == true) {
+      const eventEmitter = new NativeEventEmitter();
+      eventEmitter.emit('headerEvent', HeaderItems.assignedMyWork);
+      dispatch(getProjectModules({
+        projectId: loggedInUser.projectId,
+        projectType: projectType
+      }));
+
+      dispatch(getUsersForWorkAssignment({
+        projectId: loggedInUser.projectId,
+        projectType: projectType
+      }));
+    }
+  }, [focus]);
 
   const dispatch = useDispatch()
 
   const [isAssignPopOpen, openAssignPopup] = useState(false);
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const { projectModules, usersData, loading, loadingUsers, error} = useSelector((state: any) => state.WorkAssignment);
-  
+  const { projectModules, usersData, loading, loadingUsers, error } = useSelector((state: any) => state.WorkAssignment);
+
   // unmount
-  useEffect( () => () => {
+  useEffect(() => () => {
     setProjectModulesData([]);
     setUserCheckboxes([]);
-  }, [] );
+  }, []);
 
   useEffect(() => {
     if (projectModules) {
@@ -59,18 +72,10 @@ const PHAssignedWork = ({route, navigation}: { route: any, navigation: any }) =>
     }
   }, [projectModules, usersData]);
 
-  useEffect(() => {
-    dispatch(getProjectModules({
-      projectId: loggedInUser.projectId,
-      projectType: projectType
-    }));
+  // useEffect(() => {
 
-    dispatch(getUsersForWorkAssignment({
-      projectId: loggedInUser.projectId,
-      projectType: projectType
-    }));
-  }, []);
-  
+  // }, []);
+
   const handleRadioChange = (index: any) => {
     const projectModule: any = projectModulesData[index];
 
@@ -107,10 +112,10 @@ const PHAssignedWork = ({route, navigation}: { route: any, navigation: any }) =>
 
   return (
     <View style={styles.Container}>
-        <View style={styles.TopHeaderFixed}>
+      <View style={styles.TopHeaderFixed}>
         {(error) && <View style={styles.ErrorSectionStyle}>
-                <Text style={styles.errorText}>{error}</Text>
-              </View>}
+          <Text style={styles.errorText}>{error}</Text>
+        </View>}
         <View style={styles.SectionStyle}>
           <Image
             source={require('./../../images/search-icon.png')}
@@ -135,7 +140,7 @@ const PHAssignedWork = ({route, navigation}: { route: any, navigation: any }) =>
                 value={item.isChecked}
                 onValueChange={() => handleRadioChange(index)}
                 style={styles.checkbox}
-                tintColors={{true: '#0F56B3', false: '#818181'}}
+                tintColors={{ true: '#0F56B3', false: '#818181' }}
               />
               <View>
                 <Text style={styles.UserRole}>{item.name}</Text>
@@ -160,7 +165,7 @@ const PHAssignedWork = ({route, navigation}: { route: any, navigation: any }) =>
         ))}
 
         {/* No Data Found */}
-        {(!loading && !projectModulesData.length) && 
+        {(!loading && !projectModulesData.length) &&
           <View style={styles.NoDataContainer}>
             <Image
               style={styles.WthHeight}
@@ -183,7 +188,7 @@ const PHAssignedWork = ({route, navigation}: { route: any, navigation: any }) =>
         onRequestClose={() => {
           openAssignPopup(!isAssignPopOpen);
         }}>
-        <View style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.3)'}}>
+        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.3)' }}>
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <View style={styles.ModalHeader}>
@@ -199,27 +204,27 @@ const PHAssignedWork = ({route, navigation}: { route: any, navigation: any }) =>
                 </TouchableOpacity>
               </View>
               <View style={styles.ModalInnerContainer}>
-              <View>
-                <Text style={styles.AssignRoleText}>Project Module: {selectedProjectModule.name}</Text>
-              </View>
-              <ScrollView style={{paddingTop: 10, height: 500}}>
-                {userData.filter((item: any) => item.isChecked).map((item: any, index) => (
-                  <View style={styles.CategoryType}>
-                    <View style={styles.FlexRowCenter}>
-                      <View style={{ flexDirection: 'row' }}>
-                        <Text style={styles.AssignRoleText}>
-                          {item.name}
-                        </Text>
-                        {
+                <View>
+                  <Text style={styles.AssignRoleText}>Project Module: {selectedProjectModule.name}</Text>
+                </View>
+                <ScrollView style={{ paddingTop: 10, height: 500 }}>
+                  {userData.filter((item: any) => item.isChecked).map((item: any, index) => (
+                    <View style={styles.CategoryType}>
+                      <View style={styles.FlexRowCenter}>
+                        <View style={{ flexDirection: 'row' }}>
+                          <Text style={styles.AssignRoleText}>
+                            {item.name}
+                          </Text>
+                          {
                             item.assignmentLevel &&
                             <Text style={styles.userAlreadyAssigned}>
                               {item.assignmentLevel}
                             </Text>
                           }
+                        </View>
                       </View>
                     </View>
-                  </View>
-                ))}
+                  ))}
                 </ScrollView>
               </View>
             </View>
@@ -354,7 +359,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   checkbox: {
-    transform: [{scaleX: 1.2}, {scaleY: 1.2}],
+    transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }],
   },
   label: {
     margin: 8,

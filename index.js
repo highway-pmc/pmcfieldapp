@@ -6,7 +6,6 @@ import { AppRegistry, Alert } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 import { name as appName } from './app.json';
 import App from './src/app';
-import { useEffect } from 'react';
 
 /*
 {notification:{
@@ -16,16 +15,17 @@ import { useEffect } from 'react';
 */
 // Register background handler
 messaging().setBackgroundMessageHandler(async remoteMessage => {
-    Alert.alert('Message handled in the background!', JSON.stringify(remoteMessage));
+    Alert.alert('RFIs Notification', remoteMessage.notification?.body);
 });
 
 // Register kill-state handler
 messaging().getInitialNotification(async remoteMessage => {
-    Alert.alert('Message handled in the kill state!', JSON.stringify(remoteMessage));
+    Alert.alert('RFIs Notification', remoteMessage.notification?.body);
 });
 
 messaging().onMessage(async remoteMessage => {
-    Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    //console.log('Additional data==============', remoteMessage.data?.data);
+    Alert.alert('RFIs Notification', remoteMessage.notification?.body);
 });
 
 AppRegistry.registerComponent(appName, () => App);

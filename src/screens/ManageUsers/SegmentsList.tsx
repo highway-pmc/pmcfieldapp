@@ -87,7 +87,6 @@ const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) =>
           const assignedWorkLength = user.workAssignment?.filter((wa: any) => wa.projectModule?.id === projectModuleId && wa.assignmentLevel === 2).length;
           const segmentTypeLength = segmentsByGroupOnType[segmentType].length;
 
-          console.log('======='+ assignedWorkLength +'===================,', segmentTypeLength);
           if (assignedWorkLength === segmentTypeLength) {
             user.isChecked = true;
             user.assignedSegmentType = 'all';

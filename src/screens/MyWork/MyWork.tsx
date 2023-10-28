@@ -122,7 +122,8 @@ const MyWork = ({ navigation }: { navigation: any }) => {
           }
         ])
       } else {
-        setCurrentSegmentsData(myWorksData[projectModuleIndex].segmentsData)
+        const segmentsData = myWorksData[projectModuleIndex].segmentsData;
+        setCurrentSegmentsData(segmentsData)
         setBreadcrumbData([
           {
             name: myWorksData[projectModuleIndex].name,
@@ -135,7 +136,8 @@ const MyWork = ({ navigation }: { navigation: any }) => {
             active: true
           },
           {
-            name: "Foundation", // todo - dynamic
+            //name: "Foundation", // todo - dynamic
+            name: SEGMENT_TYPES_DISPLAY[segmentsData[0].type] || "Foundation", // todo - dynamic
             projectModuleIndex: projectModuleIndex,
             segIndex: segIndex,
             subSegIndex: subSegIndex,
@@ -319,8 +321,6 @@ const MyWork = ({ navigation }: { navigation: any }) => {
           {
             breadcrumbData.map((item: any, index) => (
               <View style={{flexDirection: 'row'}}>
-              {/* <Text style={styles.BreadcrumbPrevText} onPress={() => index === 0 ? (setCurrentLevel(1), setBreadcrumbData([])): item.active && onClick(item.level, item.assignmentLevel, item.projectModuleIndex, item.segIndex, item.subSegIndex, item.taskIndex)}>{item.name}</Text> */}
-              {/* <Text style={styles.BreadcrumbPrevText} onPress={() => index === 0 && (setCurrentLevel(1), setBreadcrumbData([]))}>{item.name}</Text> */}
               {
                 index == 0 ? <Text style={styles.BreadcrumbPrevTextUnderline} onPress={() => index === 0 && (setCurrentLevel(1), setBreadcrumbData([]))}>{item.name}</Text>
                 : index === (breadcrumbData.length -1) ? <Text style={styles.BreadcrumbCurrentText}>{item.name}</Text>
@@ -332,11 +332,6 @@ const MyWork = ({ navigation }: { navigation: any }) => {
               </View>
             ))
           }
-          {/* <Text style={styles.BreadcrumbPrevText}>Foundation 6</Text>
-          <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
-          <Text style={styles.BreadcrumbPrevText}>P1</Text>
-          <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
-          <Text style={styles.BreadcrumbCurrentText}>Footing</Text> */}
       </View>
 
 
@@ -360,7 +355,7 @@ const MyWork = ({ navigation }: { navigation: any }) => {
                       <View style={styles.TaskDetails}>
                         <Text style={styles.SubHeadingText}>Assigned:</Text>
                         <View style={{ flexDirection: 'row' }}>
-                          <Text style={styles.SubHeadingText}>Foundation /</Text>
+                          <Text style={styles.SubHeadingText}>{SEGMENT_TYPES_DISPLAY[segItem.type]} /</Text>
                           <Text style={[styles.SubHeadingText, styles.SubActive]}>{projModuleItem.segmentsData?.filter((segItem: any) => segItem.assignmentLevel == 2)[0].name}</Text>
                         </View>
                       </View>
@@ -371,29 +366,9 @@ const MyWork = ({ navigation }: { navigation: any }) => {
                       <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
                       <View style={styles.TaskDetails}>
                         <Text style={styles.SubHeadingText}>Assigned:</Text>
-                        <Text style={[styles.SubHeadingText, styles.SubActive]}>Foundation {projModuleItem.segmentsData?.filter((segItem: any) => segItem.assignmentLevel == 2).length}</Text>
+                        <Text style={[styles.SubHeadingText, styles.SubActive]}>{SEGMENT_TYPES_DISPLAY[segItem.type]} {projModuleItem.segmentsData?.filter((segItem: any) => segItem.assignmentLevel == 2).length}</Text>
                       </View>
                     </TouchableOpacity>
-
-
-
-
-                  // <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(3, projModuleItem.assignmentLevel, projModuleIndex, segIndex)}>
-                  //   <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
-                  //   <View style={styles.TaskDetails}>
-                  //     <Text style={styles.SubHeadingText}>Assigned:</Text>
-
-                  //     {projModuleItem.segmentsData?.filter((segItem: any) => segItem.assignmentLevel == 2).length === 1 ? (
-                  //       <View style={{ flexDirection: 'row' }}>
-                  //         <Text style={styles.SubHeadingText}>Foundation /</Text>
-                  //         <Text style={[styles.SubHeadingText, styles.SubActive]}>{projModuleItem.segmentsData?.filter((segItem: any) => segItem.assignmentLevel == 2)[0].name}</Text>
-                  //       </View>
-                  //     )
-                  //       :
-                  //       <Text style={[styles.SubHeadingText, styles.SubActive]}>Foundation {projModuleItem.segmentsData?.filter((segItem: any) => segItem.assignmentLevel == 2).length}</Text>
-                  //     }
-                  //   </View>
-                  // </TouchableOpacity>
                 )
                   :
                   segItem.subSegmentsData?.map((subSegItem: any, subSegIndex: number) => (
@@ -403,7 +378,7 @@ const MyWork = ({ navigation }: { navigation: any }) => {
                           <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
                           <View style={styles.TaskDetails}>
                             <Text style={styles.SubHeadingText}>Assigned:</Text>
-                            <Text style={styles.SubHeadingText}>Foundation /</Text>
+                            <Text style={styles.SubHeadingText}>{SEGMENT_TYPES_DISPLAY[segItem.type]} /</Text>
                             <Text style={styles.SubHeadingText}>{segItem.name} /</Text>
                             <Text style={[styles.SubHeadingText, styles.SubActive]}>{subSegItem.name}</Text>
                           </View>
@@ -417,7 +392,7 @@ const MyWork = ({ navigation }: { navigation: any }) => {
                           <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
                           <View style={styles.TaskDetails}>
                             <Text style={styles.SubHeadingText}>Assigned:</Text>
-                            <Text style={styles.SubHeadingText}>Foundation /</Text>
+                            <Text style={styles.SubHeadingText}>{SEGMENT_TYPES_DISPLAY[segItem.type]} /</Text>
                             <Text style={styles.SubHeadingText}>{segItem.name} /</Text>
                             <Text style={styles.SubHeadingText}>{subSegItem.name} /</Text>
                             <Text style={[styles.SubHeadingText, styles.SubActive]}>{taskItem.displayName}</Text>
@@ -441,10 +416,6 @@ const MyWork = ({ navigation }: { navigation: any }) => {
                 <Text style={styles.HeadText}>{segmentsByGroupOnType[item].length}</Text>
                 <Text style={styles.MyWorkSubHead}>{SEGMENT_TYPES_DISPLAY[item]}</Text>
               </View>
-              {/* <TouchableOpacity style={[styles.MyWorkCta, styles.StartBorder]}>
-                  <Image style={styles.WorkIcon} source={require('../images/play-icon.png')} />
-                  <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>Start</Text>
-              </TouchableOpacity> */}
             </TouchableOpacity>
           ))
         }
@@ -456,10 +427,6 @@ const MyWork = ({ navigation }: { navigation: any }) => {
                 <Text style={styles.HeadText}>{item.name}</Text>
                 {/* <Text style={styles.MyWorkSubHead}>Sub Text</Text> */}
               </View>
-              {/* <TouchableOpacity style={[styles.MyWorkCta, styles.StartBorder]}>
-                  <Image style={styles.WorkIcon} source={require('../images/play-icon.png')} />
-                  <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>Start</Text>
-              </TouchableOpacity> */}
             </TouchableOpacity>
           ))
         }
@@ -469,12 +436,7 @@ const MyWork = ({ navigation }: { navigation: any }) => {
             <TouchableOpacity style={[styles.StartWorkCard, styles.StartBorder]} onPress={() => onClickNested(4, item)}>
               <View style={styles.leftContainer}>
                 <Text style={styles.HeadText}>{item.name}</Text>
-                {/* <Text style={styles.MyWorkSubHead}>Sub Text</Text> */}
               </View>
-              {/* <TouchableOpacity style={[styles.MyWorkCta, styles.StartBorder]}>
-                  <Image style={styles.WorkIcon} source={require('../images/play-icon.png')} />
-                  <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>Start</Text>
-              </TouchableOpacity> */}
             </TouchableOpacity>
           ))
         }

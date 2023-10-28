@@ -122,7 +122,7 @@ const MyWork = ({ navigation }: { navigation: any }) => {
           }
         ])
       } else {
-        const segmentsData = myWorksData[projectModuleIndex].segmentsData;
+        const segmentsData = myWorksData[projectModuleIndex].segmentsData.filter((seg: any) => seg.type == segmentType);
         setCurrentSegmentsData(segmentsData)
         setBreadcrumbData([
           {
@@ -148,7 +148,7 @@ const MyWork = ({ navigation }: { navigation: any }) => {
           }
         ])
       }
-      
+
     } else if (level === 3 && segIndex != -1) {
       const segmentData = myWorksData[projectModuleIndex].segmentsData[segIndex];
       setCurrentSubSegmentsData(segmentData.subSegmentsData)
@@ -164,7 +164,7 @@ const MyWork = ({ navigation }: { navigation: any }) => {
           active: true
         },
         {
-          name: SEGMENT_TYPES_DISPLAY[segmentData.type] +' '+segmentData.name,
+          name: SEGMENT_TYPES_DISPLAY[segmentData.type] + ' ' + segmentData.name,
           projectModuleIndex: projectModuleIndex,
           segIndex: segIndex,
           subSegIndex: subSegIndex,
@@ -194,7 +194,7 @@ const MyWork = ({ navigation }: { navigation: any }) => {
           active: true
         },
         {
-          name: SEGMENT_TYPES_DISPLAY[segmentData.type] +' '+segmentData.name,
+          name: SEGMENT_TYPES_DISPLAY[segmentData.type] + ' ' + segmentData.name,
           projectModuleIndex: projectModuleIndex,
           segIndex: segIndex,
           subSegIndex: subSegIndex,
@@ -243,7 +243,7 @@ const MyWork = ({ navigation }: { navigation: any }) => {
           active: true
         },
         {
-          name: SEGMENT_TYPES_DISPLAY[segmentData.type] +' '+segmentData.name,
+          name: SEGMENT_TYPES_DISPLAY[segmentData.type] + ' ' + segmentData.name,
           projectModuleIndex: projectModuleIndex,
           segIndex: segIndex,
           subSegIndex: subSegIndex,
@@ -281,7 +281,7 @@ const MyWork = ({ navigation }: { navigation: any }) => {
     if (level === 3) {
       setCurrentSubSegmentsData(data.subSegmentsData)
       const beadcrumb = breadcrumbData[1];
-      beadcrumb.name = SEGMENT_TYPES_DISPLAY[data.type] +' '+data.name;
+      beadcrumb.name = SEGMENT_TYPES_DISPLAY[data.type] + ' ' + data.name;
     } else if (level === 4) {
       setCurrentTasksData(data.tasksData)
       const bcrubm = {
@@ -316,25 +316,23 @@ const MyWork = ({ navigation }: { navigation: any }) => {
 
   return (
     <View style={styles.Container}>
-      <ScrollView style={styles.Height100}>
       <View style={styles.BreadcrumbContainer}>
-          {
-            breadcrumbData.map((item: any, index) => (
-              <View style={{flexDirection: 'row'}}>
+        {
+          breadcrumbData.map((item: any, index) => (
+            <View style={{ flexDirection: 'row' }}>
               {
                 index == 0 ? <Text style={styles.BreadcrumbPrevTextUnderline} onPress={() => index === 0 && (setCurrentLevel(1), setBreadcrumbData([]))}>{item.name}</Text>
-                : index === (breadcrumbData.length -1) ? <Text style={styles.BreadcrumbCurrentText}>{item.name}</Text>
-                : <Text style={styles.BreadcrumbPrevText}>{item.name}</Text>
+                  : index === (breadcrumbData.length - 1) ? <Text style={styles.BreadcrumbCurrentText}>{item.name}</Text>
+                    : <Text style={styles.BreadcrumbPrevText}>{item.name}</Text>
               }
               {
-                index < (breadcrumbData.length -1) && <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
+                index < (breadcrumbData.length - 1) && <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
               }
-              </View>
-            ))
-          }
+            </View>
+          ))
+        }
       </View>
-
-
+      <ScrollView style={styles.Height100}>
         {
           currentLevel === 1 &&
           myWorksData.map((projModuleItem: any, projModuleIndex) => (
@@ -362,13 +360,17 @@ const MyWork = ({ navigation }: { navigation: any }) => {
                     </TouchableOpacity>
                   )
                     :
-                    <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(2, segItem.assignmentLevel, projModuleIndex)}>
-                      <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
-                      <View style={styles.TaskDetails}>
-                        <Text style={styles.SubHeadingText}>Assigned:</Text>
-                        <Text style={[styles.SubHeadingText, styles.SubActive]}>{SEGMENT_TYPES_DISPLAY[segItem.type]} {projModuleItem.segmentsData?.filter((segItem: any) => segItem.assignmentLevel == 2).length}</Text>
-                      </View>
-                    </TouchableOpacity>
+                    (
+                      Object.keys(groupBy(projModuleItem.segmentsData, "type")).map((segType: any) => (
+                        <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(2, segItem.assignmentLevel, projModuleIndex, -1, -1, -1, segType)}>
+                          <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
+                          <View style={styles.TaskDetails}>
+                            <Text style={styles.SubHeadingText}>Assigned:</Text>
+                            <Text style={[styles.SubHeadingText, styles.SubActive]}>{SEGMENT_TYPES_DISPLAY[segType]} {projModuleItem.segmentsData?.filter((segItem: any) => segItem.type == segType && segItem.assignmentLevel == 2).length}</Text>
+                          </View>
+                        </TouchableOpacity>
+                      ))
+                    )
                 )
                   :
                   segItem.subSegmentsData?.map((subSegItem: any, subSegIndex: number) => (
@@ -449,8 +451,8 @@ const MyWork = ({ navigation }: { navigation: any }) => {
                 {/* <Text style={styles.MyWorkSubHead}>Sub Text</Text> */}
               </View>
               <TouchableOpacity style={[styles.MyWorkCta, styles.StartBorder]}>
-                  <Image style={styles.WorkIcon} source={require('../../images/play-icon.png')} />
-                  <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>Start</Text>
+                <Image style={styles.WorkIcon} source={require('../../images/play-icon.png')} />
+                <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>Start</Text>
               </TouchableOpacity>
             </View>
           ))

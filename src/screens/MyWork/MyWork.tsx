@@ -278,8 +278,31 @@ const MyWork = ({ navigation }: { navigation: any }) => {
     setCurrentLevel(level);
     if (level === 3) {
       setCurrentSubSegmentsData(data.subSegmentsData)
+      const beadcrumb = breadcrumbData[1];
+      beadcrumb.name = SEGMENT_TYPES_DISPLAY[data.type] +' '+data.name;
     } else if (level === 4) {
       setCurrentTasksData(data.tasksData)
+      const bcrubm = {
+        name: data.name,
+        projectModuleIndex: breadcrumbData[0].projectModuleIndex,
+        segIndex: breadcrumbData[1].segIndex,
+        subSegIndex: 0,
+        taskIndex: 0,
+        level: 0,
+        assignmentLevel: 0,
+        active: false
+      }
+      breadcrumbData.push(bcrubm)
+      breadcrumbData.push({
+        name: 'Tasks',
+        projectModuleIndex: breadcrumbData[0].projectModuleIndex,
+        segIndex: breadcrumbData[1].segIndex,
+        subSegIndex: 0,
+        taskIndex: 0,
+        level: 0,
+        assignmentLevel: 0,
+        active: false
+      })
     }
   }
 
@@ -297,7 +320,12 @@ const MyWork = ({ navigation }: { navigation: any }) => {
             breadcrumbData.map((item: any, index) => (
               <View style={{flexDirection: 'row'}}>
               {/* <Text style={styles.BreadcrumbPrevText} onPress={() => index === 0 ? (setCurrentLevel(1), setBreadcrumbData([])): item.active && onClick(item.level, item.assignmentLevel, item.projectModuleIndex, item.segIndex, item.subSegIndex, item.taskIndex)}>{item.name}</Text> */}
-              <Text style={styles.BreadcrumbPrevText} onPress={() => index === 0 && (setCurrentLevel(1), setBreadcrumbData([]))}>{item.name}</Text>
+              {/* <Text style={styles.BreadcrumbPrevText} onPress={() => index === 0 && (setCurrentLevel(1), setBreadcrumbData([]))}>{item.name}</Text> */}
+              {
+                index == 0 ? <Text style={styles.BreadcrumbPrevTextUnderline} onPress={() => index === 0 && (setCurrentLevel(1), setBreadcrumbData([]))}>{item.name}</Text>
+                : index === (breadcrumbData.length -1) ? <Text style={styles.BreadcrumbCurrentText}>{item.name}</Text>
+                : <Text style={styles.BreadcrumbPrevText}>{item.name}</Text>
+              }
               {
                 index < (breadcrumbData.length -1) && <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
               }
@@ -572,6 +600,11 @@ const styles = StyleSheet.create({
   },
   BreadcrumbPrevText: {
     fontSize: 14,
+    color: '#333'
+  },
+  BreadcrumbPrevTextUnderline: {
+    fontSize: 14,
+    textDecorationLine: 'underline',
     color: '#333'
   },
   BreadcrumbCurrentText: {

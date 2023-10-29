@@ -1,4 +1,4 @@
-import { View, Text, NativeEventEmitter, StyleSheet, ScrollView, Pressable  } from 'react-native'
+import { View, Text, NativeEventEmitter, StyleSheet, ScrollView, TouchableOpacity  } from 'react-native'
 import React, {useEffect, useState} from 'react'
 import { useIsFocused } from '@react-navigation/native';
 import { HeaderItems, PROJECT_TYPE, ROLES } from "../../constants/constants"
@@ -84,18 +84,12 @@ const MyProjectType = ({navigation}: {navigation: any}) => {
       alignContent: 'center',
     }} style={styles.Container}>
       <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}>
+        style={styles.categoriesView}>
           {
             roles.map((role: any) => (
-            <Pressable
-              style={styles.buttonAssign}
-              onPress={() => onPressProjectType(role.projectType)}>
-              <Text style={styles.textStyle}>{role.title}</Text>
-            </Pressable>
+            <TouchableOpacity style={[styles.category, styles.categoryTab]} onPress={() => onPressProjectType(role.projectType)}>
+              <Text style={styles.tabText}>{role.title}</Text>
+            </TouchableOpacity>
             ))
           }
       </View>
@@ -106,20 +100,42 @@ const MyProjectType = ({navigation}: {navigation: any}) => {
 const styles = StyleSheet.create({
   Container: {
     flexDirection: 'column',
-    paddingVertical: 10,
-    padding: 15,
+    backgroundColor: '#F2F2F2',
+    padding: 20,
   },
-  buttonAssign: {
+  categoriesView: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    gap: 20
+  },
+  category: {
+    width: 100,
+    height: 80,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#C7C7C7',
+    borderStyle: 'solid',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  categoryTab: {
     backgroundColor: '#1C58C0',
-    paddingVertical: 30,
-    paddingHorizontal: 30,
-    width: '33%'
   },
-  textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
+  tabText: {
+    fontSize: 16,
+    fontWeight: '400',
+    color: '#fff'
+  }
 });
 
 export default MyProjectType

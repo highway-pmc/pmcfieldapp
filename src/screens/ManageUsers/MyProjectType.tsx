@@ -66,6 +66,7 @@ const MyProjectType = ({navigation}: {navigation: any}) => {
     
     if (rolesArr.length === 1) {
       onPressProjectType(rolesArr[0].projectType);
+      return;
     }
     setRoles(rolesArr)
   }, []);
@@ -77,13 +78,16 @@ const MyProjectType = ({navigation}: {navigation: any}) => {
   }
 
   return (
-    <ScrollView style={styles.Container}>
+    <ScrollView contentContainerStyle={{
+      flex: 1,
+      justifyContent: 'center',
+      alignContent: 'center',
+    }} style={styles.Container}>
       <View
         style={{
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'space-between',
-          marginHorizontal: -15,
         }}>
           {
             roles.map((role: any) => (
@@ -107,7 +111,7 @@ const styles = StyleSheet.create({
   },
   buttonAssign: {
     backgroundColor: '#1C58C0',
-    paddingVertical: 20,
+    paddingVertical: 30,
     paddingHorizontal: 30,
     width: '33%'
   },

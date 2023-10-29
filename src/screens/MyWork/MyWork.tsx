@@ -7,10 +7,10 @@ import { clearMyWorksEvent, getMyWorks } from './actions';
 import LoadingAnimation from '../Common/LoadingAnimation';
 import { groupBy } from '../../utils/Utils';
 
-const MyWork = ({ navigation }: { navigation: any }) => {
-
-
+const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
+  const { projectType } = route.params;
+
   const { myWorks, loading, error } = useSelector((state: any) => state.MyWorks);
   const [myWorksData, setMyWorksData] = useState([]);
   const [currentSegmentsData, setCurrentSegmentsData] = useState([]);
@@ -47,7 +47,10 @@ const MyWork = ({ navigation }: { navigation: any }) => {
   }, [focus]);
 
   const getMyWorksData = () => {
-    dispatch(getMyWorks(loggedInUser.projectId));
+    dispatch(getMyWorks({
+      projectId: loggedInUser.projectId,
+      projectType: projectType
+    }));
   }
 
   useEffect(() => {

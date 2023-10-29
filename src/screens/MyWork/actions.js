@@ -1,6 +1,6 @@
-export const getMyWorks = (projectId) => ({
+export const getMyWorks = (payload) => ({
     type: "GET_MY_WORKS_REQUEST",
-    payload: projectId
+    payload: payload
 });
 
 export const clearMyWorksEvent = () => ({

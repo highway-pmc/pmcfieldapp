@@ -24,6 +24,7 @@ import PHAssignedWork from "../../screens/MyWorkProjectHead/PHAssignedWork";
 import PHAssignedTasks from "../../screens/MyWorkProjectHead/PHAssignedTasks";
 import PHAssignedSubSegments from "../../screens/MyWorkProjectHead/PHAssignedSubSegments";
 import PHAssignedSegments from "../../screens/MyWorkProjectHead/PHAssignedSegments";
+import MyWorkProjectType from "../../screens/MyWork/MyWorkProjectType";
 
 const Stack = createStackNavigator();
 
@@ -38,6 +39,7 @@ const screenOptionStyle = {
 const MyWorkStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen name="MyWorkProjectType1" component={MyWorkProjectType} options={{headerShown: false}} />
       <Stack.Screen name="MyWork" component={MyWork} options={{headerShown: false}} />
       <Stack.Screen name="MyWork2" component={MyWork2} options={{headerShown: false}} />
       <Stack.Screen name="MyWork3" component={MyWork3} options={{headerShown: false}} />

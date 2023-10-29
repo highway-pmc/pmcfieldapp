@@ -84,10 +84,9 @@ const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) =>
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL4;
           user.isChecked = true;
         } else {
-          const assignedWorkLength = user.workAssignment?.filter((wa: any) => wa.projectModule?.id === projectModuleId && wa.assignmentLevel === 2).length;
+          const assignedWorkLength = user.workAssignment?.filter((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentType === segmentType && wa.assignmentLevel === 2).length;
           const segmentTypeLength = segmentsByGroupOnType[segmentType].length;
 
-          console.log('======='+ assignedWorkLength +'===================,', segmentTypeLength);
           if (assignedWorkLength === segmentTypeLength) {
             user.isChecked = true;
             user.assignedSegmentType = 'all';
@@ -101,7 +100,6 @@ const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) =>
 
   const handleRadioChange = (index: any) => {
     const segment: any = segmentsData[index];
-
     segment.isChecked = !segment.isChecked
     setSelectedSegment(segment);
 

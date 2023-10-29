@@ -72,15 +72,12 @@ const PHAssignedSegments = ({ route, navigation }: { route: any, navigation: any
       const updatedCheckboxes: any = [...userData];
       updatedCheckboxes.forEach((user: any) => {
         user.isChecked = false;
-        delete user.assignedSegmentType;
-        delete user.assignmentLevel;
-        
-        const assignedWorkLength = user.workAssignment?.filter((wa: any) => wa.projectModule?.id === projectModuleId && wa.assignmentLevel === 2).length;
+
+        const assignedWorkLength = user.workAssignment?.filter((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentType === segmentType && wa.assignmentLevel === 2).length;
         const segmentTypeLength = segmentsByGroupOnType[segmentType].length;
 
         if (assignedWorkLength === segmentTypeLength) {
           user.isChecked = true;
-          user.assignedSegmentType = 'all';
         }
       });
       setUserCheckboxes(updatedCheckboxes);
@@ -131,22 +128,22 @@ const PHAssignedSegments = ({ route, navigation }: { route: any, navigation: any
         {
           !selectedSegmentType && segmentsByGroupOnType && Object.keys(segmentsByGroupOnType).length && Object.keys(segmentsByGroupOnType).map((item) => (
             <View style={styles.UserCategory}>
-              <View style={[styles.FlexRowCenter, {gap: 10}]}>
-              <CheckBox
-                //value={item.isChecked}
-                onValueChange={() => handleSegmentTypeChange(item)}
-                style={styles.checkbox}
-                tintColors={{ true: '#0F56B3', false: '#818181' }}
-              />
-              <View>
-              <TouchableOpacity onPress={() => onSegmentTypeClick(item)}
-              >
-                <Text>{segmentsByGroupOnType[item].length}</Text>
-                <Text>{SEGMENT_TYPES_DISPLAY[item]}</Text>
-              </TouchableOpacity>
+              <View style={[styles.FlexRowCenter, { gap: 10 }]}>
+                <CheckBox
+                  //value={item.isChecked}
+                  onValueChange={() => handleSegmentTypeChange(item)}
+                  style={styles.checkbox}
+                  tintColors={{ true: '#0F56B3', false: '#818181' }}
+                />
+                <View>
+                  <TouchableOpacity onPress={() => onSegmentTypeClick(item)}
+                  >
+                    <Text>{segmentsByGroupOnType[item].length}</Text>
+                    <Text>{SEGMENT_TYPES_DISPLAY[item]}</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
-              
+
             </View>
           ))
         }
@@ -215,18 +212,11 @@ const PHAssignedSegments = ({ route, navigation }: { route: any, navigation: any
                   {userData.filter((item: any) => item.isChecked).map((item: any, index) => (
                     <View style={styles.CategoryType}>
                       <View style={styles.FlexRowCenter}>
-                        
+
                         <View style={{ flexDirection: 'row' }}>
                           <Text style={styles.AssignRoleText}>
                             {item.name}
                           </Text>
-                          {
-                            item.assignmentLevel &&
-                            <Text style={styles.userAlreadyAssigned}>
-                              {item.assignmentLevel}
-                            </Text>
-                          }
-
                         </View>
                       </View>
                     </View>

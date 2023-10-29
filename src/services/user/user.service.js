@@ -14,6 +14,17 @@ export const setPasswordApi = async (user) => {
     });
 }
 
+export const updateDeviceFCMToken = async (user) => {
+    return apiService.patchRequest('v1/auth/users/fcmToken', {
+        fcmToken: user.fcmToken,
+    }).then((response) => {
+        return true;
+    }).catch((err) => {
+        const errorMessge = err.message || 'Unable to update fcm token.';
+        throw new Error(errorMessge);
+    });
+}
+
 export const getUserInfo = async (user) => {
     return apiService.getRequest('v1/auth/users/info').then((response) => {
         return response;

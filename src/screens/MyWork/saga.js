@@ -4,7 +4,7 @@ import { getMyWorksData } from '../../services/my-works/myworks.service';
 
 function* getMyWorks({ payload }) {
     try {
-        const response = yield (getMyWorksData(payload));
+        const response = yield (getMyWorksData(payload.projectId, payload.projectType));
         yield put({ type: "GET_MY_WORKS_SUCCESS", response });
     } catch (error) {
         yield put({ type: "GET_MY_WORKS_FAILURE", error: error.message });

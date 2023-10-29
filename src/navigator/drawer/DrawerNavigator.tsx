@@ -35,7 +35,14 @@ const DrawerNavigator = () => {
           headerShown: false
         }}
       />
-      {
+      <Drawer.Screen
+        name="MyWorkProjectType"
+        component={MyWorkStackNavigator}
+        options={{
+          headerShown: false
+        }}
+      />
+      {/* {
         !projectHead ? 
         <Drawer.Screen
         name="MyWork"
@@ -52,7 +59,7 @@ const DrawerNavigator = () => {
           headerShown: false
         }}
       />
-      }
+      } */}
       
       <Drawer.Screen
         name="MyTask"

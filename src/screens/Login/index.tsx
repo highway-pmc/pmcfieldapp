@@ -24,8 +24,8 @@ import { mobilenoRegex } from '../../utils/RegexApp';
 
 
 const Login = ({ navigation }: { navigation: any }) => {
-  const [username, setUsername] = useState('ahighwaypmc@gmail.com');
-  const [password, setPassword] = useState('New@1234');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState("")
   const [passwordError, setPasswordError] = useState("")
   const [formSubmitted, setFormSubmitted] = useState(false)

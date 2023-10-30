@@ -1,4 +1,4 @@
-import { View, Text, NativeEventEmitter, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native'
+import { View, Text, NativeEventEmitter, StyleSheet, ScrollView, Image, TouchableOpacity, TextInput } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useIsFocused } from '@react-navigation/native';
 import { HeaderItems, PROJECT_TYPE, SEGMENT_TYPES_DISPLAY } from "../../constants/constants"
@@ -18,6 +18,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
   const [currentTasksData, setCurrentTasksData] = useState([]);
   const [currentLevel, setCurrentLevel] = useState(1);
   const [segmentsByGroupOnType, setSegmentsByGroupOnType] = useState(null);
+  const [searchText, setSearchText] = useState('');
   const [breadcrumbData, setBreadcrumbData] = useState([{
     name: '',
     projectModuleIndex: 0,
@@ -43,6 +44,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
       setCurrentTasksData([]);
       setBreadcrumbData([]);
       getMyWorksData();
+      setSearchText('');
     }
   }, [focus]);
 
@@ -68,9 +70,11 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
     setCurrentSubSegmentsData([]);
     setCurrentTasksData([]);
     setBreadcrumbData([]);
+    setSearchText('');
   }, []);
 
   const onClick = (level: number, assignmentLevel: number, projectModuleIndex: number, segIndex: number = -1, subSegIndex: number = -1, taskIndex: number = -1, segmentType = null) => {
+    setSearchText('');
     setCurrentLevel(level)
     setBreadcrumbData([]);
     if (level === 2) {
@@ -280,6 +284,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
   }
 
   const onClickNested = (level: number, data: any) => {
+    setSearchText('');
     setCurrentLevel(level);
     if (level === 3) {
       setCurrentSubSegmentsData(data.subSegmentsData)
@@ -335,6 +340,27 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
           ))
         }
       </View>
+      {
+        (currentLevel !== 1 && currentLevel !== 5) && <View style={styles.SearchBox}>
+          <Image
+            source={require('./../../images/search-icon.png')}
+            style={styles.ImageSearch}
+          />
+          <TextInput
+            style={styles.inputStyle}
+            placeholder="Search"
+            autoCapitalize="none"
+            keyboardType="email-address"
+            returnKeyType="next"
+            underlineColorAndroid="#f000"
+            blurOnSubmit={false}
+            value={searchText}
+            onChangeText={(text) => {
+              setSearchText(text);
+            }}
+          />
+        </View>
+}
       <ScrollView style={styles.Height100}>
         {
           currentLevel === 1 &&
@@ -426,7 +452,13 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
         }
         {
           currentLevel === 2 &&
-          currentSegmentsData.map((item: any, index) => (
+          currentSegmentsData.filter((seg: any) => {
+            if (searchText && seg.name) {
+              return seg.name.toLowerCase().includes(searchText.toLowerCase())
+            } else {
+              return true;
+            }
+          }).map((item: any, index) => (
             <TouchableOpacity style={[styles.StartWorkCard, styles.StartBorder]} onPress={() => onClickNested(3, item)}>
               <View style={styles.leftContainer}>
                 <Text style={styles.HeadText}>{item.name}</Text>
@@ -437,7 +469,13 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
         }
         {
           currentLevel === 3 &&
-          currentSubSegmentsData.map((item: any, index) => (
+          currentSubSegmentsData.filter((subSeg: any) => {
+            if (searchText && subSeg.name) {
+              return subSeg.name.toLowerCase().includes(searchText.toLowerCase())
+            } else {
+              return true;
+            }
+          }).map((item: any, index) => (
             <TouchableOpacity style={[styles.StartWorkCard, styles.StartBorder]} onPress={() => onClickNested(4, item)}>
               <View style={styles.leftContainer}>
                 <Text style={styles.HeadText}>{item.name}</Text>
@@ -447,7 +485,13 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
         }
         {
           currentLevel === 4 &&
-          currentTasksData.map((item: any, index) => (
+          currentTasksData.filter((task: any) => {
+            if (searchText && task.displayName) {
+              return task.displayName.toLowerCase().includes(searchText.toLowerCase())
+            } else {
+              return true;
+            }
+          }).map((item: any, index) => (
             <View style={[styles.StartWorkCard, styles.StartBorder]}>
               <View style={styles.leftContainer}>
                 <Text style={styles.HeadText}>{item.displayName}</Text>
@@ -487,6 +531,34 @@ const styles = StyleSheet.create({
   },
   Height100: {
     height: '100%',
+  },
+  SearchBox: {
+    flexDirection: 'row',
+    height: 40,
+    marginBottom: 20,
+    marginTop: 5,
+    position: 'relative',
+  },
+  ImageSearch: {
+    position: 'absolute',
+    width: 24,
+    height: 24,
+    zIndex: 9,
+    left: 10,
+    top: '27%',
+  },
+  inputStyle: {
+    flex: 1,
+    color: '#2c2c2c',
+    paddingLeft: 40,
+    paddingRight: 15,
+    borderWidth: 1,
+    borderRadius: 6,
+    borderColor: '#808089',
+    backgroundColor: '#fff',
+    fontWeight: '600',
+    paddingVertical: 5,
+    height: 45,
   },
   //Start Work
   StartWorkCard: {

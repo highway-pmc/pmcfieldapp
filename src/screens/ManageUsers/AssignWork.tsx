@@ -22,7 +22,7 @@ const AssignWork = ({route, navigation}: { route: any, navigation: any }) => {
 
   const [projectModulesData, setProjectModulesData] = useState([]);
   const [selectedProjectModule, setSelectedProjectModule] = useState({isChecked: false, _id: "", name: ''});
-
+  const [searchText, setSearchText] = useState('');
   // const [usersToBeAssigned, setUsersToBeAssigned] = useState([])
   const [userData, setUserCheckboxes] = useState([]);
 
@@ -43,6 +43,7 @@ const AssignWork = ({route, navigation}: { route: any, navigation: any }) => {
   useEffect( () => () => {
     setProjectModulesData([]);
     setUserCheckboxes([]);
+    setSearchText('');
   }, [] );
 
   useEffect(() => {
@@ -203,11 +204,21 @@ const AssignWork = ({route, navigation}: { route: any, navigation: any }) => {
             returnKeyType="next"
             underlineColorAndroid="#f000"
             blurOnSubmit={false}
+            value={searchText}
+            onChangeText={(text) => {
+              setSearchText(text);
+            }}
           />
         </View>
       </View>
       <ScrollView style={styles.Height100}>
-        {projectModulesData.map((item: any, index) => (
+        {projectModulesData.filter((projectMod: any) => {
+            if (searchText && projectMod.name) {
+              return projectMod.name.toLowerCase().includes(searchText.toLowerCase())
+            } else {
+              return true;
+            }
+          }).map((item: any, index) => (
           <View style={styles.UserCategory}>
             <View style={styles.FlexRowCenter}>
               <CheckBox

@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, NativeEventEmitter, StyleSheet, Image, Modal, Alert } from 'react-native'
+import { View, Text, TouchableOpacity, NativeEventEmitter, StyleSheet, Image, Modal, Alert, TextInput } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useIsFocused } from '@react-navigation/native';
 import { HeaderItems, SEGMENT_TYPES_DISPLAY, WORK_ASSIGNMENT_LEVEL } from '../../constants/constants';
@@ -21,6 +21,7 @@ const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) =>
   const [selectedSegment, setSelectedSegment] = useState({ isChecked: false, _id: "", name: "" });
   const [userData, setUserCheckboxes] = useState([]);
   const [isAssignPopOpen, openAssignPopup] = useState(false);
+  const [searchText, setSearchText] = useState('');
 
   const dispatch = useDispatch()
 
@@ -43,6 +44,7 @@ const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) =>
 
   useEffect(() => {
     setSelectedSegmentType('');
+    setSearchText('');
     dispatch(getProjectModuleSegments({
       projectId: loggedInUser.projectId,
       projectModuleId: projectModuleId
@@ -230,11 +232,38 @@ const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) =>
     openAssignPopup(!isAssignPopOpen);
   };
 
+  // unmount
+  useEffect( () => () => {
+    setSearchText('');
+  }, [] );
+
   return (
-    <View>
+    <View style={styles.Container}>
       {(error) && <View style={styles.ErrorSectionStyle}>
         <Text style={styles.errorText}>{error}</Text>
       </View>}
+
+      {
+        selectedSegmentType && <View style={styles.SectionStyle}>
+        <Image
+          source={require('./../../images/search-icon.png')}
+          style={styles.ImageSearch}
+        />
+        <TextInput
+          style={styles.inputStyle}
+          placeholder="Search"
+          autoCapitalize="none"
+          keyboardType="email-address"
+          returnKeyType="next"
+          underlineColorAndroid="#f000"
+          blurOnSubmit={false}
+          value={searchText}
+          onChangeText={(text) => {
+            setSearchText(text);
+          }}
+        />
+      </View>
+      }
       <ScrollView style={styles.Height100}>
 
         {
@@ -260,7 +289,13 @@ const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) =>
           ))
         }
 
-        {selectedSegmentType && segmentsData.map((item: any, index) => (
+        {selectedSegmentType && segmentsData.filter((seg: any) => {
+            if (searchText && seg.name) {
+              return seg.name.toLowerCase().includes(searchText.toLowerCase())
+            } else {
+              return true;
+            }
+          }).map((item: any, index) => (
           <View style={styles.UserCategory}>
             <View style={styles.FlexRowCenter}>
               <CheckBox

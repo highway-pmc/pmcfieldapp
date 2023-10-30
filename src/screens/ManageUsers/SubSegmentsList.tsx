@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, NativeEventEmitter, StyleSheet, Image, Modal, Alert } from 'react-native'
+import { View, Text, TouchableOpacity, NativeEventEmitter, StyleSheet, Image, Modal, Alert, TextInput } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useIsFocused } from '@react-navigation/native';
 import { HeaderItems, WORK_ASSIGNMENT_LEVEL } from '../../constants/constants';
@@ -8,15 +8,16 @@ import { ScrollView } from 'react-native-gesture-handler';
 import CheckBox from '@react-native-community/checkbox';
 import LoadingAnimation from '../Common/LoadingAnimation';
 
-const SubSegmentsList = ({route, navigation}: { route: any, navigation: any }) => {
+const SubSegmentsList = ({ route, navigation }: { route: any, navigation: any }) => {
   const { projectModuleId, projectModuleName, type, subType, segmentId, segmentName, projectType } = route.params;
-  
+
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const { subSegments, users, loadingUsers, loadingSubSegment, subSegmentWorkAssigned, loading, error} = useSelector((state: any) => state.WorkAssignment);
+  const { subSegments, users, loadingUsers, loadingSubSegment, subSegmentWorkAssigned, loading, error } = useSelector((state: any) => state.WorkAssignment);
   const [subSegmentsData, setSubSegmentsData] = useState([]);
   const [selectedSubSegment, setSelectedSubSegment] = useState({ isChecked: false, _id: "", name: "" });
   const [userData, setUserCheckboxes] = useState([]);
   const [isAssignPopOpen, openAssignPopup] = useState(false);
+  const [searchText, setSearchText] = useState('');
 
   const dispatch = useDispatch()
 
@@ -171,42 +172,72 @@ const SubSegmentsList = ({route, navigation}: { route: any, navigation: any }) =
     openAssignPopup(!isAssignPopOpen);
   };
 
+  // unmount
+  useEffect(() => () => {
+    setSearchText('');
+  }, []);
+
   return (
-    <View>
+    <View style={styles.Container}>
       {(error) && <View style={styles.ErrorSectionStyle}>
-                <Text style={styles.errorText}>{error}</Text>
-              </View>}
+        <Text style={styles.errorText}>{error}</Text>
+      </View>}
+      <View style={styles.SectionStyle}>
+        <Image
+          source={require('./../../images/search-icon.png')}
+          style={styles.ImageSearch}
+        />
+        <TextInput
+          style={styles.inputStyle}
+          placeholder="Search"
+          autoCapitalize="none"
+          keyboardType="email-address"
+          returnKeyType="next"
+          underlineColorAndroid="#f000"
+          blurOnSubmit={false}
+          value={searchText}
+          onChangeText={(text) => {
+            setSearchText(text);
+          }}
+        />
+      </View>
       <ScrollView style={styles.Height100}>
-        {subSegmentsData.map((item: any, index) => (
+        {subSegmentsData.filter((subSeg: any) => {
+            if (searchText && subSeg.name) {
+              return subSeg.name.toLowerCase().includes(searchText.toLowerCase())
+            } else {
+              return true;
+            }
+          }).map((item: any, index) => (
           <View style={styles.UserCategory}>
             <View style={styles.FlexRowCenter}>
               <CheckBox
                 value={item.isChecked}
                 onValueChange={() => handleRadioChange(index)}
                 style={styles.checkbox}
-                tintColors={{true: '#0F56B3', false: '#818181'}}
+                tintColors={{ true: '#0F56B3', false: '#818181' }}
               />
               <View>
                 <Text style={styles.UserRole}>{item.name}</Text>
               </View>
             </View>
             <TouchableOpacity
-                onPress={() => navigation.navigate('AssignTasks', {
-                  projectModuleId: projectModuleId,
-                  projectModuleName: projectModuleName,
-                  segmentId: segmentId,
-                  segmentName: segmentName,
-                  subSegmentId: item._id,
-                  subSegmentName: item.name,
-                  type: type,
-                  subType: subType,
-                  projectType: projectType
-                })}>
-                <Image
-                  style={styles.CloseIcon}
-                  source={require('./../../images/right-arrow.png')}
-                />
-              </TouchableOpacity>
+              onPress={() => navigation.navigate('AssignTasks', {
+                projectModuleId: projectModuleId,
+                projectModuleName: projectModuleName,
+                segmentId: segmentId,
+                segmentName: segmentName,
+                subSegmentId: item._id,
+                subSegmentName: item.name,
+                type: type,
+                subType: subType,
+                projectType: projectType
+              })}>
+              <Image
+                style={styles.CloseIcon}
+                source={require('./../../images/right-arrow.png')}
+              />
+            </TouchableOpacity>
           </View>
         ))}
       </ScrollView>
@@ -400,7 +431,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   checkbox: {
-    transform: [{scaleX: 1.2}, {scaleY: 1.2}],
+    transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }],
   },
   label: {
     margin: 8,

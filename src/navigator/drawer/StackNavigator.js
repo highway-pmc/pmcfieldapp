@@ -25,6 +25,8 @@ import PHAssignedTasks from "../../screens/MyWorkProjectHead/PHAssignedTasks";
 import PHAssignedSubSegments from "../../screens/MyWorkProjectHead/PHAssignedSubSegments";
 import PHAssignedSegments from "../../screens/MyWorkProjectHead/PHAssignedSegments";
 import MyWorkProjectType from "../../screens/MyWork/MyWorkProjectType";
+import RFIsDashboard from "../../screens/RFIs/RFIsDashboard";
+import RFIsTaskListing from "../../screens/RFIs/RFIsTaskListing";
 
 const Stack = createStackNavigator();
 
@@ -116,6 +118,8 @@ const RFIsStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
       <Stack.Screen name="RFIs" component={RFIs} options={{headerShown: false}} />
+      <Stack.Screen name="RFIsDashboard" component={RFIsDashboard} options={{headerShown: false}} />
+      <Stack.Screen name="RFIsTaskListing" component={RFIsTaskListing} options={{headerShown: false}} />
     </Stack.Navigator>
   );
 };

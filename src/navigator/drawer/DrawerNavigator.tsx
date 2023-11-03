@@ -97,7 +97,7 @@ const DrawerNavigator = () => {
         }}
       />
       <Drawer.Screen
-        name="RFIs"
+        name="RFIsHome"
         component={RFIsStackNavigator}
         options={{
           headerShown: false

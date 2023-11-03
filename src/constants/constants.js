@@ -101,7 +101,7 @@ export const Dashboard_MENU = [
         iconMenu: require("./../images/menu/manage-rfi-icom.png"),
         title: "Manage RFIs",
         subTitle: "RFI",
-        route: 'RFIs',
+        route: 'RFIsHome',
         permissions: ["project-head", "structure-head", "highway-head", "other-work-head", "quality-head"]
     },
     {

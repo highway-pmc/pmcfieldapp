@@ -756,6 +756,61 @@ const MyWorkReducer = (state = myWorksState, action) => {
     }
 }
 
+const RFIsReducer = (state = myWorksState, action) => {
+    switch (action.type) {
+        case "GET_RFI_TASKS_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "GET_RFI_TASKS_SUCCESS":
+            return {
+                ...state,
+                rfisTasks: action.response,
+                error: null,
+                loading: false,
+            };
+        case "GET_RFI_TASKS_FAILURE":
+            return {
+                ...state,
+                rfisTasks: null,
+                error: action.error,
+                loading: false,
+            };
+        case "GET_RFI_TASK_USERS_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "GET_RFI_TASK_USERS_SUCCESS":
+            return {
+                ...state,
+                taskUsers: action.response,
+                error: null,
+                loading: false,
+            };
+        case "GET_RFI_TASK_USERS_FAILURE":
+            return {
+                ...state,
+                taskUsers: null,
+                error: action.error,
+                loading: false,
+            };
+        case "CLEAR_RFI_REQUEST":
+            return {
+                ...state,
+                rfisTasks: null,
+                taskUsers: null,
+                error: null,
+                loading: false,
+            };
+        default:
+            return state;
+    }
+}
+
 export const combinedReducers = combineReducers({
     form: formReducer,
     Auth: AuthReducer,
@@ -766,4 +821,5 @@ export const combinedReducers = combineReducers({
     ProjectInfo: ProjectInfoReducer,
     WorkAssignment: WorkAssignmentReducer,
     MyWorks: MyWorkReducer,
+    RFIs: RFIsReducer,
 })

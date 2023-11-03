@@ -8,7 +8,7 @@ import ManageUsers from "../../screens/ManageUsers/ManageUsers";
 import Notifications from "../../screens/Notifications/Notifications";
 import Progress from "../../screens/Progress/Progress";
 import Reports from "../../screens/Reports/Reports";
-import RFIs from "../../screens/RFIs/RFIs";
+import RFIsHome from "../../screens/RFIs/RFIsHome";
 import Profile from "../../screens/Profile/Profile";
 import MyTask from "../../screens/MyTask/MyTask";
 import AssignWork from "../../screens/ManageUsers/AssignWork";
@@ -26,7 +26,7 @@ import PHAssignedSubSegments from "../../screens/MyWorkProjectHead/PHAssignedSub
 import PHAssignedSegments from "../../screens/MyWorkProjectHead/PHAssignedSegments";
 import MyWorkProjectType from "../../screens/MyWork/MyWorkProjectType";
 import RFIsDashboard from "../../screens/RFIs/RFIsDashboard";
-import RFIsTaskListing from "../../screens/RFIs/RFIsTaskListing";
+import RFIsUserCategorySelection from "../../screens/RFIs/RFIsUserCategorySelection";
 
 const Stack = createStackNavigator();
 
@@ -117,9 +117,9 @@ const ReportsStackNavigator = () => {
 const RFIsStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
-      <Stack.Screen name="RFIs" component={RFIs} options={{headerShown: false}} />
+      <Stack.Screen name="RFIsHome" component={RFIsHome} options={{headerShown: false}} />
       <Stack.Screen name="RFIsDashboard" component={RFIsDashboard} options={{headerShown: false}} />
-      <Stack.Screen name="RFIsTaskListing" component={RFIsTaskListing} options={{headerShown: false}} />
+      <Stack.Screen name="RFIsUserCategorySelection" component={RFIsUserCategorySelection} options={{headerShown: false}} />
     </Stack.Navigator>
   );
 };

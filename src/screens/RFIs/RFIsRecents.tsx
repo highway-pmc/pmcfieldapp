@@ -127,7 +127,7 @@ const RFIsRecents = (props: any) => {
           </ScrollView>
         </View>
         {props.rfiType === RFIs_TYPE.GENERATE && <View style={styles.footerButton}>
-          <TouchableOpacity style={styles.btnCta} onPress={() => navigation.navigate('RFIsTaskListing', {
+          <TouchableOpacity style={styles.btnCta} onPress={() => navigation.navigate('RFIsUserCategorySelection', {
             rfiType: props.rfiType
           })}>
             <Text style={styles.btnCtaText}>Generate RFI's</Text>

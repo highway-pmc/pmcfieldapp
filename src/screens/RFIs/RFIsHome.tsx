@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import { HeaderItems, RFIs_TYPE } from "../../constants/constants"
 
-const RFIs = ({ route, navigation }: { route: any, navigation: any }) => {
+const RFIsHome = ({ route, navigation }: { route: any, navigation: any }) => {
 
   const focus = useIsFocused();
   useEffect(() => {
@@ -104,4 +104,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RFIs
+export default RFIsHome

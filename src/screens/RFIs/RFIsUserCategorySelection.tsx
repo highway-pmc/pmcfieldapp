@@ -2,8 +2,9 @@ import { View, Text, Button, NativeEventEmitter, Alert, StyleSheet, ScrollView, 
 import React, { useEffect, useState } from 'react'
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import { HeaderItems, RFIs_TYPE, USER_CATEGORY_DISPLAY, WORK_TYPE } from "../../constants/constants"
+import RFIsStructureTaskListing from './RFIsStructureTaskListing';
 
-const RFIsTaskListing = ({ route, navigation }: { route: any, navigation: any }) => {
+const RFIsUserCategorySelection = ({ route, navigation }: { route: any, navigation: any }) => {
 
   const { rfiType } = route.params;
 
@@ -75,7 +76,8 @@ const RFIsTaskListing = ({ route, navigation }: { route: any, navigation: any })
       </View>
       <View style={styles.tabContent}>
         {activeTab === USER_CATEGORY_DISPLAY.STRUCTURE &&
-          <Text>STRUCTURE WORK</Text>
+          // <Text>STRUCTURE WORK</Text>
+          <RFIsStructureTaskListing rfiType={rfiType}></RFIsStructureTaskListing>
         }
         {activeTab === USER_CATEGORY_DISPLAY.HIGHWAY && <Text>TBD</Text>}
         {activeTab === USER_CATEGORY_DISPLAY.OTHER && <Text>TBD</Text>}
@@ -112,11 +114,11 @@ const styles = StyleSheet.create({
     fontWeight: '500'
   },
   tabContent: {
-    paddingHorizontal: 20,
-    paddingTop: 20,
+    paddingHorizontal: 5,
+    paddingTop: 10,
     borderWidth: 1,
     height: '100%'
   },
 });
 
-export default RFIsTaskListing
+export default RFIsUserCategorySelection

@@ -9,6 +9,7 @@ import changePassowrdScreenSaga from '../screens/ChangePassword/saga';
 import myWorksScreenSaga from '../screens/MyWork/saga';
 import projectHeadMyWorkAssignmentScreenSaga from '../screens/MyWorkProjectHead/saga';
 import dashboardScreenSaga from '../screens/Dashboard/saga';
+import myRFISScreenSaga from '../screens/RFIs/saga';
 
 function* rootSaga() {
     yield all([
@@ -22,6 +23,7 @@ function* rootSaga() {
         myWorksScreenSaga(),
         projectHeadMyWorkAssignmentScreenSaga(),
         dashboardScreenSaga(),
+        myRFISScreenSaga(),
       ])
 }
 

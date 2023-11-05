@@ -17,3 +17,21 @@ export const getRFITaskUsersData = async (projectId, projectModuleId, userCatego
         throw new Error(errorMessge);
     });
 }
+
+export const generateRFI = async (projectId, projectModuleId, body) => {
+    return apiService.postRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/rfis`, body).then((response) => {
+        return response;
+    }).catch((err) => {
+        const errorMessge = err.message || 'Unable to generate RFI.';
+        throw new Error(errorMessge);
+    });
+}
+
+export const getRFIs = async (projectId) => {
+    return apiService.getRequest(`v1/auth/projects/${projectId}/rfis`).then((response) => {
+        return response;
+    }).catch((err) => {
+        const errorMessge = err.message || 'Unable to get RFI.';
+        throw new Error(errorMessge);
+    });
+}

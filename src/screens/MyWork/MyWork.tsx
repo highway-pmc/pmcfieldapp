@@ -322,6 +322,14 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
     }
   }
 
+  const getStyle = (item: any) => {
+    console.log('=========',item.rfiStatus)
+    if (item.rfiStatus && item.rfiStatus != "pending") {
+      return [styles.StartWorkCard, styles.StartBorder];
+    }
+    return [styles.StartWorkCardDisabled, styles.DisabledBorder];
+  }
+
   return (
     <View style={styles.Container}>
       <View style={styles.BreadcrumbContainer}>
@@ -459,7 +467,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
               return true;
             }
           }).map((item: any, index) => (
-            <TouchableOpacity style={[styles.StartWorkCard, styles.StartBorder]} onPress={() => onClickNested(3, item)}>
+            <TouchableOpacity style={getStyle(item)} onPress={() => onClickNested(3, item)}>
               <View style={styles.leftContainer}>
                 <Text style={styles.HeadText}>{item.name}</Text>
                 {/* <Text style={styles.MyWorkSubHead}>Sub Text</Text> */}
@@ -476,7 +484,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
               return true;
             }
           }).map((item: any, index) => (
-            <TouchableOpacity style={[styles.StartWorkCard, styles.StartBorder]} onPress={() => onClickNested(4, item)}>
+            <TouchableOpacity style={getStyle(item)} onPress={() => onClickNested(4, item)}>
               <View style={styles.leftContainer}>
                 <Text style={styles.HeadText}>{item.name}</Text>
               </View>
@@ -492,7 +500,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
               return true;
             }
           }).map((item: any, index) => (
-            <View style={[styles.StartWorkCard, styles.StartBorder]}>
+            <View style={getStyle(item)}>
               <View style={styles.leftContainer}>
                 <Text style={styles.HeadText}>{item.displayName}</Text>
                 {/* <Text style={styles.MyWorkSubHead}>Sub Text</Text> */}
@@ -571,7 +579,20 @@ const styles = StyleSheet.create({
     gap: 15,
     padding: 15,
     alignItems: 'center',
-    marginBottom: 15
+    marginBottom: 15,
+  },
+  StartWorkCardDisabled: {
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderRadius: 12,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 15,
+    padding: 15,
+    alignItems: 'center',
+    marginBottom: 15,
+    opacity: 0.5
   },
   leftContainer: {
     flexDirection: 'column',
@@ -608,7 +629,10 @@ const styles = StyleSheet.create({
     color: '#A1A1A1',
   },
   StartBorder: {
-    borderColor: '#A1A1A1'
+    borderColor: '#A1A1A1',
+  },
+  DisabledBorder: {
+    borderColor: '#EBEBE4'
   },
   CtaInProgressTextColor: {
     color: '#FCB700',

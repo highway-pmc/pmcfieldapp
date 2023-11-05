@@ -8,6 +8,16 @@ export const getRFITaskUsers = (payload) => ({
     payload: payload
 });
 
+export const actionGenerateRFI = (payload) => ({
+    type: "GENERATE_RFI_REQUEST",
+    payload: payload
+});
+
+export const actionGetRFIs = (payload) => ({
+    type: "GET_RFI_REQUEST",
+    payload: payload
+});
+
 export const clearRFITasksEvent = () => ({
     type: "CLEAR_RFI_REQUEST"
 });

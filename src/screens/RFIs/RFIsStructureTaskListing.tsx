@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import { HeaderItems, PROJECT_TYPE, RFIs_TYPE, SEGMENT_TYPES_DISPLAY, USER_CATEGORY_DISPLAY, WORK_ASSIGNMENT_LEVEL, WORK_TYPE } from "../../constants/constants"
 import { useDispatch, useSelector } from 'react-redux';
-import { clearRFITasksEvent, getRFITasks } from './actions';
+import { clearRFITasksEvent, getRFITaskUsers, getRFITasks, actionGenerateRFI } from './actions';
 import { groupBy } from '../../utils/Utils';
 import LoadingAnimation from '../Common/LoadingAnimation';
 
@@ -12,8 +12,11 @@ const RFIsStructureTaskListing = (props: any) => {
   const userCategory = PROJECT_TYPE.STRUCTURE_WORK;
   const rfiType = props.rfiType;
 
-  const { rfisTasks, taskUsers, loading, error } = useSelector((state: any) => state.RFIs);
+  const { rfisTasks, taskUsers, rfiGenerated, loading, error } = useSelector((state: any) => state.RFIs);
   const [rfisTasksData, setRFIsTasksData] = useState([]);
+  const [taskUsersData, setTaskUsersData] = useState([]);
+  const [selectedProjectModuleId, setSelectedProjectModuleId] = useState('');
+  const [selectedTaskData, setSelectedTaskData] = useState({});
   const [currentSegmentsData, setCurrentSegmentsData] = useState([]);
   const [currentSubSegmentsData, setCurrentSubSegmentsData] = useState([]);
   const [currentTasksData, setCurrentTasksData] = useState([]);
@@ -38,6 +41,7 @@ const RFIsStructureTaskListing = (props: any) => {
     if (focus == true) {
       setCurrentLevel(1);
       setRFIsTasksData([]);
+      setTaskUsersData([]);
       setCurrentSegmentsData([]);
       setCurrentSubSegmentsData([]);
       setCurrentTasksData([]);
@@ -59,13 +63,17 @@ const RFIsStructureTaskListing = (props: any) => {
     if (rfisTasks) {
       setRFIsTasksData(rfisTasks);
     }
-  }, [rfisTasks, error]);
+    if (taskUsers) {
+      setTaskUsersData(taskUsers);
+    }
+  }, [rfisTasks, taskUsers, error]);
 
   // unmount
   useEffect(() => () => {
     dispatch(clearRFITasksEvent());
     setCurrentLevel(1);
     setRFIsTasksData([]);
+    setTaskUsersData([]);
     setCurrentSegmentsData([]);
     setCurrentSubSegmentsData([]);
     setCurrentTasksData([]);
@@ -79,8 +87,11 @@ const RFIsStructureTaskListing = (props: any) => {
     setBreadcrumbData([]);
     if (level === 2) {
       if (assignmentLevel === 1) {
+        //==
         setCurrentLevel(5);
-        const gbSegmentTypes = groupBy(rfisTasksData[projectModuleIndex].segmentsData, "type");
+        const projectModule = rfisTasksData[projectModuleIndex];
+        setSelectedProjectModuleId(projectModule.id);
+        const gbSegmentTypes = groupBy(projectModule.segmentsData, "type");
         setSegmentsByGroupOnType(gbSegmentTypes);
         setBreadcrumbData([
           {
@@ -335,15 +346,66 @@ const RFIsStructureTaskListing = (props: any) => {
     //For multiple state open
     //LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     //array[index]['isExpanded'] = !array[index]['isExpanded'];
-    array.map((value, placeindex) => placeindex === index 
-    ? array[placeindex]['isExpanded'] = !array[placeindex]['isExpanded'] 
-    : (array[placeindex]['isExpanded']) = false
-    );
+    // array.map((value, placeindex) => placeindex === index 
+    // ? array[placeindex]['isExpanded'] = !array[placeindex]['isExpanded'] 
+    // : (array[placeindex]['isExpanded']) = false
+    // );
+    array.forEach((arrayItem: any, arrayIndex) => {
+      if (arrayIndex === index) {
+        arrayItem.isExpanded = !arrayItem.isExpanded;
+        if (arrayItem.isExpanded) {
+          // call API to get users to be notified
+          setSelectedTaskData(arrayItem);
+          getUsersToNotify(arrayItem._id);
+        }
+      } else {
+        arrayItem.isExpanded = false;
+      }
+    })
     setCurrentTasksData(array);
+  }
 
-    
-}
+  const getUsersToNotify = (taskId: any) => {
+    dispatch(getRFITaskUsers({
+      projectId: loggedInUser.projectId,
+      projectModuleId: selectedProjectModuleId,
+      userCategory: userCategory,
+      taskId: taskId
+    }));
+  }
 
+  const onGenerateRFI = () => {
+    if (selectedTaskData.rfiData && selectedTaskData.rfiData._id) {
+      Alert.alert('Info', 'RFI generated already.');
+      return;
+    }
+    const reqData = {
+      taskId: selectedTaskData._id,
+      workAssignmentId: selectedTaskData.workAssignmentId,
+      rfiDateTime: "2023-11-06 14:10:00",
+      rfiStatus: "generated",
+      comments: "Test RFIs",
+      receiverIds: taskUsersData.map((item: any) => {
+        return {
+          _id: item.user._id,
+          assignmentLevel: item.assignmentLevel
+        }
+      })
+    }
+
+    dispatch(actionGenerateRFI({
+      projectId: loggedInUser.projectId,
+      projectModuleId: selectedProjectModuleId,
+      body: reqData
+    }));
+  }
+
+  useEffect(() => {
+    if (rfiGenerated) {
+      Alert.alert('Success', 'RFI generated');
+      selectedTaskData.rfiData = rfiGenerated;
+    }
+  }, [rfiGenerated]);
 
   return (
     <View style={styles.Container}>
@@ -383,7 +445,7 @@ const RFIsStructureTaskListing = (props: any) => {
             }}
           />
         </View>
-}
+      }
       <ScrollView style={styles.Height100}>
         {
           currentLevel === 1 &&
@@ -529,13 +591,14 @@ const RFIsStructureTaskListing = (props: any) => {
             //     <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>Start</Text>
             //   </TouchableOpacity>
             // </View>
-            <ExpanbableComponent 
-              key={item.displayName} 
+            <ExpanbableComponent
+              key={item.displayName}
               item={item}
               onClickFunction={() => {
-                  updateLayout(index)
+                updateLayout(index)
               }}
-              />
+              onGenerateRFI = {() => onGenerateRFI()}
+            />
           ))
         }
         {/* No Data Found */}
@@ -559,34 +622,48 @@ const RFIsStructureTaskListing = (props: any) => {
   )
 }
 
-const ExpanbableComponent = ({item, onClickFunction}: {item: any, onClickFunction: any}) => {
+const ExpanbableComponent = ({ item, onClickFunction, onGenerateRFI }: { item: any, onClickFunction: any, onGenerateRFI: any }) => {
   const [layoutHeight, setLayoutHeight] = useState(0);
   useEffect(() => {
-      if (item.isExpanded) {
-          setLayoutHeight(200)
-      } else {
-          setLayoutHeight(0)
-      }
+    if (item.isExpanded) {
+      setLayoutHeight(190)
+    } else {
+      setLayoutHeight(0)
+    }
   }, [item.isExpanded])
   return (
-      <View>
-          <TouchableOpacity style={[styles.item, item.isExpanded ? styles.openItem : null ]} onPress={onClickFunction}>
-              <View>
-                  <Text style={styles.itemText}>
-                      {item.displayName}
-                  </Text>
-              </View>
-              { item.isExpanded 
-              ? <Image style={styles.WorkIconTask} source={require('../../images/minus-icon.png')} />
-              : <Image style={styles.WorkIconTask} source={require('../../images/plus-icon.png')} />
-              }
-              
+    <View>
+      <TouchableOpacity style={[styles.item, item.isExpanded ? styles.openItem : null]} onPress={onClickFunction}>
+        <View>
+          <Text style={styles.itemText}>
+            {item.displayName}
+          </Text>
+        </View>
+        {item.isExpanded
+          ? <Image style={styles.WorkIconTask} source={require('../../images/minus-icon.png')} />
+          : <Image style={styles.WorkIconTask} source={require('../../images/plus-icon.png')} />
+        }
+
+      </TouchableOpacity>
+      <View style={[{ height: layoutHeight }, styles.content]}>
+        <View style={{ flexDirection: 'column' }}>
+          <Text style={styles.GenerateRFIFieldLabel}>Date of RFI's</Text>
+          <TextInput style={styles.GenerateRFIFieldTextInput}></TextInput>
+        </View>
+        <View style={{ flexDirection: 'column' }}>
+          <Text style={styles.GenerateRFIFieldLabel}>Time of RFI's</Text>
+          <TextInput style={styles.GenerateRFIFieldTextInput}></TextInput>
+        </View>
+        <View style={{ flexDirection: 'row', gap: 40, paddingTop: 20, alignItems: 'center', justifyContent: 'center' }}>
+          <TouchableOpacity style={styles.btnReset}>
+            <Text style={styles.btnResetText}>Reset</Text>
           </TouchableOpacity>
-          <View style={[{height: layoutHeight}, styles.content]}>
-              <Text>Date of RFI's</Text>
-              <TextInput></TextInput>
-          </View>
+          <TouchableOpacity style={styles.btnGenerate} onPress={onGenerateRFI}>
+            <Text style={styles.btnGenerateText}>Generate</Text>
+          </TouchableOpacity>
+        </View>
       </View>
+    </View>
   )
 }
 
@@ -778,27 +855,27 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignContent: 'center',
     justifyContent: 'space-between'
-},
-openItem: {
+  },
+  openItem: {
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
-},
-itemText: {
+  },
+  itemText: {
     fontSize: 16,
     fontWeight: 'bold'
-},
-content: {
+  },
+  content: {
     paddingHorizontal: 10,
     backgroundColor: '#fff',
-    overflow: 'hidden', 
-    borderBottomLeftRadius: 12, 
+    overflow: 'hidden',
+    borderBottomLeftRadius: 12,
     borderBottomRightRadius: 12
-},
-text: {
+  },
+  text: {
     fontSize: 16,
     padding: 10,
-},
-plusIconArea: {
+  },
+  plusIconArea: {
     width: 24,
     height: 24,
     borderRadius: 24,
@@ -806,11 +883,54 @@ plusIconArea: {
     opacity: .7,
     alignItems: 'center',
     justifyContent: 'center'
-},
-WorkIconTask: {
+  },
+  WorkIconTask: {
     width: 24,
     height: 24
-}
+  },
+  // generate RFI form
+  btnGenerate: {
+    borderRadius: 30,
+    backgroundColor: '#1C58C0',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  btnGenerateText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '500'
+  },
+  btnReset: {
+    borderRadius: 30,
+    backgroundColor: '#fff',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderColor: '#1C58C0',
+    borderBlockColor: '#000',
+    borderWidth: 1,
+  },
+  btnResetText: {
+    color: '#1C58C0',
+    fontSize: 14,
+    fontWeight: '500'
+  },
+  GenerateRFIFieldLabel: {
+    width: 71,
+    height: 16,
+    fontSize: 12,
+    color: "#150B3D"
+  },
+  GenerateRFIFieldTextInput: {
+    width: 295,
+    height: 40,
+    fontSize: 12,
+    color: "#666666",
+    backgroundColor: "#99ABC6"
+  }
 });
 
 export default RFIsStructureTaskListing

@@ -1,9 +1,44 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native'
 import { RFIs_TYPE } from '../../constants/constants'
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react'
+import { actionGetRFIs, clearRFITasksEvent } from './actions';
+import LoadingAnimation from '../Common/LoadingAnimation';
 
 const RFIsRecents = (props: any) => {
   const navigation = useNavigation();
+
+  const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
+  const { rfiDataList, loading, error } = useSelector((state: any) => state.RFIs);
+  const [rfiData, setRfiData] = useState([]);
+
+  const dispatch = useDispatch()
+  const focus = useIsFocused();
+
+  useEffect(() => {
+    if (focus == true) {
+      setRfiData([]);
+      getRFIsData();
+    }
+  }, [focus]);
+
+  const getRFIsData = () => {
+    dispatch(actionGetRFIs({
+      projectId: loggedInUser.projectId,
+    }));
+  }
+
+  useEffect(() => {
+    if (rfiDataList) {
+      setRfiData(rfiDataList);
+    }
+  }, [rfiDataList]);
+
+  // unmount
+  useEffect(() => () => {
+    dispatch(clearRFITasksEvent());
+  }, []);
 
   const getRFIType = () => {
     if (props.rfiType === RFIs_TYPE.GENERATE) {
@@ -25,105 +60,37 @@ const RFIsRecents = (props: any) => {
       <Text style={styles.headerText}> Recent {getRFIType()} RFI's</Text>
       <View style={styles.recentWorkContainer}>
         <View style={styles.recentWorkHead}>
-          <Text style={styles.headerText}>Recent RFI's (<Text style={styles.taskCount}>10</Text>)</Text>
+          <Text style={styles.headerText}>Recent RFI's (<Text style={styles.taskCount}>{rfiData.length}</Text>)</Text>
         </View>
         <View style={props.rfiType === RFIs_TYPE.GENERATE ? styles.recentWorkContent : styles.recentWorkContentHeight100}>
           <ScrollView showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}>
-            <TouchableOpacity style={styles.recentWorkCard}>
-              <View style={styles.taskCategory}>
-                <Text style={styles.subHead}>Foundation-A1</Text>
-                <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
-                <Text style={styles.subHead}>Footing A1</Text>
-                <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
-                <Text style={[styles.subHead, styles.taskCount]}>CNG & Setting</Text>
-              </View>
-              <Text style={styles.dateText}>Generated Date: 22/12/23</Text>
-              <Text style={styles.dateText}>Generated Time: 12:00 PM</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.recentWorkCard}>
-              <View style={styles.taskCategory}>
-                <Text style={styles.subHead}>Foundation-A1</Text>
-                <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
-                <Text style={styles.subHead}>Footing A1</Text>
-                <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
-                <Text style={[styles.subHead, styles.taskCount]}>CNG & Setting</Text>
-              </View>
-              <Text style={styles.dateText}>Generated Date: 22/12/23</Text>
-              <Text style={styles.dateText}>Generated Time: 12:00 PM</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.recentWorkCard}>
-              <View style={styles.taskCategory}>
-                <Text style={styles.subHead}>Foundation-A1</Text>
-                <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
-                <Text style={styles.subHead}>Footing A1</Text>
-                <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
-                <Text style={[styles.subHead, styles.taskCount]}>CNG & Setting</Text>
-              </View>
-              <Text style={styles.dateText}>Generated Date: 22/12/23</Text>
-              <Text style={styles.dateText}>Generated Time: 12:00 PM</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.recentWorkCard}>
-              <View style={styles.taskCategory}>
-                <Text style={styles.subHead}>Foundation-A1</Text>
-                <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
-                <Text style={styles.subHead}>Footing A1</Text>
-                <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
-                <Text style={[styles.subHead, styles.taskCount]}>CNG & Setting</Text>
-              </View>
-              <Text style={styles.dateText}>Generated Date: 22/12/23</Text>
-              <Text style={styles.dateText}>Generated Time: 12:00 PM</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.recentWorkCard}>
-              <View style={styles.taskCategory}>
-                <Text style={styles.subHead}>Foundation-A1</Text>
-                <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
-                <Text style={styles.subHead}>Footing A1</Text>
-                <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
-                <Text style={[styles.subHead, styles.taskCount]}>CNG & Setting</Text>
-              </View>
-              <Text style={styles.dateText}>Generated Date: 22/12/23</Text>
-              <Text style={styles.dateText}>Generated Time: 12:00 PM</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.recentWorkCard}>
-              <View style={styles.taskCategory}>
-                <Text style={styles.subHead}>Foundation-A1</Text>
-                <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
-                <Text style={styles.subHead}>Footing A1</Text>
-                <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
-                <Text style={[styles.subHead, styles.taskCount]}>CNG & Setting</Text>
-              </View>
-              <Text style={styles.dateText}>Generated Date: 22/12/23</Text>
-              <Text style={styles.dateText}>Generated Time: 12:00 PM</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.recentWorkCard}>
-              <View style={styles.taskCategory}>
-                <Text style={styles.subHead}>Foundation-A1</Text>
-                <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
-                <Text style={styles.subHead}>Footing A1</Text>
-                <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
-                <Text style={[styles.subHead, styles.taskCount]}>CNG & Setting</Text>
-              </View>
-              <Text style={styles.dateText}>Generated Date: 22/12/23</Text>
-              <Text style={styles.dateText}>Generated Time: 12:00 PM</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.recentWorkCard}>
-              <View style={styles.taskCategory}>
-                <Text style={styles.subHead}>Foundation-A1</Text>
-                <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
-                <Text style={styles.subHead}>Footing A1</Text>
-                <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
-                <Text style={[styles.subHead, styles.taskCount]}>CNG & Setting</Text>
-              </View>
-              <Text style={styles.dateText}>Generated Date: 22/12/23</Text>
-              <Text style={styles.dateText}>Generated Time: 12:00 PM</Text>
-            </TouchableOpacity>
+            {
+              rfiData.map((item: any, index) => (
+                <TouchableOpacity style={styles.recentWorkCard}>
+                  <View style={styles.taskCategory}>
+                    <Text style={styles.subHead}>{item.workAssignmentData.projectModule.name}</Text>
+                    <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
+                    <Text style={styles.subHead}>{item.workAssignmentData.segmentId.name}</Text>
+                    <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
+                    <Text style={styles.subHead}>{item.workAssignmentData.subSegmentId.name}</Text>
+                    <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
+                    <Text style={[styles.subHead, styles.taskCount]}>{item.workAssignmentData.taskId.displayName}</Text>
+                  </View>
+                  <Text style={styles.dateText}>Generated Date: {item.rfiDateTime}</Text>
+                  {/* <Text style={styles.dateText}>Generated Time: 12:00 PM</Text> */}
+                </TouchableOpacity>
+              ))
+            }
 
-            <View style={styles.noDataContainer}>
-              <Image style={styles.noDataImage} source={require('../../images/no-data-found.png')} />
-              <Text style={styles.noDataHeadText}>No Pending RFI's</Text>
-              <Text style={styles.noDataSubText}>There is no pending RFI's</Text>
-            </View>
+            {
+              (!rfiData.length && !loading) && 
+              <View style={styles.noDataContainer}>
+                <Image style={styles.noDataImage} source={require('../../images/no-data-found.png')} />
+                <Text style={styles.noDataHeadText}>No Pending RFI's</Text>
+                <Text style={styles.noDataSubText}>There is no pending RFI's</Text>
+              </View>
+            }            
           </ScrollView>
         </View>
         {props.rfiType === RFIs_TYPE.GENERATE && <View style={styles.footerButton}>
@@ -135,6 +102,7 @@ const RFIsRecents = (props: any) => {
         </View>}
       </View>
 
+      <LoadingAnimation loading={loading}></LoadingAnimation>
     </View>
   )
 }

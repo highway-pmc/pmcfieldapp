@@ -323,7 +323,6 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
   }
 
   const getStyle = (item: any) => {
-    console.log('=========',item.rfiStatus)
     if (item.rfiStatus && item.rfiStatus != "pending") {
       return [styles.StartWorkCard, styles.StartBorder];
     }

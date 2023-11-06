@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import React, { useEffect, useState } from 'react'
 import { actionGetRFIs, clearRFITasksEvent } from './actions';
 import LoadingAnimation from '../Common/LoadingAnimation';
+import moment from 'moment';
 
 const RFIsRecents = (props: any) => {
   const navigation = useNavigation();
@@ -77,8 +78,8 @@ const RFIsRecents = (props: any) => {
                     <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
                     <Text style={[styles.subHead, styles.taskCount]}>{item.workAssignmentData.taskId.displayName}</Text>
                   </View>
-                  <Text style={styles.dateText}>Generated Date: {item.rfiDateTime}</Text>
-                  {/* <Text style={styles.dateText}>Generated Time: 12:00 PM</Text> */}
+                  <Text style={styles.dateText}>Generated Date: {moment(new Date(item.rfiDateTime)).format('DD-MM-YYYY')}</Text>
+                  <Text style={styles.dateText}>Generated Time: {moment(new Date(item.rfiDateTime)).format('hh:mm A')}</Text>
                 </TouchableOpacity>
               ))
             }

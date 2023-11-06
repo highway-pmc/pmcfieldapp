@@ -1,4 +1,4 @@
-import { View, Text, Button, NativeEventEmitter, Alert, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput } from 'react-native'
+import { View, Text, Button, NativeEventEmitter, Alert, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, Dimensions } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import { HeaderItems, PROJECT_TYPE, RFIs_TYPE, SEGMENT_TYPES_DISPLAY, USER_CATEGORY_DISPLAY, WORK_ASSIGNMENT_LEVEL, WORK_TYPE } from "../../constants/constants"
@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { clearRFITasksEvent, getRFITaskUsers, getRFITasks, actionGenerateRFI } from './actions';
 import { groupBy } from '../../utils/Utils';
 import LoadingAnimation from '../Common/LoadingAnimation';
+import moment from 'moment';
+import CalendarPicker from 'react-native-calendar-picker';
 
 const RFIsStructureTaskListing = (props: any) => {
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
@@ -23,6 +25,7 @@ const RFIsStructureTaskListing = (props: any) => {
   const [currentLevel, setCurrentLevel] = useState(1);
   const [segmentsByGroupOnType, setSegmentsByGroupOnType] = useState(null);
   const [searchText, setSearchText] = useState('');
+
   const [breadcrumbData, setBreadcrumbData] = useState([{
     name: '',
     projectModuleIndex: 0,
@@ -382,7 +385,7 @@ const RFIsStructureTaskListing = (props: any) => {
     const reqData = {
       taskId: selectedTaskData._id,
       workAssignmentId: selectedTaskData.workAssignmentId,
-      rfiDateTime: "2023-11-06 14:10:00",
+      rfiDateTime: selectedTaskData.formRFIDate + ' ' + selectedTaskData.formRFITime + ":00",
       rfiStatus: "generated",
       comments: "Test RFIs",
       receiverIds: taskUsersData.map((item: any) => {
@@ -404,6 +407,8 @@ const RFIsStructureTaskListing = (props: any) => {
     if (rfiGenerated) {
       Alert.alert('Success', 'RFI generated');
       selectedTaskData.rfiData = rfiGenerated;
+      delete selectedTaskData.formRFIDate
+      delete selectedTaskData.formRFITime
     }
   }, [rfiGenerated]);
 
@@ -597,7 +602,7 @@ const RFIsStructureTaskListing = (props: any) => {
               onClickFunction={() => {
                 updateLayout(index)
               }}
-              onGenerateRFI = {() => onGenerateRFI()}
+              onGenerateRFI={() => onGenerateRFI()}
             />
           ))
         }
@@ -624,13 +629,30 @@ const RFIsStructureTaskListing = (props: any) => {
 
 const ExpanbableComponent = ({ item, onClickFunction, onGenerateRFI }: { item: any, onClickFunction: any, onGenerateRFI: any }) => {
   const [layoutHeight, setLayoutHeight] = useState(0);
+  const [rfiDate, setRFIDate] = useState('');
+  const [rfiTime, setRFITime] = useState('');
+  const [openCalendar, setOpenCalendar] = useState(false);
+  const { width, height } = Dimensions.get('window');
+  const DEFAULT_COMPONENT_HEIGHT = 230;
+  const DEFAULT_CALENDAR_HEIGHT = 270;
+
   useEffect(() => {
     if (item.isExpanded) {
-      setLayoutHeight(190)
+      setLayoutHeight(DEFAULT_COMPONENT_HEIGHT)
     } else {
       setLayoutHeight(0)
     }
   }, [item.isExpanded])
+
+  const openCloseCalendar = () => {
+    setOpenCalendar(!openCalendar);
+    if (!openCalendar) {
+      setLayoutHeight(DEFAULT_COMPONENT_HEIGHT + DEFAULT_CALENDAR_HEIGHT)
+    } else {
+      setLayoutHeight(DEFAULT_COMPONENT_HEIGHT)
+    }
+  }
+
   return (
     <View>
       <TouchableOpacity style={[styles.item, item.isExpanded ? styles.openItem : null]} onPress={onClickFunction}>
@@ -645,24 +667,73 @@ const ExpanbableComponent = ({ item, onClickFunction, onGenerateRFI }: { item: a
         }
 
       </TouchableOpacity>
-      <View style={[{ height: layoutHeight }, styles.content]}>
-        <View style={{ flexDirection: 'column' }}>
-          <Text style={styles.GenerateRFIFieldLabel}>Date of RFI's</Text>
-          <TextInput style={styles.GenerateRFIFieldTextInput}></TextInput>
+      <ScrollView style={styles.Height100}>
+        <View style={[{ height: layoutHeight, zIndex: 1 }, styles.content]}>
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Date of RFI's</Text>
+
+            <View style={{ flexDirection: 'row' }}>
+              <TextInput
+                style={styles.inputStyle}
+                placeholder=""
+                autoCapitalize="none"
+                keyboardType="email-address"
+                returnKeyType="next"
+                underlineColorAndroid="#f000"
+                blurOnSubmit={false}
+                value={rfiDate ? moment(new Date(rfiDate)).format('DD-MM-YYYY') : ''}
+                editable={false}
+              />
+              <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
+                <Text style={styles.assignTagButoonText}>Icon</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          {openCalendar && (
+
+            <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
+              <CalendarPicker width={width - 40}
+                initialDate={rfiDate ? new Date(rfiDate) : new Date()}
+                onDateChange={(date) => {
+                  setRFIDate(date.format("YYYY-MM-DD"));
+                  openCloseCalendar()
+                }}
+              />
+            </View>
+          )}
+
+          <View style={{ flexDirection: 'column', height: 80, paddingTop: 15, zIndex: 2 }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Time of RFI's</Text>
+            <TextInput
+              style={styles.inputStyle}
+              maxLength={10}
+              placeholder=""
+              autoCapitalize="none"
+              keyboardType="email-address"
+              returnKeyType="next"
+              underlineColorAndroid="#f000"
+              blurOnSubmit={false}
+              onChangeText={(text) => {
+                setRFITime(text);
+              }}
+            />
+          </View>
+          <View style={{ flexDirection: 'row', gap: 40, paddingTop: 20, zIndex: 3, alignItems: 'center', justifyContent: 'center' }}>
+            <TouchableOpacity style={styles.btnReset}>
+              <Text style={styles.btnResetText}>Reset</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.btnGenerate} onPress={() => {
+              item.formRFIDate = rfiDate;
+              item.formRFITime = rfiTime;
+              onGenerateRFI();
+            }
+            }>
+              <Text style={styles.btnGenerateText}>Generate</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-        <View style={{ flexDirection: 'column' }}>
-          <Text style={styles.GenerateRFIFieldLabel}>Time of RFI's</Text>
-          <TextInput style={styles.GenerateRFIFieldTextInput}></TextInput>
-        </View>
-        <View style={{ flexDirection: 'row', gap: 40, paddingTop: 20, alignItems: 'center', justifyContent: 'center' }}>
-          <TouchableOpacity style={styles.btnReset}>
-            <Text style={styles.btnResetText}>Reset</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.btnGenerate} onPress={onGenerateRFI}>
-            <Text style={styles.btnGenerateText}>Generate</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      </ScrollView>
     </View>
   )
 }
@@ -919,10 +990,9 @@ const styles = StyleSheet.create({
     fontWeight: '500'
   },
   GenerateRFIFieldLabel: {
-    width: 71,
-    height: 16,
-    fontSize: 12,
-    color: "#150B3D"
+    fontSize: 16,
+    color: '#150A33',
+    fontWeight: '500'
   },
   GenerateRFIFieldTextInput: {
     width: 295,
@@ -930,7 +1000,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#666666",
     backgroundColor: "#99ABC6"
-  }
+  },
+  assignTagButoonText: {
+    fontSize: 16,
+    color: '#fff',
+    fontWeight: '500',
+  },
 });
 
 export default RFIsStructureTaskListing

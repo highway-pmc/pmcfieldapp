@@ -667,7 +667,7 @@ const ExpanbableComponent = ({ item, onClickFunction, onGenerateRFI }: { item: a
         }
 
       </TouchableOpacity>
-      <ScrollView style={styles.Height100}>
+      {/* <ScrollView style={styles.Height100}> */}
         <View style={[{ height: layoutHeight, zIndex: 1 }, styles.content]}>
           <View style={{ flexDirection: 'column' }}>
             <Text style={styles.GenerateRFIFieldLabel}>Date of RFI's</Text>
@@ -733,7 +733,7 @@ const ExpanbableComponent = ({ item, onClickFunction, onGenerateRFI }: { item: a
             </TouchableOpacity>
           </View>
         </View>
-      </ScrollView>
+      {/* </ScrollView> */}
     </View>
   )
 }

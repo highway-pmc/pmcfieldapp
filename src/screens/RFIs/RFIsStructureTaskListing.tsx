@@ -311,7 +311,20 @@ const RFIsStructureTaskListing = (props: any) => {
       const beadcrumb = breadcrumbData[1];
       beadcrumb.name = SEGMENT_TYPES_DISPLAY[data.type] + ' ' + data.name;
     } else if (level === 4) {
-      setCurrentTasksData(data.tasksData)
+      let uniqueTasksData: any = [];
+
+      data.tasksData.forEach((item: any) => {
+        const taskItem = uniqueTasksData.find((tsk: any) => tsk.name == item.name);
+        if (!taskItem) {
+          const itemJson = JSON.parse(JSON.stringify(item))
+          itemJson.workAssignmentIds = [item.workAssignmentId];
+          uniqueTasksData.push(itemJson);
+        } else {
+          taskItem.workAssignmentIds.push(item.workAssignmentId);
+        }
+      });
+
+      setCurrentTasksData(uniqueTasksData)
       const bcrubm = {
         name: data.name,
         projectModuleIndex: breadcrumbData[0].projectModuleIndex,
@@ -384,7 +397,7 @@ const RFIsStructureTaskListing = (props: any) => {
     }
     const reqData = {
       taskId: selectedTaskData._id,
-      workAssignmentId: selectedTaskData.workAssignmentId,
+      workAssignmentIds: selectedTaskData.workAssignmentIds,
       rfiDateTime: selectedTaskData.formRFIDate + ' ' + selectedTaskData.formRFITime + ":00",
       rfiStatus: "generated",
       comments: "Test RFIs",

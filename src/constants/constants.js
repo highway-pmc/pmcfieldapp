@@ -22,7 +22,13 @@ export const HeaderItems = {
     notifications: { showBack: false, title: 'Notifications' },
     progress: { showBack: false, title: 'Progress Dashboard' },
     reports: { showBack: false, title: 'Reports' },
-    rfis: { showBack: false, title: 'RFIs' },
+    rfisHome: { showBack: false, title: 'RFIs' },
+    rfisDashboard: { showBack: true, title: 'RFIs' },
+    rfisGenerateTaskListing: { showBack: true, title: 'Generate RFIs' },
+    rfisClosedTaskListing: { showBack: true, title: 'Closed RFIs' },
+    rfisApproveRejectTaskListing: { showBack: true, title: 'Approve, Reject/Cancel RFIs' },
+    rfisRegenerateTaskListing: { showBack: true, title: 'Re-generate RFIs' },
+    rfisAssignTaskListing: { showBack: true, title: 'Assign RFIs' },
     projectInfo: { showBack: false, title: 'Project Info' },
     myTest: { showBack: false, title: 'My Test' },
     profile: { showBack: false, title: 'Edit Profile' }
@@ -95,7 +101,7 @@ export const Dashboard_MENU = [
         iconMenu: require("./../images/menu/manage-rfi-icom.png"),
         title: "Manage RFIs",
         subTitle: "RFI",
-        route: 'RFIs',
+        route: 'RFIsHome',
         permissions: ["project-head", "structure-head", "highway-head", "other-work-head", "quality-head"]
     },
     {
@@ -209,6 +215,13 @@ export const USER_CATEGORY = {
     QUALITY_WORK: 'quality-work',
 };
 
+export const USER_CATEGORY_DISPLAY = {
+    STRUCTURE: 'Structure',
+    HIGHWAY: 'Highway',
+    OTHER: 'Other',
+    QUALITY: 'Quality',
+};
+
 export const USER_CATEGORIES = [
     {
         label: "Structure Work", value: USER_CATEGORY.STRUCTURE_WORK, isChecked: false
@@ -253,6 +266,19 @@ export const SEGMENT_TYPES_DISPLAY = {
     'gap-slab': 'Gap Slab',
     'approach-slab': 'Approach Slab',
 };
+
+export const RFIs_TYPE = {
+    GENERATE: "generate",
+    CLOSED: "closed",
+    APPROVE_REJECT:"approved-closed",
+    RE_GENERATE: "re-generate",
+    ASSIGN: "assign"
+}
+
+export const WORK_TYPE = {
+    SITE_WORK: "Site Work",
+    LAB_WORK: "Lab Work"
+}
 
 export const WORK_ASSIGNMENT_LEVEL = {
     LEVEL1: 'Level 1',

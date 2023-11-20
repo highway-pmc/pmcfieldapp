@@ -76,7 +76,7 @@ const RFIsRecents = (props: any) => {
                     <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
                     <Text style={styles.subHead}>{item.workAssignmentData.subSegmentId.name}</Text>
                     <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
-                    <Text style={[styles.subHead, styles.taskCount]}>{item.workAssignmentData.taskId.displayName}</Text>
+                    <Text style={[styles.subHead, styles.taskCount]}>{item.workAssignmentData.taskId?.displayName}</Text>
                   </View>
                   <Text style={styles.dateText}>Generated Date: {moment(new Date(item.rfiDateTime)).format('DD-MM-YYYY')}</Text>
                   <Text style={styles.dateText}>Generated Time: {moment(new Date(item.rfiDateTime)).format('hh:mm A')}</Text>

@@ -8,6 +8,7 @@ import { groupBy } from '../../utils/Utils';
 import LoadingAnimation from '../Common/LoadingAnimation';
 import moment from 'moment';
 import CalendarPicker from 'react-native-calendar-picker';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 const RFIsStructureTaskListing = (props: any) => {
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
@@ -643,11 +644,28 @@ const RFIsStructureTaskListing = (props: any) => {
 const ExpanbableComponent = ({ item, onClickFunction, onGenerateRFI }: { item: any, onClickFunction: any, onGenerateRFI: any }) => {
   const [layoutHeight, setLayoutHeight] = useState(0);
   const [rfiDate, setRFIDate] = useState('');
-  const [rfiTime, setRFITime] = useState('');
+  const [hours, setHours] = useState([]);
+  const [minutes, setMinutes] = useState([]);
+  const [timeFormats, setTimeFormats] = useState([]);
+
+  const [hour, setHour] = useState('12');
+  const [minute, setMinute] = useState('00');
+  const [timeFormat, setTimeFormat] = useState('AM');
+
+  const [openHours, setOpenHours] = useState(false);
+  const [openMinutes, setOpenMinutes] = useState(false);
+  const [openTimeFormats, setOpenTimeFormats] = useState(false);
+
   const [openCalendar, setOpenCalendar] = useState(false);
   const { width, height } = Dimensions.get('window');
   const DEFAULT_COMPONENT_HEIGHT = 230;
   const DEFAULT_CALENDAR_HEIGHT = 270;
+
+  useEffect(() => {
+    getHours();
+    getMins();
+    getTimeFormats();
+  }, [])
 
   useEffect(() => {
     if (item.isExpanded) {
@@ -666,6 +684,63 @@ const ExpanbableComponent = ({ item, onClickFunction, onGenerateRFI }: { item: a
     }
   }
 
+  const getHours = () => {
+    let hours = [];
+    for (let i = 1; i <= 12; i++) {
+      hours.push({
+        label: i < 10 ? '0' + i : '' + i,
+        value: i < 10 ? '0' + i : '' + i
+      });
+    }
+    setHours(hours);
+  }
+
+  const getMins = () => {
+    let mins = [];
+    for (let i = 0; i < 60; i = i + 10) {
+      mins.push({
+        label: i < 10 ? '0' + i : '' + i,
+        value: i < 10 ? '0' + i : '' + i
+      });
+    }
+    setMinutes(mins);
+  }
+
+  const getTimeFormats = () => {
+    setTimeFormats([{
+      label: 'AM',
+      value: 'AM'
+    }, {
+      label: 'PM',
+      value: 'PM'
+    }]);
+  }
+
+  const onGenerate = () => {
+    if (!rfiDate) {
+      Alert.alert('Error', 'RFI Date is required.');
+      return false;
+    }
+    item.formRFIDate = rfiDate;
+
+    let rfiTime = '';
+    if (timeFormat === 'PM') {
+      if (Number(hour) === 12) {
+        rfiTime = hour + ':' + minute;
+      } else {
+        rfiTime = (Number(hour) + 12) + ':' + minute;
+      }
+    } else {
+      if (Number(hour) === 12) {
+        rfiTime = '00:' + minute;
+      } else {
+        rfiTime = hour + ':' + minute;
+      }
+    }
+    item.formRFITime = rfiTime;
+    onGenerateRFI();
+  }
+
   return (
     <View>
       <TouchableOpacity style={[styles.item, item.isExpanded ? styles.openItem : null]} onPress={onClickFunction}>
@@ -681,71 +756,105 @@ const ExpanbableComponent = ({ item, onClickFunction, onGenerateRFI }: { item: a
 
       </TouchableOpacity>
       {/* <ScrollView style={styles.Height100}> */}
-        <View style={[{ height: layoutHeight, zIndex: 1 }, styles.content]}>
-          <View style={{ flexDirection: 'column' }}>
-            <Text style={styles.GenerateRFIFieldLabel}>Date of RFI's</Text>
+      <View style={[{ height: layoutHeight, zIndex: 1 }, styles.content]}>
+        <View style={{ flexDirection: 'column' }}>
+          <Text style={styles.GenerateRFIFieldLabel}>Date of RFI's</Text>
 
-            <View style={{ flexDirection: 'row' }}>
-              <TextInput
-                style={styles.inputStyle}
-                placeholder=""
-                autoCapitalize="none"
-                keyboardType="email-address"
-                returnKeyType="next"
-                underlineColorAndroid="#f000"
-                blurOnSubmit={false}
-                value={rfiDate ? moment(new Date(rfiDate)).format('DD-MM-YYYY') : ''}
-                editable={false}
-              />
-              <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
-                <Text style={styles.assignTagButoonText}>Icon</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          {openCalendar && (
-
-            <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
-              <CalendarPicker width={width - 40}
-                initialDate={rfiDate ? new Date(rfiDate) : new Date()}
-                onDateChange={(date) => {
-                  setRFIDate(date.format("YYYY-MM-DD"));
-                  openCloseCalendar()
-                }}
-              />
-            </View>
-          )}
-
-          <View style={{ flexDirection: 'column', height: 80, paddingTop: 15, zIndex: 2 }}>
-            <Text style={styles.GenerateRFIFieldLabel}>Time of RFI's</Text>
+          <View style={{ flexDirection: 'row' }}>
             <TextInput
               style={styles.inputStyle}
-              maxLength={10}
               placeholder=""
               autoCapitalize="none"
               keyboardType="email-address"
               returnKeyType="next"
               underlineColorAndroid="#f000"
               blurOnSubmit={false}
-              onChangeText={(text) => {
-                setRFITime(text);
-              }}
+              value={rfiDate ? moment(new Date(rfiDate)).format('DD-MM-YYYY') : ''}
+              editable={false}
             />
-          </View>
-          <View style={{ flexDirection: 'row', gap: 40, paddingTop: 20, zIndex: 3, alignItems: 'center', justifyContent: 'center' }}>
-            <TouchableOpacity style={styles.btnReset}>
-              <Text style={styles.btnResetText}>Reset</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.btnGenerate} onPress={() => {
-              item.formRFIDate = rfiDate;
-              item.formRFITime = rfiTime;
-              onGenerateRFI();
-            }
-            }>
-              <Text style={styles.btnGenerateText}>Generate</Text>
+            <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
+              <Text style={styles.assignTagButoonText}>Icon</Text>
             </TouchableOpacity>
           </View>
         </View>
+
+        {openCalendar && (
+
+          <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
+            <CalendarPicker width={width - 40}
+              initialDate={rfiDate ? new Date(rfiDate) : new Date()}
+              onDateChange={(date) => {
+                setRFIDate(date.format("YYYY-MM-DD"));
+                openCloseCalendar()
+              }}
+            />
+          </View>
+        )}
+
+        <View style={{ flexDirection: 'column', height: 80, paddingTop: 15, zIndex: 5 }}>
+          <Text style={styles.GenerateRFIFieldLabel}>Time of RFI's</Text>
+          <View style={{ flexDirection: 'row', gap: 20 }}>
+            <View style={{ width: 80, height: 90 }}>
+              <DropDownPicker onPress={() => {
+                setOpenMinutes(false);
+                setOpenTimeFormats(false);
+              }}
+                dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                maxHeight={75}
+                zIndex={1000}
+                listMode='MODAL'
+                open={openHours}
+                value={hour}
+                items={hours}
+                setOpen={setOpenHours}
+                setValue={setHour}
+              />
+            </View>
+
+            <View style={{ width: 80, height: 90 }}>
+              <DropDownPicker onPress={() => {
+                setOpenHours(false);
+                setOpenTimeFormats(false);
+              }}
+                dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                maxHeight={75}
+                zIndex={1000}
+                listMode='MODAL'
+                open={openMinutes}
+                value={minute}
+                items={minutes}
+                setOpen={setOpenMinutes}
+                setValue={setMinute}
+              />
+            </View>
+            <View style={{ width: 80, height: 90 }}>
+              <DropDownPicker onPress={() => {
+                setOpenHours(false);
+                setOpenMinutes(false);
+              }}
+                dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                maxHeight={75}
+                zIndex={1000}
+                listMode='SCROLLVIEW'
+                open={openTimeFormats}
+                value={timeFormat}
+                items={timeFormats}
+                setOpen={setOpenTimeFormats}
+                setValue={setTimeFormat}
+              />
+            </View>
+          </View>
+        </View>
+        <View style={{ flexDirection: 'row', gap: 40, paddingTop: 20, zIndex: 3, alignItems: 'center', justifyContent: 'center' }}>
+          <TouchableOpacity style={styles.btnReset}>
+            <Text style={styles.btnResetText}>Reset</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.btnGenerate} onPress={() => onGenerate()
+          }>
+            <Text style={styles.btnGenerateText}>Generate</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
       {/* </ScrollView> */}
     </View>
   )

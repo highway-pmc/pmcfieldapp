@@ -1,11 +1,12 @@
-import { View, Text, NativeEventEmitter, StyleSheet, ScrollView, Image, TouchableOpacity, TextInput } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { View, Text, NativeEventEmitter, StyleSheet, ScrollView, Image, TouchableOpacity, TextInput, Modal, StatusBar, SafeAreaView, Dimensions, Alert } from 'react-native'
+import React, { Fragment, useEffect, useState } from 'react'
 import { useIsFocused } from '@react-navigation/native';
 import { HeaderItems, PROJECT_TYPE, SEGMENT_TYPES_DISPLAY } from "../../constants/constants"
 import { useDispatch, useSelector } from 'react-redux';
 import { clearMyWorksEvent, getMyWorks } from './actions';
 import LoadingAnimation from '../Common/LoadingAnimation';
 import { groupBy } from '../../utils/Utils';
+import * as ImagePicker from 'react-native-image-picker';
 
 const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
@@ -29,6 +30,17 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
     assignmentLevel: 0,
     active: false
   }]);
+
+  const [openPopup, setOpenPopup] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
+  const [imageObject, setImageObject] = useState({
+    filepath: {
+      data: '',
+      uri: ''
+    },
+    fileData: '',
+    fileUri: ''
+  });
 
   const dispatch = useDispatch()
   const focus = useIsFocused();
@@ -329,6 +341,138 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
     return [styles.StartWorkCardDisabled, styles.DisabledBorder];
   }
 
+
+  // const chooseImage = () => {
+  //   let options = {
+  //     title: 'Select Image',
+  //     customButtons: [
+  //       { name: 'customOptionKey', title: 'Choose Photo from Custom Option' },
+  //     ],
+  //     storageOptions: {
+  //       skipBackup: true,
+  //       path: 'images',
+  //     },
+  //   };
+  //   ImagePicker.showImagePicker(options, (response) => {
+  //     console.log('Response = ', response);
+
+  //     if (response.didCancel) {
+  //       console.log('User cancelled image picker');
+  //     } else if (response.error) {
+  //       console.log('ImagePicker Error: ', response.error);
+  //     } else if (response.customButton) {
+  //       console.log('User tapped custom button: ', response.customButton);
+  //       alert(response.customButton);
+  //     } else {
+  //       const source = { uri: response.uri };
+
+  //       // You can also display the image using data:
+  //       // const source = { uri: 'data:image/jpeg;base64,' + response.data };
+  //       // alert(JSON.stringify(response));s
+  //       console.log('response', JSON.stringify(response));
+  //       this.setState({
+  //         filePath: response,
+  //         fileData: response.data,
+  //         fileUri: response.uri
+  //       });
+  //     }
+  //   });
+  // }
+
+  const launchCamera = () => {
+    let options = {
+      includeBase64: true,
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+    ImagePicker.launchCamera(options, (response: any) => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        Alert.alert(response.customButton);
+      } else {
+        const responseImage = response.assets?.length ? response.assets[0] : response.assets ? response.assets : response;
+        const source = { uri: responseImage.uri };
+        console.log('response', JSON.stringify(response));
+        setImageObject({
+          filePath: responseImage,
+          fileData: responseImage.base64,
+          fileUri: responseImage.uri
+        });
+      }
+    });
+
+  }
+
+  const launchImageLibrary = () => {
+    let options = {
+      includeBase64: true,
+      maxWidth: 1024,
+      maxHeight: 768,
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+    ImagePicker.launchImageLibrary(options, (response: any) => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        Alert.alert(response.customButton);
+      } else {
+
+        const responseImage = response.assets?.length ? response.assets[0] : response.assets ? response.assets : response;
+        const source = { uri: responseImage.uri };
+        
+        console.log('===========================', responseImage.base64);
+        setImageObject({
+          filePath: responseImage,
+          fileData: responseImage.base64,
+          fileUri: responseImage.uri
+        });
+      }
+    });
+
+  }
+
+  const renderFileData = () => {
+    if (imageObject.fileData) {
+      return <Image source={{ uri: 'data:image/jpeg;base64,' + imageObject.fileData }}
+        style={styles.images}
+      />
+    } else {
+      return <Image source={require('./../../images/dummy.png')} // ./assets/dummy.png
+        style={styles.images}
+      />
+    }
+  }
+
+  const renderFileUri = () => {
+    if (imageObject.fileUri) {
+      return <Image
+        source={{ uri: imageObject.fileUri }}
+        style={styles.images}
+      />
+    } else {
+      return <Image
+        source={require('./../../images/galeryImages.jpg')} // ./assets/galeryImages.jpg
+        style={styles.images}
+      />
+    }
+  }
+
   return (
     <View style={styles.Container}>
       <View style={styles.BreadcrumbContainer}>
@@ -367,7 +511,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
             }}
           />
         </View>
-}
+      }
       <ScrollView style={styles.Height100}>
         {
           currentLevel === 1 &&
@@ -504,7 +648,9 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
                 <Text style={styles.HeadText}>{item.displayName}</Text>
                 {/* <Text style={styles.MyWorkSubHead}>Sub Text</Text> */}
               </View>
-              <TouchableOpacity style={[styles.MyWorkCta, styles.StartBorder]}>
+              <TouchableOpacity style={[styles.MyWorkCta, styles.StartBorder]} onPress={() => {
+                setSelectedTask(item);setOpenPopup(true)
+              }}>
                 <Image style={styles.WorkIcon} source={require('../../images/play-icon.png')} />
                 <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>Start</Text>
               </TouchableOpacity>
@@ -526,6 +672,75 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
           </View>
         }
       </ScrollView>
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={openPopup}
+        onRequestClose={() => {
+          setOpenPopup(!openPopup);
+        }}>
+        <View style={styles.bodyPopup}>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <View style={styles.ModalHeader}>
+                <Text style={styles.modalText}>RFIs</Text>
+                <TouchableOpacity
+                  style={styles.buttonClose}
+                  onPress={() => setOpenPopup(!openPopup)}>
+                  <Image
+                    style={styles.CloseIcon}
+                    tintColor={'#333'}
+                    source={require('./../../images/menu/close-icon.png')}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View style={styles.ModalInnerContainer}>
+                <View>
+                  <Text style={styles.modalLabel}>Project Module: {selectedTask?.displayName}</Text>
+                </View>
+                <ScrollView style={{ paddingTop: 10, height: 500 }}>
+                  <Fragment>
+                    <StatusBar barStyle="dark-content" />
+                    <SafeAreaView>
+                      <View>
+                        <Text style={{ textAlign: 'center', fontSize: 20, paddingBottom: 10 }} >Pick Images from Camera & Gallery</Text>
+                        <View style={styles.ImageSections}>
+                          <View>
+                            {imageObject?.fileData && renderFileData()}
+                            <Text style={{ textAlign: 'center' }}>Base 64 String</Text>
+                          </View>
+                          <View>
+                            {imageObject?.fileUri && renderFileUri()}
+                            <Text style={{ textAlign: 'center' }}>File Uri</Text>
+                          </View>
+                        </View>
+
+                        <View style={styles.btnParentSection}>
+                          
+                          <TouchableOpacity onPress={launchCamera} style={styles.btnSection}  >
+                            <Text style={styles.btnText}>Directly Launch Camera</Text>
+                          </TouchableOpacity>
+
+                          <TouchableOpacity onPress={launchImageLibrary} style={styles.btnSection}  >
+                            <Text style={styles.btnText}>Directly Launch Image Library</Text>
+                          </TouchableOpacity>
+                        </View>
+
+                      </View>
+                    </SafeAreaView>
+                  </Fragment>
+                </ScrollView>
+
+                {/* <TouchableOpacity style={styles.submitButton} onPress={() => onWorkAssignment()}>
+                  <Text style={styles.submitButtonText}>Assign</Text>
+                </TouchableOpacity> */}
+              </View>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
 
       <LoadingAnimation loading={loading}></LoadingAnimation>
     </View>
@@ -738,6 +953,121 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#27272A',
   },
+
+
+  centeredView: {
+    marginTop: 'auto',
+    backgroundColor: '#fff',
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+    borderRadius: 12,
+    borderBottomWidth: 1,
+    borderColor: '#EBEBF0',
+    borderStyle: 'solid',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 60,
+  },
+  modalView: {
+    minHeight: 150,
+  },
+  ModalHeader: {
+    position: 'relative',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderColor: '#EBEBF0',
+    borderStyle: 'solid',
+  },
+  modalText: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#27272A',
+    textAlign: 'center',
+  },
+  buttonClose: {
+    position: 'absolute',
+    right: 15,
+  },
+  CloseIcon: {
+    width: 30,
+    height: 30,
+  },
+  ModalInnerContainer: {
+    paddingHorizontal: 15,
+  },
+  modalLabel: {
+    fontSize: 16,
+    fontWeight: '400',
+    color: '#27272A',
+    marginLeft: 5,
+  },
+  submitButton: {
+    backgroundColor: '#1C58C0',
+    borderRadius: 30,
+    color: '#fff',
+    paddingHorizontal: 15,
+    paddingTop: 12,
+    paddingBottom: 12,
+    marginBottom: 10,
+    marginTop: 10,
+    alignItems: 'center',
+  },
+  submitButtonText: {
+    fontSize: 16,
+    color: '#fff',
+    fontWeight: '500',
+  },
+
+
+  bodyPopup: {
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    justifyContent: 'center',
+    borderColor: 'black',
+    borderWidth: 1,
+    height: Dimensions.get('screen').height - 20,
+    width: Dimensions.get('screen').width
+  },
+  ImageSections: {
+    display: 'flex',
+    flexDirection: 'row',
+    paddingHorizontal: 8,
+    paddingVertical: 8,
+    justifyContent: 'center'
+  },
+  images: {
+    width: 150,
+    height: 150,
+    borderColor: 'black',
+    borderWidth: 1,
+    marginHorizontal: 3
+  },
+  btnParentSection: {
+    alignItems: 'center',
+    marginTop:10
+  },
+  btnSection: {
+    width: 225,
+    height: 50,
+    backgroundColor: '#DCDCDC',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 3,
+    marginBottom:10
+  },
+  btnText: {
+    textAlign: 'center',
+    color: 'gray',
+    fontSize: 14,
+    fontWeight:'bold'
+  }
 });
 
 export default MyWork

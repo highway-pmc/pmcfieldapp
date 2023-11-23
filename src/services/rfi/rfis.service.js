@@ -18,8 +18,8 @@ export const getRFITaskUsersData = async (projectId, projectModuleId, userCatego
     });
 }
 
-export const generateRFI = async (projectId, projectModuleId, body) => {
-    return apiService.postRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/rfis`, body).then((response) => {
+export const generateRFI = async (projectId, projectModuleId, userCategory, body) => {
+    return apiService.postRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/user-category/${userCategory}/rfis`, body).then((response) => {
         return response;
     }).catch((err) => {
         const errorMessge = err.message || 'Unable to generate RFI.';
@@ -27,11 +27,29 @@ export const generateRFI = async (projectId, projectModuleId, body) => {
     });
 }
 
-export const getRFIs = async (projectId) => {
-    return apiService.getRequest(`v1/auth/projects/${projectId}/rfis`).then((response) => {
+export const getRFIs = async (projectId, status) => {
+    return apiService.getRequest(`v1/auth/projects/${projectId}/status/${status}/rfis`).then((response) => {
         return response;
     }).catch((err) => {
         const errorMessge = err.message || 'Unable to get RFI.';
+        throw new Error(errorMessge);
+    });
+}
+
+export const getRFIDataByWaId = async (projectId, projectModuleId, waId) => {
+    return apiService.getRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/wa/${waId}/rfi`).then((response) => {
+        return response;
+    }).catch((err) => {
+        const errorMessge = err.message || 'Unable to get RFI by waId.';
+        throw new Error(errorMessge);
+    });
+}
+
+export const fillRFIsDataChecklist = async (projectId, projectModuleId, rfiId, status, body) => {
+    return apiService.postRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/rfis/${rfiId}/status/${status}`, body).then((response) => {
+        return response;
+    }).catch((err) => {
+        const errorMessge = err.message || 'Unable to save check list.';
         throw new Error(errorMessge);
     });
 }

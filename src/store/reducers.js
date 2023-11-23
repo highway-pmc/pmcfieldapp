@@ -740,7 +740,47 @@ const MyWorkReducer = (state = myWorksState, action) => {
         case "GET_MY_WORKS_FAILURE":
             return {
                 ...state,
-                myWorks: null,
+                rfiData: null,
+                error: action.error,
+                loading: false,
+            };
+        case "GET_RFI_BY_WA_ID_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "GET_RFI_BY_WA_ID_SUCCESS":
+            return {
+                ...state,
+                rfiData: action.response,
+                error: null,
+                loading: false,
+            };
+        case "GET_RFI_BY_WA_ID_FAILURE":
+            return {
+                ...state,
+                rfiData: null,
+                error: action.error,
+                loading: false,
+            };
+        case "FILL_RFI_CHECK_LIST_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "FILL_RFI_CHECK_LIST_SUCCESS":
+            return {
+                ...state,
+                rfiChecklistSaved: action.response,
+                error: null,
+                loading: false,
+            };
+        case "FILL_RFI_CHECK_LIST_FAILURE":
+            return {
+                ...state,
+                rfiChecklistSaved: null,
                 error: action.error,
                 loading: false,
             };
@@ -748,6 +788,8 @@ const MyWorkReducer = (state = myWorksState, action) => {
             return {
                 ...state,
                 myWorks: null,
+                rfiData: null,
+                rfiChecklistSaved: null,
                 error: null,
                 loading: false,
             };

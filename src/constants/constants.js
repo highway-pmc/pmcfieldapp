@@ -26,9 +26,8 @@ export const HeaderItems = {
     rfisDashboard: { showBack: true, title: 'RFIs' },
     rfisGenerateTaskListing: { showBack: true, title: 'Generate RFIs' },
     rfisClosedTaskListing: { showBack: true, title: 'Closed RFIs' },
-    rfisApproveRejectTaskListing: { showBack: true, title: 'Approve, Reject/Cancel RFIs' },
-    rfisRegenerateTaskListing: { showBack: true, title: 'Re-generate RFIs' },
-    rfisAssignTaskListing: { showBack: true, title: 'Assign RFIs' },
+    rfisApprovedTaskListing: { showBack: true, title: 'Approved RFIs' },
+    rfisRejectedTaskListing: { showBack: true, title: 'Rejected/Cancelled RFIs' },
     projectInfo: { showBack: false, title: 'Project Info' },
     myTest: { showBack: false, title: 'My Test' },
     profile: { showBack: false, title: 'Edit Profile' }
@@ -270,10 +269,20 @@ export const SEGMENT_TYPES_DISPLAY = {
 export const RFIs_TYPE = {
     GENERATE: "generate",
     CLOSED: "closed",
-    APPROVE_REJECT:"approved-closed",
-    RE_GENERATE: "re-generate",
-    ASSIGN: "assign"
+    APPROVED:"approved",
+    REJECTED: "rejected",
 }
+
+export const RFI_STATUS = {
+    PENDING: 'pending',
+    GENERATED: 'generated',
+    RE_GENERATED: 'regenerated',
+    IN_PROGRESS: 'inProgress',
+    IN_REVIEW: 'inReview',
+    REJECTED: 'rejected',
+    CANCELLED: 'cancelled',
+    APPROVED: 'approved',
+  };
 
 export const WORK_TYPE = {
     SITE_WORK: "Site Work",

@@ -1,9 +1,9 @@
 import { View, Text, NativeEventEmitter, StyleSheet, ScrollView, Image, TouchableOpacity, TextInput, Modal, StatusBar, SafeAreaView, Dimensions, Alert } from 'react-native'
 import React, { Fragment, useEffect, useState } from 'react'
 import { useIsFocused } from '@react-navigation/native';
-import { HeaderItems, PROJECT_TYPE, SEGMENT_TYPES_DISPLAY } from "../../constants/constants"
+import { HeaderItems, PROJECT_TYPE, RFI_STATUS, SEGMENT_TYPES_DISPLAY } from "../../constants/constants"
 import { useDispatch, useSelector } from 'react-redux';
-import { clearMyWorksEvent, getMyWorks } from './actions';
+import { clearMyWorksEvent, fillRFIsChecklist, getMyWorks, getRFIByWaId } from './actions';
 import LoadingAnimation from '../Common/LoadingAnimation';
 import { groupBy } from '../../utils/Utils';
 import * as ImagePicker from 'react-native-image-picker';
@@ -12,14 +12,16 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
   const { projectType } = route.params;
 
-  const { myWorks, loading, error } = useSelector((state: any) => state.MyWorks);
+  const { myWorks, rfiData, rfiChecklistSaved, loading, error } = useSelector((state: any) => state.MyWorks);
   const [myWorksData, setMyWorksData] = useState([]);
   const [currentSegmentsData, setCurrentSegmentsData] = useState([]);
   const [currentSubSegmentsData, setCurrentSubSegmentsData] = useState([]);
   const [currentTasksData, setCurrentTasksData] = useState([]);
+  const [projectModuleId, setProjectModuleId] = useState('');
   const [currentLevel, setCurrentLevel] = useState(1);
   const [segmentsByGroupOnType, setSegmentsByGroupOnType] = useState(null);
   const [searchText, setSearchText] = useState('');
+  const [rfiId, setRfiId] = useState('');
   const [breadcrumbData, setBreadcrumbData] = useState([{
     name: '',
     projectModuleIndex: 0,
@@ -31,16 +33,18 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
     active: false
   }]);
 
-  const [openPopup, setOpenPopup] = useState(false);
-  const [selectedTask, setSelectedTask] = useState(null);
-  const [imageObject, setImageObject] = useState({
+  const imageObjectEmpty = {
     filepath: {
       data: '',
       uri: ''
     },
     fileData: '',
     fileUri: ''
-  });
+  };
+
+  const [openPopup, setOpenPopup] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
+  const [imageObject, setImageObject] = useState(imageObjectEmpty);
 
   const dispatch = useDispatch()
   const focus = useIsFocused();
@@ -57,6 +61,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
       setBreadcrumbData([]);
       getMyWorksData();
       setSearchText('');
+      setOpenPopup(false)
     }
   }, [focus]);
 
@@ -71,7 +76,28 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
     if (myWorks) {
       setMyWorksData(myWorks);
     }
-  }, [myWorks, error]);
+
+    if (rfiData) {
+      setRfiId(rfiData._id);
+      if (rfiData.metaData && rfiData.metaData.base64Image) {
+        setImageObject({
+          filePath: '',
+          fileData: rfiData.metaData.base64Image,
+          fileUri: ''
+        });
+      }
+      setOpenPopup(true)
+    }
+
+    if (rfiChecklistSaved) {
+      setOpenPopup(false)
+      Alert.alert('RFIs checklist saved.')
+      setCurrentLevel(1);
+      setImageObject(imageObjectEmpty)
+      dispatch(clearMyWorksEvent());
+      getMyWorksData();
+    }
+  }, [myWorks, rfiData, rfiChecklistSaved, error]);
 
   // unmount
   useEffect(() => () => {
@@ -198,7 +224,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
       const segmentData = myWorksData[projectModuleIndex].segmentsData[segIndex];
       const subSegmentData: any = segmentData.subSegmentsData[subSegIndex];
       const taskData: any = [subSegmentData.tasksData[taskIndex]];
-
+      setProjectModuleId(subSegmentData.projectModuleId);
       setCurrentTasksData(taskData)
 
       setBreadcrumbData([
@@ -247,7 +273,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
     } else if (level === 4 && subSegIndex != -1) {
       const segmentData = myWorksData[projectModuleIndex].segmentsData[segIndex];
       const subSegmentData: any = segmentData.subSegmentsData[subSegIndex];
-
+      setProjectModuleId(subSegmentData.projectModuleId);
       setCurrentTasksData(subSegmentData.tasksData)
 
       setBreadcrumbData([
@@ -303,6 +329,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
       const beadcrumb = breadcrumbData[1];
       beadcrumb.name = SEGMENT_TYPES_DISPLAY[data.type] + ' ' + data.name;
     } else if (level === 4) {
+      setProjectModuleId(data.projectModuleId);
       setCurrentTasksData(data.tasksData)
       const bcrubm = {
         name: data.name,
@@ -335,8 +362,18 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
   }
 
   const getStyle = (item: any) => {
-    if (item.rfiStatus && item.rfiStatus != "pending") {
-      return [styles.StartWorkCard, styles.StartBorder];
+    if (item.rfiStatus) {
+      if (item.rfiStatus === RFI_STATUS.GENERATED ||  item.rfiStatus === RFI_STATUS.RE_GENERATED) {
+        return [styles.StartWorkCard, styles.StartBorder];
+      } else if (item.rfiStatus === RFI_STATUS.REJECTED || item.rfiStatus === RFI_STATUS.CANCELLED) {
+        return [styles.StartWorkCard, styles.StartRejectBorder];
+      } else if (item.rfiStatus === RFI_STATUS.IN_PROGRESS) {
+        return [styles.StartWorkCard, styles.StartInProgressBorder];
+      } else if (item.rfiStatus === RFI_STATUS.IN_REVIEW) {
+        return [styles.StartWorkCard, styles.StartReviewBorder];
+      } else if (item.rfiStatus === RFI_STATUS.APPROVED) {
+        return [styles.StartWorkCard, styles.StartCompleteBorder];
+      }
     }
     return [styles.StartWorkCardDisabled, styles.DisabledBorder];
   }
@@ -378,6 +415,34 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
   //     }
   //   });
   // }
+  const getRFIDataByWorkAssignmentId = (task: any) => {
+    setImageObject(imageObjectEmpty);
+    setSelectedTask(task);
+    dispatch(getRFIByWaId({
+      projectId: loggedInUser.projectId,
+      projectModuleId: projectModuleId,
+      waId: task.workAssignmentId,
+    }));
+  }
+
+  const onFillChecklist = (rfiStatus: string) => {
+    dispatch(fillRFIsChecklist({
+      projectId: loggedInUser.projectId,
+      projectModuleId: projectModuleId,
+      rfiId: rfiId,
+      status: rfiStatus,
+      body: {
+        checkList: {
+          taskName: selectedTask.name,
+          base64Image: imageObject.fileData,
+        },
+        additionalData: {
+          comments: '',
+          rfiApprovalDateTime: ''
+        }
+      },
+    }));
+  }
 
   const launchCamera = () => {
     let options = {
@@ -388,8 +453,6 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
       },
     };
     ImagePicker.launchCamera(options, (response: any) => {
-      console.log('Response = ', response);
-
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
@@ -399,8 +462,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
         Alert.alert(response.customButton);
       } else {
         const responseImage = response.assets?.length ? response.assets[0] : response.assets ? response.assets : response;
-        const source = { uri: responseImage.uri };
-        console.log('response', JSON.stringify(response));
+
         setImageObject({
           filePath: responseImage,
           fileData: responseImage.base64,
@@ -422,7 +484,6 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
       },
     };
     ImagePicker.launchImageLibrary(options, (response: any) => {
-      console.log('Response = ', response);
 
       if (response.didCancel) {
         console.log('User cancelled image picker');
@@ -434,9 +495,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
       } else {
 
         const responseImage = response.assets?.length ? response.assets[0] : response.assets ? response.assets : response;
-        const source = { uri: responseImage.uri };
-        
-        console.log('===========================', responseImage.base64);
+
         setImageObject({
           filePath: responseImage,
           fileData: responseImage.base64,
@@ -648,12 +707,62 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
                 <Text style={styles.HeadText}>{item.displayName}</Text>
                 {/* <Text style={styles.MyWorkSubHead}>Sub Text</Text> */}
               </View>
-              <TouchableOpacity style={[styles.MyWorkCta, styles.StartBorder]} onPress={() => {
-                setSelectedTask(item);setOpenPopup(true)
-              }}>
-                <Image style={styles.WorkIcon} source={require('../../images/play-icon.png')} />
-                <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>Start</Text>
-              </TouchableOpacity>
+              {
+                item.rfiStatus === RFI_STATUS.GENERATED &&
+                <TouchableOpacity style={[styles.MyWorkCta, styles.StartBorder]} onPress={() => {
+                  getRFIDataByWorkAssignmentId(item)
+                }}>
+                  <Image style={styles.WorkIcon} source={require('../../images/play-icon.png')} />
+                  <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>Start</Text>
+                </TouchableOpacity>
+              }
+
+              {
+                item.rfiStatus === RFI_STATUS.RE_GENERATED &&
+                <TouchableOpacity style={[styles.MyWorkCta, styles.StartBorder]} onPress={() => {
+                  getRFIDataByWorkAssignmentId(item)
+                }}>
+                  <Image style={styles.WorkIcon} source={require('../../images/play-icon.png')} />
+                  <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>Re-generate</Text>
+                </TouchableOpacity>
+              }
+
+              {
+                (item.rfiStatus === RFI_STATUS.REJECTED || item.rfiStatus === RFI_STATUS.CANCELLED) &&
+                <TouchableOpacity style={[styles.MyWorkCta, styles.StartRejectBorder]} onPress={() => {
+                  getRFIDataByWorkAssignmentId(item)
+                }}>
+                  {/* <Image style={styles.WorkIcon} source={require('../../images/play-icon.png')} /> */}
+                  <Text style={[styles.CtaStartText, styles.CtaRejectTextColor]}>{item.rfiStatus === RFI_STATUS.CANCELLED ? 'Cancelled' : 'Rejected'}</Text>
+                </TouchableOpacity>
+              }
+
+              {
+                item.rfiStatus === RFI_STATUS.IN_PROGRESS &&
+                <TouchableOpacity style={[styles.MyWorkCta, styles.StartInProgressBorder]} onPress={() => {
+                  getRFIDataByWorkAssignmentId(item)
+                }}>
+                  <Image style={styles.WorkIcon} source={require('../../images/inprogress.png')} />
+                  <Text style={[styles.CtaStartText, styles.CtaInProgressTextColor]}>In Progress</Text>
+                </TouchableOpacity>
+              }
+
+              {
+                item.rfiStatus === RFI_STATUS.IN_REVIEW &&
+                <TouchableOpacity style={[styles.MyWorkCta, styles.StartReviewBorder]}>
+                  <Image style={styles.WorkIcon} source={require('../../images/review-icon.png')} />
+                  <Text style={[styles.CtaStartText, styles.CtaReviewTextColor]}>Under Review</Text>
+                </TouchableOpacity>
+              }
+
+              {
+                item.rfiStatus === RFI_STATUS.APPROVED &&
+                <TouchableOpacity style={[styles.MyWorkCta, styles.StartCompleteBorder]}>
+                  <Image style={styles.WorkIcon} source={require('../../images/complete-icon.png')} />
+                  <Text style={[styles.CtaStartText, styles.CtaCompleteTextColor]}>Completed</Text>
+                </TouchableOpacity>
+              }
+              
             </View>
           ))
         }
@@ -697,33 +806,33 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
               </View>
               <View style={styles.ModalInnerContainer}>
                 <View>
-                  <Text style={styles.modalLabel}>Project Module: {selectedTask?.displayName}</Text>
+                  <Text style={styles.modalLabel}>Task: {selectedTask?.displayName}</Text>
                 </View>
                 <ScrollView style={{ paddingTop: 10, height: 500 }}>
                   <Fragment>
                     <StatusBar barStyle="dark-content" />
                     <SafeAreaView>
                       <View>
-                        <Text style={{ textAlign: 'center', fontSize: 20, paddingBottom: 10 }} >Pick Images from Camera & Gallery</Text>
+                        <Text style={{ textAlign: 'center', fontSize: 20, paddingBottom: 10 }} >Pick Image from Camera & Gallery</Text>
                         <View style={styles.ImageSections}>
                           <View>
                             {imageObject?.fileData && renderFileData()}
-                            <Text style={{ textAlign: 'center' }}>Base 64 String</Text>
+                            {/* <Text style={{ textAlign: 'center' }}>Base 64 String</Text> */}
                           </View>
-                          <View>
+                          {/* <View>
                             {imageObject?.fileUri && renderFileUri()}
                             <Text style={{ textAlign: 'center' }}>File Uri</Text>
-                          </View>
+                          </View> */}
                         </View>
 
-                        <View style={styles.btnParentSection}>
+                        <View style={[styles.btnParentSection, {flexDirection: 'row', gap: 20, justifyContent: 'center'}]}>
                           
                           <TouchableOpacity onPress={launchCamera} style={styles.btnSection}  >
-                            <Text style={styles.btnText}>Directly Launch Camera</Text>
+                            <Text style={styles.btnText}>Camera</Text>
                           </TouchableOpacity>
 
                           <TouchableOpacity onPress={launchImageLibrary} style={styles.btnSection}  >
-                            <Text style={styles.btnText}>Directly Launch Image Library</Text>
+                            <Text style={styles.btnText}>Gallery</Text>
                           </TouchableOpacity>
                         </View>
 
@@ -731,10 +840,16 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
                     </SafeAreaView>
                   </Fragment>
                 </ScrollView>
+                
+                <View style={[styles.btnParentSection, {flexDirection: 'row', justifyContent: 'center', gap: 20}]}>
+                  <TouchableOpacity style={styles.submitButton} onPress={() => onFillChecklist(RFI_STATUS.IN_PROGRESS)}>
+                    <Text style={styles.submitButtonText}>Save</Text>
+                  </TouchableOpacity>
 
-                {/* <TouchableOpacity style={styles.submitButton} onPress={() => onWorkAssignment()}>
-                  <Text style={styles.submitButtonText}>Assign</Text>
-                </TouchableOpacity> */}
+                  <TouchableOpacity style={styles.submitButton} onPress={() => onFillChecklist(RFI_STATUS.IN_REVIEW)}>
+                    <Text style={styles.submitButtonText}>Submit</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
           </View>
@@ -865,6 +980,12 @@ const styles = StyleSheet.create({
   },
   StartCompleteBorder: {
     borderColor: '#2BC267'
+  },
+  StartRejectBorder: {
+    borderColor: '#FF0000'
+  },
+  CtaRejectTextColor: {
+    color: '#FF0000',
   },
   //Breacrumb Start
   BreadcrumbContainer: {
@@ -1032,7 +1153,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderColor: 'black',
     borderWidth: 1,
-    height: Dimensions.get('screen').height - 20,
+    height: Dimensions.get('screen').height - 60,
     width: Dimensions.get('screen').width
   },
   ImageSections: {
@@ -1050,21 +1171,21 @@ const styles = StyleSheet.create({
     marginHorizontal: 3
   },
   btnParentSection: {
-    alignItems: 'center',
+    // alignItems: 'center',
     marginTop:10
   },
   btnSection: {
-    width: 225,
+    width: 150,
     height: 50,
-    backgroundColor: '#DCDCDC',
-    alignItems: 'center',
+    backgroundColor: '#1C58C0',
+    // alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 3,
     marginBottom:10
   },
   btnText: {
     textAlign: 'center',
-    color: 'gray',
+    color: '#fff',
     fontSize: 14,
     fontWeight:'bold'
   }

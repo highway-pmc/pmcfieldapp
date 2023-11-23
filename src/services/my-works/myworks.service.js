@@ -8,3 +8,4 @@ export const getMyWorksData = async (projectId, projectType) => {
         throw new Error(errorMessge);
     });
 }
+

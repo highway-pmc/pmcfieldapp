@@ -27,6 +27,7 @@ const RFIsRecents = (props: any) => {
   const getRFIsData = () => {
     dispatch(actionGetRFIs({
       projectId: loggedInUser.projectId,
+      status: (props.rfiType === RFIs_TYPE.GENERATE ? 'generated' : props.rfiType)
     }));
   }
 
@@ -46,12 +47,10 @@ const RFIsRecents = (props: any) => {
       return 'Generated'
     } else if (props.rfiType === RFIs_TYPE.CLOSED) {
       return 'Closed'
-    } else if (props.rfiType === RFIs_TYPE.APPROVE_REJECT) {
-      return 'Approved/Rejected'
-    } else if (props.rfiType === RFIs_TYPE.RE_GENERATE) {
-      return 'Re-generated'
-    } else if (props.rfiType === RFIs_TYPE.ASSIGN) {
-      return 'Assigned'
+    } else if (props.rfiType === RFIs_TYPE.APPROVED) {
+      return 'Approved'
+    } else if (props.rfiType === RFIs_TYPE.REJECTED) {
+      return 'Rejected/Cancelled'
     }
 
     return '';

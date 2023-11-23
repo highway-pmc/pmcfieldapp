@@ -22,7 +22,7 @@ function* getRFITaskUsers({ payload }) {
 
 function* generateRFITask({ payload }) {
     try {
-        const response = yield (generateRFI(payload.projectId, payload.projectModuleId, payload.body));
+        const response = yield (generateRFI(payload.projectId, payload.projectModuleId, payload.userCategory, payload.body));
         yield put({ type: "GENERATE_RFI_SUCCESS", response });
     } catch (error) {
         yield put({ type: "GENERATE_RFI_FAILURE", error: error.message });
@@ -31,7 +31,7 @@ function* generateRFITask({ payload }) {
 
 function* getRFIData({ payload }) {
     try {
-        const response = yield (getRFIs(payload.projectId));
+        const response = yield (getRFIs(payload.projectId, payload.status));
         yield put({ type: "GET_RFI_SUCCESS", response });
     } catch (error) {
         yield put({ type: "GET_RFI_FAILURE", error: error.message });

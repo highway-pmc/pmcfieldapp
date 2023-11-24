@@ -880,6 +880,26 @@ const RFIsReducer = (state = myWorksState, action) => {
                 error: action.error,
                 loading: false,
             };
+        case "UPDATE_RFI_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "UPDATE_RFI_SUCCESS":
+            return {
+                ...state,
+                rfiUpdated: action.response,
+                error: null,
+                loading: false,
+            };
+        case "UPDATE_RFI_FAILURE":
+            return {
+                ...state,
+                rfiUpdated: null,
+                error: action.error,
+                loading: false,
+            };
         case "CLEAR_RFI_REQUEST":
             return {
                 ...state,
@@ -887,6 +907,7 @@ const RFIsReducer = (state = myWorksState, action) => {
                 taskUsers: null,
                 rfiGenerated: null,
                 rfiDataList: null,
+                rfiUpdated: null,
                 error: null,
                 loading: false,
             };

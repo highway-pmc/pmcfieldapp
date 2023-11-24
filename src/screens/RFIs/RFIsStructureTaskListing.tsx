@@ -774,7 +774,7 @@ const ExpanbableComponent = ({ item, onClickFunction, onGenerateRFI }: { item: a
               editable={false}
             />
             <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
-              <Text style={styles.assignTagButoonText}>Icon</Text>
+              <Text style={styles.assignTagButtonText}>Icon</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -1124,7 +1124,7 @@ const styles = StyleSheet.create({
     color: "#666666",
     backgroundColor: "#99ABC6"
   },
-  assignTagButoonText: {
+  assignTagButtonText: {
     fontSize: 16,
     color: '#fff',
     fontWeight: '500',

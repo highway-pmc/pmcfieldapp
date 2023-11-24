@@ -887,7 +887,7 @@ const styles = StyleSheet.create({
   inputStyle: {
     flex: 1,
     color: '#2c2c2c',
-    paddingLeft: 40,
+    paddingLeft: 15,
     paddingRight: 15,
     borderWidth: 1,
     borderRadius: 6,
@@ -1132,7 +1132,7 @@ const styles = StyleSheet.create({
   },
   submitButton: {
     backgroundColor: '#1C58C0',
-    borderRadius: 30,
+    borderRadius: 10,
     color: '#fff',
     paddingHorizontal: 15,
     paddingTop: 12,

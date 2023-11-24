@@ -1,6 +1,6 @@
 
 import { put, takeLatest } from 'redux-saga/effects';
-import { fillRFIsDataChecklist, generateRFI, getRFITaskUsersData, getRFITasksData, getRFIs } from '../../services/rfi/rfis.service';
+import { fillRFIsDataChecklist, generateRFI, generateRFIReportApi, getRFITaskUsersData, getRFITasksData, getRFIs } from '../../services/rfi/rfis.service';
 
 function* getRFITasks({ payload }) {
     try {
@@ -47,10 +47,20 @@ function* updateRFIs({ payload }) {
     }
 }
 
+function* generateRFIReport({ payload }) {
+    try {
+        const response = yield (generateRFIReportApi(payload.projectId, payload.projectModuleId, payload.rfiId));
+        yield put({ type: "GENERATE_REPORT_SUCCESS", response });
+    } catch (error) {
+        yield put({ type: "GENERATE_REPORT_FAILURE", error: error.message });
+    }
+}
+
 export default function* myRFISScreenSaga() {
     yield takeLatest("GET_RFI_TASKS_REQUEST", getRFITasks);
     yield takeLatest("GET_RFI_TASK_USERS_REQUEST", getRFITaskUsers);
     yield takeLatest("GENERATE_RFI_REQUEST", generateRFITask);
     yield takeLatest("GET_RFI_REQUEST", getRFIData);
     yield takeLatest("UPDATE_RFI_REQUEST", updateRFIs);
+    yield takeLatest("GENERATE_REPORT_REQUEST", generateRFIReport);
 }

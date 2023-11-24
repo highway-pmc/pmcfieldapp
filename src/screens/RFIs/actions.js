@@ -23,6 +23,11 @@ export const updatedRFIs = (payload) => ({
     payload: payload
 });
 
+export const generateRFIReport = (payload) => ({
+    type: "GENERATE_REPORT_REQUEST",
+    payload: payload
+});
+
 export const clearRFITasksEvent = () => ({
     type: "CLEAR_RFI_REQUEST"
 });

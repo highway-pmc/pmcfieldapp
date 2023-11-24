@@ -900,6 +900,26 @@ const RFIsReducer = (state = myWorksState, action) => {
                 error: action.error,
                 loading: false,
             };
+        case "GENERATE_REPORT_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "GENERATE_REPORT_SUCCESS":
+            return {
+                ...state,
+                reportGenerated: action.response,
+                error: null,
+                loading: false,
+            };
+        case "GENERATE_REPORT_FAILURE":
+            return {
+                ...state,
+                reportGenerated: null,
+                error: action.error,
+                loading: false,
+            };
         case "CLEAR_RFI_REQUEST":
             return {
                 ...state,
@@ -908,6 +928,7 @@ const RFIsReducer = (state = myWorksState, action) => {
                 rfiGenerated: null,
                 rfiDataList: null,
                 rfiUpdated: null,
+                reportGenerated: null,
                 error: null,
                 loading: false,
             };

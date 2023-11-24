@@ -3,7 +3,7 @@ import { RFI_STATUS, RFIs_TYPE } from '../../constants/constants'
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import React, { Fragment, useEffect, useState } from 'react'
-import { actionGetRFIs, clearRFITasksEvent, updatedRFIs } from './actions';
+import { actionGetRFIs, clearRFITasksEvent, generateRFIReport, updatedRFIs } from './actions';
 import LoadingAnimation from '../Common/LoadingAnimation';
 import moment from 'moment';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -13,7 +13,7 @@ const RFIsRecents = (props: any) => {
   const navigation = useNavigation();
 
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const { rfiDataList, rfiUpdated, loading, error } = useSelector((state: any) => state.RFIs);
+  const { rfiDataList, rfiUpdated, reportGenerated, loading, error } = useSelector((state: any) => state.RFIs);
 
   const [rfiData, setRfiData] = useState([]);
 
@@ -67,6 +67,10 @@ const RFIsRecents = (props: any) => {
     if (rfiUpdated) {
       Alert.alert('Success', 'RFI updated successfully.');
       navigation.navigate('RFIsHome')
+    }
+
+    if (reportGenerated) {
+      Alert.alert('Success', 'Report generated successfully.');
     }
   }, [rfiDataList, rfiUpdated]);
 
@@ -148,7 +152,11 @@ const RFIsRecents = (props: any) => {
   }
 
   const onGenerateReport = () => {
-
+    dispatch(generateRFIReport({
+      projectId: loggedInUser.projectId,
+      projectModuleId: selectedRFI.projectModuleId || '651705ccfa178cc2d403bb20',
+      rfiId: selectedRFI._id,
+    }));
   }
 
   const openCloseCalendar = () => {
@@ -277,14 +285,18 @@ const RFIsRecents = (props: any) => {
                 <ScrollView style={{ paddingTop: 10, height: 500 }}>
                   <Fragment>
                     <SafeAreaView>
-                      <View>
-                        {/* <Text style={{ textAlign: 'center', fontSize: 20, paddingBottom: 10 }} ></Text> */}
-                        <View style={styles.ImageSections}>
-                          <View>
-                            {renderFileData()}
+                      {
+                        props.rfiType !== RFIs_TYPE.GENERATE &&
+                        <View>
+                          {/* <Text style={{ textAlign: 'center', fontSize: 20, paddingBottom: 10 }} ></Text> */}
+                          <View style={styles.ImageSections}>
+                            <View>
+                              {renderFileData()}
+                            </View>
                           </View>
                         </View>
-                      </View>
+                      }
+
                       {
                         props.rfiType !== RFIs_TYPE.APPROVED &&
                         <View>
@@ -366,7 +378,7 @@ const RFIsRecents = (props: any) => {
                                   dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
                                   maxHeight={75}
                                   zIndex={1000}
-                                  listMode='MODAL'
+                                  listMode='SCROLLVIEW'
                                   open={openTimeFormats}
                                   value={timeFormat}
                                   items={timeFormats}

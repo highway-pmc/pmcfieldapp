@@ -53,3 +53,12 @@ export const fillRFIsDataChecklist = async (projectId, projectModuleId, rfiId, s
         throw new Error(errorMessge);
     });
 }
+
+export const generateRFIReportApi = async (projectId, projectModuleId, rfiId) => {
+    return apiService.getRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/rfis/${rfiId}/report`).then((response) => {
+        return response;
+    }).catch((err) => {
+        const errorMessge = err.message || 'Unable to generate report.';
+        throw new Error(errorMessge);
+    });
+}

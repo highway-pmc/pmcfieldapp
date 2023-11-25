@@ -6,8 +6,6 @@ import React, { Fragment, useEffect, useState } from 'react'
 import { actionGetRFIs, clearRFITasksEvent, generateRFIReport, updatedRFIs } from './actions';
 import LoadingAnimation from '../Common/LoadingAnimation';
 import moment from 'moment';
-import DropDownPicker from 'react-native-dropdown-picker';
-import CalendarPicker from 'react-native-calendar-picker';
 import Pdf from 'react-native-pdf';
 
 const RFIsRecents = (props: any) => {
@@ -21,24 +19,24 @@ const RFIsRecents = (props: any) => {
   const [openPopup, setOpenPopup] = useState(false);
   const [selectedRFI, setSelectedRFI] = useState(null);
 
-  const [rfiDate, setRFIDate] = useState('');
-  const [hours, setHours] = useState([]);
-  const [minutes, setMinutes] = useState([]);
-  const [timeFormats, setTimeFormats] = useState([]);
+  // const [rfiDate, setRFIDate] = useState('');
+  // const [hours, setHours] = useState([]);
+  // const [minutes, setMinutes] = useState([]);
+  // const [timeFormats, setTimeFormats] = useState([]);
 
-  const [hour, setHour] = useState('12');
-  const [minute, setMinute] = useState('00');
-  const [timeFormat, setTimeFormat] = useState('AM');
+  // const [hour, setHour] = useState('12');
+  // const [minute, setMinute] = useState('00');
+  // const [timeFormat, setTimeFormat] = useState('AM');
 
-  const [openHours, setOpenHours] = useState(false);
-  const [openMinutes, setOpenMinutes] = useState(false);
-  const [openTimeFormats, setOpenTimeFormats] = useState(false);
+  // const [openHours, setOpenHours] = useState(false);
+  // const [openMinutes, setOpenMinutes] = useState(false);
+  // const [openTimeFormats, setOpenTimeFormats] = useState(false);
 
   const [openCalendar, setOpenCalendar] = useState(false);
 
-  const [comments, setComments] = useState('');
+  // const [comments, setComments] = useState('');
 
-  const { width, height } = Dimensions.get('window');
+  // const { width, height } = Dimensions.get('window');
 
   const [pdfSource, setPdfSource] = useState(null);
 
@@ -48,9 +46,9 @@ const RFIsRecents = (props: any) => {
 
   useEffect(() => {
     if (focus == true) {
-      getHours();
-      getMins();
-      getTimeFormats();
+      // getHours();
+      // getMins();
+      // getTimeFormats();
       setRfiData([]);
       getRFIsData();
       setPdfSource(null);
@@ -94,6 +92,8 @@ const RFIsRecents = (props: any) => {
       return 'Approved'
     } else if (props.rfiType === RFIs_TYPE.REJECTED) {
       return 'Rejected/Cancelled'
+    } else if (props.rfiType === RFIs_TYPE.IN_PROGRESS) {
+      return 'In Progress'
     }
 
     return '';
@@ -101,8 +101,6 @@ const RFIsRecents = (props: any) => {
 
   const onSelectRFI = (item: any) => {
     setPdfSource(null);
-    setRFIDate('');
-    setComments('');
     setSelectedRFI(item);
     setOpenPopup(true);
   }
@@ -120,32 +118,32 @@ const RFIsRecents = (props: any) => {
   }
 
   const onRFIAction = (status: string) => {
-    if (status === RFI_STATUS.APPROVED) {
-      if (!rfiDate) {
-        Alert.alert('Error', 'Approval Date is required.');
-        return false;
-      }
-    }
+    // if (status === RFI_STATUS.APPROVED) {
+    //   if (!rfiDate) {
+    //     Alert.alert('Error', 'Approval Date is required.');
+    //     return false;
+    //   }
+    // }
     
-    let rfiApprovalDateTime = '';
-    let rfiTime = '';
-    if (rfiDate) {
-      if (timeFormat === 'PM') {
-        if (Number(hour) === 12) {
-          rfiTime = hour + ':' + minute;
-        } else {
-          rfiTime = (Number(hour) + 12) + ':' + minute;
-        }
-      } else {
-        if (Number(hour) === 12) {
-          rfiTime = '00:' + minute;
-        } else {
-          rfiTime = hour + ':' + minute;
-        }
-      }
+    // let rfiSubmitDateTime = '';
+    // let rfiTime = '';
+    // if (rfiDate) {
+    //   if (timeFormat === 'PM') {
+    //     if (Number(hour) === 12) {
+    //       rfiTime = hour + ':' + minute;
+    //     } else {
+    //       rfiTime = (Number(hour) + 12) + ':' + minute;
+    //     }
+    //   } else {
+    //     if (Number(hour) === 12) {
+    //       rfiTime = '00:' + minute;
+    //     } else {
+    //       rfiTime = hour + ':' + minute;
+    //     }
+    //   }
 
-      rfiApprovalDateTime = rfiDate + ' ' + rfiTime + ":00"
-    }
+    //   rfiSubmitDateTime = rfiDate + ' ' + rfiTime + ":00"
+    // }
 
     dispatch(updatedRFIs({
       projectId: loggedInUser.projectId,
@@ -153,10 +151,10 @@ const RFIsRecents = (props: any) => {
       rfiId: selectedRFI._id,
       status: status,
       body: {
-        additionalData: {
-          comments: comments,
-          rfiApprovalDateTime: rfiApprovalDateTime
-        }
+        // additionalData: {
+        //   comments: comments,
+        //   rfiSubmitDateTime: rfiSubmitDateTime
+        // }
       },
     }));
   }
@@ -178,37 +176,37 @@ const RFIsRecents = (props: any) => {
     // }
   }
 
-  const getHours = () => {
-    let hours = [];
-    for (let i = 1; i <= 12; i++) {
-      hours.push({
-        label: i < 10 ? '0' + i : '' + i,
-        value: i < 10 ? '0' + i : '' + i
-      });
-    }
-    setHours(hours);
-  }
+  // const getHours = () => {
+  //   let hours = [];
+  //   for (let i = 1; i <= 12; i++) {
+  //     hours.push({
+  //       label: i < 10 ? '0' + i : '' + i,
+  //       value: i < 10 ? '0' + i : '' + i
+  //     });
+  //   }
+  //   setHours(hours);
+  // }
 
-  const getMins = () => {
-    let mins = [];
-    for (let i = 0; i < 60; i = i + 10) {
-      mins.push({
-        label: i < 10 ? '0' + i : '' + i,
-        value: i < 10 ? '0' + i : '' + i
-      });
-    }
-    setMinutes(mins);
-  }
+  // const getMins = () => {
+  //   let mins = [];
+  //   for (let i = 0; i < 60; i = i + 10) {
+  //     mins.push({
+  //       label: i < 10 ? '0' + i : '' + i,
+  //       value: i < 10 ? '0' + i : '' + i
+  //     });
+  //   }
+  //   setMinutes(mins);
+  // }
 
-  const getTimeFormats = () => {
-    setTimeFormats([{
-      label: 'AM',
-      value: 'AM'
-    }, {
-      label: 'PM',
-      value: 'PM'
-    }]);
-  }
+  // const getTimeFormats = () => {
+  //   setTimeFormats([{
+  //     label: 'AM',
+  //     value: 'AM'
+  //   }, {
+  //     label: 'PM',
+  //     value: 'PM'
+  //   }]);
+  // }
 
   return (
     <View>
@@ -308,7 +306,7 @@ const RFIsRecents = (props: any) => {
                         </View>
                       }
 
-                      {
+                      {/* {
                         props.rfiType !== RFIs_TYPE.APPROVED &&
                         <View>
                           <View style={{ flexDirection: 'column' }}>
@@ -417,7 +415,7 @@ const RFIsRecents = (props: any) => {
                             </View>
                           </View>
                         </View>
-                      }
+                      } */}
                     </SafeAreaView>
                   </Fragment>
                 </ScrollView>
@@ -447,7 +445,7 @@ const RFIsRecents = (props: any) => {
                   props.rfiType === RFIs_TYPE.APPROVED &&
                   <View style={[styles.btnParentSection, { flexDirection: 'row', justifyContent: 'center', gap: 20 }]}>
                     <TouchableOpacity style={styles.submitButton} onPress={() => onGenerateReport()}>
-                      <Text style={styles.submitButtonText}>Report</Text>
+                      <Text style={styles.submitButtonText}>Generate Report</Text>
                     </TouchableOpacity>
                   </View>
                 }

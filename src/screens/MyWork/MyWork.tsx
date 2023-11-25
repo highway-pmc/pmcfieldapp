@@ -7,6 +7,9 @@ import { clearMyWorksEvent, fillRFIsChecklist, getMyWorks, getRFIByWaId } from '
 import LoadingAnimation from '../Common/LoadingAnimation';
 import { groupBy } from '../../utils/Utils';
 import * as ImagePicker from 'react-native-image-picker';
+import DropDownPicker from 'react-native-dropdown-picker';
+import CalendarPicker from 'react-native-calendar-picker';
+import moment from 'moment';
 
 const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
@@ -46,6 +49,24 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
   const [selectedTask, setSelectedTask] = useState(null);
   const [imageObject, setImageObject] = useState(imageObjectEmpty);
 
+  const [rfiDate, setRFIDate] = useState('');
+  const [hours, setHours] = useState([]);
+  const [minutes, setMinutes] = useState([]);
+  const [timeFormats, setTimeFormats] = useState([]);
+
+  const [hour, setHour] = useState('12');
+  const [minute, setMinute] = useState('00');
+  const [timeFormat, setTimeFormat] = useState('AM');
+
+  const [openHours, setOpenHours] = useState(false);
+  const [openMinutes, setOpenMinutes] = useState(false);
+  const [openTimeFormats, setOpenTimeFormats] = useState(false);
+
+  const [openCalendar, setOpenCalendar] = useState(false);
+
+  const [comments, setComments] = useState('');
+  const { width, height } = Dimensions.get('window');
+  
   const dispatch = useDispatch()
   const focus = useIsFocused();
 
@@ -62,6 +83,9 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
       getMyWorksData();
       setSearchText('');
       setOpenPopup(false)
+      getHours();
+      getMins();
+      getTimeFormats();
     }
   }, [focus]);
 
@@ -85,6 +109,21 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
           fileData: rfiData.metaData.base64Image,
           fileUri: ''
         });
+      }
+      if (rfiData.rfiSubmitDateTime) {
+        
+        setRFIDate(moment(new Date(rfiData.rfiSubmitDateTime)).format('YYYY-MM-DD'));
+
+        const time = moment(new Date(rfiData.rfiSubmitDateTime)).format('hh:mm A')
+        const hourMin = time.split(' ')[0];
+        setHour(hourMin.split(':')[0])
+        setMinute(hourMin.split(':')[1])
+
+        setTimeFormat(time.split(' ')[1])
+      }
+
+      if (rfiData.comments) {
+        setComments(rfiData.comments);
       }
       setOpenPopup(true)
     }
@@ -416,6 +455,8 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
   //   });
   // }
   const getRFIDataByWorkAssignmentId = (task: any) => {
+    setRFIDate('');
+    setComments('');
     setImageObject(imageObjectEmpty);
     setSelectedTask(task);
     dispatch(getRFIByWaId({
@@ -426,6 +467,36 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
   }
 
   const onFillChecklist = (rfiStatus: string) => {
+    if (!rfiDate) {
+      Alert.alert('Error', 'Date is required.');
+      return false;
+    }
+
+    if (!comments) {
+      Alert.alert('Error', 'Recommendations is required.');
+      return false;
+    }
+    
+    let rfiSubmitDateTime = '';
+    let rfiTime = '';
+    if (rfiDate) {
+      if (timeFormat === 'PM') {
+        if (Number(hour) === 12) {
+          rfiTime = hour + ':' + minute;
+        } else {
+          rfiTime = (Number(hour) + 12) + ':' + minute;
+        }
+      } else {
+        if (Number(hour) === 12) {
+          rfiTime = '00:' + minute;
+        } else {
+          rfiTime = hour + ':' + minute;
+        }
+      }
+
+      rfiSubmitDateTime = rfiDate + ' ' + rfiTime + ":00"
+    }
+
     dispatch(fillRFIsChecklist({
       projectId: loggedInUser.projectId,
       projectModuleId: projectModuleId,
@@ -437,8 +508,8 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
           base64Image: imageObject.fileData,
         },
         additionalData: {
-          comments: '',
-          rfiApprovalDateTime: ''
+          comments: comments,
+          rfiSubmitDateTime: rfiSubmitDateTime
         }
       },
     }));
@@ -530,6 +601,47 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
         style={styles.images}
       />
     }
+  }
+
+  const openCloseCalendar = () => {
+    setOpenCalendar(!openCalendar);
+    // if (!openCalendar) {
+    //   setLayoutHeight(DEFAULT_COMPONENT_HEIGHT + DEFAULT_CALENDAR_HEIGHT)
+    // } else {
+    //   setLayoutHeight(DEFAULT_COMPONENT_HEIGHT)
+    // }
+  }
+
+  const getHours = () => {
+    let hours = [];
+    for (let i = 1; i <= 12; i++) {
+      hours.push({
+        label: i < 10 ? '0' + i : '' + i,
+        value: i < 10 ? '0' + i : '' + i
+      });
+    }
+    setHours(hours);
+  }
+
+  const getMins = () => {
+    let mins = [];
+    for (let i = 0; i < 60; i = i + 10) {
+      mins.push({
+        label: i < 10 ? '0' + i : '' + i,
+        value: i < 10 ? '0' + i : '' + i
+      });
+    }
+    setMinutes(mins);
+  }
+
+  const getTimeFormats = () => {
+    setTimeFormats([{
+      label: 'AM',
+      value: 'AM'
+    }, {
+      label: 'PM',
+      value: 'PM'
+    }]);
   }
 
   return (
@@ -834,6 +946,114 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
                           </TouchableOpacity>
                         </View>
 
+                        <View>
+                          <View style={{ flexDirection: 'column' }}>
+                            <Text style={styles.GenerateRFIFieldLabel}>Date</Text>
+
+                            <View style={{ flexDirection: 'row' }}>
+                              <TextInput
+                                style={styles.inputStyle}
+                                placeholder=""
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                returnKeyType="next"
+                                underlineColorAndroid="#f000"
+                                blurOnSubmit={false}
+                                value={rfiDate ? moment(new Date(rfiDate)).format('DD-MM-YYYY') : ''}
+                                editable={false}
+                              />
+                              <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
+                                <Text style={styles.assignTagButtonText}>Icon</Text>
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+
+                          {openCalendar && (
+
+                            <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
+                              <CalendarPicker width={width - 40}
+                                initialDate={rfiDate ? new Date(rfiDate) : new Date()}
+                                onDateChange={(date) => {
+                                  setRFIDate(date.format("YYYY-MM-DD"));
+                                  openCloseCalendar()
+                                }}
+                              />
+                            </View>
+                          )}
+
+                          <View style={{ flexDirection: 'column', height: 80, paddingTop: 15, zIndex: 5, marginBottom: 140 }}>
+                            <Text style={styles.GenerateRFIFieldLabel}>Time</Text>
+                            <View style={{ flexDirection: 'row', gap: 20 }}>
+                              <View style={{ width: 80, height: 90 }}>
+                                <DropDownPicker onPress={() => {
+                                  setOpenMinutes(false);
+                                  setOpenTimeFormats(false);
+                                }}
+                                  dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                                  maxHeight={75}
+                                  zIndex={1000}
+                                  listMode='MODAL'
+                                  open={openHours}
+                                  value={hour}
+                                  items={hours}
+                                  setOpen={setOpenHours}
+                                  setValue={setHour}
+                                />
+                              </View>
+
+                              <View style={{ width: 80, height: 90 }}>
+                                <DropDownPicker onPress={() => {
+                                  setOpenHours(false);
+                                  setOpenTimeFormats(false);
+                                }}
+                                  dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                                  maxHeight={75}
+                                  zIndex={1000}
+                                  listMode='MODAL'
+                                  open={openMinutes}
+                                  value={minute}
+                                  items={minutes}
+                                  setOpen={setOpenMinutes}
+                                  setValue={setMinute}
+                                />
+                              </View>
+                              <View style={{ width: 80, height: 90 }}>
+                                <DropDownPicker onPress={() => {
+                                  setOpenHours(false);
+                                  setOpenMinutes(false);
+                                }}
+                                  dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                                  maxHeight={75}
+                                  zIndex={1000}
+                                  listMode='SCROLLVIEW'
+                                  open={openTimeFormats}
+                                  value={timeFormat}
+                                  items={timeFormats}
+                                  setOpen={setOpenTimeFormats}
+                                  setValue={setTimeFormat}
+                                />
+                              </View>
+                            </View>
+
+                            <View style={{ flexDirection: 'column', height: 65 }}>
+                              <Text style={styles.GenerateRFIFieldLabel}>Recommendations</Text>
+                              <TextInput
+                                style={styles.inputStyle}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                returnKeyType="next"
+                                underlineColorAndroid="#f000"
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={(text) => {
+                                  setComments(text);
+                                }}
+                              />
+                            </View>
+                          </View>
+                        </View>
+
                       </View>
                     </SafeAreaView>
                   </Fragment>
@@ -861,6 +1081,16 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
 }
 
 const styles = StyleSheet.create({
+  assignTagButtonText: {
+    fontSize: 16,
+    color: '#fff',
+    fontWeight: '500',
+  },
+  GenerateRFIFieldLabel: {
+    fontSize: 16,
+    color: '#150A33',
+    fontWeight: '500'
+  },
   Container: {
     padding: 20,
   },

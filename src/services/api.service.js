@@ -58,6 +58,12 @@ apiService.putRequest = (url, body, auth = true) => {
 };
 
 apiService.getRequest = (url, auth = true) => {
+    axios.interceptors.request.use(request => {
+        request.maxContentLength = Infinity;
+        request.maxBodyLength = Infinity;
+        return request;
+    });
+
     let headers = {
         'Content-Type': 'application/json'
     }
@@ -67,6 +73,7 @@ apiService.getRequest = (url, auth = true) => {
     return axios.get(`${appConfig.API_URL}/${url}`, { headers }).then((response) => {
         return response.data?.data;
     }).catch((error) => {
+        console.log('=====ERROR=====', error)
         throw new Error(error.response?.data?.message);
     });
 };

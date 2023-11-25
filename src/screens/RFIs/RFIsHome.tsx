@@ -27,6 +27,11 @@ const RFIsHome = ({ route, navigation }: { route: any, navigation: any }) => {
           <Text style={styles.tabText}>RFI's</Text>
         </TouchableOpacity>
 
+        <TouchableOpacity style={[styles.rfiTab, styles.inProgressRfi]} onPress={() => onRFIClick(RFIs_TYPE.IN_PROGRESS)}>
+          <Text style={styles.tabText}>In Progress</Text>
+          <Text style={styles.tabText}>RFI's</Text>
+        </TouchableOpacity>
+
         <TouchableOpacity style={[styles.rfiTab, styles.closeRfi]} onPress={() => onRFIClick(RFIs_TYPE.CLOSED)}>
           <Text style={styles.tabText}>Closed</Text>
           <Text style={styles.tabText}>RFI's</Text>
@@ -84,6 +89,9 @@ const styles = StyleSheet.create({
   },
   generateRfi: {
     backgroundColor: '#1C58C0',
+  },
+  inProgressRfi: {
+    backgroundColor: '#ffa879',
   },
   closeRfi: {
     backgroundColor: '#FCB700',

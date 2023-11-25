@@ -1,7 +1,7 @@
 import { View, Text, Button, NativeEventEmitter, Alert, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, Dimensions } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
-import { HeaderItems, PROJECT_TYPE, RFIs_TYPE, SEGMENT_TYPES_DISPLAY, USER_CATEGORY_DISPLAY, WORK_ASSIGNMENT_LEVEL, WORK_TYPE } from "../../constants/constants"
+import { HeaderItems, PROJECT_TYPE, RFI_STATUS, RFIs_TYPE, SEGMENT_TYPES_DISPLAY, USER_CATEGORY_DISPLAY, WORK_ASSIGNMENT_LEVEL, WORK_TYPE } from "../../constants/constants"
 import { useDispatch, useSelector } from 'react-redux';
 import { clearRFITasksEvent, getRFITaskUsers, getRFITasks, actionGenerateRFI } from './actions';
 import { groupBy } from '../../utils/Utils';
@@ -400,8 +400,8 @@ const RFIsStructureTaskListing = (props: any) => {
       taskId: selectedTaskData._id,
       workAssignmentIds: selectedTaskData.workAssignmentIds,
       rfiDateTime: selectedTaskData.formRFIDate + ' ' + selectedTaskData.formRFITime + ":00",
-      rfiStatus: "generated",
-      comments: "Test RFIs",
+      rfiStatus: RFI_STATUS.GENERATED,
+      comments: "",
       receiverIds: taskUsersData.map((item: any) => {
         return {
           _id: item.user._id,

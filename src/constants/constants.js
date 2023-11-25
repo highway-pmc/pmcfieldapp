@@ -271,6 +271,7 @@ export const RFIs_TYPE = {
     CLOSED: "closed",
     APPROVED:"approved",
     REJECTED: "rejected",
+    IN_PROGRESS: "inProgress",
 }
 
 export const RFI_STATUS = {

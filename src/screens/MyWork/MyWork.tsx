@@ -723,15 +723,13 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
                   getRFIDataByWorkAssignmentId(item)
                 }}>
                   <Image style={styles.WorkIcon} source={require('../../images/play-icon.png')} />
-                  <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>Re-generate</Text>
+                  <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>Re-start</Text>
                 </TouchableOpacity>
               }
 
               {
                 (item.rfiStatus === RFI_STATUS.REJECTED || item.rfiStatus === RFI_STATUS.CANCELLED) &&
-                <TouchableOpacity style={[styles.MyWorkCta, styles.StartRejectBorder]} onPress={() => {
-                  getRFIDataByWorkAssignmentId(item)
-                }}>
+                <TouchableOpacity style={[styles.MyWorkCta, styles.StartRejectBorder]}>
                   {/* <Image style={styles.WorkIcon} source={require('../../images/play-icon.png')} /> */}
                   <Text style={[styles.CtaStartText, styles.CtaRejectTextColor]}>{item.rfiStatus === RFI_STATUS.CANCELLED ? 'Cancelled' : 'Rejected'}</Text>
                 </TouchableOpacity>

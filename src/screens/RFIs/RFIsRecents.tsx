@@ -8,6 +8,7 @@ import LoadingAnimation from '../Common/LoadingAnimation';
 import moment from 'moment';
 import DropDownPicker from 'react-native-dropdown-picker';
 import CalendarPicker from 'react-native-calendar-picker';
+import Pdf from 'react-native-pdf';
 
 const RFIsRecents = (props: any) => {
   const navigation = useNavigation();
@@ -39,6 +40,9 @@ const RFIsRecents = (props: any) => {
 
   const { width, height } = Dimensions.get('window');
 
+  const [pdfSource, setPdfSource] = useState(null);
+
+
   const dispatch = useDispatch()
   const focus = useIsFocused();
 
@@ -49,6 +53,7 @@ const RFIsRecents = (props: any) => {
       getTimeFormats();
       setRfiData([]);
       getRFIsData();
+      setPdfSource(null);
     }
   }, [focus]);
 
@@ -70,9 +75,10 @@ const RFIsRecents = (props: any) => {
     }
 
     if (reportGenerated) {
-      Alert.alert('Success', 'Report generated successfully.');
+      //Alert.alert('Success', 'Report generated successfully.');
+      setPdfSource({ uri: "data:application/pdf;base64," + reportGenerated });
     }
-  }, [rfiDataList, rfiUpdated]);
+  }, [rfiDataList, rfiUpdated, reportGenerated]);
 
   // unmount
   useEffect(() => () => {
@@ -94,6 +100,9 @@ const RFIsRecents = (props: any) => {
   }
 
   const onSelectRFI = (item: any) => {
+    setPdfSource(null);
+    setRFIDate('');
+    setComments('');
     setSelectedRFI(item);
     setOpenPopup(true);
   }
@@ -117,9 +126,10 @@ const RFIsRecents = (props: any) => {
         return false;
       }
     }
+    
     let rfiApprovalDateTime = '';
     let rfiTime = '';
-    if (!rfiDate) {
+    if (rfiDate) {
       if (timeFormat === 'PM') {
         if (Number(hour) === 12) {
           rfiTime = hour + ':' + minute;
@@ -139,7 +149,7 @@ const RFIsRecents = (props: any) => {
 
     dispatch(updatedRFIs({
       projectId: loggedInUser.projectId,
-      projectModuleId: selectedRFI.projectModuleId || '651705ccfa178cc2d403bb20',
+      projectModuleId: selectedRFI.projectModuleId,
       rfiId: selectedRFI._id,
       status: status,
       body: {
@@ -154,7 +164,7 @@ const RFIsRecents = (props: any) => {
   const onGenerateReport = () => {
     dispatch(generateRFIReport({
       projectId: loggedInUser.projectId,
-      projectModuleId: selectedRFI.projectModuleId || '651705ccfa178cc2d403bb20',
+      projectModuleId: selectedRFI.projectModuleId,
       rfiId: selectedRFI._id,
     }));
   }
@@ -232,8 +242,8 @@ const RFIsRecents = (props: any) => {
               (!rfiData.length && !loading) &&
               <View style={styles.noDataContainer}>
                 <Image style={styles.noDataImage} source={require('../../images/no-data-found.png')} />
-                <Text style={styles.noDataHeadText}>No Pending RFI's</Text>
-                <Text style={styles.noDataSubText}>There is no pending RFI's</Text>
+                <Text style={styles.noDataHeadText}>No {getRFIType()} RFI's</Text>
+                <Text style={styles.noDataSubText}>There is no {getRFIType()?.toLowerCase()} RFI's</Text>
               </View>
             }
           </ScrollView>
@@ -254,6 +264,7 @@ const RFIsRecents = (props: any) => {
         onRequestClose={() => {
           setOpenPopup(!openPopup);
           setSelectedRFI(null);
+          setPdfSource(null);
         }}>
         <View style={styles.bodyPopup}>
           <View style={styles.centeredView}>
@@ -262,7 +273,7 @@ const RFIsRecents = (props: any) => {
                 <Text style={styles.modalText}>{getRFIType()} RFI</Text>
                 <TouchableOpacity
                   style={styles.buttonClose}
-                  onPress={() => { setOpenPopup(!openPopup); setSelectedRFI(null); }}>
+                  onPress={() => { setOpenPopup(!openPopup); setSelectedRFI(null); setPdfSource(null); }}>
                   <Image
                     style={styles.CloseIcon}
                     tintColor={'#333'}
@@ -270,7 +281,7 @@ const RFIsRecents = (props: any) => {
                   />
                 </TouchableOpacity>
               </View>
-              {selectedRFI && <View style={styles.ModalInnerContainer}>
+              {selectedRFI && !pdfSource && <View style={styles.ModalInnerContainer}>
                 <View style={styles.taskCategory}>
                   <Text style={styles.subHead}>{selectedRFI.workAssignmentData.projectModule.name}</Text>
                   <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
@@ -291,7 +302,7 @@ const RFIsRecents = (props: any) => {
                           {/* <Text style={{ textAlign: 'center', fontSize: 20, paddingBottom: 10 }} ></Text> */}
                           <View style={styles.ImageSections}>
                             <View>
-                              {renderFileData()}
+                              {selectedRFI?.metaData?.base64Image && renderFileData()}
                             </View>
                           </View>
                         </View>
@@ -451,9 +462,30 @@ const RFIsRecents = (props: any) => {
                 }
               </View>
               }
+
+              {
+                pdfSource &&
+                <View style={styles.containerPdf}>
+                  <Pdf source={pdfSource}
+                    onLoadComplete={(numberOfPages, filePath) => {
+                      console.log(`Number of pages: ${numberOfPages}`);
+                    }}
+                    onPageChanged={(page, numberOfPages) => {
+                      console.log(`Current page: ${page}`);
+                    }}
+                    onError={(error) => {
+                      console.log(error);
+                    }}
+                    onPressLink={(uri) => {
+                      console.log(`Link pressed: ${uri}`);
+                    }}
+                    style={styles.pdf} />
+                </View>
+              }
             </View>
           </View>
         </View>
+
       </Modal>
 
       <LoadingAnimation loading={loading}></LoadingAnimation>
@@ -462,6 +494,17 @@ const RFIsRecents = (props: any) => {
 }
 
 const styles = StyleSheet.create({
+  containerPdf: {
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    marginTop: 25,
+    height: Dimensions.get('screen').height - 200
+  },
+  pdf: {
+    flex: 1,
+    width: Dimensions.get('screen').width,
+    height: Dimensions.get('screen').height,
+  },
   headerText: {
     color: '#000',
     fontSize: 16,

@@ -761,10 +761,10 @@ const ExpanbableComponent = ({ item, onClickFunction, onGenerateRFI }: { item: a
         <View style={{ flexDirection: 'column' }}>
           <Text style={styles.GenerateRFIFieldLabel}>Date of RFI's</Text>
 
-          <View style={{ flexDirection: 'row' }}>
+          <View style={styles.CalendarField}>
             <TextInput
-              style={styles.inputStyle}
-              placeholder=""
+              style={[styles.paddingHorizon]}
+              placeholder="DD-MM-YYYY"
               autoCapitalize="none"
               keyboardType="email-address"
               returnKeyType="next"
@@ -773,8 +773,8 @@ const ExpanbableComponent = ({ item, onClickFunction, onGenerateRFI }: { item: a
               value={rfiDate ? moment(new Date(rfiDate)).format('DD-MM-YYYY') : ''}
               editable={false}
             />
-            <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
-              <Text style={styles.assignTagButtonText}>Icon</Text>
+            <TouchableOpacity onPress={() => openCloseCalendar()} style={styles.CalendarImage}>
+              <Image style={styles.WorkIconTask} source={require('../../images/date-icon.png')} />
             </TouchableOpacity>
           </View>
         </View>
@@ -788,6 +788,8 @@ const ExpanbableComponent = ({ item, onClickFunction, onGenerateRFI }: { item: a
                 setRFIDate(date.format("YYYY-MM-DD"));
                 openCloseCalendar()
               }}
+              previousComponent = {<Image style={styles.previousIcon} source={require('../../images/right-arrow.png')} />}
+              nextComponent = {<Image style={styles.WorkIconTask} source={require('../../images/right-arrow.png')} />}
             />
           </View>
         )}
@@ -800,10 +802,22 @@ const ExpanbableComponent = ({ item, onClickFunction, onGenerateRFI }: { item: a
                 setOpenMinutes(false);
                 setOpenTimeFormats(false);
               }}
-                dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
-                maxHeight={75}
-                zIndex={1000}
                 listMode='MODAL'
+                modalAnimationType={'slide'}
+                modalTitle={'Select Hours'}
+                customItemLabelStyle={{borderWidth: 1,
+                  borderColor: '#eee',}}
+                modalContentContainerStyle={{
+                  borderWidth: 1,
+                  maxHeight: 240,
+                  borderColor: '#eee',
+                  borderRadius: 6,
+                  backgroundColor: 'white', // Set your desired background color
+                  position: 'absolute',
+                  bottom: 0,
+                  width: '100%',
+                }}
+                autoScroll={true}
                 open={openHours}
                 value={hour}
                 items={hours}
@@ -862,6 +876,30 @@ const ExpanbableComponent = ({ item, onClickFunction, onGenerateRFI }: { item: a
 }
 
 const styles = StyleSheet.create({
+  CalendarField: {
+    flexDirection: 'row', 
+    position: 'relative'
+  },
+  CalendarImage: {
+    width: 30, position: 'absolute', top: 11, right: 5
+  },
+  previousIcon: {
+    width: 24,
+    height: 24,
+    transform: [{ rotate: '180deg' }]
+  },
+  paddingHorizon: {
+    flex: 1,
+    color: '#2c2c2c',
+    paddingHorizontal: 15,
+    borderWidth: 1,
+    borderRadius: 6,
+    borderColor: '#808089',
+    backgroundColor: '#fff',
+    fontWeight: '600',
+    paddingVertical: 5,
+    height: 45,
+  },
   Container: {
     padding: 20,
   },

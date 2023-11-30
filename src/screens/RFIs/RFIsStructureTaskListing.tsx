@@ -831,7 +831,20 @@ const ExpanbableComponent = ({ item, onClickFunction, onGenerateRFI }: { item: a
                 setOpenHours(false);
                 setOpenTimeFormats(false);
               }}
-                dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+              modalAnimationType={'slide'}
+              modalTitle={'Select Minuts'}
+              customItemLabelStyle={{borderWidth: 1,
+                borderColor: '#eee',}}
+              modalContentContainerStyle={{
+                borderWidth: 1,
+                maxHeight: 240,
+                borderColor: '#eee',
+                borderRadius: 6,
+                backgroundColor: 'white', // Set your desired background color
+                position: 'absolute',
+                bottom: 0,
+                width: '100%',
+              }}
                 maxHeight={75}
                 zIndex={1000}
                 listMode='MODAL'
@@ -860,7 +873,7 @@ const ExpanbableComponent = ({ item, onClickFunction, onGenerateRFI }: { item: a
             </View>
           </View>
         </View>
-        <View style={{ flexDirection: 'row', gap: 40, paddingTop: 20, zIndex: 3, alignItems: 'center', justifyContent: 'center' }}>
+        <View style={{ flexDirection: 'row', gap: 20, paddingTop: 30, zIndex: 3, alignItems: 'center', justifyContent: 'center' }}>
           <TouchableOpacity style={styles.btnReset}>
             <Text style={styles.btnResetText}>Reset</Text>
           </TouchableOpacity>
@@ -1127,7 +1140,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 12,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    minWidth: 150
   },
   btnGenerateText: {
     color: '#fff',
@@ -1144,11 +1158,12 @@ const styles = StyleSheet.create({
     borderColor: '#1C58C0',
     borderBlockColor: '#000',
     borderWidth: 1,
+    minWidth: 100
   },
   btnResetText: {
     color: '#1C58C0',
     fontSize: 14,
-    fontWeight: '500'
+    fontWeight: '500',
   },
   GenerateRFIFieldLabel: {
     fontSize: 16,

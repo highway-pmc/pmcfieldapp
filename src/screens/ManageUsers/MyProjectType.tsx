@@ -24,15 +24,18 @@ const MyProjectType = ({navigation}: {navigation: any}) => {
         rolesArr = [
           {
             title: 'Structure',
-            projectType: PROJECT_TYPE.STRUCTURE_WORK
+            projectType: PROJECT_TYPE.STRUCTURE_WORK,
+            color: '#1C58C0'
           },
           {
             title: 'Highway',
-            projectType: PROJECT_TYPE.HIGHWAY_WORK
+            projectType: PROJECT_TYPE.HIGHWAY_WORK,
+            color: '#ffa879'
           },
           {
             title: 'Other',
-            projectType: PROJECT_TYPE.OTHER_WORK
+            projectType: PROJECT_TYPE.OTHER_WORK,
+            color: '#FCB700'
           }
         ];
         setProjectHead(true);
@@ -78,16 +81,11 @@ const MyProjectType = ({navigation}: {navigation: any}) => {
   }
 
   return (
-    <ScrollView contentContainerStyle={{
-      flex: 1,
-      justifyContent: 'center',
-      alignContent: 'center',
-    }} style={styles.Container}>
-      <View
-        style={styles.categoriesView}>
+    <ScrollView style={styles.container}>
+      <View style={styles.rfiTabBar}>
           {
             roles.map((role: any) => (
-            <TouchableOpacity style={[styles.category, styles.categoryTab]} onPress={() => onPressProjectType(role.projectType)}>
+            <TouchableOpacity style={[styles.rfiTab, {backgroundColor: role.color}]} onPress={() => onPressProjectType(role.projectType)}>
               <Text style={styles.tabText}>{role.title}</Text>
             </TouchableOpacity>
             ))
@@ -98,21 +96,20 @@ const MyProjectType = ({navigation}: {navigation: any}) => {
 }
 
 const styles = StyleSheet.create({
-  Container: {
-    flexDirection: 'column',
+  container: {
     backgroundColor: '#F2F2F2',
     padding: 20,
   },
-  categoriesView: {
+  rfiTabBar: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     flexWrap: 'wrap',
-    gap: 20
+    gap: 10
   },
-  category: {
-    width: 100,
-    height: 80,
+  rfiTab: {
+    width: 180,
+    height: 180,
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
@@ -132,10 +129,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#1C58C0',
   },
   tabText: {
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: '400',
     color: '#fff'
-  }
+  },
 });
 
 export default MyProjectType

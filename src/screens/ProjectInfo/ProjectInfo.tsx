@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
   Container: {
     flexDirection: 'column',
     paddingVertical: 10,
-    padding: 15,
+    padding: 10,
   },
   BgColorGray: {
     backgroundColor: '#F2F2F2',
@@ -127,8 +127,8 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 15,
     borderRadius: 12,
-    borderBottomRightRadius: 0,
-    borderBottomLeftRadius: 0,
+    paddingBottom: 20,
+    paddingTop: 20
   },
 
   ErrorSectionStyle: {
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     color: '#f11f1f',
   },
   FormGroup: {
-    marginVertical: 7,
+    marginVertical: 12,
   },
   LabelTextProjectName: {
     fontSize: 18,
@@ -148,12 +148,12 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   LabelText: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#150A33',
     fontWeight: '500'
   },
   LabelSubText: {
-    fontSize: 14,
+    fontSize: 12,
     color: '#AAA6B9',
     fontWeight: '500'
   },

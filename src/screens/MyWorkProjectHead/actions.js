@@ -8,7 +8,7 @@ export const getProjectModuleSegments = (payload) => ({
     payload: payload,
 });
 
-export const getProjectModuleSubSegments = (payload) => ({
+export const getProjectModuleComponents = (payload) => ({
     type: "GET_PROJECT_MODULE_SUB_SEGMENTS_REQUEST",
     payload: payload,
 });

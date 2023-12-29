@@ -226,7 +226,7 @@ const RFIsRecents = (props: any) => {
                     <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
                     <Text style={styles.subHead}>{item.workAssignmentData.segmentId.name}</Text>
                     <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
-                    <Text style={styles.subHead}>{item.workAssignmentData.subSegmentId.name}</Text>
+                    <Text style={styles.subHead}>{item.workAssignmentData.componentId.name}</Text>
                     <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
                     <Text style={[styles.subHead, styles.taskCount]}>{item.workAssignmentData.taskId?.displayName}</Text>
                   </View>
@@ -285,7 +285,7 @@ const RFIsRecents = (props: any) => {
                   <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
                   <Text style={styles.subHead}>{selectedRFI.workAssignmentData.segmentId.name}</Text>
                   <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
-                  <Text style={styles.subHead}>{selectedRFI.workAssignmentData.subSegmentId.name}</Text>
+                  <Text style={styles.subHead}>{selectedRFI.workAssignmentData.componentId.name}</Text>
                   <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
                   <Text style={[styles.subHead, styles.taskCount]}>{selectedRFI.workAssignmentData.taskId?.displayName}</Text>
                 </View>

@@ -18,7 +18,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
   const { myWorks, rfiData, rfiChecklistSaved, loading, error } = useSelector((state: any) => state.MyWorks);
   const [myWorksData, setMyWorksData] = useState([]);
   const [currentSegmentsData, setCurrentSegmentsData] = useState([]);
-  const [currentSubSegmentsData, setCurrentSubSegmentsData] = useState([]);
+  const [currentComponentsData, setCurrentComponentsData] = useState([]);
   const [currentTasksData, setCurrentTasksData] = useState([]);
   const [projectModuleId, setProjectModuleId] = useState('');
   const [currentLevel, setCurrentLevel] = useState(1);
@@ -77,7 +77,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
       setCurrentLevel(1);
       setMyWorksData([]);
       setCurrentSegmentsData([]);
-      setCurrentSubSegmentsData([]);
+      setCurrentComponentsData([]);
       setCurrentTasksData([]);
       setBreadcrumbData([]);
       getMyWorksData();
@@ -144,7 +144,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
     setCurrentLevel(1);
     setMyWorksData([]);
     setCurrentSegmentsData([]);
-    setCurrentSubSegmentsData([]);
+    setCurrentComponentsData([]);
     setCurrentTasksData([]);
     setBreadcrumbData([]);
     setSearchText('');
@@ -235,7 +235,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
 
     } else if (level === 3 && segIndex != -1) {
       const segmentData = myWorksData[projectModuleIndex].segmentsData[segIndex];
-      setCurrentSubSegmentsData(segmentData.subSegmentsData)
+      setCurrentComponentsData(segmentData.componentsData)
       setBreadcrumbData([
         {
           name: myWorksData[projectModuleIndex].name,
@@ -261,9 +261,9 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
 
     } else if (level === 4 && subSegIndex != -1 && taskIndex != -1) {
       const segmentData = myWorksData[projectModuleIndex].segmentsData[segIndex];
-      const subSegmentData: any = segmentData.subSegmentsData[subSegIndex];
-      const taskData: any = [subSegmentData.tasksData[taskIndex]];
-      setProjectModuleId(subSegmentData.projectModuleId);
+      const componentData: any = segmentData.componentsData[subSegIndex];
+      const taskData: any = [componentData.tasksData[taskIndex]];
+      setProjectModuleId(componentData.projectModuleId);
       setCurrentTasksData(taskData)
 
       setBreadcrumbData([
@@ -288,7 +288,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
           active: true
         },
         {
-          name: subSegmentData.name,
+          name: componentData.name,
           projectModuleIndex: projectModuleIndex,
           segIndex: segIndex,
           subSegIndex: subSegIndex,
@@ -311,9 +311,9 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
 
     } else if (level === 4 && subSegIndex != -1) {
       const segmentData = myWorksData[projectModuleIndex].segmentsData[segIndex];
-      const subSegmentData: any = segmentData.subSegmentsData[subSegIndex];
-      setProjectModuleId(subSegmentData.projectModuleId);
-      setCurrentTasksData(subSegmentData.tasksData)
+      const componentData: any = segmentData.componentsData[subSegIndex];
+      setProjectModuleId(componentData.projectModuleId);
+      setCurrentTasksData(componentData.tasksData)
 
       setBreadcrumbData([
         {
@@ -337,7 +337,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
           active: true
         },
         {
-          name: subSegmentData.name,
+          name: componentData.name,
           projectModuleIndex: projectModuleIndex,
           segIndex: segIndex,
           subSegIndex: subSegIndex,
@@ -364,7 +364,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
     setSearchText('');
     setCurrentLevel(level);
     if (level === 3) {
-      setCurrentSubSegmentsData(data.subSegmentsData)
+      setCurrentComponentsData(data.componentsData)
       const beadcrumb = breadcrumbData[1];
       beadcrumb.name = SEGMENT_TYPES_DISPLAY[data.type] + ' ' + data.name;
     } else if (level === 4) {
@@ -724,7 +724,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
                     )
                 )
                   :
-                  segItem.subSegmentsData?.map((subSegItem: any, subSegIndex: number) => (
+                  segItem.componentsData?.map((subSegItem: any, subSegIndex: number) => (
                     subSegItem.assignmentLevel === 3 ?
                       (
                         <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(4, subSegItem.assignmentLevel, projModuleIndex, segIndex, subSegIndex)}>
@@ -791,7 +791,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
         }
         {
           currentLevel === 3 &&
-          currentSubSegmentsData.filter((subSeg: any) => {
+          currentComponentsData.filter((subSeg: any) => {
             if (searchText && subSeg.name) {
               return subSeg.name.toLowerCase().includes(searchText.toLowerCase())
             } else {

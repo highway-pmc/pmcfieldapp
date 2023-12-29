@@ -3,13 +3,13 @@ import React, { useEffect, useState } from 'react'
 import { useIsFocused } from '@react-navigation/native';
 import { HeaderItems, WORK_ASSIGNMENT_LEVEL } from '../../constants/constants';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearProjectModulesWorkAssignmentData, getProjectModuleSubSegments, getProjectModuleTasks, getUsersForWorkAssignment, subSegmentWorkAssignToUsers, taskWorkAssignToUsers } from './actions';
+import { clearProjectModulesWorkAssignmentData, getProjectModuleComponents, getProjectModuleTasks, getUsersForWorkAssignment, componentWorkAssignToUsers, taskWorkAssignToUsers } from './actions';
 import { ScrollView } from 'react-native-gesture-handler';
 import CheckBox from '@react-native-community/checkbox';
 import LoadingAnimation from '../Common/LoadingAnimation';
 
 const AssignTasks = ({ route, navigation }: { route: any, navigation: any }) => {
-  const { projectModuleId, projectModuleName, type, subType, segmentId, segmentName, subSegmentId, subSegmentName, projectType } = route.params;
+  const { projectModuleId, projectModuleName, type, subType, segmentId, segmentName, componentId, componentName, projectType } = route.params;
 
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
   const { tasks, users, loadingUsers, loadingTask, taskWorkAssigned, loading, error } = useSelector((state: any) => state.WorkAssignment);
@@ -47,7 +47,7 @@ const AssignTasks = ({ route, navigation }: { route: any, navigation: any }) => 
       projectId: loggedInUser.projectId,
       projectModuleId: projectModuleId,
       segmentId: segmentId,
-      subSegmentId: subSegmentId,
+      componentId: componentId,
     }));
 
     dispatch(getUsersForWorkAssignment({
@@ -74,11 +74,11 @@ const AssignTasks = ({ route, navigation }: { route: any, navigation: any }) => 
         } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.assignmentLevel === 2)) {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL2;
           user.isChecked = true;
-        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.subSegmentId === subSegmentId && wa.assignmentLevel === 3)) {
+        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.componentId === componentId && wa.assignmentLevel === 3)) {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL3;
           user.isChecked = true;
         } else {
-          const workAssignment = user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.subSegmentId === subSegmentId && wa.taskId === task._id && wa.assignmentLevel === 4);
+          const workAssignment = user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.componentId === componentId && wa.taskId === task._id && wa.assignmentLevel === 4);
           if (workAssignment) {
             user.isChecked = true;
           }
@@ -94,7 +94,7 @@ const AssignTasks = ({ route, navigation }: { route: any, navigation: any }) => 
     const updatedCheckboxes: any = [...userData];
     const selectedUser: any = updatedCheckboxes[index];
     selectedUser.isChecked = !selectedUser.isChecked;
-    const workAssignment = selectedUser.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.subSegmentId === subSegmentId && wa.taskId === selectedTask._id && wa.assignmentLevel === 4)
+    const workAssignment = selectedUser.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.componentId === componentId && wa.taskId === selectedTask._id && wa.assignmentLevel === 4)
     if (selectedUser.isChecked) {
       if (workAssignment) {
         workAssignment.dirty = false;
@@ -153,7 +153,7 @@ const AssignTasks = ({ route, navigation }: { route: any, navigation: any }) => 
         projectId: loggedInUser.projectId,
         projectModuleId: projectModuleId,
         segmentId: segmentId,
-        subSegmentId: subSegmentId,
+        componentId: componentId,
         taskId: selectedTask._id,
         body: {
           users: usersToBeAssignArray,

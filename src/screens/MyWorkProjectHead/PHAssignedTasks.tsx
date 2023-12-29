@@ -9,7 +9,7 @@ import CheckBox from '@react-native-community/checkbox';
 import LoadingAnimation from '../Common/LoadingAnimation';
 
 const PHAssignedTasks = ({route, navigation}: { route: any, navigation: any }) => {
-  const { projectModuleId, projectModuleName, type, subType, segmentId, segmentName, subSegmentId, subSegmentName, projectType } = route.params;
+  const { projectModuleId, projectModuleName, type, subType, segmentId, segmentName, componentId, componentName, projectType } = route.params;
   
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
   const { tasks, usersData, loadingUsers, loadingTask, loading, error} = useSelector((state: any) => state.WorkAssignment);
@@ -46,7 +46,7 @@ const PHAssignedTasks = ({route, navigation}: { route: any, navigation: any }) =
       projectId: loggedInUser.projectId,
       projectModuleId: projectModuleId,
       segmentId: segmentId,
-      subSegmentId: subSegmentId,
+      componentId: componentId,
     }));
 
     // dispatch(getUsersForWorkAssignment({
@@ -67,7 +67,7 @@ const PHAssignedTasks = ({route, navigation}: { route: any, navigation: any }) =
       updatedCheckboxes.forEach((user: any) => {
         user.isChecked = false;
         
-        const workAssignment = user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.subSegmentId === subSegmentId && wa.taskId === task._id && wa.assignmentLevel === 4);
+        const workAssignment = user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.componentId === componentId && wa.taskId === task._id && wa.assignmentLevel === 4);
         if (workAssignment) {
           user.isChecked = true;
         }

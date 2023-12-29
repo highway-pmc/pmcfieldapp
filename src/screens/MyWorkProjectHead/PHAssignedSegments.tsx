@@ -163,7 +163,7 @@ const PHAssignedSegments = ({ route, navigation }: { route: any, navigation: any
             </View>
             <View>
               <TouchableOpacity
-                onPress={() => navigation.navigate('PHAssignedSubSegments', {
+                onPress={() => navigation.navigate('PHAssignedComponents', {
                   projectModuleId: projectModuleId,
                   projectModuleName: projectModuleName,
                   segmentId: item._id,

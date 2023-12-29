@@ -1,7 +1,7 @@
 import { View, Text, Button, NativeEventEmitter, Alert, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, Dimensions } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
-import { HeaderItems, PROJECT_TYPE, RFIs_TYPE, SEGMENT_TYPES_DISPLAY, USER_CATEGORY_DISPLAY, WORK_ASSIGNMENT_LEVEL, WORK_TYPE } from "../../constants/constants"
+import { HeaderItems, PROJECT_TYPE, RFI_STATUS, RFIs_TYPE, SEGMENT_TYPES_DISPLAY, USER_CATEGORY_DISPLAY, WORK_ASSIGNMENT_LEVEL, WORK_TYPE } from "../../constants/constants"
 import { useDispatch, useSelector } from 'react-redux';
 import { clearRFITasksEvent, getRFITaskUsers, getRFITasks, actionGenerateRFI } from './actions';
 import { groupBy } from '../../utils/Utils';
@@ -13,7 +13,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 const RFIsStructureTaskListing = (props: any) => {
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
   const userCategory = PROJECT_TYPE.STRUCTURE_WORK;
-  const rfiType = props.rfiType;
+  // const rfiType = props.rfiType;
 
   const { rfisTasks, taskUsers, rfiGenerated, loading, error } = useSelector((state: any) => state.RFIs);
   const [rfisTasksData, setRFIsTasksData] = useState([]);
@@ -21,7 +21,7 @@ const RFIsStructureTaskListing = (props: any) => {
   const [selectedProjectModuleId, setSelectedProjectModuleId] = useState('');
   const [selectedTaskData, setSelectedTaskData] = useState({});
   const [currentSegmentsData, setCurrentSegmentsData] = useState([]);
-  const [currentSubSegmentsData, setCurrentSubSegmentsData] = useState([]);
+  const [currentComponentsData, setCurrentComponentsData] = useState([]);
   const [currentTasksData, setCurrentTasksData] = useState([]);
   const [currentLevel, setCurrentLevel] = useState(1);
   const [segmentsByGroupOnType, setSegmentsByGroupOnType] = useState(null);
@@ -47,7 +47,7 @@ const RFIsStructureTaskListing = (props: any) => {
       setRFIsTasksData([]);
       setTaskUsersData([]);
       setCurrentSegmentsData([]);
-      setCurrentSubSegmentsData([]);
+      setCurrentComponentsData([]);
       setCurrentTasksData([]);
       setBreadcrumbData([]);
       getRFITasksData();
@@ -79,7 +79,7 @@ const RFIsStructureTaskListing = (props: any) => {
     setRFIsTasksData([]);
     setTaskUsersData([]);
     setCurrentSegmentsData([]);
-    setCurrentSubSegmentsData([]);
+    setCurrentComponentsData([]);
     setCurrentTasksData([]);
     setBreadcrumbData([]);
     setSearchText('');
@@ -173,7 +173,7 @@ const RFIsStructureTaskListing = (props: any) => {
 
     } else if (level === 3 && segIndex != -1) {
       const segmentData = rfisTasksData[projectModuleIndex].segmentsData[segIndex];
-      setCurrentSubSegmentsData(segmentData.subSegmentsData)
+      setCurrentComponentsData(segmentData.componentsData)
       setBreadcrumbData([
         {
           name: rfisTasksData[projectModuleIndex].name,
@@ -199,8 +199,8 @@ const RFIsStructureTaskListing = (props: any) => {
 
     } else if (level === 4 && subSegIndex != -1 && taskIndex != -1) {
       const segmentData = rfisTasksData[projectModuleIndex].segmentsData[segIndex];
-      const subSegmentData: any = segmentData.subSegmentsData[subSegIndex];
-      const taskData: any = [subSegmentData.tasksData[taskIndex]];
+      const componentData: any = segmentData.componentsData[subSegIndex];
+      const taskData: any = [componentData.tasksData[taskIndex]];
 
       setCurrentTasksData(taskData)
 
@@ -226,7 +226,7 @@ const RFIsStructureTaskListing = (props: any) => {
           active: true
         },
         {
-          name: subSegmentData.name,
+          name: componentData.name,
           projectModuleIndex: projectModuleIndex,
           segIndex: segIndex,
           subSegIndex: subSegIndex,
@@ -249,15 +249,15 @@ const RFIsStructureTaskListing = (props: any) => {
 
     } else if (level === 4 && subSegIndex != -1) {
       const segmentData = rfisTasksData[projectModuleIndex].segmentsData[segIndex];
-      const subSegmentData: any = segmentData.subSegmentsData[subSegIndex];
+      const componentData: any = segmentData.componentsData[subSegIndex];
 
-      const tasksData = JSON.parse(JSON.stringify(subSegmentData.tasksData));
+      const tasksData = JSON.parse(JSON.stringify(componentData.tasksData));
 
       tasksData.forEach((task: any) => {
         task.isExpanded = false
       });
 
-      setCurrentTasksData(subSegmentData.tasksData)
+      setCurrentTasksData(componentData.tasksData)
 
       setBreadcrumbData([
         {
@@ -281,7 +281,7 @@ const RFIsStructureTaskListing = (props: any) => {
           active: true
         },
         {
-          name: subSegmentData.name,
+          name: componentData.name,
           projectModuleIndex: projectModuleIndex,
           segIndex: segIndex,
           subSegIndex: subSegIndex,
@@ -308,7 +308,7 @@ const RFIsStructureTaskListing = (props: any) => {
     setSearchText('');
     setCurrentLevel(level);
     if (level === 3) {
-      setCurrentSubSegmentsData(data.subSegmentsData)
+      setCurrentComponentsData(data.componentsData)
       const beadcrumb = breadcrumbData[1];
       beadcrumb.name = SEGMENT_TYPES_DISPLAY[data.type] + ' ' + data.name;
     } else if (level === 4) {
@@ -400,8 +400,8 @@ const RFIsStructureTaskListing = (props: any) => {
       taskId: selectedTaskData._id,
       workAssignmentIds: selectedTaskData.workAssignmentIds,
       rfiDateTime: selectedTaskData.formRFIDate + ' ' + selectedTaskData.formRFITime + ":00",
-      rfiStatus: "generated",
-      comments: "Test RFIs",
+      rfiStatus: RFI_STATUS.GENERATED,
+      comments: "",
       receiverIds: taskUsersData.map((item: any) => {
         return {
           _id: item.user._id,
@@ -413,6 +413,7 @@ const RFIsStructureTaskListing = (props: any) => {
     dispatch(actionGenerateRFI({
       projectId: loggedInUser.projectId,
       projectModuleId: selectedProjectModuleId,
+      userCategory: userCategory,
       body: reqData
     }));
   }
@@ -512,7 +513,7 @@ const RFIsStructureTaskListing = (props: any) => {
               //       )
               //   )
               //     :
-              //     segItem.subSegmentsData?.map((subSegItem: any, subSegIndex: number) => (
+              //     segItem.componentsData?.map((subSegItem: any, subSegIndex: number) => (
               //       subSegItem.assignmentLevel === 3 ?
               //         (
               //           <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(4, subSegItem.assignmentLevel, projModuleIndex, segIndex, subSegIndex)}>
@@ -579,7 +580,7 @@ const RFIsStructureTaskListing = (props: any) => {
         }
         {
           currentLevel === 3 &&
-          currentSubSegmentsData.filter((subSeg: any) => {
+          currentComponentsData.filter((subSeg: any) => {
             if (searchText && subSeg.name) {
               return subSeg.name.toLowerCase().includes(searchText.toLowerCase())
             } else {
@@ -760,10 +761,10 @@ const ExpanbableComponent = ({ item, onClickFunction, onGenerateRFI }: { item: a
         <View style={{ flexDirection: 'column' }}>
           <Text style={styles.GenerateRFIFieldLabel}>Date of RFI's</Text>
 
-          <View style={{ flexDirection: 'row' }}>
+          <View style={styles.CalendarField}>
             <TextInput
-              style={styles.inputStyle}
-              placeholder=""
+              style={[styles.paddingHorizon]}
+              placeholder="DD-MM-YYYY"
               autoCapitalize="none"
               keyboardType="email-address"
               returnKeyType="next"
@@ -772,8 +773,8 @@ const ExpanbableComponent = ({ item, onClickFunction, onGenerateRFI }: { item: a
               value={rfiDate ? moment(new Date(rfiDate)).format('DD-MM-YYYY') : ''}
               editable={false}
             />
-            <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
-              <Text style={styles.assignTagButoonText}>Icon</Text>
+            <TouchableOpacity onPress={() => openCloseCalendar()} style={styles.CalendarImage}>
+              <Image style={styles.WorkIconTask} source={require('../../images/date-icon.png')} />
             </TouchableOpacity>
           </View>
         </View>
@@ -787,6 +788,8 @@ const ExpanbableComponent = ({ item, onClickFunction, onGenerateRFI }: { item: a
                 setRFIDate(date.format("YYYY-MM-DD"));
                 openCloseCalendar()
               }}
+              previousComponent = {<Image style={styles.previousIcon} source={require('../../images/right-arrow.png')} />}
+              nextComponent = {<Image style={styles.WorkIconTask} source={require('../../images/right-arrow.png')} />}
             />
           </View>
         )}
@@ -799,10 +802,22 @@ const ExpanbableComponent = ({ item, onClickFunction, onGenerateRFI }: { item: a
                 setOpenMinutes(false);
                 setOpenTimeFormats(false);
               }}
-                dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
-                maxHeight={75}
-                zIndex={1000}
                 listMode='MODAL'
+                modalAnimationType={'slide'}
+                modalTitle={'Select Hours'}
+                customItemLabelStyle={{borderWidth: 1,
+                  borderColor: '#eee',}}
+                modalContentContainerStyle={{
+                  borderWidth: 1,
+                  maxHeight: 240,
+                  borderColor: '#eee',
+                  borderRadius: 6,
+                  backgroundColor: 'white', // Set your desired background color
+                  position: 'absolute',
+                  bottom: 0,
+                  width: '100%',
+                }}
+                autoScroll={true}
                 open={openHours}
                 value={hour}
                 items={hours}
@@ -816,7 +831,20 @@ const ExpanbableComponent = ({ item, onClickFunction, onGenerateRFI }: { item: a
                 setOpenHours(false);
                 setOpenTimeFormats(false);
               }}
-                dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+              modalAnimationType={'slide'}
+              modalTitle={'Select Minuts'}
+              customItemLabelStyle={{borderWidth: 1,
+                borderColor: '#eee',}}
+              modalContentContainerStyle={{
+                borderWidth: 1,
+                maxHeight: 240,
+                borderColor: '#eee',
+                borderRadius: 6,
+                backgroundColor: 'white', // Set your desired background color
+                position: 'absolute',
+                bottom: 0,
+                width: '100%',
+              }}
                 maxHeight={75}
                 zIndex={1000}
                 listMode='MODAL'
@@ -845,7 +873,7 @@ const ExpanbableComponent = ({ item, onClickFunction, onGenerateRFI }: { item: a
             </View>
           </View>
         </View>
-        <View style={{ flexDirection: 'row', gap: 40, paddingTop: 20, zIndex: 3, alignItems: 'center', justifyContent: 'center' }}>
+        <View style={{ flexDirection: 'row', gap: 20, paddingTop: 30, zIndex: 3, alignItems: 'center', justifyContent: 'center' }}>
           <TouchableOpacity style={styles.btnReset}>
             <Text style={styles.btnResetText}>Reset</Text>
           </TouchableOpacity>
@@ -861,6 +889,30 @@ const ExpanbableComponent = ({ item, onClickFunction, onGenerateRFI }: { item: a
 }
 
 const styles = StyleSheet.create({
+  CalendarField: {
+    flexDirection: 'row', 
+    position: 'relative'
+  },
+  CalendarImage: {
+    width: 30, position: 'absolute', top: 11, right: 5
+  },
+  previousIcon: {
+    width: 24,
+    height: 24,
+    transform: [{ rotate: '180deg' }]
+  },
+  paddingHorizon: {
+    flex: 1,
+    color: '#2c2c2c',
+    paddingHorizontal: 15,
+    borderWidth: 1,
+    borderRadius: 6,
+    borderColor: '#808089',
+    backgroundColor: '#fff',
+    fontWeight: '600',
+    paddingVertical: 5,
+    height: 45,
+  },
   Container: {
     padding: 20,
   },
@@ -1088,7 +1140,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 12,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    minWidth: 150
   },
   btnGenerateText: {
     color: '#fff',
@@ -1105,11 +1158,12 @@ const styles = StyleSheet.create({
     borderColor: '#1C58C0',
     borderBlockColor: '#000',
     borderWidth: 1,
+    minWidth: 100
   },
   btnResetText: {
     color: '#1C58C0',
     fontSize: 14,
-    fontWeight: '500'
+    fontWeight: '500',
   },
   GenerateRFIFieldLabel: {
     fontSize: 16,
@@ -1123,7 +1177,7 @@ const styles = StyleSheet.create({
     color: "#666666",
     backgroundColor: "#99ABC6"
   },
-  assignTagButoonText: {
+  assignTagButtonText: {
     fontSize: 16,
     color: '#fff',
     fontWeight: '500',

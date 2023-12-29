@@ -27,24 +27,24 @@ const RFIsHome = ({ route, navigation }: { route: any, navigation: any }) => {
           <Text style={styles.tabText}>RFI's</Text>
         </TouchableOpacity>
 
+        <TouchableOpacity style={[styles.rfiTab, styles.inProgressRfi]} onPress={() => onRFIClick(RFIs_TYPE.IN_PROGRESS)}>
+          <Text style={styles.tabText}>In Progress</Text>
+          <Text style={styles.tabText}>RFI's</Text>
+        </TouchableOpacity>
+
         <TouchableOpacity style={[styles.rfiTab, styles.closeRfi]} onPress={() => onRFIClick(RFIs_TYPE.CLOSED)}>
-          <Text style={styles.tabText}>Close</Text>
+          <Text style={styles.tabText}>Closed</Text>
           <Text style={styles.tabText}>RFI's</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={[styles.rfiTab, styles.approveRfi]} onPress={() => onRFIClick(RFIs_TYPE.APPROVE_REJECT)}>
-          <Text style={styles.tabText}>Approve</Text>
-          <Text style={styles.tabText}>Reject/Cancel</Text>
+        <TouchableOpacity style={[styles.rfiTab, styles.approveRfi]} onPress={() => onRFIClick(RFIs_TYPE.APPROVED)}>
+          <Text style={styles.tabText}>Approved</Text>
+          
           <Text style={styles.tabText}>RFI's</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={[styles.rfiTab, styles.reGenerateRfi]} onPress={() => onRFIClick(RFIs_TYPE.RE_GENERATE)}>
-          <Text style={styles.tabText}>Re-generate</Text>
-          <Text style={styles.tabText}>RFI's</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={[styles.rfiTab, styles.assignRfi]} onPress={() => onRFIClick(RFIs_TYPE.ASSIGN)}>
-          <Text style={styles.tabText}>Assign</Text>
+        <TouchableOpacity style={[styles.rfiTab, styles.rejectedRfi]} onPress={() => onRFIClick(RFIs_TYPE.REJECTED)}>
+          <Text style={styles.tabText}>Rejected/Cancelled</Text>
           <Text style={styles.tabText}>RFI's</Text>
         </TouchableOpacity>
       </View>
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flexWrap: 'wrap',
-    gap: 20
+    gap: 10
   },
   rfiTab: {
     width: 180,
@@ -88,19 +88,19 @@ const styles = StyleSheet.create({
     color: '#fff'
   },
   generateRfi: {
-    backgroundColor: '#FCB700',
-  },
-  closeRfi: {
-    backgroundColor: '#2BC267',
-  },
-  approveRfi: {
     backgroundColor: '#1C58C0',
   },
-  reGenerateRfi: {
+  inProgressRfi: {
+    backgroundColor: '#ffa879',
+  },
+  closeRfi: {
     backgroundColor: '#FCB700',
   },
-  assignRfi: {
-    backgroundColor: '#A1A1A1',
+  approveRfi: {
+    backgroundColor: '#2BC267',
+  },
+  rejectedRfi: {
+    backgroundColor: '#FF0000',
   },
 });
 

@@ -53,7 +53,9 @@ export const getStates = async () => {
 }
 
 export const getUserAssignment = async () => {
+    console.log('======123=====')
     return apiService.getRequest('v1/auth/users/assignment').then((response) => {
+        console.log('======12345=====')
         return response;
     }).catch((err) => {
         const errorMessge = err.message || 'Unable to get list of users to assign categories.';

@@ -25,12 +25,10 @@ const RFIsUserCategorySelection = ({ route, navigation }: { route: any, navigati
       return HeaderItems.rfisGenerateTaskListing
     } else if (rfiType === RFIs_TYPE.CLOSED) {
       return HeaderItems.rfisClosedTaskListing
-    } else if (rfiType === RFIs_TYPE.APPROVE_REJECT) {
-      return HeaderItems.rfisApproveRejectTaskListing
-    } else if (rfiType === RFIs_TYPE.RE_GENERATE) {
-      return HeaderItems.rfisRegenerateTaskListing
-    } else if (rfiType === RFIs_TYPE.ASSIGN) {
-      HeaderItems.rfisAssignTaskListing
+    } else if (rfiType === RFIs_TYPE.APPROVED) {
+      return HeaderItems.rfisApprovedTaskListing
+    } else if (rfiType === RFIs_TYPE.REJECTED) {
+      HeaderItems.rfisRejectedTaskListing
     }
 
     return {};

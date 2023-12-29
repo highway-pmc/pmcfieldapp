@@ -1,6 +1,6 @@
 
 import { put, takeLatest } from 'redux-saga/effects';
-import { generateRFI, getRFITaskUsersData, getRFITasksData, getRFIs } from '../../services/rfi/rfis.service';
+import { fillRFIsDataChecklist, generateRFI, generateRFIReportApi, getRFITaskUsersData, getRFITasksData, getRFIs } from '../../services/rfi/rfis.service';
 
 function* getRFITasks({ payload }) {
     try {
@@ -22,7 +22,7 @@ function* getRFITaskUsers({ payload }) {
 
 function* generateRFITask({ payload }) {
     try {
-        const response = yield (generateRFI(payload.projectId, payload.projectModuleId, payload.body));
+        const response = yield (generateRFI(payload.projectId, payload.projectModuleId, payload.userCategory, payload.body));
         yield put({ type: "GENERATE_RFI_SUCCESS", response });
     } catch (error) {
         yield put({ type: "GENERATE_RFI_FAILURE", error: error.message });
@@ -31,10 +31,28 @@ function* generateRFITask({ payload }) {
 
 function* getRFIData({ payload }) {
     try {
-        const response = yield (getRFIs(payload.projectId));
+        const response = yield (getRFIs(payload.projectId, payload.status));
         yield put({ type: "GET_RFI_SUCCESS", response });
     } catch (error) {
         yield put({ type: "GET_RFI_FAILURE", error: error.message });
+    }
+}
+
+function* updateRFIs({ payload }) {
+    try {
+        const response = yield (fillRFIsDataChecklist(payload.projectId, payload.projectModuleId, payload.rfiId, payload.status, payload.body));
+        yield put({ type: "UPDATE_RFI_SUCCESS", response });
+    } catch (error) {
+        yield put({ type: "UPDATE_RFI_FAILURE", error: error.message });
+    }
+}
+
+function* generateRFIReport({ payload }) {
+    try {
+        const response = yield (generateRFIReportApi(payload.projectId, payload.projectModuleId, payload.rfiId));
+        yield put({ type: "GENERATE_REPORT_SUCCESS", response });
+    } catch (error) {
+        yield put({ type: "GENERATE_REPORT_FAILURE", error: error.message });
     }
 }
 
@@ -43,4 +61,6 @@ export default function* myRFISScreenSaga() {
     yield takeLatest("GET_RFI_TASK_USERS_REQUEST", getRFITaskUsers);
     yield takeLatest("GENERATE_RFI_REQUEST", generateRFITask);
     yield takeLatest("GET_RFI_REQUEST", getRFIData);
+    yield takeLatest("UPDATE_RFI_REQUEST", updateRFIs);
+    yield takeLatest("GENERATE_REPORT_REQUEST", generateRFIReport);
 }

@@ -483,8 +483,8 @@ const Profile = () => {
                       value={dob ? moment(new Date(dob)).format('DD-MM-YYYY') : ''}
                       editable={false}
                     />
-                  <TouchableOpacity onPress={() => setOpenCalendar(!openCalendar)} style={{width: 40, backgroundColor: "#ccc"}}>
-                    <Text style={styles.assignTagButoonText}>Icon</Text>
+                  <TouchableOpacity onPress={() => setOpenCalendar(!openCalendar)} style={styles.CalendarImage}>
+                    <Image style={styles.WorkIconTask} source={require('../../images/date-icon.png')} />
                   </TouchableOpacity>
               </View>
                 {openCalendar && (
@@ -495,6 +495,8 @@ const Profile = () => {
                       setDOB(date.format("YYYY-MM-DD"));
                       setOpenCalendar(false)
                     }}
+                    previousComponent = {<Image style={styles.previousIcon} source={require('../../images/right-arrow.png')} />}
+                    nextComponent = {<Image style={styles.WorkIconTask} source={require('../../images/right-arrow.png')} />}
                   />
                   </View>
                 )}
@@ -744,6 +746,18 @@ const Profile = () => {
 }
 
 const styles = StyleSheet.create({
+  CalendarImage: {
+    width: 30, position: 'absolute', top: 11, right: 5
+  },
+  WorkIconTask: {
+    width: 24,
+    height: 24
+  },
+  previousIcon: {
+    width: 24,
+    height: 24,
+    transform: [{ rotate: '180deg' }]
+  },
   ErrorSectionStyle: {
     flexDirection: 'row',
     marginBottom: 20,

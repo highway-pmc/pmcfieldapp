@@ -1,32 +1,64 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native'
-import { RFIs_TYPE } from '../../constants/constants'
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Modal, SafeAreaView, Dimensions, TextInput, Alert } from 'react-native'
+import { RFI_STATUS, RFIs_TYPE } from '../../constants/constants'
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
-import React, { useEffect, useState } from 'react'
-import { actionGetRFIs, clearRFITasksEvent } from './actions';
+import React, { Fragment, useEffect, useState } from 'react'
+import { actionGetRFIs, clearRFITasksEvent, generateRFIReport, updatedRFIs } from './actions';
 import LoadingAnimation from '../Common/LoadingAnimation';
 import moment from 'moment';
+import Pdf from 'react-native-pdf';
 
 const RFIsRecents = (props: any) => {
   const navigation = useNavigation();
 
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const { rfiDataList, loading, error } = useSelector((state: any) => state.RFIs);
+  const { rfiDataList, rfiUpdated, reportGenerated, loading, error } = useSelector((state: any) => state.RFIs);
+
   const [rfiData, setRfiData] = useState([]);
+
+  const [openPopup, setOpenPopup] = useState(false);
+  const [selectedRFI, setSelectedRFI] = useState(null);
+
+  // const [rfiDate, setRFIDate] = useState('');
+  // const [hours, setHours] = useState([]);
+  // const [minutes, setMinutes] = useState([]);
+  // const [timeFormats, setTimeFormats] = useState([]);
+
+  // const [hour, setHour] = useState('12');
+  // const [minute, setMinute] = useState('00');
+  // const [timeFormat, setTimeFormat] = useState('AM');
+
+  // const [openHours, setOpenHours] = useState(false);
+  // const [openMinutes, setOpenMinutes] = useState(false);
+  // const [openTimeFormats, setOpenTimeFormats] = useState(false);
+
+  const [openCalendar, setOpenCalendar] = useState(false);
+
+  // const [comments, setComments] = useState('');
+
+  // const { width, height } = Dimensions.get('window');
+
+  const [pdfSource, setPdfSource] = useState(null);
+
 
   const dispatch = useDispatch()
   const focus = useIsFocused();
 
   useEffect(() => {
     if (focus == true) {
+      // getHours();
+      // getMins();
+      // getTimeFormats();
       setRfiData([]);
       getRFIsData();
+      setPdfSource(null);
     }
   }, [focus]);
 
   const getRFIsData = () => {
     dispatch(actionGetRFIs({
       projectId: loggedInUser.projectId,
+      status: (props.rfiType === RFIs_TYPE.GENERATE ? 'generated' : props.rfiType)
     }));
   }
 
@@ -34,7 +66,17 @@ const RFIsRecents = (props: any) => {
     if (rfiDataList) {
       setRfiData(rfiDataList);
     }
-  }, [rfiDataList]);
+
+    if (rfiUpdated) {
+      Alert.alert('Success', 'RFI updated successfully.');
+      navigation.navigate('RFIsHome')
+    }
+
+    if (reportGenerated) {
+      //Alert.alert('Success', 'Report generated successfully.');
+      setPdfSource({ uri: "data:application/pdf;base64," + reportGenerated });
+    }
+  }, [rfiDataList, rfiUpdated, reportGenerated]);
 
   // unmount
   useEffect(() => () => {
@@ -46,16 +88,126 @@ const RFIsRecents = (props: any) => {
       return 'Generated'
     } else if (props.rfiType === RFIs_TYPE.CLOSED) {
       return 'Closed'
-    } else if (props.rfiType === RFIs_TYPE.APPROVE_REJECT) {
-      return 'Approved/Rejected'
-    } else if (props.rfiType === RFIs_TYPE.RE_GENERATE) {
-      return 'Re-generated'
-    } else if (props.rfiType === RFIs_TYPE.ASSIGN) {
-      return 'Assigned'
+    } else if (props.rfiType === RFIs_TYPE.APPROVED) {
+      return 'Approved'
+    } else if (props.rfiType === RFIs_TYPE.REJECTED) {
+      return 'Rejected/Cancelled'
+    } else if (props.rfiType === RFIs_TYPE.IN_PROGRESS) {
+      return 'In Progress'
     }
 
     return '';
   }
+
+  const onSelectRFI = (item: any) => {
+    setPdfSource(null);
+    setSelectedRFI(item);
+    setOpenPopup(true);
+  }
+
+  const renderFileData = () => {
+    if (selectedRFI?.metaData?.base64Image) {
+      return <Image source={{ uri: 'data:image/jpeg;base64,' + selectedRFI?.metaData?.base64Image }}
+        style={styles.images}
+      />
+    } else {
+      return <Image source={require('./../../images/dummy.png')} // ./assets/dummy.png
+        style={styles.images}
+      />
+    }
+  }
+
+  const onRFIAction = (status: string) => {
+    // if (status === RFI_STATUS.APPROVED) {
+    //   if (!rfiDate) {
+    //     Alert.alert('Error', 'Approval Date is required.');
+    //     return false;
+    //   }
+    // }
+    
+    // let rfiSubmitDateTime = '';
+    // let rfiTime = '';
+    // if (rfiDate) {
+    //   if (timeFormat === 'PM') {
+    //     if (Number(hour) === 12) {
+    //       rfiTime = hour + ':' + minute;
+    //     } else {
+    //       rfiTime = (Number(hour) + 12) + ':' + minute;
+    //     }
+    //   } else {
+    //     if (Number(hour) === 12) {
+    //       rfiTime = '00:' + minute;
+    //     } else {
+    //       rfiTime = hour + ':' + minute;
+    //     }
+    //   }
+
+    //   rfiSubmitDateTime = rfiDate + ' ' + rfiTime + ":00"
+    // }
+
+    dispatch(updatedRFIs({
+      projectId: loggedInUser.projectId,
+      projectModuleId: selectedRFI.projectModuleId,
+      rfiId: selectedRFI._id,
+      status: status,
+      body: {
+        // additionalData: {
+        //   comments: comments,
+        //   rfiSubmitDateTime: rfiSubmitDateTime
+        // }
+      },
+    }));
+  }
+
+  const onGenerateReport = () => {
+    dispatch(generateRFIReport({
+      projectId: loggedInUser.projectId,
+      projectModuleId: selectedRFI.projectModuleId,
+      rfiId: selectedRFI._id,
+    }));
+  }
+
+  const openCloseCalendar = () => {
+    setOpenCalendar(!openCalendar);
+    // if (!openCalendar) {
+    //   setLayoutHeight(DEFAULT_COMPONENT_HEIGHT + DEFAULT_CALENDAR_HEIGHT)
+    // } else {
+    //   setLayoutHeight(DEFAULT_COMPONENT_HEIGHT)
+    // }
+  }
+
+  // const getHours = () => {
+  //   let hours = [];
+  //   for (let i = 1; i <= 12; i++) {
+  //     hours.push({
+  //       label: i < 10 ? '0' + i : '' + i,
+  //       value: i < 10 ? '0' + i : '' + i
+  //     });
+  //   }
+  //   setHours(hours);
+  // }
+
+  // const getMins = () => {
+  //   let mins = [];
+  //   for (let i = 0; i < 60; i = i + 10) {
+  //     mins.push({
+  //       label: i < 10 ? '0' + i : '' + i,
+  //       value: i < 10 ? '0' + i : '' + i
+  //     });
+  //   }
+  //   setMinutes(mins);
+  // }
+
+  // const getTimeFormats = () => {
+  //   setTimeFormats([{
+  //     label: 'AM',
+  //     value: 'AM'
+  //   }, {
+  //     label: 'PM',
+  //     value: 'PM'
+  //   }]);
+  // }
+
   return (
     <View>
       <Text style={styles.headerText}> Recent {getRFIType()} RFI's</Text>
@@ -68,13 +220,13 @@ const RFIsRecents = (props: any) => {
             showsHorizontalScrollIndicator={false}>
             {
               rfiData.map((item: any, index) => (
-                <TouchableOpacity style={styles.recentWorkCard}>
+                <TouchableOpacity style={styles.recentWorkCard} onPress={() => onSelectRFI(item)}>
                   <View style={styles.taskCategory}>
                     <Text style={styles.subHead}>{item.workAssignmentData.projectModule.name}</Text>
                     <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
                     <Text style={styles.subHead}>{item.workAssignmentData.segmentId.name}</Text>
                     <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
-                    <Text style={styles.subHead}>{item.workAssignmentData.subSegmentId.name}</Text>
+                    <Text style={styles.subHead}>{item.workAssignmentData.componentId.name}</Text>
                     <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
                     <Text style={[styles.subHead, styles.taskCount]}>{item.workAssignmentData.taskId?.displayName}</Text>
                   </View>
@@ -85,13 +237,13 @@ const RFIsRecents = (props: any) => {
             }
 
             {
-              (!rfiData.length && !loading) && 
+              (!rfiData.length && !loading) &&
               <View style={styles.noDataContainer}>
                 <Image style={styles.noDataImage} source={require('../../images/no-data-found.png')} />
-                <Text style={styles.noDataHeadText}>No Pending RFI's</Text>
-                <Text style={styles.noDataSubText}>There is no pending RFI's</Text>
+                <Text style={styles.noDataHeadText}>No {getRFIType()} RFI's</Text>
+                <Text style={styles.noDataSubText}>There is no {getRFIType()?.toLowerCase()} RFI's</Text>
               </View>
-            }            
+            }
           </ScrollView>
         </View>
         {props.rfiType === RFIs_TYPE.GENERATE && <View style={styles.footerButton}>
@@ -103,12 +255,254 @@ const RFIsRecents = (props: any) => {
         </View>}
       </View>
 
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={openPopup}
+        onRequestClose={() => {
+          setOpenPopup(!openPopup);
+          setSelectedRFI(null);
+          setPdfSource(null);
+        }}>
+        <View style={styles.bodyPopup}>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <View style={styles.ModalHeader}>
+                <Text style={styles.modalText}>{getRFIType()} RFI</Text>
+                <TouchableOpacity
+                  style={styles.buttonClose}
+                  onPress={() => { setOpenPopup(!openPopup); setSelectedRFI(null); setPdfSource(null); }}>
+                  <Image
+                    style={styles.CloseIcon}
+                    tintColor={'#333'}
+                    source={require('./../../images/menu/close-icon.png')}
+                  />
+                </TouchableOpacity>
+              </View>
+              {selectedRFI && !pdfSource && <View style={styles.ModalInnerContainer}>
+                <View style={styles.taskCategory}>
+                  <Text style={styles.subHead}>{selectedRFI.workAssignmentData.projectModule.name}</Text>
+                  <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
+                  <Text style={styles.subHead}>{selectedRFI.workAssignmentData.segmentId.name}</Text>
+                  <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
+                  <Text style={styles.subHead}>{selectedRFI.workAssignmentData.componentId.name}</Text>
+                  <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
+                  <Text style={[styles.subHead, styles.taskCount]}>{selectedRFI.workAssignmentData.taskId?.displayName}</Text>
+                </View>
+                <Text style={styles.dateText}>Generated Date: {moment(new Date(selectedRFI.rfiDateTime)).format('DD-MM-YYYY')}</Text>
+                <Text style={styles.dateText}>Generated Time: {moment(new Date(selectedRFI.rfiDateTime)).format('hh:mm A')}</Text>
+                <ScrollView style={{ paddingTop: 10, height: 500 }}>
+                  <Fragment>
+                    <SafeAreaView>
+                      {
+                        props.rfiType !== RFIs_TYPE.GENERATE &&
+                        <View>
+                          {/* <Text style={{ textAlign: 'center', fontSize: 20, paddingBottom: 10 }} ></Text> */}
+                          <View style={styles.ImageSections}>
+                            <View>
+                              {selectedRFI?.metaData?.base64Image && renderFileData()}
+                            </View>
+                          </View>
+                        </View>
+                      }
+
+                      {/* {
+                        props.rfiType !== RFIs_TYPE.APPROVED &&
+                        <View>
+                          <View style={{ flexDirection: 'column' }}>
+                            <Text style={styles.GenerateRFIFieldLabel}>Date</Text>
+
+                            <View style={{ flexDirection: 'row' }}>
+                              <TextInput
+                                style={styles.inputStyle}
+                                placeholder=""
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                returnKeyType="next"
+                                underlineColorAndroid="#f000"
+                                blurOnSubmit={false}
+                                value={rfiDate ? moment(new Date(rfiDate)).format('DD-MM-YYYY') : ''}
+                                editable={false}
+                              />
+                              <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
+                                <Text style={styles.assignTagButtonText}>Icon</Text>
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+
+                          {openCalendar && (
+
+                            <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
+                              <CalendarPicker width={width - 40}
+                                initialDate={rfiDate ? new Date(rfiDate) : new Date()}
+                                onDateChange={(date) => {
+                                  setRFIDate(date.format("YYYY-MM-DD"));
+                                  openCloseCalendar()
+                                }}
+                              />
+                            </View>
+                          )}
+
+                          <View style={{ flexDirection: 'column', height: 80, paddingTop: 15, zIndex: 5, marginBottom: 140 }}>
+                            <Text style={styles.GenerateRFIFieldLabel}>Time</Text>
+                            <View style={{ flexDirection: 'row', gap: 20 }}>
+                              <View style={{ width: 80, height: 90 }}>
+                                <DropDownPicker onPress={() => {
+                                  setOpenMinutes(false);
+                                  setOpenTimeFormats(false);
+                                }}
+                                  dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                                  maxHeight={75}
+                                  zIndex={1000}
+                                  listMode='MODAL'
+                                  open={openHours}
+                                  value={hour}
+                                  items={hours}
+                                  setOpen={setOpenHours}
+                                  setValue={setHour}
+                                />
+                              </View>
+
+                              <View style={{ width: 80, height: 90 }}>
+                                <DropDownPicker onPress={() => {
+                                  setOpenHours(false);
+                                  setOpenTimeFormats(false);
+                                }}
+                                  dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                                  maxHeight={75}
+                                  zIndex={1000}
+                                  listMode='MODAL'
+                                  open={openMinutes}
+                                  value={minute}
+                                  items={minutes}
+                                  setOpen={setOpenMinutes}
+                                  setValue={setMinute}
+                                />
+                              </View>
+                              <View style={{ width: 80, height: 90 }}>
+                                <DropDownPicker onPress={() => {
+                                  setOpenHours(false);
+                                  setOpenMinutes(false);
+                                }}
+                                  dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                                  maxHeight={75}
+                                  zIndex={1000}
+                                  listMode='SCROLLVIEW'
+                                  open={openTimeFormats}
+                                  value={timeFormat}
+                                  items={timeFormats}
+                                  setOpen={setOpenTimeFormats}
+                                  setValue={setTimeFormat}
+                                />
+                              </View>
+                            </View>
+
+                            <View style={{ flexDirection: 'column', height: 65 }}>
+                              <Text style={styles.GenerateRFIFieldLabel}>Comments</Text>
+                              <TextInput
+                                style={styles.inputStyle}
+                                placeholder="Comments"
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                returnKeyType="next"
+                                underlineColorAndroid="#f000"
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={(text) => {
+                                  setComments(text);
+                                }}
+                              />
+                            </View>
+                          </View>
+                        </View>
+                      } */}
+                    </SafeAreaView>
+                  </Fragment>
+                </ScrollView>
+                {
+                  props.rfiType === RFIs_TYPE.GENERATE &&
+                  <View style={[styles.btnParentSection, { flexDirection: 'row', justifyContent: 'center', gap: 20 }]}>
+                    <TouchableOpacity style={styles.submitButton} onPress={() => onRFIAction(RFI_STATUS.CANCELLED)}>
+                      <Text style={styles.submitButtonText}>Cancel</Text>
+                    </TouchableOpacity>
+                  </View>
+                }
+
+                {
+                  props.rfiType === RFIs_TYPE.CLOSED &&
+                  <View style={[styles.btnParentSection, { flexDirection: 'row', justifyContent: 'center', gap: 20 }]}>
+                    <TouchableOpacity style={styles.submitButton} onPress={() => onRFIAction(RFI_STATUS.REJECTED)}>
+                      <Text style={styles.submitButtonText}>Reject</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.submitButton} onPress={() => onRFIAction(RFI_STATUS.APPROVED)}>
+                      <Text style={styles.submitButtonText}>Approve</Text>
+                    </TouchableOpacity>
+                  </View>
+                }
+
+                {
+                  props.rfiType === RFIs_TYPE.APPROVED &&
+                  <View style={[styles.btnParentSection, { flexDirection: 'row', justifyContent: 'center', gap: 20 }]}>
+                    <TouchableOpacity style={styles.submitButton} onPress={() => onGenerateReport()}>
+                      <Text style={styles.submitButtonText}>Generate Report</Text>
+                    </TouchableOpacity>
+                  </View>
+                }
+
+                {
+                  props.rfiType === RFIs_TYPE.REJECTED &&
+                  <View style={[styles.btnParentSection, { flexDirection: 'row', justifyContent: 'center', gap: 20 }]}>
+                    <TouchableOpacity style={styles.submitButton} onPress={() => onRFIAction(RFI_STATUS.RE_GENERATED)}>
+                      <Text style={styles.submitButtonText}>Re-generate</Text>
+                    </TouchableOpacity>
+                  </View>
+                }
+              </View>
+              }
+
+              {
+                pdfSource &&
+                <View style={styles.containerPdf}>
+                  <Pdf source={pdfSource}
+                    onLoadComplete={(numberOfPages, filePath) => {
+                      console.log(`Number of pages: ${numberOfPages}`);
+                    }}
+                    onPageChanged={(page, numberOfPages) => {
+                      console.log(`Current page: ${page}`);
+                    }}
+                    onError={(error) => {
+                      console.log(error);
+                    }}
+                    onPressLink={(uri) => {
+                      console.log(`Link pressed: ${uri}`);
+                    }}
+                    style={styles.pdf} />
+                </View>
+              }
+            </View>
+          </View>
+        </View>
+
+      </Modal>
+
       <LoadingAnimation loading={loading}></LoadingAnimation>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
+  containerPdf: {
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    marginTop: 25,
+    height: Dimensions.get('screen').height - 200
+  },
+  pdf: {
+    flex: 1,
+    width: Dimensions.get('screen').width,
+    height: Dimensions.get('screen').height,
+  },
   headerText: {
     color: '#000',
     fontSize: 16,
@@ -175,7 +569,7 @@ const styles = StyleSheet.create({
     marginHorizontal: -20,
   },
   btnCta: {
-    borderRadius: 30,
+    borderRadius: 10,
     backgroundColor: '#1C58C0',
     paddingHorizontal: 20,
     paddingVertical: 12,
@@ -208,7 +602,137 @@ const styles = StyleSheet.create({
     width: 245,
     height: 184,
     marginBottom: 15
-  }
+  },
+
+  centeredView: {
+    marginTop: 'auto',
+    backgroundColor: '#fff',
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+    borderRadius: 12,
+    borderBottomWidth: 1,
+    borderColor: '#EBEBF0',
+    borderStyle: 'solid',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 60,
+  },
+  modalView: {
+    minHeight: 150,
+  },
+  ModalHeader: {
+    position: 'relative',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderColor: '#EBEBF0',
+    borderStyle: 'solid',
+  },
+  modalText: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#27272A',
+    textAlign: 'center',
+  },
+  buttonClose: {
+    position: 'absolute',
+    right: 15,
+  },
+  CloseIcon: {
+    width: 30,
+    height: 30,
+  },
+  ModalInnerContainer: {
+    paddingHorizontal: 15,
+    paddingBottom: 20
+  },
+  modalLabel: {
+    fontSize: 16,
+    fontWeight: '400',
+    color: '#27272A',
+    marginLeft: 5,
+  },
+  submitButton: {
+    backgroundColor: '#1C58C0',
+    borderRadius: 10,
+    color: '#fff',
+    paddingHorizontal: 15,
+    paddingTop: 12,
+    paddingBottom: 12,
+    marginBottom: 10,
+    marginTop: 10,
+    alignItems: 'center',
+  },
+  submitButtonText: {
+    fontSize: 16,
+    color: '#fff',
+    fontWeight: '500',
+  },
+
+  bodyPopup: {
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    justifyContent: 'center',
+    borderColor: 'black',
+    borderWidth: 1,
+    height: Dimensions.get('screen').height - 50,
+    width: Dimensions.get('screen').width
+  },
+  ImageSections: {
+    display: 'flex',
+    flexDirection: 'row',
+    paddingHorizontal: 8,
+    paddingVertical: 8,
+    justifyContent: 'center'
+  },
+  images: {
+    width: 500,
+    height: 400,
+    borderColor: 'black',
+    borderWidth: 1,
+    marginHorizontal: 3
+  },
+  btnParentSection: {
+    // alignItems: 'center',
+    marginTop: 10
+  },
+
+  GenerateRFIFieldLabel: {
+    fontSize: 16,
+    color: '#150A33',
+    fontWeight: '500'
+  },
+  GenerateRFIFieldTextInput: {
+    width: 295,
+    height: 40,
+    fontSize: 12,
+    color: "#666666",
+    backgroundColor: "#99ABC6"
+  },
+  assignTagButtonText: {
+    fontSize: 16,
+    color: '#fff',
+    fontWeight: '500',
+  },
+  inputStyle: {
+    flex: 1,
+    color: '#2c2c2c',
+    paddingLeft: 15,
+    paddingRight: 15,
+    borderWidth: 1,
+    borderRadius: 6,
+    borderColor: '#808089',
+    backgroundColor: '#fff',
+    fontWeight: '600',
+    paddingVertical: 5,
+    height: 45,
+  },
 });
 
 export default RFIsRecents

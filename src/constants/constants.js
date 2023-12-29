@@ -12,12 +12,12 @@ export const HeaderItems = {
     myWorkProjectType: { showBack: false, title: 'My Work' },
     assignWork: { showBack: true, title: 'Assign Works' },
     segmentsList: { showBack: true, title: 'Assign Works - Segment' },
-    subSegmentsList: { showBack: true, title: 'Assign Works - Sub-segment' },
+    componentsList: { showBack: true, title: 'Assign Works - Component' },
     assignTasks: { showBack: true, title: 'Assign Works - Tasks' },
     assignedMyProjectType: { showBack: false, title: 'My Work' },
     assignedMyWork: { showBack: true, title: 'Assigned Works' },
     assignedSegments: { showBack: true, title: 'Assigned Works - Segment' },
-    assignedSubSegments: { showBack: true, title: 'Assigned Works - Sub-segment' },
+    assignedComponents: { showBack: true, title: 'Assigned Works - Component' },
     assignedTasks: { showBack: true, title: 'Assigned Work - Tasks' },
     notifications: { showBack: false, title: 'Notifications' },
     progress: { showBack: false, title: 'Progress Dashboard' },
@@ -26,9 +26,8 @@ export const HeaderItems = {
     rfisDashboard: { showBack: true, title: 'RFIs' },
     rfisGenerateTaskListing: { showBack: true, title: 'Generate RFIs' },
     rfisClosedTaskListing: { showBack: true, title: 'Closed RFIs' },
-    rfisApproveRejectTaskListing: { showBack: true, title: 'Approve, Reject/Cancel RFIs' },
-    rfisRegenerateTaskListing: { showBack: true, title: 'Re-generate RFIs' },
-    rfisAssignTaskListing: { showBack: true, title: 'Assign RFIs' },
+    rfisApprovedTaskListing: { showBack: true, title: 'Approved RFIs' },
+    rfisRejectedTaskListing: { showBack: true, title: 'Rejected/Cancelled RFIs' },
     projectInfo: { showBack: false, title: 'Project Info' },
     myTest: { showBack: false, title: 'My Test' },
     profile: { showBack: false, title: 'Edit Profile' }
@@ -270,10 +269,21 @@ export const SEGMENT_TYPES_DISPLAY = {
 export const RFIs_TYPE = {
     GENERATE: "generate",
     CLOSED: "closed",
-    APPROVE_REJECT:"approved-closed",
-    RE_GENERATE: "re-generate",
-    ASSIGN: "assign"
+    APPROVED:"approved",
+    REJECTED: "rejected",
+    IN_PROGRESS: "inProgress",
 }
+
+export const RFI_STATUS = {
+    PENDING: 'pending',
+    GENERATED: 'generated',
+    RE_GENERATED: 'regenerated',
+    IN_PROGRESS: 'inProgress',
+    IN_REVIEW: 'inReview',
+    REJECTED: 'rejected',
+    CANCELLED: 'cancelled',
+    APPROVED: 'approved',
+  };
 
 export const WORK_TYPE = {
     SITE_WORK: "Site Work",

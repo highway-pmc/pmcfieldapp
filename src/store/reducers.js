@@ -31,7 +31,7 @@ const workAssignmentState = {
     loading: false,
     projectModules: null,
     segments: null,
-    subSegments: null,
+    components: null,
     error: null,
     loadingUsers: false
 }
@@ -500,23 +500,23 @@ const WorkAssignmentReducer = (state = workAssignmentState, action) => {
             return {
                 ...state,
                 error: null,
-                loadingSubSegment: true,
+                loadingComponent: true,
                 loading: true,
             };
         case "GET_PROJECT_MODULE_SUB_SEGMENTS_SUCCESS":
             return {
                 ...state,
-                subSegments: action.response,
+                components: action.response,
                 error: null,
-                loadingSubSegment: false,
+                loadingComponent: false,
                 loading: false,
             };
         case "GET_PROJECT_MODULE_SUB_SEGMENTS_FAILURE":
             return {
                 ...state,
-                subSegments: null,
+                components: null,
                 error: action.error,
-                loadingSubSegment: false,
+                loadingComponent: false,
                 loading: false,
             };
         case "GET_PROJECT_MODULE_TASKS_REQUEST":
@@ -659,14 +659,14 @@ const WorkAssignmentReducer = (state = workAssignmentState, action) => {
         case "SUB_SEGMENT_WORK_ASSIGNMENT_USERS_SUCCESS":
             return {
                 ...state,
-                subSegmentWorkAssigned: action.response,
+                componentWorkAssigned: action.response,
                 error: null,
                 loading: false,
             };
         case "SUB_SEGMENT_WORK_ASSIGNMENT_USERS_FAILURE":
             return {
                 ...state,
-                subSegmentWorkAssigned: null,
+                componentWorkAssigned: null,
                 error: action.error,
                 loading: false,
             };
@@ -695,7 +695,7 @@ const WorkAssignmentReducer = (state = workAssignmentState, action) => {
                 ...state,
                 projectModulesWorkAssigned: null,
                 segmentWorkAssigned: null,
-                subSegmentWorkAssigned: null,
+                componentWorkAssigned: null,
                 taskWorkAssigned: null,
                 error: null,
                 loading: false,
@@ -705,16 +705,16 @@ const WorkAssignmentReducer = (state = workAssignmentState, action) => {
                 ...state,
                 projectModules: null,
                 segments: null,
-                subSegments: null,
+                components: null,
                 segmentWorkAssigned: null,
-                subSegmentWorkAssigned: null,
+                componentWorkAssigned: null,
                 projectModulesWorkAssigned: null,
                 taskWorkAssigned: null,
                 users: null,
                 error: null,
                 loading: false,
                 loadingSegment: false,
-                loadingSubSegment: false,
+                loadingComponent: false,
                 loadingTask: false,
             };
         default:
@@ -740,7 +740,47 @@ const MyWorkReducer = (state = myWorksState, action) => {
         case "GET_MY_WORKS_FAILURE":
             return {
                 ...state,
-                myWorks: null,
+                rfiData: null,
+                error: action.error,
+                loading: false,
+            };
+        case "GET_RFI_BY_WA_ID_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "GET_RFI_BY_WA_ID_SUCCESS":
+            return {
+                ...state,
+                rfiData: action.response,
+                error: null,
+                loading: false,
+            };
+        case "GET_RFI_BY_WA_ID_FAILURE":
+            return {
+                ...state,
+                rfiData: null,
+                error: action.error,
+                loading: false,
+            };
+        case "FILL_RFI_CHECK_LIST_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "FILL_RFI_CHECK_LIST_SUCCESS":
+            return {
+                ...state,
+                rfiChecklistSaved: action.response,
+                error: null,
+                loading: false,
+            };
+        case "FILL_RFI_CHECK_LIST_FAILURE":
+            return {
+                ...state,
+                rfiChecklistSaved: null,
                 error: action.error,
                 loading: false,
             };
@@ -748,6 +788,8 @@ const MyWorkReducer = (state = myWorksState, action) => {
             return {
                 ...state,
                 myWorks: null,
+                rfiData: null,
+                rfiChecklistSaved: null,
                 error: null,
                 loading: false,
             };
@@ -838,6 +880,46 @@ const RFIsReducer = (state = myWorksState, action) => {
                 error: action.error,
                 loading: false,
             };
+        case "UPDATE_RFI_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "UPDATE_RFI_SUCCESS":
+            return {
+                ...state,
+                rfiUpdated: action.response,
+                error: null,
+                loading: false,
+            };
+        case "UPDATE_RFI_FAILURE":
+            return {
+                ...state,
+                rfiUpdated: null,
+                error: action.error,
+                loading: false,
+            };
+        case "GENERATE_REPORT_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "GENERATE_REPORT_SUCCESS":
+            return {
+                ...state,
+                reportGenerated: action.response,
+                error: null,
+                loading: false,
+            };
+        case "GENERATE_REPORT_FAILURE":
+            return {
+                ...state,
+                reportGenerated: null,
+                error: action.error,
+                loading: false,
+            };
         case "CLEAR_RFI_REQUEST":
             return {
                 ...state,
@@ -845,6 +927,8 @@ const RFIsReducer = (state = myWorksState, action) => {
                 taskUsers: null,
                 rfiGenerated: null,
                 rfiDataList: null,
+                rfiUpdated: null,
+                reportGenerated: null,
                 error: null,
                 loading: false,
             };

@@ -656,14 +656,14 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
                     : <Text style={styles.BreadcrumbPrevText}>{item.name}</Text>
               }
               {
-                index < (breadcrumbData.length - 1) && <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
+                index < (breadcrumbData.length - 1) ? <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} /> : null
               }
             </View>
           ))
         }
       </View>
       {
-        (currentLevel !== 1 && currentLevel !== 5) && <View style={styles.SearchBox}>
+        (currentLevel !== 1 && currentLevel !== 5) ? <View style={styles.SearchBox}>
           <Image
             source={require('./../../images/search-icon.png')}
             style={styles.ImageSearch}
@@ -682,10 +682,11 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
             }}
           />
         </View>
+        : null
       }
       <ScrollView style={styles.Height100}>
         {
-          currentLevel === 1 &&
+          currentLevel === 1 ?
           myWorksData.map((projModuleItem: any, projModuleIndex) => (
             projModuleItem.assignmentLevel === 1 ?
               <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(2, projModuleItem.assignmentLevel, projModuleIndex)}>
@@ -759,21 +760,21 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
 
               )))
 
-          ))
+          )) : null
         }
         {
           currentLevel === 5 &&
-          segmentsByGroupOnType && Object.keys(segmentsByGroupOnType).length && Object.keys(segmentsByGroupOnType).map((item) => (
+          segmentsByGroupOnType && Object.keys(segmentsByGroupOnType).length ? Object.keys(segmentsByGroupOnType).map((item) => (
             <TouchableOpacity style={[styles.StartWorkCard, styles.StartBorder]} onPress={() => onSegmentTypeClick(item)}>
               <View style={styles.leftContainer}>
                 <Text style={styles.HeadText}>{segmentsByGroupOnType[item].length}</Text>
                 <Text style={styles.MyWorkSubHead}>{SEGMENT_TYPES_DISPLAY[item]}</Text>
               </View>
             </TouchableOpacity>
-          ))
+          )) : null
         }
         {
-          currentLevel === 2 &&
+          currentLevel === 2 ?
           currentSegmentsData.filter((seg: any) => {
             if (searchText && seg.name) {
               return seg.name.toLowerCase().includes(searchText.toLowerCase())
@@ -787,10 +788,10 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
                 {/* <Text style={styles.MyWorkSubHead}>Sub Text</Text> */}
               </View>
             </TouchableOpacity>
-          ))
+          )) : null
         }
         {
-          currentLevel === 3 &&
+          currentLevel === 3 ?
           currentComponentsData.filter((subSeg: any) => {
             if (searchText && subSeg.name) {
               return subSeg.name.toLowerCase().includes(searchText.toLowerCase())
@@ -803,10 +804,10 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
                 <Text style={styles.HeadText}>{item.name}</Text>
               </View>
             </TouchableOpacity>
-          ))
+          )) : null
         }
         {
-          currentLevel === 4 &&
+          currentLevel === 4 ?
           currentTasksData.filter((task: any) => {
             if (searchText && task.displayName) {
               return task.displayName.toLowerCase().includes(searchText.toLowerCase())
@@ -820,64 +821,64 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
                 {/* <Text style={styles.MyWorkSubHead}>Sub Text</Text> */}
               </View>
               {
-                item.rfiStatus === RFI_STATUS.GENERATED &&
+                item.rfiStatus === RFI_STATUS.GENERATED ?
                 <TouchableOpacity style={[styles.MyWorkCta, styles.StartBorder]} onPress={() => {
                   getRFIDataByWorkAssignmentId(item)
                 }}>
                   <Image style={styles.WorkIcon} source={require('../../images/play-icon.png')} />
                   <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>Start</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> : null
               }
 
               {
-                item.rfiStatus === RFI_STATUS.RE_GENERATED &&
+                item.rfiStatus === RFI_STATUS.RE_GENERATED ?
                 <TouchableOpacity style={[styles.MyWorkCta, styles.StartBorder]} onPress={() => {
                   getRFIDataByWorkAssignmentId(item)
                 }}>
                   <Image style={styles.WorkIcon} source={require('../../images/play-icon.png')} />
                   <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>Re-start</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> : null
               }
 
               {
-                (item.rfiStatus === RFI_STATUS.REJECTED || item.rfiStatus === RFI_STATUS.CANCELLED) &&
+                (item.rfiStatus === RFI_STATUS.REJECTED || item.rfiStatus === RFI_STATUS.CANCELLED) ?
                 <TouchableOpacity style={[styles.MyWorkCta, styles.StartRejectBorder]}>
                   {/* <Image style={styles.WorkIcon} source={require('../../images/play-icon.png')} /> */}
                   <Text style={[styles.CtaStartText, styles.CtaRejectTextColor]}>{item.rfiStatus === RFI_STATUS.CANCELLED ? 'Cancelled' : 'Rejected'}</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> : null
               }
 
               {
-                item.rfiStatus === RFI_STATUS.IN_PROGRESS &&
+                item.rfiStatus === RFI_STATUS.IN_PROGRESS ?
                 <TouchableOpacity style={[styles.MyWorkCta, styles.StartInProgressBorder]} onPress={() => {
                   getRFIDataByWorkAssignmentId(item)
                 }}>
                   <Image style={styles.WorkIcon} source={require('../../images/inprogress.png')} />
                   <Text style={[styles.CtaStartText, styles.CtaInProgressTextColor]}>In Progress</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> : null
               }
 
               {
-                item.rfiStatus === RFI_STATUS.IN_REVIEW &&
+                item.rfiStatus === RFI_STATUS.IN_REVIEW ?
                 <TouchableOpacity style={[styles.MyWorkCta, styles.StartReviewBorder]}>
                   <Image style={styles.WorkIcon} source={require('../../images/review-icon.png')} />
                   <Text style={[styles.CtaStartText, styles.CtaReviewTextColor]}>Under Review</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> : null
               }
 
               {
-                item.rfiStatus === RFI_STATUS.APPROVED &&
+                item.rfiStatus === RFI_STATUS.APPROVED ?
                 <TouchableOpacity style={[styles.MyWorkCta, styles.StartCompleteBorder]}>
                   <Image style={styles.WorkIcon} source={require('../../images/complete-icon.png')} />
                   <Text style={[styles.CtaStartText, styles.CtaCompleteTextColor]}>Completed</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> : null
               }
               
             </View>
-          ))
+          )) : null
         }
         {/* No Data Found */}
-        {(!loading && !myWorksData.length) &&
+        {(!loading && !myWorksData.length) ?
           <View style={styles.NoDataContainer}>
             <Image
               style={styles.WthHeight}
@@ -888,7 +889,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
               Please try to search another keywork...
             </Text>
             )} */}
-          </View>
+          </View> : null
         }
       </ScrollView>
 

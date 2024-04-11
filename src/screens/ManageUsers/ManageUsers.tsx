@@ -252,6 +252,7 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
           alignItems: 'center',
           justifyContent: 'space-between',
           marginHorizontal: -15,
+          bottom: -9,
           backgroundColor: '#1C58C0',
         }}>
         <Pressable

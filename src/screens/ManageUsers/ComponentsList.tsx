@@ -284,10 +284,10 @@ const ComponentsList = ({ route, navigation }: { route: any, navigation: any }) 
                             {item.name}
                           </Text>
                           {
-                            item.assignmentLevel &&
+                            item.assignmentLevel ?
                             <Text style={styles.userAlreadyAssigned}>
                               {item.assignmentLevel}
-                            </Text>
+                            </Text> : null
                           }
 
                         </View>

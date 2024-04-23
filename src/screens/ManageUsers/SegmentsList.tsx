@@ -267,7 +267,7 @@ const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) =>
       <ScrollView style={styles.Height100}>
 
         {
-          !selectedSegmentType && segmentsByGroupOnType && Object.keys(segmentsByGroupOnType).length && Object.keys(segmentsByGroupOnType).map((item) => (
+          !selectedSegmentType && segmentsByGroupOnType && Object.keys(segmentsByGroupOnType).length ? Object.keys(segmentsByGroupOnType).map((item) => (
             <View style={styles.UserCategory}>
               <View style={[styles.FlexRowCenter, {gap: 10}]}>
               <CheckBox
@@ -286,7 +286,7 @@ const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) =>
             </View>
               
             </View>
-          ))
+          )): null
         }
 
         {selectedSegmentType && segmentsData.filter((seg: any) => {

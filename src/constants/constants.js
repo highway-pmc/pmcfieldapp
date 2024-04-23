@@ -258,8 +258,8 @@ export const SEGMENT_TYPES = {
 export const SEGMENT_TYPES_DISPLAY = {
     'foundations': 'Foundations',
     'sub-structures': 'Sub Structures',
-    'bearings': 'Super Structure',
-    'super-structure': 'Bearings',
+    'super-structure': 'Super Structure',
+    'bearings': 'Bearings',
     'expansion-joints': 'Expansion Joints',
     'dirt-wall': 'Dirt Wall',
     'gap-slab': 'Gap Slab',

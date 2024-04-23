@@ -1,7 +1,7 @@
 import { View, Text, NativeEventEmitter, StyleSheet, ScrollView, Image, TouchableOpacity, TextInput, Modal, StatusBar, SafeAreaView, Dimensions, Alert } from 'react-native'
 import React, { Fragment, useEffect, useState } from 'react'
 import { useIsFocused } from '@react-navigation/native';
-import { HeaderItems, PROJECT_TYPE, RFI_STATUS, SEGMENT_TYPES_DISPLAY } from "../../constants/constants"
+import { HeaderItems, PROJECT_TYPE, RFI_STATUS, SEGMENT_TYPES_DISPLAY, TASK_TYPES, YES_NO_LIST, YES_NO_NA_LIST } from "../../constants/constants"
 import { useDispatch, useSelector } from 'react-redux';
 import { clearMyWorksEvent, fillRFIsChecklist, getMyWorks, getRFIByWaId } from './actions';
 import LoadingAnimation from '../Common/LoadingAnimation';
@@ -66,7 +66,22 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
 
   const [comments, setComments] = useState('');
   const { width, height } = Dimensions.get('window');
-  
+
+  const [cleanliness, setCleanliness] = useState('Y');
+  const [openCleanliness, setOpenCleanliness] = useState(false);
+  const [formworkAlignmentChecked, setFormworkAlignmentChecked] = useState('Y');
+  const [openFormworkAlignmentChecked, setOpenFormworkAlignmentChecked] = useState(false);
+  const [formworkSealingChecked, setFormworkSealingChecked] = useState('Y');
+  const [openFormworkSealingChecked, setOpenFormworkSealingChecked] = useState(false);
+  const [formworkdDrawingsChecked, setFormworkdDrawingsChecked] = useState('Y');
+  const [openFormworkdDrawingsChecked, setOpenFormworkdDrawingsChecked] = useState(false);
+  const [concreteFinishLevelMarked, setConcreteFinishLevelMarked] = useState('Y');
+  const [openConcreteFinishLevelMarked, setOpenConcreteFinishLevelMarked] = useState(false);
+  const [formworkProperlySupported, setFormworkProperlySupported] = useState('Y');
+  const [openFormworkProperlySupported, setOpenFormworkProperlySupported] = useState(false);
+  const [formworkFitConcreting, setFormworkFitConcreting] = useState('Y');
+  const [openFormworkFitConcreting, setOpenFormworkFitConcreting] = useState(false);
+
   const dispatch = useDispatch()
   const focus = useIsFocused();
 
@@ -103,15 +118,24 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
 
     if (rfiData) {
       setRfiId(rfiData._id);
-      if (rfiData.metaData && rfiData.metaData.base64Image) {
-        setImageObject({
-          filePath: '',
-          fileData: rfiData.metaData.base64Image,
-          fileUri: ''
-        });
+      if (rfiData.metaData) {
+        if (selectedTask?.name == TASK_TYPES.CNG_AND_SETTING_OUT) {
+          setImageObject({
+            filePath: '',
+            fileData: rfiData.metaData.base64Image,
+            fileUri: ''
+          });
+        } else if (selectedTask?.name == TASK_TYPES.FORM_WORK) {
+          setCleanliness(rfiData.metaData.cleanliness);
+          setFormworkSealingChecked(rfiData.metaData.formworkSealingChecked);
+          setFormworkdDrawingsChecked(rfiData.metaData.formworkdDrawingsChecked);
+          setConcreteFinishLevelMarked(rfiData.metaData.concreteFinishLevelMarked);
+          setFormworkProperlySupported(rfiData.metaData.formworkProperlySupported);
+          setFormworkFitConcreting(rfiData.metaData.formworkFitConcreting);
+        }
       }
       if (rfiData.rfiSubmitDateTime) {
-        
+
         setRFIDate(moment(new Date(rfiData.rfiSubmitDateTime)).format('YYYY-MM-DD'));
 
         const time = moment(new Date(rfiData.rfiSubmitDateTime)).format('hh:mm A')
@@ -402,7 +426,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
 
   const getStyle = (item: any) => {
     if (item.rfiStatus) {
-      if (item.rfiStatus === RFI_STATUS.GENERATED ||  item.rfiStatus === RFI_STATUS.RE_GENERATED) {
+      if (item.rfiStatus === RFI_STATUS.GENERATED || item.rfiStatus === RFI_STATUS.RE_GENERATED) {
         return [styles.StartWorkCard, styles.StartBorder];
       } else if (item.rfiStatus === RFI_STATUS.REJECTED || item.rfiStatus === RFI_STATUS.CANCELLED) {
         return [styles.StartWorkCard, styles.StartRejectBorder];
@@ -476,7 +500,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
       Alert.alert('Error', 'Recommendations is required.');
       return false;
     }
-    
+
     let rfiSubmitDateTime = '';
     let rfiTime = '';
     if (rfiDate) {
@@ -497,16 +521,32 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
       rfiSubmitDateTime = rfiDate + ' ' + rfiTime + ":00"
     }
 
+    let checkList = {};
+
+    if (selectedTask?.name == TASK_TYPES.CNG_AND_SETTING_OUT) {
+      checkList = {
+        taskName: selectedTask.name,
+        base64Image: imageObject.fileData,
+      }
+    } else if (selectedTask?.name == TASK_TYPES.FORM_WORK) {
+      checkList = {
+        taskName: selectedTask.name,
+        cleanliness: cleanliness,
+        formworkSealingChecked: formworkSealingChecked,
+        formworkdDrawingsChecked: formworkdDrawingsChecked,
+        concreteFinishLevelMarked: concreteFinishLevelMarked,
+        formworkProperlySupported: formworkProperlySupported,
+        formworkFitConcreting: formworkFitConcreting
+      }
+    }
+
     dispatch(fillRFIsChecklist({
       projectId: loggedInUser.projectId,
       projectModuleId: projectModuleId,
       rfiId: rfiId,
       status: rfiStatus,
       body: {
-        checkList: {
-          taskName: selectedTask.name,
-          base64Image: imageObject.fileData,
-        },
+        checkList: checkList,
         additionalData: {
           comments: comments,
           rfiSubmitDateTime: rfiSubmitDateTime
@@ -644,6 +684,351 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
     }]);
   }
 
+  const taskForm = (taskName: any) => {
+    switch (taskName) {
+
+      case TASK_TYPES.CNG_AND_SETTING_OUT: return <View>
+        <Text style={{ textAlign: 'center', fontSize: 20, paddingBottom: 10 }} >Pick Image from Camera & Gallery</Text>
+        <View style={styles.ImageSections}>
+          <View>
+            {imageObject?.fileData && renderFileData()}
+            {/* <Text style={{ textAlign: 'center' }}>Base 64 String</Text> */}
+          </View>
+          {/* <View>
+          {imageObject?.fileUri && renderFileUri()}
+          <Text style={{ textAlign: 'center' }}>File Uri</Text>
+        </View> */}
+        </View>
+
+        <View style={[styles.btnParentSection, { flexDirection: 'row', gap: 20, justifyContent: 'center' }]}>
+
+          <TouchableOpacity onPress={launchCamera} style={styles.btnSection}  >
+            <Text style={styles.btnText}>Camera</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={launchImageLibrary} style={styles.btnSection}  >
+            <Text style={styles.btnText}>Gallery</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View>
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Date</Text>
+
+            <View style={{ flexDirection: 'row' }}>
+              <TextInput
+                style={styles.inputStyle}
+                placeholder=""
+                autoCapitalize="none"
+                keyboardType="email-address"
+                returnKeyType="next"
+                underlineColorAndroid="#f000"
+                blurOnSubmit={false}
+                value={rfiDate ? moment(new Date(rfiDate)).format('DD-MM-YYYY') : ''}
+                editable={false}
+              />
+              <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
+                <Text style={styles.assignTagButtonText}>Icon</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          {openCalendar && (
+
+            <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
+              <CalendarPicker width={width - 40}
+                initialDate={rfiDate ? new Date(rfiDate) : new Date()}
+                onDateChange={(date) => {
+                  setRFIDate(date.format("YYYY-MM-DD"));
+                  openCloseCalendar()
+                }}
+              />
+            </View>
+          )}
+
+          <View style={{ flexDirection: 'column', height: 80, paddingTop: 15, zIndex: 5, marginBottom: 140 }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Time</Text>
+            <View style={{ flexDirection: 'row', gap: 20 }}>
+              <View style={{ width: 80, height: 90 }}>
+                <DropDownPicker onPress={() => {
+                  setOpenMinutes(false);
+                  setOpenTimeFormats(false);
+                }}
+                  dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                  maxHeight={75}
+                  zIndex={1000}
+                  listMode='MODAL'
+                  open={openHours}
+                  value={hour}
+                  items={hours}
+                  setOpen={setOpenHours}
+                  setValue={setHour}
+                />
+              </View>
+
+              <View style={{ width: 80, height: 90 }}>
+                <DropDownPicker onPress={() => {
+                  setOpenHours(false);
+                  setOpenTimeFormats(false);
+                }}
+                  dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                  maxHeight={75}
+                  zIndex={1000}
+                  listMode='MODAL'
+                  open={openMinutes}
+                  value={minute}
+                  items={minutes}
+                  setOpen={setOpenMinutes}
+                  setValue={setMinute}
+                />
+              </View>
+              <View style={{ width: 80, height: 90 }}>
+                <DropDownPicker onPress={() => {
+                  setOpenHours(false);
+                  setOpenMinutes(false);
+                }}
+                  dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                  maxHeight={75}
+                  zIndex={1000}
+                  listMode='SCROLLVIEW'
+                  open={openTimeFormats}
+                  value={timeFormat}
+                  items={timeFormats}
+                  setOpen={setOpenTimeFormats}
+                  setValue={setTimeFormat}
+                />
+              </View>
+            </View>
+
+            <View style={{ flexDirection: 'column', height: 65 }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Recommendations</Text>
+              <TextInput
+                style={styles.inputStyle}
+                placeholder="Recommendations"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                returnKeyType="next"
+                underlineColorAndroid="#f000"
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={(text) => {
+                  setComments(text);
+                }}
+              />
+            </View>
+          </View>
+        </View>
+
+      </View>
+      case TASK_TYPES.FORM_WORK:
+        return <View>
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Cleanliness and Oil application checked</Text>
+            <View style={[styles.SectionStyle, { zIndex: 16, height: 50 }]}>
+              <DropDownPicker
+                open={openCleanliness}
+                value={cleanliness}
+                items={YES_NO_LIST}
+                setOpen={setOpenCleanliness}
+                setValue={setCleanliness}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Formwork alignment checked</Text>
+            <View style={[styles.SectionStyle, { zIndex: 15, height: 50 }]}>
+              <DropDownPicker
+                open={openFormworkAlignmentChecked}
+                value={formworkAlignmentChecked}
+                items={YES_NO_LIST}
+                setOpen={setOpenFormworkAlignmentChecked}
+                setValue={setFormworkAlignmentChecked}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Formwork tightness/sealing checked</Text>
+            <View style={[styles.SectionStyle, { zIndex: 14, height: 50 }]}>
+              <DropDownPicker
+                open={openFormworkSealingChecked}
+                value={formworkSealingChecked}
+                items={YES_NO_NA_LIST}
+                setOpen={setOpenFormworkSealingChecked}
+                setValue={setFormworkSealingChecked}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Required covers provided as per drawings checked</Text>
+            <View style={[styles.SectionStyle, { zIndex: 13, height: 50 }]}>
+              <DropDownPicker
+                open={openFormworkdDrawingsChecked}
+                value={formworkdDrawingsChecked}
+                items={YES_NO_LIST}
+                setOpen={setOpenFormworkdDrawingsChecked}
+                setValue={setFormworkdDrawingsChecked}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Concrete finish level marked</Text>
+            <View style={[styles.SectionStyle, { zIndex: 12, height: 50 }]}>
+              <DropDownPicker
+                open={openConcreteFinishLevelMarked}
+                value={concreteFinishLevelMarked}
+                items={YES_NO_LIST}
+                setOpen={setOpenConcreteFinishLevelMarked}
+                setValue={setConcreteFinishLevelMarked}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Formwork properly supported</Text>
+            <View style={[styles.SectionStyle, { zIndex: 11, height: 50 }]}>
+              <DropDownPicker
+                open={openFormworkProperlySupported}
+                value={formworkProperlySupported}
+                items={YES_NO_NA_LIST}
+                setOpen={setOpenFormworkProperlySupported}
+                setValue={setFormworkProperlySupported}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Formwork fit for concreting</Text>
+            <View style={[styles.SectionStyle, { zIndex: 10, height: 50 }]}>
+              <DropDownPicker
+                open={openFormworkFitConcreting}
+                value={formworkFitConcreting}
+                items={YES_NO_NA_LIST}
+                setOpen={setOpenFormworkFitConcreting}
+                setValue={setFormworkFitConcreting}
+              />
+            </View>
+          </View>
+          
+          <View>
+            <View style={{ flexDirection: 'column' }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Date</Text>
+
+              <View style={{ flexDirection: 'row' }}>
+                <TextInput
+                  style={styles.inputStyle}
+                  placeholder=""
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  blurOnSubmit={false}
+                  value={rfiDate ? moment(new Date(rfiDate)).format('DD-MM-YYYY') : ''}
+                  editable={false}
+                />
+                <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
+                  <Text style={styles.assignTagButtonText}>Icon</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {openCalendar && (
+
+              <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
+                <CalendarPicker width={width - 40}
+                  initialDate={rfiDate ? new Date(rfiDate) : new Date()}
+                  onDateChange={(date) => {
+                    setRFIDate(date.format("YYYY-MM-DD"));
+                    openCloseCalendar()
+                  }}
+                />
+              </View>
+            )}
+
+            <View style={{ flexDirection: 'column', height: 80, paddingTop: 15, zIndex: 5, marginBottom: 140 }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Time</Text>
+              <View style={{ flexDirection: 'row', gap: 20 }}>
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenMinutes(false);
+                    setOpenTimeFormats(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='MODAL'
+                    open={openHours}
+                    value={hour}
+                    items={hours}
+                    setOpen={setOpenHours}
+                    setValue={setHour}
+                  />
+                </View>
+
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenHours(false);
+                    setOpenTimeFormats(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='MODAL'
+                    open={openMinutes}
+                    value={minute}
+                    items={minutes}
+                    setOpen={setOpenMinutes}
+                    setValue={setMinute}
+                  />
+                </View>
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenHours(false);
+                    setOpenMinutes(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='SCROLLVIEW'
+                    open={openTimeFormats}
+                    value={timeFormat}
+                    items={timeFormats}
+                    setOpen={setOpenTimeFormats}
+                    setValue={setTimeFormat}
+                  />
+                </View>
+              </View>
+              
+              <View style={{ flexDirection: 'column', height: 65 }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Recommendations</Text>
+              <TextInput
+                style={styles.inputStyle}
+                placeholder="Recommendations"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                returnKeyType="next"
+                underlineColorAndroid="#f000"
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={(text) => {
+                  setComments(text);
+                }}
+              />
+            </View>
+            </View>
+          </View>
+
+          
+        </View>
+      default: return <View>
+        <Text>TODO</Text>
+      </View>
+    }
+  }
+
   return (
     <View style={styles.Container}>
       <View style={styles.BreadcrumbContainer}>
@@ -682,200 +1067,200 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
             }}
           />
         </View>
-        : null
+          : null
       }
       <ScrollView style={styles.Height100}>
         {
           currentLevel === 1 ?
-          myWorksData.map((projModuleItem: any, projModuleIndex) => (
-            projModuleItem.assignmentLevel === 1 ?
-              <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(2, projModuleItem.assignmentLevel, projModuleIndex)}>
-                <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
-                <View style={styles.TaskDetails}>
-                  <Text style={styles.SubHeadingText}>Assigned:</Text>
-                  <Text style={[styles.SubHeadingText, styles.SubActive]}>{projModuleItem.name}</Text>
-                </View>
-              </TouchableOpacity>
-              :
-              (projModuleItem.segmentsData?.map((segItem: any, segIndex: any) => (
-                (segItem.assignmentLevel === 2 && segIndex == 0) ? (
-                  projModuleItem.segmentsData?.filter((segItem: any) => segItem.assignmentLevel == 2).length === 1 ? (
-                    <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(3, segItem.assignmentLevel, projModuleIndex, projModuleItem.segmentsData?.findIndex((segItem: any) => segItem.assignmentLevel == 2))}>
-                      <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
-                      <View style={styles.TaskDetails}>
-                        <Text style={styles.SubHeadingText}>Assigned:</Text>
-                        <View style={{ flexDirection: 'row' }}>
-                          <Text style={styles.SubHeadingText}>{SEGMENT_TYPES_DISPLAY[segItem.type]} /</Text>
-                          <Text style={[styles.SubHeadingText, styles.SubActive]}>{projModuleItem.segmentsData?.filter((segItem: any) => segItem.assignmentLevel == 2)[0].name}</Text>
+            myWorksData.map((projModuleItem: any, projModuleIndex) => (
+              projModuleItem.assignmentLevel === 1 ?
+                <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(2, projModuleItem.assignmentLevel, projModuleIndex)}>
+                  <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
+                  <View style={styles.TaskDetails}>
+                    <Text style={styles.SubHeadingText}>Assigned:</Text>
+                    <Text style={[styles.SubHeadingText, styles.SubActive]}>{projModuleItem.name}</Text>
+                  </View>
+                </TouchableOpacity>
+                :
+                (projModuleItem.segmentsData?.map((segItem: any, segIndex: any) => (
+                  (segItem.assignmentLevel === 2 && segIndex == 0) ? (
+                    projModuleItem.segmentsData?.filter((segItem: any) => segItem.assignmentLevel == 2).length === 1 ? (
+                      <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(3, segItem.assignmentLevel, projModuleIndex, projModuleItem.segmentsData?.findIndex((segItem: any) => segItem.assignmentLevel == 2))}>
+                        <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
+                        <View style={styles.TaskDetails}>
+                          <Text style={styles.SubHeadingText}>Assigned:</Text>
+                          <View style={{ flexDirection: 'row' }}>
+                            <Text style={styles.SubHeadingText}>{SEGMENT_TYPES_DISPLAY[segItem.type]} /</Text>
+                            <Text style={[styles.SubHeadingText, styles.SubActive]}>{projModuleItem.segmentsData?.filter((segItem: any) => segItem.assignmentLevel == 2)[0].name}</Text>
+                          </View>
                         </View>
-                      </View>
-                    </TouchableOpacity>
+                      </TouchableOpacity>
+                    )
+                      :
+                      (
+                        Object.keys(groupBy(projModuleItem.segmentsData, "type")).map((segType: any) => (
+                          <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(2, segItem.assignmentLevel, projModuleIndex, -1, -1, -1, segType)}>
+                            <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
+                            <View style={styles.TaskDetails}>
+                              <Text style={styles.SubHeadingText}>Assigned:</Text>
+                              <Text style={[styles.SubHeadingText, styles.SubActive]}>{SEGMENT_TYPES_DISPLAY[segType]} {projModuleItem.segmentsData?.filter((segItem: any) => segItem.type == segType && segItem.assignmentLevel == 2).length}</Text>
+                            </View>
+                          </TouchableOpacity>
+                        ))
+                      )
                   )
                     :
-                    (
-                      Object.keys(groupBy(projModuleItem.segmentsData, "type")).map((segType: any) => (
-                        <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(2, segItem.assignmentLevel, projModuleIndex, -1, -1, -1, segType)}>
-                          <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
-                          <View style={styles.TaskDetails}>
-                            <Text style={styles.SubHeadingText}>Assigned:</Text>
-                            <Text style={[styles.SubHeadingText, styles.SubActive]}>{SEGMENT_TYPES_DISPLAY[segType]} {projModuleItem.segmentsData?.filter((segItem: any) => segItem.type == segType && segItem.assignmentLevel == 2).length}</Text>
-                          </View>
-                        </TouchableOpacity>
-                      ))
-                    )
-                )
-                  :
-                  segItem.componentsData?.map((subSegItem: any, subSegIndex: number) => (
-                    subSegItem.assignmentLevel === 3 ?
-                      (
-                        <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(4, subSegItem.assignmentLevel, projModuleIndex, segIndex, subSegIndex)}>
-                          <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
-                          <View style={styles.TaskDetails}>
-                            <Text style={styles.SubHeadingText}>Assigned:</Text>
-                            <Text style={styles.SubHeadingText}>{SEGMENT_TYPES_DISPLAY[segItem.type]} /</Text>
-                            <Text style={styles.SubHeadingText}>{segItem.name} /</Text>
-                            <Text style={[styles.SubHeadingText, styles.SubActive]}>{subSegItem.name}</Text>
-                          </View>
-                        </TouchableOpacity>
+                    segItem.componentsData?.map((subSegItem: any, subSegIndex: number) => (
+                      subSegItem.assignmentLevel === 3 ?
+                        (
+                          <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(4, subSegItem.assignmentLevel, projModuleIndex, segIndex, subSegIndex)}>
+                            <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
+                            <View style={styles.TaskDetails}>
+                              <Text style={styles.SubHeadingText}>Assigned:</Text>
+                              <Text style={styles.SubHeadingText}>{SEGMENT_TYPES_DISPLAY[segItem.type]} /</Text>
+                              <Text style={styles.SubHeadingText}>{segItem.name} /</Text>
+                              <Text style={[styles.SubHeadingText, styles.SubActive]}>{subSegItem.name}</Text>
+                            </View>
+                          </TouchableOpacity>
 
-                      )
-                      :
-                      subSegItem.tasksData?.map((taskItem: any, taskIndex: number) => (
-                        taskItem.assignmentLevel === 4 &&
-                        <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(4, taskItem.assignmentLevel, projModuleIndex, segIndex, subSegIndex, taskIndex)}>
-                          <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
-                          <View style={styles.TaskDetails}>
-                            <Text style={styles.SubHeadingText}>Assigned:</Text>
-                            <Text style={styles.SubHeadingText}>{SEGMENT_TYPES_DISPLAY[segItem.type]} /</Text>
-                            <Text style={styles.SubHeadingText}>{segItem.name} /</Text>
-                            <Text style={styles.SubHeadingText}>{subSegItem.name} /</Text>
-                            <Text style={[styles.SubHeadingText, styles.SubActive]}>{taskItem.displayName}</Text>
-                          </View>
-                        </TouchableOpacity>
+                        )
+                        :
+                        subSegItem.tasksData?.map((taskItem: any, taskIndex: number) => (
+                          taskItem.assignmentLevel === 4 &&
+                          <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(4, taskItem.assignmentLevel, projModuleIndex, segIndex, subSegIndex, taskIndex)}>
+                            <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
+                            <View style={styles.TaskDetails}>
+                              <Text style={styles.SubHeadingText}>Assigned:</Text>
+                              <Text style={styles.SubHeadingText}>{SEGMENT_TYPES_DISPLAY[segItem.type]} /</Text>
+                              <Text style={styles.SubHeadingText}>{segItem.name} /</Text>
+                              <Text style={styles.SubHeadingText}>{subSegItem.name} /</Text>
+                              <Text style={[styles.SubHeadingText, styles.SubActive]}>{taskItem.displayName}</Text>
+                            </View>
+                          </TouchableOpacity>
 
-                      ))
+                        ))
 
-                  ))
+                    ))
 
 
-              )))
+                )))
 
-          )) : null
+            )) : null
         }
         {
           currentLevel === 5 &&
-          segmentsByGroupOnType && Object.keys(segmentsByGroupOnType).length ? Object.keys(segmentsByGroupOnType).map((item) => (
-            <TouchableOpacity style={[styles.StartWorkCard, styles.StartBorder]} onPress={() => onSegmentTypeClick(item)}>
-              <View style={styles.leftContainer}>
-                <Text style={styles.HeadText}>{segmentsByGroupOnType[item].length}</Text>
-                <Text style={styles.MyWorkSubHead}>{SEGMENT_TYPES_DISPLAY[item]}</Text>
-              </View>
-            </TouchableOpacity>
-          )) : null
+            segmentsByGroupOnType && Object.keys(segmentsByGroupOnType).length ? Object.keys(segmentsByGroupOnType).map((item) => (
+              <TouchableOpacity style={[styles.StartWorkCard, styles.StartBorder]} onPress={() => onSegmentTypeClick(item)}>
+                <View style={styles.leftContainer}>
+                  <Text style={styles.HeadText}>{segmentsByGroupOnType[item].length}</Text>
+                  <Text style={styles.MyWorkSubHead}>{SEGMENT_TYPES_DISPLAY[item]}</Text>
+                </View>
+              </TouchableOpacity>
+            )) : null
         }
         {
           currentLevel === 2 ?
-          currentSegmentsData.filter((seg: any) => {
-            if (searchText && seg.name) {
-              return seg.name.toLowerCase().includes(searchText.toLowerCase())
-            } else {
-              return true;
-            }
-          }).map((item: any, index) => (
-            <TouchableOpacity style={getStyle(item)} onPress={() => onClickNested(3, item)}>
-              <View style={styles.leftContainer}>
-                <Text style={styles.HeadText}>{item.name}</Text>
-                {/* <Text style={styles.MyWorkSubHead}>Sub Text</Text> */}
-              </View>
-            </TouchableOpacity>
-          )) : null
+            currentSegmentsData.filter((seg: any) => {
+              if (searchText && seg.name) {
+                return seg.name.toLowerCase().includes(searchText.toLowerCase())
+              } else {
+                return true;
+              }
+            }).map((item: any, index) => (
+              <TouchableOpacity style={getStyle(item)} onPress={() => onClickNested(3, item)}>
+                <View style={styles.leftContainer}>
+                  <Text style={styles.HeadText}>{item.name}</Text>
+                  {/* <Text style={styles.MyWorkSubHead}>Sub Text</Text> */}
+                </View>
+              </TouchableOpacity>
+            )) : null
         }
         {
           currentLevel === 3 ?
-          currentComponentsData.filter((subSeg: any) => {
-            if (searchText && subSeg.name) {
-              return subSeg.name.toLowerCase().includes(searchText.toLowerCase())
-            } else {
-              return true;
-            }
-          }).map((item: any, index) => (
-            <TouchableOpacity style={getStyle(item)} onPress={() => onClickNested(4, item)}>
-              <View style={styles.leftContainer}>
-                <Text style={styles.HeadText}>{item.name}</Text>
-              </View>
-            </TouchableOpacity>
-          )) : null
+            currentComponentsData.filter((subSeg: any) => {
+              if (searchText && subSeg.name) {
+                return subSeg.name.toLowerCase().includes(searchText.toLowerCase())
+              } else {
+                return true;
+              }
+            }).map((item: any, index) => (
+              <TouchableOpacity style={getStyle(item)} onPress={() => onClickNested(4, item)}>
+                <View style={styles.leftContainer}>
+                  <Text style={styles.HeadText}>{item.name}</Text>
+                </View>
+              </TouchableOpacity>
+            )) : null
         }
         {
           currentLevel === 4 ?
-          currentTasksData.filter((task: any) => {
-            if (searchText && task.displayName) {
-              return task.displayName.toLowerCase().includes(searchText.toLowerCase())
-            } else {
-              return true;
-            }
-          }).map((item: any, index) => (
-            <View style={getStyle(item)}>
-              <View style={styles.leftContainer}>
-                <Text style={styles.HeadText}>{item.displayName}</Text>
-                {/* <Text style={styles.MyWorkSubHead}>Sub Text</Text> */}
+            currentTasksData.filter((task: any) => {
+              if (searchText && task.displayName) {
+                return task.displayName.toLowerCase().includes(searchText.toLowerCase())
+              } else {
+                return true;
+              }
+            }).map((item: any, index) => (
+              <View style={getStyle(item)}>
+                <View style={styles.leftContainer}>
+                  <Text style={styles.HeadText}>{item.displayName}</Text>
+                  {/* <Text style={styles.MyWorkSubHead}>Sub Text</Text> */}
+                </View>
+                {
+                  item.rfiStatus === RFI_STATUS.GENERATED ?
+                    <TouchableOpacity style={[styles.MyWorkCta, styles.StartBorder]} onPress={() => {
+                      getRFIDataByWorkAssignmentId(item)
+                    }}>
+                      <Image style={styles.WorkIcon} source={require('../../images/play-icon.png')} />
+                      <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>Start</Text>
+                    </TouchableOpacity> : null
+                }
+
+                {
+                  item.rfiStatus === RFI_STATUS.RE_GENERATED ?
+                    <TouchableOpacity style={[styles.MyWorkCta, styles.StartBorder]} onPress={() => {
+                      getRFIDataByWorkAssignmentId(item)
+                    }}>
+                      <Image style={styles.WorkIcon} source={require('../../images/play-icon.png')} />
+                      <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>Re-start</Text>
+                    </TouchableOpacity> : null
+                }
+
+                {
+                  (item.rfiStatus === RFI_STATUS.REJECTED || item.rfiStatus === RFI_STATUS.CANCELLED) ?
+                    <TouchableOpacity style={[styles.MyWorkCta, styles.StartRejectBorder]}>
+                      {/* <Image style={styles.WorkIcon} source={require('../../images/play-icon.png')} /> */}
+                      <Text style={[styles.CtaStartText, styles.CtaRejectTextColor]}>{item.rfiStatus === RFI_STATUS.CANCELLED ? 'Cancelled' : 'Rejected'}</Text>
+                    </TouchableOpacity> : null
+                }
+
+                {
+                  item.rfiStatus === RFI_STATUS.IN_PROGRESS ?
+                    <TouchableOpacity style={[styles.MyWorkCta, styles.StartInProgressBorder]} onPress={() => {
+                      getRFIDataByWorkAssignmentId(item)
+                    }}>
+                      <Image style={styles.WorkIcon} source={require('../../images/inprogress.png')} />
+                      <Text style={[styles.CtaStartText, styles.CtaInProgressTextColor]}>In Progress</Text>
+                    </TouchableOpacity> : null
+                }
+
+                {
+                  item.rfiStatus === RFI_STATUS.IN_REVIEW ?
+                    <TouchableOpacity style={[styles.MyWorkCta, styles.StartReviewBorder]}>
+                      <Image style={styles.WorkIcon} source={require('../../images/review-icon.png')} />
+                      <Text style={[styles.CtaStartText, styles.CtaReviewTextColor]}>Under Review</Text>
+                    </TouchableOpacity> : null
+                }
+
+                {
+                  item.rfiStatus === RFI_STATUS.APPROVED ?
+                    <TouchableOpacity style={[styles.MyWorkCta, styles.StartCompleteBorder]}>
+                      <Image style={styles.WorkIcon} source={require('../../images/complete-icon.png')} />
+                      <Text style={[styles.CtaStartText, styles.CtaCompleteTextColor]}>Completed</Text>
+                    </TouchableOpacity> : null
+                }
+
               </View>
-              {
-                item.rfiStatus === RFI_STATUS.GENERATED ?
-                <TouchableOpacity style={[styles.MyWorkCta, styles.StartBorder]} onPress={() => {
-                  getRFIDataByWorkAssignmentId(item)
-                }}>
-                  <Image style={styles.WorkIcon} source={require('../../images/play-icon.png')} />
-                  <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>Start</Text>
-                </TouchableOpacity> : null
-              }
-
-              {
-                item.rfiStatus === RFI_STATUS.RE_GENERATED ?
-                <TouchableOpacity style={[styles.MyWorkCta, styles.StartBorder]} onPress={() => {
-                  getRFIDataByWorkAssignmentId(item)
-                }}>
-                  <Image style={styles.WorkIcon} source={require('../../images/play-icon.png')} />
-                  <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>Re-start</Text>
-                </TouchableOpacity> : null
-              }
-
-              {
-                (item.rfiStatus === RFI_STATUS.REJECTED || item.rfiStatus === RFI_STATUS.CANCELLED) ?
-                <TouchableOpacity style={[styles.MyWorkCta, styles.StartRejectBorder]}>
-                  {/* <Image style={styles.WorkIcon} source={require('../../images/play-icon.png')} /> */}
-                  <Text style={[styles.CtaStartText, styles.CtaRejectTextColor]}>{item.rfiStatus === RFI_STATUS.CANCELLED ? 'Cancelled' : 'Rejected'}</Text>
-                </TouchableOpacity> : null
-              }
-
-              {
-                item.rfiStatus === RFI_STATUS.IN_PROGRESS ?
-                <TouchableOpacity style={[styles.MyWorkCta, styles.StartInProgressBorder]} onPress={() => {
-                  getRFIDataByWorkAssignmentId(item)
-                }}>
-                  <Image style={styles.WorkIcon} source={require('../../images/inprogress.png')} />
-                  <Text style={[styles.CtaStartText, styles.CtaInProgressTextColor]}>In Progress</Text>
-                </TouchableOpacity> : null
-              }
-
-              {
-                item.rfiStatus === RFI_STATUS.IN_REVIEW ?
-                <TouchableOpacity style={[styles.MyWorkCta, styles.StartReviewBorder]}>
-                  <Image style={styles.WorkIcon} source={require('../../images/review-icon.png')} />
-                  <Text style={[styles.CtaStartText, styles.CtaReviewTextColor]}>Under Review</Text>
-                </TouchableOpacity> : null
-              }
-
-              {
-                item.rfiStatus === RFI_STATUS.APPROVED ?
-                <TouchableOpacity style={[styles.MyWorkCta, styles.StartCompleteBorder]}>
-                  <Image style={styles.WorkIcon} source={require('../../images/complete-icon.png')} />
-                  <Text style={[styles.CtaStartText, styles.CtaCompleteTextColor]}>Completed</Text>
-                </TouchableOpacity> : null
-              }
-              
-            </View>
-          )) : null
+            )) : null
         }
         {/* No Data Found */}
         {(!loading && !myWorksData.length) ?
@@ -923,144 +1308,14 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
                   <Fragment>
                     <StatusBar barStyle="dark-content" />
                     <SafeAreaView>
-                      <View>
-                        <Text style={{ textAlign: 'center', fontSize: 20, paddingBottom: 10 }} >Pick Image from Camera & Gallery</Text>
-                        <View style={styles.ImageSections}>
-                          <View>
-                            {imageObject?.fileData && renderFileData()}
-                            {/* <Text style={{ textAlign: 'center' }}>Base 64 String</Text> */}
-                          </View>
-                          {/* <View>
-                            {imageObject?.fileUri && renderFileUri()}
-                            <Text style={{ textAlign: 'center' }}>File Uri</Text>
-                          </View> */}
-                        </View>
-
-                        <View style={[styles.btnParentSection, {flexDirection: 'row', gap: 20, justifyContent: 'center'}]}>
-                          
-                          <TouchableOpacity onPress={launchCamera} style={styles.btnSection}  >
-                            <Text style={styles.btnText}>Camera</Text>
-                          </TouchableOpacity>
-
-                          <TouchableOpacity onPress={launchImageLibrary} style={styles.btnSection}  >
-                            <Text style={styles.btnText}>Gallery</Text>
-                          </TouchableOpacity>
-                        </View>
-
-                        <View>
-                          <View style={{ flexDirection: 'column' }}>
-                            <Text style={styles.GenerateRFIFieldLabel}>Date</Text>
-
-                            <View style={{ flexDirection: 'row' }}>
-                              <TextInput
-                                style={styles.inputStyle}
-                                placeholder=""
-                                autoCapitalize="none"
-                                keyboardType="email-address"
-                                returnKeyType="next"
-                                underlineColorAndroid="#f000"
-                                blurOnSubmit={false}
-                                value={rfiDate ? moment(new Date(rfiDate)).format('DD-MM-YYYY') : ''}
-                                editable={false}
-                              />
-                              <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
-                                <Text style={styles.assignTagButtonText}>Icon</Text>
-                              </TouchableOpacity>
-                            </View>
-                          </View>
-
-                          {openCalendar && (
-
-                            <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
-                              <CalendarPicker width={width - 40}
-                                initialDate={rfiDate ? new Date(rfiDate) : new Date()}
-                                onDateChange={(date) => {
-                                  setRFIDate(date.format("YYYY-MM-DD"));
-                                  openCloseCalendar()
-                                }}
-                              />
-                            </View>
-                          )}
-
-                          <View style={{ flexDirection: 'column', height: 80, paddingTop: 15, zIndex: 5, marginBottom: 140 }}>
-                            <Text style={styles.GenerateRFIFieldLabel}>Time</Text>
-                            <View style={{ flexDirection: 'row', gap: 20 }}>
-                              <View style={{ width: 80, height: 90 }}>
-                                <DropDownPicker onPress={() => {
-                                  setOpenMinutes(false);
-                                  setOpenTimeFormats(false);
-                                }}
-                                  dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
-                                  maxHeight={75}
-                                  zIndex={1000}
-                                  listMode='MODAL'
-                                  open={openHours}
-                                  value={hour}
-                                  items={hours}
-                                  setOpen={setOpenHours}
-                                  setValue={setHour}
-                                />
-                              </View>
-
-                              <View style={{ width: 80, height: 90 }}>
-                                <DropDownPicker onPress={() => {
-                                  setOpenHours(false);
-                                  setOpenTimeFormats(false);
-                                }}
-                                  dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
-                                  maxHeight={75}
-                                  zIndex={1000}
-                                  listMode='MODAL'
-                                  open={openMinutes}
-                                  value={minute}
-                                  items={minutes}
-                                  setOpen={setOpenMinutes}
-                                  setValue={setMinute}
-                                />
-                              </View>
-                              <View style={{ width: 80, height: 90 }}>
-                                <DropDownPicker onPress={() => {
-                                  setOpenHours(false);
-                                  setOpenMinutes(false);
-                                }}
-                                  dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
-                                  maxHeight={75}
-                                  zIndex={1000}
-                                  listMode='SCROLLVIEW'
-                                  open={openTimeFormats}
-                                  value={timeFormat}
-                                  items={timeFormats}
-                                  setOpen={setOpenTimeFormats}
-                                  setValue={setTimeFormat}
-                                />
-                              </View>
-                            </View>
-
-                            <View style={{ flexDirection: 'column', height: 65 }}>
-                              <Text style={styles.GenerateRFIFieldLabel}>Recommendations</Text>
-                              <TextInput
-                                style={styles.inputStyle}
-                                placeholder="Recommendations"
-                                autoCapitalize="none"
-                                keyboardType="email-address"
-                                returnKeyType="next"
-                                underlineColorAndroid="#f000"
-                                blurOnSubmit={false}
-                                value={comments}
-                                onChangeText={(text) => {
-                                  setComments(text);
-                                }}
-                              />
-                            </View>
-                          </View>
-                        </View>
-
-                      </View>
+                      {
+                        taskForm(selectedTask?.name)
+                      }
                     </SafeAreaView>
                   </Fragment>
                 </ScrollView>
-                
-                <View style={[styles.btnParentSection, {flexDirection: 'row', justifyContent: 'center', gap: 20}]}>
+
+                <View style={[styles.btnParentSection, { flexDirection: 'row', justifyContent: 'center', gap: 20 }]}>
                   <TouchableOpacity style={styles.submitButton} onPress={() => onFillChecklist(RFI_STATUS.IN_PROGRESS)}>
                     <Text style={styles.submitButtonText}>Save</Text>
                   </TouchableOpacity>
@@ -1091,6 +1346,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#150A33',
     fontWeight: '500'
+  },
+  SectionStyle: {
+    flexDirection: 'row',
+    height: 40,
+    marginBottom: 10,
+    marginTop: 5,
   },
   Container: {
     padding: 20,
@@ -1401,7 +1662,7 @@ const styles = StyleSheet.create({
   },
   btnParentSection: {
     // alignItems: 'center',
-    marginTop:10
+    marginTop: 10
   },
   btnSection: {
     width: 150,
@@ -1410,13 +1671,13 @@ const styles = StyleSheet.create({
     // alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 3,
-    marginBottom:10
+    marginBottom: 10
   },
   btnText: {
     textAlign: 'center',
     color: '#fff',
     fontSize: 14,
-    fontWeight:'bold'
+    fontWeight: 'bold'
   }
 });
 

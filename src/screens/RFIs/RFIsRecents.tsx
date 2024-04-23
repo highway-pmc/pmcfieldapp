@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Modal, SafeAreaView, Dimensions, TextInput, Alert } from 'react-native'
-import { RFI_STATUS, RFIs_TYPE } from '../../constants/constants'
+import { RFI_STATUS, RFIs_TYPE, TASK_TYPES } from '../../constants/constants'
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import React, { Fragment, useEffect, useState } from 'react'
@@ -208,6 +208,58 @@ const RFIsRecents = (props: any) => {
   //   }]);
   // }
 
+  const taskForm = (selectedRFI: any) => {
+    switch (selectedRFI?.metaData?.taskName) {
+
+      case TASK_TYPES.CNG_AND_SETTING_OUT: return <View style={styles.ImageSections}>
+      <View>
+        {selectedRFI?.metaData?.base64Image && renderFileData()}
+      </View>
+    </View>
+      case TASK_TYPES.FORM_WORK:
+        return <View>
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Cleanliness and Oil application checked</Text>
+            <Text>{selectedRFI?.metaData.cleanliness}</Text>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Formwork alignment checked</Text>
+            <Text>{selectedRFI?.metaData.formworkAlignmentChecked}</Text>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Formwork tightness/sealing checked</Text>
+            <Text>{selectedRFI?.metaData.formworkSealingChecked}</Text>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Required covers provided as per drawings checked</Text>
+            <Text>{selectedRFI?.metaData.formworkdDrawingsChecked}</Text>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Concrete finish level marked</Text>
+            <Text>{selectedRFI?.metaData.concreteFinishLevelMarked}</Text>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Formwork properly supported</Text>
+            <Text>{selectedRFI?.metaData.formworkProperlySupported}</Text>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Formwork fit for concreting</Text>
+            <Text>{selectedRFI?.metaData.formworkFitConcreting}</Text>
+          </View>
+          
+        </View>
+      default: return <View>
+        <Text>TODO</Text>
+      </View>
+    }
+  }
+
   return (
     <View>
       <Text style={styles.headerText}> Recent {getRFIType()} RFI's</Text>
@@ -298,11 +350,7 @@ const RFIsRecents = (props: any) => {
                         props.rfiType !== RFIs_TYPE.GENERATE &&
                         <View>
                           {/* <Text style={{ textAlign: 'center', fontSize: 20, paddingBottom: 10 }} ></Text> */}
-                          <View style={styles.ImageSections}>
-                            <View>
-                              {selectedRFI?.metaData?.base64Image && renderFileData()}
-                            </View>
-                          </View>
+                          {taskForm(selectedRFI)}
                         </View>
                       }
 

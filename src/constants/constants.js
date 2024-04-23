@@ -296,3 +296,30 @@ export const WORK_ASSIGNMENT_LEVEL = {
     LEVEL3: 'Level 3',
     LEVEL4: 'Level 4',
 }
+
+export const TASK_TYPES = {
+    CNG_AND_SETTING_OUT: 'cng-and-setting-out',
+    FORM_WORK: 'form-work',
+    EXCAVATION: 'excavation'
+}
+
+export const YES_NO_LIST = [
+    {
+        label: 'Yes', value: 'Y'
+    },
+    {
+        label: 'No', value: 'N'
+    },
+];
+
+export const YES_NO_NA_LIST = [
+    {
+        label: 'Yes', value: 'Y'
+    },
+    {
+        label: 'No', value: 'N'
+    },
+    {
+        label: 'NA', value: 'NA'
+    },
+];

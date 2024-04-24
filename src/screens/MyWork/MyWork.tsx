@@ -127,6 +127,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
           });
         } else if (selectedTask?.name == TASK_TYPES.FORM_WORK) {
           setCleanliness(rfiData.metaData.cleanliness);
+          setFormworkAlignmentChecked(rfiData.metaData.formworkAlignmentChecked);
           setFormworkSealingChecked(rfiData.metaData.formworkSealingChecked);
           setFormworkdDrawingsChecked(rfiData.metaData.formworkdDrawingsChecked);
           setConcreteFinishLevelMarked(rfiData.metaData.concreteFinishLevelMarked);
@@ -532,6 +533,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
       checkList = {
         taskName: selectedTask.name,
         cleanliness: cleanliness,
+        formworkAlignmentChecked: formworkAlignmentChecked,
         formworkSealingChecked: formworkSealingChecked,
         formworkdDrawingsChecked: formworkdDrawingsChecked,
         concreteFinishLevelMarked: concreteFinishLevelMarked,

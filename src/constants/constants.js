@@ -300,7 +300,9 @@ export const WORK_ASSIGNMENT_LEVEL = {
 export const TASK_TYPES = {
     CNG_AND_SETTING_OUT: 'cng-and-setting-out',
     FORM_WORK: 'form-work',
-    EXCAVATION: 'excavation'
+    EXCAVATION: 'excavation',
+    REINFORCEMENT: 'reinforcement',
+    REINFORCEMENT_PREPARATION: 'reinforcement-preparation',
 }
 
 export const YES_NO_LIST = [

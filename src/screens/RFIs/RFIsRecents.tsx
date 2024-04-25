@@ -254,6 +254,56 @@ const RFIsRecents = (props: any) => {
           </View>
           
         </View>
+      case TASK_TYPES.REINFORCEMENT:
+      case TASK_TYPES.REINFORCEMENT_PREPARATION:
+        return <View>
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Rebar and dimension (dia,len and shape) checked as per GFC</Text>
+            <Text>{selectedRFI?.metaData.rebarAndDimensionGFC}</Text>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Shaping, No and Length of Bars checked as per GFC</Text>
+            <Text>{selectedRFI?.metaData.shapingNoAndLengthOfBarsGFC}</Text>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Rebars securely tightened/bound by tie bars</Text>
+            <Text>{selectedRFI?.metaData.rebarsSecurelyTightened}</Text>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Splice length and location checked as per GFC</Text>
+            <Text>{selectedRFI?.metaData.spliceLengthAndLocationGFC}</Text>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Rebar within tolerance limit</Text>
+            <Text>{selectedRFI?.metaData.rebarWithinToleranceLimit}</Text>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Coupler arrangements within tolerance</Text>
+            <Text>{selectedRFI?.metaData.couplerArrangementsWithinTolerance}</Text>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Bar Bending schedule checked</Text>
+            <Text>{selectedRFI?.metaData.barBendingScheduleChecked}</Text>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Spacer bar checked as per GFC</Text>
+            <Text>{selectedRFI?.metaData.spacerBarCheckedGFC}</Text>
+          </View>
+        </View>
+      case TASK_TYPES.EXCAVATION:
+        return <View>
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Qty of earth work excavated in cum</Text>
+            <Text>{selectedRFI?.metaData.quantity}</Text>
+          </View>
+        </View>
       default: return <View>
         <Text>TODO</Text>
       </View>

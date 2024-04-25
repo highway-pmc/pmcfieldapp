@@ -67,6 +67,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
   const [comments, setComments] = useState('');
   const { width, height } = Dimensions.get('window');
 
+  // Form Work
   const [cleanliness, setCleanliness] = useState('Y');
   const [openCleanliness, setOpenCleanliness] = useState(false);
   const [formworkAlignmentChecked, setFormworkAlignmentChecked] = useState('Y');
@@ -81,6 +82,27 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
   const [openFormworkProperlySupported, setOpenFormworkProperlySupported] = useState(false);
   const [formworkFitConcreting, setFormworkFitConcreting] = useState('Y');
   const [openFormworkFitConcreting, setOpenFormworkFitConcreting] = useState(false);
+
+  // REINFORCEMENT / REINFORCEMENT PREPARATION
+  const [rebarAndDimensionGFC, setRebarAndDimensionGFC] = useState('Y');
+  const [openRebarAndDimensionGFC, setOpenRebarAndDimensionGFC] = useState(false);
+  const [shapingNoAndLengthOfBarsGFC, setShapingNoAndLengthOfBarsGFC] = useState('Y');
+  const [openShapingNoAndLengthOfBarsGFC, setOpenShapingNoAndLengthOfBarsGFC] = useState(false);
+  const [rebarsSecurelyTightened, setRebarsSecurelyTightened] = useState('Y');
+  const [openRebarsSecurelyTightened, setOpenRebarsSecurelyTightened] = useState(false);
+  const [spliceLengthAndLocationGFC, setSpliceLengthAndLocationGFC] = useState('Y');
+  const [openSpliceLengthAndLocationGFC, setOpenSpliceLengthAndLocationGFC] = useState(false);
+  const [rebarWithinToleranceLimit, setRebarWithinToleranceLimit] = useState('Y');
+  const [openRebarWithinToleranceLimit, setOpenRebarWithinToleranceLimit] = useState(false);
+  const [couplerArrangementsWithinTolerance, setCouplerArrangementsWithinTolerance] = useState('Y');
+  const [openCouplerArrangementsWithinTolerance, setOpenCouplerArrangementsWithinTolerance] = useState(false);
+  const [barBendingScheduleChecked, setBarBendingScheduleChecked] = useState('Y');
+  const [openBarBendingScheduleChecked, setOpenBarBendingScheduleChecked] = useState(false);
+  const [spacerBarCheckedGFC, setSpacerBarCheckedGFC] = useState('Y');
+  const [openSpacerBarCheckedGFC, setOpenSpacerBarCheckedGFC] = useState(false);
+
+  // EXCAVATION
+  const [quantity, setQuantity] = useState(0);
 
   const dispatch = useDispatch()
   const focus = useIsFocused();
@@ -125,7 +147,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
             fileData: rfiData.metaData.base64Image,
             fileUri: ''
           });
-        } else if (selectedTask?.name == TASK_TYPES.FORM_WORK) {
+        } else if (rfiData.metaData && selectedTask?.name == TASK_TYPES.FORM_WORK) {
           setCleanliness(rfiData.metaData.cleanliness);
           setFormworkAlignmentChecked(rfiData.metaData.formworkAlignmentChecked);
           setFormworkSealingChecked(rfiData.metaData.formworkSealingChecked);
@@ -133,8 +155,20 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
           setConcreteFinishLevelMarked(rfiData.metaData.concreteFinishLevelMarked);
           setFormworkProperlySupported(rfiData.metaData.formworkProperlySupported);
           setFormworkFitConcreting(rfiData.metaData.formworkFitConcreting);
+        } else if (rfiData.metaData && (selectedTask?.name == TASK_TYPES.REINFORCEMENT_PREPARATION || selectedTask?.name == TASK_TYPES.REINFORCEMENT)) {
+          setRebarAndDimensionGFC(rfiData.metaData.rebarAndDimensionGFC);
+          setShapingNoAndLengthOfBarsGFC(rfiData.metaData.shapingNoAndLengthOfBarsGFC);
+          setRebarsSecurelyTightened(rfiData.metaData.rebarsSecurelyTightened);
+          setSpliceLengthAndLocationGFC(rfiData.metaData.spliceLengthAndLocationGFC);
+          setRebarWithinToleranceLimit(rfiData.metaData.rebarWithinToleranceLimit);
+          setCouplerArrangementsWithinTolerance(rfiData.metaData.couplerArrangementsWithinTolerance);
+          setBarBendingScheduleChecked(rfiData.metaData.barBendingScheduleChecked);
+          setSpacerBarCheckedGFC(rfiData.metaData.spacerBarCheckedGFC);
+        } else if (rfiData.metaData && selectedTask?.name == TASK_TYPES.EXCAVATION) {
+          setQuantity(rfiData.metaData.quantity);
         }
       }
+
       if (rfiData.rfiSubmitDateTime) {
 
         setRFIDate(moment(new Date(rfiData.rfiSubmitDateTime)).format('YYYY-MM-DD'));
@@ -540,6 +574,23 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
         formworkProperlySupported: formworkProperlySupported,
         formworkFitConcreting: formworkFitConcreting
       }
+    } else if (selectedTask?.name == TASK_TYPES.REINFORCEMENT_PREPARATION || selectedTask?.name == TASK_TYPES.REINFORCEMENT) {
+      checkList = {
+        taskName: selectedTask.name,
+        rebarAndDimensionGFC: rebarAndDimensionGFC,
+        shapingNoAndLengthOfBarsGFC: shapingNoAndLengthOfBarsGFC,
+        rebarsSecurelyTightened: rebarsSecurelyTightened,
+        spliceLengthAndLocationGFC: spliceLengthAndLocationGFC,
+        rebarWithinToleranceLimit: rebarWithinToleranceLimit,
+        couplerArrangementsWithinTolerance: couplerArrangementsWithinTolerance,
+        barBendingScheduleChecked: barBendingScheduleChecked,
+        spacerBarCheckedGFC: spacerBarCheckedGFC
+      }
+    } else if (selectedTask?.name == TASK_TYPES.EXCAVATION) {
+      checkList = {
+        taskName: selectedTask.name,
+        quantity: quantity
+      }
     }
 
     dispatch(fillRFIsChecklist({
@@ -912,6 +963,362 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
                 setOpen={setOpenFormworkFitConcreting}
                 setValue={setFormworkFitConcreting}
               />
+            </View>
+          </View>
+          
+          <View>
+            <View style={{ flexDirection: 'column' }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Date</Text>
+
+              <View style={{ flexDirection: 'row' }}>
+                <TextInput
+                  style={styles.inputStyle}
+                  placeholder=""
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  blurOnSubmit={false}
+                  value={rfiDate ? moment(new Date(rfiDate)).format('DD-MM-YYYY') : ''}
+                  editable={false}
+                />
+                <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
+                  <Text style={styles.assignTagButtonText}>Icon</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {openCalendar && (
+
+              <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
+                <CalendarPicker width={width - 40}
+                  initialDate={rfiDate ? new Date(rfiDate) : new Date()}
+                  onDateChange={(date) => {
+                    setRFIDate(date.format("YYYY-MM-DD"));
+                    openCloseCalendar()
+                  }}
+                />
+              </View>
+            )}
+
+            <View style={{ flexDirection: 'column', height: 80, paddingTop: 15, zIndex: 5, marginBottom: 140 }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Time</Text>
+              <View style={{ flexDirection: 'row', gap: 20 }}>
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenMinutes(false);
+                    setOpenTimeFormats(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='MODAL'
+                    open={openHours}
+                    value={hour}
+                    items={hours}
+                    setOpen={setOpenHours}
+                    setValue={setHour}
+                  />
+                </View>
+
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenHours(false);
+                    setOpenTimeFormats(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='MODAL'
+                    open={openMinutes}
+                    value={minute}
+                    items={minutes}
+                    setOpen={setOpenMinutes}
+                    setValue={setMinute}
+                  />
+                </View>
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenHours(false);
+                    setOpenMinutes(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='SCROLLVIEW'
+                    open={openTimeFormats}
+                    value={timeFormat}
+                    items={timeFormats}
+                    setOpen={setOpenTimeFormats}
+                    setValue={setTimeFormat}
+                  />
+                </View>
+              </View>
+              
+              <View style={{ flexDirection: 'column', height: 65 }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Recommendations</Text>
+              <TextInput
+                style={styles.inputStyle}
+                placeholder="Recommendations"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                returnKeyType="next"
+                underlineColorAndroid="#f000"
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={(text) => {
+                  setComments(text);
+                }}
+              />
+            </View>
+            </View>
+          </View>
+
+          
+        </View>
+      case TASK_TYPES.REINFORCEMENT:
+      case TASK_TYPES.REINFORCEMENT_PREPARATION:
+        return <View>
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Rebar and dimension (dia,len and shape) checked as per GFC</Text>
+            <View style={[styles.SectionStyle, { zIndex: 16, height: 50 }]}>
+              <DropDownPicker
+                open={openRebarAndDimensionGFC}
+                value={rebarAndDimensionGFC}
+                items={YES_NO_LIST}
+                setOpen={setOpenRebarAndDimensionGFC}
+                setValue={setRebarAndDimensionGFC}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Shaping, No and Length of Bars checked as per GFC</Text>
+            <View style={[styles.SectionStyle, { zIndex: 15, height: 50 }]}>
+              <DropDownPicker
+                open={openShapingNoAndLengthOfBarsGFC}
+                value={shapingNoAndLengthOfBarsGFC}
+                items={YES_NO_LIST}
+                setOpen={setOpenShapingNoAndLengthOfBarsGFC}
+                setValue={setShapingNoAndLengthOfBarsGFC}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Rebars securely tightened/bound by tie bars</Text>
+            <View style={[styles.SectionStyle, { zIndex: 14, height: 50 }]}>
+              <DropDownPicker
+                open={openRebarsSecurelyTightened}
+                value={rebarsSecurelyTightened}
+                items={YES_NO_NA_LIST}
+                setOpen={setOpenRebarsSecurelyTightened}
+                setValue={setRebarsSecurelyTightened}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Splice length and location checked as per GFC</Text>
+            <View style={[styles.SectionStyle, { zIndex: 13, height: 50 }]}>
+              <DropDownPicker
+                open={openSpliceLengthAndLocationGFC}
+                value={spliceLengthAndLocationGFC}
+                items={YES_NO_LIST}
+                setOpen={setOpenSpliceLengthAndLocationGFC}
+                setValue={setSpliceLengthAndLocationGFC}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Rebar within tolerance limit</Text>
+            <View style={[styles.SectionStyle, { zIndex: 12, height: 50 }]}>
+              <DropDownPicker
+                open={openRebarWithinToleranceLimit}
+                value={rebarWithinToleranceLimit}
+                items={YES_NO_LIST}
+                setOpen={setOpenRebarWithinToleranceLimit}
+                setValue={setRebarWithinToleranceLimit}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Coupler arrangements within tolerance</Text>
+            <View style={[styles.SectionStyle, { zIndex: 11, height: 50 }]}>
+              <DropDownPicker
+                open={openCouplerArrangementsWithinTolerance}
+                value={couplerArrangementsWithinTolerance}
+                items={YES_NO_NA_LIST}
+                setOpen={setOpenCouplerArrangementsWithinTolerance}
+                setValue={setCouplerArrangementsWithinTolerance}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Bar Bending schedule checked</Text>
+            <View style={[styles.SectionStyle, { zIndex: 10, height: 50 }]}>
+              <DropDownPicker
+                open={openBarBendingScheduleChecked}
+                value={barBendingScheduleChecked}
+                items={YES_NO_NA_LIST}
+                setOpen={setOpenBarBendingScheduleChecked}
+                setValue={setBarBendingScheduleChecked}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Spacer bar checked as per GFC</Text>
+            <View style={[styles.SectionStyle, { zIndex: 9, height: 50 }]}>
+              <DropDownPicker
+                open={openSpacerBarCheckedGFC}
+                value={spacerBarCheckedGFC}
+                items={YES_NO_NA_LIST}
+                setOpen={setOpenSpacerBarCheckedGFC}
+                setValue={setSpacerBarCheckedGFC}
+              />
+            </View>
+          </View>
+          
+          <View>
+            <View style={{ flexDirection: 'column' }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Date</Text>
+
+              <View style={{ flexDirection: 'row' }}>
+                <TextInput
+                  style={styles.inputStyle}
+                  placeholder=""
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  blurOnSubmit={false}
+                  value={rfiDate ? moment(new Date(rfiDate)).format('DD-MM-YYYY') : ''}
+                  editable={false}
+                />
+                <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
+                  <Text style={styles.assignTagButtonText}>Icon</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {openCalendar && (
+
+              <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
+                <CalendarPicker width={width - 40}
+                  initialDate={rfiDate ? new Date(rfiDate) : new Date()}
+                  onDateChange={(date) => {
+                    setRFIDate(date.format("YYYY-MM-DD"));
+                    openCloseCalendar()
+                  }}
+                />
+              </View>
+            )}
+
+            <View style={{ flexDirection: 'column', height: 80, paddingTop: 15, zIndex: 5, marginBottom: 140 }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Time</Text>
+              <View style={{ flexDirection: 'row', gap: 20 }}>
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenMinutes(false);
+                    setOpenTimeFormats(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='MODAL'
+                    open={openHours}
+                    value={hour}
+                    items={hours}
+                    setOpen={setOpenHours}
+                    setValue={setHour}
+                  />
+                </View>
+
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenHours(false);
+                    setOpenTimeFormats(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='MODAL'
+                    open={openMinutes}
+                    value={minute}
+                    items={minutes}
+                    setOpen={setOpenMinutes}
+                    setValue={setMinute}
+                  />
+                </View>
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenHours(false);
+                    setOpenMinutes(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='SCROLLVIEW'
+                    open={openTimeFormats}
+                    value={timeFormat}
+                    items={timeFormats}
+                    setOpen={setOpenTimeFormats}
+                    setValue={setTimeFormat}
+                  />
+                </View>
+              </View>
+              
+              <View style={{ flexDirection: 'column', height: 65 }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Recommendations</Text>
+              <TextInput
+                style={styles.inputStyle}
+                placeholder="Recommendations"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                returnKeyType="next"
+                underlineColorAndroid="#f000"
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={(text) => {
+                  setComments(text);
+                }}
+              />
+            </View>
+            </View>
+          </View>
+
+          
+        </View>
+      case TASK_TYPES.EXCAVATION:
+        return <View>
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Qty of earth work excavated in cum</Text>
+            <View style={[styles.SectionStyle, { zIndex: 16, height: 50 }]}>
+            <TextInput
+                  style={styles.inputStyle}
+                  placeholder="Quantity"
+                  autoCapitalize="none"
+                  keyboardType="numeric"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  blurOnSubmit={false}
+                  value={''+quantity}
+                  onChangeText={(text) => {
+                    let exp = text.replace(/[^0-9.]/g, '')
+                    if(!isNaN(parseFloat(exp))) {
+                      if (exp.split('.').length > 4) {
+                        exp = parseFloat(exp).toString();
+                      }
+                      setQuantity(Number(exp));
+                    } else {
+                      setQuantity(0);
+                    }
+                  }}
+                />
             </View>
           </View>
           

@@ -308,7 +308,12 @@ export const TASK_TYPES = {
     PLACEMENT_OF_INNER_SHUTTERS: 'placement-of-inner-shutters',
     PLACEMENT_OF_SIDE_SHUTTERS: 'placement-of-side-shutters',
     PLACEMENT_OF_BOTTOM_SHUTTER: 'placement-of-bottom-shutter',
-    PLACEMENT_OF_MIDDLE_AND_TOP_SHUTTER: 'placement-of-middle-and-top-shutter'
+    PLACEMENT_OF_MIDDLE_AND_TOP_SHUTTER: 'placement-of-middle-and-top-shutter',
+    PLACEMENT_OF_REINFORCEMENT_CAGE: 'placement-of-reinforcement-cage',
+    CAGE_LOWERING: 'cage-lowering',
+    PLACING_OF_SHEATHING_DUCT: 'placing-of-sheathing-duct',
+    THREADING_OF_PRE_STRESSING_STRANDS: 'threading-of-pre-stressing-strands'
+
 }
 
 export const YES_NO_LIST = [

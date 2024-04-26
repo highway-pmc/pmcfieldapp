@@ -45,10 +45,6 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
     fileUri: ''
   };
 
-  const [openPopup, setOpenPopup] = useState(false);
-  const [selectedTask, setSelectedTask] = useState(null);
-  const [imageObject, setImageObject] = useState(imageObjectEmpty);
-
   const [rfiDate, setRFIDate] = useState('');
   const [hours, setHours] = useState([]);
   const [minutes, setMinutes] = useState([]);
@@ -66,6 +62,12 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
 
   const [comments, setComments] = useState('');
   const { width, height } = Dimensions.get('window');
+
+  // CNG_AND_SETTING_OUT
+  // PLACING_OF_SHEATHING_DUCT
+  const [openPopup, setOpenPopup] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
+  const [imageObject, setImageObject] = useState(imageObjectEmpty);
 
   // FORM_WORK
   // PLACEMENT_OF_INNER_SHUTTERS
@@ -87,7 +89,9 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
   const [formworkFitConcreting, setFormworkFitConcreting] = useState('Y');
   const [openFormworkFitConcreting, setOpenFormworkFitConcreting] = useState(false);
 
-  // REINFORCEMENT / REINFORCEMENT PREPARATION
+  // REINFORCEMENT
+  // REINFORCEMENT_PREPARATION
+  // PLACEMENT_OF_REINFORCEMENT_CAGE **(except spacerBarCheckedGFC)
   const [rebarAndDimensionGFC, setRebarAndDimensionGFC] = useState('Y');
   const [openRebarAndDimensionGFC, setOpenRebarAndDimensionGFC] = useState(false);
   const [shapingNoAndLengthOfBarsGFC, setShapingNoAndLengthOfBarsGFC] = useState('Y');
@@ -114,6 +118,17 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
   const [openConcreteHasAchievedDesiredStrength, setOpenConcreteHasAchievedDesiredStrength] = useState(false);
   const [minimumTimeHasBeenAttained, setMinimumTimeHasBeenAttained] = useState('Y');
   const [openMinimumTimeHasBeenAttained, setOpenMinimumTimeHasBeenAttained] = useState(false);
+
+  // THREADING_OF_PRE_STRESSING_STRANDS
+    // only comments
+  
+  // CAGE_LOWERING
+  const [plieShaftCleanedLooseMaterial, setPlieShaftCleanedLooseMaterial] = useState('Y');
+  const [openPlieShaftCleanedLooseMaterial, setOpenPlieShaftCleanedLooseMaterial] = useState(false);
+  const [suitableSpacerProvidedToMaintainCoverToSteel, setSuitableSpacerProvidedToMaintainCoverToSteel] = useState('Y');
+  const [openSuitableSpacerProvidedToMaintainCoverToSteel, setOpenSuitableSpacerProvidedToMaintainCoverToSteel] = useState(false);
+  const [noLBendBottomOfTheCageChecked, setNoLBendBottomOfTheCageChecked] = useState('Y');
+  const [openNoLBendBottomOfTheCageChecked, setOpenNoLBendBottomOfTheCageChecked] = useState(false);
 
   const dispatch = useDispatch()
   const focus = useIsFocused();
@@ -154,6 +169,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
       if (rfiData.metaData) {
         switch (selectedTask?.name) {
           case TASK_TYPES.CNG_AND_SETTING_OUT:
+          case TASK_TYPES.PLACING_OF_SHEATHING_DUCT:
             setImageObject({
               filePath: '',
               fileData: rfiData.metaData.base64Image,
@@ -184,6 +200,15 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
             setBarBendingScheduleChecked(rfiData.metaData.barBendingScheduleChecked);
             setSpacerBarCheckedGFC(rfiData.metaData.spacerBarCheckedGFC);
             break;
+          case TASK_TYPES.PLACEMENT_OF_REINFORCEMENT_CAGE:
+            setRebarAndDimensionGFC(rfiData.metaData.rebarAndDimensionGFC);
+            setShapingNoAndLengthOfBarsGFC(rfiData.metaData.shapingNoAndLengthOfBarsGFC);
+            setRebarsSecurelyTightened(rfiData.metaData.rebarsSecurelyTightened);
+            setSpliceLengthAndLocationGFC(rfiData.metaData.spliceLengthAndLocationGFC);
+            setRebarWithinToleranceLimit(rfiData.metaData.rebarWithinToleranceLimit);
+            setCouplerArrangementsWithinTolerance(rfiData.metaData.couplerArrangementsWithinTolerance);
+            setBarBendingScheduleChecked(rfiData.metaData.barBendingScheduleChecked);
+            break;
           case TASK_TYPES.EXCAVATION:
             setQuantity(rfiData.metaData.quantity);
             break;
@@ -191,6 +216,11 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
           case TASK_TYPES.REMOVAL_OF_SHUTTERS:
             setConcreteHasAchievedDesiredStrength(rfiData.metaData.concreteHasAchievedDesiredStrength);
             setMinimumTimeHasBeenAttained(rfiData.metaData.minimumTimeHasBeenAttained);
+            break;
+          case TASK_TYPES.CAGE_LOWERING:
+            setPlieShaftCleanedLooseMaterial(rfiData.metaData.plieShaftCleanedLooseMaterial);
+            setSuitableSpacerProvidedToMaintainCoverToSteel(rfiData.metaData.suitableSpacerProvidedToMaintainCoverToSteel);
+            setNoLBendBottomOfTheCageChecked(rfiData.metaData.noLBendBottomOfTheCageChecked);
             break;
           default:
             break;
@@ -588,6 +618,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
 
     switch (selectedTask?.name) {
       case TASK_TYPES.CNG_AND_SETTING_OUT:
+      case TASK_TYPES.PLACING_OF_SHEATHING_DUCT:
         checkList = {
           taskName: selectedTask.name,
           base64Image: imageObject.fileData,
@@ -623,6 +654,18 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
           spacerBarCheckedGFC: spacerBarCheckedGFC
         }
         break;
+      case TASK_TYPES.PLACEMENT_OF_REINFORCEMENT_CAGE:
+        checkList = {
+          taskName: selectedTask.name,
+          rebarAndDimensionGFC: rebarAndDimensionGFC,
+          shapingNoAndLengthOfBarsGFC: shapingNoAndLengthOfBarsGFC,
+          rebarsSecurelyTightened: rebarsSecurelyTightened,
+          spliceLengthAndLocationGFC: spliceLengthAndLocationGFC,
+          rebarWithinToleranceLimit: rebarWithinToleranceLimit,
+          couplerArrangementsWithinTolerance: couplerArrangementsWithinTolerance,
+          barBendingScheduleChecked: barBendingScheduleChecked,
+        }
+        break;
       case TASK_TYPES.EXCAVATION:
         checkList = {
           taskName: selectedTask.name,
@@ -635,6 +678,19 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
           taskName: selectedTask.name,
           concreteHasAchievedDesiredStrength: concreteHasAchievedDesiredStrength,
           minimumTimeHasBeenAttained: minimumTimeHasBeenAttained
+        }
+        break;
+      case TASK_TYPES.THREADING_OF_PRE_STRESSING_STRANDS:
+        checkList = {
+          taskName: selectedTask.name,
+        }
+        break;
+      case TASK_TYPES.CAGE_LOWERING:
+        checkList = {
+          taskName: selectedTask.name,
+          plieShaftCleanedLooseMaterial: plieShaftCleanedLooseMaterial,
+          suitableSpacerProvidedToMaintainCoverToSteel: suitableSpacerProvidedToMaintainCoverToSteel,
+          noLBendBottomOfTheCageChecked: noLBendBottomOfTheCageChecked
         }
         break;
       default:
@@ -788,7 +844,9 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
   const taskForm = (taskName: any) => {
     switch (taskName) {
 
-      case TASK_TYPES.CNG_AND_SETTING_OUT: return <View>
+      case TASK_TYPES.CNG_AND_SETTING_OUT:
+      case TASK_TYPES.PLACING_OF_SHEATHING_DUCT:
+        return <View>
         <Text style={{ textAlign: 'center', fontSize: 20, paddingBottom: 10 }} >Pick Image from Camera & Gallery</Text>
         <View style={styles.ImageSections}>
           <View>
@@ -1345,6 +1403,209 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
 
           
         </View>
+      case TASK_TYPES.REINFORCEMENT_PREPARATION:
+        return <View>
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Rebar and dimension (dia,len and shape) checked as per GFC</Text>
+            <View style={[styles.SectionStyle, { zIndex: 16, height: 50 }]}>
+              <DropDownPicker
+                open={openRebarAndDimensionGFC}
+                value={rebarAndDimensionGFC}
+                items={YES_NO_LIST}
+                setOpen={setOpenRebarAndDimensionGFC}
+                setValue={setRebarAndDimensionGFC}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Shaping, No and Length of Bars checked as per GFC</Text>
+            <View style={[styles.SectionStyle, { zIndex: 15, height: 50 }]}>
+              <DropDownPicker
+                open={openShapingNoAndLengthOfBarsGFC}
+                value={shapingNoAndLengthOfBarsGFC}
+                items={YES_NO_LIST}
+                setOpen={setOpenShapingNoAndLengthOfBarsGFC}
+                setValue={setShapingNoAndLengthOfBarsGFC}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Rebars securely tightened/bound by tie bars</Text>
+            <View style={[styles.SectionStyle, { zIndex: 14, height: 50 }]}>
+              <DropDownPicker
+                open={openRebarsSecurelyTightened}
+                value={rebarsSecurelyTightened}
+                items={YES_NO_NA_LIST}
+                setOpen={setOpenRebarsSecurelyTightened}
+                setValue={setRebarsSecurelyTightened}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Splice length and location checked as per GFC</Text>
+            <View style={[styles.SectionStyle, { zIndex: 13, height: 50 }]}>
+              <DropDownPicker
+                open={openSpliceLengthAndLocationGFC}
+                value={spliceLengthAndLocationGFC}
+                items={YES_NO_LIST}
+                setOpen={setOpenSpliceLengthAndLocationGFC}
+                setValue={setSpliceLengthAndLocationGFC}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Rebar within tolerance limit</Text>
+            <View style={[styles.SectionStyle, { zIndex: 12, height: 50 }]}>
+              <DropDownPicker
+                open={openRebarWithinToleranceLimit}
+                value={rebarWithinToleranceLimit}
+                items={YES_NO_LIST}
+                setOpen={setOpenRebarWithinToleranceLimit}
+                setValue={setRebarWithinToleranceLimit}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Coupler arrangements within tolerance</Text>
+            <View style={[styles.SectionStyle, { zIndex: 11, height: 50 }]}>
+              <DropDownPicker
+                open={openCouplerArrangementsWithinTolerance}
+                value={couplerArrangementsWithinTolerance}
+                items={YES_NO_NA_LIST}
+                setOpen={setOpenCouplerArrangementsWithinTolerance}
+                setValue={setCouplerArrangementsWithinTolerance}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Bar Bending schedule checked</Text>
+            <View style={[styles.SectionStyle, { zIndex: 10, height: 50 }]}>
+              <DropDownPicker
+                open={openBarBendingScheduleChecked}
+                value={barBendingScheduleChecked}
+                items={YES_NO_NA_LIST}
+                setOpen={setOpenBarBendingScheduleChecked}
+                setValue={setBarBendingScheduleChecked}
+              />
+            </View>
+          </View>
+          
+          <View>
+            <View style={{ flexDirection: 'column' }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Date</Text>
+
+              <View style={{ flexDirection: 'row' }}>
+                <TextInput
+                  style={styles.inputStyle}
+                  placeholder=""
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  blurOnSubmit={false}
+                  value={rfiDate ? moment(new Date(rfiDate)).format('DD-MM-YYYY') : ''}
+                  editable={false}
+                />
+                <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
+                  <Text style={styles.assignTagButtonText}>Icon</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {openCalendar && (
+
+              <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
+                <CalendarPicker width={width - 40}
+                  initialDate={rfiDate ? new Date(rfiDate) : new Date()}
+                  onDateChange={(date) => {
+                    setRFIDate(date.format("YYYY-MM-DD"));
+                    openCloseCalendar()
+                  }}
+                />
+              </View>
+            )}
+
+            <View style={{ flexDirection: 'column', height: 80, paddingTop: 15, zIndex: 5, marginBottom: 140 }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Time</Text>
+              <View style={{ flexDirection: 'row', gap: 20 }}>
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenMinutes(false);
+                    setOpenTimeFormats(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='MODAL'
+                    open={openHours}
+                    value={hour}
+                    items={hours}
+                    setOpen={setOpenHours}
+                    setValue={setHour}
+                  />
+                </View>
+
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenHours(false);
+                    setOpenTimeFormats(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='MODAL'
+                    open={openMinutes}
+                    value={minute}
+                    items={minutes}
+                    setOpen={setOpenMinutes}
+                    setValue={setMinute}
+                  />
+                </View>
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenHours(false);
+                    setOpenMinutes(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='SCROLLVIEW'
+                    open={openTimeFormats}
+                    value={timeFormat}
+                    items={timeFormats}
+                    setOpen={setOpenTimeFormats}
+                    setValue={setTimeFormat}
+                  />
+                </View>
+              </View>
+              
+              <View style={{ flexDirection: 'column', height: 65 }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Recommendations</Text>
+              <TextInput
+                style={styles.inputStyle}
+                placeholder="Recommendations"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                returnKeyType="next"
+                underlineColorAndroid="#f000"
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={(text) => {
+                  setComments(text);
+                }}
+              />
+            </View>
+            </View>
+          </View>
+
+          
+        </View>
       case TASK_TYPES.EXCAVATION:
         return <View>
           <View style={{ flexDirection: 'column' }}>
@@ -1621,6 +1882,267 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
           </View>
 
           
+        </View>
+      case TASK_TYPES.THREADING_OF_PRE_STRESSING_STRANDS:
+        return <View>
+          <View>
+            <View style={{ flexDirection: 'column' }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Date</Text>
+
+              <View style={{ flexDirection: 'row' }}>
+                <TextInput
+                  style={styles.inputStyle}
+                  placeholder=""
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  blurOnSubmit={false}
+                  value={rfiDate ? moment(new Date(rfiDate)).format('DD-MM-YYYY') : ''}
+                  editable={false}
+                />
+                <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
+                  <Text style={styles.assignTagButtonText}>Icon</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {openCalendar && (
+
+              <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
+                <CalendarPicker width={width - 40}
+                  initialDate={rfiDate ? new Date(rfiDate) : new Date()}
+                  onDateChange={(date) => {
+                    setRFIDate(date.format("YYYY-MM-DD"));
+                    openCloseCalendar()
+                  }}
+                />
+              </View>
+            )}
+
+            <View style={{ flexDirection: 'column', height: 80, paddingTop: 15, zIndex: 5, marginBottom: 140 }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Time</Text>
+              <View style={{ flexDirection: 'row', gap: 20 }}>
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenMinutes(false);
+                    setOpenTimeFormats(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='MODAL'
+                    open={openHours}
+                    value={hour}
+                    items={hours}
+                    setOpen={setOpenHours}
+                    setValue={setHour}
+                  />
+                </View>
+
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenHours(false);
+                    setOpenTimeFormats(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='MODAL'
+                    open={openMinutes}
+                    value={minute}
+                    items={minutes}
+                    setOpen={setOpenMinutes}
+                    setValue={setMinute}
+                  />
+                </View>
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenHours(false);
+                    setOpenMinutes(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='SCROLLVIEW'
+                    open={openTimeFormats}
+                    value={timeFormat}
+                    items={timeFormats}
+                    setOpen={setOpenTimeFormats}
+                    setValue={setTimeFormat}
+                  />
+                </View>
+              </View>
+              
+              <View style={{ flexDirection: 'column', height: 65 }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Recommendations</Text>
+              <TextInput
+                style={styles.inputStyle}
+                placeholder="Recommendations"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                returnKeyType="next"
+                underlineColorAndroid="#f000"
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={(text) => {
+                  setComments(text);
+                }}
+              />
+            </View>
+            </View>
+          </View>
+
+          
+        </View>
+      case TASK_TYPES.CAGE_LOWERING:
+        return <View>
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Plie shaft cleaned of all loose material or not</Text>
+            <View style={[styles.SectionStyle, { zIndex: 16, height: 50 }]}>
+              <DropDownPicker
+                open={openPlieShaftCleanedLooseMaterial}
+                value={plieShaftCleanedLooseMaterial}
+                items={YES_NO_LIST}
+                setOpen={setOpenPlieShaftCleanedLooseMaterial}
+                setValue={setPlieShaftCleanedLooseMaterial}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Suitable spacer provided to maintain the required cover to steel </Text>
+            <View style={[styles.SectionStyle, { zIndex: 15, height: 50 }]}>
+              <DropDownPicker
+                open={openSuitableSpacerProvidedToMaintainCoverToSteel}
+                value={suitableSpacerProvidedToMaintainCoverToSteel}
+                items={YES_NO_LIST}
+                setOpen={setOpenSuitableSpacerProvidedToMaintainCoverToSteel}
+                setValue={setSuitableSpacerProvidedToMaintainCoverToSteel}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>No L bend at the bottom of the Cage checked or not </Text>
+            <View style={[styles.SectionStyle, { zIndex: 15, height: 50 }]}>
+              <DropDownPicker
+                open={openNoLBendBottomOfTheCageChecked}
+                value={noLBendBottomOfTheCageChecked}
+                items={YES_NO_NA_LIST}
+                setOpen={setOpenNoLBendBottomOfTheCageChecked}
+                setValue={setNoLBendBottomOfTheCageChecked}
+              />
+            </View>
+          </View>
+
+          <View>
+            <View style={{ flexDirection: 'column' }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Date</Text>
+
+              <View style={{ flexDirection: 'row' }}>
+                <TextInput
+                  style={styles.inputStyle}
+                  placeholder=""
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  blurOnSubmit={false}
+                  value={rfiDate ? moment(new Date(rfiDate)).format('DD-MM-YYYY') : ''}
+                  editable={false}
+                />
+                <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
+                  <Text style={styles.assignTagButtonText}>Icon</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {openCalendar && (
+
+              <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
+                <CalendarPicker width={width - 40}
+                  initialDate={rfiDate ? new Date(rfiDate) : new Date()}
+                  onDateChange={(date) => {
+                    setRFIDate(date.format("YYYY-MM-DD"));
+                    openCloseCalendar()
+                  }}
+                />
+              </View>
+            )}
+
+            <View style={{ flexDirection: 'column', height: 80, paddingTop: 15, zIndex: 5, marginBottom: 140 }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Time</Text>
+              <View style={{ flexDirection: 'row', gap: 20 }}>
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenMinutes(false);
+                    setOpenTimeFormats(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='MODAL'
+                    open={openHours}
+                    value={hour}
+                    items={hours}
+                    setOpen={setOpenHours}
+                    setValue={setHour}
+                  />
+                </View>
+
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenHours(false);
+                    setOpenTimeFormats(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='MODAL'
+                    open={openMinutes}
+                    value={minute}
+                    items={minutes}
+                    setOpen={setOpenMinutes}
+                    setValue={setMinute}
+                  />
+                </View>
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenHours(false);
+                    setOpenMinutes(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='SCROLLVIEW'
+                    open={openTimeFormats}
+                    value={timeFormat}
+                    items={timeFormats}
+                    setOpen={setOpenTimeFormats}
+                    setValue={setTimeFormat}
+                  />
+                </View>
+              </View>
+              
+              <View style={{ flexDirection: 'column', height: 65 }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Recommendations</Text>
+              <TextInput
+                style={styles.inputStyle}
+                placeholder="Recommendations"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                returnKeyType="next"
+                underlineColorAndroid="#f000"
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={(text) => {
+                  setComments(text);
+                }}
+              />
+            </View>
+            </View>
+          </View>
         </View>
       default: return <View>
         <Text>TODO</Text>

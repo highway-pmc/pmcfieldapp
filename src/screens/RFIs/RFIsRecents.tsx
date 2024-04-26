@@ -211,7 +211,9 @@ const RFIsRecents = (props: any) => {
   const taskForm = (selectedRFI: any) => {
     switch (selectedRFI?.metaData?.taskName) {
 
-      case TASK_TYPES.CNG_AND_SETTING_OUT: return <View style={styles.ImageSections}>
+      case TASK_TYPES.CNG_AND_SETTING_OUT:
+      case TASK_TYPES.PLACING_OF_SHEATHING_DUCT:
+        return <View style={styles.ImageSections}>
       <View>
         {selectedRFI?.metaData?.base64Image && renderFileData()}
       </View>
@@ -301,6 +303,43 @@ const RFIsRecents = (props: any) => {
             <Text>{selectedRFI?.metaData.spacerBarCheckedGFC}</Text>
           </View>
         </View>
+      case TASK_TYPES.PLACEMENT_OF_REINFORCEMENT_CAGE:
+        return <View>
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Rebar and dimension (dia,len and shape) checked as per GFC</Text>
+            <Text>{selectedRFI?.metaData.rebarAndDimensionGFC}</Text>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Shaping, No and Length of Bars checked as per GFC</Text>
+            <Text>{selectedRFI?.metaData.shapingNoAndLengthOfBarsGFC}</Text>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Rebars securely tightened/bound by tie bars</Text>
+            <Text>{selectedRFI?.metaData.rebarsSecurelyTightened}</Text>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Splice length and location checked as per GFC</Text>
+            <Text>{selectedRFI?.metaData.spliceLengthAndLocationGFC}</Text>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Rebar within tolerance limit</Text>
+            <Text>{selectedRFI?.metaData.rebarWithinToleranceLimit}</Text>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Coupler arrangements within tolerance</Text>
+            <Text>{selectedRFI?.metaData.couplerArrangementsWithinTolerance}</Text>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Bar Bending schedule checked</Text>
+            <Text>{selectedRFI?.metaData.barBendingScheduleChecked}</Text>
+          </View>
+        </View>
       case TASK_TYPES.EXCAVATION:
         return <View>
           <View style={{ flexDirection: 'column' }}>
@@ -319,6 +358,27 @@ const RFIsRecents = (props: any) => {
           <View style={{ flexDirection: 'column' }}>
             <Text style={styles.GenerateRFIFieldLabel}>Whether minimum time has been attained</Text>
             <Text>{selectedRFI?.metaData.minimumTimeHasBeenAttained}</Text>
+          </View>
+        </View>
+      case TASK_TYPES.THREADING_OF_PRE_STRESSING_STRANDS:
+        return <View>
+          <Text>No Observations</Text>
+        </View>
+      case TASK_TYPES.CAGE_LOWERING:
+        return <View>
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Plie shaft cleaned of all loose material or not</Text>
+            <Text>{selectedRFI?.metaData.plieShaftCleanedLooseMaterial}</Text>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Suitable spacer provided to maintain the required cover to steel</Text>
+            <Text>{selectedRFI?.metaData.suitableSpacerProvidedToMaintainCoverToSteel}</Text>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>No L bend at the bottom of the Cage checked or not</Text>
+            <Text>{selectedRFI?.metaData.noLBendBottomOfTheCageChecked}</Text>
           </View>
         </View>
       default: return <View>

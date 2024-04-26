@@ -217,6 +217,10 @@ const RFIsRecents = (props: any) => {
       </View>
     </View>
       case TASK_TYPES.FORM_WORK:
+      case TASK_TYPES.PLACEMENT_OF_INNER_SHUTTERS:
+      case TASK_TYPES.PLACEMENT_OF_SIDE_SHUTTERS:
+      case TASK_TYPES.PLACEMENT_OF_BOTTOM_SHUTTER:
+      case TASK_TYPES.PLACEMENT_OF_MIDDLE_AND_TOP_SHUTTER:
         return <View>
           <View style={{ flexDirection: 'column' }}>
             <Text style={styles.GenerateRFIFieldLabel}>Cleanliness and Oil application checked</Text>
@@ -302,6 +306,19 @@ const RFIsRecents = (props: any) => {
           <View style={{ flexDirection: 'column' }}>
             <Text style={styles.GenerateRFIFieldLabel}>Qty of earth work excavated in cum</Text>
             <Text>{selectedRFI?.metaData.quantity}</Text>
+          </View>
+        </View>
+      case TASK_TYPES.REMOVAL_OF_SHUTTER:
+      case TASK_TYPES.REMOVAL_OF_SHUTTERS:
+        return <View>
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Whether concrete has achieved desired strength</Text>
+            <Text>{selectedRFI?.metaData.concreteHasAchievedDesiredStrength}</Text>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Whether minimum time has been attained</Text>
+            <Text>{selectedRFI?.metaData.minimumTimeHasBeenAttained}</Text>
           </View>
         </View>
       default: return <View>

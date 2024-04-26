@@ -67,7 +67,11 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
   const [comments, setComments] = useState('');
   const { width, height } = Dimensions.get('window');
 
-  // Form Work
+  // FORM_WORK
+  // PLACEMENT_OF_INNER_SHUTTERS
+  // PLACEMENT_OF_SIDE_SHUTTERS
+  // PLACEMENT_OF_BOTTOM_SHUTTER
+  // PLACEMENT_OF_MIDDLE_AND_TOP_SHUTTER
   const [cleanliness, setCleanliness] = useState('Y');
   const [openCleanliness, setOpenCleanliness] = useState(false);
   const [formworkAlignmentChecked, setFormworkAlignmentChecked] = useState('Y');
@@ -103,6 +107,13 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
 
   // EXCAVATION
   const [quantity, setQuantity] = useState(0);
+
+  // REMOVAL_OF_SHUTTER
+  // REMOVAL_OF_SHUTTERS
+  const [concreteHasAchievedDesiredStrength, setConcreteHasAchievedDesiredStrength] = useState('Y');
+  const [openConcreteHasAchievedDesiredStrength, setOpenConcreteHasAchievedDesiredStrength] = useState(false);
+  const [minimumTimeHasBeenAttained, setMinimumTimeHasBeenAttained] = useState('Y');
+  const [openMinimumTimeHasBeenAttained, setOpenMinimumTimeHasBeenAttained] = useState(false);
 
   const dispatch = useDispatch()
   const focus = useIsFocused();
@@ -141,31 +152,48 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
     if (rfiData) {
       setRfiId(rfiData._id);
       if (rfiData.metaData) {
-        if (selectedTask?.name == TASK_TYPES.CNG_AND_SETTING_OUT) {
-          setImageObject({
-            filePath: '',
-            fileData: rfiData.metaData.base64Image,
-            fileUri: ''
-          });
-        } else if (rfiData.metaData && selectedTask?.name == TASK_TYPES.FORM_WORK) {
-          setCleanliness(rfiData.metaData.cleanliness);
-          setFormworkAlignmentChecked(rfiData.metaData.formworkAlignmentChecked);
-          setFormworkSealingChecked(rfiData.metaData.formworkSealingChecked);
-          setFormworkdDrawingsChecked(rfiData.metaData.formworkdDrawingsChecked);
-          setConcreteFinishLevelMarked(rfiData.metaData.concreteFinishLevelMarked);
-          setFormworkProperlySupported(rfiData.metaData.formworkProperlySupported);
-          setFormworkFitConcreting(rfiData.metaData.formworkFitConcreting);
-        } else if (rfiData.metaData && (selectedTask?.name == TASK_TYPES.REINFORCEMENT_PREPARATION || selectedTask?.name == TASK_TYPES.REINFORCEMENT)) {
-          setRebarAndDimensionGFC(rfiData.metaData.rebarAndDimensionGFC);
-          setShapingNoAndLengthOfBarsGFC(rfiData.metaData.shapingNoAndLengthOfBarsGFC);
-          setRebarsSecurelyTightened(rfiData.metaData.rebarsSecurelyTightened);
-          setSpliceLengthAndLocationGFC(rfiData.metaData.spliceLengthAndLocationGFC);
-          setRebarWithinToleranceLimit(rfiData.metaData.rebarWithinToleranceLimit);
-          setCouplerArrangementsWithinTolerance(rfiData.metaData.couplerArrangementsWithinTolerance);
-          setBarBendingScheduleChecked(rfiData.metaData.barBendingScheduleChecked);
-          setSpacerBarCheckedGFC(rfiData.metaData.spacerBarCheckedGFC);
-        } else if (rfiData.metaData && selectedTask?.name == TASK_TYPES.EXCAVATION) {
-          setQuantity(rfiData.metaData.quantity);
+        switch (selectedTask?.name) {
+          case TASK_TYPES.CNG_AND_SETTING_OUT:
+            setImageObject({
+              filePath: '',
+              fileData: rfiData.metaData.base64Image,
+              fileUri: ''
+            });
+            break;
+          case TASK_TYPES.FORM_WORK:
+          case TASK_TYPES.PLACEMENT_OF_INNER_SHUTTERS:
+          case TASK_TYPES.PLACEMENT_OF_SIDE_SHUTTERS:
+          case TASK_TYPES.PLACEMENT_OF_BOTTOM_SHUTTER:
+          case TASK_TYPES.PLACEMENT_OF_MIDDLE_AND_TOP_SHUTTER:
+            setCleanliness(rfiData.metaData.cleanliness);
+            setFormworkAlignmentChecked(rfiData.metaData.formworkAlignmentChecked);
+            setFormworkSealingChecked(rfiData.metaData.formworkSealingChecked);
+            setFormworkdDrawingsChecked(rfiData.metaData.formworkdDrawingsChecked);
+            setConcreteFinishLevelMarked(rfiData.metaData.concreteFinishLevelMarked);
+            setFormworkProperlySupported(rfiData.metaData.formworkProperlySupported);
+            setFormworkFitConcreting(rfiData.metaData.formworkFitConcreting);
+            break;
+          case TASK_TYPES.REINFORCEMENT_PREPARATION:
+          case TASK_TYPES.REINFORCEMENT:
+            setRebarAndDimensionGFC(rfiData.metaData.rebarAndDimensionGFC);
+            setShapingNoAndLengthOfBarsGFC(rfiData.metaData.shapingNoAndLengthOfBarsGFC);
+            setRebarsSecurelyTightened(rfiData.metaData.rebarsSecurelyTightened);
+            setSpliceLengthAndLocationGFC(rfiData.metaData.spliceLengthAndLocationGFC);
+            setRebarWithinToleranceLimit(rfiData.metaData.rebarWithinToleranceLimit);
+            setCouplerArrangementsWithinTolerance(rfiData.metaData.couplerArrangementsWithinTolerance);
+            setBarBendingScheduleChecked(rfiData.metaData.barBendingScheduleChecked);
+            setSpacerBarCheckedGFC(rfiData.metaData.spacerBarCheckedGFC);
+            break;
+          case TASK_TYPES.EXCAVATION:
+            setQuantity(rfiData.metaData.quantity);
+            break;
+          case TASK_TYPES.REMOVAL_OF_SHUTTER:
+          case TASK_TYPES.REMOVAL_OF_SHUTTERS:
+            setConcreteHasAchievedDesiredStrength(rfiData.metaData.concreteHasAchievedDesiredStrength);
+            setMinimumTimeHasBeenAttained(rfiData.metaData.minimumTimeHasBeenAttained);
+            break;
+          default:
+            break;
         }
       }
 
@@ -558,39 +586,59 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
 
     let checkList = {};
 
-    if (selectedTask?.name == TASK_TYPES.CNG_AND_SETTING_OUT) {
-      checkList = {
-        taskName: selectedTask.name,
-        base64Image: imageObject.fileData,
-      }
-    } else if (selectedTask?.name == TASK_TYPES.FORM_WORK) {
-      checkList = {
-        taskName: selectedTask.name,
-        cleanliness: cleanliness,
-        formworkAlignmentChecked: formworkAlignmentChecked,
-        formworkSealingChecked: formworkSealingChecked,
-        formworkdDrawingsChecked: formworkdDrawingsChecked,
-        concreteFinishLevelMarked: concreteFinishLevelMarked,
-        formworkProperlySupported: formworkProperlySupported,
-        formworkFitConcreting: formworkFitConcreting
-      }
-    } else if (selectedTask?.name == TASK_TYPES.REINFORCEMENT_PREPARATION || selectedTask?.name == TASK_TYPES.REINFORCEMENT) {
-      checkList = {
-        taskName: selectedTask.name,
-        rebarAndDimensionGFC: rebarAndDimensionGFC,
-        shapingNoAndLengthOfBarsGFC: shapingNoAndLengthOfBarsGFC,
-        rebarsSecurelyTightened: rebarsSecurelyTightened,
-        spliceLengthAndLocationGFC: spliceLengthAndLocationGFC,
-        rebarWithinToleranceLimit: rebarWithinToleranceLimit,
-        couplerArrangementsWithinTolerance: couplerArrangementsWithinTolerance,
-        barBendingScheduleChecked: barBendingScheduleChecked,
-        spacerBarCheckedGFC: spacerBarCheckedGFC
-      }
-    } else if (selectedTask?.name == TASK_TYPES.EXCAVATION) {
-      checkList = {
-        taskName: selectedTask.name,
-        quantity: quantity
-      }
+    switch (selectedTask?.name) {
+      case TASK_TYPES.CNG_AND_SETTING_OUT:
+        checkList = {
+          taskName: selectedTask.name,
+          base64Image: imageObject.fileData,
+        }
+        break;
+      case TASK_TYPES.FORM_WORK:
+      case TASK_TYPES.PLACEMENT_OF_INNER_SHUTTERS:
+      case TASK_TYPES.PLACEMENT_OF_SIDE_SHUTTERS:
+      case TASK_TYPES.PLACEMENT_OF_BOTTOM_SHUTTER:
+      case TASK_TYPES.PLACEMENT_OF_MIDDLE_AND_TOP_SHUTTER:
+        checkList = {
+          taskName: selectedTask.name,
+          cleanliness: cleanliness,
+          formworkAlignmentChecked: formworkAlignmentChecked,
+          formworkSealingChecked: formworkSealingChecked,
+          formworkdDrawingsChecked: formworkdDrawingsChecked,
+          concreteFinishLevelMarked: concreteFinishLevelMarked,
+          formworkProperlySupported: formworkProperlySupported,
+          formworkFitConcreting: formworkFitConcreting
+        }
+        break;
+      case TASK_TYPES.REINFORCEMENT_PREPARATION:
+      case TASK_TYPES.REINFORCEMENT:
+        checkList = {
+          taskName: selectedTask.name,
+          rebarAndDimensionGFC: rebarAndDimensionGFC,
+          shapingNoAndLengthOfBarsGFC: shapingNoAndLengthOfBarsGFC,
+          rebarsSecurelyTightened: rebarsSecurelyTightened,
+          spliceLengthAndLocationGFC: spliceLengthAndLocationGFC,
+          rebarWithinToleranceLimit: rebarWithinToleranceLimit,
+          couplerArrangementsWithinTolerance: couplerArrangementsWithinTolerance,
+          barBendingScheduleChecked: barBendingScheduleChecked,
+          spacerBarCheckedGFC: spacerBarCheckedGFC
+        }
+        break;
+      case TASK_TYPES.EXCAVATION:
+        checkList = {
+          taskName: selectedTask.name,
+          quantity: quantity
+        }
+        break;
+      case TASK_TYPES.REMOVAL_OF_SHUTTER:
+      case TASK_TYPES.REMOVAL_OF_SHUTTERS:
+        checkList = {
+          taskName: selectedTask.name,
+          concreteHasAchievedDesiredStrength: concreteHasAchievedDesiredStrength,
+          minimumTimeHasBeenAttained: minimumTimeHasBeenAttained
+        }
+        break;
+      default:
+        break;
     }
 
     dispatch(fillRFIsChecklist({
@@ -874,6 +922,10 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
 
       </View>
       case TASK_TYPES.FORM_WORK:
+      case TASK_TYPES.PLACEMENT_OF_INNER_SHUTTERS:
+      case TASK_TYPES.PLACEMENT_OF_SIDE_SHUTTERS:
+      case TASK_TYPES.PLACEMENT_OF_BOTTOM_SHUTTER:
+      case TASK_TYPES.PLACEMENT_OF_MIDDLE_AND_TOP_SHUTTER:
         return <View>
           <View style={{ flexDirection: 'column' }}>
             <Text style={styles.GenerateRFIFieldLabel}>Cleanliness and Oil application checked</Text>
@@ -1322,6 +1374,144 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
             </View>
           </View>
           
+          <View>
+            <View style={{ flexDirection: 'column' }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Date</Text>
+
+              <View style={{ flexDirection: 'row' }}>
+                <TextInput
+                  style={styles.inputStyle}
+                  placeholder=""
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  blurOnSubmit={false}
+                  value={rfiDate ? moment(new Date(rfiDate)).format('DD-MM-YYYY') : ''}
+                  editable={false}
+                />
+                <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
+                  <Text style={styles.assignTagButtonText}>Icon</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {openCalendar && (
+
+              <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
+                <CalendarPicker width={width - 40}
+                  initialDate={rfiDate ? new Date(rfiDate) : new Date()}
+                  onDateChange={(date) => {
+                    setRFIDate(date.format("YYYY-MM-DD"));
+                    openCloseCalendar()
+                  }}
+                />
+              </View>
+            )}
+
+            <View style={{ flexDirection: 'column', height: 80, paddingTop: 15, zIndex: 5, marginBottom: 140 }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Time</Text>
+              <View style={{ flexDirection: 'row', gap: 20 }}>
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenMinutes(false);
+                    setOpenTimeFormats(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='MODAL'
+                    open={openHours}
+                    value={hour}
+                    items={hours}
+                    setOpen={setOpenHours}
+                    setValue={setHour}
+                  />
+                </View>
+
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenHours(false);
+                    setOpenTimeFormats(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='MODAL'
+                    open={openMinutes}
+                    value={minute}
+                    items={minutes}
+                    setOpen={setOpenMinutes}
+                    setValue={setMinute}
+                  />
+                </View>
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenHours(false);
+                    setOpenMinutes(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='SCROLLVIEW'
+                    open={openTimeFormats}
+                    value={timeFormat}
+                    items={timeFormats}
+                    setOpen={setOpenTimeFormats}
+                    setValue={setTimeFormat}
+                  />
+                </View>
+              </View>
+              
+              <View style={{ flexDirection: 'column', height: 65 }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Recommendations</Text>
+              <TextInput
+                style={styles.inputStyle}
+                placeholder="Recommendations"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                returnKeyType="next"
+                underlineColorAndroid="#f000"
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={(text) => {
+                  setComments(text);
+                }}
+              />
+            </View>
+            </View>
+          </View>
+
+          
+        </View>
+      case TASK_TYPES.REMOVAL_OF_SHUTTER:
+      case TASK_TYPES.REMOVAL_OF_SHUTTERS:
+        return <View>
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Whether concrete has achieved desired strength</Text>
+            <View style={[styles.SectionStyle, { zIndex: 16, height: 50 }]}>
+              <DropDownPicker
+                open={openConcreteHasAchievedDesiredStrength}
+                value={concreteHasAchievedDesiredStrength}
+                items={YES_NO_LIST}
+                setOpen={setOpenConcreteHasAchievedDesiredStrength}
+                setValue={setConcreteHasAchievedDesiredStrength}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Whether minimum time has been attained</Text>
+            <View style={[styles.SectionStyle, { zIndex: 15, height: 50 }]}>
+              <DropDownPicker
+                open={openMinimumTimeHasBeenAttained}
+                value={minimumTimeHasBeenAttained}
+                items={YES_NO_LIST}
+                setOpen={setOpenMinimumTimeHasBeenAttained}
+                setValue={setMinimumTimeHasBeenAttained}
+              />
+            </View>
+          </View>
           <View>
             <View style={{ flexDirection: 'column' }}>
               <Text style={styles.GenerateRFIFieldLabel}>Date</Text>

@@ -303,6 +303,12 @@ export const TASK_TYPES = {
     EXCAVATION: 'excavation',
     REINFORCEMENT: 'reinforcement',
     REINFORCEMENT_PREPARATION: 'reinforcement-preparation',
+    REMOVAL_OF_SHUTTER: 'removal-of-shutter',
+    REMOVAL_OF_SHUTTERS: 'removal-of-shutters',
+    PLACEMENT_OF_INNER_SHUTTERS: 'placement-of-inner-shutters',
+    PLACEMENT_OF_SIDE_SHUTTERS: 'placement-of-side-shutters',
+    PLACEMENT_OF_BOTTOM_SHUTTER: 'placement-of-bottom-shutter',
+    PLACEMENT_OF_MIDDLE_AND_TOP_SHUTTER: 'placement-of-middle-and-top-shutter'
 }
 
 export const YES_NO_LIST = [

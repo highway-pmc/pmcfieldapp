@@ -4,7 +4,7 @@ import { useIsFocused } from '@react-navigation/native';
 import { HeaderItems, PROJECT_TYPE, ROLES } from "../../constants/constants"
 import { useSelector } from 'react-redux';
 
-const MyProjectType = ({navigation}: {navigation: any}) => {
+const WorkType = ({navigation}: {navigation: any}) => {
   const [projectHead, setProjectHead] = useState(false);
   const [roles, setRoles] = useState([]);
 
@@ -12,7 +12,7 @@ const MyProjectType = ({navigation}: {navigation: any}) => {
 
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();
-    eventEmitter.emit('headerEvent', HeaderItems.myProjectType);
+    eventEmitter.emit('headerEvent', HeaderItems.manageWork);
   }
 
   useEffect(() => {
@@ -135,4 +135,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MyProjectType
+export default WorkType

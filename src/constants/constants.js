@@ -8,13 +8,13 @@ export const HeaderItems = {
     changePassword: { showBack: false, title: 'Change Password' },
     assignTask: { showBack: true, title: 'Assign Task' },
     flyoverDetails: { showBack: true, title: 'Flyover Details' },
-    myProjectType: { showBack: true, title: 'Manage Works' },
-    myWorkProjectType: { showBack: false, title: 'My Work' },
+    manageWork: { showBack: true, title: 'Manage Works' },
+    myWorkType: { showBack: false, title: 'My Work' },
     assignWork: { showBack: true, title: 'Assign Works' },
     segmentsList: { showBack: true, title: 'Assign Works - Segment' },
     componentsList: { showBack: true, title: 'Assign Works - Component' },
     assignTasks: { showBack: true, title: 'Assign Works - Tasks' },
-    assignedMyProjectType: { showBack: false, title: 'My Work' },
+    assignedWorkType: { showBack: false, title: 'My Work' },
     assignedMyWork: { showBack: true, title: 'Assigned Works' },
     assignedSegments: { showBack: true, title: 'Assigned Works - Segment' },
     assignedComponents: { showBack: true, title: 'Assigned Works - Component' },
@@ -62,7 +62,7 @@ export const Dashboard_MENU = [
         iconMenu: require("./../images/menu/manage-icon.png"),
         title: "My Work",
         subTitle: "Check your task",
-        route: 'MyWorkProjectType',
+        route: 'MyWorkType',
         permissions: ["project-head", "structure-head", "highway-head", "other-work-head"],
         categories: ["structure-work", "highway-work", "other-work"]
     },
@@ -296,3 +296,43 @@ export const WORK_ASSIGNMENT_LEVEL = {
     LEVEL3: 'Level 3',
     LEVEL4: 'Level 4',
 }
+
+export const TASK_TYPES = {
+    CNG_AND_SETTING_OUT: 'cng-and-setting-out',
+    FORM_WORK: 'form-work',
+    EXCAVATION: 'excavation',
+    REINFORCEMENT: 'reinforcement',
+    REINFORCEMENT_PREPARATION: 'reinforcement-preparation',
+    REMOVAL_OF_SHUTTER: 'removal-of-shutter',
+    REMOVAL_OF_SHUTTERS: 'removal-of-shutters',
+    PLACEMENT_OF_INNER_SHUTTERS: 'placement-of-inner-shutters',
+    PLACEMENT_OF_SIDE_SHUTTERS: 'placement-of-side-shutters',
+    PLACEMENT_OF_BOTTOM_SHUTTER: 'placement-of-bottom-shutter',
+    PLACEMENT_OF_MIDDLE_AND_TOP_SHUTTER: 'placement-of-middle-and-top-shutter',
+    PLACEMENT_OF_REINFORCEMENT_CAGE: 'placement-of-reinforcement-cage',
+    CAGE_LOWERING: 'cage-lowering',
+    PLACING_OF_SHEATHING_DUCT: 'placing-of-sheathing-duct',
+    THREADING_OF_PRE_STRESSING_STRANDS: 'threading-of-pre-stressing-strands'
+
+}
+
+export const YES_NO_LIST = [
+    {
+        label: 'Yes', value: 'Y'
+    },
+    {
+        label: 'No', value: 'N'
+    },
+];
+
+export const YES_NO_NA_LIST = [
+    {
+        label: 'Yes', value: 'Y'
+    },
+    {
+        label: 'No', value: 'N'
+    },
+    {
+        label: 'NA', value: 'NA'
+    },
+];

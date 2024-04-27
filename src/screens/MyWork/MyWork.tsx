@@ -1,7 +1,7 @@
 import { View, Text, NativeEventEmitter, StyleSheet, ScrollView, Image, TouchableOpacity, TextInput, Modal, StatusBar, SafeAreaView, Dimensions, Alert } from 'react-native'
 import React, { Fragment, useEffect, useState } from 'react'
 import { useIsFocused } from '@react-navigation/native';
-import { HeaderItems, PROJECT_TYPE, RFI_STATUS, SEGMENT_TYPES_DISPLAY } from "../../constants/constants"
+import { HeaderItems, PROJECT_TYPE, RFI_STATUS, SEGMENT_TYPES_DISPLAY, TASK_TYPES, YES_NO_LIST, YES_NO_NA_LIST } from "../../constants/constants"
 import { useDispatch, useSelector } from 'react-redux';
 import { clearMyWorksEvent, fillRFIsChecklist, getMyWorks, getRFIByWaId } from './actions';
 import LoadingAnimation from '../Common/LoadingAnimation';
@@ -45,10 +45,6 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
     fileUri: ''
   };
 
-  const [openPopup, setOpenPopup] = useState(false);
-  const [selectedTask, setSelectedTask] = useState(null);
-  const [imageObject, setImageObject] = useState(imageObjectEmpty);
-
   const [rfiDate, setRFIDate] = useState('');
   const [hours, setHours] = useState([]);
   const [minutes, setMinutes] = useState([]);
@@ -66,7 +62,74 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
 
   const [comments, setComments] = useState('');
   const { width, height } = Dimensions.get('window');
+
+  // CNG_AND_SETTING_OUT
+  // PLACING_OF_SHEATHING_DUCT
+  const [openPopup, setOpenPopup] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
+  const [imageObject, setImageObject] = useState(imageObjectEmpty);
+
+  // FORM_WORK
+  // PLACEMENT_OF_INNER_SHUTTERS
+  // PLACEMENT_OF_SIDE_SHUTTERS
+  // PLACEMENT_OF_BOTTOM_SHUTTER
+  // PLACEMENT_OF_MIDDLE_AND_TOP_SHUTTER
+  const [cleanliness, setCleanliness] = useState('Y');
+  const [openCleanliness, setOpenCleanliness] = useState(false);
+  const [formworkAlignmentChecked, setFormworkAlignmentChecked] = useState('Y');
+  const [openFormworkAlignmentChecked, setOpenFormworkAlignmentChecked] = useState(false);
+  const [formworkSealingChecked, setFormworkSealingChecked] = useState('Y');
+  const [openFormworkSealingChecked, setOpenFormworkSealingChecked] = useState(false);
+  const [formworkdDrawingsChecked, setFormworkdDrawingsChecked] = useState('Y');
+  const [openFormworkdDrawingsChecked, setOpenFormworkdDrawingsChecked] = useState(false);
+  const [concreteFinishLevelMarked, setConcreteFinishLevelMarked] = useState('Y');
+  const [openConcreteFinishLevelMarked, setOpenConcreteFinishLevelMarked] = useState(false);
+  const [formworkProperlySupported, setFormworkProperlySupported] = useState('Y');
+  const [openFormworkProperlySupported, setOpenFormworkProperlySupported] = useState(false);
+  const [formworkFitConcreting, setFormworkFitConcreting] = useState('Y');
+  const [openFormworkFitConcreting, setOpenFormworkFitConcreting] = useState(false);
+
+  // REINFORCEMENT
+  // REINFORCEMENT_PREPARATION
+  // PLACEMENT_OF_REINFORCEMENT_CAGE **(except spacerBarCheckedGFC)
+  const [rebarAndDimensionGFC, setRebarAndDimensionGFC] = useState('Y');
+  const [openRebarAndDimensionGFC, setOpenRebarAndDimensionGFC] = useState(false);
+  const [shapingNoAndLengthOfBarsGFC, setShapingNoAndLengthOfBarsGFC] = useState('Y');
+  const [openShapingNoAndLengthOfBarsGFC, setOpenShapingNoAndLengthOfBarsGFC] = useState(false);
+  const [rebarsSecurelyTightened, setRebarsSecurelyTightened] = useState('Y');
+  const [openRebarsSecurelyTightened, setOpenRebarsSecurelyTightened] = useState(false);
+  const [spliceLengthAndLocationGFC, setSpliceLengthAndLocationGFC] = useState('Y');
+  const [openSpliceLengthAndLocationGFC, setOpenSpliceLengthAndLocationGFC] = useState(false);
+  const [rebarWithinToleranceLimit, setRebarWithinToleranceLimit] = useState('Y');
+  const [openRebarWithinToleranceLimit, setOpenRebarWithinToleranceLimit] = useState(false);
+  const [couplerArrangementsWithinTolerance, setCouplerArrangementsWithinTolerance] = useState('Y');
+  const [openCouplerArrangementsWithinTolerance, setOpenCouplerArrangementsWithinTolerance] = useState(false);
+  const [barBendingScheduleChecked, setBarBendingScheduleChecked] = useState('Y');
+  const [openBarBendingScheduleChecked, setOpenBarBendingScheduleChecked] = useState(false);
+  const [spacerBarCheckedGFC, setSpacerBarCheckedGFC] = useState('Y');
+  const [openSpacerBarCheckedGFC, setOpenSpacerBarCheckedGFC] = useState(false);
+
+  // EXCAVATION
+  const [quantity, setQuantity] = useState(0);
+
+  // REMOVAL_OF_SHUTTER
+  // REMOVAL_OF_SHUTTERS
+  const [concreteHasAchievedDesiredStrength, setConcreteHasAchievedDesiredStrength] = useState('Y');
+  const [openConcreteHasAchievedDesiredStrength, setOpenConcreteHasAchievedDesiredStrength] = useState(false);
+  const [minimumTimeHasBeenAttained, setMinimumTimeHasBeenAttained] = useState('Y');
+  const [openMinimumTimeHasBeenAttained, setOpenMinimumTimeHasBeenAttained] = useState(false);
+
+  // THREADING_OF_PRE_STRESSING_STRANDS
+    // only comments
   
+  // CAGE_LOWERING
+  const [plieShaftCleanedLooseMaterial, setPlieShaftCleanedLooseMaterial] = useState('Y');
+  const [openPlieShaftCleanedLooseMaterial, setOpenPlieShaftCleanedLooseMaterial] = useState(false);
+  const [suitableSpacerProvidedToMaintainCoverToSteel, setSuitableSpacerProvidedToMaintainCoverToSteel] = useState('Y');
+  const [openSuitableSpacerProvidedToMaintainCoverToSteel, setOpenSuitableSpacerProvidedToMaintainCoverToSteel] = useState(false);
+  const [noLBendBottomOfTheCageChecked, setNoLBendBottomOfTheCageChecked] = useState('Y');
+  const [openNoLBendBottomOfTheCageChecked, setOpenNoLBendBottomOfTheCageChecked] = useState(false);
+
   const dispatch = useDispatch()
   const focus = useIsFocused();
 
@@ -103,15 +166,69 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
 
     if (rfiData) {
       setRfiId(rfiData._id);
-      if (rfiData.metaData && rfiData.metaData.base64Image) {
-        setImageObject({
-          filePath: '',
-          fileData: rfiData.metaData.base64Image,
-          fileUri: ''
-        });
+      if (rfiData.metaData) {
+        switch (selectedTask?.name) {
+          case TASK_TYPES.CNG_AND_SETTING_OUT:
+          case TASK_TYPES.PLACING_OF_SHEATHING_DUCT:
+            setImageObject({
+              filePath: '',
+              fileData: rfiData.metaData.base64Image,
+              fileUri: ''
+            });
+            break;
+          case TASK_TYPES.FORM_WORK:
+          case TASK_TYPES.PLACEMENT_OF_INNER_SHUTTERS:
+          case TASK_TYPES.PLACEMENT_OF_SIDE_SHUTTERS:
+          case TASK_TYPES.PLACEMENT_OF_BOTTOM_SHUTTER:
+          case TASK_TYPES.PLACEMENT_OF_MIDDLE_AND_TOP_SHUTTER:
+            setCleanliness(rfiData.metaData.cleanliness);
+            setFormworkAlignmentChecked(rfiData.metaData.formworkAlignmentChecked);
+            setFormworkSealingChecked(rfiData.metaData.formworkSealingChecked);
+            setFormworkdDrawingsChecked(rfiData.metaData.formworkdDrawingsChecked);
+            setConcreteFinishLevelMarked(rfiData.metaData.concreteFinishLevelMarked);
+            setFormworkProperlySupported(rfiData.metaData.formworkProperlySupported);
+            setFormworkFitConcreting(rfiData.metaData.formworkFitConcreting);
+            break;
+          case TASK_TYPES.REINFORCEMENT_PREPARATION:
+          case TASK_TYPES.REINFORCEMENT:
+            setRebarAndDimensionGFC(rfiData.metaData.rebarAndDimensionGFC);
+            setShapingNoAndLengthOfBarsGFC(rfiData.metaData.shapingNoAndLengthOfBarsGFC);
+            setRebarsSecurelyTightened(rfiData.metaData.rebarsSecurelyTightened);
+            setSpliceLengthAndLocationGFC(rfiData.metaData.spliceLengthAndLocationGFC);
+            setRebarWithinToleranceLimit(rfiData.metaData.rebarWithinToleranceLimit);
+            setCouplerArrangementsWithinTolerance(rfiData.metaData.couplerArrangementsWithinTolerance);
+            setBarBendingScheduleChecked(rfiData.metaData.barBendingScheduleChecked);
+            setSpacerBarCheckedGFC(rfiData.metaData.spacerBarCheckedGFC);
+            break;
+          case TASK_TYPES.PLACEMENT_OF_REINFORCEMENT_CAGE:
+            setRebarAndDimensionGFC(rfiData.metaData.rebarAndDimensionGFC);
+            setShapingNoAndLengthOfBarsGFC(rfiData.metaData.shapingNoAndLengthOfBarsGFC);
+            setRebarsSecurelyTightened(rfiData.metaData.rebarsSecurelyTightened);
+            setSpliceLengthAndLocationGFC(rfiData.metaData.spliceLengthAndLocationGFC);
+            setRebarWithinToleranceLimit(rfiData.metaData.rebarWithinToleranceLimit);
+            setCouplerArrangementsWithinTolerance(rfiData.metaData.couplerArrangementsWithinTolerance);
+            setBarBendingScheduleChecked(rfiData.metaData.barBendingScheduleChecked);
+            break;
+          case TASK_TYPES.EXCAVATION:
+            setQuantity(rfiData.metaData.quantity);
+            break;
+          case TASK_TYPES.REMOVAL_OF_SHUTTER:
+          case TASK_TYPES.REMOVAL_OF_SHUTTERS:
+            setConcreteHasAchievedDesiredStrength(rfiData.metaData.concreteHasAchievedDesiredStrength);
+            setMinimumTimeHasBeenAttained(rfiData.metaData.minimumTimeHasBeenAttained);
+            break;
+          case TASK_TYPES.CAGE_LOWERING:
+            setPlieShaftCleanedLooseMaterial(rfiData.metaData.plieShaftCleanedLooseMaterial);
+            setSuitableSpacerProvidedToMaintainCoverToSteel(rfiData.metaData.suitableSpacerProvidedToMaintainCoverToSteel);
+            setNoLBendBottomOfTheCageChecked(rfiData.metaData.noLBendBottomOfTheCageChecked);
+            break;
+          default:
+            break;
+        }
       }
+
       if (rfiData.rfiSubmitDateTime) {
-        
+
         setRFIDate(moment(new Date(rfiData.rfiSubmitDateTime)).format('YYYY-MM-DD'));
 
         const time = moment(new Date(rfiData.rfiSubmitDateTime)).format('hh:mm A')
@@ -402,7 +519,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
 
   const getStyle = (item: any) => {
     if (item.rfiStatus) {
-      if (item.rfiStatus === RFI_STATUS.GENERATED ||  item.rfiStatus === RFI_STATUS.RE_GENERATED) {
+      if (item.rfiStatus === RFI_STATUS.GENERATED || item.rfiStatus === RFI_STATUS.RE_GENERATED) {
         return [styles.StartWorkCard, styles.StartBorder];
       } else if (item.rfiStatus === RFI_STATUS.REJECTED || item.rfiStatus === RFI_STATUS.CANCELLED) {
         return [styles.StartWorkCard, styles.StartRejectBorder];
@@ -476,7 +593,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
       Alert.alert('Error', 'Recommendations is required.');
       return false;
     }
-    
+
     let rfiSubmitDateTime = '';
     let rfiTime = '';
     if (rfiDate) {
@@ -497,16 +614,96 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
       rfiSubmitDateTime = rfiDate + ' ' + rfiTime + ":00"
     }
 
+    let checkList = {};
+
+    switch (selectedTask?.name) {
+      case TASK_TYPES.CNG_AND_SETTING_OUT:
+      case TASK_TYPES.PLACING_OF_SHEATHING_DUCT:
+        checkList = {
+          taskName: selectedTask.name,
+          base64Image: imageObject.fileData,
+        }
+        break;
+      case TASK_TYPES.FORM_WORK:
+      case TASK_TYPES.PLACEMENT_OF_INNER_SHUTTERS:
+      case TASK_TYPES.PLACEMENT_OF_SIDE_SHUTTERS:
+      case TASK_TYPES.PLACEMENT_OF_BOTTOM_SHUTTER:
+      case TASK_TYPES.PLACEMENT_OF_MIDDLE_AND_TOP_SHUTTER:
+        checkList = {
+          taskName: selectedTask.name,
+          cleanliness: cleanliness,
+          formworkAlignmentChecked: formworkAlignmentChecked,
+          formworkSealingChecked: formworkSealingChecked,
+          formworkdDrawingsChecked: formworkdDrawingsChecked,
+          concreteFinishLevelMarked: concreteFinishLevelMarked,
+          formworkProperlySupported: formworkProperlySupported,
+          formworkFitConcreting: formworkFitConcreting
+        }
+        break;
+      case TASK_TYPES.REINFORCEMENT_PREPARATION:
+      case TASK_TYPES.REINFORCEMENT:
+        checkList = {
+          taskName: selectedTask.name,
+          rebarAndDimensionGFC: rebarAndDimensionGFC,
+          shapingNoAndLengthOfBarsGFC: shapingNoAndLengthOfBarsGFC,
+          rebarsSecurelyTightened: rebarsSecurelyTightened,
+          spliceLengthAndLocationGFC: spliceLengthAndLocationGFC,
+          rebarWithinToleranceLimit: rebarWithinToleranceLimit,
+          couplerArrangementsWithinTolerance: couplerArrangementsWithinTolerance,
+          barBendingScheduleChecked: barBendingScheduleChecked,
+          spacerBarCheckedGFC: spacerBarCheckedGFC
+        }
+        break;
+      case TASK_TYPES.PLACEMENT_OF_REINFORCEMENT_CAGE:
+        checkList = {
+          taskName: selectedTask.name,
+          rebarAndDimensionGFC: rebarAndDimensionGFC,
+          shapingNoAndLengthOfBarsGFC: shapingNoAndLengthOfBarsGFC,
+          rebarsSecurelyTightened: rebarsSecurelyTightened,
+          spliceLengthAndLocationGFC: spliceLengthAndLocationGFC,
+          rebarWithinToleranceLimit: rebarWithinToleranceLimit,
+          couplerArrangementsWithinTolerance: couplerArrangementsWithinTolerance,
+          barBendingScheduleChecked: barBendingScheduleChecked,
+        }
+        break;
+      case TASK_TYPES.EXCAVATION:
+        checkList = {
+          taskName: selectedTask.name,
+          quantity: quantity
+        }
+        break;
+      case TASK_TYPES.REMOVAL_OF_SHUTTER:
+      case TASK_TYPES.REMOVAL_OF_SHUTTERS:
+        checkList = {
+          taskName: selectedTask.name,
+          concreteHasAchievedDesiredStrength: concreteHasAchievedDesiredStrength,
+          minimumTimeHasBeenAttained: minimumTimeHasBeenAttained
+        }
+        break;
+      case TASK_TYPES.THREADING_OF_PRE_STRESSING_STRANDS:
+        checkList = {
+          taskName: selectedTask.name,
+        }
+        break;
+      case TASK_TYPES.CAGE_LOWERING:
+        checkList = {
+          taskName: selectedTask.name,
+          plieShaftCleanedLooseMaterial: plieShaftCleanedLooseMaterial,
+          suitableSpacerProvidedToMaintainCoverToSteel: suitableSpacerProvidedToMaintainCoverToSteel,
+          noLBendBottomOfTheCageChecked: noLBendBottomOfTheCageChecked
+        }
+        break;
+      default:
+        break;
+    }
+
     dispatch(fillRFIsChecklist({
       projectId: loggedInUser.projectId,
       projectModuleId: projectModuleId,
       rfiId: rfiId,
       status: rfiStatus,
       body: {
-        checkList: {
-          taskName: selectedTask.name,
-          base64Image: imageObject.fileData,
-        },
+        checkList: checkList,
         additionalData: {
           comments: comments,
           rfiSubmitDateTime: rfiSubmitDateTime
@@ -644,6 +841,1315 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
     }]);
   }
 
+  const taskForm = (taskName: any) => {
+    switch (taskName) {
+
+      case TASK_TYPES.CNG_AND_SETTING_OUT:
+      case TASK_TYPES.PLACING_OF_SHEATHING_DUCT:
+        return <View>
+        <Text style={{ textAlign: 'center', fontSize: 20, paddingBottom: 10 }} >Pick Image from Camera & Gallery</Text>
+        <View style={styles.ImageSections}>
+          <View>
+            {imageObject?.fileData && renderFileData()}
+            {/* <Text style={{ textAlign: 'center' }}>Base 64 String</Text> */}
+          </View>
+          {/* <View>
+          {imageObject?.fileUri && renderFileUri()}
+          <Text style={{ textAlign: 'center' }}>File Uri</Text>
+        </View> */}
+        </View>
+
+        <View style={[styles.btnParentSection, { flexDirection: 'row', gap: 20, justifyContent: 'center' }]}>
+
+          <TouchableOpacity onPress={launchCamera} style={styles.btnSection}  >
+            <Text style={styles.btnText}>Camera</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={launchImageLibrary} style={styles.btnSection}  >
+            <Text style={styles.btnText}>Gallery</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View>
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Date</Text>
+
+            <View style={{ flexDirection: 'row' }}>
+              <TextInput
+                style={styles.inputStyle}
+                placeholder=""
+                autoCapitalize="none"
+                keyboardType="email-address"
+                returnKeyType="next"
+                underlineColorAndroid="#f000"
+                blurOnSubmit={false}
+                value={rfiDate ? moment(new Date(rfiDate)).format('DD-MM-YYYY') : ''}
+                editable={false}
+              />
+              <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
+                <Text style={styles.assignTagButtonText}>Icon</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          {openCalendar && (
+
+            <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
+              <CalendarPicker width={width - 40}
+                initialDate={rfiDate ? new Date(rfiDate) : new Date()}
+                onDateChange={(date) => {
+                  setRFIDate(date.format("YYYY-MM-DD"));
+                  openCloseCalendar()
+                }}
+              />
+            </View>
+          )}
+
+          <View style={{ flexDirection: 'column', height: 80, paddingTop: 15, zIndex: 5, marginBottom: 140 }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Time</Text>
+            <View style={{ flexDirection: 'row', gap: 20 }}>
+              <View style={{ width: 80, height: 90 }}>
+                <DropDownPicker onPress={() => {
+                  setOpenMinutes(false);
+                  setOpenTimeFormats(false);
+                }}
+                  dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                  maxHeight={75}
+                  zIndex={1000}
+                  listMode='MODAL'
+                  open={openHours}
+                  value={hour}
+                  items={hours}
+                  setOpen={setOpenHours}
+                  setValue={setHour}
+                />
+              </View>
+
+              <View style={{ width: 80, height: 90 }}>
+                <DropDownPicker onPress={() => {
+                  setOpenHours(false);
+                  setOpenTimeFormats(false);
+                }}
+                  dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                  maxHeight={75}
+                  zIndex={1000}
+                  listMode='MODAL'
+                  open={openMinutes}
+                  value={minute}
+                  items={minutes}
+                  setOpen={setOpenMinutes}
+                  setValue={setMinute}
+                />
+              </View>
+              <View style={{ width: 80, height: 90 }}>
+                <DropDownPicker onPress={() => {
+                  setOpenHours(false);
+                  setOpenMinutes(false);
+                }}
+                  dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                  maxHeight={75}
+                  zIndex={1000}
+                  listMode='SCROLLVIEW'
+                  open={openTimeFormats}
+                  value={timeFormat}
+                  items={timeFormats}
+                  setOpen={setOpenTimeFormats}
+                  setValue={setTimeFormat}
+                />
+              </View>
+            </View>
+
+            <View style={{ flexDirection: 'column', height: 65 }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Recommendations</Text>
+              <TextInput
+                style={styles.inputStyle}
+                placeholder="Recommendations"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                returnKeyType="next"
+                underlineColorAndroid="#f000"
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={(text) => {
+                  setComments(text);
+                }}
+              />
+            </View>
+          </View>
+        </View>
+
+      </View>
+      case TASK_TYPES.FORM_WORK:
+      case TASK_TYPES.PLACEMENT_OF_INNER_SHUTTERS:
+      case TASK_TYPES.PLACEMENT_OF_SIDE_SHUTTERS:
+      case TASK_TYPES.PLACEMENT_OF_BOTTOM_SHUTTER:
+      case TASK_TYPES.PLACEMENT_OF_MIDDLE_AND_TOP_SHUTTER:
+        return <View>
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Cleanliness and Oil application checked</Text>
+            <View style={[styles.SectionStyle, { zIndex: 16, height: 50 }]}>
+              <DropDownPicker
+                open={openCleanliness}
+                value={cleanliness}
+                items={YES_NO_LIST}
+                setOpen={setOpenCleanliness}
+                setValue={setCleanliness}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Formwork alignment checked</Text>
+            <View style={[styles.SectionStyle, { zIndex: 15, height: 50 }]}>
+              <DropDownPicker
+                open={openFormworkAlignmentChecked}
+                value={formworkAlignmentChecked}
+                items={YES_NO_LIST}
+                setOpen={setOpenFormworkAlignmentChecked}
+                setValue={setFormworkAlignmentChecked}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Formwork tightness/sealing checked</Text>
+            <View style={[styles.SectionStyle, { zIndex: 14, height: 50 }]}>
+              <DropDownPicker
+                open={openFormworkSealingChecked}
+                value={formworkSealingChecked}
+                items={YES_NO_NA_LIST}
+                setOpen={setOpenFormworkSealingChecked}
+                setValue={setFormworkSealingChecked}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Required covers provided as per drawings checked</Text>
+            <View style={[styles.SectionStyle, { zIndex: 13, height: 50 }]}>
+              <DropDownPicker
+                open={openFormworkdDrawingsChecked}
+                value={formworkdDrawingsChecked}
+                items={YES_NO_LIST}
+                setOpen={setOpenFormworkdDrawingsChecked}
+                setValue={setFormworkdDrawingsChecked}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Concrete finish level marked</Text>
+            <View style={[styles.SectionStyle, { zIndex: 12, height: 50 }]}>
+              <DropDownPicker
+                open={openConcreteFinishLevelMarked}
+                value={concreteFinishLevelMarked}
+                items={YES_NO_LIST}
+                setOpen={setOpenConcreteFinishLevelMarked}
+                setValue={setConcreteFinishLevelMarked}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Formwork properly supported</Text>
+            <View style={[styles.SectionStyle, { zIndex: 11, height: 50 }]}>
+              <DropDownPicker
+                open={openFormworkProperlySupported}
+                value={formworkProperlySupported}
+                items={YES_NO_NA_LIST}
+                setOpen={setOpenFormworkProperlySupported}
+                setValue={setFormworkProperlySupported}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Formwork fit for concreting</Text>
+            <View style={[styles.SectionStyle, { zIndex: 10, height: 50 }]}>
+              <DropDownPicker
+                open={openFormworkFitConcreting}
+                value={formworkFitConcreting}
+                items={YES_NO_NA_LIST}
+                setOpen={setOpenFormworkFitConcreting}
+                setValue={setFormworkFitConcreting}
+              />
+            </View>
+          </View>
+          
+          <View>
+            <View style={{ flexDirection: 'column' }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Date</Text>
+
+              <View style={{ flexDirection: 'row' }}>
+                <TextInput
+                  style={styles.inputStyle}
+                  placeholder=""
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  blurOnSubmit={false}
+                  value={rfiDate ? moment(new Date(rfiDate)).format('DD-MM-YYYY') : ''}
+                  editable={false}
+                />
+                <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
+                  <Text style={styles.assignTagButtonText}>Icon</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {openCalendar && (
+
+              <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
+                <CalendarPicker width={width - 40}
+                  initialDate={rfiDate ? new Date(rfiDate) : new Date()}
+                  onDateChange={(date) => {
+                    setRFIDate(date.format("YYYY-MM-DD"));
+                    openCloseCalendar()
+                  }}
+                />
+              </View>
+            )}
+
+            <View style={{ flexDirection: 'column', height: 80, paddingTop: 15, zIndex: 5, marginBottom: 140 }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Time</Text>
+              <View style={{ flexDirection: 'row', gap: 20 }}>
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenMinutes(false);
+                    setOpenTimeFormats(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='MODAL'
+                    open={openHours}
+                    value={hour}
+                    items={hours}
+                    setOpen={setOpenHours}
+                    setValue={setHour}
+                  />
+                </View>
+
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenHours(false);
+                    setOpenTimeFormats(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='MODAL'
+                    open={openMinutes}
+                    value={minute}
+                    items={minutes}
+                    setOpen={setOpenMinutes}
+                    setValue={setMinute}
+                  />
+                </View>
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenHours(false);
+                    setOpenMinutes(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='SCROLLVIEW'
+                    open={openTimeFormats}
+                    value={timeFormat}
+                    items={timeFormats}
+                    setOpen={setOpenTimeFormats}
+                    setValue={setTimeFormat}
+                  />
+                </View>
+              </View>
+              
+              <View style={{ flexDirection: 'column', height: 65 }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Recommendations</Text>
+              <TextInput
+                style={styles.inputStyle}
+                placeholder="Recommendations"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                returnKeyType="next"
+                underlineColorAndroid="#f000"
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={(text) => {
+                  setComments(text);
+                }}
+              />
+            </View>
+            </View>
+          </View>
+
+          
+        </View>
+      case TASK_TYPES.REINFORCEMENT:
+      case TASK_TYPES.REINFORCEMENT_PREPARATION:
+        return <View>
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Rebar and dimension (dia,len and shape) checked as per GFC</Text>
+            <View style={[styles.SectionStyle, { zIndex: 16, height: 50 }]}>
+              <DropDownPicker
+                open={openRebarAndDimensionGFC}
+                value={rebarAndDimensionGFC}
+                items={YES_NO_LIST}
+                setOpen={setOpenRebarAndDimensionGFC}
+                setValue={setRebarAndDimensionGFC}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Shaping, No and Length of Bars checked as per GFC</Text>
+            <View style={[styles.SectionStyle, { zIndex: 15, height: 50 }]}>
+              <DropDownPicker
+                open={openShapingNoAndLengthOfBarsGFC}
+                value={shapingNoAndLengthOfBarsGFC}
+                items={YES_NO_LIST}
+                setOpen={setOpenShapingNoAndLengthOfBarsGFC}
+                setValue={setShapingNoAndLengthOfBarsGFC}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Rebars securely tightened/bound by tie bars</Text>
+            <View style={[styles.SectionStyle, { zIndex: 14, height: 50 }]}>
+              <DropDownPicker
+                open={openRebarsSecurelyTightened}
+                value={rebarsSecurelyTightened}
+                items={YES_NO_NA_LIST}
+                setOpen={setOpenRebarsSecurelyTightened}
+                setValue={setRebarsSecurelyTightened}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Splice length and location checked as per GFC</Text>
+            <View style={[styles.SectionStyle, { zIndex: 13, height: 50 }]}>
+              <DropDownPicker
+                open={openSpliceLengthAndLocationGFC}
+                value={spliceLengthAndLocationGFC}
+                items={YES_NO_LIST}
+                setOpen={setOpenSpliceLengthAndLocationGFC}
+                setValue={setSpliceLengthAndLocationGFC}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Rebar within tolerance limit</Text>
+            <View style={[styles.SectionStyle, { zIndex: 12, height: 50 }]}>
+              <DropDownPicker
+                open={openRebarWithinToleranceLimit}
+                value={rebarWithinToleranceLimit}
+                items={YES_NO_LIST}
+                setOpen={setOpenRebarWithinToleranceLimit}
+                setValue={setRebarWithinToleranceLimit}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Coupler arrangements within tolerance</Text>
+            <View style={[styles.SectionStyle, { zIndex: 11, height: 50 }]}>
+              <DropDownPicker
+                open={openCouplerArrangementsWithinTolerance}
+                value={couplerArrangementsWithinTolerance}
+                items={YES_NO_NA_LIST}
+                setOpen={setOpenCouplerArrangementsWithinTolerance}
+                setValue={setCouplerArrangementsWithinTolerance}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Bar Bending schedule checked</Text>
+            <View style={[styles.SectionStyle, { zIndex: 10, height: 50 }]}>
+              <DropDownPicker
+                open={openBarBendingScheduleChecked}
+                value={barBendingScheduleChecked}
+                items={YES_NO_NA_LIST}
+                setOpen={setOpenBarBendingScheduleChecked}
+                setValue={setBarBendingScheduleChecked}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Spacer bar checked as per GFC</Text>
+            <View style={[styles.SectionStyle, { zIndex: 9, height: 50 }]}>
+              <DropDownPicker
+                open={openSpacerBarCheckedGFC}
+                value={spacerBarCheckedGFC}
+                items={YES_NO_NA_LIST}
+                setOpen={setOpenSpacerBarCheckedGFC}
+                setValue={setSpacerBarCheckedGFC}
+              />
+            </View>
+          </View>
+          
+          <View>
+            <View style={{ flexDirection: 'column' }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Date</Text>
+
+              <View style={{ flexDirection: 'row' }}>
+                <TextInput
+                  style={styles.inputStyle}
+                  placeholder=""
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  blurOnSubmit={false}
+                  value={rfiDate ? moment(new Date(rfiDate)).format('DD-MM-YYYY') : ''}
+                  editable={false}
+                />
+                <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
+                  <Text style={styles.assignTagButtonText}>Icon</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {openCalendar && (
+
+              <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
+                <CalendarPicker width={width - 40}
+                  initialDate={rfiDate ? new Date(rfiDate) : new Date()}
+                  onDateChange={(date) => {
+                    setRFIDate(date.format("YYYY-MM-DD"));
+                    openCloseCalendar()
+                  }}
+                />
+              </View>
+            )}
+
+            <View style={{ flexDirection: 'column', height: 80, paddingTop: 15, zIndex: 5, marginBottom: 140 }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Time</Text>
+              <View style={{ flexDirection: 'row', gap: 20 }}>
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenMinutes(false);
+                    setOpenTimeFormats(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='MODAL'
+                    open={openHours}
+                    value={hour}
+                    items={hours}
+                    setOpen={setOpenHours}
+                    setValue={setHour}
+                  />
+                </View>
+
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenHours(false);
+                    setOpenTimeFormats(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='MODAL'
+                    open={openMinutes}
+                    value={minute}
+                    items={minutes}
+                    setOpen={setOpenMinutes}
+                    setValue={setMinute}
+                  />
+                </View>
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenHours(false);
+                    setOpenMinutes(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='SCROLLVIEW'
+                    open={openTimeFormats}
+                    value={timeFormat}
+                    items={timeFormats}
+                    setOpen={setOpenTimeFormats}
+                    setValue={setTimeFormat}
+                  />
+                </View>
+              </View>
+              
+              <View style={{ flexDirection: 'column', height: 65 }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Recommendations</Text>
+              <TextInput
+                style={styles.inputStyle}
+                placeholder="Recommendations"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                returnKeyType="next"
+                underlineColorAndroid="#f000"
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={(text) => {
+                  setComments(text);
+                }}
+              />
+            </View>
+            </View>
+          </View>
+
+          
+        </View>
+      case TASK_TYPES.REINFORCEMENT_PREPARATION:
+        return <View>
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Rebar and dimension (dia,len and shape) checked as per GFC</Text>
+            <View style={[styles.SectionStyle, { zIndex: 16, height: 50 }]}>
+              <DropDownPicker
+                open={openRebarAndDimensionGFC}
+                value={rebarAndDimensionGFC}
+                items={YES_NO_LIST}
+                setOpen={setOpenRebarAndDimensionGFC}
+                setValue={setRebarAndDimensionGFC}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Shaping, No and Length of Bars checked as per GFC</Text>
+            <View style={[styles.SectionStyle, { zIndex: 15, height: 50 }]}>
+              <DropDownPicker
+                open={openShapingNoAndLengthOfBarsGFC}
+                value={shapingNoAndLengthOfBarsGFC}
+                items={YES_NO_LIST}
+                setOpen={setOpenShapingNoAndLengthOfBarsGFC}
+                setValue={setShapingNoAndLengthOfBarsGFC}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Rebars securely tightened/bound by tie bars</Text>
+            <View style={[styles.SectionStyle, { zIndex: 14, height: 50 }]}>
+              <DropDownPicker
+                open={openRebarsSecurelyTightened}
+                value={rebarsSecurelyTightened}
+                items={YES_NO_NA_LIST}
+                setOpen={setOpenRebarsSecurelyTightened}
+                setValue={setRebarsSecurelyTightened}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Splice length and location checked as per GFC</Text>
+            <View style={[styles.SectionStyle, { zIndex: 13, height: 50 }]}>
+              <DropDownPicker
+                open={openSpliceLengthAndLocationGFC}
+                value={spliceLengthAndLocationGFC}
+                items={YES_NO_LIST}
+                setOpen={setOpenSpliceLengthAndLocationGFC}
+                setValue={setSpliceLengthAndLocationGFC}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Rebar within tolerance limit</Text>
+            <View style={[styles.SectionStyle, { zIndex: 12, height: 50 }]}>
+              <DropDownPicker
+                open={openRebarWithinToleranceLimit}
+                value={rebarWithinToleranceLimit}
+                items={YES_NO_LIST}
+                setOpen={setOpenRebarWithinToleranceLimit}
+                setValue={setRebarWithinToleranceLimit}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Coupler arrangements within tolerance</Text>
+            <View style={[styles.SectionStyle, { zIndex: 11, height: 50 }]}>
+              <DropDownPicker
+                open={openCouplerArrangementsWithinTolerance}
+                value={couplerArrangementsWithinTolerance}
+                items={YES_NO_NA_LIST}
+                setOpen={setOpenCouplerArrangementsWithinTolerance}
+                setValue={setCouplerArrangementsWithinTolerance}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Bar Bending schedule checked</Text>
+            <View style={[styles.SectionStyle, { zIndex: 10, height: 50 }]}>
+              <DropDownPicker
+                open={openBarBendingScheduleChecked}
+                value={barBendingScheduleChecked}
+                items={YES_NO_NA_LIST}
+                setOpen={setOpenBarBendingScheduleChecked}
+                setValue={setBarBendingScheduleChecked}
+              />
+            </View>
+          </View>
+          
+          <View>
+            <View style={{ flexDirection: 'column' }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Date</Text>
+
+              <View style={{ flexDirection: 'row' }}>
+                <TextInput
+                  style={styles.inputStyle}
+                  placeholder=""
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  blurOnSubmit={false}
+                  value={rfiDate ? moment(new Date(rfiDate)).format('DD-MM-YYYY') : ''}
+                  editable={false}
+                />
+                <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
+                  <Text style={styles.assignTagButtonText}>Icon</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {openCalendar && (
+
+              <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
+                <CalendarPicker width={width - 40}
+                  initialDate={rfiDate ? new Date(rfiDate) : new Date()}
+                  onDateChange={(date) => {
+                    setRFIDate(date.format("YYYY-MM-DD"));
+                    openCloseCalendar()
+                  }}
+                />
+              </View>
+            )}
+
+            <View style={{ flexDirection: 'column', height: 80, paddingTop: 15, zIndex: 5, marginBottom: 140 }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Time</Text>
+              <View style={{ flexDirection: 'row', gap: 20 }}>
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenMinutes(false);
+                    setOpenTimeFormats(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='MODAL'
+                    open={openHours}
+                    value={hour}
+                    items={hours}
+                    setOpen={setOpenHours}
+                    setValue={setHour}
+                  />
+                </View>
+
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenHours(false);
+                    setOpenTimeFormats(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='MODAL'
+                    open={openMinutes}
+                    value={minute}
+                    items={minutes}
+                    setOpen={setOpenMinutes}
+                    setValue={setMinute}
+                  />
+                </View>
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenHours(false);
+                    setOpenMinutes(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='SCROLLVIEW'
+                    open={openTimeFormats}
+                    value={timeFormat}
+                    items={timeFormats}
+                    setOpen={setOpenTimeFormats}
+                    setValue={setTimeFormat}
+                  />
+                </View>
+              </View>
+              
+              <View style={{ flexDirection: 'column', height: 65 }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Recommendations</Text>
+              <TextInput
+                style={styles.inputStyle}
+                placeholder="Recommendations"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                returnKeyType="next"
+                underlineColorAndroid="#f000"
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={(text) => {
+                  setComments(text);
+                }}
+              />
+            </View>
+            </View>
+          </View>
+
+          
+        </View>
+      case TASK_TYPES.EXCAVATION:
+        return <View>
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Qty of earth work excavated in cum</Text>
+            <View style={[styles.SectionStyle, { zIndex: 16, height: 50 }]}>
+            <TextInput
+                  style={styles.inputStyle}
+                  placeholder="Quantity"
+                  autoCapitalize="none"
+                  keyboardType="numeric"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  blurOnSubmit={false}
+                  value={''+quantity}
+                  onChangeText={(text) => {
+                    let exp = text.replace(/[^0-9.]/g, '')
+                    if(!isNaN(parseFloat(exp))) {
+                      if (exp.split('.').length > 4) {
+                        exp = parseFloat(exp).toString();
+                      }
+                      setQuantity(Number(exp));
+                    } else {
+                      setQuantity(0);
+                    }
+                  }}
+                />
+            </View>
+          </View>
+          
+          <View>
+            <View style={{ flexDirection: 'column' }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Date</Text>
+
+              <View style={{ flexDirection: 'row' }}>
+                <TextInput
+                  style={styles.inputStyle}
+                  placeholder=""
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  blurOnSubmit={false}
+                  value={rfiDate ? moment(new Date(rfiDate)).format('DD-MM-YYYY') : ''}
+                  editable={false}
+                />
+                <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
+                  <Text style={styles.assignTagButtonText}>Icon</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {openCalendar && (
+
+              <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
+                <CalendarPicker width={width - 40}
+                  initialDate={rfiDate ? new Date(rfiDate) : new Date()}
+                  onDateChange={(date) => {
+                    setRFIDate(date.format("YYYY-MM-DD"));
+                    openCloseCalendar()
+                  }}
+                />
+              </View>
+            )}
+
+            <View style={{ flexDirection: 'column', height: 80, paddingTop: 15, zIndex: 5, marginBottom: 140 }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Time</Text>
+              <View style={{ flexDirection: 'row', gap: 20 }}>
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenMinutes(false);
+                    setOpenTimeFormats(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='MODAL'
+                    open={openHours}
+                    value={hour}
+                    items={hours}
+                    setOpen={setOpenHours}
+                    setValue={setHour}
+                  />
+                </View>
+
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenHours(false);
+                    setOpenTimeFormats(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='MODAL'
+                    open={openMinutes}
+                    value={minute}
+                    items={minutes}
+                    setOpen={setOpenMinutes}
+                    setValue={setMinute}
+                  />
+                </View>
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenHours(false);
+                    setOpenMinutes(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='SCROLLVIEW'
+                    open={openTimeFormats}
+                    value={timeFormat}
+                    items={timeFormats}
+                    setOpen={setOpenTimeFormats}
+                    setValue={setTimeFormat}
+                  />
+                </View>
+              </View>
+              
+              <View style={{ flexDirection: 'column', height: 65 }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Recommendations</Text>
+              <TextInput
+                style={styles.inputStyle}
+                placeholder="Recommendations"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                returnKeyType="next"
+                underlineColorAndroid="#f000"
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={(text) => {
+                  setComments(text);
+                }}
+              />
+            </View>
+            </View>
+          </View>
+
+          
+        </View>
+      case TASK_TYPES.REMOVAL_OF_SHUTTER:
+      case TASK_TYPES.REMOVAL_OF_SHUTTERS:
+        return <View>
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Whether concrete has achieved desired strength</Text>
+            <View style={[styles.SectionStyle, { zIndex: 16, height: 50 }]}>
+              <DropDownPicker
+                open={openConcreteHasAchievedDesiredStrength}
+                value={concreteHasAchievedDesiredStrength}
+                items={YES_NO_LIST}
+                setOpen={setOpenConcreteHasAchievedDesiredStrength}
+                setValue={setConcreteHasAchievedDesiredStrength}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Whether minimum time has been attained</Text>
+            <View style={[styles.SectionStyle, { zIndex: 15, height: 50 }]}>
+              <DropDownPicker
+                open={openMinimumTimeHasBeenAttained}
+                value={minimumTimeHasBeenAttained}
+                items={YES_NO_LIST}
+                setOpen={setOpenMinimumTimeHasBeenAttained}
+                setValue={setMinimumTimeHasBeenAttained}
+              />
+            </View>
+          </View>
+          <View>
+            <View style={{ flexDirection: 'column' }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Date</Text>
+
+              <View style={{ flexDirection: 'row' }}>
+                <TextInput
+                  style={styles.inputStyle}
+                  placeholder=""
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  blurOnSubmit={false}
+                  value={rfiDate ? moment(new Date(rfiDate)).format('DD-MM-YYYY') : ''}
+                  editable={false}
+                />
+                <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
+                  <Text style={styles.assignTagButtonText}>Icon</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {openCalendar && (
+
+              <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
+                <CalendarPicker width={width - 40}
+                  initialDate={rfiDate ? new Date(rfiDate) : new Date()}
+                  onDateChange={(date) => {
+                    setRFIDate(date.format("YYYY-MM-DD"));
+                    openCloseCalendar()
+                  }}
+                />
+              </View>
+            )}
+
+            <View style={{ flexDirection: 'column', height: 80, paddingTop: 15, zIndex: 5, marginBottom: 140 }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Time</Text>
+              <View style={{ flexDirection: 'row', gap: 20 }}>
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenMinutes(false);
+                    setOpenTimeFormats(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='MODAL'
+                    open={openHours}
+                    value={hour}
+                    items={hours}
+                    setOpen={setOpenHours}
+                    setValue={setHour}
+                  />
+                </View>
+
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenHours(false);
+                    setOpenTimeFormats(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='MODAL'
+                    open={openMinutes}
+                    value={minute}
+                    items={minutes}
+                    setOpen={setOpenMinutes}
+                    setValue={setMinute}
+                  />
+                </View>
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenHours(false);
+                    setOpenMinutes(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='SCROLLVIEW'
+                    open={openTimeFormats}
+                    value={timeFormat}
+                    items={timeFormats}
+                    setOpen={setOpenTimeFormats}
+                    setValue={setTimeFormat}
+                  />
+                </View>
+              </View>
+              
+              <View style={{ flexDirection: 'column', height: 65 }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Recommendations</Text>
+              <TextInput
+                style={styles.inputStyle}
+                placeholder="Recommendations"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                returnKeyType="next"
+                underlineColorAndroid="#f000"
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={(text) => {
+                  setComments(text);
+                }}
+              />
+            </View>
+            </View>
+          </View>
+
+          
+        </View>
+      case TASK_TYPES.THREADING_OF_PRE_STRESSING_STRANDS:
+        return <View>
+          <View>
+            <View style={{ flexDirection: 'column' }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Date</Text>
+
+              <View style={{ flexDirection: 'row' }}>
+                <TextInput
+                  style={styles.inputStyle}
+                  placeholder=""
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  blurOnSubmit={false}
+                  value={rfiDate ? moment(new Date(rfiDate)).format('DD-MM-YYYY') : ''}
+                  editable={false}
+                />
+                <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
+                  <Text style={styles.assignTagButtonText}>Icon</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {openCalendar && (
+
+              <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
+                <CalendarPicker width={width - 40}
+                  initialDate={rfiDate ? new Date(rfiDate) : new Date()}
+                  onDateChange={(date) => {
+                    setRFIDate(date.format("YYYY-MM-DD"));
+                    openCloseCalendar()
+                  }}
+                />
+              </View>
+            )}
+
+            <View style={{ flexDirection: 'column', height: 80, paddingTop: 15, zIndex: 5, marginBottom: 140 }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Time</Text>
+              <View style={{ flexDirection: 'row', gap: 20 }}>
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenMinutes(false);
+                    setOpenTimeFormats(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='MODAL'
+                    open={openHours}
+                    value={hour}
+                    items={hours}
+                    setOpen={setOpenHours}
+                    setValue={setHour}
+                  />
+                </View>
+
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenHours(false);
+                    setOpenTimeFormats(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='MODAL'
+                    open={openMinutes}
+                    value={minute}
+                    items={minutes}
+                    setOpen={setOpenMinutes}
+                    setValue={setMinute}
+                  />
+                </View>
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenHours(false);
+                    setOpenMinutes(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='SCROLLVIEW'
+                    open={openTimeFormats}
+                    value={timeFormat}
+                    items={timeFormats}
+                    setOpen={setOpenTimeFormats}
+                    setValue={setTimeFormat}
+                  />
+                </View>
+              </View>
+              
+              <View style={{ flexDirection: 'column', height: 65 }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Recommendations</Text>
+              <TextInput
+                style={styles.inputStyle}
+                placeholder="Recommendations"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                returnKeyType="next"
+                underlineColorAndroid="#f000"
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={(text) => {
+                  setComments(text);
+                }}
+              />
+            </View>
+            </View>
+          </View>
+
+          
+        </View>
+      case TASK_TYPES.CAGE_LOWERING:
+        return <View>
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Plie shaft cleaned of all loose material or not</Text>
+            <View style={[styles.SectionStyle, { zIndex: 16, height: 50 }]}>
+              <DropDownPicker
+                open={openPlieShaftCleanedLooseMaterial}
+                value={plieShaftCleanedLooseMaterial}
+                items={YES_NO_LIST}
+                setOpen={setOpenPlieShaftCleanedLooseMaterial}
+                setValue={setPlieShaftCleanedLooseMaterial}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Suitable spacer provided to maintain the required cover to steel </Text>
+            <View style={[styles.SectionStyle, { zIndex: 15, height: 50 }]}>
+              <DropDownPicker
+                open={openSuitableSpacerProvidedToMaintainCoverToSteel}
+                value={suitableSpacerProvidedToMaintainCoverToSteel}
+                items={YES_NO_LIST}
+                setOpen={setOpenSuitableSpacerProvidedToMaintainCoverToSteel}
+                setValue={setSuitableSpacerProvidedToMaintainCoverToSteel}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>No L bend at the bottom of the Cage checked or not </Text>
+            <View style={[styles.SectionStyle, { zIndex: 15, height: 50 }]}>
+              <DropDownPicker
+                open={openNoLBendBottomOfTheCageChecked}
+                value={noLBendBottomOfTheCageChecked}
+                items={YES_NO_NA_LIST}
+                setOpen={setOpenNoLBendBottomOfTheCageChecked}
+                setValue={setNoLBendBottomOfTheCageChecked}
+              />
+            </View>
+          </View>
+
+          <View>
+            <View style={{ flexDirection: 'column' }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Date</Text>
+
+              <View style={{ flexDirection: 'row' }}>
+                <TextInput
+                  style={styles.inputStyle}
+                  placeholder=""
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  blurOnSubmit={false}
+                  value={rfiDate ? moment(new Date(rfiDate)).format('DD-MM-YYYY') : ''}
+                  editable={false}
+                />
+                <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
+                  <Text style={styles.assignTagButtonText}>Icon</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {openCalendar && (
+
+              <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
+                <CalendarPicker width={width - 40}
+                  initialDate={rfiDate ? new Date(rfiDate) : new Date()}
+                  onDateChange={(date) => {
+                    setRFIDate(date.format("YYYY-MM-DD"));
+                    openCloseCalendar()
+                  }}
+                />
+              </View>
+            )}
+
+            <View style={{ flexDirection: 'column', height: 80, paddingTop: 15, zIndex: 5, marginBottom: 140 }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Time</Text>
+              <View style={{ flexDirection: 'row', gap: 20 }}>
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenMinutes(false);
+                    setOpenTimeFormats(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='MODAL'
+                    open={openHours}
+                    value={hour}
+                    items={hours}
+                    setOpen={setOpenHours}
+                    setValue={setHour}
+                  />
+                </View>
+
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenHours(false);
+                    setOpenTimeFormats(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='MODAL'
+                    open={openMinutes}
+                    value={minute}
+                    items={minutes}
+                    setOpen={setOpenMinutes}
+                    setValue={setMinute}
+                  />
+                </View>
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenHours(false);
+                    setOpenMinutes(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='SCROLLVIEW'
+                    open={openTimeFormats}
+                    value={timeFormat}
+                    items={timeFormats}
+                    setOpen={setOpenTimeFormats}
+                    setValue={setTimeFormat}
+                  />
+                </View>
+              </View>
+              
+              <View style={{ flexDirection: 'column', height: 65 }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Recommendations</Text>
+              <TextInput
+                style={styles.inputStyle}
+                placeholder="Recommendations"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                returnKeyType="next"
+                underlineColorAndroid="#f000"
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={(text) => {
+                  setComments(text);
+                }}
+              />
+            </View>
+            </View>
+          </View>
+        </View>
+      default: return <View>
+        <Text>TODO</Text>
+      </View>
+    }
+  }
+
   return (
     <View style={styles.Container}>
       <View style={styles.BreadcrumbContainer}>
@@ -682,200 +2188,200 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
             }}
           />
         </View>
-        : null
+          : null
       }
       <ScrollView style={styles.Height100}>
         {
           currentLevel === 1 ?
-          myWorksData.map((projModuleItem: any, projModuleIndex) => (
-            projModuleItem.assignmentLevel === 1 ?
-              <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(2, projModuleItem.assignmentLevel, projModuleIndex)}>
-                <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
-                <View style={styles.TaskDetails}>
-                  <Text style={styles.SubHeadingText}>Assigned:</Text>
-                  <Text style={[styles.SubHeadingText, styles.SubActive]}>{projModuleItem.name}</Text>
-                </View>
-              </TouchableOpacity>
-              :
-              (projModuleItem.segmentsData?.map((segItem: any, segIndex: any) => (
-                (segItem.assignmentLevel === 2 && segIndex == 0) ? (
-                  projModuleItem.segmentsData?.filter((segItem: any) => segItem.assignmentLevel == 2).length === 1 ? (
-                    <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(3, segItem.assignmentLevel, projModuleIndex, projModuleItem.segmentsData?.findIndex((segItem: any) => segItem.assignmentLevel == 2))}>
-                      <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
-                      <View style={styles.TaskDetails}>
-                        <Text style={styles.SubHeadingText}>Assigned:</Text>
-                        <View style={{ flexDirection: 'row' }}>
-                          <Text style={styles.SubHeadingText}>{SEGMENT_TYPES_DISPLAY[segItem.type]} /</Text>
-                          <Text style={[styles.SubHeadingText, styles.SubActive]}>{projModuleItem.segmentsData?.filter((segItem: any) => segItem.assignmentLevel == 2)[0].name}</Text>
+            myWorksData.map((projModuleItem: any, projModuleIndex) => (
+              projModuleItem.assignmentLevel === 1 ?
+                <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(2, projModuleItem.assignmentLevel, projModuleIndex)}>
+                  <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
+                  <View style={styles.TaskDetails}>
+                    <Text style={styles.SubHeadingText}>Assigned:</Text>
+                    <Text style={[styles.SubHeadingText, styles.SubActive]}>{projModuleItem.name}</Text>
+                  </View>
+                </TouchableOpacity>
+                :
+                (projModuleItem.segmentsData?.map((segItem: any, segIndex: any) => (
+                  (segItem.assignmentLevel === 2 && segIndex == 0) ? (
+                    projModuleItem.segmentsData?.filter((segItem: any) => segItem.assignmentLevel == 2).length === 1 ? (
+                      <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(3, segItem.assignmentLevel, projModuleIndex, projModuleItem.segmentsData?.findIndex((segItem: any) => segItem.assignmentLevel == 2))}>
+                        <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
+                        <View style={styles.TaskDetails}>
+                          <Text style={styles.SubHeadingText}>Assigned:</Text>
+                          <View style={{ flexDirection: 'row' }}>
+                            <Text style={styles.SubHeadingText}>{SEGMENT_TYPES_DISPLAY[segItem.type]} /</Text>
+                            <Text style={[styles.SubHeadingText, styles.SubActive]}>{projModuleItem.segmentsData?.filter((segItem: any) => segItem.assignmentLevel == 2)[0].name}</Text>
+                          </View>
                         </View>
-                      </View>
-                    </TouchableOpacity>
+                      </TouchableOpacity>
+                    )
+                      :
+                      (
+                        Object.keys(groupBy(projModuleItem.segmentsData, "type")).map((segType: any) => (
+                          <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(2, segItem.assignmentLevel, projModuleIndex, -1, -1, -1, segType)}>
+                            <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
+                            <View style={styles.TaskDetails}>
+                              <Text style={styles.SubHeadingText}>Assigned:</Text>
+                              <Text style={[styles.SubHeadingText, styles.SubActive]}>{SEGMENT_TYPES_DISPLAY[segType]} {projModuleItem.segmentsData?.filter((segItem: any) => segItem.type == segType && segItem.assignmentLevel == 2).length}</Text>
+                            </View>
+                          </TouchableOpacity>
+                        ))
+                      )
                   )
                     :
-                    (
-                      Object.keys(groupBy(projModuleItem.segmentsData, "type")).map((segType: any) => (
-                        <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(2, segItem.assignmentLevel, projModuleIndex, -1, -1, -1, segType)}>
-                          <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
-                          <View style={styles.TaskDetails}>
-                            <Text style={styles.SubHeadingText}>Assigned:</Text>
-                            <Text style={[styles.SubHeadingText, styles.SubActive]}>{SEGMENT_TYPES_DISPLAY[segType]} {projModuleItem.segmentsData?.filter((segItem: any) => segItem.type == segType && segItem.assignmentLevel == 2).length}</Text>
-                          </View>
-                        </TouchableOpacity>
-                      ))
-                    )
-                )
-                  :
-                  segItem.componentsData?.map((subSegItem: any, subSegIndex: number) => (
-                    subSegItem.assignmentLevel === 3 ?
-                      (
-                        <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(4, subSegItem.assignmentLevel, projModuleIndex, segIndex, subSegIndex)}>
-                          <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
-                          <View style={styles.TaskDetails}>
-                            <Text style={styles.SubHeadingText}>Assigned:</Text>
-                            <Text style={styles.SubHeadingText}>{SEGMENT_TYPES_DISPLAY[segItem.type]} /</Text>
-                            <Text style={styles.SubHeadingText}>{segItem.name} /</Text>
-                            <Text style={[styles.SubHeadingText, styles.SubActive]}>{subSegItem.name}</Text>
-                          </View>
-                        </TouchableOpacity>
+                    segItem.componentsData?.map((subSegItem: any, subSegIndex: number) => (
+                      subSegItem.assignmentLevel === 3 ?
+                        (
+                          <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(4, subSegItem.assignmentLevel, projModuleIndex, segIndex, subSegIndex)}>
+                            <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
+                            <View style={styles.TaskDetails}>
+                              <Text style={styles.SubHeadingText}>Assigned:</Text>
+                              <Text style={styles.SubHeadingText}>{SEGMENT_TYPES_DISPLAY[segItem.type]} /</Text>
+                              <Text style={styles.SubHeadingText}>{segItem.name} /</Text>
+                              <Text style={[styles.SubHeadingText, styles.SubActive]}>{subSegItem.name}</Text>
+                            </View>
+                          </TouchableOpacity>
 
-                      )
-                      :
-                      subSegItem.tasksData?.map((taskItem: any, taskIndex: number) => (
-                        taskItem.assignmentLevel === 4 &&
-                        <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(4, taskItem.assignmentLevel, projModuleIndex, segIndex, subSegIndex, taskIndex)}>
-                          <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
-                          <View style={styles.TaskDetails}>
-                            <Text style={styles.SubHeadingText}>Assigned:</Text>
-                            <Text style={styles.SubHeadingText}>{SEGMENT_TYPES_DISPLAY[segItem.type]} /</Text>
-                            <Text style={styles.SubHeadingText}>{segItem.name} /</Text>
-                            <Text style={styles.SubHeadingText}>{subSegItem.name} /</Text>
-                            <Text style={[styles.SubHeadingText, styles.SubActive]}>{taskItem.displayName}</Text>
-                          </View>
-                        </TouchableOpacity>
+                        )
+                        :
+                        subSegItem.tasksData?.map((taskItem: any, taskIndex: number) => (
+                          taskItem.assignmentLevel === 4 &&
+                          <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(4, taskItem.assignmentLevel, projModuleIndex, segIndex, subSegIndex, taskIndex)}>
+                            <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
+                            <View style={styles.TaskDetails}>
+                              <Text style={styles.SubHeadingText}>Assigned:</Text>
+                              <Text style={styles.SubHeadingText}>{SEGMENT_TYPES_DISPLAY[segItem.type]} /</Text>
+                              <Text style={styles.SubHeadingText}>{segItem.name} /</Text>
+                              <Text style={styles.SubHeadingText}>{subSegItem.name} /</Text>
+                              <Text style={[styles.SubHeadingText, styles.SubActive]}>{taskItem.displayName}</Text>
+                            </View>
+                          </TouchableOpacity>
 
-                      ))
+                        ))
 
-                  ))
+                    ))
 
 
-              )))
+                )))
 
-          )) : null
+            )) : null
         }
         {
           currentLevel === 5 &&
-          segmentsByGroupOnType && Object.keys(segmentsByGroupOnType).length ? Object.keys(segmentsByGroupOnType).map((item) => (
-            <TouchableOpacity style={[styles.StartWorkCard, styles.StartBorder]} onPress={() => onSegmentTypeClick(item)}>
-              <View style={styles.leftContainer}>
-                <Text style={styles.HeadText}>{segmentsByGroupOnType[item].length}</Text>
-                <Text style={styles.MyWorkSubHead}>{SEGMENT_TYPES_DISPLAY[item]}</Text>
-              </View>
-            </TouchableOpacity>
-          )) : null
+            segmentsByGroupOnType && Object.keys(segmentsByGroupOnType).length ? Object.keys(segmentsByGroupOnType).map((item) => (
+              <TouchableOpacity style={[styles.StartWorkCard, styles.StartBorder]} onPress={() => onSegmentTypeClick(item)}>
+                <View style={styles.leftContainer}>
+                  <Text style={styles.HeadText}>{segmentsByGroupOnType[item].length}</Text>
+                  <Text style={styles.MyWorkSubHead}>{SEGMENT_TYPES_DISPLAY[item]}</Text>
+                </View>
+              </TouchableOpacity>
+            )) : null
         }
         {
           currentLevel === 2 ?
-          currentSegmentsData.filter((seg: any) => {
-            if (searchText && seg.name) {
-              return seg.name.toLowerCase().includes(searchText.toLowerCase())
-            } else {
-              return true;
-            }
-          }).map((item: any, index) => (
-            <TouchableOpacity style={getStyle(item)} onPress={() => onClickNested(3, item)}>
-              <View style={styles.leftContainer}>
-                <Text style={styles.HeadText}>{item.name}</Text>
-                {/* <Text style={styles.MyWorkSubHead}>Sub Text</Text> */}
-              </View>
-            </TouchableOpacity>
-          )) : null
+            currentSegmentsData.filter((seg: any) => {
+              if (searchText && seg.name) {
+                return seg.name.toLowerCase().includes(searchText.toLowerCase())
+              } else {
+                return true;
+              }
+            }).map((item: any, index) => (
+              <TouchableOpacity style={getStyle(item)} onPress={() => onClickNested(3, item)}>
+                <View style={styles.leftContainer}>
+                  <Text style={styles.HeadText}>{item.name}</Text>
+                  {/* <Text style={styles.MyWorkSubHead}>Sub Text</Text> */}
+                </View>
+              </TouchableOpacity>
+            )) : null
         }
         {
           currentLevel === 3 ?
-          currentComponentsData.filter((subSeg: any) => {
-            if (searchText && subSeg.name) {
-              return subSeg.name.toLowerCase().includes(searchText.toLowerCase())
-            } else {
-              return true;
-            }
-          }).map((item: any, index) => (
-            <TouchableOpacity style={getStyle(item)} onPress={() => onClickNested(4, item)}>
-              <View style={styles.leftContainer}>
-                <Text style={styles.HeadText}>{item.name}</Text>
-              </View>
-            </TouchableOpacity>
-          )) : null
+            currentComponentsData.filter((subSeg: any) => {
+              if (searchText && subSeg.name) {
+                return subSeg.name.toLowerCase().includes(searchText.toLowerCase())
+              } else {
+                return true;
+              }
+            }).map((item: any, index) => (
+              <TouchableOpacity style={getStyle(item)} onPress={() => onClickNested(4, item)}>
+                <View style={styles.leftContainer}>
+                  <Text style={styles.HeadText}>{item.name}</Text>
+                </View>
+              </TouchableOpacity>
+            )) : null
         }
         {
           currentLevel === 4 ?
-          currentTasksData.filter((task: any) => {
-            if (searchText && task.displayName) {
-              return task.displayName.toLowerCase().includes(searchText.toLowerCase())
-            } else {
-              return true;
-            }
-          }).map((item: any, index) => (
-            <View style={getStyle(item)}>
-              <View style={styles.leftContainer}>
-                <Text style={styles.HeadText}>{item.displayName}</Text>
-                {/* <Text style={styles.MyWorkSubHead}>Sub Text</Text> */}
+            currentTasksData.filter((task: any) => {
+              if (searchText && task.displayName) {
+                return task.displayName.toLowerCase().includes(searchText.toLowerCase())
+              } else {
+                return true;
+              }
+            }).map((item: any, index) => (
+              <View style={getStyle(item)}>
+                <View style={styles.leftContainer}>
+                  <Text style={styles.HeadText}>{item.displayName}</Text>
+                  {/* <Text style={styles.MyWorkSubHead}>Sub Text</Text> */}
+                </View>
+                {
+                  item.rfiStatus === RFI_STATUS.GENERATED ?
+                    <TouchableOpacity style={[styles.MyWorkCta, styles.StartBorder]} onPress={() => {
+                      getRFIDataByWorkAssignmentId(item)
+                    }}>
+                      <Image style={styles.WorkIcon} source={require('../../images/play-icon.png')} />
+                      <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>Start</Text>
+                    </TouchableOpacity> : null
+                }
+
+                {
+                  item.rfiStatus === RFI_STATUS.RE_GENERATED ?
+                    <TouchableOpacity style={[styles.MyWorkCta, styles.StartBorder]} onPress={() => {
+                      getRFIDataByWorkAssignmentId(item)
+                    }}>
+                      <Image style={styles.WorkIcon} source={require('../../images/play-icon.png')} />
+                      <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>Re-start</Text>
+                    </TouchableOpacity> : null
+                }
+
+                {
+                  (item.rfiStatus === RFI_STATUS.REJECTED || item.rfiStatus === RFI_STATUS.CANCELLED) ?
+                    <TouchableOpacity style={[styles.MyWorkCta, styles.StartRejectBorder]}>
+                      {/* <Image style={styles.WorkIcon} source={require('../../images/play-icon.png')} /> */}
+                      <Text style={[styles.CtaStartText, styles.CtaRejectTextColor]}>{item.rfiStatus === RFI_STATUS.CANCELLED ? 'Cancelled' : 'Rejected'}</Text>
+                    </TouchableOpacity> : null
+                }
+
+                {
+                  item.rfiStatus === RFI_STATUS.IN_PROGRESS ?
+                    <TouchableOpacity style={[styles.MyWorkCta, styles.StartInProgressBorder]} onPress={() => {
+                      getRFIDataByWorkAssignmentId(item)
+                    }}>
+                      <Image style={styles.WorkIcon} source={require('../../images/inprogress.png')} />
+                      <Text style={[styles.CtaStartText, styles.CtaInProgressTextColor]}>In Progress</Text>
+                    </TouchableOpacity> : null
+                }
+
+                {
+                  item.rfiStatus === RFI_STATUS.IN_REVIEW ?
+                    <TouchableOpacity style={[styles.MyWorkCta, styles.StartReviewBorder]}>
+                      <Image style={styles.WorkIcon} source={require('../../images/review-icon.png')} />
+                      <Text style={[styles.CtaStartText, styles.CtaReviewTextColor]}>Under Review</Text>
+                    </TouchableOpacity> : null
+                }
+
+                {
+                  item.rfiStatus === RFI_STATUS.APPROVED ?
+                    <TouchableOpacity style={[styles.MyWorkCta, styles.StartCompleteBorder]}>
+                      <Image style={styles.WorkIcon} source={require('../../images/complete-icon.png')} />
+                      <Text style={[styles.CtaStartText, styles.CtaCompleteTextColor]}>Completed</Text>
+                    </TouchableOpacity> : null
+                }
+
               </View>
-              {
-                item.rfiStatus === RFI_STATUS.GENERATED ?
-                <TouchableOpacity style={[styles.MyWorkCta, styles.StartBorder]} onPress={() => {
-                  getRFIDataByWorkAssignmentId(item)
-                }}>
-                  <Image style={styles.WorkIcon} source={require('../../images/play-icon.png')} />
-                  <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>Start</Text>
-                </TouchableOpacity> : null
-              }
-
-              {
-                item.rfiStatus === RFI_STATUS.RE_GENERATED ?
-                <TouchableOpacity style={[styles.MyWorkCta, styles.StartBorder]} onPress={() => {
-                  getRFIDataByWorkAssignmentId(item)
-                }}>
-                  <Image style={styles.WorkIcon} source={require('../../images/play-icon.png')} />
-                  <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>Re-start</Text>
-                </TouchableOpacity> : null
-              }
-
-              {
-                (item.rfiStatus === RFI_STATUS.REJECTED || item.rfiStatus === RFI_STATUS.CANCELLED) ?
-                <TouchableOpacity style={[styles.MyWorkCta, styles.StartRejectBorder]}>
-                  {/* <Image style={styles.WorkIcon} source={require('../../images/play-icon.png')} /> */}
-                  <Text style={[styles.CtaStartText, styles.CtaRejectTextColor]}>{item.rfiStatus === RFI_STATUS.CANCELLED ? 'Cancelled' : 'Rejected'}</Text>
-                </TouchableOpacity> : null
-              }
-
-              {
-                item.rfiStatus === RFI_STATUS.IN_PROGRESS ?
-                <TouchableOpacity style={[styles.MyWorkCta, styles.StartInProgressBorder]} onPress={() => {
-                  getRFIDataByWorkAssignmentId(item)
-                }}>
-                  <Image style={styles.WorkIcon} source={require('../../images/inprogress.png')} />
-                  <Text style={[styles.CtaStartText, styles.CtaInProgressTextColor]}>In Progress</Text>
-                </TouchableOpacity> : null
-              }
-
-              {
-                item.rfiStatus === RFI_STATUS.IN_REVIEW ?
-                <TouchableOpacity style={[styles.MyWorkCta, styles.StartReviewBorder]}>
-                  <Image style={styles.WorkIcon} source={require('../../images/review-icon.png')} />
-                  <Text style={[styles.CtaStartText, styles.CtaReviewTextColor]}>Under Review</Text>
-                </TouchableOpacity> : null
-              }
-
-              {
-                item.rfiStatus === RFI_STATUS.APPROVED ?
-                <TouchableOpacity style={[styles.MyWorkCta, styles.StartCompleteBorder]}>
-                  <Image style={styles.WorkIcon} source={require('../../images/complete-icon.png')} />
-                  <Text style={[styles.CtaStartText, styles.CtaCompleteTextColor]}>Completed</Text>
-                </TouchableOpacity> : null
-              }
-              
-            </View>
-          )) : null
+            )) : null
         }
         {/* No Data Found */}
         {(!loading && !myWorksData.length) ?
@@ -923,144 +2429,14 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
                   <Fragment>
                     <StatusBar barStyle="dark-content" />
                     <SafeAreaView>
-                      <View>
-                        <Text style={{ textAlign: 'center', fontSize: 20, paddingBottom: 10 }} >Pick Image from Camera & Gallery</Text>
-                        <View style={styles.ImageSections}>
-                          <View>
-                            {imageObject?.fileData && renderFileData()}
-                            {/* <Text style={{ textAlign: 'center' }}>Base 64 String</Text> */}
-                          </View>
-                          {/* <View>
-                            {imageObject?.fileUri && renderFileUri()}
-                            <Text style={{ textAlign: 'center' }}>File Uri</Text>
-                          </View> */}
-                        </View>
-
-                        <View style={[styles.btnParentSection, {flexDirection: 'row', gap: 20, justifyContent: 'center'}]}>
-                          
-                          <TouchableOpacity onPress={launchCamera} style={styles.btnSection}  >
-                            <Text style={styles.btnText}>Camera</Text>
-                          </TouchableOpacity>
-
-                          <TouchableOpacity onPress={launchImageLibrary} style={styles.btnSection}  >
-                            <Text style={styles.btnText}>Gallery</Text>
-                          </TouchableOpacity>
-                        </View>
-
-                        <View>
-                          <View style={{ flexDirection: 'column' }}>
-                            <Text style={styles.GenerateRFIFieldLabel}>Date</Text>
-
-                            <View style={{ flexDirection: 'row' }}>
-                              <TextInput
-                                style={styles.inputStyle}
-                                placeholder=""
-                                autoCapitalize="none"
-                                keyboardType="email-address"
-                                returnKeyType="next"
-                                underlineColorAndroid="#f000"
-                                blurOnSubmit={false}
-                                value={rfiDate ? moment(new Date(rfiDate)).format('DD-MM-YYYY') : ''}
-                                editable={false}
-                              />
-                              <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
-                                <Text style={styles.assignTagButtonText}>Icon</Text>
-                              </TouchableOpacity>
-                            </View>
-                          </View>
-
-                          {openCalendar && (
-
-                            <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
-                              <CalendarPicker width={width - 40}
-                                initialDate={rfiDate ? new Date(rfiDate) : new Date()}
-                                onDateChange={(date) => {
-                                  setRFIDate(date.format("YYYY-MM-DD"));
-                                  openCloseCalendar()
-                                }}
-                              />
-                            </View>
-                          )}
-
-                          <View style={{ flexDirection: 'column', height: 80, paddingTop: 15, zIndex: 5, marginBottom: 140 }}>
-                            <Text style={styles.GenerateRFIFieldLabel}>Time</Text>
-                            <View style={{ flexDirection: 'row', gap: 20 }}>
-                              <View style={{ width: 80, height: 90 }}>
-                                <DropDownPicker onPress={() => {
-                                  setOpenMinutes(false);
-                                  setOpenTimeFormats(false);
-                                }}
-                                  dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
-                                  maxHeight={75}
-                                  zIndex={1000}
-                                  listMode='MODAL'
-                                  open={openHours}
-                                  value={hour}
-                                  items={hours}
-                                  setOpen={setOpenHours}
-                                  setValue={setHour}
-                                />
-                              </View>
-
-                              <View style={{ width: 80, height: 90 }}>
-                                <DropDownPicker onPress={() => {
-                                  setOpenHours(false);
-                                  setOpenTimeFormats(false);
-                                }}
-                                  dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
-                                  maxHeight={75}
-                                  zIndex={1000}
-                                  listMode='MODAL'
-                                  open={openMinutes}
-                                  value={minute}
-                                  items={minutes}
-                                  setOpen={setOpenMinutes}
-                                  setValue={setMinute}
-                                />
-                              </View>
-                              <View style={{ width: 80, height: 90 }}>
-                                <DropDownPicker onPress={() => {
-                                  setOpenHours(false);
-                                  setOpenMinutes(false);
-                                }}
-                                  dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
-                                  maxHeight={75}
-                                  zIndex={1000}
-                                  listMode='SCROLLVIEW'
-                                  open={openTimeFormats}
-                                  value={timeFormat}
-                                  items={timeFormats}
-                                  setOpen={setOpenTimeFormats}
-                                  setValue={setTimeFormat}
-                                />
-                              </View>
-                            </View>
-
-                            <View style={{ flexDirection: 'column', height: 65 }}>
-                              <Text style={styles.GenerateRFIFieldLabel}>Recommendations</Text>
-                              <TextInput
-                                style={styles.inputStyle}
-                                placeholder="Recommendations"
-                                autoCapitalize="none"
-                                keyboardType="email-address"
-                                returnKeyType="next"
-                                underlineColorAndroid="#f000"
-                                blurOnSubmit={false}
-                                value={comments}
-                                onChangeText={(text) => {
-                                  setComments(text);
-                                }}
-                              />
-                            </View>
-                          </View>
-                        </View>
-
-                      </View>
+                      {
+                        taskForm(selectedTask?.name)
+                      }
                     </SafeAreaView>
                   </Fragment>
                 </ScrollView>
-                
-                <View style={[styles.btnParentSection, {flexDirection: 'row', justifyContent: 'center', gap: 20}]}>
+
+                <View style={[styles.btnParentSection, { flexDirection: 'row', justifyContent: 'center', gap: 20 }]}>
                   <TouchableOpacity style={styles.submitButton} onPress={() => onFillChecklist(RFI_STATUS.IN_PROGRESS)}>
                     <Text style={styles.submitButtonText}>Save</Text>
                   </TouchableOpacity>
@@ -1091,6 +2467,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#150A33',
     fontWeight: '500'
+  },
+  SectionStyle: {
+    flexDirection: 'row',
+    height: 40,
+    marginBottom: 10,
+    marginTop: 5,
   },
   Container: {
     padding: 20,
@@ -1401,7 +2783,7 @@ const styles = StyleSheet.create({
   },
   btnParentSection: {
     // alignItems: 'center',
-    marginTop:10
+    marginTop: 10
   },
   btnSection: {
     width: 150,
@@ -1410,13 +2792,13 @@ const styles = StyleSheet.create({
     // alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 3,
-    marginBottom:10
+    marginBottom: 10
   },
   btnText: {
     textAlign: 'center',
     color: '#fff',
     fontSize: 14,
-    fontWeight:'bold'
+    fontWeight: 'bold'
   }
 });
 

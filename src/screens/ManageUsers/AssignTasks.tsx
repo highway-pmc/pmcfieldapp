@@ -9,7 +9,7 @@ import CheckBox from '@react-native-community/checkbox';
 import LoadingAnimation from '../Common/LoadingAnimation';
 
 const AssignTasks = ({ route, navigation }: { route: any, navigation: any }) => {
-  const { projectModuleId, projectModuleName, type, subType, segmentId, segmentName, componentId, componentName, projectType } = route.params;
+  const { projectModuleId, projectModuleName, type, subType, segmentId, segmentName, componentId, componentName, workType } = route.params;
 
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
   const { tasks, users, loadingUsers, loadingTask, taskWorkAssigned, loading, error } = useSelector((state: any) => state.WorkAssignment);
@@ -52,7 +52,7 @@ const AssignTasks = ({ route, navigation }: { route: any, navigation: any }) => 
 
     dispatch(getUsersForWorkAssignment({
       projectId: loggedInUser.projectId,
-      projectType: projectType
+      workType: workType
     }));
   }, []);
 
@@ -124,7 +124,7 @@ const AssignTasks = ({ route, navigation }: { route: any, navigation: any }) => 
       setTimeout(() => {
         dispatch(getUsersForWorkAssignment({
           projectId: loggedInUser.projectId,
-          projectType: projectType
+          workType: workType
         }));
       }, 500)
     }

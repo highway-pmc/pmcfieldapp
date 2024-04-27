@@ -9,7 +9,7 @@ import CheckBox from '@react-native-community/checkbox';
 import LoadingAnimation from '../Common/LoadingAnimation';
 
 const ComponentsList = ({ route, navigation }: { route: any, navigation: any }) => {
-  const { projectModuleId, projectModuleName, type, subType, segmentId, segmentName, projectType } = route.params;
+  const { projectModuleId, projectModuleName, type, subType, segmentId, segmentName, workType } = route.params;
 
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
   const { components, users, loadingUsers, loadingComponent, componentWorkAssigned, loading, error } = useSelector((state: any) => state.WorkAssignment);
@@ -51,7 +51,7 @@ const ComponentsList = ({ route, navigation }: { route: any, navigation: any }) 
 
     dispatch(getUsersForWorkAssignment({
       projectId: loggedInUser.projectId,
-      projectType: projectType
+      workType: workType
     }));
   }, []);
 
@@ -123,7 +123,7 @@ const ComponentsList = ({ route, navigation }: { route: any, navigation: any }) 
       setTimeout(() => {
         dispatch(getUsersForWorkAssignment({
           projectId: loggedInUser.projectId,
-          projectType: projectType
+          workType: workType
         }));
       }, 500)
     }
@@ -231,7 +231,7 @@ const ComponentsList = ({ route, navigation }: { route: any, navigation: any }) 
                 componentName: item.name,
                 type: type,
                 subType: subType,
-                projectType: projectType
+                workType: workType
               })}>
               <Image
                 style={styles.CloseIcon}

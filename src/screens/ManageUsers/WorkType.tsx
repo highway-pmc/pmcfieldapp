@@ -24,17 +24,17 @@ const WorkType = ({navigation}: {navigation: any}) => {
         rolesArr = [
           {
             title: 'Structure',
-            projectType: PROJECT_TYPE.STRUCTURE_WORK,
+            workType: PROJECT_TYPE.STRUCTURE_WORK,
             color: '#1C58C0'
           },
           {
             title: 'Highway',
-            projectType: PROJECT_TYPE.HIGHWAY_WORK,
+            workType: PROJECT_TYPE.HIGHWAY_WORK,
             color: '#ffa879'
           },
           {
             title: 'Other',
-            projectType: PROJECT_TYPE.OTHER_WORK,
+            workType: PROJECT_TYPE.OTHER_WORK,
             color: '#FCB700'
           }
         ];
@@ -45,21 +45,21 @@ const WorkType = ({navigation}: {navigation: any}) => {
             rolesArr.push(
               {
                 title: 'Structure',
-                projectType: PROJECT_TYPE.STRUCTURE_WORK
+                workType: PROJECT_TYPE.STRUCTURE_WORK
               }
             );
           } else if (role === ROLES.HIGHWAY_HEAD) {
             rolesArr.push(
               {
                 title: 'Highway',
-                projectType: PROJECT_TYPE.HIGHWAY_WORK
+                workType: PROJECT_TYPE.HIGHWAY_WORK
               }
             );
           } else if (role === ROLES.OTHER_WORF_HEAD) {
             rolesArr.push(
               {
                 title: 'Other',
-                projectType: PROJECT_TYPE.OTHER_WORK
+                workType: PROJECT_TYPE.OTHER_WORK
               }
             );
           }
@@ -68,15 +68,15 @@ const WorkType = ({navigation}: {navigation: any}) => {
     }
     
     if (rolesArr.length === 1) {
-      onPressProjectType(rolesArr[0].projectType);
+      onPressWorkType(rolesArr[0].workType);
       return;
     }
     setRoles(rolesArr)
   }, []);
 
-  const onPressProjectType = (projectType: any) => {
+  const onPressWorkType = (workType: any) => {
     navigation.navigate("AssignWork", {
-      projectType: projectType
+      workType: workType
     })
   }
 
@@ -85,7 +85,7 @@ const WorkType = ({navigation}: {navigation: any}) => {
       <View style={styles.rfiTabBar}>
           {
             roles.map((role: any) => (
-            <TouchableOpacity style={[styles.rfiTab, {backgroundColor: role.color}]} onPress={() => onPressProjectType(role.projectType)}>
+            <TouchableOpacity style={[styles.rfiTab, {backgroundColor: role.color}]} onPress={() => onPressWorkType(role.workType)}>
               <Text style={styles.tabText}>{role.title}</Text>
             </TouchableOpacity>
             ))

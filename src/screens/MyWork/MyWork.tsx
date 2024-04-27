@@ -13,7 +13,7 @@ import moment from 'moment';
 
 const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const { projectType } = route.params;
+  const { workType } = route.params;
 
   const { myWorks, rfiData, rfiChecklistSaved, loading, error } = useSelector((state: any) => state.MyWorks);
   const [myWorksData, setMyWorksData] = useState([]);
@@ -155,7 +155,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
   const getMyWorksData = () => {
     dispatch(getMyWorks({
       projectId: loggedInUser.projectId,
-      projectType: projectType
+      workType: workType
     }));
   }
 

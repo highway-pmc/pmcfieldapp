@@ -31,7 +31,7 @@ function* addUserCategories({ payload }) {
 
 function* getProjectModules({ payload }) {
     try {
-        const response = yield (getProjectModulesData(payload.projectId, payload.projectType));
+        const response = yield (getProjectModulesData(payload.projectId, payload.workType));
 
         yield put({ type: "GET_PROJECT_MODULES_SUCCESS", response });
     } catch (error) {
@@ -69,7 +69,7 @@ function* getProjectModuleTasks({ payload }) {
 
 function* getUsersForWorkAssignment({ payload }) {
     try {
-        const response = yield (getUsersForWorkAssignmentData(payload.projectId, payload.projectType));
+        const response = yield (getUsersForWorkAssignmentData(payload.projectId, payload.workType));
         yield put({ type: "GET_USERS_TO_WORK_ASSIGNMENT_SUCCESS", response });
     } catch (error) {
         yield put({ type: "GET_USERS_TO_WORK_ASSIGNMENT_FAILURE", error: error.message });

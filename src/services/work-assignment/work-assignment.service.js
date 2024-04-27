@@ -1,7 +1,7 @@
 import apiService from '../api.service';
 
-export const getProjectModulesData = async (projectId, projectType) => {
-    return apiService.getRequest(`v1/auth/projects/${projectId}/project-modules?projectType=${projectType || ''}`).then((response) => {
+export const getProjectModulesData = async (projectId, workType) => {
+    return apiService.getRequest(`v1/auth/projects/${projectId}/project-modules?workType=${workType || ''}`).then((response) => {
         return response;
     }).catch((err) => {
         const errorMessge = err.message || 'Unable to get list of project modules.';
@@ -36,8 +36,8 @@ export const getProjectModuleTasksData = async (projectId, projectModuleId, segm
     });
 }
 
-export const getUsersForWorkAssignmentData = async (projectId, projectType) => {
-    return apiService.getRequest(`v1/auth/projects/${projectId}/users/${projectType}/work-assignment`).then((response) => {
+export const getUsersForWorkAssignmentData = async (projectId, workType) => {
+    return apiService.getRequest(`v1/auth/projects/${projectId}/users/${workType}/work-assignment`).then((response) => {
         return response;
     }).catch((err) => {
         const errorMessge = err.message || 'Unable to get list of users.';

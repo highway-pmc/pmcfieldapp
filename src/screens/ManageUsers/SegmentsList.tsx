@@ -10,7 +10,7 @@ import LoadingAnimation from '../Common/LoadingAnimation';
 import { groupBy } from '../../utils/Utils';
 
 const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) => {
-  const { projectModuleId, projectModuleName, type, subType, projectType } = route.params;
+  const { projectModuleId, projectModuleName, type, subType, workType } = route.params;
 
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
   const { segments, users, segmentWorkAssigned, loading, loadingSegment, loadingUsers, error } = useSelector((state: any) => state.WorkAssignment);
@@ -52,7 +52,7 @@ const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) =>
 
     dispatch(getUsersForWorkAssignment({
       projectId: loggedInUser.projectId,
-      projectType: projectType
+      workType: workType
     }));
   }, []);
 
@@ -172,7 +172,7 @@ const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) =>
       setTimeout(() => {
         dispatch(getUsersForWorkAssignment({
           projectId: loggedInUser.projectId,
-          projectType: projectType
+          workType: workType
         }));
       }, 500)
     }
@@ -317,7 +317,7 @@ const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) =>
                   segmentName: item.name,
                   type: type,
                   subType: subType,
-                  projectType: projectType
+                  workType: workType
                 })}>
                 <Image
                   style={styles.CloseIcon}

@@ -5,7 +5,7 @@ import { getProjectModuleSegmentsData, getProjectModuleComponentsData, getProjec
 
 function* getProjectModules({ payload }) {
     try {
-        const response = yield (getProjectModulesData(payload.projectId, payload.projectType));
+        const response = yield (getProjectModulesData(payload.projectId, payload.workType));
 
         yield put({ type: "GET_PROJECT_MODULES_SUCCESS", response });
     } catch (error) {
@@ -43,7 +43,7 @@ function* getProjectModuleTasks({ payload }) {
 
 function* getUsersForWorkAssignment({ payload }) {
     try {
-        const response = yield (getUsersForWorkAssignmentData(payload.projectId, payload.projectType));
+        const response = yield (getUsersForWorkAssignmentData(payload.projectId, payload.workType));
         yield put({ type: "GET_USERS_MY_WORK_SUCCESS", response });
     } catch (error) {
         yield put({ type: "GET_USERS_MY_WORK_FAILURE", error: error.message });

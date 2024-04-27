@@ -13,6 +13,7 @@ export const HeaderItems = {
     assignWork: { showBack: true, title: 'Assign Works' },
     segmentsList: { showBack: true, title: 'Assign Works - Segment' },
     componentsList: { showBack: true, title: 'Assign Works - Component' },
+    subComponentsList: { showBack: true, title: 'Assign Works - Sub Component' },
     assignTasks: { showBack: true, title: 'Assign Works - Tasks' },
     assignedWorkType: { showBack: false, title: 'My Work' },
     assignedMyWork: { showBack: true, title: 'Assigned Works' },

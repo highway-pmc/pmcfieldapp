@@ -24,7 +24,7 @@ const PHAssignedWork = ({ route, navigation }: { route: any, navigation: any }) 
 
   const [userData, setUserCheckboxes] = useState([]);
 
-  const { projectType } = route.params;
+  const { workType } = route.params;
   const focus = useIsFocused();
 
 
@@ -34,12 +34,12 @@ const PHAssignedWork = ({ route, navigation }: { route: any, navigation: any }) 
       eventEmitter.emit('headerEvent', HeaderItems.assignedMyWork);
       dispatch(getProjectModules({
         projectId: loggedInUser.projectId,
-        projectType: projectType
+        workType: workType
       }));
 
       dispatch(getUsersForWorkAssignment({
         projectId: loggedInUser.projectId,
-        projectType: projectType
+        workType: workType
       }));
     }
   }, [focus]);
@@ -153,7 +153,7 @@ const PHAssignedWork = ({ route, navigation }: { route: any, navigation: any }) 
                   projectModuleName: item.name,
                   type: item.type,
                   subType: item.subType,
-                  projectType: projectType
+                  workType: workType
                 })}>
                 <Image
                   style={styles.CloseIcon}

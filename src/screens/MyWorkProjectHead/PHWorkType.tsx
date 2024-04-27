@@ -16,23 +16,23 @@ const PHWorkType = ({navigation}: {navigation: any}) => {
     let rolesArr: any = [
       {
         title: 'Structure',
-        projectType: PROJECT_TYPE.STRUCTURE_WORK
+        workType: PROJECT_TYPE.STRUCTURE_WORK
       },
       {
         title: 'Highway',
-        projectType: PROJECT_TYPE.HIGHWAY_WORK
+        workType: PROJECT_TYPE.HIGHWAY_WORK
       },
       {
         title: 'Other',
-        projectType: PROJECT_TYPE.OTHER_WORK
+        workType: PROJECT_TYPE.OTHER_WORK
       }
     ];
     setRoles(rolesArr)
   }, []);
 
-  const onPressProjectType = (projectType: any) => {
+  const onPressWorkType = (workType: any) => {
     navigation.navigate("PHAssignedWork", {
-      projectType: projectType
+      workType: workType
     })
   }
 
@@ -49,7 +49,7 @@ const PHWorkType = ({navigation}: {navigation: any}) => {
             roles.map((role: any) => (
             <Pressable
               style={styles.buttonAssign}
-              onPress={() => onPressProjectType(role.projectType)}>
+              onPress={() => onPressWorkType(role.workType)}>
               <Text style={styles.textStyle}>{role.title}</Text>
             </Pressable>
             ))

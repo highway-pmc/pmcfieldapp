@@ -5,7 +5,7 @@ import { fillRFIsDataChecklist, getRFIDataByWaId } from '../../services/rfi/rfis
 
 function* getMyWorks({ payload }) {
     try {
-        const response = yield (getMyWorksData(payload.projectId, payload.projectType));
+        const response = yield (getMyWorksData(payload.projectId, payload.workType));
         yield put({ type: "GET_MY_WORKS_SUCCESS", response });
     } catch (error) {
         yield put({ type: "GET_MY_WORKS_FAILURE", error: error.message });

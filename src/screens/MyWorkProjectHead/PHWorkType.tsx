@@ -3,12 +3,12 @@ import React, {useEffect, useState} from 'react'
 import { useIsFocused } from '@react-navigation/native';
 import { HeaderItems, PROJECT_TYPE } from "../../constants/constants"
 
-const PHMyProjectType = ({navigation}: {navigation: any}) => {
+const PHWorkType = ({navigation}: {navigation: any}) => {
   const [roles, setRoles] = useState([]);
 
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();
-    eventEmitter.emit('headerEvent', HeaderItems.assignedMyProjectType);
+    eventEmitter.emit('headerEvent', HeaderItems.assignedWorkType);
   }
 
   useEffect(() => {
@@ -78,4 +78,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PHMyProjectType
+export default PHWorkType

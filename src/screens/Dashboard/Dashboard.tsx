@@ -30,7 +30,7 @@ const Dashboard = ({navigation}:{navigation: any}) => {
               style={styles.TopMenuIcon}
               source={require('./../../images/back-button.png')} 
             />
-            <Text style={styles.HeaderTextBold}>{headerInfo.title}</Text>
+            <Text style={styles.HeaderTextBold}>{headerInfo?.title}</Text>
           </TouchableOpacity>
           :
           <TouchableOpacity style={styles.HeaderMenuContainer} onPress={() => {navigation.dispatch(DrawerActions.openDrawer())}}>
@@ -39,7 +39,7 @@ const Dashboard = ({navigation}:{navigation: any}) => {
               style={styles.HeaderTopMenuIcon}
               source={require('./../../images/menu-icon.png')} 
             />
-            <Text style={styles.HeaderTextBold}>{headerInfo.title}</Text>
+            <Text style={styles.HeaderTextBold}>{headerInfo?.title}</Text>
           </TouchableOpacity>
           }
         </TouchableOpacity>

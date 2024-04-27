@@ -17,14 +17,14 @@ import ProjectInfo from "../../screens/ProjectInfo/ProjectInfo";
 import MyTest from "../../screens/MyTest/MyTest";
 import ChangePassword from "../../screens/ChangePassword/ChangePassword";
 import ComponentsList from "../../screens/ManageUsers/ComponentsList";
-import MyProjectType from "../../screens/ManageUsers/MyProjectType";
+import WorkType from "../../screens/ManageUsers/WorkType";
 import AssignTasks from "../../screens/ManageUsers/AssignTasks";
-import PHMyProjectType from "../../screens/MyWorkProjectHead/PHMyProjectType";
+import PHWorkType from "../../screens/MyWorkProjectHead/PHWorkType";
 import PHAssignedWork from "../../screens/MyWorkProjectHead/PHAssignedWork";
 import PHAssignedTasks from "../../screens/MyWorkProjectHead/PHAssignedTasks";
 import PHAssignedComponents from "../../screens/MyWorkProjectHead/PHAssignedComponents";
 import PHAssignedSegments from "../../screens/MyWorkProjectHead/PHAssignedSegments";
-import MyWorkProjectType from "../../screens/MyWork/MyWorkProjectType";
+import MyWorkType from "../../screens/MyWork/MyWorkType";
 import RFIsDashboard from "../../screens/RFIs/RFIsDashboard";
 import RFIsUserCategorySelection from "../../screens/RFIs/RFIsUserCategorySelection";
 
@@ -41,7 +41,7 @@ const screenOptionStyle = {
 const MyWorkStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
-      <Stack.Screen name="MyWorkProjectType1" component={MyWorkProjectType} options={{headerShown: false}} />
+      <Stack.Screen name="MyWorkType1" component={MyWorkType} options={{headerShown: false}} />
       <Stack.Screen name="MyWork" component={MyWork} options={{headerShown: false}} />
       <Stack.Screen name="MyWork2" component={MyWork2} options={{headerShown: false}} />
       <Stack.Screen name="MyWork3" component={MyWork3} options={{headerShown: false}} />
@@ -69,7 +69,7 @@ const ManageUsersStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
       <Stack.Screen name="ManageUsers" component={ManageUsers} options={{headerShown: false}} />
-      <Stack.Screen name="MyProjectType" component={MyProjectType} options={{headerShown: false}} />
+      <Stack.Screen name="WorkType" component={WorkType} options={{headerShown: false}} />
       <Stack.Screen name="AssignWork" component={AssignWork} options={{headerShown: false}} />
       <Stack.Screen name="SegmentsList" component={SegmentsList} options={{headerShown: false}} />
       <Stack.Screen name="ComponentsList" component={ComponentsList} options={{headerShown: false}} />
@@ -81,7 +81,7 @@ const ManageUsersStackNavigator = () => {
 const MyWorkPHStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
-      <Stack.Screen name="PHMyProjectType" component={PHMyProjectType} options={{headerShown: false}} />
+      <Stack.Screen name="PHWorkType" component={PHWorkType} options={{headerShown: false}} />
       <Stack.Screen name="PHAssignedWork" component={PHAssignedWork} options={{headerShown: false}} />
       <Stack.Screen name="PHAssignedSegments" component={PHAssignedSegments} options={{headerShown: false}} />
       <Stack.Screen name="PHAssignedComponents" component={PHAssignedComponents} options={{headerShown: false}} />

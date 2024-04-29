@@ -44,7 +44,6 @@ const AssignTasks = ({ route, navigation }: { route: any, navigation: any }) => 
 
   useEffect(() => {
     if (subComponentId) {
-      console.log('=========', subComponentId)
       dispatch(getProjectModuleSubComponentTasks({
         projectId: loggedInUser.projectId,
         projectModuleId: projectModuleId,

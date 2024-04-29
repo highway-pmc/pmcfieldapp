@@ -28,7 +28,6 @@ const SubComponentsList = ({ route, navigation }: { route: any, navigation: any 
 
   useEffect(() => {
     if (subComponents) {
-      console.log('==============', subComponents)
       subComponents.forEach((pModule: any) => {
         pModule.isChecked = false
       });

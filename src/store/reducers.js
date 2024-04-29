@@ -810,7 +810,6 @@ const WorkAssignmentReducer = (state = workAssignmentState, action) => {
                 loadingTask: false,
             };
         case "CLEAR_NEXT_LEVEL":
-            console.log('============CCC=========')
             return {
                 ...state,
                 nextLevel: null,

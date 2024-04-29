@@ -296,6 +296,7 @@ export const WORK_ASSIGNMENT_LEVEL = {
     LEVEL2: 'Level 2',
     LEVEL3: 'Level 3',
     LEVEL4: 'Level 4',
+    LEVEL5: 'Level 5',
 }
 
 export const TASK_TYPES = {

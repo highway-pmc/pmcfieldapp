@@ -120,6 +120,15 @@ const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) =>
         } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segment._id && wa.componentId && wa.assignmentLevel === 4) != null) {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL4;
           user.isChecked = true;
+        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId && wa.componentId && wa.subComponentId && wa.taskId && wa.assignmentLevel === 5) != null) {
+          user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL5;
+          user.isChecked = true;
+        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId && wa.componentId && wa.taskId && wa.assignmentLevel === 5) != null) {
+          user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL5;
+          user.isChecked = true;
+        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId && wa.taskId && wa.assignmentLevel === 5) != null) {
+          user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL5;
+          user.isChecked = true;
         } else {
           const workAssignment = user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segment._id && wa.assignmentLevel === 2);
           if (workAssignment) {

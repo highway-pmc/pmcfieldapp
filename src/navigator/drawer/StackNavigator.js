@@ -27,6 +27,7 @@ import PHAssignedSegments from "../../screens/MyWorkProjectHead/PHAssignedSegmen
 import MyWorkType from "../../screens/MyWork/MyWorkType";
 import RFIsDashboard from "../../screens/RFIs/RFIsDashboard";
 import RFIsUserCategorySelection from "../../screens/RFIs/RFIsUserCategorySelection";
+import SubComponentsList from "../../screens/ManageUsers/SubComponentsList";
 
 const Stack = createStackNavigator();
 
@@ -73,6 +74,7 @@ const ManageUsersStackNavigator = () => {
       <Stack.Screen name="AssignWork" component={AssignWork} options={{headerShown: false}} />
       <Stack.Screen name="SegmentsList" component={SegmentsList} options={{headerShown: false}} />
       <Stack.Screen name="ComponentsList" component={ComponentsList} options={{headerShown: false}} />
+      <Stack.Screen name="SubComponentsList" component={SubComponentsList} options={{headerShown: false}} />
       <Stack.Screen name="AssignTasks" component={AssignTasks} options={{headerShown: false}} />
     </Stack.Navigator>
   );

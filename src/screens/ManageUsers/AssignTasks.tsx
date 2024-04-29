@@ -3,13 +3,13 @@ import React, { useEffect, useState } from 'react'
 import { useIsFocused } from '@react-navigation/native';
 import { HeaderItems, WORK_ASSIGNMENT_LEVEL } from '../../constants/constants';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearProjectModulesWorkAssignmentData, getProjectModuleComponents, getProjectModuleComponentTasks, getUsersForWorkAssignment, componentWorkAssignToUsers, taskWorkAssignToUsers, getProjectModuleSegmentTasks } from './actions';
+import { clearProjectModulesWorkAssignmentData, getProjectModuleComponents, getProjectModuleComponentTasks, getUsersForWorkAssignment, componentWorkAssignToUsers, taskWorkAssignToUsers, getProjectModuleSegmentTasks, getProjectModuleSubComponentTasks } from './actions';
 import { ScrollView } from 'react-native-gesture-handler';
 import CheckBox from '@react-native-community/checkbox';
 import LoadingAnimation from '../Common/LoadingAnimation';
 
 const AssignTasks = ({ route, navigation }: { route: any, navigation: any }) => {
-  const { projectModuleId, projectModuleName, type, subType, segmentId, segmentName, componentId, componentName, workType } = route.params;
+  const { projectModuleId, projectModuleName, type, subType, segmentId, segmentName, componentId, componentName, subComponentId, subComponentName, workType } = route.params;
 
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
   const { tasks, users, loadingUsers, loadingTask, taskWorkAssigned, loading, error } = useSelector((state: any) => state.WorkAssignment);
@@ -43,7 +43,17 @@ const AssignTasks = ({ route, navigation }: { route: any, navigation: any }) => 
   }, [tasks, users, error]);
 
   useEffect(() => {
-    if (componentId) {
+    if (subComponentId) {
+      console.log('=========', subComponentId)
+      dispatch(getProjectModuleSubComponentTasks({
+        projectId: loggedInUser.projectId,
+        projectModuleId: projectModuleId,
+        segmentId: segmentId,
+        componentId: componentId,
+        subComponentId: subComponentId,
+      }));
+    }
+    else if (componentId) {
       dispatch(getProjectModuleComponentTasks({
         projectId: loggedInUser.projectId,
         projectModuleId: projectModuleId,
@@ -85,9 +95,16 @@ const AssignTasks = ({ route, navigation }: { route: any, navigation: any }) => 
         } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.componentId === componentId && wa.assignmentLevel === 3)) {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL3;
           user.isChecked = true;
+        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.componentId === componentId && wa.subComponentId === subComponentId && wa.assignmentLevel === 4)) {
+          user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL4;
+          user.isChecked = true;
         } else {
-          const workAssignment = user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.componentId === componentId && wa.taskId === task._id && wa.assignmentLevel === 4);
+          const workAssignment = user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.componentId === componentId && wa.subComponentId === subComponentId && wa.taskId === task._id && wa.assignmentLevel === 5);
           if (workAssignment) {
+            user.isChecked = true;
+          } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.componentId === componentId && wa.taskId === task._id && wa.assignmentLevel === 5)) {
+            user.isChecked = true;
+          } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId && wa.taskId === task._id && wa.assignmentLevel === 5) != null) {
             user.isChecked = true;
           }
         }
@@ -102,7 +119,7 @@ const AssignTasks = ({ route, navigation }: { route: any, navigation: any }) => 
     const updatedCheckboxes: any = [...userData];
     const selectedUser: any = updatedCheckboxes[index];
     selectedUser.isChecked = !selectedUser.isChecked;
-    const workAssignment = selectedUser.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.componentId === componentId && wa.taskId === selectedTask._id && wa.assignmentLevel === 4)
+    const workAssignment = selectedUser.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.componentId === componentId && wa.taskId === selectedTask._id && wa.assignmentLevel === 5)
     if (selectedUser.isChecked) {
       if (workAssignment) {
         workAssignment.dirty = false;
@@ -165,7 +182,7 @@ const AssignTasks = ({ route, navigation }: { route: any, navigation: any }) => 
         taskId: selectedTask._id,
         body: {
           users: usersToBeAssignArray,
-          level: 4
+          level: 5
         }
       }));
     }

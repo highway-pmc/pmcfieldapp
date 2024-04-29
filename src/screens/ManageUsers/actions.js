@@ -26,12 +26,32 @@ export const getProjectModuleSegments = (payload) => ({
 });
 
 export const getProjectModuleComponents = (payload) => ({
-    type: "GET_PROJECT_MODULE_SUB_SEGMENTS_REQUEST",
+    type: "GET_PROJECT_MODULE_COMPONENTS_REQUEST",
     payload: payload,
 });
 
-export const getProjectModuleTasks = (payload) => ({
-    type: "GET_PROJECT_MODULE_TASKS_REQUEST",
+export const getProjectModuleSubComponents = (payload) => ({
+    type: "GET_PROJECT_MODULE_SUB_COMPONENTS_REQUEST",
+    payload: payload,
+});
+
+export const getProjectModuleSegmentTasks = (payload) => ({
+    type: "GET_PROJECT_MODULE_SEGMENT_TASKS_REQUEST",
+    payload: payload,
+});
+
+export const getProjectModuleSubComponentTasks = (payload) => ({
+    type: "GET_PROJECT_MODULE_SUB_COMPONENT_TASKS_REQUEST",
+    payload: payload,
+});
+
+export const getProjectModuleNextLevel = (payload) => ({
+    type: "GET_PROJECT_MODULE_NEXT_LEVEL_REQUEST",
+    payload: payload,
+});
+
+export const getProjectModuleComponentTasks = (payload) => ({
+    type: "GET_PROJECT_MODULE_COMPONENTS_TASKS_REQUEST",
     payload: payload,
 });
 
@@ -71,5 +91,9 @@ export const clearWorkAssignmentData = () => ({
 
 export const clearProjectModulesWorkAssignmentData = () => ({
     type: "CLEAR_PROJECT_MODULE_WORK_ASSIGNMENT_USERS"
+});
+
+export const clearNextLevel = () => ({
+    type: "CLEAR_NEXT_LEVEL",
 });
 

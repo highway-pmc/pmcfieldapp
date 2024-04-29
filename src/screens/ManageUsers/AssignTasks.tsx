@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useIsFocused } from '@react-navigation/native';
 import { HeaderItems, WORK_ASSIGNMENT_LEVEL } from '../../constants/constants';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearProjectModulesWorkAssignmentData, getProjectModuleComponents, getProjectModuleTasks, getUsersForWorkAssignment, componentWorkAssignToUsers, taskWorkAssignToUsers } from './actions';
+import { clearProjectModulesWorkAssignmentData, getProjectModuleComponents, getProjectModuleComponentTasks, getUsersForWorkAssignment, componentWorkAssignToUsers, taskWorkAssignToUsers, getProjectModuleSegmentTasks } from './actions';
 import { ScrollView } from 'react-native-gesture-handler';
 import CheckBox from '@react-native-community/checkbox';
 import LoadingAnimation from '../Common/LoadingAnimation';
@@ -43,12 +43,20 @@ const AssignTasks = ({ route, navigation }: { route: any, navigation: any }) => 
   }, [tasks, users, error]);
 
   useEffect(() => {
-    dispatch(getProjectModuleTasks({
-      projectId: loggedInUser.projectId,
-      projectModuleId: projectModuleId,
-      segmentId: segmentId,
-      componentId: componentId,
-    }));
+    if (componentId) {
+      dispatch(getProjectModuleComponentTasks({
+        projectId: loggedInUser.projectId,
+        projectModuleId: projectModuleId,
+        segmentId: segmentId,
+        componentId: componentId,
+      }));
+    } else {
+      dispatch(getProjectModuleSegmentTasks({
+        projectId: loggedInUser.projectId,
+        projectModuleId: projectModuleId,
+        segmentId: segmentId,
+      }));
+    }
 
     dispatch(getUsersForWorkAssignment({
       projectId: loggedInUser.projectId,

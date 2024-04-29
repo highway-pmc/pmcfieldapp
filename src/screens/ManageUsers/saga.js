@@ -1,7 +1,7 @@
 
 import { put, takeLatest } from 'redux-saga/effects';
 import { getUserAssignment, getUserCategory, userCategoriesAssignment } from '../../services/user/user.service';
-import { getProjectModuleSegmentsData, getProjectModuleComponentsData, getProjectModuleTasksData, getProjectModulesData, getUsersForWorkAssignmentData, projectModulesWorkAssignToUsersApi, segmentTypeWorkAssignToUsersApi, segmentsWorkAssignToUsersApi, componentsWorkAssignToUsersApi, tasksWorkAssignToUsersApi } from '../../services/work-assignment/work-assignment.service';
+import { getProjectModuleSegmentsData, getProjectModuleComponentsData, getProjectModuleComponentTasksData, getProjectModulesData, getUsersForWorkAssignmentData, projectModulesWorkAssignToUsersApi, segmentTypeWorkAssignToUsersApi, segmentsWorkAssignToUsersApi, componentsWorkAssignToUsersApi, tasksWorkAssignToUsersApi, getProjectModuleSubComponentsData, getProjectModuleSubComponentTasksData, getProjectModuleNextLevelData, getProjectModuleSegmentTasksData } from '../../services/work-assignment/work-assignment.service';
 function* getUserCategories() {
     try {
         const response = yield (getUserCategory());
@@ -52,18 +52,55 @@ function* getProjectModuleSegments({ payload }) {
 function* getProjectModuleComponents({ payload }) {
     try {
         const response = yield (getProjectModuleComponentsData(payload.projectId, payload.projectModuleId, payload.segmentId));
-        yield put({ type: "GET_PROJECT_MODULE_SUB_SEGMENTS_SUCCESS", response });
+        yield put({ type: "GET_PROJECT_MODULE_COMPONENTS_SUCCESS", response });
     } catch (error) {
-        yield put({ type: "GET_PROJECT_MODULE_SUB_SEGMENTS_FAILURE", error: error.message });
+        yield put({ type: "GET_PROJECT_MODULE_COMPONENTS_FAILURE", error: error.message });
     }
 }
 
-function* getProjectModuleTasks({ payload }) {
+function* getProjectModuleSubComponents({ payload }) {
     try {
-        const response = yield (getProjectModuleTasksData(payload.projectId, payload.projectModuleId, payload.segmentId, payload.componentId));
-        yield put({ type: "GET_PROJECT_MODULE_TASKS_SUCCESS", response });
+        const response = yield (getProjectModuleSubComponentsData(payload.projectId, payload.projectModuleId, payload.segmentId, payload.componentId));
+        yield put({ type: "GET_PROJECT_MODULE_SUB_COMPONENTS_SUCCESS", response });
     } catch (error) {
-        yield put({ type: "GET_PROJECT_MODULE_TASKS_FAILURE", error: error.message });
+        yield put({ type: "GET_PROJECT_MODULE_SUB_COMPONENTS_FAILURE", error: error.message });
+    }
+}
+
+function* getProjectModuleComponentTasks({ payload }) {
+    try {
+        const response = yield (getProjectModuleComponentTasksData(payload.projectId, payload.projectModuleId, payload.segmentId, payload.componentId));
+        yield put({ type: "GET_PROJECT_MODULE_COMPONENTS_TASKS_SUCCESS", response });
+    } catch (error) {
+        yield put({ type: "GET_PROJECT_MODULE_COMPONENTS_TASKS_FAILURE", error: error.message });
+    }
+}
+
+function* getProjectModuleSegmentTasks({ payload }) {
+    try {
+        const response = yield (getProjectModuleSegmentTasksData(payload.projectId, payload.projectModuleId, payload.segmentId));
+
+        yield put({ type: "GET_PROJECT_MODULE_SEGMENT_TASKS_SUCCESS", response });
+    } catch (error) {
+        yield put({ type: "GET_PROJECT_MODULE_SEGMENT_TASKS_FAILURE", error: error.message });
+    }
+}
+
+function* getProjectModuleSubComponentTasks({ payload }) {
+    try {
+        const response = yield (getProjectModuleSubComponentTasksData(payload.projectId, payload.projectModuleId, payload.segmentId, payload.componentId, payload.subComponentId));
+        yield put({ type: "GET_PROJECT_MODULE_SUB_COMPONENT_TASKS_SUCCESS", response });
+    } catch (error) {
+        yield put({ type: "GET_PROJECT_MODULE_SUB_COMPONENT_TASKS_FAILURE", error: error.message });
+    }
+}
+
+function* getProjectModuleNextLevel({ payload }) {
+    try {
+        const response = yield (getProjectModuleNextLevelData(payload.projectId, payload.projectModuleId, payload.id, payload.type));
+        yield put({ type: "GET_PROJECT_MODULE_NEXT_LEVEL_SUCCESS", response });
+    } catch (error) {
+        yield put({ type: "GET_PROJECT_MODULE_NEXT_LEVEL_FAILURE", error: error.message });
     }
 }
 
@@ -127,13 +164,18 @@ export default function* userCategoriesAssignmentScreenSaga() {
     yield takeLatest("ADD_USER_ASSIGNMENT_REQUEST", addUserCategories);
     yield takeLatest("GET_PROJECT_MODULES_REQUEST", getProjectModules);
     yield takeLatest("GET_PROJECT_MODULE_SEGMENTS_REQUEST", getProjectModuleSegments);
-    yield takeLatest("GET_PROJECT_MODULE_SUB_SEGMENTS_REQUEST", getProjectModuleComponents);
-    yield takeLatest("GET_PROJECT_MODULE_TASKS_REQUEST", getProjectModuleTasks);
+    yield takeLatest("GET_PROJECT_MODULE_COMPONENTS_REQUEST", getProjectModuleComponents);
+    yield takeLatest("GET_PROJECT_MODULE_SUB_COMPONENTS_REQUEST", getProjectModuleSubComponents);
+    yield takeLatest("GET_PROJECT_MODULE_COMPONENTS_TASKS_REQUEST", getProjectModuleComponentTasks);
     yield takeLatest("GET_USERS_TO_WORK_ASSIGNMENT_REQUEST", getUsersForWorkAssignment);
     yield takeLatest("PROJECT_MODULE_WORK_ASSIGNMENT_USERS_REQUEST", projectModulesWorkAssignToUsers);
     yield takeLatest("SEGMENT_WORK_ASSIGNMENT_USERS_REQUEST", segmentsWorkAssignToUsers);
     yield takeLatest("SEGMENT_TYPE_WORK_ASSIGNMENT_USERS_REQUEST", segmentTypeWorkAssignToUsers);
     yield takeLatest("SUB_SEGMENT_WORK_ASSIGNMENT_USERS_REQUEST", componentWorkAssignToUsers);
     yield takeLatest("TASK_WORK_ASSIGNMENT_USERS_REQUEST", taskWorkAssignToUsers);
+
+    yield takeLatest("GET_PROJECT_MODULE_SEGMENT_TASKS_REQUEST", getProjectModuleSegmentTasks);
+    yield takeLatest("GET_PROJECT_MODULE_SUB_COMPONENT_TASKS_REQUEST", getProjectModuleSubComponentTasks);
+    yield takeLatest("GET_PROJECT_MODULE_NEXT_LEVEL_REQUEST", getProjectModuleNextLevel);
 }
 

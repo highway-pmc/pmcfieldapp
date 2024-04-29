@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useIsFocused } from '@react-navigation/native';
 import { HeaderItems, SEGMENT_TYPES_DISPLAY, WORK_ASSIGNMENT_LEVEL } from '../../constants/constants';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearProjectModulesWorkAssignmentData, getProjectModuleSegments, getUsersForWorkAssignment, segmentTypeWorkAssignToUsers, segmentWorkAssignToUsers } from './actions';
+import { clearNextLevel, clearProjectModulesWorkAssignmentData, getProjectModuleNextLevel, getProjectModuleSegments, getUsersForWorkAssignment, segmentTypeWorkAssignToUsers, segmentWorkAssignToUsers } from './actions';
 import { ScrollView } from 'react-native-gesture-handler';
 import CheckBox from '@react-native-community/checkbox';
 import LoadingAnimation from '../Common/LoadingAnimation';
@@ -13,7 +13,7 @@ const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) =>
   const { projectModuleId, projectModuleName, type, subType, workType } = route.params;
 
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const { segments, users, segmentWorkAssigned, loading, loadingSegment, loadingUsers, error } = useSelector((state: any) => state.WorkAssignment);
+  const { segments, users, segmentWorkAssigned, nextLevel, loading, loadingSegment, loadingUsers, error } = useSelector((state: any) => state.WorkAssignment);
   const [segmentsData, setSegmentsData] = useState([]);
   const [selectedSegmentType, setSelectedSegmentType] = useState('');
   const [segmentTypeToAssignWork, setSegmentTypeToAssignWork] = useState('');
@@ -237,6 +237,44 @@ const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) =>
     setSearchText('');
   }, [] );
 
+  const onSegmentNextClick = (item: any) => {
+    setSelectedSegment(item);
+    dispatch(getProjectModuleNextLevel({
+      projectId: loggedInUser.projectId,
+      projectModuleId: projectModuleId,
+      id: item._id,
+      type: 'segment',
+    }));
+  }
+
+  useEffect(() => {
+    if (nextLevel) {
+      dispatch(clearNextLevel());
+      if (nextLevel.nextLevel === 'component') {
+        navigation.navigate('ComponentsList', {
+          projectModuleId: projectModuleId,
+          projectModuleName: projectModuleName,
+          segmentId: selectedSegment._id,
+          segmentName: selectedSegment.name,
+          type: type,
+          subType: subType,
+          workType: workType
+        })
+      } else if (nextLevel.nextLevel === 'task') {
+        navigation.navigate('AssignTasks', {
+          projectModuleId: projectModuleId,
+          projectModuleName: projectModuleName,
+          segmentId: selectedSegment._id,
+          segmentName: selectedSegment.name,
+          type: type,
+          subType: subType,
+          workType: workType
+        })
+      }
+      
+    }
+  }, [nextLevel]);
+
   return (
     <View style={styles.Container}>
       {(error) && <View style={styles.ErrorSectionStyle}>
@@ -310,15 +348,7 @@ const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) =>
             </View>
             <View>
               <TouchableOpacity
-                onPress={() => navigation.navigate('ComponentsList', {
-                  projectModuleId: projectModuleId,
-                  projectModuleName: projectModuleName,
-                  segmentId: item._id,
-                  segmentName: item.name,
-                  type: type,
-                  subType: subType,
-                  workType: workType
-                })}>
+                onPress={() => onSegmentNextClick(item)}>
                 <Image
                   style={styles.CloseIcon}
                   source={require('./../../images/right-arrow.png')}

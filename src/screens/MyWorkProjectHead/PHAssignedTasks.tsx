@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useIsFocused } from '@react-navigation/native';
 import { HeaderItems } from '../../constants/constants';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProjectModuleTasks, getUsersForWorkAssignment } from './actions';
+import { getProjectModuleComponentTasks, getUsersForWorkAssignment } from './actions';
 import { ScrollView } from 'react-native-gesture-handler';
 import CheckBox from '@react-native-community/checkbox';
 import LoadingAnimation from '../Common/LoadingAnimation';
@@ -42,7 +42,7 @@ const PHAssignedTasks = ({route, navigation}: { route: any, navigation: any }) =
   }, [tasks, usersData, error]);
 
   useEffect(() => {
-    dispatch(getProjectModuleTasks({
+    dispatch(getProjectModuleComponentTasks({
       projectId: loggedInUser.projectId,
       projectModuleId: projectModuleId,
       segmentId: segmentId,

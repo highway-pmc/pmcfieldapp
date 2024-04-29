@@ -496,14 +496,14 @@ const WorkAssignmentReducer = (state = workAssignmentState, action) => {
                 loading: false,
                 loadingSegment: false
             };
-        case "GET_PROJECT_MODULE_SUB_SEGMENTS_REQUEST":
+        case "GET_PROJECT_MODULE_COMPONENTS_REQUEST":
             return {
                 ...state,
                 error: null,
                 loadingComponent: true,
                 loading: true,
             };
-        case "GET_PROJECT_MODULE_SUB_SEGMENTS_SUCCESS":
+        case "GET_PROJECT_MODULE_COMPONENTS_SUCCESS":
             return {
                 ...state,
                 components: action.response,
@@ -511,7 +511,7 @@ const WorkAssignmentReducer = (state = workAssignmentState, action) => {
                 loadingComponent: false,
                 loading: false,
             };
-        case "GET_PROJECT_MODULE_SUB_SEGMENTS_FAILURE":
+        case "GET_PROJECT_MODULE_COMPONENTS_FAILURE":
             return {
                 ...state,
                 components: null,
@@ -519,14 +519,14 @@ const WorkAssignmentReducer = (state = workAssignmentState, action) => {
                 loadingComponent: false,
                 loading: false,
             };
-        case "GET_PROJECT_MODULE_TASKS_REQUEST":
+        case "GET_PROJECT_MODULE_COMPONENTS_TASKS_REQUEST":
             return {
                 ...state,
                 error: null,
                 loadingTask: true,
                 loading: true,
             };
-        case "GET_PROJECT_MODULE_TASKS_SUCCESS":
+        case "GET_PROJECT_MODULE_COMPONENTS_TASKS_SUCCESS":
             return {
                 ...state,
                 tasks: action.response,
@@ -534,10 +534,102 @@ const WorkAssignmentReducer = (state = workAssignmentState, action) => {
                 loadingTask: false,
                 loading: false,
             };
-        case "GET_PROJECT_MODULE_TASKS_FAILURE":
+        case "GET_PROJECT_MODULE_COMPONENTS_TASKS_FAILURE":
             return {
                 ...state,
                 tasks: null,
+                error: action.error,
+                loadingTask: false,
+                loading: false,
+            };
+        case "GET_PROJECT_MODULE_SUB_COMPONENTS_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loadingTask: true,
+                loading: true,
+            };
+        case "GET_PROJECT_MODULE_SUB_COMPONENTS_SUCCESS":
+            return {
+                ...state,
+                subComponents: action.response,
+                error: null,
+                loadingTask: false,
+                loading: false,
+            };
+        case "GET_PROJECT_MODULE_SUB_COMPONENTS_FAILURE":
+            return {
+                ...state,
+                subComponents: null,
+                error: action.error,
+                loadingTask: false,
+                loading: false,
+            };
+        case "GET_PROJECT_MODULE_SEGMENT_TASKS_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loadingTask: true,
+                loading: true,
+            };
+        case "GET_PROJECT_MODULE_SEGMENT_TASKS_SUCCESS":
+            return {
+                ...state,
+                tasks: action.response,
+                error: null,
+                loadingTask: false,
+                loading: false,
+            };
+        case "GET_PROJECT_MODULE_SEGMENT_TASKS_FAILURE":
+            return {
+                ...state,
+                tasks: null,
+                error: action.error,
+                loadingTask: false,
+                loading: false,
+            };
+        case "GET_PROJECT_MODULE_SUB_COMPONENT_TASKS_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loadingTask: true,
+                loading: true,
+            };
+        case "GET_PROJECT_MODULE_SUB_COMPONENT_TASKS_SUCCESS":
+            return {
+                ...state,
+                tasks: action.response,
+                error: null,
+                loadingTask: false,
+                loading: false,
+            };
+        case "GET_PROJECT_MODULE_SUB_COMPONENT_TASKS_FAILURE":
+            return {
+                ...state,
+                tasks: null,
+                error: action.error,
+                loadingTask: false,
+                loading: false,
+            };
+        case "GET_PROJECT_MODULE_NEXT_LEVEL_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loadingTask: true,
+                loading: true,
+            };
+        case "GET_PROJECT_MODULE_NEXT_LEVEL_SUCCESS":
+            return {
+                ...state,
+                nextLevel: action.response,
+                error: null,
+                loadingTask: false,
+                loading: false,
+            };
+        case "GET_PROJECT_MODULE_NEXT_LEVEL_FAILURE":
+            return {
+                ...state,
+                nextLevel: null,
                 error: action.error,
                 loadingTask: false,
                 loading: false,
@@ -715,6 +807,14 @@ const WorkAssignmentReducer = (state = workAssignmentState, action) => {
                 loading: false,
                 loadingSegment: false,
                 loadingComponent: false,
+                loadingTask: false,
+            };
+        case "CLEAR_NEXT_LEVEL":
+            console.log('============CCC=========')
+            return {
+                ...state,
+                nextLevel: null,
+                loading: false,
                 loadingTask: false,
             };
         default:

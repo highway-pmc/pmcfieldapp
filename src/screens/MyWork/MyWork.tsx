@@ -2247,7 +2247,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
                         )
                         :
                         subSegItem.tasksData?.map((taskItem: any, taskIndex: number) => (
-                          taskItem.assignmentLevel === 4 &&
+                          taskItem.assignmentLevel === 5 &&
                           <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(4, taskItem.assignmentLevel, projModuleIndex, segIndex, subSegIndex, taskIndex)}>
                             <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
                             <View style={styles.TaskDetails}>

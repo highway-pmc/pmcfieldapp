@@ -178,6 +178,7 @@ const AssignTasks = ({ route, navigation }: { route: any, navigation: any }) => 
         projectModuleId: projectModuleId,
         segmentId: segmentId,
         componentId: componentId,
+        subComponentId: subComponentId,
         taskId: selectedTask._id,
         body: {
           users: usersToBeAssignArray,

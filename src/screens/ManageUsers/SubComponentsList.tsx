@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useIsFocused } from '@react-navigation/native';
 import { HeaderItems, WORK_ASSIGNMENT_LEVEL } from '../../constants/constants';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearProjectModulesWorkAssignmentData, getProjectModuleComponents, getUsersForWorkAssignment, componentWorkAssignToUsers, getProjectModuleSubComponents } from './actions';
+import { clearProjectModulesWorkAssignmentData, getProjectModuleComponents, getUsersForWorkAssignment, componentWorkAssignToUsers, getProjectModuleSubComponents, subComponentWorkAssignToUsers } from './actions';
 import { ScrollView } from 'react-native-gesture-handler';
 import CheckBox from '@react-native-community/checkbox';
 import LoadingAnimation from '../Common/LoadingAnimation';
@@ -12,9 +12,9 @@ const SubComponentsList = ({ route, navigation }: { route: any, navigation: any 
   const { projectModuleId, projectModuleName, type, subType, segmentId, segmentName, componentId, componentName, workType } = route.params;
 
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const { subComponents, users, loadingUsers, loadingComponent, componentWorkAssigned, loading, error } = useSelector((state: any) => state.WorkAssignment);
+  const { subComponents, users, loadingUsers, loadingComponent, subComponentWorkAssigned, loading, error } = useSelector((state: any) => state.WorkAssignment);
   const [subComponentsData, setSubComponentsData] = useState([]);
-  const [selectedComponent, setSelectedComponent] = useState({ isChecked: false, _id: "", name: "" });
+  const [selectedSubComponent, setSelectedSubComponent] = useState({ isChecked: false, _id: "", name: "" });
   const [userData, setUserCheckboxes] = useState([]);
   const [isAssignPopOpen, openAssignPopup] = useState(false);
   const [searchText, setSearchText] = useState('');
@@ -60,7 +60,7 @@ const SubComponentsList = ({ route, navigation }: { route: any, navigation: any 
     const subComponent: any = subComponentsData[index];
 
     subComponent.isChecked = !subComponent.isChecked
-    setSelectedComponent(subComponent);
+    setSelectedSubComponent(subComponent);
 
     const updatedCheckboxes: any = [...userData];
 
@@ -100,7 +100,7 @@ const SubComponentsList = ({ route, navigation }: { route: any, navigation: any 
     const updatedCheckboxes: any = [...userData];
     const selectedUser: any = updatedCheckboxes[index];
     selectedUser.isChecked = !selectedUser.isChecked;
-    const workAssignment = selectedUser.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.componentId === componentId && wa.subComponentId === selectedComponent._id && wa.assignmentLevel === 4)
+    const workAssignment = selectedUser.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.componentId === componentId && wa.subComponentId === selectedSubComponent._id && wa.assignmentLevel === 4)
     if (selectedUser.isChecked) {
       if (workAssignment) {
         workAssignment.dirty = false;
@@ -123,7 +123,7 @@ const SubComponentsList = ({ route, navigation }: { route: any, navigation: any 
   };
 
   useEffect(() => {
-    if (componentWorkAssigned) {
+    if (subComponentWorkAssigned) {
       Alert.alert("Success", "Works assigned successfully");
       openAssignClose();
       dispatch(clearProjectModulesWorkAssignmentData());
@@ -134,7 +134,7 @@ const SubComponentsList = ({ route, navigation }: { route: any, navigation: any 
         }));
       }, 500)
     }
-  }, [componentWorkAssigned, error]);
+  }, [subComponentWorkAssigned, error]);
 
   const onWorkAssignment = () => {
     const usersToBeAssign = userData.filter((u: any) => u.dirty);
@@ -155,11 +155,12 @@ const SubComponentsList = ({ route, navigation }: { route: any, navigation: any 
     });
 
     if (usersToBeAssignArray.length) {
-      dispatch(componentWorkAssignToUsers({
+      dispatch(subComponentWorkAssignToUsers({
         projectId: loggedInUser.projectId,
         projectModuleId: projectModuleId,
         segmentId: segmentId,
-        componentId: selectedComponent._id,
+        componentId: componentId,
+        subComponentId: selectedSubComponent._id,
         body: {
           users: usersToBeAssignArray,
           level: 4
@@ -275,7 +276,7 @@ const SubComponentsList = ({ route, navigation }: { route: any, navigation: any 
               </View>
               <View style={styles.ModalInnerContainer}>
                 <View>
-                  <Text style={styles.AssignRoleText}>Component: {selectedComponent.name}</Text>
+                  <Text style={styles.AssignRoleText}>Component: {selectedSubComponent.name}</Text>
                 </View>
                 <ScrollView style={{ paddingTop: 10, height: 500 }}>
                   {userData.map((item: any, index) => (

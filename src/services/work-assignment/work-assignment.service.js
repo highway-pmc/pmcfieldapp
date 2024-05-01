@@ -117,9 +117,20 @@ export const componentsWorkAssignToUsersApi = async (projectId, projectModuleId,
     });
 }
 
-export const tasksWorkAssignToUsersApi = async (projectId, projectModuleId, segmentId, componentId, taskId, body) => {
+export const subComponentsWorkAssignToUsersApi = async (projectId, projectModuleId, segmentId, componentId, subComponentId, body) => {
+    return apiService.postRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/segments/${segmentId}/components/${componentId}/sub-components/${subComponentId}/work-assignment`, body).then((response) => {
+        return response;
+    }).catch((err) => {
+        const errorMessge = err.message || 'Unable to assign works to users.';
+        throw new Error(errorMessge);
+    });
+}
+
+export const tasksWorkAssignToUsersApi = async (projectId, projectModuleId, segmentId, componentId, subComponentId, taskId, body) => {
     let url = '';
-    if (componentId) {
+    if (subComponentId) {
+        url = `v1/auth/projects/${projectId}/project-modules/${projectModuleId}/segments/${segmentId}/components/${componentId}/sub-components/${subComponentId}/tasks/${taskId}/work-assignment`
+    } else if (componentId) {
         url = `v1/auth/projects/${projectId}/project-modules/${projectModuleId}/segments/${segmentId}/components/${componentId}/tasks/${taskId}/work-assignment`
     } else {
         url = `v1/auth/projects/${projectId}/project-modules/${projectModuleId}/segments/${segmentId}/tasks/${taskId}/work-assignment`

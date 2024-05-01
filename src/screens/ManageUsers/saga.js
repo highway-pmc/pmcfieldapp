@@ -1,7 +1,7 @@
 
 import { put, takeLatest } from 'redux-saga/effects';
 import { getUserAssignment, getUserCategory, userCategoriesAssignment } from '../../services/user/user.service';
-import { getProjectModuleSegmentsData, getProjectModuleComponentsData, getProjectModuleComponentTasksData, getProjectModulesData, getUsersForWorkAssignmentData, projectModulesWorkAssignToUsersApi, segmentTypeWorkAssignToUsersApi, segmentsWorkAssignToUsersApi, componentsWorkAssignToUsersApi, tasksWorkAssignToUsersApi, getProjectModuleSubComponentsData, getProjectModuleSubComponentTasksData, getProjectModuleNextLevelData, getProjectModuleSegmentTasksData } from '../../services/work-assignment/work-assignment.service';
+import { getProjectModuleSegmentsData, getProjectModuleComponentsData, getProjectModuleComponentTasksData, getProjectModulesData, getUsersForWorkAssignmentData, projectModulesWorkAssignToUsersApi, segmentTypeWorkAssignToUsersApi, segmentsWorkAssignToUsersApi, componentsWorkAssignToUsersApi, tasksWorkAssignToUsersApi, getProjectModuleSubComponentsData, getProjectModuleSubComponentTasksData, getProjectModuleNextLevelData, getProjectModuleSegmentTasksData, subComponentsWorkAssignToUsersApi } from '../../services/work-assignment/work-assignment.service';
 function* getUserCategories() {
     try {
         const response = yield (getUserCategory());
@@ -143,15 +143,24 @@ function* segmentTypeWorkAssignToUsers({ payload }) {
 function* componentWorkAssignToUsers({ payload }) {
     try {
         const response = yield (componentsWorkAssignToUsersApi(payload.projectId, payload.projectModuleId, payload.segmentId, payload.componentId, payload.body));
-        yield put({ type: "SUB_SEGMENT_WORK_ASSIGNMENT_USERS_SUCCESS", response });
+        yield put({ type: "COMPONENT_WORK_ASSIGNMENT_USERS_SUCCESS", response });
     } catch (error) {
-        yield put({ type: "SUB_SEGMENT_WORK_ASSIGNMENT_USERS_FAILURE", error: error.message });
+        yield put({ type: "COMPONENT_WORK_ASSIGNMENT_USERS_FAILURE", error: error.message });
+    }
+}
+
+function* subComponentWorkAssignToUsers({ payload }) {
+    try {
+        const response = yield (subComponentsWorkAssignToUsersApi(payload.projectId, payload.projectModuleId, payload.segmentId, payload.componentId, payload.subComponentId, payload.body));
+        yield put({ type: "SUB_COMPONENT_WORK_ASSIGNMENT_USERS_SUCCESS", response });
+    } catch (error) {
+        yield put({ type: "SUB_COMPONENT_WORK_ASSIGNMENT_USERS_FAILURE", error: error.message });
     }
 }
 
 function* taskWorkAssignToUsers({ payload }) {
     try {
-        const response = yield (tasksWorkAssignToUsersApi(payload.projectId, payload.projectModuleId, payload.segmentId, payload.componentId, payload.taskId, payload.body));
+        const response = yield (tasksWorkAssignToUsersApi(payload.projectId, payload.projectModuleId, payload.segmentId, payload.componentId, payload.subComponentId, payload.taskId, payload.body));
         yield put({ type: "TASK_WORK_ASSIGNMENT_USERS_SUCCESS", response });
     } catch (error) {
         yield put({ type: "TASK_WORK_ASSIGNMENT_USERS_FAILURE", error: error.message });
@@ -171,7 +180,8 @@ export default function* userCategoriesAssignmentScreenSaga() {
     yield takeLatest("PROJECT_MODULE_WORK_ASSIGNMENT_USERS_REQUEST", projectModulesWorkAssignToUsers);
     yield takeLatest("SEGMENT_WORK_ASSIGNMENT_USERS_REQUEST", segmentsWorkAssignToUsers);
     yield takeLatest("SEGMENT_TYPE_WORK_ASSIGNMENT_USERS_REQUEST", segmentTypeWorkAssignToUsers);
-    yield takeLatest("SUB_SEGMENT_WORK_ASSIGNMENT_USERS_REQUEST", componentWorkAssignToUsers);
+    yield takeLatest("COMPONENT_WORK_ASSIGNMENT_USERS_REQUEST", componentWorkAssignToUsers);
+    yield takeLatest("SUB_COMPONENT_WORK_ASSIGNMENT_USERS_REQUEST", subComponentWorkAssignToUsers);
     yield takeLatest("TASK_WORK_ASSIGNMENT_USERS_REQUEST", taskWorkAssignToUsers);
 
     yield takeLatest("GET_PROJECT_MODULE_SEGMENT_TASKS_REQUEST", getProjectModuleSegmentTasks);

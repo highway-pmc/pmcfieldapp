@@ -405,8 +405,25 @@ const RFIsRecents = (props: any) => {
                     <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
                     <Text style={styles.subHead}>{item.workAssignmentData.segmentId.name}</Text>
                     <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
-                    <Text style={styles.subHead}>{item.workAssignmentData.componentId.name}</Text>
-                    <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
+                    {
+                    item.workAssignmentData.componentId ? (
+                      <View>
+                        <Text style={styles.subHead}>{item.workAssignmentData.componentId?.name}</Text>
+                        <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
+                      </View>
+                    )
+                    : null
+                  }
+
+                  {
+                    item.workAssignmentData.subComponentId ? (
+                      <View>
+                        <Text style={styles.subHead}>{item.workAssignmentData.subComponentId?.name}</Text>
+                        <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
+                      </View>
+                    )
+                    : null
+                  }
                     <Text style={[styles.subHead, styles.taskCount]}>{item.workAssignmentData.taskId?.displayName}</Text>
                   </View>
                   <Text style={styles.dateText}>Generated Date: {moment(new Date(item.rfiDateTime)).format('DD-MM-YYYY')}</Text>
@@ -462,10 +479,28 @@ const RFIsRecents = (props: any) => {
                 <View style={styles.taskCategory}>
                   <Text style={styles.subHead}>{selectedRFI.workAssignmentData.projectModule.name}</Text>
                   <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
-                  <Text style={styles.subHead}>{selectedRFI.workAssignmentData.segmentId.name}</Text>
+                  <Text style={styles.subHead}>{selectedRFI.workAssignmentData.segmentId?.name}</Text>
                   <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
-                  <Text style={styles.subHead}>{selectedRFI.workAssignmentData.componentId.name}</Text>
-                  <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
+                  {
+                    selectedRFI.workAssignmentData.componentId ? (
+                      <View>
+                        <Text style={styles.subHead}>{selectedRFI.workAssignmentData.componentId?.name}</Text>
+                        <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
+                      </View>
+                    )
+                    : null
+                  }
+
+                  {
+                    selectedRFI.workAssignmentData.subComponentId ? (
+                      <View>
+                        <Text style={styles.subHead}>{selectedRFI.workAssignmentData.subComponentId?.name}</Text>
+                        <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
+                      </View>
+                    )
+                    : null
+                  }
+                  
                   <Text style={[styles.subHead, styles.taskCount]}>{selectedRFI.workAssignmentData.taskId?.displayName}</Text>
                 </View>
                 <Text style={styles.dateText}>Generated Date: {moment(new Date(selectedRFI.rfiDateTime)).format('DD-MM-YYYY')}</Text>

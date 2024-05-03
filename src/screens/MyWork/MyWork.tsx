@@ -272,7 +272,6 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
   }, []);
 
   const onClick = (level: number, assignmentLevel: number, projectModuleIndex: number, segIndex: number = -1, componentIndex: number = -1, subComponentIndex: number = -1, taskIndex: number = -1, segmentType = null) => {
-    console.log('=====level====', level)
     setSearchText('');
     setCurrentLevel(level)
     setBreadcrumbData([]);
@@ -368,6 +367,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
         setCurrentTasksData([]);
         setCurrentComponentsData(segmentData.componentsData)
       } else {
+        setCurrentLevel(6)
         setCurrentComponentsData([]);
         setCurrentTasksData(segmentData.tasksData)
       }
@@ -401,9 +401,11 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
       const componentData = segmentData.componentsData[componentIndex];
       if (componentData.subComponentsData && componentData.subComponentsData.length) {
         setCurrentTasksData([])
+        setCurrentLevel(4)
         setCurrentSubComponentsData(componentData.subComponentsData)
       } else {
         setCurrentSubComponentsData([])
+        setCurrentLevel(6)
         setCurrentTasksData(componentData.tasksData)
       }
       setBreadcrumbData([
@@ -446,7 +448,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
       const segmentData = myWorksData[projectModuleIndex].segmentsData[segIndex];
       const componentData: any = segmentData.componentsData[componentIndex];
       const subComponentData: any = componentData.subComponentsData[subComponentIndex];
-      setProjectModuleId(componentData.projectModuleId);
+      setProjectModuleId(segmentData.projectModuleId);
       setCurrentTasksData(subComponentData.tasksData)
 
       setBreadcrumbData([
@@ -525,8 +527,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
         const componentData: any = segmentData.componentsData[componentIndex];
         const subComponentData = componentData.subComponentsData[subComponentIndex];
         const taskData: any = [subComponentData.tasksData[taskIndex]];
-        setProjectModuleId(subComponentData.projectModuleId);
-        console.log('===333===', taskData)
+        setProjectModuleId(segmentData.projectModuleId);
         setCurrentTasksData(taskData)
         breadcrumbItems.push(
           ...[{
@@ -555,7 +556,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
       } else if (componentIndex != -1) {
         const componentData: any = segmentData.componentsData[componentIndex];
         const taskData: any = [componentData.tasksData[taskIndex]];
-        setProjectModuleId(componentData.projectModuleId);
+        setProjectModuleId(segmentData.projectModuleId);
         setCurrentTasksData(taskData)
         breadcrumbItems.push(
           {
@@ -591,8 +592,10 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
   }
 
   const onClickNested = (level: number, data: any) => {
-    console.log('====222=====')
     setSearchText('');
+    if (data.projectModuleId) {
+      setProjectModuleId(data.projectModuleId);
+    }
     setCurrentLevel(level);
     if (level === 3) {
       setCurrentComponentsData(data.componentsData)
@@ -600,32 +603,35 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
       beadcrumb.name = SEGMENT_TYPES_DISPLAY[data.type] + ' ' + data.name;
     } else if (level === 4) {
       setProjectModuleId(data.projectModuleId);
-      setCurrentSubComponentsData(data.subComponentsData)
       const bcrubm = {
         name: data.name,
         projectModuleIndex: breadcrumbData[0].projectModuleIndex,
         segIndex: breadcrumbData[1].segIndex,
-        componentIndex: breadcrumbData[2].componentIndex,
-        subComponentIndex: breadcrumbData[3].subComponentIndex,
+        componentIndex: breadcrumbData[2]?.componentIndex || -1,
+        subComponentIndex: breadcrumbData[3]?.subComponentIndex || -1,
         taskIndex: 0,
         level: 0,
         assignmentLevel: 0,
         active: false
       }
       breadcrumbData.push(bcrubm)
-      breadcrumbData.push({
-        name: 'Tasks',
-        projectModuleIndex: breadcrumbData[0].projectModuleIndex,
-        segIndex: breadcrumbData[1].segIndex,
-        componentIndex: breadcrumbData[2].componentIndex,
-        subComponentIndex: breadcrumbData[3].subComponentIndex,
-        taskIndex: 0,
-        level: 0,
-        assignmentLevel: 0,
-        active: false
-      })
+      if (data.subComponentsData && data.subComponentsData.length) {
+        setCurrentSubComponentsData(data.subComponentsData)
+      } else {
+        setCurrentTasksData(data.tasksData)
+        breadcrumbData.push({
+          name: 'Tasks',
+          projectModuleIndex: breadcrumbData[0].projectModuleIndex,
+          segIndex: breadcrumbData[1].segIndex,
+          componentIndex: breadcrumbData[2]?.componentIndex || -1,
+          subComponentIndex: breadcrumbData[3]?.subComponentIndex || -1,
+          taskIndex: 0,
+          level: 0,
+          assignmentLevel: 0,
+          active: false
+        })
+      }
     } else if (level === 5) {
-      setProjectModuleId(data.projectModuleId);
       setCurrentTasksData(data.tasksData)
       const bcrubm = {
         name: data.name,
@@ -2417,12 +2423,12 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
                 </TouchableOpacity>
                 :
                 (projModuleItem.segmentsData?.map((segItem: any, segIndex: any) => (
-                  (segItem.assignmentLevel === 2 && segIndex == 0) ? (
+                  (segItem.assignmentLevel === 2) ? (
                     projModuleItem.segmentsData?.filter((segItem: any) => segItem.assignmentLevel == 2).length === 1 ? (
                       <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(3, segItem.assignmentLevel, projModuleIndex, projModuleItem.segmentsData?.findIndex((segItem: any) => segItem.assignmentLevel == 2))}>
                         <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
                         <View style={styles.TaskDetails}>
-                          <Text style={styles.SubHeadingText}>Assigned:</Text>
+                          <Text style={styles.SubHeadingText}>Assigned:AA</Text>
                           <View style={{ flexDirection: 'row' }}>
                             <Text style={styles.SubHeadingText}>{SEGMENT_TYPES_DISPLAY[segItem.type]} /</Text>
                             <Text style={[styles.SubHeadingText, styles.SubActive]}>{projModuleItem.segmentsData?.filter((segItem: any) => segItem.assignmentLevel == 2)[0].name}</Text>
@@ -2432,11 +2438,11 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
                     )
                       :
                       (
-                        Object.keys(groupBy(projModuleItem.segmentsData, "type")).map((segType: any) => (
-                          <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(2, segItem.assignmentLevel, projModuleIndex, -1, -1, -1, segType)}>
+                        Object.keys(groupBy([segItem], "type")).map((segType: any, index: any) => (
+                          <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(2, segItem.assignmentLevel, projModuleIndex, -1, -1, -1, -1, segType)}>
                             <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
                             <View style={styles.TaskDetails}>
-                              <Text style={styles.SubHeadingText}>Assigned:</Text>
+                              <Text style={styles.SubHeadingText}>Assigned:BB {''+index}</Text>
                               <Text style={[styles.SubHeadingText, styles.SubActive]}>{SEGMENT_TYPES_DISPLAY[segType]} {projModuleItem.segmentsData?.filter((segItem: any) => segItem.type == segType && segItem.assignmentLevel == 2).length}</Text>
                             </View>
                           </TouchableOpacity>
@@ -2451,7 +2457,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
                             <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(4, componentItem.assignmentLevel, projModuleIndex, segIndex, componentIndex)}>
                               <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
                               <View style={styles.TaskDetails}>
-                                <Text style={styles.SubHeadingText}>Assigned:</Text>
+                                <Text style={styles.SubHeadingText}>Assigned:AA</Text>
                                 <Text style={styles.SubHeadingText}>{SEGMENT_TYPES_DISPLAY[segItem.type]} /</Text>
                                 <Text style={styles.SubHeadingText}>{segItem.name} /</Text>
                                 <Text style={[styles.SubHeadingText, styles.SubActive]}>{componentItem.name}</Text>
@@ -2561,7 +2567,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
         }
         {
           currentLevel === 3 ?
-          currentComponentsData.length ? currentComponentsData.filter((subSeg: any) => {
+          currentComponentsData && currentComponentsData.length ? currentComponentsData.filter((subSeg: any) => {
               if (searchText && subSeg.name) {
                 return subSeg.name.toLowerCase().includes(searchText.toLowerCase())
               } else {
@@ -2579,7 +2585,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
         }
         {
           currentLevel === 4 ?
-          currentSubComponentsData.length ? currentSubComponentsData.filter((subComponent: any) => {
+          currentSubComponentsData && currentSubComponentsData.length ? currentSubComponentsData.filter((subComponent: any) => {
               if (searchText && subComponent.name) {
                 return subComponent.name.toLowerCase().includes(searchText.toLowerCase())
               } else {

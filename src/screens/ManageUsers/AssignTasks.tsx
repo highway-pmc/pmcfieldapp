@@ -101,9 +101,9 @@ const AssignTasks = ({ route, navigation }: { route: any, navigation: any }) => 
           const workAssignment = user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.componentId === componentId && wa.subComponentId === subComponentId && wa.taskId === task._id && wa.assignmentLevel === 5);
           if (workAssignment) {
             user.isChecked = true;
-          } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.componentId === componentId && wa.taskId === task._id && wa.assignmentLevel === 5)) {
+          } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.componentId === componentId && subComponentId == null && wa.taskId === task._id && wa.assignmentLevel === 5)) {
             user.isChecked = true;
-          } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId && wa.taskId === task._id && wa.assignmentLevel === 5) != null) {
+          } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId && componentId== null && subComponentId == null && wa.taskId === task._id && wa.assignmentLevel === 5) != null) {
             user.isChecked = true;
           }
         }

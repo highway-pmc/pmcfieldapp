@@ -7,6 +7,7 @@ import { actionGetRFIs, clearRFITasksEvent, generateRFIReport, updatedRFIs } fro
 import LoadingAnimation from '../Common/LoadingAnimation';
 import moment from 'moment';
 import Pdf from 'react-native-pdf';
+import { SwipeListView } from 'react-native-swipe-list-view';
 
 const RFIsRecents = (props: any) => {
   const navigation = useNavigation();
@@ -208,6 +209,115 @@ const RFIsRecents = (props: any) => {
   //   }]);
   // }
 
+  // Function to render each list item 
+  const renderItem = (rowData: any) => (
+    <View>
+      {rowData.index === 0 &&  <View style={{ flexDirection: 'row' }}>
+      <View>
+        <Text>TM No.</Text>
+      </View>
+      <View>
+      <Text>Last 4 digits of Vehicle No.</Text>
+      </View>
+      <View>
+        <Text>Time of arrival</Text>
+      </View>
+      <View>
+        <Text>Grade of Concrete</Text>
+      </View>
+      <View>
+        <Text>Concrete temp in C</Text>
+      </View>
+      <View>
+        <Text>Slump value in mm</Text>
+      </View>
+      <View>
+        <Text>No of cubes casted</Text>
+      </View>
+      <View>
+        <Text>Concrete start time</Text>
+      </View>
+      <View>
+        <Text>Concrete poured in cum</Text>
+      </View>
+      <View>
+        <Text>Concrete finish time</Text>
+      </View>
+      </View>
+    }
+    <View style={{ flexDirection: 'row' }}>
+      <View style={{width: 80}}>
+        <Text>TM {rowData.index + 1}</Text>
+      </View>
+      <View style={{width: 80}}>
+        <Text>{rowData.item.vehicleNo}</Text>
+      </View>
+      <View style={{width: 80}}>
+        <Text>{rowData.item.timeOfArrival}</Text>
+      </View>
+      <View style={{width: 80}}>
+        <Text>{rowData.item.gradeOfConcrete}</Text>
+      </View>
+      <View style={{width: 80}}>
+          <Text>{rowData.item.concreteTemp}</Text>
+      </View>
+      <View style={{width: 80}}>
+          <Text>{rowData.item.slumpValue}</Text>
+      </View>
+      <View style={{width: 80}}>
+          <Text>{rowData.item.noOfCubesCasted}</Text>
+      </View>
+      <View style={{width: 80}}>
+        <Text>{rowData.item.concreteStartTime}</Text>
+      </View>
+      <View style={{width: 80}}>
+          <Text>{rowData.item.concretePoured}</Text>
+      </View>
+      <View style={{width: 80}}>
+        <Text>{rowData.item.concreteFinishTime}</Text>
+      </View>
+        
+      </View>
+    </View>
+  );
+
+const renderSectionHeader = (rowData: any) => {
+  return (
+    <View>
+      <View>
+        <Text>TM No.</Text>
+      </View>
+      <View>
+      <Text>Last 4 digits of Vehicle No.</Text>
+      </View>
+      <View>
+        <Text>Time of arrival</Text>
+      </View>
+      <View>
+        <Text>Grade of Concrete</Text>
+      </View>
+      <View>
+        <Text>Concrete temp in C</Text>
+      </View>
+      <View>
+        <Text>Slump value in mm</Text>
+      </View>
+      <View>
+        <Text>No of cubes casted</Text>
+      </View>
+      <View>
+        <Text>Concrete start time</Text>
+      </View>
+      <View>
+        <Text>Concrete poured in cum</Text>
+      </View>
+      <View>
+        <Text>Concrete finish time</Text>
+      </View>
+  </View>
+  )
+}
+
   const taskForm = (selectedRFI: any) => {
     switch (selectedRFI?.metaData?.taskName) {
 
@@ -380,6 +490,23 @@ const RFIsRecents = (props: any) => {
             <Text style={styles.GenerateRFIFieldLabel}>No L bend at the bottom of the Cage checked or not</Text>
             <Text>{selectedRFI?.metaData.noLBendBottomOfTheCageChecked}</Text>
           </View>
+        </View>
+      case TASK_TYPES.CONCRETING:
+        return <View>
+          <ScrollView id='scrollViewConcrete' horizontal={true}>
+          <View style={{ flexDirection: 'column', padding: 10, borderBlockColor: '#cccccc', borderStyle: 'solid', borderWidth: 1}}>
+            {
+              <SwipeListView 
+                data={selectedRFI?.metaData.concreteData} 
+                renderItem={renderItem}
+                renderSectionHeader={renderSectionHeader}
+            /> 
+            
+            }
+           
+            
+          </View>
+          </ScrollView>
         </View>
       default: return <View>
         <Text>TODO</Text>

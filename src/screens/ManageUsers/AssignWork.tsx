@@ -344,6 +344,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     paddingVertical: 10,
     padding: 15,
+    paddingBottom: 35
   },
   ErrorSectionStyle: {
     flexDirection: 'row',

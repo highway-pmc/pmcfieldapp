@@ -265,6 +265,37 @@ export const SEGMENT_TYPES_DISPLAY = {
     'dirt-wall': 'Dirt Wall',
     'gap-slab': 'Gap Slab',
     'approach-slab': 'Approach Slab',
+
+    'main-foundations': 'Foundations Main',
+    'main-sub-structures': 'Sub Structures Main',
+    'main-super-structures': 'Super Structures Main',
+    'main-truss-roof': 'Truss Roof Main',
+    'lhs-stair-foundations': 'Foundations LHS Stairs',
+    'lhs-stair-sub-structure': 'Sub Structures LHS Stairs',
+    'lhs-stair-super-structure': 'Super Structures LHS Stairs',
+    'lhs-stair-truss-roof': 'Truss Roof LHS Stairs',
+    'rhs-stair-foundations': 'Foundations RHS Stairs',
+    'rhs-stair-sub-structure': 'Sub Structures RHS Stairs',
+    'rhs-stair-super-structure': 'Super Structures RHS Stairs',
+    'rhs-stair-truss-roof': 'Truss Roof RHS Stairs',
+    'lhs-ramp-foundations': 'Foundations LHS Ramp',
+    'lhs-ramp-sub-structure': 'Sub Structures LHS Ramp',
+    'lhs-ramp-super-structure': 'Super Structures LHS Ramp',
+    'lhs-ramp-truss-roof': 'Truss Roof LHS Ramp',
+    'rhs-ramp-foundations': 'Foundations RHS Ramp',
+    'rhs-ramp-sub-structure': 'Sub Structures RHS Ramp',
+    'rhs-ramp-super-structure': 'Super Structures RHS Ramp',
+    'rhs-ramp-truss-roof': 'Truss Roof RHS Ramp',
+
+    'counter-forts': 'Counter Forts',
+
+    'rcc-box-culvert': 'RCC Box Culvert',
+    'chambers': 'Chambers',
+
+    'rcc-box-drain': 'RCC Box Drain',
+
+    'reinforced-earth-wall': 'RE Wall',
+    're-wall': 'RE Wall'
 };
 
 export const RFIs_TYPE = {
@@ -292,11 +323,11 @@ export const WORK_TYPE = {
 }
 
 export const WORK_ASSIGNMENT_LEVEL = {
-    LEVEL1: 'Level 1',
-    LEVEL2: 'Level 2',
-    LEVEL3: 'Level 3',
-    LEVEL4: 'Level 4',
-    LEVEL5: 'Level 5',
+    LEVEL1: 'Project Module',
+    LEVEL2: 'Segment',
+    LEVEL3: 'Component',
+    LEVEL4: 'Sub component',
+    LEVEL5: 'Task',
 }
 
 export const TASK_TYPES = {
@@ -314,8 +345,8 @@ export const TASK_TYPES = {
     PLACEMENT_OF_REINFORCEMENT_CAGE: 'placement-of-reinforcement-cage',
     CAGE_LOWERING: 'cage-lowering',
     PLACING_OF_SHEATHING_DUCT: 'placing-of-sheathing-duct',
-    THREADING_OF_PRE_STRESSING_STRANDS: 'threading-of-pre-stressing-strands'
-
+    THREADING_OF_PRE_STRESSING_STRANDS: 'threading-of-pre-stressing-strands',
+    CONCRETING: 'concreting'
 }
 
 export const YES_NO_LIST = [

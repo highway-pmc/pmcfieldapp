@@ -10,6 +10,8 @@ import * as ImagePicker from 'react-native-image-picker';
 import DropDownPicker from 'react-native-dropdown-picker';
 import CalendarPicker from 'react-native-calendar-picker';
 import moment from 'moment';
+import { SwipeListView } from 'react-native-swipe-list-view';
+import { Guid } from 'guid-typescript';
 
 const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
@@ -132,6 +134,19 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
   const [noLBendBottomOfTheCageChecked, setNoLBendBottomOfTheCageChecked] = useState('Y');
   const [openNoLBendBottomOfTheCageChecked, setOpenNoLBendBottomOfTheCageChecked] = useState(false);
 
+  // CONCRETE
+  const [concreteData, setConcreteData] = useState([{
+    vehicleNo: '',
+    timeOfArrival: 'N',
+    gradeOfConcrete: 'Y',
+    concreteTemp: '',
+    slumpValue: '',
+    noOfCubesCasted: '',
+    concreteStartTime: '',
+    concretePoured: '',
+    concreteFinishTime: '',
+    key: Guid.create()
+  }]);
   const dispatch = useDispatch()
   const focus = useIsFocused();
 
@@ -224,6 +239,16 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
             setPlieShaftCleanedLooseMaterial(rfiData.metaData.plieShaftCleanedLooseMaterial);
             setSuitableSpacerProvidedToMaintainCoverToSteel(rfiData.metaData.suitableSpacerProvidedToMaintainCoverToSteel);
             setNoLBendBottomOfTheCageChecked(rfiData.metaData.noLBendBottomOfTheCageChecked);
+            break;
+          case TASK_TYPES.CONCRETING:
+            if (rfiData.metaData.concreteData) {
+              rfiData.metaData.concreteData.forEach((item: any) => {
+                item.key = Guid.create();
+              })
+              setConcreteData(rfiData.metaData.concreteData);
+            } else {
+              setConcreteData([]);
+            }
             break;
           default:
             break;
@@ -841,10 +866,19 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
           noLBendBottomOfTheCageChecked: noLBendBottomOfTheCageChecked
         }
         break;
+      case TASK_TYPES.CONCRETING:
+        concreteData.forEach((item: any) => {
+          delete item.key;
+        })
+        checkList = {
+          taskName: selectedTask.name,
+          concreteData: concreteData
+        }
+        break;
       default:
         break;
     }
-
+    
     dispatch(fillRFIsChecklist({
       projectId: loggedInUser.projectId,
       projectModuleId: projectModuleId,
@@ -988,6 +1022,163 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
       value: 'PM'
     }]);
   }
+
+  const onAddMoreConcrete = () => {
+    setConcreteData([...concreteData, {
+      vehicleNo: '',
+      timeOfArrival: 'N',
+      gradeOfConcrete: 'Y',
+      concreteTemp: '',
+      slumpValue: '',
+      noOfCubesCasted: '',
+      concreteStartTime: '',
+      concretePoured: '',
+      concreteFinishTime: '',
+      key: Guid.create()
+    }])
+  }
+
+  // Function to render each list item 
+  const renderItem = (rowData: any) => (
+    <View style={{ flexDirection: 'row', backgroundColor: 'red' }}>
+      <View>
+        <Text>TM {rowData.index + 1}</Text>
+      </View>
+      <View>
+        <CustomTextInput rowItem={rowData.item}
+          fieldName={'vehicleNo'}></CustomTextInput>
+      </View>
+      <View>
+        <CustomDropdownPicker items={YES_NO_LIST}
+          rowItem={rowData.item}
+          fieldName={'timeOfArrival'}
+        />
+      </View>
+      <View>
+      <CustomDropdownPicker items={YES_NO_LIST}
+          rowItem={rowData.item}
+          fieldName={'gradeOfConcrete'}
+        />
+      </View>
+      <View>
+        <CustomTextInput rowItem={rowData.item}
+          fieldName={'concreteTemp'}></CustomTextInput>
+      </View>
+      <View>
+        <CustomTextInput rowItem={rowData.item}
+          fieldName={'slumpValue'}></CustomTextInput>
+      </View>
+      <View>
+        <CustomTextInput rowItem={rowData.item}
+          fieldName={'noOfCubesCasted'}></CustomTextInput>
+      </View>
+      <View>
+      <CustomDropdownPicker items={YES_NO_LIST}
+          rowItem={rowData.item}
+          fieldName={'concreteStartTime'}
+        />
+      </View>
+      <View>
+        <CustomTextInput rowItem={rowData.item}
+          fieldName={'concretePoured'}></CustomTextInput>
+      </View>
+      <View>
+      <CustomDropdownPicker items={YES_NO_LIST}
+          rowItem={rowData.item}
+          fieldName={'concreteFinishTime'}
+        />
+      </View>
+        
+      </View>
+);
+
+// Function to close a swiped row 
+const closeRow = (rowMap: any, rowKey: any) => {
+  if (rowMap[rowKey]) { 
+      rowMap[rowKey].closeRow(); 
+  } 
+}; 
+
+// Function to delete an item from the list 
+const deleteItem = (rowMap: any, rowKey: any) => { 
+  closeRow(rowMap, rowKey); 
+  const newData = [...concreteData]; 
+  const prevIndex = concreteData 
+      .findIndex(item => item.gradeOfConcrete === rowKey); 
+  newData.splice(prevIndex, 1); 
+  setConcreteData(newData); 
+}; 
+
+// Function to handle row open event 
+const onRowOpen = (rowKey: any) => { 
+  console.log('Opened row with key:', rowKey); 
+}; 
+
+// Function to render hidden swipe actions 
+const renderHiddenItem = (rowData: any, rowMap: any) => ( 
+    <View style={styles.hiddenContainer}> 
+        <TouchableOpacity 
+            style={[styles.hiddenButton, styles.closeButton]} 
+            onPress={() => closeRow(rowMap, rowData.item.key)} 
+        > 
+            <Text style={styles.buttonText}>Close</Text> 
+        </TouchableOpacity> 
+        <TouchableOpacity 
+            style={[styles.hiddenButton, styles.deleteButton]} 
+            onPress={() => deleteItem(rowMap, rowData.item.key)} 
+        > 
+            <Text style={styles.buttonText}>Delete</Text> 
+        </TouchableOpacity> 
+    </View> 
+);
+
+const renderSectionHeader = (rowData: any) => {
+  return (
+    <View>
+      <View>
+        <Text>TM No.</Text>
+      </View>
+      <View>
+      <Text>Last 4 digits of Vehicle No.</Text>
+      </View>
+      <View>
+        <Text>Time of arrival</Text>
+      </View>
+      <View>
+        <Text>Grade of Concrete</Text>
+      </View>
+      <View>
+        <Text>Concrete temp in C</Text>
+      </View>
+      <View>
+        <Text>Slump value in mm</Text>
+      </View>
+      <View>
+        <Text>No of cubes casted</Text>
+      </View>
+      <View>
+        <Text>Concrete start time</Text>
+      </View>
+      <View>
+        <Text>Concrete poured in cum</Text>
+      </View>
+      <View>
+        <Text>Concrete finish time</Text>
+      </View>
+  </View>
+  )
+}
+
+const [enableScroll, setEnableScroll] = useState(true);
+const onSwipeValueChange = (data: any) => {
+  console.log('======', data)
+  if (data.value < 0) {
+    setEnableScroll(false);
+  } else {
+    setEnableScroll(true);
+  }
+
+}
 
   const taskForm = (taskName: any) => {
     switch (taskName) {
@@ -2292,6 +2483,175 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
             </View>
           </View>
         </View>
+
+
+
+
+
+      case TASK_TYPES.CONCRETING:
+        if (!concreteData || !concreteData.length) {
+          setConcreteData([{
+            vehicleNo: '',
+            timeOfArrival: 'Y',
+            gradeOfConcrete:'N',
+            concreteTemp: '',
+            slumpValue: '',
+            noOfCubesCasted: '',
+            concreteStartTime: '',
+            concretePoured: '',
+            concreteFinishTime: '',
+            key: Guid.create()
+          }])
+
+        }
+        return <View>
+          <ScrollView id='scrollViewConcrete' horizontal={enableScroll}>
+          <View style={{ flexDirection: 'column', padding: 10, borderBlockColor: '#cccccc', borderStyle: 'solid', borderWidth: 1}}>
+            {
+              <SwipeListView 
+                data={concreteData} 
+                renderItem={renderItem} 
+                renderHiddenItem={renderHiddenItem} 
+                renderSectionHeader={renderSectionHeader}
+                leftOpenValue={0} 
+                rightOpenValue={-430} 
+                previewRowKey={'0'} 
+                previewOpenValue={-40} 
+                previewOpenDelay={3000} 
+                onRowDidOpen={onRowOpen}
+                style={{zIndex: 10}}
+                automaticallyAdjustContentInsets={true}
+                scrollEnabled={false}
+                onSwipeValueChange={onSwipeValueChange}
+            /> 
+            
+            }
+           
+            
+          </View>
+          </ScrollView>
+          
+          <View>
+          <TouchableOpacity style={{marginTop: 50, zIndex: 8}} onPress={() => onAddMoreConcrete()}>
+              <Text>Add More</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View>
+            <View style={{ flexDirection: 'column' }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Date</Text>
+
+              <View style={{ flexDirection: 'row' }}>
+                <TextInput
+                  style={styles.inputStyle}
+                  placeholder=""
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  blurOnSubmit={false}
+                  value={rfiDate ? moment(new Date(rfiDate)).format('DD-MM-YYYY') : ''}
+                  editable={false}
+                />
+                <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
+                  <Text style={styles.assignTagButtonText}>Icon</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {openCalendar && (
+
+              <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
+                <CalendarPicker width={width - 40}
+                  initialDate={rfiDate ? new Date(rfiDate) : new Date()}
+                  onDateChange={(date) => {
+                    setRFIDate(date.format("YYYY-MM-DD"));
+                    openCloseCalendar()
+                  }}
+                />
+              </View>
+            )}
+
+            <View style={{ flexDirection: 'column', height: 80, paddingTop: 15, zIndex: 5, marginBottom: 140 }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Time</Text>
+              <View style={{ flexDirection: 'row', gap: 20 }}>
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenMinutes(false);
+                    setOpenTimeFormats(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='MODAL'
+                    open={openHours}
+                    value={hour}
+                    items={hours}
+                    setOpen={setOpenHours}
+                    setValue={setHour}
+                  />
+                </View>
+
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenHours(false);
+                    setOpenTimeFormats(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='MODAL'
+                    open={openMinutes}
+                    value={minute}
+                    items={minutes}
+                    setOpen={setOpenMinutes}
+                    setValue={setMinute}
+                  />
+                </View>
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenHours(false);
+                    setOpenMinutes(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='SCROLLVIEW'
+                    open={openTimeFormats}
+                    value={timeFormat}
+                    items={timeFormats}
+                    setOpen={setOpenTimeFormats}
+                    setValue={setTimeFormat}
+                  />
+                </View>
+              </View>
+              
+              <View style={{ flexDirection: 'column', height: 65 }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Recommendations</Text>
+              <TextInput
+                style={styles.inputStyle}
+                placeholder="Recommendations"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                returnKeyType="next"
+                underlineColorAndroid="#f000"
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={(text) => {
+                  setComments(text);
+                }}
+              />
+            </View>
+            </View>
+          </View>
+        </View>
+
+
+
+
+
+
+
       default: return <View>
         <Text>TODO</Text>
       </View>
@@ -2680,6 +3040,49 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
   )
 }
 
+const CustomTextInput = ({rowItem, fieldName}: {rowItem: any, fieldName: any}) => {
+  const [value, setValue] = useState(rowItem[fieldName]);
+  const updateValue = (text: any) => {
+    {rowItem[fieldName] = text}
+  }
+
+  return (
+    <TextInput
+      style={styles.inputStyle2}
+      placeholder=""
+      autoCapitalize="none"
+      keyboardType="email-address"
+      returnKeyType="next"
+      underlineColorAndroid="#f000"
+      blurOnSubmit={false}
+      value={value}
+      onChangeText={(text) => {
+        setValue(text); updateValue(text);
+      }}
+    />
+  )
+}
+
+const CustomDropdownPicker = ({items, rowItem, fieldName}: {items: any, rowItem: any, fieldName: any}) => {
+  const [value, setValue] = useState(rowItem[fieldName]);
+  const [openList, setOpenList] = useState(false);
+  const updateValue = () => {
+    {rowItem[fieldName] = value}
+  }
+  return (
+    <DropDownPicker style={{width: 90, height: 45, zIndex: 10}}
+      open={openList}
+      value={value}
+      items={items}
+      setOpen={setOpenList}
+      setValue={setValue}
+      listMode='MODAL'
+      closeAfterSelecting={true}
+      onChangeValue={() => updateValue()}
+    />
+  )
+}
+
 const styles = StyleSheet.create({
   assignTagButtonText: {
     fontSize: 16,
@@ -2730,6 +3133,17 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     paddingVertical: 5,
     height: 45,
+  },
+  inputStyle2: {
+    flex: 1,
+    color: '#2c2c2c',
+    borderWidth: 1,
+    borderRadius: 0,
+    borderColor: '#808089',
+    backgroundColor: '#fff',
+    fontWeight: '600',
+    height: 45,
+    width: 50
   },
   //Start Work
   StartWorkCard: {
@@ -2987,8 +3401,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderColor: 'black',
     borderWidth: 1,
-    height: Dimensions.get('screen').height - 60,
-    width: Dimensions.get('screen').width
+    height: Dimensions.get('window').height - 60,
+    width: Dimensions.get('window').width
   },
   ImageSections: {
     display: 'flex',
@@ -3022,7 +3436,71 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 14,
     fontWeight: 'bold'
-  }
+  },
+  /* Left Swipe */
+  heading: { 
+    fontSize: 30, 
+    fontWeight: 'bold', 
+    marginBottom: 20, 
+    color: 'green', 
+    margin: 20, 
+    textAlign: 'center', 
+}, 
+subheading: { 
+    fontSize: 24, 
+    fontWeight: 'bold', 
+    marginBottom: 20, 
+    color: '#333', // Dark Gray 
+    margin: 10, 
+    textAlign: 'center', 
+}, 
+itemContainer: { 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    backgroundColor: '#FFF', // White 
+    borderBottomColor: '#E0E0E0', // Lighter Gray 
+    borderBottomWidth: 1, 
+    height: 45, 
+    borderRadius: 8, 
+    shadowColor: '#000', 
+    shadowOffset: { width: 0, height: 2 }, 
+    shadowOpacity: 0.2, 
+    shadowRadius: 3, 
+    elevation: 3, 
+    marginBottom: 10, 
+}, 
+itemText: { 
+    color: '#333', // Dark Gray 
+    fontSize: 16, 
+    fontWeight: 'bold', 
+}, 
+hiddenContainer: { 
+    flexDirection: 'row', 
+    justifyContent: 'flex-end', 
+    alignItems: 'center', 
+    backgroundColor: '#FFF', 
+    height: 45, 
+    borderRadius: 20, 
+}, 
+hiddenButton: { 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    width: 75, 
+    height: 45, 
+}, 
+closeButton: { 
+    backgroundColor: 'green', // Blue 
+    borderRadius: 20, 
+}, 
+deleteButton: { 
+    backgroundColor: '#E74C3C', // Red 
+    borderRadius: 20, 
+}, 
+buttonText: { 
+    color: '#FFF', 
+    fontSize: 16, 
+    fontWeight: 'bold', 
+},
 });
 
 export default MyWork

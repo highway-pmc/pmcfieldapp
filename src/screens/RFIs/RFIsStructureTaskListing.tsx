@@ -12,7 +12,8 @@ import DropDownPicker from 'react-native-dropdown-picker';
 
 const RFIsStructureTaskListing = (props: any) => {
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const userCategory = PROJECT_TYPE.STRUCTURE_WORK;
+  //const userCategory = PROJECT_TYPE.STRUCTURE_WORK;
+  const userCategory = props.projectType;
   // const rfiType = props.rfiType;
 
   const { rfisTasks, taskUsers, rfiGenerated, loading, error } = useSelector((state: any) => state.RFIs);
@@ -61,7 +62,7 @@ const RFIsStructureTaskListing = (props: any) => {
     dispatch(getRFITasks({
       projectId: loggedInUser.projectId,
       userCategory: userCategory,
-      level: 4 // Tasks
+      level: 5 // Tasks
     }));
   }
 

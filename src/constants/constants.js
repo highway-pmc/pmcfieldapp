@@ -295,7 +295,13 @@ export const SEGMENT_TYPES_DISPLAY = {
     'rcc-box-drain': 'RCC Box Drain',
 
     'reinforced-earth-wall': 'RE Wall',
-    're-wall': 'RE Wall'
+    're-wall': 'RE Wall',
+
+    'pipe-culvert': 'Pipe Culvert',
+    'head-wall': 'Head Wall',
+    'stone-pitching': 'Stone Pitching',
+    'longitudinal-drain': 'Longitudinal Drain'
+
 };
 
 export const RFIs_TYPE = {

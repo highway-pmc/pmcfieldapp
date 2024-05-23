@@ -919,6 +919,61 @@ const MyWorkReducer = (state = myWorksState, action) => {
     }
 }
 
+const RFIsReportsReducer = (state = myWorksState, action) => {
+    switch (action.type) {
+        case "GET_RFI_REPORTS_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "GET_RFI_REPORTS_SUCCESS":
+            return {
+                ...state,
+                rfiDataList: action.response,
+                error: null,
+                loading: false,
+            };
+        case "GET_RFI_REPORTS_FAILURE":
+            return {
+                ...state,
+                rfiDataList: null,
+                error: action.error,
+                loading: false,
+            };
+        case "DOWNLOAD_REPORT_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "DOWNLOAD_REPORT_SUCCESS":
+            return {
+                ...state,
+                reportDownloaded: action.response,
+                error: null,
+                loading: false,
+            };
+        case "DOWNLOAD_REPORT_FAILURE":
+            return {
+                ...state,
+                reportDownloaded: null,
+                error: action.error,
+                loading: false,
+            };
+        case "CLEAR_RFI_REPORTS_REQUEST":
+            return {
+                ...state,
+               // rfiDataList: null,
+                reportDownloaded: null,
+                error: null,
+                loading: false,
+            };
+        default:
+            return state;
+    }
+}
+
 const RFIsReducer = (state = myWorksState, action) => {
     switch (action.type) {
         case "GET_RFI_TASKS_REQUEST":
@@ -1021,35 +1076,32 @@ const RFIsReducer = (state = myWorksState, action) => {
                 error: action.error,
                 loading: false,
             };
-        case "GENERATE_REPORT_REQUEST":
+        case "DOWNLOAD_REPORT_REQUEST":
             return {
                 ...state,
                 error: null,
                 loading: true,
             };
-        case "GENERATE_REPORT_SUCCESS":
+        case "DOWNLOAD_REPORT_SUCCESS":
             return {
                 ...state,
-                reportGenerated: action.response,
+                reportdownloaded: action.response,
                 error: null,
                 loading: false,
             };
-        case "GENERATE_REPORT_FAILURE":
+        case "DOWNLOAD_REPORT_FAILURE":
             return {
                 ...state,
-                reportGenerated: null,
+                reportdownloaded: null,
                 error: action.error,
                 loading: false,
             };
         case "CLEAR_RFI_REQUEST":
             return {
                 ...state,
-                rfisTasks: null,
-                taskUsers: null,
-                rfiGenerated: null,
                 rfiDataList: null,
                 rfiUpdated: null,
-                reportGenerated: null,
+                reportdownloaded: null,
                 error: null,
                 loading: false,
             };
@@ -1069,4 +1121,5 @@ export const combinedReducers = combineReducers({
     WorkAssignment: WorkAssignmentReducer,
     MyWorks: MyWorkReducer,
     RFIs: RFIsReducer,
+    Reports: RFIsReportsReducer
 })

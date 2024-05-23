@@ -10,6 +10,7 @@ import myWorksScreenSaga from '../screens/MyWork/saga';
 import projectHeadMyWorkAssignmentScreenSaga from '../screens/MyWorkProjectHead/saga';
 import dashboardScreenSaga from '../screens/Dashboard/saga';
 import myRFISScreenSaga from '../screens/RFIs/saga';
+import myReportsScreenSaga from '../screens/Reports/saga';
 
 function* rootSaga() {
     yield all([
@@ -24,6 +25,7 @@ function* rootSaga() {
         projectHeadMyWorkAssignmentScreenSaga(),
         dashboardScreenSaga(),
         myRFISScreenSaga(),
+        myReportsScreenSaga(),
       ])
 }
 

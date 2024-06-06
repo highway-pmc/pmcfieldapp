@@ -45,7 +45,6 @@ const Reports = (props: any) => {
   }
 
   useEffect(() => {
-    console.log('==============1341243========')
     if (rfiDataList) {
       setRfiData(rfiDataList);
     }

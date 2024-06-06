@@ -12,12 +12,9 @@ function* getRFIsReportsData({ payload }) {
 
 function* downloadRFIReport({ payload }) {
     try {
-        console.log('=====================================1')
         const response = yield (generateRFIReportApi(payload.projectId, payload.projectModuleId, payload.rfiId));
-        console.log('=====================================3')
         yield put({ type: "DOWNLOAD_REPORT_SUCCESS", response });
     } catch (error) {
-        console.log('=====================================2')
         yield put({ type: "DOWNLOAD_REPORT_FAILURE", error: error.message });
     }
 }

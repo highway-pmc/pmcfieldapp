@@ -1171,7 +1171,6 @@ const renderSectionHeader = (rowData: any) => {
 
 const [enableScroll, setEnableScroll] = useState(true);
 const onSwipeValueChange = (data: any) => {
-  console.log('======', data)
   if (data.value < 0) {
     setEnableScroll(false);
   } else {

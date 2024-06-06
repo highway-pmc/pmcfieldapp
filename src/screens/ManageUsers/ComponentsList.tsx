@@ -3,16 +3,16 @@ import React, { useEffect, useState } from 'react'
 import { useIsFocused } from '@react-navigation/native';
 import { HeaderItems, WORK_ASSIGNMENT_LEVEL } from '../../constants/constants';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearProjectModulesWorkAssignmentData, getProjectModuleComponents, getUsersForWorkAssignment, componentWorkAssignToUsers } from './actions';
+import { clearProjectModulesWorkAssignmentData, getProjectModuleComponents, getUsersForWorkAssignment, componentWorkAssignToUsers, getProjectModuleNextLevel, clearNextLevel } from './actions';
 import { ScrollView } from 'react-native-gesture-handler';
 import CheckBox from '@react-native-community/checkbox';
 import LoadingAnimation from '../Common/LoadingAnimation';
 
 const ComponentsList = ({ route, navigation }: { route: any, navigation: any }) => {
-  const { projectModuleId, projectModuleName, type, subType, segmentId, segmentName, projectType } = route.params;
+  const { projectModuleId, projectModuleName, type, subType, segmentId, segmentName, workType } = route.params;
 
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const { components, users, loadingUsers, loadingComponent, componentWorkAssigned, loading, error } = useSelector((state: any) => state.WorkAssignment);
+  const { components, users, nextLevel, loadingUsers, loadingComponent, componentWorkAssigned, loading, error } = useSelector((state: any) => state.WorkAssignment);
   const [componentsData, setComponentsData] = useState([]);
   const [selectedComponent, setSelectedComponent] = useState({ isChecked: false, _id: "", name: "" });
   const [userData, setUserCheckboxes] = useState([]);
@@ -51,7 +51,7 @@ const ComponentsList = ({ route, navigation }: { route: any, navigation: any }) 
 
     dispatch(getUsersForWorkAssignment({
       projectId: loggedInUser.projectId,
-      projectType: projectType
+      workType: workType
     }));
   }, []);
 
@@ -76,7 +76,13 @@ const ComponentsList = ({ route, navigation }: { route: any, navigation: any }) 
         } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.componentId === component._id && wa.assignmentLevel === 4)) {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL4;
           user.isChecked = true;
-        } else {
+        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.componentId === component._id && wa.assignmentLevel === 5)) {
+          user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL5;
+          user.isChecked = true;
+        } /*else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.assignmentLevel === 5)) {
+          user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL5;
+          user.isChecked = true;
+        }*/ else {
           const workAssignment = user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.componentId === component._id && wa.assignmentLevel === 3);
           if (workAssignment) {
             user.isChecked = true;
@@ -123,7 +129,7 @@ const ComponentsList = ({ route, navigation }: { route: any, navigation: any }) 
       setTimeout(() => {
         dispatch(getUsersForWorkAssignment({
           projectId: loggedInUser.projectId,
-          projectType: projectType
+          workType: workType
         }));
       }, 500)
     }
@@ -177,6 +183,48 @@ const ComponentsList = ({ route, navigation }: { route: any, navigation: any }) 
     setSearchText('');
   }, []);
 
+  const onComponentNextClick = (item: any) => {
+    setSelectedComponent(item);
+    dispatch(getProjectModuleNextLevel({
+      projectId: loggedInUser.projectId,
+      projectModuleId: projectModuleId,
+      id: item._id,
+      type: 'component',
+    }));
+  }
+
+  useEffect(() => {
+    if (nextLevel) {
+      dispatch(clearNextLevel());
+      if (nextLevel.nextLevel === 'sub-component') {
+        navigation.navigate('SubComponentsList', {
+          projectModuleId: projectModuleId,
+          projectModuleName: projectModuleName,
+          segmentId: segmentId,
+          segmentName: segmentName,
+          componentId: selectedComponent._id,
+          componentName: selectedComponent.name,
+          type: type,
+          subType: subType,
+          workType: workType
+        })
+      } else if (nextLevel.nextLevel === 'task') {
+        navigation.navigate('AssignTasks', {
+          projectModuleId: projectModuleId,
+          projectModuleName: projectModuleName,
+          segmentId: segmentId,
+          segmentName: segmentName,
+          componentId: selectedComponent._id,
+          componentName: selectedComponent.name,
+          type: type,
+          subType: subType,
+          workType: workType
+        })
+      }
+      
+    }
+  }, [nextLevel]);
+
   return (
     <View style={styles.Container}>
       {(error) && <View style={styles.ErrorSectionStyle}>
@@ -222,17 +270,7 @@ const ComponentsList = ({ route, navigation }: { route: any, navigation: any }) 
               </View>
             </View>
             <TouchableOpacity
-              onPress={() => navigation.navigate('AssignTasks', {
-                projectModuleId: projectModuleId,
-                projectModuleName: projectModuleName,
-                segmentId: segmentId,
-                segmentName: segmentName,
-                componentId: item._id,
-                componentName: item.name,
-                type: type,
-                subType: subType,
-                projectType: projectType
-              })}>
+              onPress={() => onComponentNextClick(item)}>
               <Image
                 style={styles.CloseIcon}
                 source={require('./../../images/right-arrow.png')}

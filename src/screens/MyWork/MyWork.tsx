@@ -10,15 +10,18 @@ import * as ImagePicker from 'react-native-image-picker';
 import DropDownPicker from 'react-native-dropdown-picker';
 import CalendarPicker from 'react-native-calendar-picker';
 import moment from 'moment';
+import { SwipeListView } from 'react-native-swipe-list-view';
+import { Guid } from 'guid-typescript';
 
 const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const { projectType } = route.params;
+  const { workType } = route.params;
 
   const { myWorks, rfiData, rfiChecklistSaved, loading, error } = useSelector((state: any) => state.MyWorks);
   const [myWorksData, setMyWorksData] = useState([]);
   const [currentSegmentsData, setCurrentSegmentsData] = useState([]);
   const [currentComponentsData, setCurrentComponentsData] = useState([]);
+  const [currentSubComponentsData, setCurrentSubComponentsData] = useState([]);
   const [currentTasksData, setCurrentTasksData] = useState([]);
   const [projectModuleId, setProjectModuleId] = useState('');
   const [currentLevel, setCurrentLevel] = useState(1);
@@ -29,7 +32,8 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
     name: '',
     projectModuleIndex: 0,
     segIndex: 0,
-    subSegIndex: 0,
+    componentIndex: 0,
+    subComponentIndex: 0,
     taskIndex: 0,
     level: 0,
     assignmentLevel: 0,
@@ -130,6 +134,19 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
   const [noLBendBottomOfTheCageChecked, setNoLBendBottomOfTheCageChecked] = useState('Y');
   const [openNoLBendBottomOfTheCageChecked, setOpenNoLBendBottomOfTheCageChecked] = useState(false);
 
+  // CONCRETE
+  const [concreteData, setConcreteData] = useState([{
+    vehicleNo: '',
+    timeOfArrival: 'N',
+    gradeOfConcrete: 'Y',
+    concreteTemp: '',
+    slumpValue: '',
+    noOfCubesCasted: '',
+    concreteStartTime: '',
+    concretePoured: '',
+    concreteFinishTime: '',
+    key: Guid.create()
+  }]);
   const dispatch = useDispatch()
   const focus = useIsFocused();
 
@@ -141,6 +158,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
       setMyWorksData([]);
       setCurrentSegmentsData([]);
       setCurrentComponentsData([]);
+      setCurrentSubComponentsData([]);
       setCurrentTasksData([]);
       setBreadcrumbData([]);
       getMyWorksData();
@@ -155,7 +173,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
   const getMyWorksData = () => {
     dispatch(getMyWorks({
       projectId: loggedInUser.projectId,
-      projectType: projectType
+      workType: workType
     }));
   }
 
@@ -222,6 +240,16 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
             setSuitableSpacerProvidedToMaintainCoverToSteel(rfiData.metaData.suitableSpacerProvidedToMaintainCoverToSteel);
             setNoLBendBottomOfTheCageChecked(rfiData.metaData.noLBendBottomOfTheCageChecked);
             break;
+          case TASK_TYPES.CONCRETING:
+            if (rfiData.metaData.concreteData) {
+              rfiData.metaData.concreteData.forEach((item: any) => {
+                item.key = Guid.create();
+              })
+              setConcreteData(rfiData.metaData.concreteData);
+            } else {
+              setConcreteData([]);
+            }
+            break;
           default:
             break;
         }
@@ -262,18 +290,20 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
     setMyWorksData([]);
     setCurrentSegmentsData([]);
     setCurrentComponentsData([]);
+    setCurrentSubComponentsData([]);
     setCurrentTasksData([]);
     setBreadcrumbData([]);
     setSearchText('');
   }, []);
 
-  const onClick = (level: number, assignmentLevel: number, projectModuleIndex: number, segIndex: number = -1, subSegIndex: number = -1, taskIndex: number = -1, segmentType = null) => {
+  const onClick = (level: number, assignmentLevel: number, projectModuleIndex: number, segIndex: number = -1, componentIndex: number = -1, subComponentIndex: number = -1, taskIndex: number = -1, segmentType = null) => {
     setSearchText('');
     setCurrentLevel(level)
     setBreadcrumbData([]);
+    setCurrentTasksData([]);
     if (level === 2) {
       if (assignmentLevel === 1) {
-        setCurrentLevel(5);
+        setCurrentLevel(7);
         const gbSegmentTypes = groupBy(myWorksData[projectModuleIndex].segmentsData, "type");
         setSegmentsByGroupOnType(gbSegmentTypes);
         setBreadcrumbData([
@@ -281,7 +311,8 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
             name: myWorksData[projectModuleIndex].name,
             projectModuleIndex: projectModuleIndex,
             segIndex: segIndex,
-            subSegIndex: subSegIndex,
+            componentIndex: componentIndex,
+            subComponentIndex: subComponentIndex,
             taskIndex: taskIndex,
             level: 2,
             assignmentLevel: assignmentLevel,
@@ -291,7 +322,8 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
             name: "Segment Types",
             projectModuleIndex: projectModuleIndex,
             segIndex: segIndex,
-            subSegIndex: subSegIndex,
+            componentIndex: componentIndex,
+            subComponentIndex: subComponentIndex,
             taskIndex: taskIndex,
             level: 0,
             assignmentLevel: assignmentLevel,
@@ -305,7 +337,8 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
             name: myWorksData[projectModuleIndex].name,
             projectModuleIndex: projectModuleIndex,
             segIndex: segIndex,
-            subSegIndex: subSegIndex,
+            componentIndex: componentIndex,
+            subComponentIndex: subComponentIndex,
             taskIndex: taskIndex,
             level: 2,
             assignmentLevel: assignmentLevel,
@@ -315,7 +348,8 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
             name: SEGMENT_TYPES_DISPLAY[segmentType],
             projectModuleIndex: projectModuleIndex,
             segIndex: segIndex,
-            subSegIndex: subSegIndex,
+            componentIndex: componentIndex,
+            subComponentIndex: subComponentIndex,
             taskIndex: taskIndex,
             level: 0,
             assignmentLevel: assignmentLevel,
@@ -330,7 +364,8 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
             name: myWorksData[projectModuleIndex].name,
             projectModuleIndex: projectModuleIndex,
             segIndex: segIndex,
-            subSegIndex: subSegIndex,
+            componentIndex: componentIndex,
+            subComponentIndex: subComponentIndex,
             taskIndex: taskIndex,
             level: 2,
             assignmentLevel: assignmentLevel,
@@ -341,7 +376,8 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
             name: SEGMENT_TYPES_DISPLAY[segmentsData[0].type] || "Foundation", // todo - dynamic
             projectModuleIndex: projectModuleIndex,
             segIndex: segIndex,
-            subSegIndex: subSegIndex,
+            componentIndex: componentIndex,
+            subComponentIndex: subComponentIndex,
             taskIndex: taskIndex,
             level: 0,
             assignmentLevel: assignmentLevel,
@@ -352,13 +388,21 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
 
     } else if (level === 3 && segIndex != -1) {
       const segmentData = myWorksData[projectModuleIndex].segmentsData[segIndex];
-      setCurrentComponentsData(segmentData.componentsData)
+      if (segmentData.componentsData && segmentData.componentsData.length) {
+        setCurrentTasksData([]);
+        setCurrentComponentsData(segmentData.componentsData)
+      } else {
+        setCurrentLevel(6)
+        setCurrentComponentsData([]);
+        setCurrentTasksData(segmentData.tasksData)
+      }
       setBreadcrumbData([
         {
           name: myWorksData[projectModuleIndex].name,
           projectModuleIndex: projectModuleIndex,
           segIndex: segIndex,
-          subSegIndex: subSegIndex,
+          componentIndex: componentIndex,
+          subComponentIndex: subComponentIndex,
           taskIndex: taskIndex,
           level: 2,
           assignmentLevel: assignmentLevel,
@@ -368,7 +412,8 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
           name: SEGMENT_TYPES_DISPLAY[segmentData.type] + ' ' + segmentData.name,
           projectModuleIndex: projectModuleIndex,
           segIndex: segIndex,
-          subSegIndex: subSegIndex,
+          componentIndex: componentIndex,
+          subComponentIndex: subComponentIndex,
           taskIndex: taskIndex,
           level: 0,
           assignmentLevel: assignmentLevel,
@@ -376,19 +421,68 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
         }
       ])
 
-    } else if (level === 4 && subSegIndex != -1 && taskIndex != -1) {
+    } else if (level === 4 && segIndex != -1 && componentIndex != -1) {
       const segmentData = myWorksData[projectModuleIndex].segmentsData[segIndex];
-      const componentData: any = segmentData.componentsData[subSegIndex];
-      const taskData: any = [componentData.tasksData[taskIndex]];
-      setProjectModuleId(componentData.projectModuleId);
-      setCurrentTasksData(taskData)
+      const componentData = segmentData.componentsData[componentIndex];
+      if (componentData.subComponentsData && componentData.subComponentsData.length) {
+        setCurrentTasksData([])
+        setCurrentLevel(4)
+        setCurrentSubComponentsData(componentData.subComponentsData)
+      } else {
+        setCurrentSubComponentsData([])
+        setCurrentLevel(6)
+        setCurrentTasksData(componentData.tasksData)
+      }
+      setBreadcrumbData([
+        {
+          name: myWorksData[projectModuleIndex].name,
+          projectModuleIndex: projectModuleIndex,
+          segIndex: segIndex,
+          componentIndex: componentIndex,
+          subComponentIndex: subComponentIndex,
+          taskIndex: taskIndex,
+          level: 2,
+          assignmentLevel: assignmentLevel,
+          active: true
+        },
+        {
+          name: SEGMENT_TYPES_DISPLAY[segmentData.type] + '' + segmentData.name,
+          projectModuleIndex: projectModuleIndex,
+          segIndex: segIndex,
+          componentIndex: componentIndex,
+          subComponentIndex: subComponentIndex,
+          taskIndex: taskIndex,
+          level: 0,
+          assignmentLevel: assignmentLevel,
+          active: false
+        },
+        {
+          name: componentData.name,
+          projectModuleIndex: projectModuleIndex,
+          segIndex: segIndex,
+          componentIndex: componentIndex,
+          subComponentIndex: subComponentIndex,
+          taskIndex: taskIndex,
+          level: 3,
+          assignmentLevel: assignmentLevel,
+          active: true
+        },
+      ])
+
+    } else if (level === 5 && segIndex != -1 && componentIndex != -1 && subComponentIndex != -1) {
+      const segmentData = myWorksData[projectModuleIndex].segmentsData[segIndex];
+      const componentData: any = segmentData.componentsData[componentIndex];
+      const subComponentData: any = componentData.subComponentsData[subComponentIndex];
+      setProjectModuleId(segmentData.projectModuleId);
+      setCurrentTasksData(subComponentData.tasksData)
 
       setBreadcrumbData([
         {
           name: myWorksData[projectModuleIndex].name,
           projectModuleIndex: projectModuleIndex,
           segIndex: segIndex,
-          subSegIndex: subSegIndex,
+          componentIndex: componentIndex,
+          subComponentIndex: subComponentIndex,
           taskIndex: taskIndex,
           level: 2,
           assignmentLevel: assignmentLevel,
@@ -398,9 +492,10 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
           name: SEGMENT_TYPES_DISPLAY[segmentData.type] + ' ' + segmentData.name,
           projectModuleIndex: projectModuleIndex,
           segIndex: segIndex,
-          subSegIndex: subSegIndex,
+          componentIndex: componentIndex,
+          subComponentIndex: subComponentIndex,
           taskIndex: taskIndex,
-          level: 2,
+          level: 0,
           assignmentLevel: assignmentLevel,
           active: true
         },
@@ -408,77 +503,124 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
           name: componentData.name,
           projectModuleIndex: projectModuleIndex,
           segIndex: segIndex,
-          subSegIndex: subSegIndex,
+          componentIndex: componentIndex,
+          subComponentIndex: subComponentIndex,
           taskIndex: taskIndex,
           level: 3,
           assignmentLevel: assignmentLevel,
           active: true
         },
         {
-          name: taskData[0].displayName,
+          name: subComponentData.name,
           projectModuleIndex: projectModuleIndex,
           segIndex: segIndex,
-          subSegIndex: subSegIndex,
+          componentIndex: componentIndex,
+          subComponentIndex: subComponentIndex,
           taskIndex: taskIndex,
-          level: 0,
+          level: 4,
           assignmentLevel: assignmentLevel,
-          active: false
+          active: true
         }
       ])
 
-    } else if (level === 4 && subSegIndex != -1) {
+    } else if (level === 6 && taskIndex != -1) {
       const segmentData = myWorksData[projectModuleIndex].segmentsData[segIndex];
-      const componentData: any = segmentData.componentsData[subSegIndex];
-      setProjectModuleId(componentData.projectModuleId);
-      setCurrentTasksData(componentData.tasksData)
+      const breadcrumbItems = [{
+        name: myWorksData[projectModuleIndex].name,
+        projectModuleIndex: projectModuleIndex,
+        segIndex: segIndex,
+        componentIndex: componentIndex,
+        subComponentIndex: subComponentIndex,
+        taskIndex: taskIndex,
+        level: 2,
+        assignmentLevel: assignmentLevel,
+        active: true
+      },
+      {
+        name: SEGMENT_TYPES_DISPLAY[segmentData.type] + ' ' + segmentData.name,
+        projectModuleIndex: projectModuleIndex,
+        segIndex: segIndex,
+        componentIndex: componentIndex,
+        subComponentIndex: subComponentIndex,
+        taskIndex: taskIndex,
+        level: 0,
+        assignmentLevel: assignmentLevel,
+        active: true
+      }
+    ];
+      if (componentIndex != -1 && subComponentIndex != -1) {
+        const componentData: any = segmentData.componentsData[componentIndex];
+        const subComponentData = componentData.subComponentsData[subComponentIndex];
+        const taskData: any = [subComponentData.tasksData[taskIndex]];
+        setProjectModuleId(segmentData.projectModuleId);
+        setCurrentTasksData(taskData)
+        breadcrumbItems.push(
+          ...[{
+            name: componentData.name,
+            projectModuleIndex: projectModuleIndex,
+            segIndex: segIndex,
+            componentIndex: componentIndex,
+            subComponentIndex: subComponentIndex,
+            taskIndex: taskIndex,
+            level: 3,
+            assignmentLevel: assignmentLevel,
+            active: true
+          },
+          {
+            name: subComponentData.name,
+            projectModuleIndex: projectModuleIndex,
+            segIndex: segIndex,
+            componentIndex: componentIndex,
+            subComponentIndex: subComponentIndex,
+            taskIndex: taskIndex,
+            level: 4,
+            assignmentLevel: assignmentLevel,
+            active: true
+          }]
+        )
+      } else if (componentIndex != -1) {
+        const componentData: any = segmentData.componentsData[componentIndex];
+        const taskData: any = [componentData.tasksData[taskIndex]];
+        setProjectModuleId(segmentData.projectModuleId);
+        setCurrentTasksData(taskData)
+        breadcrumbItems.push(
+          {
+            name: componentData.name,
+            projectModuleIndex: projectModuleIndex,
+            segIndex: segIndex,
+            componentIndex: componentIndex,
+            subComponentIndex: subComponentIndex,
+            taskIndex: taskIndex,
+            level: 3,
+            assignmentLevel: assignmentLevel,
+            active: true
+          });
+      } else if (segIndex != -1) {
+        setProjectModuleId(segmentData.projectModuleId);
+        const taskData: any = [segmentData.tasksData[taskIndex]];
+        setCurrentTasksData(taskData)
+      }
 
-      setBreadcrumbData([
-        {
-          name: myWorksData[projectModuleIndex].name,
-          projectModuleIndex: projectModuleIndex,
-          segIndex: segIndex,
-          subSegIndex: subSegIndex,
-          taskIndex: taskIndex,
-          level: 2,
-          assignmentLevel: assignmentLevel,
-          active: true
-        },
-        {
-          name: SEGMENT_TYPES_DISPLAY[segmentData.type] + ' ' + segmentData.name,
-          projectModuleIndex: projectModuleIndex,
-          segIndex: segIndex,
-          subSegIndex: subSegIndex,
-          taskIndex: taskIndex,
-          level: 2,
-          assignmentLevel: assignmentLevel,
-          active: true
-        },
-        {
-          name: componentData.name,
-          projectModuleIndex: projectModuleIndex,
-          segIndex: segIndex,
-          subSegIndex: subSegIndex,
-          taskIndex: taskIndex,
-          level: 3,
-          assignmentLevel: assignmentLevel,
-          active: true
-        },
-        {
-          name: 'Tasks',
-          projectModuleIndex: projectModuleIndex,
-          segIndex: segIndex,
-          subSegIndex: subSegIndex,
-          taskIndex: taskIndex,
-          level: 0,
-          assignmentLevel: assignmentLevel,
-          active: false
-        }
-      ])
+      breadcrumbItems.push({
+        name: 'Tasks',
+        projectModuleIndex: projectModuleIndex,
+        segIndex: segIndex,
+        componentIndex: componentIndex,
+        subComponentIndex: subComponentIndex,
+        taskIndex: taskIndex,
+        level: 0,
+        assignmentLevel: assignmentLevel,
+        active: false
+      });
+      setBreadcrumbData(breadcrumbItems)
     }
   }
 
   const onClickNested = (level: number, data: any) => {
     setSearchText('');
+    if (data.projectModuleId) {
+      setProjectModuleId(data.projectModuleId);
+    }
     setCurrentLevel(level);
     if (level === 3) {
       setCurrentComponentsData(data.componentsData)
@@ -486,12 +628,42 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
       beadcrumb.name = SEGMENT_TYPES_DISPLAY[data.type] + ' ' + data.name;
     } else if (level === 4) {
       setProjectModuleId(data.projectModuleId);
+      const bcrubm = {
+        name: data.name,
+        projectModuleIndex: breadcrumbData[0].projectModuleIndex,
+        segIndex: breadcrumbData[1].segIndex,
+        componentIndex: breadcrumbData[2]?.componentIndex || -1,
+        subComponentIndex: breadcrumbData[3]?.subComponentIndex || -1,
+        taskIndex: 0,
+        level: 0,
+        assignmentLevel: 0,
+        active: false
+      }
+      breadcrumbData.push(bcrubm)
+      if (data.subComponentsData && data.subComponentsData.length) {
+        setCurrentSubComponentsData(data.subComponentsData)
+      } else {
+        setCurrentTasksData(data.tasksData)
+        breadcrumbData.push({
+          name: 'Tasks',
+          projectModuleIndex: breadcrumbData[0].projectModuleIndex,
+          segIndex: breadcrumbData[1].segIndex,
+          componentIndex: breadcrumbData[2]?.componentIndex || -1,
+          subComponentIndex: breadcrumbData[3]?.subComponentIndex || -1,
+          taskIndex: 0,
+          level: 0,
+          assignmentLevel: 0,
+          active: false
+        })
+      }
+    } else if (level === 5) {
       setCurrentTasksData(data.tasksData)
       const bcrubm = {
         name: data.name,
         projectModuleIndex: breadcrumbData[0].projectModuleIndex,
         segIndex: breadcrumbData[1].segIndex,
-        subSegIndex: 0,
+        componentIndex: breadcrumbData[2]?.componentIndex || -1,
+        subComponentIndex: breadcrumbData[3]?.subComponentIndex || -1,
         taskIndex: 0,
         level: 0,
         assignmentLevel: 0,
@@ -502,7 +674,8 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
         name: 'Tasks',
         projectModuleIndex: breadcrumbData[0].projectModuleIndex,
         segIndex: breadcrumbData[1].segIndex,
-        subSegIndex: 0,
+        componentIndex: breadcrumbData[2]?.componentIndex || -1,
+        subComponentIndex: breadcrumbData[3]?.subComponentIndex || -1,
         taskIndex: 0,
         level: 0,
         assignmentLevel: 0,
@@ -513,7 +686,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
 
   const onSegmentTypeClick = (type: any) => {
     if (segmentsByGroupOnType) {
-      onClick(2, -1, breadcrumbData[0].projectModuleIndex, -1, -1, -1, type);
+      onClick(2, -1, breadcrumbData[0].projectModuleIndex, -1, -1, -1, -1, type);
     }
   }
 
@@ -561,7 +734,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
 
   //       // You can also display the image using data:
   //       // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-  //       // alert(JSON.stringify(response));s
+  //       // alert(JSON.stringify(response));
   //       console.log('response', JSON.stringify(response));
   //       this.setState({
   //         filePath: response,
@@ -693,10 +866,19 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
           noLBendBottomOfTheCageChecked: noLBendBottomOfTheCageChecked
         }
         break;
+      case TASK_TYPES.CONCRETING:
+        concreteData.forEach((item: any) => {
+          delete item.key;
+        })
+        checkList = {
+          taskName: selectedTask.name,
+          concreteData: concreteData
+        }
+        break;
       default:
         break;
     }
-
+    
     dispatch(fillRFIsChecklist({
       projectId: loggedInUser.projectId,
       projectModuleId: projectModuleId,
@@ -840,6 +1022,162 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
       value: 'PM'
     }]);
   }
+
+  const onAddMoreConcrete = () => {
+    setConcreteData([...concreteData, {
+      vehicleNo: '',
+      timeOfArrival: 'N',
+      gradeOfConcrete: 'Y',
+      concreteTemp: '',
+      slumpValue: '',
+      noOfCubesCasted: '',
+      concreteStartTime: '',
+      concretePoured: '',
+      concreteFinishTime: '',
+      key: Guid.create()
+    }])
+  }
+
+  // Function to render each list item 
+  const renderItem = (rowData: any) => (
+    <View style={{ flexDirection: 'row', backgroundColor: 'red' }}>
+      <View>
+        <Text>TM {rowData.index + 1}</Text>
+      </View>
+      <View>
+        <CustomTextInput rowItem={rowData.item}
+          fieldName={'vehicleNo'}></CustomTextInput>
+      </View>
+      <View>
+        <CustomDropdownPicker items={YES_NO_LIST}
+          rowItem={rowData.item}
+          fieldName={'timeOfArrival'}
+        />
+      </View>
+      <View>
+      <CustomDropdownPicker items={YES_NO_LIST}
+          rowItem={rowData.item}
+          fieldName={'gradeOfConcrete'}
+        />
+      </View>
+      <View>
+        <CustomTextInput rowItem={rowData.item}
+          fieldName={'concreteTemp'}></CustomTextInput>
+      </View>
+      <View>
+        <CustomTextInput rowItem={rowData.item}
+          fieldName={'slumpValue'}></CustomTextInput>
+      </View>
+      <View>
+        <CustomTextInput rowItem={rowData.item}
+          fieldName={'noOfCubesCasted'}></CustomTextInput>
+      </View>
+      <View>
+      <CustomDropdownPicker items={YES_NO_LIST}
+          rowItem={rowData.item}
+          fieldName={'concreteStartTime'}
+        />
+      </View>
+      <View>
+        <CustomTextInput rowItem={rowData.item}
+          fieldName={'concretePoured'}></CustomTextInput>
+      </View>
+      <View>
+      <CustomDropdownPicker items={YES_NO_LIST}
+          rowItem={rowData.item}
+          fieldName={'concreteFinishTime'}
+        />
+      </View>
+        
+      </View>
+);
+
+// Function to close a swiped row 
+const closeRow = (rowMap: any, rowKey: any) => {
+  if (rowMap[rowKey]) { 
+      rowMap[rowKey].closeRow(); 
+  } 
+}; 
+
+// Function to delete an item from the list 
+const deleteItem = (rowMap: any, rowKey: any) => { 
+  closeRow(rowMap, rowKey); 
+  const newData = [...concreteData]; 
+  const prevIndex = concreteData 
+      .findIndex(item => item.gradeOfConcrete === rowKey); 
+  newData.splice(prevIndex, 1); 
+  setConcreteData(newData); 
+}; 
+
+// Function to handle row open event 
+const onRowOpen = (rowKey: any) => { 
+  console.log('Opened row with key:', rowKey); 
+}; 
+
+// Function to render hidden swipe actions 
+const renderHiddenItem = (rowData: any, rowMap: any) => ( 
+    <View style={styles.hiddenContainer}> 
+        <TouchableOpacity 
+            style={[styles.hiddenButton, styles.closeButton]} 
+            onPress={() => closeRow(rowMap, rowData.item.key)} 
+        > 
+            <Text style={styles.buttonText}>Close</Text> 
+        </TouchableOpacity> 
+        <TouchableOpacity 
+            style={[styles.hiddenButton, styles.deleteButton]} 
+            onPress={() => deleteItem(rowMap, rowData.item.key)} 
+        > 
+            <Text style={styles.buttonText}>Delete</Text> 
+        </TouchableOpacity> 
+    </View> 
+);
+
+const renderSectionHeader = (rowData: any) => {
+  return (
+    <View>
+      <View>
+        <Text>TM No.</Text>
+      </View>
+      <View>
+      <Text>Last 4 digits of Vehicle No.</Text>
+      </View>
+      <View>
+        <Text>Time of arrival</Text>
+      </View>
+      <View>
+        <Text>Grade of Concrete</Text>
+      </View>
+      <View>
+        <Text>Concrete temp in C</Text>
+      </View>
+      <View>
+        <Text>Slump value in mm</Text>
+      </View>
+      <View>
+        <Text>No of cubes casted</Text>
+      </View>
+      <View>
+        <Text>Concrete start time</Text>
+      </View>
+      <View>
+        <Text>Concrete poured in cum</Text>
+      </View>
+      <View>
+        <Text>Concrete finish time</Text>
+      </View>
+  </View>
+  )
+}
+
+const [enableScroll, setEnableScroll] = useState(true);
+const onSwipeValueChange = (data: any) => {
+  if (data.value < 0) {
+    setEnableScroll(false);
+  } else {
+    setEnableScroll(true);
+  }
+
+}
 
   const taskForm = (taskName: any) => {
     switch (taskName) {
@@ -2144,10 +2482,250 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
             </View>
           </View>
         </View>
+
+
+
+
+
+      case TASK_TYPES.CONCRETING:
+        if (!concreteData || !concreteData.length) {
+          setConcreteData([{
+            vehicleNo: '',
+            timeOfArrival: 'Y',
+            gradeOfConcrete:'N',
+            concreteTemp: '',
+            slumpValue: '',
+            noOfCubesCasted: '',
+            concreteStartTime: '',
+            concretePoured: '',
+            concreteFinishTime: '',
+            key: Guid.create()
+          }])
+
+        }
+        return <View>
+          <ScrollView id='scrollViewConcrete' horizontal={enableScroll}>
+          <View style={{ flexDirection: 'column', padding: 10, borderBlockColor: '#cccccc', borderStyle: 'solid', borderWidth: 1}}>
+            {
+              <SwipeListView 
+                data={concreteData} 
+                renderItem={renderItem} 
+                renderHiddenItem={renderHiddenItem} 
+                renderSectionHeader={renderSectionHeader}
+                leftOpenValue={0} 
+                rightOpenValue={-430} 
+                previewRowKey={'0'} 
+                previewOpenValue={-40} 
+                previewOpenDelay={3000} 
+                onRowDidOpen={onRowOpen}
+                style={{zIndex: 10}}
+                automaticallyAdjustContentInsets={true}
+                scrollEnabled={false}
+                onSwipeValueChange={onSwipeValueChange}
+            /> 
+            
+            }
+           
+            
+          </View>
+          </ScrollView>
+          
+          <View>
+          <TouchableOpacity style={{marginTop: 50, zIndex: 8}} onPress={() => onAddMoreConcrete()}>
+              <Text>Add More</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View>
+            <View style={{ flexDirection: 'column' }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Date</Text>
+
+              <View style={{ flexDirection: 'row' }}>
+                <TextInput
+                  style={styles.inputStyle}
+                  placeholder=""
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  blurOnSubmit={false}
+                  value={rfiDate ? moment(new Date(rfiDate)).format('DD-MM-YYYY') : ''}
+                  editable={false}
+                />
+                <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
+                  <Text style={styles.assignTagButtonText}>Icon</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {openCalendar && (
+
+              <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
+                <CalendarPicker width={width - 40}
+                  initialDate={rfiDate ? new Date(rfiDate) : new Date()}
+                  onDateChange={(date) => {
+                    setRFIDate(date.format("YYYY-MM-DD"));
+                    openCloseCalendar()
+                  }}
+                />
+              </View>
+            )}
+
+            <View style={{ flexDirection: 'column', height: 80, paddingTop: 15, zIndex: 5, marginBottom: 140 }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Time</Text>
+              <View style={{ flexDirection: 'row', gap: 20 }}>
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenMinutes(false);
+                    setOpenTimeFormats(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='MODAL'
+                    open={openHours}
+                    value={hour}
+                    items={hours}
+                    setOpen={setOpenHours}
+                    setValue={setHour}
+                  />
+                </View>
+
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenHours(false);
+                    setOpenTimeFormats(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='MODAL'
+                    open={openMinutes}
+                    value={minute}
+                    items={minutes}
+                    setOpen={setOpenMinutes}
+                    setValue={setMinute}
+                  />
+                </View>
+                <View style={{ width: 80, height: 90 }}>
+                  <DropDownPicker onPress={() => {
+                    setOpenHours(false);
+                    setOpenMinutes(false);
+                  }}
+                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
+                    maxHeight={75}
+                    zIndex={1000}
+                    listMode='SCROLLVIEW'
+                    open={openTimeFormats}
+                    value={timeFormat}
+                    items={timeFormats}
+                    setOpen={setOpenTimeFormats}
+                    setValue={setTimeFormat}
+                  />
+                </View>
+              </View>
+              
+              <View style={{ flexDirection: 'column', height: 65 }}>
+              <Text style={styles.GenerateRFIFieldLabel}>Recommendations</Text>
+              <TextInput
+                style={styles.inputStyle}
+                placeholder="Recommendations"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                returnKeyType="next"
+                underlineColorAndroid="#f000"
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={(text) => {
+                  setComments(text);
+                }}
+              />
+            </View>
+            </View>
+          </View>
+        </View>
+
+
+
+
+
+
+
       default: return <View>
         <Text>TODO</Text>
       </View>
     }
+  }
+
+  const tasksListing = () => {
+    return currentTasksData.filter((task: any) => {
+      if (searchText && task.displayName) {
+        return task.displayName.toLowerCase().includes(searchText.toLowerCase())
+      } else {
+        return true;
+      }
+    }).map((item: any, index) => (
+      <View style={getStyle(item)}>
+        <View style={styles.leftContainer}>
+          <Text style={styles.HeadText}>{item.displayName}</Text>
+          {/* <Text style={styles.MyWorkSubHead}>Sub Text</Text> */}
+        </View>
+        {
+          item.rfiStatus === RFI_STATUS.GENERATED ?
+            <TouchableOpacity style={[styles.MyWorkCta, styles.StartBorder]} onPress={() => {
+              getRFIDataByWorkAssignmentId(item)
+            }}>
+              <Image style={styles.WorkIcon} source={require('../../images/play-icon.png')} />
+              <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>Start</Text>
+            </TouchableOpacity> : null
+        }
+
+        {
+          item.rfiStatus === RFI_STATUS.RE_GENERATED ?
+            <TouchableOpacity style={[styles.MyWorkCta, styles.StartBorder]} onPress={() => {
+              getRFIDataByWorkAssignmentId(item)
+            }}>
+              <Image style={styles.WorkIcon} source={require('../../images/play-icon.png')} />
+              <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>Re-start</Text>
+            </TouchableOpacity> : null
+        }
+
+        {
+          (item.rfiStatus === RFI_STATUS.REJECTED || item.rfiStatus === RFI_STATUS.CANCELLED) ?
+            <TouchableOpacity style={[styles.MyWorkCta, styles.StartRejectBorder]}>
+              {/* <Image style={styles.WorkIcon} source={require('../../images/play-icon.png')} /> */}
+              <Text style={[styles.CtaStartText, styles.CtaRejectTextColor]}>{item.rfiStatus === RFI_STATUS.CANCELLED ? 'Cancelled' : 'Rejected'}</Text>
+            </TouchableOpacity> : null
+        }
+
+        {
+          item.rfiStatus === RFI_STATUS.IN_PROGRESS ?
+            <TouchableOpacity style={[styles.MyWorkCta, styles.StartInProgressBorder]} onPress={() => {
+              getRFIDataByWorkAssignmentId(item)
+            }}>
+              <Image style={styles.WorkIcon} source={require('../../images/inprogress.png')} />
+              <Text style={[styles.CtaStartText, styles.CtaInProgressTextColor]}>In Progress</Text>
+            </TouchableOpacity> : null
+        }
+
+        {
+          item.rfiStatus === RFI_STATUS.IN_REVIEW ?
+            <TouchableOpacity style={[styles.MyWorkCta, styles.StartReviewBorder]}>
+              <Image style={styles.WorkIcon} source={require('../../images/review-icon.png')} />
+              <Text style={[styles.CtaStartText, styles.CtaReviewTextColor]}>Under Review</Text>
+            </TouchableOpacity> : null
+        }
+
+        {
+          item.rfiStatus === RFI_STATUS.APPROVED ?
+            <TouchableOpacity style={[styles.MyWorkCta, styles.StartCompleteBorder]}>
+              <Image style={styles.WorkIcon} source={require('../../images/complete-icon.png')} />
+              <Text style={[styles.CtaStartText, styles.CtaCompleteTextColor]}>Completed</Text>
+            </TouchableOpacity> : null
+        }
+
+      </View>
+    ))
   }
 
   return (
@@ -2204,12 +2782,12 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
                 </TouchableOpacity>
                 :
                 (projModuleItem.segmentsData?.map((segItem: any, segIndex: any) => (
-                  (segItem.assignmentLevel === 2 && segIndex == 0) ? (
+                  (segItem.assignmentLevel === 2) ? (
                     projModuleItem.segmentsData?.filter((segItem: any) => segItem.assignmentLevel == 2).length === 1 ? (
                       <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(3, segItem.assignmentLevel, projModuleIndex, projModuleItem.segmentsData?.findIndex((segItem: any) => segItem.assignmentLevel == 2))}>
                         <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
                         <View style={styles.TaskDetails}>
-                          <Text style={styles.SubHeadingText}>Assigned:</Text>
+                          <Text style={styles.SubHeadingText}>Assigned:AA</Text>
                           <View style={{ flexDirection: 'row' }}>
                             <Text style={styles.SubHeadingText}>{SEGMENT_TYPES_DISPLAY[segItem.type]} /</Text>
                             <Text style={[styles.SubHeadingText, styles.SubActive]}>{projModuleItem.segmentsData?.filter((segItem: any) => segItem.assignmentLevel == 2)[0].name}</Text>
@@ -2219,11 +2797,11 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
                     )
                       :
                       (
-                        Object.keys(groupBy(projModuleItem.segmentsData, "type")).map((segType: any) => (
-                          <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(2, segItem.assignmentLevel, projModuleIndex, -1, -1, -1, segType)}>
+                        Object.keys(groupBy([segItem], "type")).map((segType: any, index: any) => (
+                          <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(2, segItem.assignmentLevel, projModuleIndex, -1, -1, -1, -1, segType)}>
                             <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
                             <View style={styles.TaskDetails}>
-                              <Text style={styles.SubHeadingText}>Assigned:</Text>
+                              <Text style={styles.SubHeadingText}>Assigned:BB {''+index}</Text>
                               <Text style={[styles.SubHeadingText, styles.SubActive]}>{SEGMENT_TYPES_DISPLAY[segType]} {projModuleItem.segmentsData?.filter((segItem: any) => segItem.type == segType && segItem.assignmentLevel == 2).length}</Text>
                             </View>
                           </TouchableOpacity>
@@ -2231,45 +2809,95 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
                       )
                   )
                     :
-                    segItem.componentsData?.map((subSegItem: any, subSegIndex: number) => (
-                      subSegItem.assignmentLevel === 3 ?
-                        (
-                          <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(4, subSegItem.assignmentLevel, projModuleIndex, segIndex, subSegIndex)}>
-                            <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
-                            <View style={styles.TaskDetails}>
-                              <Text style={styles.SubHeadingText}>Assigned:</Text>
-                              <Text style={styles.SubHeadingText}>{SEGMENT_TYPES_DISPLAY[segItem.type]} /</Text>
-                              <Text style={styles.SubHeadingText}>{segItem.name} /</Text>
-                              <Text style={[styles.SubHeadingText, styles.SubActive]}>{subSegItem.name}</Text>
-                            </View>
-                          </TouchableOpacity>
-
-                        )
-                        :
-                        subSegItem.tasksData?.map((taskItem: any, taskIndex: number) => (
-                          taskItem.assignmentLevel === 4 &&
-                          <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(4, taskItem.assignmentLevel, projModuleIndex, segIndex, subSegIndex, taskIndex)}>
-                            <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
-                            <View style={styles.TaskDetails}>
-                              <Text style={styles.SubHeadingText}>Assigned:</Text>
-                              <Text style={styles.SubHeadingText}>{SEGMENT_TYPES_DISPLAY[segItem.type]} /</Text>
-                              <Text style={styles.SubHeadingText}>{segItem.name} /</Text>
-                              <Text style={styles.SubHeadingText}>{subSegItem.name} /</Text>
-                              <Text style={[styles.SubHeadingText, styles.SubActive]}>{taskItem.displayName}</Text>
-                            </View>
-                          </TouchableOpacity>
-
-                        ))
+                    segItem.componentsData && segItem.componentsData.length ? (
+                      segItem.componentsData?.map((componentItem: any, componentIndex: number) => (
+                        componentItem.assignmentLevel === 3 ?
+                          (
+                            <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(4, componentItem.assignmentLevel, projModuleIndex, segIndex, componentIndex)}>
+                              <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
+                              <View style={styles.TaskDetails}>
+                                <Text style={styles.SubHeadingText}>Assigned:AA</Text>
+                                <Text style={styles.SubHeadingText}>{SEGMENT_TYPES_DISPLAY[segItem.type]} /</Text>
+                                <Text style={styles.SubHeadingText}>{segItem.name} /</Text>
+                                <Text style={[styles.SubHeadingText, styles.SubActive]}>{componentItem.name}</Text>
+                              </View>
+                            </TouchableOpacity>
+  
+                          )
+                          :
+                          componentItem.subComponentsData && componentItem.subComponentsData.length ? (
+                            componentItem.subComponentsData.map((subComponentItem: any, subCompIndex: number) => (
+                              subComponentItem.assignmentLevel === 4 ?
+                          (
+                            <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(5, subComponentItem.assignmentLevel, projModuleIndex, segIndex, componentIndex, subCompIndex)}>
+                              <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
+                              <View style={styles.TaskDetails}>
+                                <Text style={styles.SubHeadingText}>Assigned:</Text>
+                                <Text style={styles.SubHeadingText}>{SEGMENT_TYPES_DISPLAY[segItem.type]} /</Text>
+                                <Text style={styles.SubHeadingText}>{segItem.name} /</Text>
+                                <Text style={styles.SubHeadingText}>{componentItem.name} /</Text>
+                                <Text style={[styles.SubHeadingText, styles.SubActive]}>{subComponentItem.name}</Text>
+                              </View>
+                            </TouchableOpacity>
+  
+                          )
+                          :
+                          subComponentItem.tasksData?.map((taskItem: any, taskIndex: number) => (
+                            taskItem.assignmentLevel === 5 &&
+                            <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(6, taskItem.assignmentLevel, projModuleIndex, segIndex, componentIndex, subCompIndex, taskIndex)}>
+                              <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
+                              <View style={styles.TaskDetails}>
+                                <Text style={styles.SubHeadingText}>Assigned:</Text>
+                                <Text style={styles.SubHeadingText}>{SEGMENT_TYPES_DISPLAY[segItem.type]} /</Text>
+                                <Text style={styles.SubHeadingText}>{segItem.name} /</Text>
+                                <Text style={styles.SubHeadingText}>{componentItem.name} /</Text>
+                                <Text style={styles.SubHeadingText}>{subComponentItem.name} /</Text>
+                                <Text style={[styles.SubHeadingText, styles.SubActive]}>{taskItem.displayName}</Text>
+                              </View>
+                            </TouchableOpacity>
+  
+                          ))
+                            )
+                          ))
+                          :
+                          componentItem.tasksData?.map((taskItem: any, taskIndex: number) => (
+                            taskItem.assignmentLevel === 5 &&
+                            <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(6, taskItem.assignmentLevel, projModuleIndex, segIndex, componentIndex, -1, taskIndex)}>
+                              <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
+                              <View style={styles.TaskDetails}>
+                                <Text style={styles.SubHeadingText}>Assigned:</Text>
+                                <Text style={styles.SubHeadingText}>{SEGMENT_TYPES_DISPLAY[segItem.type]} /</Text>
+                                <Text style={styles.SubHeadingText}>{segItem.name} /</Text>
+                                <Text style={styles.SubHeadingText}>{componentItem.name} /</Text>
+                                <Text style={[styles.SubHeadingText, styles.SubActive]}>{taskItem.displayName}</Text>
+                              </View>
+                            </TouchableOpacity>
+  
+                          ))
+  
+                      ))
+                    )
+                    :
+                    segItem.tasksData?.map((taskItem: any, taskIndex: number) => (
+                      taskItem.assignmentLevel === 5 &&
+                      <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(6, taskItem.assignmentLevel, projModuleIndex, segIndex, -1, -1, taskIndex)}>
+                        <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
+                        <View style={styles.TaskDetails}>
+                          <Text style={styles.SubHeadingText}>Assigned:</Text>
+                          <Text style={styles.SubHeadingText}>{SEGMENT_TYPES_DISPLAY[segItem.type]} /</Text>
+                          <Text style={styles.SubHeadingText}>{segItem.name} /</Text>
+                          <Text style={[styles.SubHeadingText, styles.SubActive]}>{taskItem.displayName}</Text>
+                        </View>
+                      </TouchableOpacity>
 
                     ))
-
 
                 )))
 
             )) : null
         }
         {
-          currentLevel === 5 &&
+          currentLevel === 7 &&
             segmentsByGroupOnType && Object.keys(segmentsByGroupOnType).length ? Object.keys(segmentsByGroupOnType).map((item) => (
               <TouchableOpacity style={[styles.StartWorkCard, styles.StartBorder]} onPress={() => onSegmentTypeClick(item)}>
                 <View style={styles.leftContainer}>
@@ -2298,7 +2926,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
         }
         {
           currentLevel === 3 ?
-            currentComponentsData.filter((subSeg: any) => {
+          currentComponentsData && currentComponentsData.length ? currentComponentsData.filter((subSeg: any) => {
               if (searchText && subSeg.name) {
                 return subSeg.name.toLowerCase().includes(searchText.toLowerCase())
               } else {
@@ -2310,78 +2938,32 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
                   <Text style={styles.HeadText}>{item.name}</Text>
                 </View>
               </TouchableOpacity>
-            )) : null
+            )) : tasksListing()
+            :
+            null
         }
         {
           currentLevel === 4 ?
-            currentTasksData.filter((task: any) => {
-              if (searchText && task.displayName) {
-                return task.displayName.toLowerCase().includes(searchText.toLowerCase())
+          currentSubComponentsData && currentSubComponentsData.length ? currentSubComponentsData.filter((subComponent: any) => {
+              if (searchText && subComponent.name) {
+                return subComponent.name.toLowerCase().includes(searchText.toLowerCase())
               } else {
                 return true;
               }
             }).map((item: any, index) => (
-              <View style={getStyle(item)}>
+              <TouchableOpacity style={getStyle(item)} onPress={() => onClickNested(5, item)}>
                 <View style={styles.leftContainer}>
-                  <Text style={styles.HeadText}>{item.displayName}</Text>
-                  {/* <Text style={styles.MyWorkSubHead}>Sub Text</Text> */}
+                  <Text style={styles.HeadText}>{item.name}</Text>
                 </View>
-                {
-                  item.rfiStatus === RFI_STATUS.GENERATED ?
-                    <TouchableOpacity style={[styles.MyWorkCta, styles.StartBorder]} onPress={() => {
-                      getRFIDataByWorkAssignmentId(item)
-                    }}>
-                      <Image style={styles.WorkIcon} source={require('../../images/play-icon.png')} />
-                      <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>Start</Text>
-                    </TouchableOpacity> : null
-                }
-
-                {
-                  item.rfiStatus === RFI_STATUS.RE_GENERATED ?
-                    <TouchableOpacity style={[styles.MyWorkCta, styles.StartBorder]} onPress={() => {
-                      getRFIDataByWorkAssignmentId(item)
-                    }}>
-                      <Image style={styles.WorkIcon} source={require('../../images/play-icon.png')} />
-                      <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>Re-start</Text>
-                    </TouchableOpacity> : null
-                }
-
-                {
-                  (item.rfiStatus === RFI_STATUS.REJECTED || item.rfiStatus === RFI_STATUS.CANCELLED) ?
-                    <TouchableOpacity style={[styles.MyWorkCta, styles.StartRejectBorder]}>
-                      {/* <Image style={styles.WorkIcon} source={require('../../images/play-icon.png')} /> */}
-                      <Text style={[styles.CtaStartText, styles.CtaRejectTextColor]}>{item.rfiStatus === RFI_STATUS.CANCELLED ? 'Cancelled' : 'Rejected'}</Text>
-                    </TouchableOpacity> : null
-                }
-
-                {
-                  item.rfiStatus === RFI_STATUS.IN_PROGRESS ?
-                    <TouchableOpacity style={[styles.MyWorkCta, styles.StartInProgressBorder]} onPress={() => {
-                      getRFIDataByWorkAssignmentId(item)
-                    }}>
-                      <Image style={styles.WorkIcon} source={require('../../images/inprogress.png')} />
-                      <Text style={[styles.CtaStartText, styles.CtaInProgressTextColor]}>In Progress</Text>
-                    </TouchableOpacity> : null
-                }
-
-                {
-                  item.rfiStatus === RFI_STATUS.IN_REVIEW ?
-                    <TouchableOpacity style={[styles.MyWorkCta, styles.StartReviewBorder]}>
-                      <Image style={styles.WorkIcon} source={require('../../images/review-icon.png')} />
-                      <Text style={[styles.CtaStartText, styles.CtaReviewTextColor]}>Under Review</Text>
-                    </TouchableOpacity> : null
-                }
-
-                {
-                  item.rfiStatus === RFI_STATUS.APPROVED ?
-                    <TouchableOpacity style={[styles.MyWorkCta, styles.StartCompleteBorder]}>
-                      <Image style={styles.WorkIcon} source={require('../../images/complete-icon.png')} />
-                      <Text style={[styles.CtaStartText, styles.CtaCompleteTextColor]}>Completed</Text>
-                    </TouchableOpacity> : null
-                }
-
-              </View>
-            )) : null
+              </TouchableOpacity>
+            )) : tasksListing()
+            :
+            null
+        }
+        {
+          (currentLevel === 5 || currentLevel === 6) ?
+            tasksListing()
+          : null
         }
         {/* No Data Found */}
         {(!loading && !myWorksData.length) ?
@@ -2457,6 +3039,49 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
   )
 }
 
+const CustomTextInput = ({rowItem, fieldName}: {rowItem: any, fieldName: any}) => {
+  const [value, setValue] = useState(rowItem[fieldName]);
+  const updateValue = (text: any) => {
+    {rowItem[fieldName] = text}
+  }
+
+  return (
+    <TextInput
+      style={styles.inputStyle2}
+      placeholder=""
+      autoCapitalize="none"
+      keyboardType="email-address"
+      returnKeyType="next"
+      underlineColorAndroid="#f000"
+      blurOnSubmit={false}
+      value={value}
+      onChangeText={(text) => {
+        setValue(text); updateValue(text);
+      }}
+    />
+  )
+}
+
+const CustomDropdownPicker = ({items, rowItem, fieldName}: {items: any, rowItem: any, fieldName: any}) => {
+  const [value, setValue] = useState(rowItem[fieldName]);
+  const [openList, setOpenList] = useState(false);
+  const updateValue = () => {
+    {rowItem[fieldName] = value}
+  }
+  return (
+    <DropDownPicker style={{width: 90, height: 45, zIndex: 10}}
+      open={openList}
+      value={value}
+      items={items}
+      setOpen={setOpenList}
+      setValue={setValue}
+      listMode='MODAL'
+      closeAfterSelecting={true}
+      onChangeValue={() => updateValue()}
+    />
+  )
+}
+
 const styles = StyleSheet.create({
   assignTagButtonText: {
     fontSize: 16,
@@ -2507,6 +3132,17 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     paddingVertical: 5,
     height: 45,
+  },
+  inputStyle2: {
+    flex: 1,
+    color: '#2c2c2c',
+    borderWidth: 1,
+    borderRadius: 0,
+    borderColor: '#808089',
+    backgroundColor: '#fff',
+    fontWeight: '600',
+    height: 45,
+    width: 50
   },
   //Start Work
   StartWorkCard: {
@@ -2764,8 +3400,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderColor: 'black',
     borderWidth: 1,
-    height: Dimensions.get('screen').height - 60,
-    width: Dimensions.get('screen').width
+    height: Dimensions.get('window').height - 60,
+    width: Dimensions.get('window').width
   },
   ImageSections: {
     display: 'flex',
@@ -2799,7 +3435,71 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 14,
     fontWeight: 'bold'
-  }
+  },
+  /* Left Swipe */
+  heading: { 
+    fontSize: 30, 
+    fontWeight: 'bold', 
+    marginBottom: 20, 
+    color: 'green', 
+    margin: 20, 
+    textAlign: 'center', 
+}, 
+subheading: { 
+    fontSize: 24, 
+    fontWeight: 'bold', 
+    marginBottom: 20, 
+    color: '#333', // Dark Gray 
+    margin: 10, 
+    textAlign: 'center', 
+}, 
+itemContainer: { 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    backgroundColor: '#FFF', // White 
+    borderBottomColor: '#E0E0E0', // Lighter Gray 
+    borderBottomWidth: 1, 
+    height: 45, 
+    borderRadius: 8, 
+    shadowColor: '#000', 
+    shadowOffset: { width: 0, height: 2 }, 
+    shadowOpacity: 0.2, 
+    shadowRadius: 3, 
+    elevation: 3, 
+    marginBottom: 10, 
+}, 
+itemText: { 
+    color: '#333', // Dark Gray 
+    fontSize: 16, 
+    fontWeight: 'bold', 
+}, 
+hiddenContainer: { 
+    flexDirection: 'row', 
+    justifyContent: 'flex-end', 
+    alignItems: 'center', 
+    backgroundColor: '#FFF', 
+    height: 45, 
+    borderRadius: 20, 
+}, 
+hiddenButton: { 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    width: 75, 
+    height: 45, 
+}, 
+closeButton: { 
+    backgroundColor: 'green', // Blue 
+    borderRadius: 20, 
+}, 
+deleteButton: { 
+    backgroundColor: '#E74C3C', // Red 
+    borderRadius: 20, 
+}, 
+buttonText: { 
+    color: '#FFF', 
+    fontSize: 16, 
+    fontWeight: 'bold', 
+},
 });
 
 export default MyWork

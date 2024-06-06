@@ -36,6 +36,15 @@ export const getRFIs = async (projectId, status) => {
     });
 }
 
+export const getRFIsReports = async (projectId) => {
+    return apiService.getRequest(`v1/auth/projects/${projectId}/rfis/reports`).then((response) => {
+        return response;
+    }).catch((err) => {
+        const errorMessge = err.message || 'Unable to get RFIs reports.';
+        throw new Error(errorMessge);
+    });
+}
+
 export const getRFIDataByWaId = async (projectId, projectModuleId, waId) => {
     return apiService.getRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/wa/${waId}/rfi`).then((response) => {
         return response;

@@ -12,7 +12,8 @@ import DropDownPicker from 'react-native-dropdown-picker';
 
 const RFIsStructureTaskListing = (props: any) => {
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const userCategory = PROJECT_TYPE.STRUCTURE_WORK;
+  //const userCategory = PROJECT_TYPE.STRUCTURE_WORK;
+  const userCategory = props.projectType;
   // const rfiType = props.rfiType;
 
   const { rfisTasks, taskUsers, rfiGenerated, loading, error } = useSelector((state: any) => state.RFIs);
@@ -22,6 +23,7 @@ const RFIsStructureTaskListing = (props: any) => {
   const [selectedTaskData, setSelectedTaskData] = useState({});
   const [currentSegmentsData, setCurrentSegmentsData] = useState([]);
   const [currentComponentsData, setCurrentComponentsData] = useState([]);
+  const [currentSubComponentsData, setCurrentSubComponentsData] = useState([]);
   const [currentTasksData, setCurrentTasksData] = useState([]);
   const [currentLevel, setCurrentLevel] = useState(1);
   const [segmentsByGroupOnType, setSegmentsByGroupOnType] = useState(null);
@@ -31,7 +33,8 @@ const RFIsStructureTaskListing = (props: any) => {
     name: '',
     projectModuleIndex: 0,
     segIndex: 0,
-    subSegIndex: 0,
+    componentIndex: 0,
+    subComponentIndex: 0,
     taskIndex: 0,
     level: 0,
     assignmentLevel: 0,
@@ -59,7 +62,7 @@ const RFIsStructureTaskListing = (props: any) => {
     dispatch(getRFITasks({
       projectId: loggedInUser.projectId,
       userCategory: userCategory,
-      level: 4 // Tasks
+      level: 5 // Tasks
     }));
   }
 
@@ -85,14 +88,14 @@ const RFIsStructureTaskListing = (props: any) => {
     setSearchText('');
   }, []);
 
-  const onClick = (level: number, assignmentLevel: number, projectModuleIndex: number, segIndex: number = -1, subSegIndex: number = -1, taskIndex: number = -1, segmentType = null) => {
+  const onClick = (level: number, assignmentLevel: number, projectModuleIndex: number, segIndex: number = -1, componentIndex: number = -1, subComponentIndex: number = -1, taskIndex: number = -1, segmentType = null) => {
     setSearchText('');
     setCurrentLevel(level)
     setBreadcrumbData([]);
     if (level === 2) {
       if (assignmentLevel === 1) {
         //==
-        setCurrentLevel(5);
+        setCurrentLevel(6);
         const projectModule = rfisTasksData[projectModuleIndex];
         setSelectedProjectModuleId(projectModule.id);
         const gbSegmentTypes = groupBy(projectModule.segmentsData, "type");
@@ -102,7 +105,8 @@ const RFIsStructureTaskListing = (props: any) => {
             name: rfisTasksData[projectModuleIndex].name,
             projectModuleIndex: projectModuleIndex,
             segIndex: segIndex,
-            subSegIndex: subSegIndex,
+            componentIndex: componentIndex,
+            subComponentIndex: subComponentIndex,
             taskIndex: taskIndex,
             level: 2,
             assignmentLevel: assignmentLevel,
@@ -112,7 +116,8 @@ const RFIsStructureTaskListing = (props: any) => {
             name: "Segment Types",
             projectModuleIndex: projectModuleIndex,
             segIndex: segIndex,
-            subSegIndex: subSegIndex,
+            componentIndex: componentIndex,
+            subComponentIndex: subComponentIndex,
             taskIndex: taskIndex,
             level: 0,
             assignmentLevel: assignmentLevel,
@@ -126,7 +131,8 @@ const RFIsStructureTaskListing = (props: any) => {
             name: rfisTasksData[projectModuleIndex].name,
             projectModuleIndex: projectModuleIndex,
             segIndex: segIndex,
-            subSegIndex: subSegIndex,
+            componentIndex: componentIndex,
+            subComponentIndex: subComponentIndex,
             taskIndex: taskIndex,
             level: 2,
             assignmentLevel: assignmentLevel,
@@ -136,7 +142,8 @@ const RFIsStructureTaskListing = (props: any) => {
             name: SEGMENT_TYPES_DISPLAY[segmentType],
             projectModuleIndex: projectModuleIndex,
             segIndex: segIndex,
-            subSegIndex: subSegIndex,
+            componentIndex: componentIndex,
+            subComponentIndex: subComponentIndex,
             taskIndex: taskIndex,
             level: 0,
             assignmentLevel: assignmentLevel,
@@ -151,7 +158,8 @@ const RFIsStructureTaskListing = (props: any) => {
             name: rfisTasksData[projectModuleIndex].name,
             projectModuleIndex: projectModuleIndex,
             segIndex: segIndex,
-            subSegIndex: subSegIndex,
+            componentIndex: componentIndex,
+            subComponentIndex: subComponentIndex,
             taskIndex: taskIndex,
             level: 2,
             assignmentLevel: assignmentLevel,
@@ -162,7 +170,8 @@ const RFIsStructureTaskListing = (props: any) => {
             name: SEGMENT_TYPES_DISPLAY[segmentsData[0].type] || "Foundation", // todo - dynamic
             projectModuleIndex: projectModuleIndex,
             segIndex: segIndex,
-            subSegIndex: subSegIndex,
+            componentIndex: componentIndex,
+            subComponentIndex: subComponentIndex,
             taskIndex: taskIndex,
             level: 0,
             assignmentLevel: assignmentLevel,
@@ -179,7 +188,8 @@ const RFIsStructureTaskListing = (props: any) => {
           name: rfisTasksData[projectModuleIndex].name,
           projectModuleIndex: projectModuleIndex,
           segIndex: segIndex,
-          subSegIndex: subSegIndex,
+          componentIndex: componentIndex,
+          subComponentIndex: subComponentIndex,
           taskIndex: taskIndex,
           level: 2,
           assignmentLevel: assignmentLevel,
@@ -189,7 +199,8 @@ const RFIsStructureTaskListing = (props: any) => {
           name: SEGMENT_TYPES_DISPLAY[segmentData.type] + ' ' + segmentData.name,
           projectModuleIndex: projectModuleIndex,
           segIndex: segIndex,
-          subSegIndex: subSegIndex,
+          componentIndex: componentIndex,
+          subComponentIndex: subComponentIndex,
           taskIndex: taskIndex,
           level: 0,
           assignmentLevel: assignmentLevel,
@@ -197,9 +208,37 @@ const RFIsStructureTaskListing = (props: any) => {
         }
       ])
 
-    } else if (level === 4 && subSegIndex != -1 && taskIndex != -1) {
+    } else if (level === 4 && segIndex != -1) {
       const segmentData = rfisTasksData[projectModuleIndex].segmentsData[segIndex];
-      const componentData: any = segmentData.componentsData[subSegIndex];
+      setCurrentComponentsData(segmentData.componentsData)
+      setBreadcrumbData([
+        {
+          name: rfisTasksData[projectModuleIndex].name,
+          projectModuleIndex: projectModuleIndex,
+          segIndex: segIndex,
+          componentIndex: componentIndex,
+          subComponentIndex: subComponentIndex,
+          taskIndex: taskIndex,
+          level: 2,
+          assignmentLevel: assignmentLevel,
+          active: true
+        },
+        {
+          name: SEGMENT_TYPES_DISPLAY[segmentData.type] + ' ' + segmentData.name,
+          projectModuleIndex: projectModuleIndex,
+          segIndex: segIndex,
+          componentIndex: componentIndex,
+          subComponentIndex: subComponentIndex,
+          taskIndex: taskIndex,
+          level: 0,
+          assignmentLevel: assignmentLevel,
+          active: false
+        }
+      ])
+
+    } else if (level === 4 && componentIndex != -1 && taskIndex != -1) {
+      const segmentData = rfisTasksData[projectModuleIndex].segmentsData[segIndex];
+      const componentData: any = segmentData.componentsData[componentIndex];
       const taskData: any = [componentData.tasksData[taskIndex]];
 
       setCurrentTasksData(taskData)
@@ -209,7 +248,8 @@ const RFIsStructureTaskListing = (props: any) => {
           name: rfisTasksData[projectModuleIndex].name,
           projectModuleIndex: projectModuleIndex,
           segIndex: segIndex,
-          subSegIndex: subSegIndex,
+          componentIndex: componentIndex,
+          subComponentIndex: subComponentIndex,
           taskIndex: taskIndex,
           level: 2,
           assignmentLevel: assignmentLevel,
@@ -219,7 +259,8 @@ const RFIsStructureTaskListing = (props: any) => {
           name: SEGMENT_TYPES_DISPLAY[segmentData.type] + ' ' + segmentData.name,
           projectModuleIndex: projectModuleIndex,
           segIndex: segIndex,
-          subSegIndex: subSegIndex,
+          componentIndex: componentIndex,
+          subComponentIndex: subComponentIndex,
           taskIndex: taskIndex,
           level: 2,
           assignmentLevel: assignmentLevel,
@@ -229,7 +270,8 @@ const RFIsStructureTaskListing = (props: any) => {
           name: componentData.name,
           projectModuleIndex: projectModuleIndex,
           segIndex: segIndex,
-          subSegIndex: subSegIndex,
+          componentIndex: componentIndex,
+          subComponentIndex: subComponentIndex,
           taskIndex: taskIndex,
           level: 3,
           assignmentLevel: assignmentLevel,
@@ -239,7 +281,8 @@ const RFIsStructureTaskListing = (props: any) => {
           name: taskData[0].displayName,
           projectModuleIndex: projectModuleIndex,
           segIndex: segIndex,
-          subSegIndex: subSegIndex,
+          componentIndex: componentIndex,
+          subComponentIndex: subComponentIndex,
           taskIndex: taskIndex,
           level: 0,
           assignmentLevel: assignmentLevel,
@@ -247,9 +290,9 @@ const RFIsStructureTaskListing = (props: any) => {
         }
       ])
 
-    } else if (level === 4 && subSegIndex != -1) {
+    } else if (level === 4 && componentIndex != -1) {
       const segmentData = rfisTasksData[projectModuleIndex].segmentsData[segIndex];
-      const componentData: any = segmentData.componentsData[subSegIndex];
+      const componentData: any = segmentData.componentsData[componentIndex];
 
       const tasksData = JSON.parse(JSON.stringify(componentData.tasksData));
 
@@ -264,7 +307,8 @@ const RFIsStructureTaskListing = (props: any) => {
           name: rfisTasksData[projectModuleIndex].name,
           projectModuleIndex: projectModuleIndex,
           segIndex: segIndex,
-          subSegIndex: subSegIndex,
+          componentIndex: componentIndex,
+          subComponentIndex: subComponentIndex,
           taskIndex: taskIndex,
           level: 2,
           assignmentLevel: assignmentLevel,
@@ -274,7 +318,8 @@ const RFIsStructureTaskListing = (props: any) => {
           name: SEGMENT_TYPES_DISPLAY[segmentData.type] + ' ' + segmentData.name,
           projectModuleIndex: projectModuleIndex,
           segIndex: segIndex,
-          subSegIndex: subSegIndex,
+          componentIndex: componentIndex,
+          subComponentIndex: subComponentIndex,
           taskIndex: taskIndex,
           level: 2,
           assignmentLevel: assignmentLevel,
@@ -284,7 +329,8 @@ const RFIsStructureTaskListing = (props: any) => {
           name: componentData.name,
           projectModuleIndex: projectModuleIndex,
           segIndex: segIndex,
-          subSegIndex: subSegIndex,
+          componentIndex: componentIndex,
+          subComponentIndex: subComponentIndex,
           taskIndex: taskIndex,
           level: 3,
           assignmentLevel: assignmentLevel,
@@ -294,7 +340,8 @@ const RFIsStructureTaskListing = (props: any) => {
           name: 'Tasks',
           projectModuleIndex: projectModuleIndex,
           segIndex: segIndex,
-          subSegIndex: subSegIndex,
+          componentIndex: componentIndex,
+          subComponentIndex: subComponentIndex,
           taskIndex: taskIndex,
           level: 0,
           assignmentLevel: assignmentLevel,
@@ -311,9 +358,88 @@ const RFIsStructureTaskListing = (props: any) => {
       setCurrentComponentsData(data.componentsData)
       const beadcrumb = breadcrumbData[1];
       beadcrumb.name = SEGMENT_TYPES_DISPLAY[data.type] + ' ' + data.name;
-    } else if (level === 4) {
       let uniqueTasksData: any = [];
-
+      if (data.tasksData && data.tasksData.length) {
+        data.tasksData.forEach((item: any) => {
+          const taskItem = uniqueTasksData.find((tsk: any) => tsk.name == item.name);
+          if (!taskItem) {
+            const itemJson = JSON.parse(JSON.stringify(item))
+            itemJson.workAssignmentIds = [item.workAssignmentId];
+            uniqueTasksData.push(itemJson);
+          } else {
+            taskItem.workAssignmentIds.push(item.workAssignmentId);
+          }
+        });
+  
+        setCurrentTasksData(uniqueTasksData)
+        const bcrubm = {
+          name: data.name,
+          projectModuleIndex: breadcrumbData[0].projectModuleIndex,
+          segIndex: breadcrumbData[1].segIndex,
+          componentIndex: 0,
+          subComponentIndex: 0,
+          taskIndex: 0,
+          level: 0,
+          assignmentLevel: 0,
+          active: false
+        }
+        breadcrumbData.push(bcrubm)
+        breadcrumbData.push({
+          name: 'Tasks',
+          projectModuleIndex: breadcrumbData[0].projectModuleIndex,
+          segIndex: breadcrumbData[1].segIndex,
+          componentIndex: 0,
+          subComponentIndex: 0,
+          taskIndex: 0,
+          level: 0,
+          assignmentLevel: 0,
+          active: false
+        })
+      }
+    } else if (level === 4) {
+      const bcrubm = {
+        name: data.name,
+        projectModuleIndex: breadcrumbData[0].projectModuleIndex,
+        segIndex: breadcrumbData[1].segIndex,
+        componentIndex: 0,
+        subComponentIndex: 0,
+        taskIndex: 0,
+        level: 0,
+        assignmentLevel: 0,
+        active: false
+      }
+      breadcrumbData.push(bcrubm)
+      let uniqueTasksData: any = [];
+      if (data.subComponentsData && data.subComponentsData.length) {
+        setCurrentSubComponentsData(data.subComponentsData)
+      } else {
+        data.tasksData.forEach((item: any) => {
+          const taskItem = uniqueTasksData.find((tsk: any) => tsk.name == item.name);
+          if (!taskItem) {
+            const itemJson = JSON.parse(JSON.stringify(item))
+            itemJson.workAssignmentIds = [item.workAssignmentId];
+            uniqueTasksData.push(itemJson);
+          } else {
+            taskItem.workAssignmentIds.push(item.workAssignmentId);
+          }
+        });
+  
+        setCurrentTasksData(uniqueTasksData)
+        
+        breadcrumbData.push({
+          name: 'Tasks',
+          projectModuleIndex: breadcrumbData[0].projectModuleIndex,
+          segIndex: breadcrumbData[1].segIndex,
+          componentIndex: 0,
+          subComponentIndex: 0,
+          taskIndex: 0,
+          level: 0,
+          assignmentLevel: 0,
+          active: false
+        })
+      }
+    } else if (level === 5) {
+      let uniqueTasksData: any = [];
       data.tasksData.forEach((item: any) => {
         const taskItem = uniqueTasksData.find((tsk: any) => tsk.name == item.name);
         if (!taskItem) {
@@ -326,11 +452,13 @@ const RFIsStructureTaskListing = (props: any) => {
       });
 
       setCurrentTasksData(uniqueTasksData)
+
       const bcrubm = {
         name: data.name,
         projectModuleIndex: breadcrumbData[0].projectModuleIndex,
         segIndex: breadcrumbData[1].segIndex,
-        subSegIndex: 0,
+        componentIndex: 0,
+        subComponentIndex: 0,
         taskIndex: 0,
         level: 0,
         assignmentLevel: 0,
@@ -341,7 +469,8 @@ const RFIsStructureTaskListing = (props: any) => {
         name: 'Tasks',
         projectModuleIndex: breadcrumbData[0].projectModuleIndex,
         segIndex: breadcrumbData[1].segIndex,
-        subSegIndex: 0,
+        componentIndex: 0,
+        subComponentIndex: 0,
         taskIndex: 0,
         level: 0,
         assignmentLevel: 0,
@@ -352,7 +481,7 @@ const RFIsStructureTaskListing = (props: any) => {
 
   const onSegmentTypeClick = (type: any) => {
     if (segmentsByGroupOnType) {
-      onClick(2, -1, breadcrumbData[0].projectModuleIndex, -1, -1, -1, type);
+      onClick(2, -1, breadcrumbData[0].projectModuleIndex, -1, -1, -1, -1, type);
     }
   }
 
@@ -513,10 +642,10 @@ const RFIsStructureTaskListing = (props: any) => {
               //       )
               //   )
               //     :
-              //     segItem.componentsData?.map((subSegItem: any, subSegIndex: number) => (
+              //     segItem.componentsData?.map((subSegItem: any, componentIndex: number) => (
               //       subSegItem.assignmentLevel === 3 ?
               //         (
-              //           <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(4, subSegItem.assignmentLevel, projModuleIndex, segIndex, subSegIndex)}>
+              //           <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(4, subSegItem.assignmentLevel, projModuleIndex, segIndex, componentIndex)}>
               //             <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
               //             <View style={styles.TaskDetails}>
               //               <Text style={styles.SubHeadingText}>Assigned:</Text>
@@ -530,7 +659,7 @@ const RFIsStructureTaskListing = (props: any) => {
               //         :
               //         subSegItem.tasksData?.map((taskItem: any, taskIndex: number) => (
               //           taskItem.assignmentLevel === 4 &&
-              //           <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(4, taskItem.assignmentLevel, projModuleIndex, segIndex, subSegIndex, taskIndex)}>
+              //           <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(4, taskItem.assignmentLevel, projModuleIndex, segIndex, componentIndex, taskIndex)}>
               //             <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
               //             <View style={styles.TaskDetails}>
               //               <Text style={styles.SubHeadingText}>Assigned:</Text>
@@ -551,7 +680,7 @@ const RFIsStructureTaskListing = (props: any) => {
           ))
         }
         {
-          currentLevel === 5 &&
+          currentLevel === 6 &&
           segmentsByGroupOnType && Object.keys(segmentsByGroupOnType).length && Object.keys(segmentsByGroupOnType).map((item) => (
             <TouchableOpacity style={[styles.StartWorkCard, styles.StartBorder]} onPress={() => onSegmentTypeClick(item)}>
               <View style={styles.leftContainer}>
@@ -579,10 +708,10 @@ const RFIsStructureTaskListing = (props: any) => {
           ))
         }
         {
-          currentLevel === 3 &&
-          currentComponentsData.filter((subSeg: any) => {
-            if (searchText && subSeg.name) {
-              return subSeg.name.toLowerCase().includes(searchText.toLowerCase())
+          currentLevel === 3 ?
+          currentComponentsData && currentComponentsData.length ? currentComponentsData.filter((comp: any) => {
+            if (searchText && comp.name) {
+              return comp.name.toLowerCase().includes(searchText.toLowerCase())
             } else {
               return true;
             }
@@ -593,9 +722,61 @@ const RFIsStructureTaskListing = (props: any) => {
               </View>
             </TouchableOpacity>
           ))
+          :
+          currentTasksData.filter((task: any) => {
+            if (searchText && task.displayName) {
+              return task.displayName.toLowerCase().includes(searchText.toLowerCase())
+            } else {
+              return true;
+            }
+          }).map((item: any, index) => (
+            <ExpanbableComponent
+              key={item.displayName}
+              item={item}
+              onClickFunction={() => {
+                updateLayout(index)
+              }}
+              onGenerateRFI={() => onGenerateRFI()}
+            />
+          ))
+          : null
         }
         {
-          currentLevel === 4 &&
+          currentLevel === 4 ?
+          currentSubComponentsData && currentSubComponentsData.length ? currentSubComponentsData.filter((subComp: any) => {
+            if (searchText && subComp.name) {
+              return subComp.name.toLowerCase().includes(searchText.toLowerCase())
+            } else {
+              return true;
+            }
+          }).map((item: any, index) => (
+            <TouchableOpacity style={[styles.StartWorkCard, styles.StartBorder]} onPress={() => onClickNested(5, item)}>
+              <View style={styles.leftContainer}>
+                <Text style={styles.HeadText}>{item.name}</Text>
+              </View>
+            </TouchableOpacity>
+          ))
+          :
+          currentTasksData.filter((task: any) => {
+            if (searchText && task.displayName) {
+              return task.displayName.toLowerCase().includes(searchText.toLowerCase())
+            } else {
+              return true;
+            }
+          }).map((item: any, index) => (
+            <ExpanbableComponent
+              key={item.displayName}
+              item={item}
+              onClickFunction={() => {
+                updateLayout(index)
+              }}
+              onGenerateRFI={() => onGenerateRFI()}
+            />
+          ))
+          : null
+        }
+        {
+          currentLevel === 5 ?
           currentTasksData.filter((task: any) => {
             if (searchText && task.displayName) {
               return task.displayName.toLowerCase().includes(searchText.toLowerCase())
@@ -619,7 +800,7 @@ const RFIsStructureTaskListing = (props: any) => {
               }}
               onGenerateRFI={() => onGenerateRFI()}
             />
-          ))
+          )) : null
         }
         {/* No Data Found */}
         {(!loading && !rfisTasksData.length) &&

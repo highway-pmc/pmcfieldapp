@@ -26,7 +26,7 @@ const AssignWork = ({route, navigation}: { route: any, navigation: any }) => {
   // const [usersToBeAssigned, setUsersToBeAssigned] = useState([])
   const [userData, setUserCheckboxes] = useState([]);
 
-  const { projectType } = route.params;
+  const { workType } = route.params;
 
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();
@@ -65,12 +65,12 @@ const AssignWork = ({route, navigation}: { route: any, navigation: any }) => {
   useEffect(() => {
     dispatch(getProjectModules({
       projectId: loggedInUser.projectId,
-      projectType: projectType
+      workType: workType
     }));
 
     dispatch(getUsersForWorkAssignment({
       projectId: loggedInUser.projectId,
-      projectType: projectType
+      workType: workType
     }));
   }, []);
   
@@ -98,6 +98,12 @@ const AssignWork = ({route, navigation}: { route: any, navigation: any }) => {
           user.isChecked = true;
         } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModule._id && wa.segmentId && wa.componentId && wa.taskId && wa.assignmentLevel === 4) != null) {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL4;
+          user.isChecked = true;
+        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModule._id && wa.segmentId && wa.componentId && wa.subComponentId && wa.taskId && wa.assignmentLevel === 5) != null) {
+          user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL5;
+          user.isChecked = true;
+        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModule._id && wa.segmentId && wa.taskId && wa.assignmentLevel === 5) != null) {
+          user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL5;
           user.isChecked = true;
         }
       });
@@ -140,7 +146,7 @@ const AssignWork = ({route, navigation}: { route: any, navigation: any }) => {
       dispatch(clearProjectModulesWorkAssignmentData());
       dispatch(getUsersForWorkAssignment({
         projectId: loggedInUser.projectId,
-        projectType: projectType
+        workType: workType
       }));
     }
   }, [projectModulesWorkAssigned, error]);
@@ -238,7 +244,7 @@ const AssignWork = ({route, navigation}: { route: any, navigation: any }) => {
                   projectModuleName: item.name,
                   type: item.type,
                   subType: item.subType,
-                  projectType: projectType
+                  workType: workType
                 })}>
                 <Image
                   style={styles.CloseIcon}
@@ -338,6 +344,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     paddingVertical: 10,
     padding: 15,
+    paddingBottom: 35
   },
   ErrorSectionStyle: {
     flexDirection: 'row',

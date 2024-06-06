@@ -7,6 +7,7 @@ import { actionGetRFIs, clearRFITasksEvent, generateRFIReport, updatedRFIs } fro
 import LoadingAnimation from '../Common/LoadingAnimation';
 import moment from 'moment';
 import Pdf from 'react-native-pdf';
+import { SwipeListView } from 'react-native-swipe-list-view';
 
 const RFIsRecents = (props: any) => {
   const navigation = useNavigation();
@@ -19,24 +20,7 @@ const RFIsRecents = (props: any) => {
   const [openPopup, setOpenPopup] = useState(false);
   const [selectedRFI, setSelectedRFI] = useState(null);
 
-  // const [rfiDate, setRFIDate] = useState('');
-  // const [hours, setHours] = useState([]);
-  // const [minutes, setMinutes] = useState([]);
-  // const [timeFormats, setTimeFormats] = useState([]);
-
-  // const [hour, setHour] = useState('12');
-  // const [minute, setMinute] = useState('00');
-  // const [timeFormat, setTimeFormat] = useState('AM');
-
-  // const [openHours, setOpenHours] = useState(false);
-  // const [openMinutes, setOpenMinutes] = useState(false);
-  // const [openTimeFormats, setOpenTimeFormats] = useState(false);
-
   const [openCalendar, setOpenCalendar] = useState(false);
-
-  // const [comments, setComments] = useState('');
-
-  // const { width, height } = Dimensions.get('window');
 
   const [pdfSource, setPdfSource] = useState(null);
 
@@ -46,9 +30,6 @@ const RFIsRecents = (props: any) => {
 
   useEffect(() => {
     if (focus == true) {
-      // getHours();
-      // getMins();
-      // getTimeFormats();
       setRfiData([]);
       getRFIsData();
       setPdfSource(null);
@@ -207,6 +188,115 @@ const RFIsRecents = (props: any) => {
   //     value: 'PM'
   //   }]);
   // }
+
+  // Function to render each list item 
+  const renderItem = (rowData: any) => (
+    <View>
+      {rowData.index === 0 &&  <View style={{ flexDirection: 'row' }}>
+      <View>
+        <Text>TM No.</Text>
+      </View>
+      <View>
+      <Text>Last 4 digits of Vehicle No.</Text>
+      </View>
+      <View>
+        <Text>Time of arrival</Text>
+      </View>
+      <View>
+        <Text>Grade of Concrete</Text>
+      </View>
+      <View>
+        <Text>Concrete temp in C</Text>
+      </View>
+      <View>
+        <Text>Slump value in mm</Text>
+      </View>
+      <View>
+        <Text>No of cubes casted</Text>
+      </View>
+      <View>
+        <Text>Concrete start time</Text>
+      </View>
+      <View>
+        <Text>Concrete poured in cum</Text>
+      </View>
+      <View>
+        <Text>Concrete finish time</Text>
+      </View>
+      </View>
+    }
+    <View style={{ flexDirection: 'row' }}>
+      <View style={{width: 80}}>
+        <Text>TM {rowData.index + 1}</Text>
+      </View>
+      <View style={{width: 80}}>
+        <Text>{rowData.item.vehicleNo}</Text>
+      </View>
+      <View style={{width: 80}}>
+        <Text>{rowData.item.timeOfArrival}</Text>
+      </View>
+      <View style={{width: 80}}>
+        <Text>{rowData.item.gradeOfConcrete}</Text>
+      </View>
+      <View style={{width: 80}}>
+          <Text>{rowData.item.concreteTemp}</Text>
+      </View>
+      <View style={{width: 80}}>
+          <Text>{rowData.item.slumpValue}</Text>
+      </View>
+      <View style={{width: 80}}>
+          <Text>{rowData.item.noOfCubesCasted}</Text>
+      </View>
+      <View style={{width: 80}}>
+        <Text>{rowData.item.concreteStartTime}</Text>
+      </View>
+      <View style={{width: 80}}>
+          <Text>{rowData.item.concretePoured}</Text>
+      </View>
+      <View style={{width: 80}}>
+        <Text>{rowData.item.concreteFinishTime}</Text>
+      </View>
+        
+      </View>
+    </View>
+  );
+
+const renderSectionHeader = (rowData: any) => {
+  return (
+    <View>
+      <View>
+        <Text>TM No.</Text>
+      </View>
+      <View>
+      <Text>Last 4 digits of Vehicle No.</Text>
+      </View>
+      <View>
+        <Text>Time of arrival</Text>
+      </View>
+      <View>
+        <Text>Grade of Concrete</Text>
+      </View>
+      <View>
+        <Text>Concrete temp in C</Text>
+      </View>
+      <View>
+        <Text>Slump value in mm</Text>
+      </View>
+      <View>
+        <Text>No of cubes casted</Text>
+      </View>
+      <View>
+        <Text>Concrete start time</Text>
+      </View>
+      <View>
+        <Text>Concrete poured in cum</Text>
+      </View>
+      <View>
+        <Text>Concrete finish time</Text>
+      </View>
+  </View>
+  )
+}
 
   const taskForm = (selectedRFI: any) => {
     switch (selectedRFI?.metaData?.taskName) {
@@ -381,6 +471,23 @@ const RFIsRecents = (props: any) => {
             <Text>{selectedRFI?.metaData.noLBendBottomOfTheCageChecked}</Text>
           </View>
         </View>
+      case TASK_TYPES.CONCRETING:
+        return <View>
+          <ScrollView id='scrollViewConcrete' horizontal={true}>
+          <View style={{ flexDirection: 'column', padding: 10, borderBlockColor: '#cccccc', borderStyle: 'solid', borderWidth: 1}}>
+            {
+              <SwipeListView 
+                data={selectedRFI?.metaData.concreteData} 
+                renderItem={renderItem}
+                renderSectionHeader={renderSectionHeader}
+            /> 
+            
+            }
+           
+            
+          </View>
+          </ScrollView>
+        </View>
       default: return <View>
         <Text>TODO</Text>
       </View>
@@ -405,8 +512,25 @@ const RFIsRecents = (props: any) => {
                     <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
                     <Text style={styles.subHead}>{item.workAssignmentData.segmentId.name}</Text>
                     <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
-                    <Text style={styles.subHead}>{item.workAssignmentData.componentId.name}</Text>
-                    <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
+                    {
+                    item.workAssignmentData.componentId ? (
+                      <View>
+                        <Text style={styles.subHead}>{item.workAssignmentData.componentId?.name}</Text>
+                        <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
+                      </View>
+                    )
+                    : null
+                  }
+
+                  {
+                    item.workAssignmentData.subComponentId ? (
+                      <View>
+                        <Text style={styles.subHead}>{item.workAssignmentData.subComponentId?.name}</Text>
+                        <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
+                      </View>
+                    )
+                    : null
+                  }
                     <Text style={[styles.subHead, styles.taskCount]}>{item.workAssignmentData.taskId?.displayName}</Text>
                   </View>
                   <Text style={styles.dateText}>Generated Date: {moment(new Date(item.rfiDateTime)).format('DD-MM-YYYY')}</Text>
@@ -462,10 +586,28 @@ const RFIsRecents = (props: any) => {
                 <View style={styles.taskCategory}>
                   <Text style={styles.subHead}>{selectedRFI.workAssignmentData.projectModule.name}</Text>
                   <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
-                  <Text style={styles.subHead}>{selectedRFI.workAssignmentData.segmentId.name}</Text>
+                  <Text style={styles.subHead}>{selectedRFI.workAssignmentData.segmentId?.name}</Text>
                   <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
-                  <Text style={styles.subHead}>{selectedRFI.workAssignmentData.componentId.name}</Text>
-                  <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
+                  {
+                    selectedRFI.workAssignmentData.componentId ? (
+                      <View>
+                        <Text style={styles.subHead}>{selectedRFI.workAssignmentData.componentId?.name}</Text>
+                        <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
+                      </View>
+                    )
+                    : null
+                  }
+
+                  {
+                    selectedRFI.workAssignmentData.subComponentId ? (
+                      <View>
+                        <Text style={styles.subHead}>{selectedRFI.workAssignmentData.subComponentId?.name}</Text>
+                        <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
+                      </View>
+                    )
+                    : null
+                  }
+                  
                   <Text style={[styles.subHead, styles.taskCount]}>{selectedRFI.workAssignmentData.taskId?.displayName}</Text>
                 </View>
                 <Text style={styles.dateText}>Generated Date: {moment(new Date(selectedRFI.rfiDateTime)).format('DD-MM-YYYY')}</Text>
@@ -480,117 +622,6 @@ const RFIsRecents = (props: any) => {
                           {taskForm(selectedRFI)}
                         </View>
                       }
-
-                      {/* {
-                        props.rfiType !== RFIs_TYPE.APPROVED &&
-                        <View>
-                          <View style={{ flexDirection: 'column' }}>
-                            <Text style={styles.GenerateRFIFieldLabel}>Date</Text>
-
-                            <View style={{ flexDirection: 'row' }}>
-                              <TextInput
-                                style={styles.inputStyle}
-                                placeholder=""
-                                autoCapitalize="none"
-                                keyboardType="email-address"
-                                returnKeyType="next"
-                                underlineColorAndroid="#f000"
-                                blurOnSubmit={false}
-                                value={rfiDate ? moment(new Date(rfiDate)).format('DD-MM-YYYY') : ''}
-                                editable={false}
-                              />
-                              <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
-                                <Text style={styles.assignTagButtonText}>Icon</Text>
-                              </TouchableOpacity>
-                            </View>
-                          </View>
-
-                          {openCalendar && (
-
-                            <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
-                              <CalendarPicker width={width - 40}
-                                initialDate={rfiDate ? new Date(rfiDate) : new Date()}
-                                onDateChange={(date) => {
-                                  setRFIDate(date.format("YYYY-MM-DD"));
-                                  openCloseCalendar()
-                                }}
-                              />
-                            </View>
-                          )}
-
-                          <View style={{ flexDirection: 'column', height: 80, paddingTop: 15, zIndex: 5, marginBottom: 140 }}>
-                            <Text style={styles.GenerateRFIFieldLabel}>Time</Text>
-                            <View style={{ flexDirection: 'row', gap: 20 }}>
-                              <View style={{ width: 80, height: 90 }}>
-                                <DropDownPicker onPress={() => {
-                                  setOpenMinutes(false);
-                                  setOpenTimeFormats(false);
-                                }}
-                                  dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
-                                  maxHeight={75}
-                                  zIndex={1000}
-                                  listMode='MODAL'
-                                  open={openHours}
-                                  value={hour}
-                                  items={hours}
-                                  setOpen={setOpenHours}
-                                  setValue={setHour}
-                                />
-                              </View>
-
-                              <View style={{ width: 80, height: 90 }}>
-                                <DropDownPicker onPress={() => {
-                                  setOpenHours(false);
-                                  setOpenTimeFormats(false);
-                                }}
-                                  dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
-                                  maxHeight={75}
-                                  zIndex={1000}
-                                  listMode='MODAL'
-                                  open={openMinutes}
-                                  value={minute}
-                                  items={minutes}
-                                  setOpen={setOpenMinutes}
-                                  setValue={setMinute}
-                                />
-                              </View>
-                              <View style={{ width: 80, height: 90 }}>
-                                <DropDownPicker onPress={() => {
-                                  setOpenHours(false);
-                                  setOpenMinutes(false);
-                                }}
-                                  dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
-                                  maxHeight={75}
-                                  zIndex={1000}
-                                  listMode='SCROLLVIEW'
-                                  open={openTimeFormats}
-                                  value={timeFormat}
-                                  items={timeFormats}
-                                  setOpen={setOpenTimeFormats}
-                                  setValue={setTimeFormat}
-                                />
-                              </View>
-                            </View>
-
-                            <View style={{ flexDirection: 'column', height: 65 }}>
-                              <Text style={styles.GenerateRFIFieldLabel}>Comments</Text>
-                              <TextInput
-                                style={styles.inputStyle}
-                                placeholder="Comments"
-                                autoCapitalize="none"
-                                keyboardType="email-address"
-                                returnKeyType="next"
-                                underlineColorAndroid="#f000"
-                                blurOnSubmit={false}
-                                value={comments}
-                                onChangeText={(text) => {
-                                  setComments(text);
-                                }}
-                              />
-                            </View>
-                          </View>
-                        </View>
-                      } */}
                     </SafeAreaView>
                   </Fragment>
                 </ScrollView>

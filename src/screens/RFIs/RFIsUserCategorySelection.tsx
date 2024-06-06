@@ -1,7 +1,7 @@
 import { View, Text, Button, NativeEventEmitter, Alert, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
-import { HeaderItems, RFIs_TYPE, USER_CATEGORY_DISPLAY, WORK_TYPE } from "../../constants/constants"
+import { HeaderItems, PROJECT_TYPE, RFIs_TYPE, USER_CATEGORY_DISPLAY, WORK_TYPE } from "../../constants/constants"
 import RFIsStructureTaskListing from './RFIsStructureTaskListing';
 
 const RFIsUserCategorySelection = ({ route, navigation }: { route: any, navigation: any }) => {
@@ -75,9 +75,9 @@ const RFIsUserCategorySelection = ({ route, navigation }: { route: any, navigati
       <View style={styles.tabContent}>
         {activeTab === USER_CATEGORY_DISPLAY.STRUCTURE &&
           // <Text>STRUCTURE WORK</Text>
-          <RFIsStructureTaskListing rfiType={rfiType}></RFIsStructureTaskListing>
+          <RFIsStructureTaskListing rfiType={rfiType} projectType={PROJECT_TYPE.STRUCTURE_WORK}></RFIsStructureTaskListing>
         }
-        {activeTab === USER_CATEGORY_DISPLAY.HIGHWAY && <Text>TBD</Text>}
+        {activeTab === USER_CATEGORY_DISPLAY.HIGHWAY && <RFIsStructureTaskListing rfiType={rfiType} projectType={PROJECT_TYPE.HIGHWAY_WORK}></RFIsStructureTaskListing>}
         {activeTab === USER_CATEGORY_DISPLAY.OTHER && <Text>TBD</Text>}
       </View>
 

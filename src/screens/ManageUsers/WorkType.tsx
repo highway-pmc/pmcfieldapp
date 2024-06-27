@@ -1,14 +1,16 @@
-import { View, Text, NativeEventEmitter, StyleSheet, ScrollView, TouchableOpacity  } from 'react-native'
-import React, {useEffect, useState} from 'react'
+import { View, Text, NativeEventEmitter, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { useIsFocused } from '@react-navigation/native';
-import { HeaderItems, PROJECT_TYPE, ROLES } from "../../constants/constants"
+import { HeaderItems, PROJECT_TYPE, ROLES, WORK_TYPE } from "../../constants/constants"
 import { useSelector } from 'react-redux';
 
-const WorkType = ({navigation}: {navigation: any}) => {
+const WorkType = ({ navigation }: { navigation: any }) => {
   const [projectHead, setProjectHead] = useState(false);
   const [roles, setRoles] = useState([]);
 
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
+
+  const [activeTab, setActiveTab] = useState(WORK_TYPE.SITE_WORK);
 
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();
@@ -18,7 +20,7 @@ const WorkType = ({navigation}: {navigation: any}) => {
   useEffect(() => {
     setRoles([]);
     let rolesArr: any = [];
-    if(loggedInUser.roles) {
+    if (loggedInUser.roles) {
       //loggedInUser.roles = 'structure-head,highway-head';
       if (loggedInUser.roles.split(',').find((role: any) => role === ROLES.PROJECT_HEAD)) {
         rolesArr = [
@@ -66,7 +68,7 @@ const WorkType = ({navigation}: {navigation: any}) => {
         });
       }
     }
-    
+
     if (rolesArr.length === 1) {
       onPressWorkType(rolesArr[0].workType);
       return;
@@ -80,16 +82,48 @@ const WorkType = ({navigation}: {navigation: any}) => {
     })
   }
 
+  const switchTab = (tabName: any) => {
+    setActiveTab(tabName);
+  };
+
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.rfiTabBar}>
-          {
-            roles.map((role: any) => (
-            <TouchableOpacity style={[styles.rfiTab, {backgroundColor: role.color}]} onPress={() => onPressWorkType(role.workType)}>
-              <Text style={styles.tabText}>{role.title}</Text>
-            </TouchableOpacity>
-            ))
+      <View>
+        <View style={styles.tabBar}>
+          <TouchableOpacity
+            style={[
+              styles.tabItem,
+              activeTab === WORK_TYPE.SITE_WORK && styles.activeTab,
+            ]}
+            onPress={() => switchTab(WORK_TYPE.SITE_WORK)}
+          >
+            <Text style={styles.activeTabText}>{WORK_TYPE.SITE_WORK}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.tabItem,
+              activeTab === WORK_TYPE.LAB_WORK && styles.activeTab,
+            ]}
+            onPress={() => switchTab(WORK_TYPE.LAB_WORK)}
+          >
+            <Text style={styles.activeTabText}>{WORK_TYPE.LAB_WORK}</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.tabContent}>
+          {activeTab === WORK_TYPE.SITE_WORK &&
+            <View style={styles.rfiTabBar}>
+              {
+                roles.map((role: any) => (
+                  <TouchableOpacity style={[styles.rfiTab, { backgroundColor: role.color }]} onPress={() => onPressWorkType(role.workType)}>
+                    <Text style={styles.tabText}>{role.title}</Text>
+                  </TouchableOpacity>
+                ))
+              }
+            </View>
           }
+          {activeTab === WORK_TYPE.LAB_WORK && <Text>TBD</Text>}
+        </View>
+
       </View>
     </ScrollView>
   )
@@ -98,7 +132,6 @@ const WorkType = ({navigation}: {navigation: any}) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#F2F2F2',
-    padding: 20,
   },
   rfiTabBar: {
     flexDirection: 'row',
@@ -132,6 +165,35 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '400',
     color: '#fff'
+  },
+  tabBar: {
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  tabItem: {
+    flex: 1,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  activeTab: {
+    borderBottomWidth: 3,
+    borderStyle: 'solid',
+    borderColor: '#1C58C0'
+  },
+  activeTabText: {
+    color: '#000',
+    fontSize: 16,
+    fontWeight: '500'
+  },
+  tabContent: {
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    borderWidth: 1,
+    height: '100%'
   },
 });
 

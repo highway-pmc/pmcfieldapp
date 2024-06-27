@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Main from './Main';
 import CustomDrawer from './CustomDrawer';
-import { ChangePasswordStackNavigator, ManageUsersStackNavigator, MyTaskStackNavigator, MyTestStackNavigator, MyWorkPHStackNavigator, MyWorkStackNavigator, ProfileStackNavigator, ProgressStackNavigator, ProjectInfoStackNavigator, RFIsStackNavigator, ReportsStackNavigator } from './StackNavigator';
+import { ChangePasswordStackNavigator, ManageUsersStackNavigator, MyTaskStackNavigator, MyQualityWorksStackNavigator, MyWorkPHStackNavigator, MyWorkStackNavigator, ProfileStackNavigator, ProgressStackNavigator, ProjectInfoStackNavigator, RFIsStackNavigator, ReportsStackNavigator } from './StackNavigator';
 import ForgotPasswordStep3 from '../../screens/ForgotPassword/Step3';
 import { useSelector } from 'react-redux';
 import { ROLES } from '../../constants/constants';
@@ -69,8 +69,8 @@ const DrawerNavigator = () => {
         }}
       />
       <Drawer.Screen
-        name="MyTest"
-        component={MyTestStackNavigator}
+        name="MyQualityWorks"
+        component={MyQualityWorksStackNavigator}
         options={{
           headerShown: false
         }}

@@ -1,12 +1,12 @@
 import { View, Text, Button, NativeEventEmitter, Alert, StyleSheet, ScrollView  } from 'react-native'
 import React, {useEffect, useState} from 'react'
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
-import { HeaderItems } from "../../constants/constants"
+import { HeaderItems } from "../../../constants/constants"
 
-const MyTest = ({ navigation }) => {
+const MyQualityWorks = ({ navigation }) => {
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();
-    eventEmitter.emit('headerEvent', HeaderItems.myTest);
+    eventEmitter.emit('headerEvent', HeaderItems.myQualityWorks);
   }
 
   return (
@@ -26,4 +26,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MyTest
+export default MyQualityWorks

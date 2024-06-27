@@ -14,7 +14,6 @@ import MyTask from "../../screens/MyTask/MyTask";
 import AssignWork from "../../screens/ManageUsers/AssignWork";
 import SegmentsList from "../../screens/ManageUsers/SegmentsList";
 import ProjectInfo from "../../screens/ProjectInfo/ProjectInfo";
-import MyTest from "../../screens/MyTest/MyTest";
 import ChangePassword from "../../screens/ChangePassword/ChangePassword";
 import ComponentsList from "../../screens/ManageUsers/ComponentsList";
 import WorkType from "../../screens/ManageUsers/WorkType";
@@ -28,6 +27,7 @@ import MyWorkType from "../../screens/MyWork/MyWorkType";
 import RFIsDashboard from "../../screens/RFIs/RFIsDashboard";
 import RFIsUserCategorySelection from "../../screens/RFIs/RFIsUserCategorySelection";
 import SubComponentsList from "../../screens/ManageUsers/SubComponentsList";
+import MyQualityWorks from "../../screens/QualityWorks/MyQualityWorks/MyQualityWorks";
 
 const Stack = createStackNavigator();
 
@@ -58,10 +58,10 @@ const MyTaskStackNavigator = () => {
   );
 };
 
-const MyTestStackNavigator = () => {
+const MyQualityWorksStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
-      <Stack.Screen name="MyTest" component={MyTest} options={{headerShown: false}} />
+      <Stack.Screen name="MyQualityWorks" component={MyQualityWorks} options={{headerShown: false}} />
     </Stack.Navigator>
   );
 };
@@ -150,5 +150,5 @@ const ChangePasswordStackNavigator = () => {
   );
 };
 
-export { MyWorkStackNavigator, MyWorkPHStackNavigator, MyTaskStackNavigator, MyTestStackNavigator, ManageUsersStackNavigator, NotificationsStackNavigator,
+export { MyWorkStackNavigator, MyWorkPHStackNavigator, MyTaskStackNavigator, MyQualityWorksStackNavigator, ManageUsersStackNavigator, NotificationsStackNavigator,
   ProgressStackNavigator, ReportsStackNavigator, RFIsStackNavigator, ProfileStackNavigator, ProjectInfoStackNavigator, ChangePasswordStackNavigator };

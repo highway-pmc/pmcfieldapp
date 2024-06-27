@@ -30,8 +30,13 @@ export const HeaderItems = {
     rfisApprovedTaskListing: { showBack: true, title: 'Approved RFIs' },
     rfisRejectedTaskListing: { showBack: true, title: 'Rejected/Cancelled RFIs' },
     projectInfo: { showBack: false, title: 'Project Info' },
-    myTest: { showBack: false, title: 'My Test' },
-    profile: { showBack: false, title: 'Edit Profile' }
+    myQualityWorks: { showBack: false, title: 'Quality Works' },
+    profile: { showBack: false, title: 'Edit Profile' },
+
+    assignTestClassification: { showBack: true, title: 'Assign Test Classification' },
+    assignTestWorkCategory: { showBack: true, title: 'Assign Test Work Category' },
+    assignTestMaterials: { showBack: true, title: 'Assign Test Materials' },
+    assignTestTypes: { showBack: true, title: 'Assign Test Types' },
 };
 
 export const UserRoles = {
@@ -71,9 +76,9 @@ export const Dashboard_MENU = [
         id: "2",
         icon: require("./../images/dashboard/my-work-icon.png"),
         iconMenu: require("./../images/menu/mywork-icon.png"),
-        title: "My Test",
-        subTitle: "My Test",
-        route: 'MyTest',
+        title: "Quality Work",
+        subTitle: "Quality Work",
+        route: 'MyQualityWorks',
         permissions: ["project-head", "quality-head"],
         categories: ["quality-work"]
     },

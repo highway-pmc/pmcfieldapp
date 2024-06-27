@@ -36,6 +36,16 @@ const workAssignmentState = {
     loadingUsers: false
 }
 
+const testAssignmentState = {
+    loading: false,
+    testClassifications: null,
+    testWorkCategory: null,
+    testMaterials: null,
+    testTypes: null,
+    error: null,
+    loadingUsers: false
+}
+
 const myWorksState = {
     loading: false,
     myWorks: null,
@@ -843,6 +853,289 @@ const WorkAssignmentReducer = (state = workAssignmentState, action) => {
     }
 }
 
+const TestAssignmentReducer = (state = testAssignmentState, action) => {
+    switch (action.type) {
+        case "GET_TEST_CLASSIFICATION_REQUEST":
+            return {
+                ...state,
+                testClassifications: [],
+                error: null,
+                loading: true,
+            };
+        case "GET_TEST_CLASSIFICATION_SUCCESS":
+            return {
+                ...state,
+                testClassifications: action.response,
+                error: null,
+                loading: false,
+            };
+        case "GET_TEST_CLASSIFICATION_FAILURE":
+            return {
+                ...state,
+                testClassifications: null,
+                error: action.error,
+                loading: false,
+            };
+        case "GET_TEST_WORK_CATEGORY_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loadingTestWorkCategory: true,
+                loading: true,
+            };
+        case "GET_TEST_WORK_CATEGORY_SUCCESS":
+            return {
+                ...state,
+                testWorkCategory: action.response,
+                error: null,
+                loadingTestWorkCategory: false,
+                loading: false,
+            };
+        case "GET_TEST_WORK_CATEGORY_FAILURE":
+            return {
+                ...state,
+                testWorkCategory: null,
+                error: action.error,
+                loading: false,
+                loadingTestWorkCategory: false
+            };
+        case "GET_TEST_MATERIALS_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loadingTestMaterials: true,
+                loading: true,
+            };
+        case "GET_TEST_MATERIALS_SUCCESS":
+            return {
+                ...state,
+                testMaterials: action.response,
+                error: null,
+                loadingTestMaterials: false,
+                loading: false,
+            };
+        case "GET_TEST_MATERIALS_FAILURE":
+            return {
+                ...state,
+                testMaterials: null,
+                error: action.error,
+                loadingTestMaterials: false,
+                loading: false,
+            };
+        case "GET_TEST_TYPE_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loadingTestTypes: true,
+                loading: true,
+            };
+        case "GET_TEST_TYPE_SUCCESS":
+            return {
+                ...state,
+                testTypes: action.response,
+                error: null,
+                loadingTestTypes: false,
+                loading: false,
+            };
+        case "GET_TEST_TYPE_FAILURE":
+            return {
+                ...state,
+                testTypes: null,
+                error: action.error,
+                loadingTestTypes: false,
+                loading: false,
+            };
+        case "GET_TEST_CLASSIFICATION_NEXT_LEVEL_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loadingTask: true,
+                loading: true,
+            };
+        case "GET_TEST_CLASSIFICATION_NEXT_LEVEL_SUCCESS":
+            return {
+                ...state,
+                nextLevel: action.response,
+                error: null,
+                loadingTask: false,
+                loading: false,
+            };
+        case "GET_TEST_CLASSIFICATION_NEXT_LEVEL_FAILURE":
+            return {
+                ...state,
+                nextLevel: null,
+                error: action.error,
+                loadingTask: false,
+                loading: false,
+            };
+        case "GET_USERS_TO_TEST_ASSIGNMENT_REQUEST":
+            return {
+                ...state,
+                users: [],
+                error: null,
+                loading: true,
+                loadingUsers: true,
+            };
+        case "GET_USERS_TO_TEST_ASSIGNMENT_SUCCESS":
+            return {
+                ...state,
+                users: action.response,
+                error: null,
+                loading: false,
+                loadingUsers: false,
+            };
+        case "GET_USERS_TO_TEST_ASSIGNMENT_FAILURE":
+            return {
+                ...state,
+                users: null,
+                error: action.error,
+                loading: false,
+                loadingUsers: false,
+            };
+        /*case "GET_USERS_MY_WORK_REQUEST":
+            return {
+                ...state,
+                usersData: [],
+                error: null,
+                loading: true,
+                loadingUsers: true,
+            };
+        case "GET_USERS_MY_WORK_SUCCESS":
+            return {
+                ...state,
+                usersData: action.response,
+                error: null,
+                loading: false,
+                loadingUsers: false,
+            };
+        case "GET_USERS_MY_WORK_FAILURE":
+            return {
+                ...state,
+                usersData: null,
+                error: action.error,
+                loading: false,
+                loadingUsers: false,
+            };*/
+        case "TEST_CLASSIFICATION_TEST_ASSIGNMENT_USERS_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "TEST_CLASSIFICATION_TEST_ASSIGNMENT_USERS_SUCCESS":
+            return {
+                ...state,
+                testClassificationsTestAssigned: action.response,
+                error: null,
+                loading: false,
+            };
+        case "TEST_CLASSIFICATION_TEST_ASSIGNMENT_USERS_FAILURE":
+            return {
+                ...state,
+                testClassificationsTestAssigned: null,
+                error: action.error,
+                loading: false,
+            };
+        case "TEST_WORK_CATEGORY_TEST_ASSIGNMENT_USERS_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "TEST_WORK_CATEGORY_TEST_ASSIGNMENT_USERS_SUCCESS":
+            return {
+                ...state,
+                testWorkCategoryTestAssigned: action.response,
+                error: null,
+                loading: false,
+            };
+        case "TEST_WORK_CATEGORY_TEST_ASSIGNMENT_USERS_FAILURE":
+            return {
+                ...state,
+                testWorkCategoryTestAssigned: null,
+                error: action.error,
+                loading: false,
+            };
+        case "TEST_MATERIALS_TEST_ASSIGNMENT_USERS_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "TEST_MATERIALS_TEST_ASSIGNMENT_USERS_SUCCESS":
+            return {
+                ...state,
+                testMaterialsTestAssigned: action.response,
+                error: null,
+                loading: false,
+            };
+        case "TEST_MATERIALS_TEST_ASSIGNMENT_USERS_FAILURE":
+            return {
+                ...state,
+                testMaterialsTestAssigned: null,
+                error: action.error,
+                loading: false,
+            };
+        case "TEST_TYPES_TEST_ASSIGNMENT_USERS_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "TEST_TYPES_TEST_ASSIGNMENT_USERS_SUCCESS":
+            return {
+                ...state,
+                testTypesAssigned: action.response,
+                error: null,
+                loading: false,
+            };
+        case "TEST_TYPES_TEST_ASSIGNMENT_USERS_FAILURE":
+            return {
+                ...state,
+                testTypesAssigned: null,
+                error: action.error,
+                loading: false,
+            };
+        case "CLEAR_TEST_CLASSIFICATION_TEST_ASSIGNMENT_USERS":
+            return {
+                ...state,
+                testClassificationsTestAssigned: null,
+                testWorkCategoryTestAssigned: null,
+                testMaterialsTestAssigned: null,
+                testTypesAssigned: null,
+                error: null,
+                loading: false,
+            };
+        case "CLEAR_TEST_ASSIGNMENT":
+            return {
+                ...state,
+                testClassifications: null,
+                testWorkCategory: null,
+                testMaterials: null,
+                testTypes: null,
+                testClassificationsTestAssigned: null,
+                testWorkCategoryTestAssigned: null,
+                testMaterialsTestAssigned: null,
+                testTypesAssigned: null,
+                users: null,
+                error: null,
+                loading: false,
+                loadingTestWorkCategory: false,
+                loadingTestMaterials: false,
+                loadingTestTypes: false,
+            };
+        case "CLEAR_NEXT_LEVEL":
+            return {
+                ...state,
+                nextLevel: null,
+                loading: false,
+                loadingTestTypes: false,
+            };
+        default:
+            return state;
+    }
+}
+
 const MyWorkReducer = (state = myWorksState, action) => {
     switch (action.type) {
         case "GET_MY_WORKS_REQUEST":
@@ -1119,6 +1412,7 @@ export const combinedReducers = combineReducers({
     UserAssignment: UserAssignmentReducer,
     ProjectInfo: ProjectInfoReducer,
     WorkAssignment: WorkAssignmentReducer,
+    TestAssignment: TestAssignmentReducer,
     MyWorks: MyWorkReducer,
     RFIs: RFIsReducer,
     Reports: RFIsReportsReducer

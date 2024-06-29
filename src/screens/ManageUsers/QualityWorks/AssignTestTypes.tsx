@@ -1,20 +1,20 @@
 import { View, Text, TouchableOpacity, NativeEventEmitter, StyleSheet, Image, Modal, Alert, TextInput } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useIsFocused } from '@react-navigation/native';
-import { HeaderItems, WORK_ASSIGNMENT_LEVEL } from '../../../constants/constants';
+import { HeaderItems, TEST_ASSIGNMENT_LEVEL } from '../../../constants/constants';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearProjectModulesWorkAssignmentData, getProjectModuleComponents, getProjectModuleComponentTasks, getUsersForWorkAssignment, componentWorkAssignToUsers, taskWorkAssignToUsers, getProjectModuleSegmentTasks, getProjectModuleSubComponentTasks } from './actions';
+import { clearTestClassificationsAssignmentData, getTestType, getUsersForTestAssignment, testTypesAssignToUsers } from './actions';
 import { ScrollView } from 'react-native-gesture-handler';
 import CheckBox from '@react-native-community/checkbox';
 import LoadingAnimation from '../../Common/LoadingAnimation';
 
 const AssignTestTypes = ({ route, navigation }: { route: any, navigation: any }) => {
-  const { projectModuleId, projectModuleName, type, subType, segmentId, segmentName, componentId, componentName, subComponentId, subComponentName, workType } = route.params;
+  const { testClassificationId, testClassificationName, testWorkCategoryId, testWorkCategoryName, testMaterialId, testMaterialName, workType } = route.params;
 
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const { tasks, users, loadingUsers, loadingTask, taskWorkAssigned, loading, error } = useSelector((state: any) => state.WorkAssignment);
-  const [tasksData, setTasksData] = useState([]);
-  const [selectedTask, setSelectedTask] = useState({ isChecked: false, _id: "", name: "", displayName: "" });
+  const { testTypes, users, loadingUsers, loadingTestTypes, testTypesAssigned, loading, error } = useSelector((state: any) => state.TestAssignment);
+  const [testTypesData, setTestTypesData] = useState([]);
+  const [selectedTestType, setSelectedTestType] = useState({ isChecked: false, _id: "", name: "", displayName: "" });
   const [userData, setUserCheckboxes] = useState([]);
   const [isAssignPopOpen, openAssignPopup] = useState(false);
   const [searchText, setSearchText] = useState('');
@@ -27,11 +27,11 @@ const AssignTestTypes = ({ route, navigation }: { route: any, navigation: any })
   }
 
   useEffect(() => {
-    if (tasks) {
-      tasks.forEach((pModule: any) => {
-        pModule.isChecked = false
+    if (testTypes) {
+      testTypes.forEach((tType: any) => {
+        tType.isChecked = false
       });
-      setTasksData(tasks);
+      setTestTypesData(testTypes);
     }
 
     if (users) {
@@ -40,70 +40,46 @@ const AssignTestTypes = ({ route, navigation }: { route: any, navigation: any })
       });
       setUserCheckboxes(users);
     }
-  }, [tasks, users, error]);
+  }, [testTypes, users, error]);
 
   useEffect(() => {
-    if (subComponentId) {
-      dispatch(getProjectModuleSubComponentTasks({
-        projectId: loggedInUser.projectId,
-        projectModuleId: projectModuleId,
-        segmentId: segmentId,
-        componentId: componentId,
-        subComponentId: subComponentId,
-      }));
-    }
-    else if (componentId) {
-      dispatch(getProjectModuleComponentTasks({
-        projectId: loggedInUser.projectId,
-        projectModuleId: projectModuleId,
-        segmentId: segmentId,
-        componentId: componentId,
-      }));
-    } else {
-      dispatch(getProjectModuleSegmentTasks({
-        projectId: loggedInUser.projectId,
-        projectModuleId: projectModuleId,
-        segmentId: segmentId,
-      }));
-    }
+    dispatch(getTestType({
+      projectId: loggedInUser.projectId,
+      testClassificationId: testClassificationId,
+      testWorkCategoryId: testWorkCategoryId,
+      testMaterialId: testMaterialId,
+    }));
 
-    dispatch(getUsersForWorkAssignment({
+    dispatch(getUsersForTestAssignment({
       projectId: loggedInUser.projectId,
       workType: workType
     }));
   }, []);
 
   const handleRadioChange = (index: any) => {
-    const task: any = tasksData[index];
+    const testType: any = testTypesData[index];
 
-    task.isChecked = !task.isChecked
-    setSelectedTask(task);
+    testType.isChecked = !testType.isChecked
+    setSelectedTestType(testType);
 
     const updatedCheckboxes: any = [...userData];
 
-    if (task.isChecked) {
+    if (testType.isChecked) {
       updatedCheckboxes.forEach((user: any) => {
         user.isChecked = false;
         delete user.assignmentLevel;
-        if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.assignmentLevel === 1) != null) {
-          user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL1;
+        if (user.testAssignment?.find((wa: any) => wa.testClassification?.id === testClassificationId && wa.assignmentLevel === 1) != null) {
+          user.assignmentLevel = TEST_ASSIGNMENT_LEVEL.LEVEL1;
           user.isChecked = true;
-        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.assignmentLevel === 2)) {
-          user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL2;
+        } else if (user.testAssignment?.find((wa: any) => wa.testClassification?.id === testClassificationId && wa.testWorkCategoryId === testWorkCategoryId && wa.assignmentLevel === 2)) {
+          user.assignmentLevel = TEST_ASSIGNMENT_LEVEL.LEVEL2;
           user.isChecked = true;
-        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.componentId === componentId && wa.assignmentLevel === 3)) {
-          user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL3;
-          user.isChecked = true;
-        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.componentId === componentId && wa.subComponentId === subComponentId && wa.assignmentLevel === 4)) {
-          user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL4;
+        } else if (user.testAssignment?.find((wa: any) => wa.testClassification?.id === testClassificationId && wa.testWorkCategoryId === testWorkCategoryId && wa.testMaterialId === testMaterialId && wa.assignmentLevel === 3)) {
+          user.assignmentLevel = TEST_ASSIGNMENT_LEVEL.LEVEL3;
           user.isChecked = true;
         } else {
-          const workAssignment = user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.componentId === componentId && wa.subComponentId === subComponentId && wa.taskId === task._id && wa.assignmentLevel === 5);
-          if (workAssignment) {
-            user.isChecked = true;
-          } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.componentId === componentId && subComponentId == null && wa.taskId === task._id && wa.assignmentLevel === 5)) {
-            user.isChecked = true;
-          } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId && componentId== null && subComponentId == null && wa.taskId === task._id && wa.assignmentLevel === 5) != null) {
+          const testAssignment = user.testAssignment?.find((wa: any) => wa.testClassification?.id === testClassificationId && wa.testWorkCategoryId === testWorkCategoryId && wa.testMaterialId === testMaterialId && wa.testTypeId === testType._id && wa.assignmentLevel === 4);
+          if (testAssignment) {
             user.isChecked = true;
           }
         }
@@ -118,22 +94,22 @@ const AssignTestTypes = ({ route, navigation }: { route: any, navigation: any })
     const updatedCheckboxes: any = [...userData];
     const selectedUser: any = updatedCheckboxes[index];
     selectedUser.isChecked = !selectedUser.isChecked;
-    const workAssignment = selectedUser.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.componentId === componentId && wa.taskId === selectedTask._id && wa.assignmentLevel === 5)
+    const testAssignment = selectedUser.testAssignment?.find((wa: any) => wa.testClassification?.id === testClassificationId && wa.testWorkCategoryId === testWorkCategoryId && wa.testMaterialId === testMaterialId && wa.testTypeId === selectedTestType._id && wa.assignmentLevel === 4)
     if (selectedUser.isChecked) {
-      if (workAssignment) {
-        workAssignment.dirty = false;
+      if (testAssignment) {
+        testAssignment.dirty = false;
         selectedUser.dirty = false;
       } else {
         selectedUser.dirty = true;
       }
       selectedUser.delete = false;
     } else {
-      if (!workAssignment) {
+      if (!testAssignment) {
         selectedUser.dirty = false;
       } else {
         selectedUser.dirty = true;
         selectedUser.delete = true;
-        workAssignment.dirty = true;
+        testAssignment.dirty = true;
       }
     }
 
@@ -141,18 +117,18 @@ const AssignTestTypes = ({ route, navigation }: { route: any, navigation: any })
   };
 
   useEffect(() => {
-    if (taskWorkAssigned) {
+    if (testTypesAssigned) {
       Alert.alert("Success", "Tasks assigned successfully");
       openAssignClose();
-      dispatch(clearProjectModulesWorkAssignmentData());
+      dispatch(clearTestClassificationsAssignmentData());
       setTimeout(() => {
-        dispatch(getUsersForWorkAssignment({
+        dispatch(getUsersForTestAssignment({
           projectId: loggedInUser.projectId,
           workType: workType
         }));
       }, 500)
     }
-  }, [taskWorkAssigned, error]);
+  }, [testTypesAssigned, error]);
 
   const onWorkAssignment = () => {
     const usersToBeAssign = userData.filter((u: any) => u.dirty);
@@ -164,32 +140,31 @@ const AssignTestTypes = ({ route, navigation }: { route: any, navigation: any })
         _id: u._id,
         delete: u.delete || false
       }
-      const workAssignment = u.workAssignment?.find((wa: any) => wa.dirty);
-      if (workAssignment) {
-        user.workAssignmentId = workAssignment._id;
+      const testAssignment = u.testAssignment?.find((wa: any) => wa.dirty);
+      if (testAssignment) {
+        user.testAssignmentId = testAssignment._id;
       }
 
       usersToBeAssignArray.push(user);
     });
 
     if (usersToBeAssignArray.length) {
-      dispatch(taskWorkAssignToUsers({
+      dispatch(testTypesAssignToUsers({
         projectId: loggedInUser.projectId,
-        projectModuleId: projectModuleId,
-        segmentId: segmentId,
-        componentId: componentId,
-        subComponentId: subComponentId,
-        taskId: selectedTask._id,
+        testClassificationId: testClassificationId,
+        testWorkCategoryId: testWorkCategoryId,
+        testMaterialId: testMaterialId,
+        testTypeId: selectedTestType._id,
         body: {
           users: usersToBeAssignArray,
-          level: 5
+          level: 4
         }
       }));
     }
   }
 
   const openAssignClose = () => {
-    tasksData.forEach((item: any) => {
+    testTypesData.forEach((item: any) => {
       item.isChecked = false;
     });
     userData.forEach((item: any) => {
@@ -211,7 +186,7 @@ const AssignTestTypes = ({ route, navigation }: { route: any, navigation: any })
       </View>}
       <View style={styles.SectionStyle}>
         <Image
-          source={require('./../../images/search-icon.png')}
+          source={require('./../../../images/search-icon.png')}
           style={styles.ImageSearch}
         />
         <TextInput
@@ -230,9 +205,9 @@ const AssignTestTypes = ({ route, navigation }: { route: any, navigation: any })
       </View>
       
       <ScrollView style={styles.Height100}>
-        {tasksData.filter((task: any) => {
-            if (searchText && task.displayName) {
-              return task.displayName.toLowerCase().includes(searchText.toLowerCase())
+        {testTypesData.filter((testType: any) => {
+            if (searchText && testType.displayName) {
+              return testType.displayName.toLowerCase().includes(searchText.toLowerCase())
             } else {
               return true;
             }
@@ -246,14 +221,14 @@ const AssignTestTypes = ({ route, navigation }: { route: any, navigation: any })
                 tintColors={{ true: '#0F56B3', false: '#818181' }}
               />
               <View>
-                <Text style={styles.UserRole}>{item.displayName}</Text>
+                <Text style={styles.UserRole}>{item.name}</Text>
               </View>
             </View>
             {/* <View>
               <TouchableOpacity>
                 <Image
                   style={styles.CloseIcon}
-                  source={require('./../../images/right-arrow.png')}
+                  source={require('./../../../images/right-arrow.png')}
                 />
               </TouchableOpacity>
             </View> */}
@@ -279,13 +254,13 @@ const AssignTestTypes = ({ route, navigation }: { route: any, navigation: any })
                   <Image
                     style={styles.CloseIcon}
                     tintColor={'#333'}
-                    source={require('./../../images/menu/close-icon.png')}
+                    source={require('./../../../images/menu/close-icon.png')}
                   />
                 </TouchableOpacity>
               </View>
               <View style={styles.ModalInnerContainer}>
                 <View>
-                  <Text style={styles.AssignRoleText}>Task: {selectedTask.displayName}</Text>
+                  <Text style={styles.AssignRoleText}>Task: {selectedTestType.displayName}</Text>
                 </View>
                 <ScrollView style={{ paddingTop: 10, height: 500 }}>
                   {userData.map((item: any, index) => (
@@ -323,7 +298,7 @@ const AssignTestTypes = ({ route, navigation }: { route: any, navigation: any })
           </View>
         </View>
       </Modal>
-      <LoadingAnimation loading={loading || loadingUsers || loadingTask}></LoadingAnimation>
+      <LoadingAnimation loading={loading || loadingUsers || loadingTestTypes}></LoadingAnimation>
     </View>
   )
 }

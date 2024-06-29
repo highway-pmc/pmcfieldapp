@@ -341,6 +341,13 @@ export const WORK_ASSIGNMENT_LEVEL = {
     LEVEL5: 'Task',
 }
 
+export const TEST_ASSIGNMENT_LEVEL = {
+    LEVEL1: 'Classifications',
+    LEVEL2: 'Work Category',
+    LEVEL3: 'Materials',
+    LEVEL4: 'Test Type',
+}
+
 export const TASK_TYPES = {
     CNG_AND_SETTING_OUT: 'cng-and-setting-out',
     FORM_WORK: 'form-work',

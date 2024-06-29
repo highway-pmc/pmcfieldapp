@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useIsFocused } from '@react-navigation/native';
 import { HeaderItems, WORK_ASSIGNMENT_LEVEL } from '../../constants/constants';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearProjectModulesWorkAssignmentData, getProjectModuleComponents, getUsersForWorkAssignment, componentWorkAssignToUsers, getProjectModuleSubComponents, subComponentWorkAssignToUsers } from './actions';
+import { clearProjectModulesWorkAssignmentData, getUsersForWorkAssignment, getProjectModuleSubComponents, subComponentWorkAssignToUsers } from './actions';
 import { ScrollView } from 'react-native-gesture-handler';
 import CheckBox from '@react-native-community/checkbox';
 import LoadingAnimation from '../Common/LoadingAnimation';

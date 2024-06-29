@@ -1,6 +1,6 @@
 
 import { put, takeLatest } from 'redux-saga/effects';
-import { getUserAssignment, getUserCategory } from '../../services/user/user.service';
+import { getUserAssignment, getUserCategory } from '../../../services/user/user.service';
 import { getTestClassificationData, getTestClassificationNextLevelData, getTestMaterialsData, getTestTypesData, getTestWorkCategoryData, getUsersForTestAssignmentData, testClassificationsTestAssignToUsersApi, testMaterialsTestAssignToUsersApi, testTypesAssignToUsersApi, testWorkCategoryTestAssignToUsersApi } from '../../../services/test-assignment/test-assignment.service';
 function* getUserCategories() {
     try {

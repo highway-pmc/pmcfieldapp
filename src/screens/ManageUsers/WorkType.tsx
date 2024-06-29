@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useIsFocused } from '@react-navigation/native';
 import { HeaderItems, PROJECT_TYPE, ROLES, WORK_TYPE } from "../../constants/constants"
 import { useSelector } from 'react-redux';
+import AssignTestClassification from './QualityWorks/AssignTestClassification';
 
 const WorkType = ({ navigation }: { navigation: any }) => {
   const [projectHead, setProjectHead] = useState(false);
@@ -121,7 +122,9 @@ const WorkType = ({ navigation }: { navigation: any }) => {
               }
             </View>
           }
-          {activeTab === WORK_TYPE.LAB_WORK && <Text>TBD</Text>}
+          {activeTab === WORK_TYPE.LAB_WORK && 
+            <AssignTestClassification></AssignTestClassification>
+          }
         </View>
 
       </View>

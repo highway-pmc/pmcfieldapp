@@ -10,23 +10,23 @@ import {
   Alert,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {useIsFocused} from '@react-navigation/native';
-import {HeaderItems, PROJECT_TYPE, WORK_ASSIGNMENT_LEVEL} from '../../../constants/constants';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
+import {HeaderItems, PROJECT_TYPE, TEST_ASSIGNMENT_LEVEL} from '../../../constants/constants';
 import CheckBox from '@react-native-community/checkbox';
 import {ScrollView} from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearProjectModulesWorkAssignmentData, getProjectModules, getUsersForWorkAssignment, projectModulesWorkAssignToUsers } from './actions';
+import { clearTestClassificationsAssignmentData, getTestClassifications, getUsersForTestAssignment, testClassificationsTestAssignToUsers } from './actions';
 import LoadingAnimation from '../../Common/LoadingAnimation';
 
-const AssignTestClassification = ({route, navigation}: { route: any, navigation: any }) => {
-
-  const [projectModulesData, setProjectModulesData] = useState([]);
-  const [selectedProjectModule, setSelectedProjectModule] = useState({isChecked: false, _id: "", name: ''});
+const AssignTestClassification = () => {
+  const navigation: any = useNavigation();
+  const [testClassificationsData, setTestClassificationsData] = useState([]);
+  const [selectedTestClassification, setSelectedTestClassification] = useState({isChecked: false, _id: "", name: ''});
   const [searchText, setSearchText] = useState('');
   // const [usersToBeAssigned, setUsersToBeAssigned] = useState([])
   const [userData, setUserCheckboxes] = useState([]);
 
-  const { workType } = route.params;
+  const workType = PROJECT_TYPE.QUALITY_WORK;
 
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();
@@ -37,21 +37,21 @@ const AssignTestClassification = ({route, navigation}: { route: any, navigation:
 
   const [isAssignPopOpen, openAssignPopup] = useState(false);
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const { projectModules, users, projectModulesWorkAssigned, loading, loadingUsers, error} = useSelector((state: any) => state.WorkAssignment);
+  const { testClassifications, users, testClassificationsTestAssigned, loading, loadingUsers, error} = useSelector((state: any) => state.TestAssignment);
   
   // unmount
   useEffect( () => () => {
-    setProjectModulesData([]);
+    setTestClassificationsData([]);
     setUserCheckboxes([]);
     setSearchText('');
   }, [] );
 
   useEffect(() => {
-    if (projectModules) {
-      projectModules.forEach((pModule: any) => {
-        pModule.isChecked = false
+    if (testClassifications) {
+      testClassifications.forEach((tClassi: any) => {
+        tClassi.isChecked = false
       });
-      setProjectModulesData(projectModules);
+      setTestClassificationsData(testClassifications);
     }
 
     if (users) {
@@ -60,50 +60,44 @@ const AssignTestClassification = ({route, navigation}: { route: any, navigation:
       });
       setUserCheckboxes(users);
     }
-  }, [projectModules, users]);
+  }, [testClassifications, users]);
 
   useEffect(() => {
-    dispatch(getProjectModules({
+    dispatch(getTestClassifications({
       projectId: loggedInUser.projectId,
       workType: workType
     }));
 
-    dispatch(getUsersForWorkAssignment({
+    dispatch(getUsersForTestAssignment({
       projectId: loggedInUser.projectId,
       workType: workType
     }));
   }, []);
   
   const handleRadioChange = (index: any) => {
-    const projectModule: any = projectModulesData[index];
+    const testClassification: any = testClassificationsData[index];
 
-    projectModule.isChecked = !projectModule.isChecked;
-    setSelectedProjectModule(projectModule);
+    testClassification.isChecked = !testClassification.isChecked;
+    setSelectedTestClassification(testClassification);
 
     const updatedCheckboxes: any = [...userData];
 
-    if (projectModule.isChecked) {
+    if (testClassification.isChecked) {
       updatedCheckboxes.forEach((user: any) => {
         user.isChecked = false;
         delete user.assignmentLevel;
-        const workAssignment = user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModulesData[index]._id && wa.assignmentLevel === 1);
+        const testAssignment = user.testAssignment?.find((wa: any) => wa.testClassification?.id === testClassificationsData[index]._id && wa.assignmentLevel === 1);
 
-        if (workAssignment) {
+        if (testAssignment) {
           user.isChecked = true;
-        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModule._id && wa.segmentId && wa.assignmentLevel === 2) != null) {
-          user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL2;
+        } else if (user.testAssignment?.find((wa: any) => wa.testClassification?.id === testClassification._id && wa.testWorkCategoryId && wa.assignmentLevel === 2) != null) {
+          user.assignmentLevel = TEST_ASSIGNMENT_LEVEL.LEVEL2;
           user.isChecked = true;
-        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModule._id && wa.segmentId && wa.componentId && wa.assignmentLevel === 3) != null) {
-          user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL3;
+        } else if (user.testAssignment?.find((wa: any) => wa.testClassification?.id === testClassification._id && wa.testWorkCategoryId && wa.testMaterialId && wa.assignmentLevel === 3) != null) {
+          user.assignmentLevel = TEST_ASSIGNMENT_LEVEL.LEVEL3;
           user.isChecked = true;
-        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModule._id && wa.segmentId && wa.componentId && wa.taskId && wa.assignmentLevel === 4) != null) {
-          user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL4;
-          user.isChecked = true;
-        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModule._id && wa.segmentId && wa.componentId && wa.subComponentId && wa.taskId && wa.assignmentLevel === 5) != null) {
-          user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL5;
-          user.isChecked = true;
-        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModule._id && wa.segmentId && wa.taskId && wa.assignmentLevel === 5) != null) {
-          user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL5;
+        } else if (user.testAssignment?.find((wa: any) => wa.testClassification?.id === testClassification._id && wa.testWorkCategoryId && wa.testMaterialId && wa.testTypeId && wa.assignmentLevel === 4) != null) {
+          user.assignmentLevel = TEST_ASSIGNMENT_LEVEL.LEVEL4;
           user.isChecked = true;
         }
       });
@@ -117,22 +111,22 @@ const AssignTestClassification = ({route, navigation}: { route: any, navigation:
     const updatedCheckboxes: any = [...userData];
     const selectedUser: any = updatedCheckboxes[index];
     selectedUser.isChecked = !selectedUser.isChecked;
-    const workAssignment = selectedUser.workAssignment?.find((wa: any) => wa.projectModule?.id === selectedProjectModule._id && wa.assignmentLevel === 1)
+    const testAssignment = selectedUser.testAssignment?.find((wa: any) => wa.testClassification?.id === selectedTestClassification._id && wa.assignmentLevel === 1)
     if (selectedUser.isChecked) {
-      if (workAssignment) {
-        workAssignment.dirty = false;
+      if (testAssignment) {
+        testAssignment.dirty = false;
         selectedUser.dirty = false;
       } else {
         selectedUser.dirty = true;
       }
       selectedUser.delete = false;
     } else {
-      if (!workAssignment) {
+      if (!testAssignment) {
         selectedUser.dirty = false;
       } else {
         selectedUser.dirty = true;
         selectedUser.delete = true;
-        workAssignment.dirty = true;
+        testAssignment.dirty = true;
       }
     }
 
@@ -140,18 +134,18 @@ const AssignTestClassification = ({route, navigation}: { route: any, navigation:
   };
 
   useEffect(() => {
-    if (projectModulesWorkAssigned) {
-      Alert.alert("Success", "Works assigned successfully");
+    if (testClassificationsTestAssigned) {
+      Alert.alert("Success", "Tests assigned successfully");
       openAssignClose();
-      dispatch(clearProjectModulesWorkAssignmentData());
-      dispatch(getUsersForWorkAssignment({
+      dispatch(clearTestClassificationsAssignmentData());
+      dispatch(getUsersForTestAssignment({
         projectId: loggedInUser.projectId,
         workType: workType
       }));
     }
-  }, [projectModulesWorkAssigned, error]);
+  }, [testClassificationsTestAssigned, error]);
 
-  const onWorkAssignment = () => {
+  const onTestAssignment = () => {
     const usersToBeAssign = userData.filter((u: any) => u.dirty);
 
     let usersToBeAssignArray: any = [];
@@ -161,18 +155,18 @@ const AssignTestClassification = ({route, navigation}: { route: any, navigation:
         _id: u._id,
         delete: u.delete || false
       }
-      const workAssignment = u.workAssignment?.find((wa: any) => wa.dirty);
-      if (workAssignment) {
-        user.workAssignmentId = workAssignment._id;
+      const testAssignment = u.testAssignment?.find((wa: any) => wa.dirty);
+      if (testAssignment) {
+        user.testAssignmentId = testAssignment._id;
       }
 
       usersToBeAssignArray.push(user);
     });
 
     if (usersToBeAssignArray.length) {
-      dispatch(projectModulesWorkAssignToUsers({
+      dispatch(testClassificationsTestAssignToUsers({
         projectId: loggedInUser.projectId,
-        projectModuleId: selectedProjectModule._id,
+        testClassificationId: selectedTestClassification._id,
         body: {
           users: usersToBeAssignArray,
           level: 1
@@ -182,7 +176,7 @@ const AssignTestClassification = ({route, navigation}: { route: any, navigation:
   }
 
   const openAssignClose = () => {
-    projectModulesData.forEach((item: any) => {
+    testClassificationsData.forEach((item: any) => {
       item.isChecked = false;
     });
     userData.forEach((item: any) => {
@@ -199,7 +193,7 @@ const AssignTestClassification = ({route, navigation}: { route: any, navigation:
               </View>}
         <View style={styles.SectionStyle}>
           <Image
-            source={require('./../../images/search-icon.png')}
+            source={require('./../../../images/search-icon.png')}
             style={styles.ImageSearch}
           />
           <TextInput
@@ -218,9 +212,9 @@ const AssignTestClassification = ({route, navigation}: { route: any, navigation:
         </View>
       </View>
       <ScrollView style={styles.Height100}>
-        {projectModulesData.filter((projectMod: any) => {
-            if (searchText && projectMod.name) {
-              return projectMod.name.toLowerCase().includes(searchText.toLowerCase())
+        {testClassificationsData.filter((testClassif: any) => {
+            if (searchText && testClassif.name) {
+              return testClassif.name.toLowerCase().includes(searchText.toLowerCase())
             } else {
               return true;
             }
@@ -239,16 +233,14 @@ const AssignTestClassification = ({route, navigation}: { route: any, navigation:
             </View>
             <View>
               <TouchableOpacity
-                onPress={() => navigation.navigate('SegmentsList', {
-                  projectModuleId: item._id,
-                  projectModuleName: item.name,
-                  type: item.type,
-                  subType: item.subType,
+                onPress={() => navigation.navigate('AssignTestWorkCategory', {
+                  testClassificationId: item._id,
+                  testClassificationName: item.name,
                   workType: workType
                 })}>
                 <Image
                   style={styles.CloseIcon}
-                  source={require('./../../images/right-arrow.png')}
+                  source={require('./../../../images/right-arrow.png')}
                 />
               </TouchableOpacity>
             </View>
@@ -256,11 +248,11 @@ const AssignTestClassification = ({route, navigation}: { route: any, navigation:
         ))}
 
         {/* No Data Found */}
-        {(!loading && !projectModulesData.length) && 
+        {(!loading && !testClassificationsData.length) && 
           <View style={styles.NoDataContainer}>
             <Image
               style={styles.WthHeight}
-              source={require('./../../images/no-data-found.png')}
+              source={require('./../../../images/no-data-found.png')}
             />
             <Text style={styles.NodataHeadText}>Sorry, no result found!</Text>
             {/* {(searchText && <Text style={styles.NodataSubText}>
@@ -290,13 +282,13 @@ const AssignTestClassification = ({route, navigation}: { route: any, navigation:
                   <Image
                     style={styles.CloseIcon}
                     tintColor={'#333'}
-                    source={require('./../../images/menu/close-icon.png')}
+                    source={require('./../../../images/menu/close-icon.png')}
                   />
                 </TouchableOpacity>
               </View>
               <View style={styles.ModalInnerContainer}>
               <View>
-                <Text style={styles.AssignRoleText}>Project Module: {selectedProjectModule.name}</Text>
+                <Text style={styles.AssignRoleText}>Test Classification: {selectedTestClassification.name}</Text>
               </View>
               <ScrollView style={{paddingTop: 10, height: 500}}>
                 {userData.map((item: any, index) => (
@@ -325,8 +317,8 @@ const AssignTestClassification = ({route, navigation}: { route: any, navigation:
                 ))}
                 </ScrollView>
 
-                <TouchableOpacity style={styles.assignTagButoon} onPress={() => onWorkAssignment()}>
-                  <Text style={styles.assignTagButoonText}>Assign</Text>
+                <TouchableOpacity style={styles.assignTagButoon} onPress={() => onTestAssignment()}>
+                  <Text style={styles.assignTagButtonText}>Assign</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -610,7 +602,7 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     alignItems: 'center',
   },
-  assignTagButoonText: {
+  assignTagButtonText: {
     fontSize: 16,
     color: '#fff',
     fontWeight: '500',

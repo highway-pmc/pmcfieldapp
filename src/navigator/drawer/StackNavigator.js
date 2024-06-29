@@ -28,6 +28,9 @@ import RFIsDashboard from "../../screens/RFIs/RFIsDashboard";
 import RFIsUserCategorySelection from "../../screens/RFIs/RFIsUserCategorySelection";
 import SubComponentsList from "../../screens/ManageUsers/SubComponentsList";
 import MyQualityWorks from "../../screens/QualityWorks/MyQualityWorks/MyQualityWorks";
+import AssignTestWorkCategory from "../../screens/ManageUsers/QualityWorks/AssignTestWorkCategory";
+import AssignTestMaterials from "../../screens/ManageUsers/QualityWorks/AssignTestMaterials";
+import AssignTestTypes from "../../screens/ManageUsers/QualityWorks/AssignTestTypes";
 
 const Stack = createStackNavigator();
 
@@ -76,6 +79,11 @@ const ManageUsersStackNavigator = () => {
       <Stack.Screen name="ComponentsList" component={ComponentsList} options={{headerShown: false}} />
       <Stack.Screen name="SubComponentsList" component={SubComponentsList} options={{headerShown: false}} />
       <Stack.Screen name="AssignTasks" component={AssignTasks} options={{headerShown: false}} />
+
+      {/* <Stack.Screen name="AssignWork" component={AssignWork} options={{headerShown: false}} /> */}
+      <Stack.Screen name="AssignTestWorkCategory" component={AssignTestWorkCategory} options={{headerShown: false}} />
+      <Stack.Screen name="AssignTestMaterials" component={AssignTestMaterials} options={{headerShown: false}} />
+      <Stack.Screen name="AssignTestTypes" component={AssignTestTypes} options={{headerShown: false}} />
     </Stack.Navigator>
   );
 };

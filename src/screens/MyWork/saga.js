@@ -1,6 +1,6 @@
 
 import { put, takeLatest } from 'redux-saga/effects';
-import { getMyWorksData } from '../../services/my-works/myworks.service';
+import { getMyTestsData, getMyWorksData } from '../../services/my-works/myworks.service';
 import { fillRFIsDataChecklist, getRFIDataByWaId } from '../../services/rfi/rfis.service';
 
 function* getMyWorks({ payload }) {
@@ -30,8 +30,18 @@ function* fillRFIsChecklist({ payload }) {
     }
 }
 
+function* getMyTests({ payload }) {
+    try {
+        const response = yield (getMyTestsData(payload.projectId, payload.workType));
+        yield put({ type: "GET_MY_TESTS_SUCCESS", response });
+    } catch (error) {
+        yield put({ type: "GET_MY_TESTS_FAILURE", error: error.message });
+    }
+}
+
 export default function* myWorksScreenSaga() {
     yield takeLatest("GET_MY_WORKS_REQUEST", getMyWorks);
+    yield takeLatest("GET_MY_TESTS_REQUEST", getMyTests);
     yield takeLatest("GET_RFI_BY_WA_ID_REQUEST", getRFIByWaId);
     yield takeLatest("FILL_RFI_CHECK_LIST_REQUEST", fillRFIsChecklist);
 }

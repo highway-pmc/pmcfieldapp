@@ -9,3 +9,11 @@ export const getMyWorksData = async (projectId, workType) => {
     });
 }
 
+export const getMyTestsData = async (projectId, workType) => {
+    return apiService.getRequest(`v1/auth/projects/${projectId}/users/${workType}/my-tests`).then((response) => {
+        return response;
+    }).catch((err) => {
+        const errorMessge = err.message || 'Unable to get my tests.';
+        throw new Error(errorMessge);
+    });
+}

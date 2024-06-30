@@ -27,7 +27,7 @@ import MyWorkType from "../../screens/MyWork/MyWorkType";
 import RFIsDashboard from "../../screens/RFIs/RFIsDashboard";
 import RFIsUserCategorySelection from "../../screens/RFIs/RFIsUserCategorySelection";
 import SubComponentsList from "../../screens/ManageUsers/SubComponentsList";
-import MyQualityWorks from "../../screens/QualityWorks/MyQualityWorks/MyQualityWorks";
+import MyQualityWorks from "../../screens/MyWork/MyQualityWorks";
 import AssignTestWorkCategory from "../../screens/ManageUsers/QualityWorks/AssignTestWorkCategory";
 import AssignTestMaterials from "../../screens/ManageUsers/QualityWorks/AssignTestMaterials";
 import AssignTestTypes from "../../screens/ManageUsers/QualityWorks/AssignTestTypes";

@@ -1,9 +1,18 @@
-import { View, Text, Button, NativeEventEmitter, Alert, StyleSheet, ScrollView  } from 'react-native'
-import React, {useEffect, useState} from 'react'
-import { useFocusEffect, useIsFocused } from '@react-navigation/native';
-import { HeaderItems } from "../../constants/constants"
+import {
+  View,
+  Text,
+  Button,
+  NativeEventEmitter,
+  Alert,
+  StyleSheet,
+  ScrollView,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {useFocusEffect, useIsFocused} from '@react-navigation/native';
+import {HeaderItems} from '../../constants/constants';
+import GroutingForm from '../../components/groutingForm';
 
-const Progress = ({ navigation }) => {
+const Progress = ({navigation}) => {
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();
     eventEmitter.emit('headerEvent', HeaderItems.progress);
@@ -11,12 +20,10 @@ const Progress = ({ navigation }) => {
 
   return (
     <ScrollView style={styles.Container}>
-      <View>
-        <Text>Progress Dashboard</Text>
-    </View>
+      <GroutingForm />
     </ScrollView>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   Container: {
@@ -26,4 +33,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Progress
+export default Progress;

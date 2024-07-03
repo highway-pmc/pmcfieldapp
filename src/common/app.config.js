@@ -1,23 +1,23 @@
 const appConfig = {};
 
 //appConfig.API_URL = "https://api.highwaypmc.in"
-//appConfig.API_URL = "https://client-auth.highwaypmc.in"
-appConfig.API_URL = "http://192.168.1.7:4000"
+appConfig.API_URL = 'https://client-auth.highwaypmc.in';
+// appConfig.API_URL = "http://192.168.1.7:4000"
 
-appConfig.setUserInfo = (userInfo) => {
-    this.userInfo = userInfo;
-}
+appConfig.setUserInfo = userInfo => {
+  this.userInfo = userInfo;
+};
 
 appConfig.getUserInfo = () => {
-    return this.userInfo || {};
-}
+  return this.userInfo || {};
+};
 
-appConfig.setToken = (token) => {
-    this.token = token;
-}
+appConfig.setToken = token => {
+  this.token = token;
+};
 
 appConfig.getToken = () => {
-    return this.token || {};
-}
+  return this.token || {};
+};
 
 export default appConfig;

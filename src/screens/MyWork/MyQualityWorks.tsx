@@ -353,11 +353,15 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
       Alert.alert('Error', 'Please sample status');
       return;
     }
-
-    if (!item['rfiDateTime_TEMP'] || (new Date(item['rfiDateTime_TEMP'])).toString() == 'Invalid Date') {
-      Alert.alert('Error', 'Please enter date');
-      return;
+    if (item['sampleStatus_TEMP'] === TEST_SAMPLE_STATUS.PREPARED) {
+      if (!item['rfiDateTime_TEMP'] || (new Date(item['rfiDateTime_TEMP'])).toString() == 'Invalid Date') {
+        Alert.alert('Error', 'Please enter date');
+        return;
+      }
+    } else {
+      item['rfiDateTime_TEMP'] = '';
     }
+    
     const obj = {
       sampleStatus: item['sampleStatus_TEMP'],
       rfiDateTime: item['rfiDateTime_TEMP'],

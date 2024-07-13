@@ -71,3 +71,12 @@ export const generateRFIReportApi = async (projectId, projectModuleId, rfiId) =>
         throw new Error(errorMessge);
     });
 }
+
+export const updateTestSampleAPi = async (projectId, id, body) => {
+    return apiService.patchRequest(`v1/auth/projects/${projectId}/testsample/${id}/`, body).then((response) => {
+        return response;
+    }).catch((err) => {
+        const errorMessge = err.message || 'Unable to update test sample.';
+        throw new Error(errorMessge);
+    });
+}

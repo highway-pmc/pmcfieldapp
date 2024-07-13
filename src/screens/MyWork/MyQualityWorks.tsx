@@ -1,9 +1,9 @@
 import { View, Text, NativeEventEmitter, StyleSheet, ScrollView, Image, TouchableOpacity, TextInput, Modal, StatusBar, SafeAreaView, Dimensions, Alert } from 'react-native'
 import React, { Fragment, useEffect, useState } from 'react'
 import { useIsFocused } from '@react-navigation/native';
-import { HeaderItems, PROJECT_TYPE, RFI_STATUS, SEGMENT_TYPES_DISPLAY, TASK_TYPES, USER_CATEGORY, YES_NO_LIST, YES_NO_NA_LIST } from "../../constants/constants"
+import { HeaderItems, PROJECT_TYPE, RFI_STATUS, SEGMENT_TYPES_DISPLAY, TASK_TYPES, TEST_SAMPLE_STATUS, TEST_SAMPLE_STATUS_LIST, USER_CATEGORY, YES_NO_LIST, YES_NO_NA_LIST } from "../../constants/constants"
 import { useDispatch, useSelector } from 'react-redux';
-import { clearMyWorksEvent, getMyTests, } from './actions';
+import { clearMyWorksEvent, getMyTests, updateTestSample, } from './actions';
 import LoadingAnimation from '../Common/LoadingAnimation';
 import DropDownPicker from 'react-native-dropdown-picker';
 import CalendarPicker from 'react-native-calendar-picker';
@@ -15,12 +15,13 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
   const workType = PROJECT_TYPE.QUALITY_WORK;
 
-  const { myTests, loading, error } = useSelector((state: any) => state.MyWorks);
+  const { myTests, testSampleUpdated, loading, error } = useSelector((state: any) => state.MyWorks);
   const [myTestsData, setMyTestsData] = useState([]);
   const [currentTestWorkCategoryData, setCurrentTestWorkCategoryData] = useState([]);
   const [currentTestMaterialsData, setCurrentTestMaterialsData] = useState([]);
   const [currentTestTypesData, setCurrentTestTypesData] = useState([]);
   const [currentSubTestTypesData, setCurrentSubTestTypesData] = useState([]);
+  const [currentSubTestTypeRFIsData, setCurrentSubTestTypeRFIsData] = useState([]);
   const [testClassificationId, setTestClassificationId] = useState('');
   const [currentLevel, setCurrentLevel] = useState(1);
   const [searchText, setSearchText] = useState('');
@@ -119,8 +120,8 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
   const [openMinimumTimeHasBeenAttained, setOpenMinimumTimeHasBeenAttained] = useState(false);
 
   // THREADING_OF_PRE_STRESSING_STRANDS
-    // only comments
-  
+  // only comments
+
   // CAGE_LOWERING
   const [plieShaftCleanedLooseMaterial, setPlieShaftCleanedLooseMaterial] = useState('Y');
   const [openPlieShaftCleanedLooseMaterial, setOpenPlieShaftCleanedLooseMaterial] = useState(false);
@@ -155,6 +156,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
       setCurrentTestMaterialsData([]);
       setCurrentTestTypesData([]);
       setCurrentSubTestTypesData([]);
+      setCurrentSubTestTypeRFIsData([]);
       setBreadcrumbData([]);
       getMyWorksData();
       setSearchText('');
@@ -173,7 +175,18 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
     if (myTests) {
       setMyTestsData(myTests);
     }
-  }, [myTests, error]);
+    if (testSampleUpdated) {
+        const sampleDataTemp: any = [...currentSubTestTypeRFIsData]
+        const updatedSampleIndex = sampleDataTemp.findIndex((x: any) => x._id === testSampleUpdated._id);
+        if (updatedSampleIndex != -1) {
+          sampleDataTemp[updatedSampleIndex] = testSampleUpdated;
+        }
+        setCurrentSubTestTypeRFIsData([]);
+        setCurrentSubTestTypeRFIsData(sampleDataTemp);
+        Alert.alert('Info', 'Sample updated')
+      dispatch(clearMyWorksEvent());
+    }
+  }, [myTests, testSampleUpdated, error]);
 
   // unmount
   useEffect(() => () => {
@@ -184,6 +197,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
     setCurrentTestMaterialsData([]);
     setCurrentTestTypesData([]);
     setCurrentSubTestTypesData([]);
+    setCurrentSubTestTypeRFIsData([]);
     setBreadcrumbData([]);
     setSearchText('');
   }, []);
@@ -194,6 +208,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
     setBreadcrumbData([]);
     setCurrentTestTypesData([]);
     setCurrentSubTestTypesData([]);
+    setCurrentSubTestTypeRFIsData([]);
     const testClassifData: any = myTestsData[testClassifIndex];
     let testWorkCategoryData = null;
     let testMateData = null;
@@ -271,11 +286,12 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
     }
 
     setBreadcrumbData(breadCrumb);
-    
+
   }
 
   const onClickNested = (level: number, data: any) => {
     setSearchText('');
+    setCurrentSubTestTypeRFIsData([]);
     if (data.testClassificationId) {
       setTestClassificationId(data.testClassificationId);
     }
@@ -326,6 +342,36 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
         active: false
       }
       breadcrumbData.push(bcrubm)
+    } else if (level === 6) {
+      // show sample test generated
+      setCurrentSubTestTypeRFIsData(data.testRFIsData);
+    }
+  }
+
+  const onUpdateSample = (item: any) => {
+    if (!item['sampleStatus_TEMP'] || item['sampleStatus_TEMP'] === TEST_SAMPLE_STATUS.PENDING) {
+      Alert.alert('Error', 'Please sample status');
+      return;
+    }
+
+    if (!item['rfiDateTime_TEMP'] || (new Date(item['rfiDateTime_TEMP'])).toString() == 'Invalid Date') {
+      Alert.alert('Error', 'Please enter date');
+      return;
+    }
+    const obj = {
+      sampleStatus: item['sampleStatus_TEMP'],
+      rfiDateTime: item['rfiDateTime_TEMP'],
+    };
+    dispatch(updateTestSample({
+      projectId: loggedInUser.projectId,
+      id: item._id,
+      body: obj
+    }));
+  }
+
+  const onClickTestSampleItem = (item: any) => {
+    if (item.sampleStatus != TEST_SAMPLE_STATUS.PENDING) {
+      Alert.alert('Info', "TODO")
     }
   }
 
@@ -429,6 +475,49 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
     ))
   }
 
+  const CustomDropdownPicker = ({ items, rowItem, fieldName }: { items: any, rowItem: any, fieldName: any }) => {
+    const [value, setValue] = useState(rowItem[fieldName]);
+    const [openList, setOpenList] = useState(false);
+    const updateValue = () => {
+      { rowItem[fieldName + '_TEMP'] = value }
+    }
+    return (
+      <DropDownPicker style={{ width: 110, height: 30, zIndex: 10 }}
+        open={openList}
+        value={value}
+        items={items}
+        setOpen={setOpenList}
+        setValue={setValue}
+        listMode='MODAL'
+        closeAfterSelecting={true}
+        onChangeValue={() => updateValue()}
+      />
+    )
+  }
+
+  const CustomTextInput = ({ rowItem, fieldName }: { rowItem: any, fieldName: any }) => {
+    const [value, setValue] = useState(rowItem[fieldName]);
+    const updateValue = (text: any) => {
+      { rowItem[fieldName + '_TEMP'] = text }
+    }
+
+    return (
+      <TextInput
+        style={styles.inputStyle3}
+        placeholder=""
+        autoCapitalize="none"
+        keyboardType="email-address"
+        returnKeyType="next"
+        underlineColorAndroid="#f000"
+        blurOnSubmit={false}
+        value={value}
+        onChangeText={(text) => {
+          setValue(text); updateValue(text);
+        }}
+      />
+    )
+  }
+
   return (
     <View style={styles.Container}>
       <View style={styles.BreadcrumbContainer}>
@@ -485,14 +574,14 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                 (testClassificationItem.testWorkCategoriesData?.map((workCateItem: any, workCateIndex: any) => (
                   (workCateItem.assignmentLevel === 2) ? (
                     <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(3, workCateItem.assignmentLevel, testClassificationIndex, workCateIndex)}>
-                        <Text style={styles.HeadingText}>{testClassificationItem.name}</Text>
-                        <View style={styles.TaskDetails}>
-                          <Text style={styles.SubHeadingText}>Assigned:</Text>
-                          <View style={{ flexDirection: 'row' }}>
-                            <Text style={[styles.SubHeadingText, styles.SubActive]}>{workCateItem.name}</Text>
-                          </View>
+                      <Text style={styles.HeadingText}>{testClassificationItem.name}</Text>
+                      <View style={styles.TaskDetails}>
+                        <Text style={styles.SubHeadingText}>Assigned:</Text>
+                        <View style={{ flexDirection: 'row' }}>
+                          <Text style={[styles.SubHeadingText, styles.SubActive]}>{workCateItem.name}</Text>
                         </View>
-                      </TouchableOpacity>
+                      </View>
+                    </TouchableOpacity>
                   )
                     :
                     workCateItem.testMaterialsData && workCateItem.testMaterialsData.length ? (
@@ -507,7 +596,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                                 <Text style={[styles.SubHeadingText, styles.SubActive]}>{testMateItem.name}</Text>
                               </View>
                             </TouchableOpacity>
-  
+
                           )
                           :
                           testMateItem.testTypesData?.map((testTypeItem: any, testTypeIndex: number) => (
@@ -521,13 +610,13 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                                 <Text style={[styles.SubHeadingText, styles.SubActive]}>{testTypeItem.name}</Text>
                               </View>
                             </TouchableOpacity>
-  
+
                           ))
-  
+
                       ))
                     )
-                    :
-                    null
+                      :
+                      null
 
                 )))
 
@@ -535,7 +624,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
         }
         {
           currentLevel === 2 ?
-          currentTestWorkCategoryData && currentTestWorkCategoryData.length ? currentTestWorkCategoryData.filter((subSeg: any) => {
+            currentTestWorkCategoryData && currentTestWorkCategoryData.length ? currentTestWorkCategoryData.filter((subSeg: any) => {
               if (searchText && subSeg.name) {
                 return subSeg.name.toLowerCase().includes(searchText.toLowerCase())
               } else {
@@ -553,7 +642,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
         }
         {
           currentLevel === 3 ?
-          currentTestMaterialsData && currentTestMaterialsData.length ? currentTestMaterialsData.filter((testMate: any) => {
+            currentTestMaterialsData && currentTestMaterialsData.length ? currentTestMaterialsData.filter((testMate: any) => {
               if (searchText && testMate.name) {
                 return testMate.name.toLowerCase().includes(searchText.toLowerCase())
               } else {
@@ -572,26 +661,79 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
         {
           (currentLevel === 4) ?
             tasksListing()
-          : null
+            : null
         }
         {
           (currentLevel === 5) ?
-            currentSubTestTypesData?.length ? 
-            currentSubTestTypesData.filter((subTestType: any) => {
-              if (searchText && subTestType.name) {
-                return subTestType.name.toLowerCase().includes(searchText.toLowerCase())
-              } else {
-                return true;
-              }
-            }).map((item: any) => (
-              <TouchableOpacity style={getStyle(item)} onPress={() => onClickNested(5, item)}>
-                <View style={styles.leftContainer}>
-                  <Text style={styles.HeadText}>{item.name}</Text>
-                </View>
-              </TouchableOpacity>
-            )) : tasksListing()
+            currentSubTestTypesData?.length ?
+              currentSubTestTypesData.filter((subTestType: any) => {
+                if (searchText && subTestType.name) {
+                  return subTestType.name.toLowerCase().includes(searchText.toLowerCase())
+                } else {
+                  return true;
+                }
+              }).map((item: any) => (
+                <TouchableOpacity style={getStyle(item)} onPress={() => onClickNested(6, item)}>
+                  <View style={styles.leftContainer}>
+                    <Text style={styles.HeadText}>{item.name}</Text>
+                  </View>
+                </TouchableOpacity>
+              )) : tasksListing()
             :
             null
+        }
+        {
+          (currentLevel === 6) ?
+            currentSubTestTypeRFIsData?.length ?
+              <ScrollView style={styles.Height100}>
+                {
+                  currentSubTestTypeRFIsData.filter((testRFI: any) => {
+                    if (searchText && testRFI.name) {
+                      return testRFI.name.toLowerCase().includes(searchText.toLowerCase())
+                    } else {
+                      return true;
+                    }
+                  }).map((item: any) => (
+                    <View>
+                      <View style={item.sampleStatus != TEST_SAMPLE_STATUS.PREPARED && { borderColor: '#000', borderWidth: 1, borderRadius: 10, marginBottom: 10 }}>
+                        <TouchableOpacity style={getStyle(item)} onPress={() => onClickTestSampleItem(item)}>
+                          <View style={styles.leftContainer}>
+                            <Text style={styles.HeadText}>{item.name}</Text>
+                          </View>
+                        </TouchableOpacity>
+                        {
+                          item.sampleStatus != TEST_SAMPLE_STATUS.PREPARED ?
+                            <View style={{ flexDirection: 'row', alignContent: 'center', alignItems: 'center' }}>
+                              <View style={[styles.SectionStyle, { width: 130 }]}>
+                                <CustomDropdownPicker items={TEST_SAMPLE_STATUS_LIST}
+                                  rowItem={item}
+                                  fieldName={'sampleStatus'}
+                                />
+                              </View>
+                              <View style={{ height: 45 }}>
+                                <CustomTextInput rowItem={item}
+                                  fieldName={'rfiDateTime'}></CustomTextInput>
+                              </View>
+                              <View style={{ height: 45, width: 100 }}>
+                                <TouchableOpacity style={[styles.SubmitSample, styles.StartBorder]} onPress={() => onUpdateSample(item)}>
+                                  <View style={styles.leftContainer}>
+                                    <Text style={styles.HeadText}>Submit</Text>
+                                  </View>
+                                </TouchableOpacity>
+                              </View>
+                            </View>
+                            :
+                            null
+                        }
+                      </View>
+
+                    </View>
+
+                  ))
+                }
+              </ScrollView>
+              : null//tasksListing()
+            : null
         }
         {/* No Data Found */}
         {(!loading && !myTestsData.length) ?
@@ -667,10 +809,10 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
   )
 }
 
-const CustomTextInput = ({rowItem, fieldName}: {rowItem: any, fieldName: any}) => {
+const CustomTextInput = ({ rowItem, fieldName }: { rowItem: any, fieldName: any }) => {
   const [value, setValue] = useState(rowItem[fieldName]);
   const updateValue = (text: any) => {
-    {rowItem[fieldName] = text}
+    { rowItem[fieldName] = text }
   }
 
   return (
@@ -690,14 +832,14 @@ const CustomTextInput = ({rowItem, fieldName}: {rowItem: any, fieldName: any}) =
   )
 }
 
-const CustomDropdownPicker = ({items, rowItem, fieldName}: {items: any, rowItem: any, fieldName: any}) => {
+const CustomDropdownPicker = ({ items, rowItem, fieldName }: { items: any, rowItem: any, fieldName: any }) => {
   const [value, setValue] = useState(rowItem[fieldName]);
   const [openList, setOpenList] = useState(false);
   const updateValue = () => {
-    {rowItem[fieldName] = value}
+    { rowItem[fieldName] = value }
   }
   return (
-    <DropDownPicker style={{width: 90, height: 45, zIndex: 10}}
+    <DropDownPicker style={{ width: 90, height: 45, zIndex: 10 }}
       open={openList}
       value={value}
       items={items}
@@ -772,6 +914,17 @@ const styles = StyleSheet.create({
     height: 45,
     width: 50
   },
+  inputStyle3: {
+    flex: 1,
+    color: '#2c2c2c',
+    borderWidth: 1,
+    borderRadius: 0,
+    borderColor: '#808089',
+    backgroundColor: '#fff',
+    fontWeight: '600',
+    height: 30,
+    width: 120
+  },
   //Start Work
   StartWorkCard: {
     backgroundColor: '#fff',
@@ -797,6 +950,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 15,
     opacity: 0.5
+  },
+  SubmitSample: {
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderRadius: 12,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    height: 45,
+    textAlign: 'center',
+    padding: 10,
+    alignItems: 'center',
+    marginLeft: 20
   },
   leftContainer: {
     flexDirection: 'column',
@@ -1065,69 +1231,69 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   /* Left Swipe */
-  heading: { 
-    fontSize: 30, 
-    fontWeight: 'bold', 
-    marginBottom: 20, 
-    color: 'green', 
-    margin: 20, 
-    textAlign: 'center', 
-}, 
-subheading: { 
-    fontSize: 24, 
-    fontWeight: 'bold', 
-    marginBottom: 20, 
+  heading: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    color: 'green',
+    margin: 20,
+    textAlign: 'center',
+  },
+  subheading: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
     color: '#333', // Dark Gray 
-    margin: 10, 
-    textAlign: 'center', 
-}, 
-itemContainer: { 
-    alignItems: 'center', 
-    justifyContent: 'center', 
+    margin: 10,
+    textAlign: 'center',
+  },
+  itemContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: '#FFF', // White 
     borderBottomColor: '#E0E0E0', // Lighter Gray 
-    borderBottomWidth: 1, 
-    height: 45, 
-    borderRadius: 8, 
-    shadowColor: '#000', 
-    shadowOffset: { width: 0, height: 2 }, 
-    shadowOpacity: 0.2, 
-    shadowRadius: 3, 
-    elevation: 3, 
-    marginBottom: 10, 
-}, 
-itemText: { 
+    borderBottomWidth: 1,
+    height: 45,
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 3,
+    marginBottom: 10,
+  },
+  itemText: {
     color: '#333', // Dark Gray 
-    fontSize: 16, 
-    fontWeight: 'bold', 
-}, 
-hiddenContainer: { 
-    flexDirection: 'row', 
-    justifyContent: 'flex-end', 
-    alignItems: 'center', 
-    backgroundColor: '#FFF', 
-    height: 45, 
-    borderRadius: 20, 
-}, 
-hiddenButton: { 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    width: 75, 
-    height: 45, 
-}, 
-closeButton: { 
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  hiddenContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    backgroundColor: '#FFF',
+    height: 45,
+    borderRadius: 20,
+  },
+  hiddenButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 75,
+    height: 45,
+  },
+  closeButton: {
     backgroundColor: 'green', // Blue 
-    borderRadius: 20, 
-}, 
-deleteButton: { 
+    borderRadius: 20,
+  },
+  deleteButton: {
     backgroundColor: '#E74C3C', // Red 
-    borderRadius: 20, 
-}, 
-buttonText: { 
-    color: '#FFF', 
-    fontSize: 16, 
-    fontWeight: 'bold', 
-},
+    borderRadius: 20,
+  },
+  buttonText: {
+    color: '#FFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
 });
 
 export default MyQualityWork

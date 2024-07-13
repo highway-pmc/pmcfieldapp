@@ -1218,6 +1218,26 @@ const MyWorkReducer = (state = myWorksState, action) => {
                 error: action.error,
                 loading: false,
             };
+        case "UPDATE_TEST_SAMPLE_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "UPDATE_TEST_SAMPLE_SUCCESS":
+            return {
+                ...state,
+                testSampleUpdated: action.response,
+                error: null,
+                loading: false,
+            };
+        case "UPDATE_TEST_SAMPLE_FAILURE":
+            return {
+                ...state,
+                testSampleUpdated: null,
+                error: action.error,
+                loading: false,
+            };
         case "CLEAR_MY_WORKS":
             return {
                 ...state,
@@ -1225,6 +1245,7 @@ const MyWorkReducer = (state = myWorksState, action) => {
                 myTests: null,
                 rfiData: null,
                 rfiChecklistSaved: null,
+                testSampleUpdated: null,
                 error: null,
                 loading: false,
             };

@@ -326,7 +326,25 @@ export const RFI_STATUS = {
     REJECTED: 'rejected',
     CANCELLED: 'cancelled',
     APPROVED: 'approved',
-  };
+};
+
+export const TEST_SAMPLE_STATUS = {
+    PENDING: 'pending',
+    PREPARED: 'prepared',
+    NOT_PREPARED: 'notPrepared',
+};
+
+export const TEST_SAMPLE_STATUS_LIST = [
+    {
+        label: 'Select', value: 'pending'
+    },
+    {
+        label: 'Prepared', value: 'prepared'
+    },
+    {
+        label: 'Not Prepared', value: 'notPrepared'
+    }
+];
 
 export const WORK_TYPE = {
     SITE_WORK: "Site Work",

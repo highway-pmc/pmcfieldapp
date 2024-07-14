@@ -385,6 +385,20 @@ export const TASK_TYPES = {
     CONCRETING: 'concreting'
 }
 
+export const TEST_MATERIALS_TYPES = {
+    WATER: 'water',
+    FINE_AGGREGATE: 'fine-aggregate',
+    GRANULATED_SLAG: 'granulated-slag',
+    FLYASH: 'flyash',
+    MICRO_SILIKA: 'micro-silika',
+    BENTONITE: 'bentonite',
+    CONCRETE: 'concrete',
+    COARSE_AGGREGATE: 'coarse-aggregate',
+    CEMENT: 'cement',
+    ADMIXTURE: 'admixture',
+    SILICA_FUME: 'silica-fume',
+  };
+
 export const YES_NO_LIST = [
     {
         label: 'Yes', value: 'Y'
@@ -403,5 +417,23 @@ export const YES_NO_NA_LIST = [
     },
     {
         label: 'NA', value: 'NA'
+    },
+];
+
+export const SAMPLE_BY_LIST = [
+    {
+        label: 'Concessionaire', value: 'Concessionaire'
+    },
+    {
+        label: 'Jointly', value: 'Jointly'
+    },
+];
+
+export const TEST_CONDUCTED_BY_LIST = [
+    {
+        label: 'Concessionaire', value: 'Concessionaire'
+    },
+    {
+        label: 'Jointly', value: 'Jointly'
     },
 ];

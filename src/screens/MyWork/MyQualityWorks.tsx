@@ -1,15 +1,11 @@
-import { View, Text, NativeEventEmitter, StyleSheet, ScrollView, Image, TouchableOpacity, TextInput, Modal, StatusBar, SafeAreaView, Dimensions, Alert } from 'react-native'
+import { View, Text, NativeEventEmitter, StyleSheet, ScrollView, Image, TouchableOpacity, TextInput, Dimensions, Alert, Modal, StatusBar, SafeAreaView } from 'react-native'
 import React, { Fragment, useEffect, useState } from 'react'
 import { useIsFocused } from '@react-navigation/native';
-import { HeaderItems, PROJECT_TYPE, RFI_STATUS, SEGMENT_TYPES_DISPLAY, TASK_TYPES, TEST_SAMPLE_STATUS, TEST_SAMPLE_STATUS_LIST, USER_CATEGORY, YES_NO_LIST, YES_NO_NA_LIST } from "../../constants/constants"
+import { HeaderItems, PROJECT_TYPE, RFI_STATUS, SAMPLE_BY_LIST, TEST_CONDUCTED_BY_LIST, TEST_MATERIALS_TYPES, TEST_SAMPLE_STATUS, TEST_SAMPLE_STATUS_LIST, } from "../../constants/constants"
 import { useDispatch, useSelector } from 'react-redux';
 import { clearMyWorksEvent, getMyTests, updateTestSample, } from './actions';
 import LoadingAnimation from '../Common/LoadingAnimation';
 import DropDownPicker from 'react-native-dropdown-picker';
-import CalendarPicker from 'react-native-calendar-picker';
-import moment from 'moment';
-import { SwipeListView } from 'react-native-swipe-list-view';
-import { Guid } from 'guid-typescript';
 
 const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) => {
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
@@ -25,6 +21,9 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
   const [testClassificationId, setTestClassificationId] = useState('');
   const [currentLevel, setCurrentLevel] = useState(1);
   const [searchText, setSearchText] = useState('');
+  const [openPopup, setOpenPopup] = useState(false);
+  const [selectedTestSample, setSelectedTestSample]: any = useState(null);
+
   const [breadcrumbData, setBreadcrumbData] = useState([{
     name: '',
     testClassifIndex: 0,
@@ -36,113 +35,6 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
     active: false
   }]);
 
-  const imageObjectEmpty = {
-    filepath: {
-      data: '',
-      uri: ''
-    },
-    fileData: '',
-    fileUri: ''
-  };
-
-  const [rfiDate, setRFIDate] = useState('');
-  const [hours, setHours] = useState([]);
-  const [minutes, setMinutes] = useState([]);
-  const [timeFormats, setTimeFormats] = useState([]);
-
-  const [hour, setHour] = useState('12');
-  const [minute, setMinute] = useState('00');
-  const [timeFormat, setTimeFormat] = useState('AM');
-
-  const [openHours, setOpenHours] = useState(false);
-  const [openMinutes, setOpenMinutes] = useState(false);
-  const [openTimeFormats, setOpenTimeFormats] = useState(false);
-
-  const [openCalendar, setOpenCalendar] = useState(false);
-
-  const [comments, setComments] = useState('');
-  const { width, height } = Dimensions.get('window');
-
-  // CNG_AND_SETTING_OUT
-  // PLACING_OF_SHEATHING_DUCT
-  const [openPopup, setOpenPopup] = useState(false);
-  const [selectedTask, setSelectedTask] = useState(null);
-  const [imageObject, setImageObject] = useState(imageObjectEmpty);
-
-  // FORM_WORK
-  // PLACEMENT_OF_INNER_SHUTTERS
-  // PLACEMENT_OF_SIDE_SHUTTERS
-  // PLACEMENT_OF_BOTTOM_SHUTTER
-  // PLACEMENT_OF_MIDDLE_AND_TOP_SHUTTER
-  const [cleanliness, setCleanliness] = useState('Y');
-  const [openCleanliness, setOpenCleanliness] = useState(false);
-  const [formworkAlignmentChecked, setFormworkAlignmentChecked] = useState('Y');
-  const [openFormworkAlignmentChecked, setOpenFormworkAlignmentChecked] = useState(false);
-  const [formworkSealingChecked, setFormworkSealingChecked] = useState('Y');
-  const [openFormworkSealingChecked, setOpenFormworkSealingChecked] = useState(false);
-  const [formworkdDrawingsChecked, setFormworkdDrawingsChecked] = useState('Y');
-  const [openFormworkdDrawingsChecked, setOpenFormworkdDrawingsChecked] = useState(false);
-  const [concreteFinishLevelMarked, setConcreteFinishLevelMarked] = useState('Y');
-  const [openConcreteFinishLevelMarked, setOpenConcreteFinishLevelMarked] = useState(false);
-  const [formworkProperlySupported, setFormworkProperlySupported] = useState('Y');
-  const [openFormworkProperlySupported, setOpenFormworkProperlySupported] = useState(false);
-  const [formworkFitConcreting, setFormworkFitConcreting] = useState('Y');
-  const [openFormworkFitConcreting, setOpenFormworkFitConcreting] = useState(false);
-
-  // REINFORCEMENT
-  // REINFORCEMENT_PREPARATION
-  // PLACEMENT_OF_REINFORCEMENT_CAGE **(except spacerBarCheckedGFC)
-  const [rebarAndDimensionGFC, setRebarAndDimensionGFC] = useState('Y');
-  const [openRebarAndDimensionGFC, setOpenRebarAndDimensionGFC] = useState(false);
-  const [shapingNoAndLengthOfBarsGFC, setShapingNoAndLengthOfBarsGFC] = useState('Y');
-  const [openShapingNoAndLengthOfBarsGFC, setOpenShapingNoAndLengthOfBarsGFC] = useState(false);
-  const [rebarsSecurelyTightened, setRebarsSecurelyTightened] = useState('Y');
-  const [openRebarsSecurelyTightened, setOpenRebarsSecurelyTightened] = useState(false);
-  const [spliceLengthAndLocationGFC, setSpliceLengthAndLocationGFC] = useState('Y');
-  const [openSpliceLengthAndLocationGFC, setOpenSpliceLengthAndLocationGFC] = useState(false);
-  const [rebarWithinToleranceLimit, setRebarWithinToleranceLimit] = useState('Y');
-  const [openRebarWithinToleranceLimit, setOpenRebarWithinToleranceLimit] = useState(false);
-  const [couplerArrangementsWithinTolerance, setCouplerArrangementsWithinTolerance] = useState('Y');
-  const [openCouplerArrangementsWithinTolerance, setOpenCouplerArrangementsWithinTolerance] = useState(false);
-  const [barBendingScheduleChecked, setBarBendingScheduleChecked] = useState('Y');
-  const [openBarBendingScheduleChecked, setOpenBarBendingScheduleChecked] = useState(false);
-  const [spacerBarCheckedGFC, setSpacerBarCheckedGFC] = useState('Y');
-  const [openSpacerBarCheckedGFC, setOpenSpacerBarCheckedGFC] = useState(false);
-
-  // EXCAVATION
-  const [quantity, setQuantity] = useState(0);
-
-  // REMOVAL_OF_SHUTTER
-  // REMOVAL_OF_SHUTTERS
-  const [concreteHasAchievedDesiredStrength, setConcreteHasAchievedDesiredStrength] = useState('Y');
-  const [openConcreteHasAchievedDesiredStrength, setOpenConcreteHasAchievedDesiredStrength] = useState(false);
-  const [minimumTimeHasBeenAttained, setMinimumTimeHasBeenAttained] = useState('Y');
-  const [openMinimumTimeHasBeenAttained, setOpenMinimumTimeHasBeenAttained] = useState(false);
-
-  // THREADING_OF_PRE_STRESSING_STRANDS
-  // only comments
-
-  // CAGE_LOWERING
-  const [plieShaftCleanedLooseMaterial, setPlieShaftCleanedLooseMaterial] = useState('Y');
-  const [openPlieShaftCleanedLooseMaterial, setOpenPlieShaftCleanedLooseMaterial] = useState(false);
-  const [suitableSpacerProvidedToMaintainCoverToSteel, setSuitableSpacerProvidedToMaintainCoverToSteel] = useState('Y');
-  const [openSuitableSpacerProvidedToMaintainCoverToSteel, setOpenSuitableSpacerProvidedToMaintainCoverToSteel] = useState(false);
-  const [noLBendBottomOfTheCageChecked, setNoLBendBottomOfTheCageChecked] = useState('Y');
-  const [openNoLBendBottomOfTheCageChecked, setOpenNoLBendBottomOfTheCageChecked] = useState(false);
-
-  // CONCRETE
-  const [concreteData, setConcreteData] = useState([{
-    vehicleNo: '',
-    timeOfArrival: 'N',
-    gradeOfConcrete: 'Y',
-    concreteTemp: '',
-    slumpValue: '',
-    noOfCubesCasted: '',
-    concreteStartTime: '',
-    concretePoured: '',
-    concreteFinishTime: '',
-    key: Guid.create()
-  }]);
   const dispatch = useDispatch()
   const focus = useIsFocused();
 
@@ -160,7 +52,6 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
       setBreadcrumbData([]);
       getMyWorksData();
       setSearchText('');
-      setOpenPopup(false)
     }
   }, [focus]);
 
@@ -348,7 +239,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
     }
   }
 
-  const onUpdateSample = (item: any) => {
+  const onUpdateTestSample = (item: any) => {
     if (!item['sampleStatus_TEMP'] || item['sampleStatus_TEMP'] === TEST_SAMPLE_STATUS.PENDING) {
       Alert.alert('Error', 'Please sample status');
       return;
@@ -374,9 +265,66 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
   }
 
   const onClickTestSampleItem = (item: any) => {
-    if (item.sampleStatus != TEST_SAMPLE_STATUS.PENDING) {
-      Alert.alert('Info', "TODO")
+    // if (!item.workChecklistSubmitted) {
+    //   Alert.alert('Error', 'Checklist of this sample yet to be submitted.')
+    //   return;
+    // }
+    if (!item.readyForDayTesting) {
+      Alert.alert('Error', `Testing of this sample will be started by ${item.startTestingByDate}`);
+      return;
     }
+    
+    item.materialType = TEST_MATERIALS_TYPES.CONCRETE; // TEMP - TODO
+    setSelectedTestSample(item);
+
+    const testObservations = [
+      {
+        sampleNo: {
+          title: 'Sample no',
+          value: 1
+        },
+        details: {
+          titles: ['Cube No.', 'Wt. of cube in gm', 'Volume of Cube in Cum', 'Test Area in mm2', 'Failure Load (KN)', 'Compressive Strength (N/mm2)'],
+          values: [
+          {
+            cubeNo: 1,
+            wtCube: 0,
+            volOfCube: 0,
+            testArea: 0,
+            failureLoad: 0,
+            compressiveStrength: 0
+          },
+          {
+            cubeNo: 2,
+            wtCube: 0,
+            volOfCube: 0,
+            testArea: 0,
+            failureLoad: 0,
+            compressiveStrength: 0
+          },
+          {
+            cubeNo: 3,
+            wtCube: 0,
+            volOfCube: 0,
+            testArea: 0,
+            failureLoad: 0,
+            compressiveStrength: 0
+          }
+        ]
+      },
+      avgStrength: {
+        title: 'Avg. Strength (N/mm2)',
+        value: 0
+      },
+      remarks: {
+        title: 'Remarks',
+        value: ''
+      }
+      }
+    ]
+
+    setConcreteSampleTestItems(testObservations);
+    setOpenPopup(!openPopup);
   }
 
   const getStyle = (item: any) => {
@@ -397,10 +345,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
   }
 
   const getRFIDataByWorkAssignmentId = (task: any) => {
-    // setRFIDate('');
-    // setComments('');
-    // setImageObject(imageObjectEmpty);
-    setSelectedTask(task);
+    // setSelectedTask(task);
     // dispatch(getRFIByWaId({
     //   projectId: loggedInUser.projectId,
     //   projectModuleId: projectModuleId,
@@ -499,10 +444,10 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
     )
   }
 
-  const CustomTextInput = ({ rowItem, fieldName }: { rowItem: any, fieldName: any }) => {
+  const CustomTextInput = ({ rowItem, fieldName, tempProp = false }: { rowItem: any, fieldName: any, tempProp: boolean }) => {
     const [value, setValue] = useState(rowItem[fieldName]);
     const updateValue = (text: any) => {
-      { rowItem[fieldName + '_TEMP'] = text }
+      { rowItem[fieldName + tempProp ? '_TEMP' : ''] = text }
     }
 
     return (
@@ -520,6 +465,231 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
         }}
       />
     )
+  }
+
+  const [concreteSampleTestItems, setConcreteSampleTestItems]: any[] = useState([]);
+  const [humidity, setHumidity] = useState('')
+  const [roomTemperature, setRoomTemperature] = useState('')
+  const [openTestConductedBy, setOpenTestConductedBy] = useState(false)
+  const [testConductedBy, setTestConductedBy] = useState('')
+  const [openSampleBy, setOpenSampleBy] = useState(false)
+  const [sampleBy, setSampleBy] = useState('')
+  const [dateOfTesting, setDateOfTesting] = useState('')
+
+  const testSampleForm = (materialType: any) => {
+    if (materialType === TEST_MATERIALS_TYPES.CONCRETE) {
+      return <View>
+        <View style={{ flexDirection: 'column' }}>
+          {/* <View style={{flexDirection: 'column'}}>
+            <Text style={styles.GenerateRFIFieldLabel}>Date of Testing</Text>
+            <TextInput
+                style={styles.inputStyle}
+                placeholder="Date of Testing"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                returnKeyType="next"
+                underlineColorAndroid="#f000"
+                blurOnSubmit={false}
+                value={dateOfTesting}
+                onChangeText={(text) => {
+                  setDateOfTesting(text);
+                }}
+              />
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Sampled By</Text>
+            <View style={[styles.SectionStyle, { zIndex: 11, height: 50 }]}>
+              <DropDownPicker
+                open={openSampleBy}
+                value={sampleBy}
+                items={SAMPLE_BY_LIST}
+                setOpen={setOpenSampleBy}
+                setValue={setSampleBy}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Test Conducted By</Text>
+            <View style={[styles.SectionStyle, { zIndex: 10, height: 50 }]}>
+            <DropDownPicker
+                open={openTestConductedBy}
+                value={testConductedBy}
+                items={TEST_CONDUCTED_BY_LIST}
+                setOpen={setOpenTestConductedBy}
+                setValue={setTestConductedBy}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Room Temperature/ Atmospheric Temperature in C</Text>
+            <TextInput
+                style={styles.inputStyle}
+                placeholder="Room/Atmospheric Temperature"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                returnKeyType="next"
+                underlineColorAndroid="#f000"
+                blurOnSubmit={false}
+                value={roomTemperature}
+                onChangeText={(text) => {
+                  setRoomTemperature(text);
+                }}
+              />
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Humidity in %</Text>
+            <TextInput
+                style={styles.inputStyle}
+                placeholder="Humidity in %"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                returnKeyType="next"
+                underlineColorAndroid="#f000"
+                blurOnSubmit={false}
+                value={humidity}
+                onChangeText={(text) => {
+                  setHumidity(text);
+                }}
+              />
+          </View> */}
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Observations:</Text>
+            <View>
+                {
+                  concreteSampleTestItems.map((item: any, index: any) => (
+                    <View style={{flexDirection: 'row'}}>
+                      <View style={{flexDirection: 'column'}}>
+                        <View>
+                          <Text>{item.sampleNo.title}</Text>
+                        </View>
+                        <View>
+                          <Text>{item.sampleNo.value}</Text>
+                        </View>
+                      </View>
+
+                      <View style={{flexDirection: 'column'}}>
+                        {/* <View style={{flexDirection: 'row'}}>
+                          {
+                            item.details.titles.map((title: any) => (
+                              <View style={{flexDirection: 'column'}}>
+                              <Text>{title}</Text>
+                            </View>
+                            ))
+                          }
+                          </View> */}
+                          {/* <View> */}
+                          {
+                            item.details.values.map((value: any, index: number) => (
+                              <View style={{flexDirection: 'row'}}>
+                                <View style={{flexDirection: 'column'}}>
+                                  {
+                                    index === 0 ? 
+                                    <View>
+                                      <Text>{item.details.titles[0]}</Text>
+                                  </View> : null
+                                  }
+                                  <Text>{value.cubeNo}</Text>
+                                </View>
+
+                                <View style={{flexDirection: 'column'}}>
+                                {
+                                    index === 0 ? 
+                                    <View>
+                                      <Text>{item.details.titles[1]}</Text>
+                                  </View> : null
+                                  }
+                                  <CustomTextInput rowItem={value}
+                                    tempProp={false}
+                                    fieldName={'wtCube'}></CustomTextInput>
+                                </View>
+
+                                <View style={{flexDirection: 'column'}}>
+                                {
+                                    index === 0 ? 
+                                    <View>
+                                      <Text>{item.details.titles[2]}</Text>
+                                  </View> : null
+                                  }
+                                  <CustomTextInput rowItem={value}
+                                    tempProp={false}
+                                    fieldName={'volOfCube'}></CustomTextInput>
+                                </View>
+
+                                <View style={{flexDirection: 'column'}}>
+                                {
+                                    index === 0 ? 
+                                    <View>
+                                      <Text>{item.details.titles[3]}</Text>
+                                  </View> : null
+                                  }
+                                  <CustomTextInput rowItem={value}
+                                    tempProp={false}
+                                    fieldName={'testArea'}></CustomTextInput>
+                                </View>
+
+                                <View style={{flexDirection: 'column'}}>
+                                {
+                                    index === 0 ? 
+                                    <View>
+                                      <Text>{item.details.titles[4]}</Text>
+                                  </View> : null
+                                  }
+                                  <CustomTextInput rowItem={value}
+                                    tempProp={false}
+                                    fieldName={'failureLoad'}></CustomTextInput>
+                                </View>
+
+                                <View style={{flexDirection: 'column'}}>
+                                {
+                                    index === 0 ? 
+                                    <View>
+                                      <Text>{item.details.titles[5]}</Text>
+                                  </View> : null
+                                  }
+                                  <Text>{value.compressiveStrength}</Text>
+                                </View>
+
+                              </View>
+                            ))
+                          }
+                          {/* </View> */}
+                        
+                      </View>
+                      <View style={{flexDirection: 'column'}}>
+                          <View>
+                            <Text>{item.avgStrength.title}</Text>
+                          </View>
+                          <View>
+                            <Text>{item.avgStrength.value}</Text>
+                          </View>
+                      </View>
+                      <View style={{flexDirection: 'column'}}>
+                        <View>
+                          <Text>{item.remarks.title}</Text>
+                        </View>
+                        <View>
+                          <Text>{item.remarks.value}</Text>
+                        </View>
+                      </View>
+                    </View>
+                  )
+                )
+                }
+            </View>
+          </View>
+
+        </View>
+      </View>
+    }
+  }
+
+  const onSubmitTestSample = (status: string) => {
+    console.log('======', JSON.stringify(concreteSampleTestItems))
   }
 
   return (
@@ -700,7 +870,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                   }).map((item: any) => (
                     <View>
                       <View style={item.sampleStatus != TEST_SAMPLE_STATUS.PREPARED && { borderColor: '#000', borderWidth: 1, borderRadius: 10, marginBottom: 10 }}>
-                        <TouchableOpacity style={getStyle(item)} onPress={() => onClickTestSampleItem(item)}>
+                        <TouchableOpacity style={getStyle(item)} disabled={item.sampleStatus != TEST_SAMPLE_STATUS.PREPARED} onPress={() => onClickTestSampleItem(item)}>
                           <View style={styles.leftContainer}>
                             <Text style={styles.HeadText}>{item.name}</Text>
                           </View>
@@ -716,10 +886,11 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                               </View>
                               <View style={{ height: 45 }}>
                                 <CustomTextInput rowItem={item}
+                                  tempProp={true}
                                   fieldName={'rfiDateTime'}></CustomTextInput>
                               </View>
                               <View style={{ height: 45, width: 100 }}>
-                                <TouchableOpacity style={[styles.SubmitSample, styles.StartBorder]} onPress={() => onUpdateSample(item)}>
+                                <TouchableOpacity style={[styles.SubmitSample, styles.StartBorder]} onPress={() => onUpdateTestSample(item)}>
                                   <View style={styles.leftContainer}>
                                     <Text style={styles.HeadText}>Submit</Text>
                                   </View>
@@ -754,7 +925,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
           </View> : null
         }
       </ScrollView>
-
+      
       <Modal
         animationType="fade"
         transparent={true}
@@ -766,7 +937,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <View style={styles.ModalHeader}>
-                <Text style={styles.modalText}>RFIs</Text>
+                <Text style={styles.modalText}>Test Sample</Text>
                 <TouchableOpacity
                   style={styles.buttonClose}
                   onPress={() => setOpenPopup(!openPopup)}>
@@ -779,80 +950,36 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
               </View>
               <View style={styles.ModalInnerContainer}>
                 <View>
-                  <Text style={styles.modalLabel}>Task: {selectedTask?.name}</Text>
+                  <Text style={styles.modalLabel}>{selectedTestSample?.name}</Text>
                 </View>
-                <ScrollView style={{ paddingTop: 10, height: 500 }}>
+                <ScrollView style={{ paddingTop: 10, height: 500, width: 1000 }}>
                   <Fragment>
                     <StatusBar barStyle="dark-content" />
                     <SafeAreaView>
                       {
-                        // taskForm(selectedTask?.name)
+                        testSampleForm(selectedTestSample?.materialType)
                       }
                     </SafeAreaView>
                   </Fragment>
                 </ScrollView>
 
-                {/* <View style={[styles.btnParentSection, { flexDirection: 'row', justifyContent: 'center', gap: 20 }]}>
-                  <TouchableOpacity style={styles.submitButton} onPress={() => onFillChecklist(RFI_STATUS.IN_PROGRESS)}>
+                <View style={[styles.btnParentSection, { flexDirection: 'row', justifyContent: 'center', gap: 20 }]}>
+                  <TouchableOpacity style={styles.submitButton} onPress={() => onSubmitTestSample(RFI_STATUS.IN_PROGRESS)}>
                     <Text style={styles.submitButtonText}>Save</Text>
                   </TouchableOpacity>
 
-                  <TouchableOpacity style={styles.submitButton} onPress={() => onFillChecklist(RFI_STATUS.IN_REVIEW)}>
+                  <TouchableOpacity style={styles.submitButton} onPress={() => onSubmitTestSample(RFI_STATUS.APPROVED)}>
                     <Text style={styles.submitButtonText}>Submit</Text>
                   </TouchableOpacity>
-                </View> */}
+                </View>
               </View>
             </View>
           </View>
         </View>
       </Modal>
 
-
       <LoadingAnimation loading={loading}></LoadingAnimation>
     </View>
-  )
-}
-
-const CustomTextInput = ({ rowItem, fieldName }: { rowItem: any, fieldName: any }) => {
-  const [value, setValue] = useState(rowItem[fieldName]);
-  const updateValue = (text: any) => {
-    { rowItem[fieldName] = text }
-  }
-
-  return (
-    <TextInput
-      style={styles.inputStyle2}
-      placeholder=""
-      autoCapitalize="none"
-      keyboardType="email-address"
-      returnKeyType="next"
-      underlineColorAndroid="#f000"
-      blurOnSubmit={false}
-      value={value}
-      onChangeText={(text) => {
-        setValue(text); updateValue(text);
-      }}
-    />
-  )
-}
-
-const CustomDropdownPicker = ({ items, rowItem, fieldName }: { items: any, rowItem: any, fieldName: any }) => {
-  const [value, setValue] = useState(rowItem[fieldName]);
-  const [openList, setOpenList] = useState(false);
-  const updateValue = () => {
-    { rowItem[fieldName] = value }
-  }
-  return (
-    <DropDownPicker style={{ width: 90, height: 45, zIndex: 10 }}
-      open={openList}
-      value={value}
-      items={items}
-      setOpen={setOpenList}
-      setValue={setValue}
-      listMode='MODAL'
-      closeAfterSelecting={true}
-      onChangeValue={() => updateValue()}
-    />
   )
 }
 

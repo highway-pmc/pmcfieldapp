@@ -424,11 +424,11 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
     ))
   }
 
-  const CustomDropdownPicker = ({ items, rowItem, fieldName }: { items: any, rowItem: any, fieldName: any }) => {
+  const CustomDropdownPicker = ({ items, rowItem, fieldName, tempProp }: { items: any, rowItem: any, fieldName: any, tempProp: boolean }) => {
     const [value, setValue] = useState(rowItem[fieldName]);
     const [openList, setOpenList] = useState(false);
     const updateValue = () => {
-      { rowItem[fieldName + '_TEMP'] = value }
+      { rowItem[fieldName + (tempProp ? '_TEMP' : '')] = value }
     }
     return (
       <DropDownPicker style={{ width: 110, height: 30, zIndex: 10 }}
@@ -447,7 +447,56 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
   const CustomTextInput = ({ rowItem, fieldName, tempProp = false }: { rowItem: any, fieldName: any, tempProp: boolean }) => {
     const [value, setValue] = useState(rowItem[fieldName]);
     const updateValue = (text: any) => {
-      { rowItem[fieldName + tempProp ? '_TEMP' : ''] = text }
+      { rowItem[fieldName + (tempProp ? '_TEMP' : '')] = text }
+    }
+
+    const onBlur = () => {
+      if (fieldName === 'testArea' || fieldName === 'failureLoad') {
+        if (Number(rowItem['testArea']).toString() !== 'NaN' && Number(rowItem['failureLoad']).toString() !== 'NaN') {
+          const testArea = Number(rowItem['testArea']);
+          const failureLoad = Number(rowItem['failureLoad']);
+          if (testArea && failureLoad) {
+            rowItem['compressiveStrength'] = Number((failureLoad * 1000 / testArea).toFixed(2));
+          } else {
+            rowItem['compressiveStrength'] = 0;
+          }
+        } else {
+          rowItem['compressiveStrength'] = 0;
+        }
+        const total = concreteSampleTestItems[0].details.values.map((item: any) => Number(item.compressiveStrength)).reduce((prev: any, next: any) => prev + next, 0) || 0;
+        const avg = Number((total / 3).toFixed(2));
+        concreteSampleTestItems[0].avgStrength.value = avg;
+
+        // Remark
+        if (avg) { // Sample discarded
+          const cubeNo1 = (Number(concreteSampleTestItems[0].details.values[0].compressiveStrength) - avg) / avg;
+          const cubeNo1Pass = (avg <= (cubeNo1 + 15) && avg >= (cubeNo1 - 15));
+
+          const cubeNo2 = (Number(concreteSampleTestItems[0].details.values[1].compressiveStrength) - avg) / avg;
+          const cubeNo2Pass = (avg <= (cubeNo2 + 15) && avg >= (cubeNo2 - 15));
+
+          const cubeNo3 = (Number(concreteSampleTestItems[0].details.values[2].compressiveStrength) - avg) / avg;
+          const cubeNo3Pass = (avg <= (cubeNo3 + 15) && avg >= (cubeNo3 - 15));
+          
+          concreteSampleTestItems[0].remarks.value = '';
+          if (!cubeNo1Pass || !cubeNo2Pass || !cubeNo3Pass) {
+            concreteSampleTestItems[0].remarks.value = 'Sample discarded';
+          } else { // Recheck
+            const gradeOfConcrete = Number(selectedTestSample.name.substring(selectedTestSample.name.indexOf('Grade-M') + 7, selectedTestSample.name.lastIndexOf('/')))
+            const recheck = !((0.67 * gradeOfConcrete) > avg);
+            if (recheck) {
+              concreteSampleTestItems[0].remarks.value = 'Recheck';
+            } else {
+              concreteSampleTestItems[0].remarks.value = 'Pass';
+            }
+          }
+        }
+
+        const concreteSampleTestItemsTemp = [...concreteSampleTestItems];
+
+        setConcreteSampleTestItems(concreteSampleTestItemsTemp);
+        
+      }
     }
 
     return (
@@ -463,6 +512,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
         onChangeText={(text) => {
           setValue(text); updateValue(text);
         }}
+        onBlur={() => onBlur()}
       />
     )
   }
@@ -479,8 +529,8 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
   const testSampleForm = (materialType: any) => {
     if (materialType === TEST_MATERIALS_TYPES.CONCRETE) {
       return <View>
-        <View style={{ flexDirection: 'column' }}>
-          {/* <View style={{flexDirection: 'column'}}>
+        <View style={{ flexDirection: 'column', paddingBottom: 40 }}>
+          <View style={{flexDirection: 'column'}}>
             <Text style={styles.GenerateRFIFieldLabel}>Date of Testing</Text>
             <TextInput
                 style={styles.inputStyle}
@@ -555,132 +605,134 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                   setHumidity(text);
                 }}
               />
-          </View> */}
+          </View>
 
           <View style={{ flexDirection: 'column' }}>
             <Text style={styles.GenerateRFIFieldLabel}>Observations:</Text>
-            <View>
-                {
-                  concreteSampleTestItems.map((item: any, index: any) => (
-                    <View style={{flexDirection: 'row'}}>
-                      <View style={{flexDirection: 'column'}}>
-                        <View>
-                          <Text>{item.sampleNo.title}</Text>
+            <ScrollView style={styles.Width100} horizontal={true}>
+              <View>
+                  {
+                    concreteSampleTestItems.map((item: any, index: any) => (
+                      <View style={{flexDirection: 'row'}}>
+                        <View style={{flexDirection: 'column', width: 80}}>
+                          <View style={{height: 40}}>
+                            <Text style={{fontWeight: '700'}}>{item.sampleNo.title}</Text>
+                          </View>
+                          <View>
+                            <Text style={{textAlign: 'center'}}>{item.sampleNo.value}</Text>
+                          </View>
                         </View>
-                        <View>
-                          <Text>{item.sampleNo.value}</Text>
-                        </View>
-                      </View>
 
-                      <View style={{flexDirection: 'column'}}>
-                        {/* <View style={{flexDirection: 'row'}}>
-                          {
-                            item.details.titles.map((title: any) => (
-                              <View style={{flexDirection: 'column'}}>
-                              <Text>{title}</Text>
-                            </View>
-                            ))
-                          }
-                          </View> */}
-                          {/* <View> */}
-                          {
-                            item.details.values.map((value: any, index: number) => (
-                              <View style={{flexDirection: 'row'}}>
+                        <View style={{flexDirection: 'column'}}>
+                          {/* <View style={{flexDirection: 'row'}}>
+                            {
+                              item.details.titles.map((title: any) => (
                                 <View style={{flexDirection: 'column'}}>
-                                  {
-                                    index === 0 ? 
-                                    <View>
-                                      <Text>{item.details.titles[0]}</Text>
-                                  </View> : null
-                                  }
-                                  <Text>{value.cubeNo}</Text>
-                                </View>
-
-                                <View style={{flexDirection: 'column'}}>
-                                {
-                                    index === 0 ? 
-                                    <View>
-                                      <Text>{item.details.titles[1]}</Text>
-                                  </View> : null
-                                  }
-                                  <CustomTextInput rowItem={value}
-                                    tempProp={false}
-                                    fieldName={'wtCube'}></CustomTextInput>
-                                </View>
-
-                                <View style={{flexDirection: 'column'}}>
-                                {
-                                    index === 0 ? 
-                                    <View>
-                                      <Text>{item.details.titles[2]}</Text>
-                                  </View> : null
-                                  }
-                                  <CustomTextInput rowItem={value}
-                                    tempProp={false}
-                                    fieldName={'volOfCube'}></CustomTextInput>
-                                </View>
-
-                                <View style={{flexDirection: 'column'}}>
-                                {
-                                    index === 0 ? 
-                                    <View>
-                                      <Text>{item.details.titles[3]}</Text>
-                                  </View> : null
-                                  }
-                                  <CustomTextInput rowItem={value}
-                                    tempProp={false}
-                                    fieldName={'testArea'}></CustomTextInput>
-                                </View>
-
-                                <View style={{flexDirection: 'column'}}>
-                                {
-                                    index === 0 ? 
-                                    <View>
-                                      <Text>{item.details.titles[4]}</Text>
-                                  </View> : null
-                                  }
-                                  <CustomTextInput rowItem={value}
-                                    tempProp={false}
-                                    fieldName={'failureLoad'}></CustomTextInput>
-                                </View>
-
-                                <View style={{flexDirection: 'column'}}>
-                                {
-                                    index === 0 ? 
-                                    <View>
-                                      <Text>{item.details.titles[5]}</Text>
-                                  </View> : null
-                                  }
-                                  <Text>{value.compressiveStrength}</Text>
-                                </View>
-
+                                <Text>{title}</Text>
                               </View>
-                            ))
-                          }
-                          {/* </View> */}
-                        
-                      </View>
-                      <View style={{flexDirection: 'column'}}>
-                          <View>
-                            <Text>{item.avgStrength.title}</Text>
-                          </View>
-                          <View>
-                            <Text>{item.avgStrength.value}</Text>
-                          </View>
-                      </View>
-                      <View style={{flexDirection: 'column'}}>
-                        <View>
-                          <Text>{item.remarks.title}</Text>
+                              ))
+                            }
+                            </View> */}
+                            {/* <View> */}
+                            {
+                              item.details.values.map((value: any, index: number) => (
+                                <View style={{flexDirection: 'row'}}>
+                                  <View style={{flexDirection: 'column', width: 60}}>
+                                    {
+                                      index === 0 ? 
+                                      <View style={{height: 40}}>
+                                        <Text style={{fontWeight: '700'}}>{item.details.titles[0]}</Text>
+                                    </View> : null
+                                    }
+                                    <Text style={[styles.textStyle2, {textAlign: 'center'}]}>{value.cubeNo}</Text>
+                                  </View>
+
+                                  <View style={{flexDirection: 'column', width: 120}}>
+                                  {
+                                      index === 0 ? 
+                                      <View style={{height: 40}}>
+                                        <Text style={{fontWeight: '700'}}>{item.details.titles[1]}</Text>
+                                    </View> : null
+                                    }
+                                    <CustomTextInput rowItem={value}
+                                      tempProp={false}
+                                      fieldName={'wtCube'}></CustomTextInput>
+                                  </View>
+
+                                  <View style={{flexDirection: 'column', width: 120}}>
+                                  {
+                                      index === 0 ? 
+                                      <View style={{height: 40}}>
+                                        <Text style={{fontWeight: '700'}}>{item.details.titles[2]}</Text>
+                                    </View> : null
+                                    }
+                                    <CustomTextInput rowItem={value}
+                                      tempProp={false}
+                                      fieldName={'volOfCube'}></CustomTextInput>
+                                  </View>
+
+                                  <View style={{flexDirection: 'column', width: 120}}>
+                                  {
+                                      index === 0 ? 
+                                      <View style={{height: 40}}>
+                                        <Text style={{fontWeight: '700'}}>{item.details.titles[3]}</Text>
+                                    </View> : null
+                                    }
+                                    <CustomTextInput rowItem={value}
+                                      tempProp={false}
+                                      fieldName={'testArea'}></CustomTextInput>
+                                  </View>
+
+                                  <View style={{flexDirection: 'column', width: 120}}>
+                                  {
+                                      index === 0 ? 
+                                      <View style={{height: 40}}>
+                                        <Text style={{fontWeight: '700'}}>{item.details.titles[4]}</Text>
+                                    </View> : null
+                                    }
+                                    <CustomTextInput rowItem={value}
+                                      tempProp={false}
+                                      fieldName={'failureLoad'}></CustomTextInput>
+                                  </View>
+
+                                  <View style={{flexDirection: 'column', width: 120}}>
+                                  {
+                                      index === 0 ? 
+                                      <View style={{height: 40}}>
+                                        <Text style={{fontWeight: '700'}}>{item.details.titles[5]}</Text>
+                                    </View> : null
+                                    }
+                                    <Text style={[styles.textStyle, {textAlign: 'center'}]}>{value.compressiveStrength}</Text>
+                                  </View>
+
+                                </View>
+                              ))
+                            }
+                            {/* </View> */}
+                          
                         </View>
-                        <View>
-                          <Text>{item.remarks.value}</Text>
+                        <View style={{flexDirection: 'column', width: 120}}>
+                            <View style={{height: 40}}>
+                              <Text style={{fontWeight: '700'}}>{item.avgStrength.title}</Text>
+                            </View>
+                            <View style={styles.textStyle}>
+                              <Text style={{textAlign: 'center'}}>{item.avgStrength.value}</Text>
+                            </View>
+                        </View>
+                        <View style={{flexDirection: 'column', width: 120}}>
+                          <View style={{height: 40}}>
+                            <Text style={{fontWeight: '700'}}>{item.remarks.title}</Text>
+                          </View>
+                          <View style={styles.textStyle}>
+                            <Text style={[{textAlign: 'center'}]}>{item.remarks.value}</Text>
+                          </View>
                         </View>
                       </View>
-                    </View>
+                    )
                   )
-                )
-                }
-            </View>
+                  }
+              </View>
+            </ScrollView>
           </View>
 
         </View>
@@ -880,7 +932,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                             <View style={{ flexDirection: 'row', alignContent: 'center', alignItems: 'center' }}>
                               <View style={[styles.SectionStyle, { width: 130 }]}>
                                 <CustomDropdownPicker items={TEST_SAMPLE_STATUS_LIST}
-                                  rowItem={item}
+                                  rowItem={item} tempProp={true}
                                   fieldName={'sampleStatus'}
                                 />
                               </View>
@@ -1006,6 +1058,9 @@ const styles = StyleSheet.create({
   Height100: {
     height: '100%',
   },
+  Width100: {
+    width: Dimensions.get("screen").width,
+  },
   SearchBox: {
     flexDirection: 'row',
     height: 40,
@@ -1053,8 +1108,31 @@ const styles = StyleSheet.create({
     borderColor: '#808089',
     backgroundColor: '#fff',
     fontWeight: '600',
-    height: 30,
+    height: 40,
     width: 120
+  },
+  textStyle: {
+    flex: 1,
+    borderWidth: 1,
+    borderRadius: 0,
+    borderColor: '#808089',
+    backgroundColor: '#ccc',
+    fontWeight: '600',
+    height: 40,
+    width: 120
+  },
+  textStyle2: {
+    flex: 1,
+    borderWidth: 1,
+    borderRadius: 0,
+    borderColor: '#808089',
+    backgroundColor: '#ccc',
+  },
+  boxBorder: {
+    flex: 1,
+    borderWidth: 1,
+    borderRadius: 0,
+    borderColor: '#808089',
   },
   //Start Work
   StartWorkCard: {

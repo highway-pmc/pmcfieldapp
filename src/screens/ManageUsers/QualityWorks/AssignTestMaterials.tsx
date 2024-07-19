@@ -7,6 +7,7 @@ import { clearTestClassificationsAssignmentData, getUsersForTestAssignment, getT
 import { ScrollView } from 'react-native-gesture-handler';
 import CheckBox from '@react-native-community/checkbox';
 import LoadingAnimation from '../../Common/LoadingAnimation';
+import { hideTestkAssignmentCheckbox } from '../../../utils/Utils';
 
 const AssignTestMaterials = ({ route, navigation }: { route: any, navigation: any }) => {
   const { testClassificationId, testClassificationName, testWorkCategoryId, testWorkCategoryName, workType } = route.params;
@@ -177,6 +178,42 @@ const AssignTestMaterials = ({ route, navigation }: { route: any, navigation: an
     setSearchText('');
   }, []);
 
+  const onNext = (item: any) => {
+    if (hideTestkAssignmentCheckbox(testClassificationName)) { // TODO - will introduce type in db and use it iso Classification Name
+      if (testClassificationName === 'Procurement Details') {
+        navigation.navigate('Procurements', {
+          testClassificationId: testClassificationId,
+          testClassificationName: testClassificationName,
+          testWorkCategoryId: testWorkCategoryId,
+          testWorkCategoryName: testWorkCategoryName,
+          testMaterialId: item._id,
+          testMaterialName: item.name,
+          workType: workType
+        })
+      } else if (testClassificationName === 'Source Approvals') {
+        navigation.navigate('SourceApprovals', {
+          testClassificationId: testClassificationId,
+          testClassificationName: testClassificationName,
+          testWorkCategoryId: testWorkCategoryId,
+          testWorkCategoryName: testWorkCategoryName,
+          testMaterialId: item._id,
+          testMaterialName: item.name,
+          workType: workType
+        })
+      }
+    } else {
+      navigation.navigate('AssignTestTypes', {
+        testClassificationId: testClassificationId,
+        testClassificationName: testClassificationName,
+        testWorkCategoryId: testWorkCategoryId,
+        testWorkCategoryName: testWorkCategoryName,
+        testMaterialId: item._id,
+        testMaterialName: item.name,
+        workType: workType
+      })
+    }
+  };
+
   return (
     <View style={styles.Container}>
       {(error) && <View style={styles.ErrorSectionStyle}>
@@ -211,26 +248,21 @@ const AssignTestMaterials = ({ route, navigation }: { route: any, navigation: an
           }).map((item: any, index) => (
           <View style={styles.UserCategory}>
             <View style={styles.FlexRowCenter}>
-              <CheckBox
-                value={item.isChecked}
-                onValueChange={() => handleRadioChange(index)}
-                style={styles.checkbox}
-                tintColors={{ true: '#0F56B3', false: '#818181' }}
-              />
+              {
+                !hideTestkAssignmentCheckbox(testClassificationName) &&
+                <CheckBox
+                  value={item.isChecked}
+                  onValueChange={() => handleRadioChange(index)}
+                  style={styles.checkbox}
+                  tintColors={{ true: '#0F56B3', false: '#818181' }}
+                />
+              }
               <View>
                 <Text style={styles.UserRole}>{item.name}</Text>
               </View>
             </View>
             <TouchableOpacity
-              onPress={() => navigation.navigate('AssignTestTypes', {
-                testClassificationId: testClassificationId,
-                testClassificationName: testClassificationName,
-                testWorkCategoryId: testWorkCategoryId,
-                testWorkCategoryName: testWorkCategoryName,
-                testMaterialId: item._id,
-                testMaterialName: item.name,
-                workType: workType
-              })}>
+              onPress={() => onNext(item)}>
               <Image
                 style={styles.CloseIcon}
                 source={require('./../../../images/right-arrow.png')}

@@ -17,6 +17,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearTestClassificationsAssignmentData, getTestClassifications, getUsersForTestAssignment, testClassificationsTestAssignToUsers } from './actions';
 import LoadingAnimation from '../../Common/LoadingAnimation';
+import { hideTestkAssignmentCheckbox } from '../../../utils/Utils';
 
 const AssignTestClassification = () => {
   const navigation: any = useNavigation();
@@ -221,12 +222,15 @@ const AssignTestClassification = () => {
           }).map((item: any, index) => (
           <View style={styles.UserCategory}>
             <View style={styles.FlexRowCenter}>
-              <CheckBox
-                value={item.isChecked}
-                onValueChange={() => handleRadioChange(index)}
-                style={styles.checkbox}
-                tintColors={{true: '#0F56B3', false: '#818181'}}
-              />
+              {
+                !hideTestkAssignmentCheckbox(item.name) &&
+                <CheckBox
+                  value={item.isChecked}
+                  onValueChange={() => handleRadioChange(index)}
+                  style={styles.checkbox}
+                  tintColors={{true: '#0F56B3', false: '#818181'}}
+                 />
+              }
               <View>
                 <Text style={styles.UserRole}>{item.name}</Text>
               </View>

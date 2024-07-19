@@ -7,6 +7,7 @@ import { clearTestClassificationsAssignmentData, getTestWorkCategory, getUsersFo
 import { ScrollView } from 'react-native-gesture-handler';
 import CheckBox from '@react-native-community/checkbox';
 import LoadingAnimation from '../../Common/LoadingAnimation';
+import { hideTestkAssignmentCheckbox } from '../../../utils/Utils';
 
 const AssignTestWorkCategory = ({ route, navigation }: { route: any, navigation: any }) => {
   const { testClassificationId, testClassificationName, workType } = route.params;
@@ -219,12 +220,16 @@ const AssignTestWorkCategory = ({ route, navigation }: { route: any, navigation:
           }).map((item: any, index) => (
           <View style={styles.UserCategory}>
             <View style={styles.FlexRowCenter}>
-              <CheckBox
-                value={item.isChecked}
-                onValueChange={() => handleRadioChange(index)}
-                style={styles.checkbox}
-                tintColors={{ true: '#0F56B3', false: '#818181' }}
-              />
+              {
+                !hideTestkAssignmentCheckbox(testClassificationName) &&
+                <CheckBox
+                  value={item.isChecked}
+                  onValueChange={() => handleRadioChange(index)}
+                  style={styles.checkbox}
+                  tintColors={{ true: '#0F56B3', false: '#818181' }}
+                />
+              }
+              
               <View>
                 <Text style={styles.UserRole}>{item.name}</Text>
               </View>

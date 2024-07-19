@@ -265,10 +265,10 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
   }
 
   const onClickTestSampleItem = (item: any) => {
-    // if (!item.workChecklistSubmitted) {
-    //   Alert.alert('Error', 'Checklist of this sample yet to be submitted.')
-    //   return;
-    // }
+    if (!item.workChecklistSubmitted) {
+      Alert.alert('Error', 'Checklist of this sample yet to be submitted.')
+      return;
+    }
     if (!item.readyForDayTesting) {
       Alert.alert('Error', `Testing of this sample will be started by ${item.startTestingByDate}`);
       return;

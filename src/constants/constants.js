@@ -37,6 +37,8 @@ export const HeaderItems = {
     assignTestWorkCategory: { showBack: true, title: 'Assign Test Work Category' },
     assignTestMaterials: { showBack: true, title: 'Assign Test Materials' },
     assignTestTypes: { showBack: true, title: 'Assign Test Types' },
+    sourceApprovals: { showBack: true, title: 'Source Approvals' },
+    procurements: { showBack: true, title: 'Procurements' },
 };
 
 export const UserRoles = {
@@ -435,5 +437,51 @@ export const TEST_CONDUCTED_BY_LIST = [
     },
     {
         label: 'Jointly', value: 'Jointly'
+    },
+];
+
+export const SOURCE_APPROVAL_STATUS = {
+    PENDING: 'pending',
+    REJECTED: 'rejected',
+    CANCELLED: 'cancelled',
+    APPROVED: 'approved',
+  };
+
+export const CONCRETE_GRADE_LIST = [
+    {
+        label: 'M20', value: 'M20'
+    },
+    {
+        label: 'M25', value: 'M25'
+    },
+    {
+        label: 'M30', value: 'M30'
+    },
+    {
+        label: 'M35', value: 'M35'
+    },
+    {
+        label: 'M40', value: 'M40'
+    },
+    {
+        label: 'M45', value: 'M45'
+    },
+    {
+        label: 'M50', value: 'M50'
+    },
+    {
+        label: 'M55', value: 'M55'
+    },
+    {
+        label: 'M60', value: 'M60'
+    },
+    {
+        label: 'M65', value: 'M65'
+    },
+    {
+        label: 'M70', value: 'M70'
+    },
+    {
+        label: 'M75', value: 'M20'
     },
 ];

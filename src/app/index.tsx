@@ -12,6 +12,7 @@ import {dbMigrations} from '../database/dbmigrations'
 import { schema } from '../database/schema'
 import { db } from '../database/db'
 import { users } from '../models/users'
+import {SnackbarProvider} from '../context/SnackbarContext';
 
 LogBox.ignoreAllLogs()
 
@@ -40,6 +41,8 @@ const App = () => {
 
 export default () => (
   <ReduxProvider store={store}>
-    <App />
+    <SnackbarProvider>
+      <App />
+    </SnackbarProvider>
   </ReduxProvider>
 )

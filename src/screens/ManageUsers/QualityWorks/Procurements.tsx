@@ -19,7 +19,7 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
 
     if (useIsFocused()) {
         const eventEmitter = new NativeEventEmitter();
-        eventEmitter.emit('headerEvent', HeaderItems.sourceApprovals);
+        eventEmitter.emit('headerEvent', HeaderItems.procurements);
     }
 
     const { showSnackbar } = useSnackbar();
@@ -27,31 +27,42 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
     type FormState = {
         projectId: string;
         sourceApprovalId: string;
-        qty: number;
+        qtyOfConcrete: number;
         procurementDateTime: string;
-        vehicleNo: [];
+        vehicleNo: any[];
+        vehicleNoTemp: any;
         invoiceFile: string;
     };
-
+    const [vehicleNos, setVehicleNos] = useState(['']);
     const [form, setForm] = useState<FormState>({
         projectId: loggedInUser.projectId,
         sourceApprovalId: testMaterialId,
-        qty: 0,
+        qtyOfConcrete: 0,
         procurementDateTime: '',
         vehicleNo: [],
+        vehicleNoTemp: '',
         invoiceFile: '',
     });
 
-    const initialData = [
-        { id: '1', name: 'Item 1', type: 'approve' },
-        { id: '2', name: 'Item 2', type: 'reject' },
-        { id: '3', name: 'Item 3', type: 'approve' },
+    const initialData: any = [
+        { id: '1', name: 'Item 1', vehicleNo: [], type: 'approve' },
+        { id: '2', name: 'Item 2', vehicleNo: [], type: 'reject' },
+        { id: '3', name: 'Item 3', vehicleNo: [], type: 'approve' },
       ];
 
       const [data, setData] = useState(initialData);
 
       const handleDelete = (id: any) => {
-        setData(data.filter(item => item.id !== id));
+        setData(data.filter((item: any) => item.id !== id));
+      };
+
+      const handleDeleteAddedVehicle = (vehicleNo: any) => {
+        const index = vehicleNos.indexOf(vehicleNo);
+        if (index != -1) {
+            vehicleNos.splice(index, 1);
+            setVehicleNos([...vehicleNos]);
+            setForm({...form});
+        }
       };
     
       const handleEdit = (id: any) => {
@@ -79,6 +90,22 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
         showSnackbar('Updated Successfully', 'success', 'done'); // Show success snackbar
     };
 
+    const onAddVehicle = () => {
+        console.log('========', form.vehicleNoTemp)
+        if (form.vehicleNoTemp) {
+            if (!vehicleNos) {
+                setVehicleNos([]);
+            }
+            const index = vehicleNos.indexOf(form.vehicleNoTemp);
+            if (index === -1) {
+                vehicleNos.push(form.vehicleNoTemp);
+                form.vehicleNoTemp = '';
+                setVehicleNos([...vehicleNos]);
+                setForm({...form});
+            }
+        }
+    }
+
     const addProcurementsForm = () => {
         return (
             <View style={styles.reportFields}>
@@ -89,8 +116,8 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
                     <View>
                         <Input
                             label="Qty (in cum)"
-                            value={form.qty}
-                            onChange={(value: string) => handleInputChange('qty', value)}
+                            value={form.qtyOfConcrete}
+                            onChange={(value: string) => handleInputChange('qtyOfConcrete', value)}
                             isRequired={true}
                         />
                     </View>
@@ -102,18 +129,34 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
                         />
                     </View>
                     <View>
-                        <Input
-                            label="Vehicle no."
-                            value={form.vehicleNo}
-                            onChange={(value: string) => handleInputChange('vehicleNo', value)}
-                        />
+                        <View style={{flexDirection: 'row', width: '100%', display: 'flex', gap: 10}}>
+                            <View style={{width: '70%'}}>
+                                <Input
+                                    label="Vehicle no."
+                                    value={form.vehicleNoTemp}
+                                    onChange={(value: string) => handleInputChange('vehicleNoTemp', value)}
+                                />
+                            </View>
+                            <View style={{justifyContent: 'center'}}>
+                                <TouchableOpacity style={styles.add_vehicle} onPress={onAddVehicle}>
+                                    <Text style={styles.btnAddVehicle}>Add Vehicle</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                        <View style={{maxHeight: 400}}>
+                        <ScrollView>
+                            <FlatList
+                                data={vehicleNos}
+                                renderItem={renderAddedVehicleItem}
+                                keyExtractor={item => item}
+                            />
+                        </ScrollView>
+                        </View>
                     </View>
                     <View>
-                        <Input
-                            label="Upload invoice"
-                            value={form.invoiceFile}
-                            onChange={(value: string) => handleInputChange('invoiceFile', value)}
-                        />
+                    <TouchableOpacity style={styles.upload_container}>
+                        <Text style={styles.uploadBtn}>Upload Invoice</Text>
+                    </TouchableOpacity>
                     </View>
                 </View>
                 <TouchableOpacity style={styles.btnContainer} onPress={handleSubmit}>
@@ -177,6 +220,22 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
         </View>
       );
 
+      const renderAddedVehicleItem = ({ item }: {item: any}) => (
+        <View style={styles.itemContainerVehicleList}>
+          <Text style={styles.itemText}>{item}</Text>
+          <View style={styles.iconContainer}>
+            <Icon.Button 
+              style={styles.icon} 
+              name="trash" 
+              backgroundColor="transparent"
+              color="red"
+              onPress={() => handleDeleteAddedVehicle(item)}
+            >
+            </Icon.Button>
+          </View>
+        </View>
+      );
+
     return (
         <SafeAreaView style={styles.container}>
             <View>
@@ -191,11 +250,11 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
                     </View>
                     <View>
                         <ScrollView>
-                    <FlatList
-                        data={data}
-                        renderItem={renderItem}
-                        keyExtractor={item => item.id}
-                    />
+                            <FlatList
+                                data={data}
+                                renderItem={renderItem}
+                                keyExtractor={item => item.id}
+                            />
                         </ScrollView>
                     </View>
                 </View>
@@ -257,6 +316,14 @@ const styles = StyleSheet.create({
         backgroundColor: '#f9f9f9',
         borderRadius: 4,
         borderLeftWidth: 5,
+      },
+      itemContainerVehicleList: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: 10,
+        marginVertical: 2,
+        backgroundColor: '#f9f9f9',
       },
       itemText: {
         fontSize: 14,
@@ -462,6 +529,23 @@ const styles = StyleSheet.create({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    btnAddVehicle: {
+        borderRadius: 25,
+        borderWidth: 1,
+        borderColor: '#1d7dea',
+        color: '#1d7dea',
+        paddingVertical: 10,
+        paddingHorizontal: 10,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 100,
+        margin: 'auto'
+    },
+    add_vehicle:{
+        borderRadius: 4,
+        display: 'flex',
     },
     addmoreInput: {
         width: '90%'

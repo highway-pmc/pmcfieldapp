@@ -32,10 +32,15 @@ const SourceApprovals = ({ route, navigation }: { route: any, navigation: any })
         vendorName: string;
         comments: string;
         status: string;
+    };
+
+    type FormSourceDetailState = {
+        sourceApprovalId: string;
+        gradeOfConcrete: string;
         ratePerCum: number;
     };
 
-    const [form, setForm] = useState<FormState>({
+    const [sourceForm, setSourceForm] = useState<FormState>({
         projectId: loggedInUser.projectId,
         testMaterialId: testMaterialId,
         name: '',
@@ -43,7 +48,12 @@ const SourceApprovals = ({ route, navigation }: { route: any, navigation: any })
         vendorName: '',
         comments: '',
         status: SOURCE_APPROVAL_STATUS.PENDING,
-        ratePerCum: 0
+    });
+
+    const [sourceDetailForm, setSourceDetailForm] = useState<FormSourceDetailState>({
+        sourceApprovalId: '',
+        gradeOfConcrete: '',
+        ratePerCum: 0,
     });
 
     const initialData = [
@@ -79,17 +89,21 @@ const SourceApprovals = ({ route, navigation }: { route: any, navigation: any })
       };
 
     const handleInputChange = (name: keyof FormState, value: string | number) => {
-        setForm({ ...form, [name]: value });
+        setSourceForm({ ...sourceForm, [name]: value });
+    };
+
+    const handleSourceDetailInputChange = (name: keyof FormSourceDetailState, value: string | number) => {
+        setSourceDetailForm({ ...sourceDetailForm, [name]: value });
     };
 
     const handleSubmit = () => {
-        console.log('Form Submitted', form);
-        showSnackbar('Updated Successfully', 'success', 'done'); // Show success snackbar
+        console.log('Form Submitted', sourceForm);
+        showSnackbar('Source Added Successfully', 'success'); // Show success snackbar
     };
 
     const addSourceDetailsSubmit = () => {
-        console.log('Form Submitted', form);
-        showSnackbar('Updated Successfully', 'success', 'done'); // Show success snackbar
+        console.log('Form Submitted', sourceDetailForm);
+        showSnackbar('Source detail Added Successfully', 'success', 'done'); // Show success snackbar
     };
 
     const addSourceApprovalsForm = () => {
@@ -99,7 +113,7 @@ const SourceApprovals = ({ route, navigation }: { route: any, navigation: any })
                     <View>
                         <Input
                             label="Source Name"
-                            value={form.name}
+                            value={sourceForm.name}
                             onChange={(value: string) => handleInputChange('name', value)}
                             isRequired={true}
                         />
@@ -107,7 +121,7 @@ const SourceApprovals = ({ route, navigation }: { route: any, navigation: any })
                     <View>
                         <Input
                             label="Location"
-                            value={form.location}
+                            value={sourceForm.location}
                             onChange={(value: string) => handleInputChange('location', value)}
                             isRequired={true}
                         />
@@ -115,7 +129,7 @@ const SourceApprovals = ({ route, navigation }: { route: any, navigation: any })
                     <View>
                         <Input
                             label="Name of the Vendor"
-                            value={form.vendorName}
+                            value={sourceForm.vendorName}
                             onChange={(value: string) => handleInputChange('vendorName', value)}
                             isRequired={true}
                         />
@@ -123,7 +137,7 @@ const SourceApprovals = ({ route, navigation }: { route: any, navigation: any })
                     <View>
                         <Input
                             label="Comments"
-                            value={form.comments}
+                            value={sourceForm.comments}
                             onChange={(value: string) => handleInputChange('comments', value)}
                         />
                     </View>
@@ -140,13 +154,13 @@ const SourceApprovals = ({ route, navigation }: { route: any, navigation: any })
             <View style={styles.reportFields}>
                 <View>
                     <View>
-                        {renderPicker('Grade of Concrete', 'name')}
+                        {renderPicker('Grade of Concrete', 'gradeOfConcrete')}
                     </View>
                     <View>
                         <Input
                             label="Rate per cum"
-                            value={form.ratePerCum}
-                            onChange={(value: string) => handleInputChange('ratePerCum', value)}
+                            value={sourceDetailForm.ratePerCum}
+                            onChange={(value: string) => handleSourceDetailInputChange('ratePerCum', value)}
                             isRequired={true}
                         />
                     </View>
@@ -160,17 +174,17 @@ const SourceApprovals = ({ route, navigation }: { route: any, navigation: any })
 
     const renderPicker = (
         label: string,
-        name: keyof FormState,
-        options = CONCRETE_GRADE_LIST,
+        name: keyof FormSourceDetailState,
+        options = [{label: 'Select', value: ''}].concat(CONCRETE_GRADE_LIST),
       ) => {
         return (
           <View style={styles.inputContainer}>
             <Text style={styles.label}>{label}</Text>
             <View style={styles.pickerContainer}>
               <Picker
-                selectedValue={form[name]}
+                selectedValue={sourceDetailForm[name]}
                 style={styles.picker}
-                onValueChange={itemValue => handleInputChange(name, itemValue)}>
+                onValueChange={itemValue => handleSourceDetailInputChange(name, itemValue)}>
                 {options.map((option, index) => (
                   <Picker.Item key={index} label={option.label} value={option.value} />
                 ))}

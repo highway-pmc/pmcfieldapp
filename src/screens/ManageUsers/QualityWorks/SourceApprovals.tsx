@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react'
 import { SafeAreaView, StyleSheet, Text, NativeEventEmitter, View, TouchableOpacity, Modal, ScrollView, FlatList, Alert } from 'react-native';
 import { useSnackbar } from '../../../context/SnackbarContext';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Input from '../../../components/UI/Input';
 import { useIsFocused } from '@react-navigation/native';
 import { CONCRETE_GRADE_LIST, HeaderItems, SOURCE_APPROVAL_STATUS } from '../../../constants/constants';
@@ -9,13 +9,20 @@ import { Image } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import LoadingAnimation from '../../Common/LoadingAnimation';
 import { Picker } from '@react-native-picker/picker';
+import { addSourceApproval, addSourceDetail, clearSourceApprovals, getSourceApprovals, patchSourceApproval } from '../actions';
 
 const SourceApprovals = ({ route, navigation }: { route: any, navigation: any }) => {
 
     const { testWorkCategoryName, testMaterialName, testMaterialId } = route.params;
     const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
+    const {sourceApprovals, sourceApprovalsByStatus, addedSourceApproval, patchedSourceApproval,
+        updatedSourceApproval, deletedSourceApproval, addedSourceDetail, updatedSourceDetail, deletedSourceDetail,
+        loading, error} = useSelector((state: any) => state.SourceApprovals);
     const [openSourceApprovalsPopup, setOpenSourceApprovalsPopup] = useState(false);
     const [openSourceDetailsPopup, setOpenSourceDetailsPopup] = useState(false);
+    const [selectedSource, setSelectedSource]: any = useState({});
+    
+    const [data, setData] = useState([]);
 
     if (useIsFocused()) {
         const eventEmitter = new NativeEventEmitter();
@@ -24,9 +31,30 @@ const SourceApprovals = ({ route, navigation }: { route: any, navigation: any })
 
     const { showSnackbar } = useSnackbar();
 
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (sourceApprovals) {
+            setData(sourceApprovals);
+        } else if (error) {
+            showSnackbar(error, 'error');
+        }
+      }, [sourceApprovals, error]);
+    
+      // mount
+    useEffect(() => {
+        dispatch(getSourceApprovals({
+            projectId: loggedInUser.projectId,
+            testMaterialId: testMaterialId
+        }));
+    }, []);
+    
+      // unmount
+    useEffect( () => () => {
+        dispatch(clearSourceApprovals());
+    }, [] );
+  
     type FormState = {
-        projectId: string;
-        testMaterialId: string;
         name: string;
         location: string;
         vendorName: string;
@@ -41,8 +69,6 @@ const SourceApprovals = ({ route, navigation }: { route: any, navigation: any })
     };
 
     const [sourceForm, setSourceForm] = useState<FormState>({
-        projectId: loggedInUser.projectId,
-        testMaterialId: testMaterialId,
         name: '',
         location: '',
         vendorName: '',
@@ -56,32 +82,30 @@ const SourceApprovals = ({ route, navigation }: { route: any, navigation: any })
         ratePerCum: 0,
     });
 
-    const initialData = [
-        { id: '1', name: 'Item 1', type: 'approve' },
-        { id: '2', name: 'Item 2', type: 'reject' },
-        { id: '3', name: 'Item 3', type: 'approve' },
-      ];
-
-      const [data, setData] = useState(initialData);
-
-      const handleDelete = (id: any) => {
-        setData(data.filter(item => item.id !== id));
+      const handleDelete = (item: any) => {
+       // setData(data.filter((item: any) => item.id !== id));
       };
     
-      const handleEdit = (id: any) => {
+      const handleEdit = (item: any) => {
         // Edit logic here
-        Alert.alert('Edit ' + id);
+        //Alert.alert('Edit ' + id);
       };
     
-      const handleAdd = (id: any) => {
+      const handleAdd = (item: any) => {
+        setSelectedSource(item);
+        setSourceDetailForm({
+            sourceApprovalId: selectedSource._id,
+            gradeOfConcrete: '',
+            ratePerCum: 0,
+        });
         setOpenSourceDetailsPopup(!openSourceDetailsPopup)
       };
     
       const getBorderColor = (type: any) => {
-        switch (type) {
-          case 'approve':
+        switch (type?.toLowerCase()) {
+          case 'approved':
             return 'green';
-          case 'reject':
+          case 'rejected':
             return 'red';
           default:
             return 'gray';
@@ -97,14 +121,79 @@ const SourceApprovals = ({ route, navigation }: { route: any, navigation: any })
     };
 
     const handleSubmit = () => {
-        console.log('Form Submitted', sourceForm);
-        showSnackbar('Source Added Successfully', 'success'); // Show success snackbar
+        dispatch(addSourceApproval({
+            projectId: loggedInUser.projectId,
+            testMaterialId: testMaterialId,
+            body: sourceForm
+        }));
     };
 
+    useEffect(() => {
+        if (addedSourceApproval) {
+            setOpenSourceApprovalsPopup(false);
+            showSnackbar('Source Added Successfully', 'success'); // Show success snackbar
+            dispatch(getSourceApprovals({
+                projectId: loggedInUser.projectId,
+                testMaterialId: testMaterialId
+            }));
+        } else if (error) {
+            setOpenSourceApprovalsPopup(false);
+            showSnackbar(error, 'error');
+        }
+      }, [addedSourceApproval, error]);
+
     const addSourceDetailsSubmit = () => {
-        console.log('Form Submitted', sourceDetailForm);
-        showSnackbar('Source detail Added Successfully', 'success', 'done'); // Show success snackbar
+        dispatch(addSourceDetail({
+            projectId: loggedInUser.projectId,
+            sourceApprovalId: selectedSource._id,
+            body: {
+                name: sourceDetailForm.gradeOfConcrete,
+                metaData: {
+                    gradeOfConcrete: sourceDetailForm.gradeOfConcrete,
+                    ratePerCum: Number(sourceDetailForm.ratePerCum),
+                }
+            }
+        }));
     };
+
+    useEffect(() => {
+        if (addedSourceDetail) {
+            setOpenSourceDetailsPopup(false);
+            showSnackbar('Source deatil added successfully', 'success');
+            dispatch(getSourceApprovals({
+                projectId: loggedInUser.projectId,
+                testMaterialId: testMaterialId
+            }));
+        } else if (error) {
+            setOpenSourceApprovalsPopup(false);
+            showSnackbar(error, 'error');
+        }
+      }, [addedSourceDetail, error]);
+
+    const onSourceStatusChanged = (item: any, status: any) => {
+        dispatch(patchSourceApproval({
+            projectId: loggedInUser.projectId,
+            testMaterialId: testMaterialId,
+            id: item._id,
+            body: {
+                status: status
+            }
+        }));
+    }
+
+    useEffect(() => {
+        if (patchedSourceApproval) {
+            setOpenSourceApprovalsPopup(false);
+            showSnackbar('Source status updated successfully', 'success'); // Show success snackbar
+            dispatch(getSourceApprovals({
+                projectId: loggedInUser.projectId,
+                testMaterialId: testMaterialId
+            }));
+        } else if (error) {
+            setOpenSourceApprovalsPopup(false);
+            showSnackbar(error, 'error');
+        }
+      }, [patchedSourceApproval, error]);
 
     const addSourceApprovalsForm = () => {
         return (
@@ -195,23 +284,62 @@ const SourceApprovals = ({ route, navigation }: { route: any, navigation: any })
       }
       
     const renderItem = ({ item }: {item: any}) => (
-        <View style={[styles.itemContainer, { borderLeftColor: getBorderColor(item.type) }]}>
+        <View style={[styles.itemContainer, { borderLeftColor: getBorderColor(item.status) }]}>
+          <Text style={styles.itemText}>{item.name}</Text>
+          <Text style={styles.itemText}>{item.status}</Text>
+          <View style={{flexDirection: 'column'}}>
+            <View style={styles.iconContainer}>
+                <Icon.Button 
+                style={styles.icon} 
+                name="plus-square-o" 
+                backgroundColor="transparent"
+                color="black"
+                onPress={() => handleAdd(item)}
+                >
+                </Icon.Button>
+                <Icon.Button 
+                style={styles.icon} 
+                name="edit" 
+                backgroundColor="transparent"
+                color="green"
+                onPress={() => handleEdit(item)}
+                >
+                </Icon.Button>
+                <Icon.Button 
+                style={styles.icon} 
+                name="trash" 
+                backgroundColor="transparent"
+                color="red"
+                onPress={() => handleDelete(item)}
+                >
+                </Icon.Button>
+            </View>
+            {
+                item.status === SOURCE_APPROVAL_STATUS.PENDING ?
+                <View style={{flexDirection: 'row', gap: 6}}>
+                    <Text onPress={() => onSourceStatusChanged(item, SOURCE_APPROVAL_STATUS.APPROVED)}>Approve</Text>
+                    <Text onPress={() => onSourceStatusChanged(item, SOURCE_APPROVAL_STATUS.REJECTED)}>Reject</Text>
+                </View>
+                :
+                item.status === SOURCE_APPROVAL_STATUS.REJECTED &&
+                <View style={{flexDirection: 'row', gap: 6}}>
+                    <Text onPress={() => onSourceStatusChanged(item, SOURCE_APPROVAL_STATUS.APPROVED)}>Approve</Text>
+                </View>
+            }
+          </View>
+        </View>
+    );
+
+    const renderSourceDetailItem = ({ item }: {item: any}) => (
+        <View style={[styles.itemContainerSourceDetailList]}>
           <Text style={styles.itemText}>{item.name}</Text>
           <View style={styles.iconContainer}>
-            <Icon.Button 
-              style={styles.icon} 
-              name="plus-square-o" 
-              backgroundColor="transparent"
-              color="black"
-              onPress={() => handleAdd(item.id)}
-            >
-            </Icon.Button>
             <Icon.Button 
               style={styles.icon} 
               name="edit" 
               backgroundColor="transparent"
               color="green"
-              onPress={() => handleEdit(item.id)}
+              onPress={() => handleEdit(item)}
             >
             </Icon.Button>
             <Icon.Button 
@@ -219,12 +347,12 @@ const SourceApprovals = ({ route, navigation }: { route: any, navigation: any })
               name="trash" 
               backgroundColor="transparent"
               color="red"
-              onPress={() => handleDelete(item.id)}
+              onPress={() => handleDelete(item)}
             >
             </Icon.Button>
           </View>
         </View>
-      );
+    );
 
     return (
         <SafeAreaView style={styles.container}>
@@ -250,12 +378,12 @@ const SourceApprovals = ({ route, navigation }: { route: any, navigation: any })
                         <Text style={styles.rejectText}>Rejected</Text>
                         </View>
                     </View>
-                    <FlatList
-                        data={data}
-                        renderItem={renderItem}
-                        keyExtractor={item => item.id}
-                    />
-                        </ScrollView>
+                        <FlatList
+                            data={data}
+                            renderItem={renderItem}
+                            keyExtractor={item => item._id}
+                        />
+                    </ScrollView>
                     </View>
                 </View>
             </View>
@@ -299,32 +427,43 @@ const SourceApprovals = ({ route, navigation }: { route: any, navigation: any })
                 transparent={true}
                 visible={openSourceDetailsPopup}
                 onRequestClose={() => {
+                    setSelectedSource(null);
                     setOpenSourceDetailsPopup(!openSourceDetailsPopup);
                 }}>
-                <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.3)' }}>
-                    <View style={styles.centeredView}>
-                        <View style={styles.modalView}>
-                            <View style={styles.ModalHeader}>
-                                <Text style={styles.AssignRoleText}>Add Source Details</Text>
-                                <TouchableOpacity
-                                    style={styles.buttonClose}
-                                    onPress={() => setOpenSourceDetailsPopup(!openSourceDetailsPopup)}>
-                                    <Image style={styles.CloseIcon}
-                                        tintColor={'#333'}
-                                        source={require('./../../../images/menu/close-icon.png')}
-                                    />
-                                </TouchableOpacity>
-                            </View>
-                            <View style={styles.ModalInnerContainer}>
-                                <ScrollView style={{ paddingTop: 10, height: '85%' }}>
-                                    {
-                                        addSourceDetailsForm()
-                                    }
-                                </ScrollView>
+                    {
+                        selectedSource && <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.3)' }}>
+                        <View style={styles.centeredView}>
+                            <View style={styles.modalView}>
+                                <View style={styles.ModalHeader}>
+                                    <Text style={styles.AssignRoleText}>Add Source Details ({selectedSource.name})</Text>
+                                    <TouchableOpacity
+                                        style={styles.buttonClose}
+                                        onPress={() => setOpenSourceDetailsPopup(!openSourceDetailsPopup)}>
+                                        <Image style={styles.CloseIcon}
+                                            tintColor={'#333'}
+                                            source={require('./../../../images/menu/close-icon.png')}
+                                        />
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={styles.ModalInnerContainer}>
+                                    <ScrollView style={{ paddingTop: 10, height: '85%' }}>
+                                        {
+                                            addSourceDetailsForm()
+                                        }
+                                        <View>
+                                        <FlatList
+                                            data={selectedSource.sourceApprovalDetails}
+                                            renderItem={renderSourceDetailItem}
+                                            keyExtractor={item => item._id}
+                                        />
+                                        </View>
+                                    </ScrollView>
+                                </View>
                             </View>
                         </View>
                     </View>
-                </View>
+                    }
+                
             </Modal>
             <LoadingAnimation loading={/*loading || loadingUsers || loadingTestWorkCategory*/ false}></LoadingAnimation>
         </SafeAreaView>
@@ -350,6 +489,14 @@ const styles = StyleSheet.create({
         backgroundColor: '#f9f9f9',
         borderRadius: 4,
         borderLeftWidth: 5,
+      },
+      itemContainerSourceDetailList: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: 10,
+        marginVertical: 2,
+        backgroundColor: '#f9f9f9',
       },
       itemText: {
         fontSize: 14,

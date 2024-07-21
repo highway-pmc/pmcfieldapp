@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SafeAreaView, StyleSheet, Text, NativeEventEmitter, View, TouchableOpacity, Modal, ScrollView, FlatList, Alert } from 'react-native';
 import { useSnackbar } from '../../../context/SnackbarContext';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Input from '../../../components/UI/Input';
 import { useIsFocused } from '@react-navigation/native';
 import { CONCRETE_GRADE_LIST, HeaderItems, SOURCE_APPROVAL_STATUS } from '../../../constants/constants';
@@ -10,12 +10,43 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import LoadingAnimation from '../../Common/LoadingAnimation';
 import { Picker } from '@react-native-picker/picker';
 import CalendarPicker from '../../../components/UI/CalenderPicker';
+import { addProcurement, clearProcurements, getProcurements, getSourceApprovalsByStatus } from '../actions';
 
 const Procurements = ({ route, navigation }: { route: any, navigation: any }) => {
 
     const { testWorkCategoryName, testMaterialName, testMaterialId } = route.params;
     const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
+    const { procurements, addedProcurement, updatedProcurement, deletedProcurement,
+        loading, error} = useSelector((state: any) => state.Procurements);
+    const { sourceApprovalsByStatus,
+        } = useSelector((state: any) => state.SourceApprovals);
     const [openProcurementsPopup, setOpenProcurementPopup] = useState(false);
+
+    type FormState = {
+        // projectId: string;
+         sourceApprovalId: string;
+         lotNo: string,
+         qtyOfConcrete: number;
+         procurementDateTime: string;
+         vehicleNo: any[];
+         vehicleNoTemp: any;
+         invoiceFile: string;
+     };
+     const [vehicleNos, setVehicleNos]: any = useState([]);
+     const [form, setForm] = useState<FormState>({
+        // projectId: loggedInUser.projectId,
+         sourceApprovalId: '',
+         lotNo: '',
+         qtyOfConcrete: 0,
+         procurementDateTime: '',
+         vehicleNo: [],
+         vehicleNoTemp: '',
+         invoiceFile: '',
+     });
+ 
+     const [data, setData]: any = useState([]);
+
+     const [sourceApprovals, setSourceApprovals] = useState([]);
 
     if (useIsFocused()) {
         const eventEmitter = new NativeEventEmitter();
@@ -24,33 +55,42 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
 
     const { showSnackbar } = useSnackbar();
 
-    type FormState = {
-        projectId: string;
-        sourceApprovalId: string;
-        qtyOfConcrete: number;
-        procurementDateTime: string;
-        vehicleNo: any[];
-        vehicleNoTemp: any;
-        invoiceFile: string;
-    };
-    const [vehicleNos, setVehicleNos] = useState(['']);
-    const [form, setForm] = useState<FormState>({
-        projectId: loggedInUser.projectId,
-        sourceApprovalId: testMaterialId,
-        qtyOfConcrete: 0,
-        procurementDateTime: '',
-        vehicleNo: [],
-        vehicleNoTemp: '',
-        invoiceFile: '',
-    });
+    const dispatch = useDispatch();
 
-    const initialData: any = [
-        { id: '1', name: 'Item 1', vehicleNo: [], type: 'approve' },
-        { id: '2', name: 'Item 2', vehicleNo: [], type: 'reject' },
-        { id: '3', name: 'Item 3', vehicleNo: [], type: 'approve' },
-      ];
+    useEffect(() => {
+        if (procurements) {
+            setData(procurements);
+        } else if (error) {
+            showSnackbar(error, 'error');
+        }
+      }, [procurements, error]);
+    
+      useEffect(() => {
+        if (sourceApprovalsByStatus) {
+            setSourceApprovals(sourceApprovalsByStatus);
+        } else if (error) {
+            showSnackbar(error, 'error');
+        }
+      }, [sourceApprovalsByStatus, error]);
 
-      const [data, setData] = useState(initialData);
+      // mount
+    useEffect(() => {
+        dispatch(getProcurements({
+            projectId: loggedInUser.projectId,
+            testMaterialId: testMaterialId
+        }));
+
+        dispatch(getSourceApprovalsByStatus({
+            projectId: loggedInUser.projectId,
+            testMaterialId: testMaterialId,
+            status: SOURCE_APPROVAL_STATUS.APPROVED
+        }));
+    }, []);
+    
+      // unmount
+    useEffect( () => () => {
+        dispatch(clearProcurements());
+    }, [] );
 
       const handleDelete = (id: any) => {
         setData(data.filter((item: any) => item.id !== id));
@@ -69,29 +109,42 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
         // Edit logic here
         Alert.alert('Edit ' + id);
       };
-    
-      const getBorderColor = (type: any) => {
-        switch (type) {
-          case 'approve':
-            return 'green';
-          case 'reject':
-            return 'red';
-          default:
-            return 'gray';
-        }
-      };
 
     const handleInputChange = (name: keyof FormState, value: string | number | []) => {
         setForm({ ...form, [name]: value });
     };
 
     const handleSubmit = () => {
-        console.log('Form Submitted', form);
-        showSnackbar('Updated Successfully', 'success', 'done'); // Show success snackbar
+        //showSnackbar('Updated Successfully', 'success', 'done'); // Show success snackbar
+        const dateTimeArray = form.procurementDateTime?.split('/');
+        dispatch(addProcurement({
+            projectId: loggedInUser.projectId,
+            testMaterialId: testMaterialId,
+            body: {
+                sourceApprovalId: form.sourceApprovalId,
+                lotNo: form.lotNo,
+                procurementDateTime: (dateTimeArray[2]+'-'+dateTimeArray[1]+'-'+dateTimeArray[0]),
+                vehicleNo: vehicleNos.length ? vehicleNos : [form.vehicleNo || ''],
+                invoiceFile: form.invoiceFile,
+                metaData: {
+                    qtyOfConcrete: Number(form.qtyOfConcrete)
+                }
+        }
+        }));
     };
 
+    useEffect(() => {
+        if (addedProcurement) {
+            setOpenProcurementPopup(false);
+            showSnackbar('Procurement Added Successfully', 'success'); // Show success snackbar
+            dispatch(getProcurements({
+                projectId: loggedInUser.projectId,
+                testMaterialId: testMaterialId
+            }));
+        }
+      }, [addedProcurement, error]);
+
     const onAddVehicle = () => {
-        console.log('========', form.vehicleNoTemp)
         if (form.vehicleNoTemp) {
             if (!vehicleNos) {
                 setVehicleNos([]);
@@ -112,6 +165,14 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
                 <View>
                     <View>
                     {renderPicker('Select source', 'sourceApprovalId')}
+                    </View>
+                    <View>
+                        <Input
+                            label="Lot No/Trip No/Invoice No"
+                            value={form.lotNo}
+                            onChange={(value: string) => handleInputChange('lotNo', value)}
+                            isRequired={true}
+                        />
                     </View>
                     <View>
                         <Input
@@ -169,7 +230,7 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
     const renderPicker = (
         label: string,
         name: keyof FormState,
-        options = CONCRETE_GRADE_LIST,
+        options = sourceApprovals,
       ) => {
         return (
           <View style={styles.inputContainer}>
@@ -180,7 +241,7 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
                 style={styles.picker}
                 onValueChange={itemValue => handleInputChange(name, itemValue)}>
                 {options.map((option, index) => (
-                  <Picker.Item key={index} label={option.label} value={option.value} />
+                  <Picker.Item key={index} label={option['name']} value={option['_id']} />
                 ))}
               </Picker>
             </View>
@@ -189,17 +250,9 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
       }
       
     const renderItem = ({ item }: {item: any}) => (
-        <View style={[styles.itemContainer, { borderLeftColor: getBorderColor(item.type) }]}>
-          <Text style={styles.itemText}>{item.name}</Text>
+        <View style={[styles.itemContainer]}>
+          <Text style={styles.itemText}>{item.lotNo}</Text>
           <View style={styles.iconContainer}>
-            <Icon.Button 
-              style={styles.icon} 
-              name="plus-square-o" 
-              backgroundColor="transparent"
-              color="black"
-              onPress={() => handleAdd(item.id)}
-            >
-            </Icon.Button>
             <Icon.Button 
               style={styles.icon} 
               name="edit" 
@@ -314,8 +367,6 @@ const styles = StyleSheet.create({
         padding: 10,
         marginVertical: 2,
         backgroundColor: '#f9f9f9',
-        borderRadius: 4,
-        borderLeftWidth: 5,
       },
       itemContainerVehicleList: {
         flexDirection: 'row',

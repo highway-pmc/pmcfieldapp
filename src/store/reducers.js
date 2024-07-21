@@ -1,5 +1,6 @@
 import { combineReducers } from "redux";
 import { reducer as formReducer } from 'redux-form';
+import { PROCUREMENTS, SOURCE_APPROVALS } from "../screens/ManageUsers/QualityWorks/constants";
 
 const initialState = {
     loading: false,
@@ -55,6 +56,30 @@ const myWorksState = {
 const dashboardState = {
     loading: false,
     fcmToken: null,
+    error: null,
+}
+
+const sourceApprovalsState = {
+    loading: false,
+    sourceApprovals: null,
+    sourceApprovalsByStatus: null,
+    addedSourceApproval: null,
+    patchedSourceApproval: null,
+    updatedSourceApproval: null,
+    deletedSourceApproval: null,
+
+    addedSourceDetail: null,
+    updatedSourceDetail: null,
+    deletedSourceDetail: null,
+    error: null,
+}
+
+const procurementsState = {
+    loading: false,
+    procurements: null,
+    addedProcurement: null,
+    updatedProcurement: null,
+    deletedProcurement: null,
     error: null,
 }
 
@@ -1445,6 +1470,330 @@ const RFIsReducer = (state = myWorksState, action) => {
     }
 }
 
+const SourceApprovalsReducer = (state = sourceApprovalsState, action) => {
+    console.log('action======', action)
+    switch (action.type) {
+        case SOURCE_APPROVALS.GET_SOURCE_APPROVALS_REQUEST:
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case SOURCE_APPROVALS.GET_SOURCE_APPROVALS_SUCCESS:
+            return {
+                ...state,
+                sourceApprovals: action.response,
+                error: null,
+                loading: false,
+            };
+        case SOURCE_APPROVALS.GET_SOURCE_APPROVALS_FAILURE:
+            return {
+                ...state,
+                sourceApprovals: null,
+                error: action.error,
+                loading: false,
+            };
+        case SOURCE_APPROVALS.GET_SOURCE_APPROVALS_BY_STATUS_REQUEST:
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case SOURCE_APPROVALS.GET_SOURCE_APPROVALS_BY_STATUS_SUCCESS:
+            return {
+                ...state,
+                sourceApprovalsByStatus: action.response,
+                error: null,
+                loading: false,
+            };
+        case SOURCE_APPROVALS.GET_SOURCE_APPROVALS_BY_STATUS_FAILURE:
+            return {
+                ...state,
+                sourceApprovalsByStatus: null,
+                error: action.error,
+                loading: false,
+            };
+        case SOURCE_APPROVALS.ADD_SOURCE_APPROVAL_REQUEST:
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case SOURCE_APPROVALS.ADD_SOURCE_APPROVAL_SUCCESS:
+            return {
+                ...state,
+                addedSourceApproval: action.response,
+                error: null,
+                loading: false,
+            };
+        case SOURCE_APPROVALS.ADD_SOURCE_APPROVAL_FAILURE:
+            return {
+                ...state,
+                addedSourceApproval: null,
+                error: action.error,
+                loading: false,
+            };
+        case SOURCE_APPROVALS.PATCH_SOURCE_APPROVAL_REQUEST:
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case SOURCE_APPROVALS.PATCH_SOURCE_APPROVAL_SUCCESS:
+            return {
+                ...state,
+                patchedSourceApproval: action.response,
+                error: null,
+                loading: false,
+            };
+        case SOURCE_APPROVALS.PATCH_SOURCE_APPROVAL_FAILURE:
+            return {
+                ...state,
+                patchedSourceApproval: null,
+                error: action.error,
+                loading: false,
+            };
+        case SOURCE_APPROVALS.UPDATE_SOURCE_APPROVAL_REQUEST:
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case SOURCE_APPROVALS.UPDATE_SOURCE_APPROVAL_SUCCESS:
+            return {
+                ...state,
+                updatedSourceApproval: action.response,
+                error: null,
+                loading: false,
+            };
+        case SOURCE_APPROVALS.UPDATE_SOURCE_APPROVAL_FAILURE:
+            return {
+                ...state,
+                updatedSourceApproval: null,
+                error: action.error,
+                loading: false,
+            };
+        case SOURCE_APPROVALS.DELETE_SOURCE_APPROVAL_REQUEST:
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case SOURCE_APPROVALS.DELETE_SOURCE_APPROVAL_SUCCESS:
+            return {
+                ...state,
+                deletedSourceApproval: action.response,
+                error: null,
+                loading: false,
+            };
+        case SOURCE_APPROVALS.DELETE_SOURCE_APPROVAL_FAILURE:
+            return {
+                ...state,
+                deletedSourceApproval: null,
+                error: action.error,
+                loading: false,
+            };
+        case SOURCE_APPROVALS.ADD_SOURCE_APPROVAL_DETAIL_REQUEST:
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case SOURCE_APPROVALS.ADD_SOURCE_APPROVAL_DETAIL_SUCCESS:
+            return {
+                ...state,
+                addedSourceDetail: action.response,
+                error: null,
+                loading: false,
+            };
+        case SOURCE_APPROVALS.ADD_SOURCE_APPROVAL_DETAIL_FAILURE:
+            return {
+                ...state,
+                addedSourceDetail: null,
+                error: action.error,
+                loading: false,
+            };
+        case SOURCE_APPROVALS.UPDATE_SOURCE_APPROVAL_DETAIL_REQUEST:
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case SOURCE_APPROVALS.UPDATE_SOURCE_APPROVAL_DETAIL_SUCCESS:
+            return {
+                ...state,
+                updatedSourceDetail: action.response,
+                error: null,
+                loading: false,
+            };
+        case SOURCE_APPROVALS.UPDATE_SOURCE_APPROVAL_DETAIL_FAILURE:
+            return {
+                ...state,
+                updatedSourceDetail: null,
+                error: action.error,
+                loading: false,
+            };
+        case SOURCE_APPROVALS.DELETE_SOURCE_APPROVAL_DETAIL_REQUEST:
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case SOURCE_APPROVALS.DELETE_SOURCE_APPROVAL_DETAIL_SUCCESS:
+            return {
+                ...state,
+                deletedSourceDetail: action.response,
+                error: null,
+                loading: false,
+            };
+        case SOURCE_APPROVALS.DELETE_SOURCE_APPROVAL_DETAIL_FAILURE:
+            return {
+                ...state,
+                deletedSourceDetail: null,
+                error: action.error,
+                loading: false,
+            };
+        case SOURCE_APPROVALS.CLEAR_SOURCE_APPROVALS_REQUEST:
+            return {
+                ...state,
+                sourceApprovals: null,
+                sourceApprovalsByStatus: null,
+                addedSourceApproval: null,
+                patchedSourceApproval: null,
+                updatedSourceApproval: null,
+                deletedSourceApproval: null,
+                addedSourceDetail: null,
+                updatedSourceDetail: null,
+                deletedSourceDetail: null,
+                error: action.error,
+                error: null,
+                loading: true,
+            };
+            return {
+                ...state,
+                sourceApprovals: null,
+                sourceApprovalsByStatus: null,
+                addedSourceApproval: null,
+                patchedSourceApproval: null,
+                updatedSourceApproval: null,
+                deletedSourceApproval: null,
+                addedSourceDetail: null,
+                updatedSourceDetail: null,
+                deletedSourceDetail: null,
+                error: action.error,
+                loading: false,
+            };
+        default:
+            return state;
+    }
+}
+
+const ProcurementsReducer = (state = procurementsState, action) => {
+    switch (action.type) {
+        /* Procurements */
+        case PROCUREMENTS.GET_PROCUREMENTS_REQUEST:
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case PROCUREMENTS.GET_PROCUREMENTS_SUCCESS:
+            return {
+                ...state,
+                procurements: action.response,
+                error: null,
+                loading: false,
+            };
+        case PROCUREMENTS.GET_PROCUREMENTS_FAILURE:
+            return {
+                ...state,
+                procurements: null,
+                error: action.error,
+                loading: false,
+            };
+        case PROCUREMENTS.ADD_PROCUREMENT_REQUEST:
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case PROCUREMENTS.ADD_PROCUREMENT_SUCCESS:
+            return {
+                ...state,
+                addedProcurement: action.response,
+                error: null,
+                loading: false,
+            };
+        case PROCUREMENTS.ADD_PROCUREMENT_FAILURE:
+            return {
+                ...state,
+                addedProcurement: null,
+                error: action.error,
+                loading: false,
+            };
+        case PROCUREMENTS.UPDATE_PROCUREMENT_REQUEST:
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case PROCUREMENTS.UPDATE_PROCUREMENT_SUCCESS:
+            return {
+                ...state,
+                updatedProcurement: action.response,
+                error: null,
+                loading: false,
+            };
+        case PROCUREMENTS.UPDATE_PROCUREMENT_FAILURE:
+            return {
+                ...state,
+                updatedProcurement: null,
+                error: action.error,
+                loading: false,
+            };
+        case PROCUREMENTS.DELETE_PROCUREMENT_REQUEST:
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case PROCUREMENTS.DELETE_PROCUREMENT_SUCCESS:
+            return {
+                ...state,
+                deletedProcurement: action.response,
+                error: null,
+                loading: false,
+            };
+        case PROCUREMENTS.DELETE_PROCUREMENT_FAILURE:
+            return {
+                ...state,
+                deletedProcurement: null,
+                error: action.error,
+                loading: false,
+            };
+        case PROCUREMENTS.CLEAR_PROCUREMENT_REQUEST:
+            return {
+                ...state,
+                procurements: null,
+                addedProcurement: null,
+                updatedProcurement: null,
+                deletedProcurement: null,
+                loading: true,
+            };
+            return {
+                ...state,
+                procurements: null,
+                addedProcurement: null,
+                updatedProcurement: null,
+                deletedProcurement: null,
+                error: action.error,
+                loading: false,
+            };
+        default:
+            return state;
+    }
+}
+
 export const combinedReducers = combineReducers({
     form: formReducer,
     Auth: AuthReducer,
@@ -1457,5 +1806,7 @@ export const combinedReducers = combineReducers({
     TestAssignment: TestAssignmentReducer,
     MyWorks: MyWorkReducer,
     RFIs: RFIsReducer,
-    Reports: RFIsReportsReducer
+    Reports: RFIsReportsReducer,
+    SourceApprovals: SourceApprovalsReducer,
+    Procurements: ProcurementsReducer
 })

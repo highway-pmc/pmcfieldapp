@@ -14,10 +14,12 @@ apiService.postRequest = (url, body, auth = true) => {
         if (response.data.code === 200) {
             return response.data?.data;
         }
-
+        console.log('==response.data==', response.data)
         throw new Error(response.data.message);
     }).catch((error) => {
-        throw new Error(error.response?.data?.message);
+        throw new Error(
+            error.response?.data?.message
+        );
     });
 };
 
@@ -74,6 +76,24 @@ apiService.getRequest = (url, auth = true) => {
         return response.data?.data;
     }).catch((error) => {
         console.log('=====ERROR=====', error)
+        throw new Error(error.response?.data?.message);
+    });
+};
+
+apiService.deleteRequest = (url, auth = true) => {
+    let headers = {
+        'Content-Type': 'application/json'
+    }
+    if (auth) {
+        headers['Authorization'] = appConfig.getToken();
+    }
+    return axios.delete(`${appConfig.API_URL}/${url}`, { headers }).then((response) => {
+        if (response.data.code === 200) {
+            return response.data?.data;
+        }
+
+        throw new Error(response.data.message);
+    }).catch((error) => {
         throw new Error(error.response?.data?.message);
     });
 };

@@ -17,36 +17,36 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
     const { testWorkCategoryName, testMaterialName, testMaterialId } = route.params;
     const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
     const { procurements, addedProcurement, updatedProcurement, deletedProcurement,
-        loading, error} = useSelector((state: any) => state.Procurements);
+        loading, error } = useSelector((state: any) => state.Procurements);
     const { sourceApprovalsByStatus,
-        } = useSelector((state: any) => state.SourceApprovals);
+    } = useSelector((state: any) => state.SourceApprovals);
     const [openProcurementsPopup, setOpenProcurementPopup] = useState(false);
 
     type FormState = {
         // projectId: string;
-         sourceApprovalId: string;
-         lotNo: string,
-         qtyOfConcrete: number;
-         procurementDateTime: string;
-         vehicleNo: any[];
-         vehicleNoTemp: any;
-         invoiceFile: string;
-     };
-     const [vehicleNos, setVehicleNos]: any = useState([]);
-     const [form, setForm] = useState<FormState>({
+        sourceApprovalId: string;
+        lotNo: string,
+        qtyOfConcrete: number;
+        procurementDateTime: string;
+        vehicleNo: any[];
+        vehicleNoTemp: any;
+        invoiceFile: string;
+    };
+    const [vehicleNos, setVehicleNos]: any = useState([]);
+    const [form, setForm] = useState<FormState>({
         // projectId: loggedInUser.projectId,
-         sourceApprovalId: '',
-         lotNo: '',
-         qtyOfConcrete: 0,
-         procurementDateTime: '',
-         vehicleNo: [],
-         vehicleNoTemp: '',
-         invoiceFile: '',
-     });
- 
-     const [data, setData]: any = useState([]);
+        sourceApprovalId: '',
+        lotNo: '',
+        qtyOfConcrete: 0,
+        procurementDateTime: '',
+        vehicleNo: [],
+        vehicleNoTemp: '',
+        invoiceFile: '',
+    });
 
-     const [sourceApprovals, setSourceApprovals] = useState([]);
+    const [data, setData]: any = useState([]);
+
+    const [sourceApprovals, setSourceApprovals] = useState([]);
 
     if (useIsFocused()) {
         const eventEmitter = new NativeEventEmitter();
@@ -63,17 +63,17 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
         } else if (error) {
             showSnackbar(error, 'error');
         }
-      }, [procurements, error]);
-    
-      useEffect(() => {
+    }, [procurements, error]);
+
+    useEffect(() => {
         if (sourceApprovalsByStatus) {
             setSourceApprovals(sourceApprovalsByStatus);
         } else if (error) {
             showSnackbar(error, 'error');
         }
-      }, [sourceApprovalsByStatus, error]);
+    }, [sourceApprovalsByStatus, error]);
 
-      // mount
+    // mount
     useEffect(() => {
         dispatch(getProcurements({
             projectId: loggedInUser.projectId,
@@ -86,29 +86,29 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
             status: SOURCE_APPROVAL_STATUS.APPROVED
         }));
     }, []);
-    
-      // unmount
-    useEffect( () => () => {
+
+    // unmount
+    useEffect(() => () => {
         dispatch(clearProcurements());
-    }, [] );
+    }, []);
 
-      const handleDelete = (id: any) => {
+    const handleDelete = (id: any) => {
         setData(data.filter((item: any) => item.id !== id));
-      };
+    };
 
-      const handleDeleteAddedVehicle = (vehicleNo: any) => {
+    const handleDeleteAddedVehicle = (vehicleNo: any) => {
         const index = vehicleNos.indexOf(vehicleNo);
         if (index != -1) {
             vehicleNos.splice(index, 1);
             setVehicleNos([...vehicleNos]);
-            setForm({...form});
+            setForm({ ...form });
         }
-      };
-    
-      const handleEdit = (id: any) => {
+    };
+
+    const handleEdit = (id: any) => {
         // Edit logic here
         Alert.alert('Edit ' + id);
-      };
+    };
 
     const handleInputChange = (name: keyof FormState, value: string | number | []) => {
         setForm({ ...form, [name]: value });
@@ -123,13 +123,13 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
             body: {
                 sourceApprovalId: form.sourceApprovalId,
                 lotNo: form.lotNo,
-                procurementDateTime: (dateTimeArray[2]+'-'+dateTimeArray[1]+'-'+dateTimeArray[0]),
+                procurementDateTime: (dateTimeArray[2] + '-' + dateTimeArray[1] + '-' + dateTimeArray[0]),
                 vehicleNo: vehicleNos.length ? vehicleNos : [form.vehicleNo || ''],
                 invoiceFile: form.invoiceFile,
                 metaData: {
                     qtyOfConcrete: Number(form.qtyOfConcrete)
                 }
-        }
+            }
         }));
     };
 
@@ -142,7 +142,7 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
                 testMaterialId: testMaterialId
             }));
         }
-      }, [addedProcurement, error]);
+    }, [addedProcurement, error]);
 
     const onAddVehicle = () => {
         if (form.vehicleNoTemp) {
@@ -154,7 +154,7 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
                 vehicleNos.push(form.vehicleNoTemp);
                 form.vehicleNoTemp = '';
                 setVehicleNos([...vehicleNos]);
-                setForm({...form});
+                setForm({ ...form });
             }
         }
     }
@@ -164,7 +164,7 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
             <View style={styles.reportFields}>
                 <View>
                     <View>
-                    {renderPicker('Select source', 'sourceApprovalId')}
+                        {renderPicker('Select source', 'sourceApprovalId')}
                     </View>
                     <View>
                         <Input
@@ -183,41 +183,41 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
                         />
                     </View>
                     <View>
-                    <CalendarPicker
-                        label="Date"
-                        value={form.procurementDateTime}
-                        onChange={date => handleInputChange('procurementDateTime', date)}
+                        <CalendarPicker
+                            label="Date"
+                            value={form.procurementDateTime}
+                            onChange={date => handleInputChange('procurementDateTime', date)}
                         />
                     </View>
                     <View>
-                        <View style={{flexDirection: 'row', width: '100%', display: 'flex', gap: 10}}>
-                            <View style={{width: '70%'}}>
+                        <View style={{ flexDirection: 'row', width: '100%', display: 'flex', gap: 10 }}>
+                            <View style={{ width: '70%' }}>
                                 <Input
                                     label="Vehicle no."
                                     value={form.vehicleNoTemp}
                                     onChange={(value: string) => handleInputChange('vehicleNoTemp', value)}
                                 />
                             </View>
-                            <View style={{justifyContent: 'center'}}>
+                            <View style={{ justifyContent: 'center' }}>
                                 <TouchableOpacity style={styles.add_vehicle} onPress={onAddVehicle}>
                                     <Text style={styles.btnAddVehicle}>Add Vehicle</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
-                        <View style={{maxHeight: 400}}>
-                        <ScrollView>
-                            <FlatList
-                                data={vehicleNos}
-                                renderItem={renderAddedVehicleItem}
-                                keyExtractor={item => item}
-                            />
-                        </ScrollView>
+                        <View style={{ maxHeight: 400 }}>
+                            <ScrollView>
+                                <FlatList
+                                    data={vehicleNos}
+                                    renderItem={renderAddedVehicleItem}
+                                    keyExtractor={item => item}
+                                />
+                            </ScrollView>
                         </View>
                     </View>
                     <View>
-                    <TouchableOpacity style={styles.upload_container}>
-                        <Text style={styles.uploadBtn}>Upload Invoice</Text>
-                    </TouchableOpacity>
+                        <TouchableOpacity style={styles.upload_container}>
+                            <Text style={styles.uploadBtn}>Upload Invoice</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
                 <TouchableOpacity style={styles.btnContainer} onPress={handleSubmit}>
@@ -230,64 +230,52 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
     const renderPicker = (
         label: string,
         name: keyof FormState,
-        options = sourceApprovals,
-      ) => {
+        options = [{ name: 'Select', _id: '' }].concat(sourceApprovals),
+    ) => {
         return (
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>{label}</Text>
-            <View style={styles.pickerContainer}>
-              <Picker
-                selectedValue={form[name]}
-                style={styles.picker}
-                onValueChange={itemValue => handleInputChange(name, itemValue)}>
-                {options.map((option, index) => (
-                  <Picker.Item key={index} label={option['name']} value={option['_id']} />
-                ))}
-              </Picker>
+            <View style={styles.inputContainer}>
+                <Text style={styles.label}>{label}</Text>
+                <View style={styles.pickerContainer}>
+                    <Picker
+                        selectedValue={form[name]}
+                        style={styles.picker}
+                        onValueChange={itemValue => handleInputChange(name, itemValue)}>
+                        {options.map((option, index) => (
+                            <Picker.Item key={index} label={option['name']} value={option['_id']} />
+                        ))}
+                    </Picker>
+                </View>
             </View>
-          </View>
         );
-      }
-      
-    const renderItem = ({ item }: {item: any}) => (
-        <View style={[styles.itemContainer]}>
-          <Text style={styles.itemText}>{item.lotNo}</Text>
-          <View style={styles.iconContainer}>
-            <Icon.Button 
-              style={styles.icon} 
-              name="edit" 
-              backgroundColor="transparent"
-              color="green"
-              onPress={() => handleEdit(item.id)}
-            >
-            </Icon.Button>
-            <Icon.Button 
-              style={styles.icon} 
-              name="trash" 
-              backgroundColor="transparent"
-              color="red"
-              onPress={() => handleDelete(item.id)}
-            >
-            </Icon.Button>
-          </View>
-        </View>
-      );
+    }
 
-      const renderAddedVehicleItem = ({ item }: {item: any}) => (
-        <View style={styles.itemContainerVehicleList}>
-          <Text style={styles.itemText}>{item}</Text>
-          <View style={styles.iconContainer}>
-            <Icon.Button 
-              style={styles.icon} 
-              name="trash" 
-              backgroundColor="transparent"
-              color="red"
-              onPress={() => handleDeleteAddedVehicle(item)}
-            >
-            </Icon.Button>
-          </View>
+    const renderItem = ({ item }: { item: any }) => (
+        <View style={[styles.itemContainer]}>
+            <Text style={styles.itemText}>{item.lotNo}</Text>
+            <View style={styles.iconContainer}>
+                <Image style={styles.ActionIcon}
+                    tintColor={'#333'} onPress={() => handleEdit(item.id)}
+                    source={require('./../../../images/edit.png')}
+                />
+                <Image style={styles.ActionIcon}
+                    tintColor={'#333'} onPress={() => handleDelete(item.id)}
+                    source={require('./../../../images/trash.png')}
+                />
+            </View>
         </View>
-      );
+    );
+
+    const renderAddedVehicleItem = ({ item }: { item: any }) => (
+        <View style={styles.itemContainerVehicleList}>
+            <Text style={styles.itemText}>{item}</Text>
+            <View style={styles.iconContainer}>
+                <Image style={styles.ActionIcon}
+                    tintColor={'#333'} onPress={() => handleDeleteAddedVehicle(item)}
+                    source={require('./../../../images/trash.png')}
+                />
+            </View>
+        </View>
+    );
 
     return (
         <SafeAreaView style={styles.container}>
@@ -367,30 +355,30 @@ const styles = StyleSheet.create({
         padding: 10,
         marginVertical: 2,
         backgroundColor: '#f9f9f9',
-      },
-      itemContainerVehicleList: {
+    },
+    itemContainerVehicleList: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: 10,
         marginVertical: 2,
         backgroundColor: '#f9f9f9',
-      },
-      itemText: {
+    },
+    itemText: {
         fontSize: 14,
         maxWidth: 200,
-      },
-      iconContainer: {
+    },
+    iconContainer: {
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
         width: 110,
-      },
-      icon: {
+    },
+    icon: {
         margin: 0,
         padding: 0,
-      },
-      legends:{
+    },
+    legends: {
         width: '100%',
         textAlign: 'center',
         display: 'flex',
@@ -398,53 +386,53 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'row',
         marginBottom: 10,
-      },
-      approve:{
+    },
+    approve: {
         width: 20,
         height: 20,
         borderRadius: 100,
         backgroundColor: '#2BC267',
         color: '#fff',
         textAlign: 'center'
-      },
-      rejected:{
+    },
+    rejected: {
         width: 20,
         height: 20,
         borderRadius: 100,
         backgroundColor: '#DD0303',
         color: '#fff',
         textAlign: 'center'
-      },
-      inputContainer: {
+    },
+    inputContainer: {
         marginBottom: 20,
-      },
-      label: {
+    },
+    label: {
         fontSize: 16,
         marginBottom: 8,
         color: '#555',
-      },
-      pickerContainer: {
+    },
+    pickerContainer: {
         backgroundColor: '#fff',
         borderRadius: 8,
         borderColor: '#ddd',
         borderWidth: 1,
-      },
-      picker: {
+    },
+    picker: {
         height: 50,
         width: '100%',
-      },
-      legendContainer:{
+    },
+    legendContainer: {
         display: 'flex',
         gap: 5,
         alignItems: 'center',
         flexDirection: 'row'
-      },
-      approveText:{
+    },
+    approveText: {
         color: '#2BC267',
-      },
-      rejectText:{
+    },
+    rejectText: {
         color: '#DD0303',
-      },
+    },
     centeredView: {
         marginTop: 'auto',
         backgroundColor: '#fff',
@@ -473,6 +461,10 @@ const styles = StyleSheet.create({
     CloseIcon: {
         width: 30,
         height: 30,
+    },
+    ActionIcon: {
+        width: 20,
+        height: 20,
     },
     ModalHeader: {
         position: 'relative',
@@ -594,7 +586,7 @@ const styles = StyleSheet.create({
         width: 100,
         margin: 'auto'
     },
-    add_vehicle:{
+    add_vehicle: {
         borderRadius: 4,
         display: 'flex',
     },

@@ -211,7 +211,6 @@ function* getProcurements({ payload }) {
 
 function* addProcurement({ payload }) {
     try {
-        console.log('=======', payload)
         const response = yield (addProcurementApi(payload.projectId, payload.testMaterialId, payload.body));
         yield put({ type: PROCUREMENTS.ADD_PROCUREMENT_SUCCESS, response });
     } catch (error) {

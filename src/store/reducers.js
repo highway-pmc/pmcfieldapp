@@ -1471,7 +1471,6 @@ const RFIsReducer = (state = myWorksState, action) => {
 }
 
 const SourceApprovalsReducer = (state = sourceApprovalsState, action) => {
-    console.log('action======', action)
     switch (action.type) {
         case SOURCE_APPROVALS.GET_SOURCE_APPROVALS_REQUEST:
             return {

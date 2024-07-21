@@ -25,6 +25,7 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
     type FormState = {
         // projectId: string;
         sourceApprovalId: string;
+        sourceApprovalDetailId: string;
         lotNo: string,
         qtyOfConcrete: number;
         procurementDateTime: string;
@@ -36,6 +37,7 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
     const [form, setForm] = useState<FormState>({
         // projectId: loggedInUser.projectId,
         sourceApprovalId: '',
+        sourceApprovalDetailId: '',
         lotNo: '',
         qtyOfConcrete: 0,
         procurementDateTime: '',
@@ -46,7 +48,8 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
 
     const [data, setData]: any = useState([]);
 
-    const [sourceApprovals, setSourceApprovals] = useState([]);
+    const [sourceApprovals, setSourceApprovals]: any = useState([]);
+    const [sourceApprovalDetails, setSourceApprovalDetails] = useState([]);
 
     if (useIsFocused()) {
         const eventEmitter = new NativeEventEmitter();
@@ -112,6 +115,9 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
 
     const handleInputChange = (name: keyof FormState, value: string | number | []) => {
         setForm({ ...form, [name]: value });
+        if (name === 'sourceApprovalId') {
+            setSourceApprovalDetails(sourceApprovals.find((x: any) => x._id === value)?.sourceApprovalDetails)
+        }
     };
 
     const handleSubmit = () => {
@@ -122,6 +128,7 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
             testMaterialId: testMaterialId,
             body: {
                 sourceApprovalId: form.sourceApprovalId,
+                sourceApprovalDetailId: form.sourceApprovalDetailId,
                 lotNo: form.lotNo,
                 procurementDateTime: (dateTimeArray[2] + '-' + dateTimeArray[1] + '-' + dateTimeArray[0]),
                 vehicleNo: vehicleNos.length ? vehicleNos : [form.vehicleNo || ''],
@@ -165,6 +172,9 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
                 <View>
                     <View>
                         {renderPicker('Select source', 'sourceApprovalId')}
+                    </View>
+                    <View>
+                        {renderSourceDetailsPicker('Select source details', 'sourceApprovalDetailId')}
                     </View>
                     <View>
                         <Input
@@ -248,6 +258,28 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
             </View>
         );
     }
+
+    const renderSourceDetailsPicker = (
+        label: string,
+        name: keyof FormState,
+        options = [{ name: 'Select', _id: '' }].concat(sourceApprovalDetails),
+    ) => {
+        return (
+            <View style={styles.inputContainer}>
+                <Text style={styles.label}>{label}</Text>
+                <View style={styles.pickerContainer}>
+                    <Picker
+                        selectedValue={form[name]}
+                        style={styles.picker}
+                        onValueChange={itemValue => handleInputChange(name, itemValue)}>
+                        {options.map((option, index) => (
+                            <Picker.Item key={index} label={option['name']} value={option['_id']} />
+                        ))}
+                    </Picker>
+                </View>
+            </View>
+        );
+    };
 
     const renderItem = ({ item }: { item: any }) => (
         <View style={[styles.itemContainer]}>

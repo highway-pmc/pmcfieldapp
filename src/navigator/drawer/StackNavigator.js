@@ -14,7 +14,6 @@ import MyTask from "../../screens/MyTask/MyTask";
 import AssignWork from "../../screens/ManageUsers/AssignWork";
 import SegmentsList from "../../screens/ManageUsers/SegmentsList";
 import ProjectInfo from "../../screens/ProjectInfo/ProjectInfo";
-import MyTest from "../../screens/MyTest/MyTest";
 import ChangePassword from "../../screens/ChangePassword/ChangePassword";
 import ComponentsList from "../../screens/ManageUsers/ComponentsList";
 import WorkType from "../../screens/ManageUsers/WorkType";
@@ -28,6 +27,12 @@ import MyWorkType from "../../screens/MyWork/MyWorkType";
 import RFIsDashboard from "../../screens/RFIs/RFIsDashboard";
 import RFIsUserCategorySelection from "../../screens/RFIs/RFIsUserCategorySelection";
 import SubComponentsList from "../../screens/ManageUsers/SubComponentsList";
+import MyQualityWorks from "../../screens/MyWork/MyQualityWorks";
+import AssignTestWorkCategory from "../../screens/ManageUsers/QualityWorks/AssignTestWorkCategory";
+import AssignTestMaterials from "../../screens/ManageUsers/QualityWorks/AssignTestMaterials";
+import AssignTestTypes from "../../screens/ManageUsers/QualityWorks/AssignTestTypes";
+import SourceApprovals from "../../screens/ManageUsers/QualityWorks/SourceApprovals";
+import Procurements from "../../screens/ManageUsers/QualityWorks/Procurements";
 
 const Stack = createStackNavigator();
 
@@ -58,10 +63,10 @@ const MyTaskStackNavigator = () => {
   );
 };
 
-const MyTestStackNavigator = () => {
+const MyQualityWorksStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
-      <Stack.Screen name="MyTest" component={MyTest} options={{headerShown: false}} />
+      <Stack.Screen name="MyQualityWorks" component={MyQualityWorks} options={{headerShown: false}} />
     </Stack.Navigator>
   );
 };
@@ -76,6 +81,13 @@ const ManageUsersStackNavigator = () => {
       <Stack.Screen name="ComponentsList" component={ComponentsList} options={{headerShown: false}} />
       <Stack.Screen name="SubComponentsList" component={SubComponentsList} options={{headerShown: false}} />
       <Stack.Screen name="AssignTasks" component={AssignTasks} options={{headerShown: false}} />
+
+      {/* <Stack.Screen name="AssignWork" component={AssignWork} options={{headerShown: false}} /> */}
+      <Stack.Screen name="AssignTestWorkCategory" component={AssignTestWorkCategory} options={{headerShown: false}} />
+      <Stack.Screen name="AssignTestMaterials" component={AssignTestMaterials} options={{headerShown: false}} />
+      <Stack.Screen name="AssignTestTypes" component={AssignTestTypes} options={{headerShown: false}} />
+      <Stack.Screen name="SourceApprovals" component={SourceApprovals} options={{headerShown: false}} />
+      <Stack.Screen name="Procurements" component={Procurements} options={{headerShown: false}} />
     </Stack.Navigator>
   );
 };
@@ -150,5 +162,5 @@ const ChangePasswordStackNavigator = () => {
   );
 };
 
-export { MyWorkStackNavigator, MyWorkPHStackNavigator, MyTaskStackNavigator, MyTestStackNavigator, ManageUsersStackNavigator, NotificationsStackNavigator,
+export { MyWorkStackNavigator, MyWorkPHStackNavigator, MyTaskStackNavigator, MyQualityWorksStackNavigator, ManageUsersStackNavigator, NotificationsStackNavigator,
   ProgressStackNavigator, ReportsStackNavigator, RFIsStackNavigator, ProfileStackNavigator, ProjectInfoStackNavigator, ChangePasswordStackNavigator };

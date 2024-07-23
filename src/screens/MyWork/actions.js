@@ -13,6 +13,16 @@ export const fillRFIsChecklist = (payload) => ({
     payload: payload
 });
 
+export const getMyTests = (payload) => ({
+    type: "GET_MY_TESTS_REQUEST",
+    payload: payload
+});
+
+export const updateTestSample = (payload) => ({
+    type: "UPDATE_TEST_SAMPLE_REQUEST",
+    payload: payload
+});
+
 export const clearMyWorksEvent = () => ({
     type: "CLEAR_MY_WORKS"
 });

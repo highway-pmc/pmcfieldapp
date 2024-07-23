@@ -30,8 +30,15 @@ export const HeaderItems = {
     rfisApprovedTaskListing: { showBack: true, title: 'Approved RFIs' },
     rfisRejectedTaskListing: { showBack: true, title: 'Rejected/Cancelled RFIs' },
     projectInfo: { showBack: false, title: 'Project Info' },
-    myTest: { showBack: false, title: 'My Test' },
-    profile: { showBack: false, title: 'Edit Profile' }
+    myQualityWorks: { showBack: false, title: 'Quality Works' },
+    profile: { showBack: false, title: 'Edit Profile' },
+
+    assignTestClassification: { showBack: true, title: 'Assign Test Classification' },
+    assignTestWorkCategory: { showBack: true, title: 'Assign Test Work Category' },
+    assignTestMaterials: { showBack: true, title: 'Assign Test Materials' },
+    assignTestTypes: { showBack: true, title: 'Assign Test Types' },
+    sourceApprovals: { showBack: true, title: 'Source Approvals' },
+    procurements: { showBack: true, title: 'Procurements' },
 };
 
 export const UserRoles = {
@@ -71,9 +78,9 @@ export const Dashboard_MENU = [
         id: "2",
         icon: require("./../images/dashboard/my-work-icon.png"),
         iconMenu: require("./../images/menu/mywork-icon.png"),
-        title: "My Test",
-        subTitle: "My Test",
-        route: 'MyTest',
+        title: "Quality Work",
+        subTitle: "Quality Work",
+        route: 'MyQualityWorks',
         permissions: ["project-head", "quality-head"],
         categories: ["quality-work"]
     },
@@ -321,7 +328,25 @@ export const RFI_STATUS = {
     REJECTED: 'rejected',
     CANCELLED: 'cancelled',
     APPROVED: 'approved',
-  };
+};
+
+export const TEST_SAMPLE_STATUS = {
+    PENDING: 'pending',
+    PREPARED: 'prepared',
+    NOT_PREPARED: 'notPrepared',
+};
+
+export const TEST_SAMPLE_STATUS_LIST = [
+    {
+        label: 'Select', value: 'pending'
+    },
+    {
+        label: 'Prepared', value: 'prepared'
+    },
+    {
+        label: 'Not Prepared', value: 'notPrepared'
+    }
+];
 
 export const WORK_TYPE = {
     SITE_WORK: "Site Work",
@@ -334,6 +359,13 @@ export const WORK_ASSIGNMENT_LEVEL = {
     LEVEL3: 'Component',
     LEVEL4: 'Sub component',
     LEVEL5: 'Task',
+}
+
+export const TEST_ASSIGNMENT_LEVEL = {
+    LEVEL1: 'Classifications',
+    LEVEL2: 'Work Category',
+    LEVEL3: 'Materials',
+    LEVEL4: 'Test Type',
 }
 
 export const TASK_TYPES = {
@@ -355,6 +387,20 @@ export const TASK_TYPES = {
     CONCRETING: 'concreting'
 }
 
+export const TEST_MATERIALS_TYPES = {
+    WATER: 'water',
+    FINE_AGGREGATE: 'fine-aggregate',
+    GRANULATED_SLAG: 'granulated-slag',
+    FLYASH: 'flyash',
+    MICRO_SILIKA: 'micro-silika',
+    BENTONITE: 'bentonite',
+    CONCRETE: 'concrete',
+    COARSE_AGGREGATE: 'coarse-aggregate',
+    CEMENT: 'cement',
+    ADMIXTURE: 'admixture',
+    SILICA_FUME: 'silica-fume',
+  };
+
 export const YES_NO_LIST = [
     {
         label: 'Yes', value: 'Y'
@@ -373,5 +419,69 @@ export const YES_NO_NA_LIST = [
     },
     {
         label: 'NA', value: 'NA'
+    },
+];
+
+export const SAMPLE_BY_LIST = [
+    {
+        label: 'Concessionaire', value: 'Concessionaire'
+    },
+    {
+        label: 'Jointly', value: 'Jointly'
+    },
+];
+
+export const TEST_CONDUCTED_BY_LIST = [
+    {
+        label: 'Concessionaire', value: 'Concessionaire'
+    },
+    {
+        label: 'Jointly', value: 'Jointly'
+    },
+];
+
+export const SOURCE_APPROVAL_STATUS = {
+    PENDING: 'pending',
+    REJECTED: 'rejected',
+    CANCELLED: 'cancelled',
+    APPROVED: 'approved',
+  };
+
+export const CONCRETE_GRADE_LIST = [
+    {
+        label: 'M20', value: 'M20'
+    },
+    {
+        label: 'M25', value: 'M25'
+    },
+    {
+        label: 'M30', value: 'M30'
+    },
+    {
+        label: 'M35', value: 'M35'
+    },
+    {
+        label: 'M40', value: 'M40'
+    },
+    {
+        label: 'M45', value: 'M45'
+    },
+    {
+        label: 'M50', value: 'M50'
+    },
+    {
+        label: 'M55', value: 'M55'
+    },
+    {
+        label: 'M60', value: 'M60'
+    },
+    {
+        label: 'M65', value: 'M65'
+    },
+    {
+        label: 'M70', value: 'M70'
+    },
+    {
+        label: 'M75', value: 'M20'
     },
 ];

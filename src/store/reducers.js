@@ -1,5 +1,6 @@
 import { combineReducers } from "redux";
 import { reducer as formReducer } from 'redux-form';
+import { PROCUREMENTS, SOURCE_APPROVALS } from "../screens/ManageUsers/QualityWorks/constants";
 
 const initialState = {
     loading: false,
@@ -36,6 +37,16 @@ const workAssignmentState = {
     loadingUsers: false
 }
 
+const testAssignmentState = {
+    loading: false,
+    testClassifications: null,
+    testWorkCategory: null,
+    testMaterials: null,
+    testTypes: null,
+    error: null,
+    loadingUsers: false
+}
+
 const myWorksState = {
     loading: false,
     myWorks: null,
@@ -45,6 +56,30 @@ const myWorksState = {
 const dashboardState = {
     loading: false,
     fcmToken: null,
+    error: null,
+}
+
+const sourceApprovalsState = {
+    loading: false,
+    sourceApprovals: null,
+    sourceApprovalsByStatus: null,
+    addedSourceApproval: null,
+    patchedSourceApproval: null,
+    updatedSourceApproval: null,
+    deletedSourceApproval: null,
+
+    addedSourceDetail: null,
+    updatedSourceDetail: null,
+    deletedSourceDetail: null,
+    error: null,
+}
+
+const procurementsState = {
+    loading: false,
+    procurements: null,
+    addedProcurement: null,
+    updatedProcurement: null,
+    deletedProcurement: null,
     error: null,
 }
 
@@ -843,6 +878,289 @@ const WorkAssignmentReducer = (state = workAssignmentState, action) => {
     }
 }
 
+const TestAssignmentReducer = (state = testAssignmentState, action) => {
+    switch (action.type) {
+        case "GET_TEST_CLASSIFICATION_REQUEST":
+            return {
+                ...state,
+                testClassifications: [],
+                error: null,
+                loading: true,
+            };
+        case "GET_TEST_CLASSIFICATION_SUCCESS":
+            return {
+                ...state,
+                testClassifications: action.response,
+                error: null,
+                loading: false,
+            };
+        case "GET_TEST_CLASSIFICATION_FAILURE":
+            return {
+                ...state,
+                testClassifications: null,
+                error: action.error,
+                loading: false,
+            };
+        case "GET_TEST_WORK_CATEGORY_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loadingTestWorkCategory: true,
+                loading: true,
+            };
+        case "GET_TEST_WORK_CATEGORY_SUCCESS":
+            return {
+                ...state,
+                testWorkCategory: action.response,
+                error: null,
+                loadingTestWorkCategory: false,
+                loading: false,
+            };
+        case "GET_TEST_WORK_CATEGORY_FAILURE":
+            return {
+                ...state,
+                testWorkCategory: null,
+                error: action.error,
+                loading: false,
+                loadingTestWorkCategory: false
+            };
+        case "GET_TEST_MATERIALS_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loadingTestMaterials: true,
+                loading: true,
+            };
+        case "GET_TEST_MATERIALS_SUCCESS":
+            return {
+                ...state,
+                testMaterials: action.response,
+                error: null,
+                loadingTestMaterials: false,
+                loading: false,
+            };
+        case "GET_TEST_MATERIALS_FAILURE":
+            return {
+                ...state,
+                testMaterials: null,
+                error: action.error,
+                loadingTestMaterials: false,
+                loading: false,
+            };
+        case "GET_TEST_TYPE_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loadingTestTypes: true,
+                loading: true,
+            };
+        case "GET_TEST_TYPE_SUCCESS":
+            return {
+                ...state,
+                testTypes: action.response,
+                error: null,
+                loadingTestTypes: false,
+                loading: false,
+            };
+        case "GET_TEST_TYPE_FAILURE":
+            return {
+                ...state,
+                testTypes: null,
+                error: action.error,
+                loadingTestTypes: false,
+                loading: false,
+            };
+        case "GET_TEST_CLASSIFICATION_NEXT_LEVEL_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loadingTask: true,
+                loading: true,
+            };
+        case "GET_TEST_CLASSIFICATION_NEXT_LEVEL_SUCCESS":
+            return {
+                ...state,
+                nextLevel: action.response,
+                error: null,
+                loadingTask: false,
+                loading: false,
+            };
+        case "GET_TEST_CLASSIFICATION_NEXT_LEVEL_FAILURE":
+            return {
+                ...state,
+                nextLevel: null,
+                error: action.error,
+                loadingTask: false,
+                loading: false,
+            };
+        case "GET_USERS_TO_TEST_ASSIGNMENT_REQUEST":
+            return {
+                ...state,
+                users: [],
+                error: null,
+                loading: true,
+                loadingUsers: true,
+            };
+        case "GET_USERS_TO_TEST_ASSIGNMENT_SUCCESS":
+            return {
+                ...state,
+                users: action.response,
+                error: null,
+                loading: false,
+                loadingUsers: false,
+            };
+        case "GET_USERS_TO_TEST_ASSIGNMENT_FAILURE":
+            return {
+                ...state,
+                users: null,
+                error: action.error,
+                loading: false,
+                loadingUsers: false,
+            };
+        /*case "GET_USERS_MY_WORK_REQUEST":
+            return {
+                ...state,
+                usersData: [],
+                error: null,
+                loading: true,
+                loadingUsers: true,
+            };
+        case "GET_USERS_MY_WORK_SUCCESS":
+            return {
+                ...state,
+                usersData: action.response,
+                error: null,
+                loading: false,
+                loadingUsers: false,
+            };
+        case "GET_USERS_MY_WORK_FAILURE":
+            return {
+                ...state,
+                usersData: null,
+                error: action.error,
+                loading: false,
+                loadingUsers: false,
+            };*/
+        case "TEST_CLASSIFICATION_TEST_ASSIGNMENT_USERS_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "TEST_CLASSIFICATION_TEST_ASSIGNMENT_USERS_SUCCESS":
+            return {
+                ...state,
+                testClassificationsTestAssigned: action.response,
+                error: null,
+                loading: false,
+            };
+        case "TEST_CLASSIFICATION_TEST_ASSIGNMENT_USERS_FAILURE":
+            return {
+                ...state,
+                testClassificationsTestAssigned: null,
+                error: action.error,
+                loading: false,
+            };
+        case "TEST_WORK_CATEGORY_TEST_ASSIGNMENT_USERS_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "TEST_WORK_CATEGORY_TEST_ASSIGNMENT_USERS_SUCCESS":
+            return {
+                ...state,
+                testWorkCategoryTestAssigned: action.response,
+                error: null,
+                loading: false,
+            };
+        case "TEST_WORK_CATEGORY_TEST_ASSIGNMENT_USERS_FAILURE":
+            return {
+                ...state,
+                testWorkCategoryTestAssigned: null,
+                error: action.error,
+                loading: false,
+            };
+        case "TEST_MATERIALS_TEST_ASSIGNMENT_USERS_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "TEST_MATERIALS_TEST_ASSIGNMENT_USERS_SUCCESS":
+            return {
+                ...state,
+                testMaterialsTestAssigned: action.response,
+                error: null,
+                loading: false,
+            };
+        case "TEST_MATERIALS_TEST_ASSIGNMENT_USERS_FAILURE":
+            return {
+                ...state,
+                testMaterialsTestAssigned: null,
+                error: action.error,
+                loading: false,
+            };
+        case "TEST_TYPES_TEST_ASSIGNMENT_USERS_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "TEST_TYPES_TEST_ASSIGNMENT_USERS_SUCCESS":
+            return {
+                ...state,
+                testTypesAssigned: action.response,
+                error: null,
+                loading: false,
+            };
+        case "TEST_TYPES_TEST_ASSIGNMENT_USERS_FAILURE":
+            return {
+                ...state,
+                testTypesAssigned: null,
+                error: action.error,
+                loading: false,
+            };
+        case "CLEAR_TEST_CLASSIFICATION_TEST_ASSIGNMENT_USERS":
+            return {
+                ...state,
+                testClassificationsTestAssigned: null,
+                testWorkCategoryTestAssigned: null,
+                testMaterialsTestAssigned: null,
+                testTypesAssigned: null,
+                error: null,
+                loading: false,
+            };
+        case "CLEAR_TEST_ASSIGNMENT":
+            return {
+                ...state,
+                testClassifications: null,
+                testWorkCategory: null,
+                testMaterials: null,
+                testTypes: null,
+                testClassificationsTestAssigned: null,
+                testWorkCategoryTestAssigned: null,
+                testMaterialsTestAssigned: null,
+                testTypesAssigned: null,
+                users: null,
+                error: null,
+                loading: false,
+                loadingTestWorkCategory: false,
+                loadingTestMaterials: false,
+                loadingTestTypes: false,
+            };
+        case "CLEAR_NEXT_LEVEL":
+            return {
+                ...state,
+                nextLevel: null,
+                loading: false,
+                loadingTestTypes: false,
+            };
+        default:
+            return state;
+    }
+}
+
 const MyWorkReducer = (state = myWorksState, action) => {
     switch (action.type) {
         case "GET_MY_WORKS_REQUEST":
@@ -905,12 +1223,54 @@ const MyWorkReducer = (state = myWorksState, action) => {
                 error: action.error,
                 loading: false,
             };
+        case "GET_MY_TESTS_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "GET_MY_TESTS_SUCCESS":
+            return {
+                ...state,
+                myTests: action.response,
+                error: null,
+                loading: false,
+            };
+        case "GET_MY_TESTS_FAILURE":
+            return {
+                ...state,
+                rfiData: null,
+                error: action.error,
+                loading: false,
+            };
+        case "UPDATE_TEST_SAMPLE_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "UPDATE_TEST_SAMPLE_SUCCESS":
+            return {
+                ...state,
+                testSampleUpdated: action.response,
+                error: null,
+                loading: false,
+            };
+        case "UPDATE_TEST_SAMPLE_FAILURE":
+            return {
+                ...state,
+                testSampleUpdated: null,
+                error: action.error,
+                loading: false,
+            };
         case "CLEAR_MY_WORKS":
             return {
                 ...state,
                 myWorks: null,
+                myTests: null,
                 rfiData: null,
                 rfiChecklistSaved: null,
+                testSampleUpdated: null,
                 error: null,
                 loading: false,
             };
@@ -1110,6 +1470,329 @@ const RFIsReducer = (state = myWorksState, action) => {
     }
 }
 
+const SourceApprovalsReducer = (state = sourceApprovalsState, action) => {
+    switch (action.type) {
+        case SOURCE_APPROVALS.GET_SOURCE_APPROVALS_REQUEST:
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case SOURCE_APPROVALS.GET_SOURCE_APPROVALS_SUCCESS:
+            return {
+                ...state,
+                sourceApprovals: action.response,
+                error: null,
+                loading: false,
+            };
+        case SOURCE_APPROVALS.GET_SOURCE_APPROVALS_FAILURE:
+            return {
+                ...state,
+                sourceApprovals: null,
+                error: action.error,
+                loading: false,
+            };
+        case SOURCE_APPROVALS.GET_SOURCE_APPROVALS_BY_STATUS_REQUEST:
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case SOURCE_APPROVALS.GET_SOURCE_APPROVALS_BY_STATUS_SUCCESS:
+            return {
+                ...state,
+                sourceApprovalsByStatus: action.response,
+                error: null,
+                loading: false,
+            };
+        case SOURCE_APPROVALS.GET_SOURCE_APPROVALS_BY_STATUS_FAILURE:
+            return {
+                ...state,
+                sourceApprovalsByStatus: null,
+                error: action.error,
+                loading: false,
+            };
+        case SOURCE_APPROVALS.ADD_SOURCE_APPROVAL_REQUEST:
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case SOURCE_APPROVALS.ADD_SOURCE_APPROVAL_SUCCESS:
+            return {
+                ...state,
+                addedSourceApproval: action.response,
+                error: null,
+                loading: false,
+            };
+        case SOURCE_APPROVALS.ADD_SOURCE_APPROVAL_FAILURE:
+            return {
+                ...state,
+                addedSourceApproval: null,
+                error: action.error,
+                loading: false,
+            };
+        case SOURCE_APPROVALS.PATCH_SOURCE_APPROVAL_REQUEST:
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case SOURCE_APPROVALS.PATCH_SOURCE_APPROVAL_SUCCESS:
+            return {
+                ...state,
+                patchedSourceApproval: action.response,
+                error: null,
+                loading: false,
+            };
+        case SOURCE_APPROVALS.PATCH_SOURCE_APPROVAL_FAILURE:
+            return {
+                ...state,
+                patchedSourceApproval: null,
+                error: action.error,
+                loading: false,
+            };
+        case SOURCE_APPROVALS.UPDATE_SOURCE_APPROVAL_REQUEST:
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case SOURCE_APPROVALS.UPDATE_SOURCE_APPROVAL_SUCCESS:
+            return {
+                ...state,
+                updatedSourceApproval: action.response,
+                error: null,
+                loading: false,
+            };
+        case SOURCE_APPROVALS.UPDATE_SOURCE_APPROVAL_FAILURE:
+            return {
+                ...state,
+                updatedSourceApproval: null,
+                error: action.error,
+                loading: false,
+            };
+        case SOURCE_APPROVALS.DELETE_SOURCE_APPROVAL_REQUEST:
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case SOURCE_APPROVALS.DELETE_SOURCE_APPROVAL_SUCCESS:
+            return {
+                ...state,
+                deletedSourceApproval: action.response,
+                error: null,
+                loading: false,
+            };
+        case SOURCE_APPROVALS.DELETE_SOURCE_APPROVAL_FAILURE:
+            return {
+                ...state,
+                deletedSourceApproval: null,
+                error: action.error,
+                loading: false,
+            };
+        case SOURCE_APPROVALS.ADD_SOURCE_APPROVAL_DETAIL_REQUEST:
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case SOURCE_APPROVALS.ADD_SOURCE_APPROVAL_DETAIL_SUCCESS:
+            return {
+                ...state,
+                addedSourceDetail: action.response,
+                error: null,
+                loading: false,
+            };
+        case SOURCE_APPROVALS.ADD_SOURCE_APPROVAL_DETAIL_FAILURE:
+            return {
+                ...state,
+                addedSourceDetail: null,
+                error: action.error,
+                loading: false,
+            };
+        case SOURCE_APPROVALS.UPDATE_SOURCE_APPROVAL_DETAIL_REQUEST:
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case SOURCE_APPROVALS.UPDATE_SOURCE_APPROVAL_DETAIL_SUCCESS:
+            return {
+                ...state,
+                updatedSourceDetail: action.response,
+                error: null,
+                loading: false,
+            };
+        case SOURCE_APPROVALS.UPDATE_SOURCE_APPROVAL_DETAIL_FAILURE:
+            return {
+                ...state,
+                updatedSourceDetail: null,
+                error: action.error,
+                loading: false,
+            };
+        case SOURCE_APPROVALS.DELETE_SOURCE_APPROVAL_DETAIL_REQUEST:
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case SOURCE_APPROVALS.DELETE_SOURCE_APPROVAL_DETAIL_SUCCESS:
+            return {
+                ...state,
+                deletedSourceDetail: action.response,
+                error: null,
+                loading: false,
+            };
+        case SOURCE_APPROVALS.DELETE_SOURCE_APPROVAL_DETAIL_FAILURE:
+            return {
+                ...state,
+                deletedSourceDetail: null,
+                error: action.error,
+                loading: false,
+            };
+        case SOURCE_APPROVALS.CLEAR_SOURCE_APPROVALS_REQUEST:
+            return {
+                ...state,
+                sourceApprovals: null,
+                sourceApprovalsByStatus: null,
+                addedSourceApproval: null,
+                patchedSourceApproval: null,
+                updatedSourceApproval: null,
+                deletedSourceApproval: null,
+                addedSourceDetail: null,
+                updatedSourceDetail: null,
+                deletedSourceDetail: null,
+                error: action.error,
+                error: null,
+                loading: true,
+            };
+            return {
+                ...state,
+                sourceApprovals: null,
+                sourceApprovalsByStatus: null,
+                addedSourceApproval: null,
+                patchedSourceApproval: null,
+                updatedSourceApproval: null,
+                deletedSourceApproval: null,
+                addedSourceDetail: null,
+                updatedSourceDetail: null,
+                deletedSourceDetail: null,
+                error: action.error,
+                loading: false,
+            };
+        default:
+            return state;
+    }
+}
+
+const ProcurementsReducer = (state = procurementsState, action) => {
+    switch (action.type) {
+        /* Procurements */
+        case PROCUREMENTS.GET_PROCUREMENTS_REQUEST:
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case PROCUREMENTS.GET_PROCUREMENTS_SUCCESS:
+            return {
+                ...state,
+                procurements: action.response,
+                error: null,
+                loading: false,
+            };
+        case PROCUREMENTS.GET_PROCUREMENTS_FAILURE:
+            return {
+                ...state,
+                procurements: null,
+                error: action.error,
+                loading: false,
+            };
+        case PROCUREMENTS.ADD_PROCUREMENT_REQUEST:
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case PROCUREMENTS.ADD_PROCUREMENT_SUCCESS:
+            return {
+                ...state,
+                addedProcurement: action.response,
+                error: null,
+                loading: false,
+            };
+        case PROCUREMENTS.ADD_PROCUREMENT_FAILURE:
+            return {
+                ...state,
+                addedProcurement: null,
+                error: action.error,
+                loading: false,
+            };
+        case PROCUREMENTS.UPDATE_PROCUREMENT_REQUEST:
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case PROCUREMENTS.UPDATE_PROCUREMENT_SUCCESS:
+            return {
+                ...state,
+                updatedProcurement: action.response,
+                error: null,
+                loading: false,
+            };
+        case PROCUREMENTS.UPDATE_PROCUREMENT_FAILURE:
+            return {
+                ...state,
+                updatedProcurement: null,
+                error: action.error,
+                loading: false,
+            };
+        case PROCUREMENTS.DELETE_PROCUREMENT_REQUEST:
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case PROCUREMENTS.DELETE_PROCUREMENT_SUCCESS:
+            return {
+                ...state,
+                deletedProcurement: action.response,
+                error: null,
+                loading: false,
+            };
+        case PROCUREMENTS.DELETE_PROCUREMENT_FAILURE:
+            return {
+                ...state,
+                deletedProcurement: null,
+                error: action.error,
+                loading: false,
+            };
+        case PROCUREMENTS.CLEAR_PROCUREMENT_REQUEST:
+            return {
+                ...state,
+                procurements: null,
+                addedProcurement: null,
+                updatedProcurement: null,
+                deletedProcurement: null,
+                loading: true,
+            };
+            return {
+                ...state,
+                procurements: null,
+                addedProcurement: null,
+                updatedProcurement: null,
+                deletedProcurement: null,
+                error: action.error,
+                loading: false,
+            };
+        default:
+            return state;
+    }
+}
+
 export const combinedReducers = combineReducers({
     form: formReducer,
     Auth: AuthReducer,
@@ -1119,7 +1802,10 @@ export const combinedReducers = combineReducers({
     UserAssignment: UserAssignmentReducer,
     ProjectInfo: ProjectInfoReducer,
     WorkAssignment: WorkAssignmentReducer,
+    TestAssignment: TestAssignmentReducer,
     MyWorks: MyWorkReducer,
     RFIs: RFIsReducer,
-    Reports: RFIsReportsReducer
+    Reports: RFIsReportsReducer,
+    SourceApprovals: SourceApprovalsReducer,
+    Procurements: ProcurementsReducer
 })

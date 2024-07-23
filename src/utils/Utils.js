@@ -6,6 +6,11 @@ const groupBy = (arr, property) => {
     }, {});
 };
 
+const hideTestkAssignmentCheckbox = (testClassificationName) => {
+    return (testClassificationName === 'Source Approvals' || testClassificationName === 'Procurement Details');
+}
+
 export {
-    groupBy
+    groupBy,
+    hideTestkAssignmentCheckbox
 }

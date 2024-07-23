@@ -1,3 +1,5 @@
+import { PROCUREMENTS, SOURCE_APPROVALS } from "./QualityWorks/constants";
+
 export const getUserCategories = () => ({
     type: "GET_USER_CATEGORY_REQUEST"
 });
@@ -102,3 +104,78 @@ export const clearNextLevel = () => ({
     type: "CLEAR_NEXT_LEVEL",
 });
 
+
+/* Source Approvals */
+export const getSourceApprovals = (payload) => ({
+    type: SOURCE_APPROVALS.GET_SOURCE_APPROVALS_REQUEST,
+    payload: payload,
+});
+
+export const getSourceApprovalsByStatus = (payload) => ({
+    type: SOURCE_APPROVALS.GET_SOURCE_APPROVALS_BY_STATUS_REQUEST,
+    payload: payload,
+});
+
+export const addSourceApproval = (payload) => ({
+    type: SOURCE_APPROVALS.ADD_SOURCE_APPROVAL_REQUEST,
+    payload: payload,
+});
+
+export const patchSourceApproval = (payload) => ({
+    type: SOURCE_APPROVALS.PATCH_SOURCE_APPROVAL_REQUEST,
+    payload: payload,
+});
+
+export const updateSourceApproval = (payload) => ({
+    type: SOURCE_APPROVALS.UPDATE_SOURCE_APPROVAL_REQUEST,
+    payload: payload,
+});
+
+export const deleteSourceApproval = (payload) => ({
+    type: SOURCE_APPROVALS.DELETE_SOURCE_APPROVAL_REQUEST,
+    payload: payload,
+});
+
+export const addSourceDetail = (payload) => ({
+    type: SOURCE_APPROVALS.ADD_SOURCE_APPROVAL_DETAIL_REQUEST,
+    payload: payload,
+});
+
+export const updateSourceDetail = (payload) => ({
+    type: SOURCE_APPROVALS.UPDATE_SOURCE_APPROVAL_DETAIL_REQUEST,
+    payload: payload,
+});
+
+export const deleteSourceDetail = (payload) => ({
+    type: SOURCE_APPROVALS.DELETE_SOURCE_APPROVAL_DETAIL_REQUEST,
+    payload: payload,
+});
+
+/* Procurement Details */
+export const getProcurements = (payload) => ({
+    type: PROCUREMENTS.GET_PROCUREMENTS_REQUEST,
+    payload: payload,
+});
+
+export const addProcurement = (payload) => ({
+    type: PROCUREMENTS.ADD_PROCUREMENT_REQUEST,
+    payload: payload,
+});
+
+export const updateProcurement = (payload) => ({
+    type: PROCUREMENTS.UPDATE_PROCUREMENT_REQUEST,
+    payload: payload,
+});
+
+export const deleteProcurement = (payload) => ({
+    type: PROCUREMENTS.DELETE_PROCUREMENT_REQUEST,
+    payload: payload,
+});
+
+export const clearSourceApprovals = () => ({
+    type: SOURCE_APPROVALS.CLEAR_SOURCE_APPROVALS_REQUEST,
+});
+
+export const clearProcurements = () => ({
+    type: PROCUREMENTS.CLEAR_PROCUREMENT_FAILURE,
+});

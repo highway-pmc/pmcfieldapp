@@ -137,13 +137,13 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
   // CONCRETE
   const [concreteData, setConcreteData] = useState([{
     vehicleNo: '',
-    timeOfArrival: 'N',
-    gradeOfConcrete: 'Y',
-    concreteTemp: '',
-    slumpValue: '',
-    noOfCubesCasted: '',
+    timeOfArrival: '',
+    gradeOfConcrete: '',
+    concreteTemp: 0,
+    slumpValue: 0,
+    noOfCubesCasted: 0,
     concreteStartTime: '',
-    concretePoured: '',
+    concretePoured: 0,
     concreteFinishTime: '',
     key: Guid.create()
   }]);
@@ -869,6 +869,10 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
       case TASK_TYPES.CONCRETING:
         concreteData.forEach((item: any) => {
           delete item.key;
+          item.concreteTemp = Number(item.concreteTemp),
+          item.slumpValue = Number(item.slumpValue),
+          item.noOfCubesCasted = Number(item.noOfCubesCasted),
+          item.concretePoured = Number(item.concretePoured)
         })
         checkList = {
           taskName: selectedTask.name,
@@ -1028,11 +1032,11 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
       vehicleNo: '',
       timeOfArrival: 'N',
       gradeOfConcrete: 'Y',
-      concreteTemp: '',
-      slumpValue: '',
-      noOfCubesCasted: '',
+      concreteTemp: 0,
+      slumpValue: 0,
+      noOfCubesCasted: 0,
       concreteStartTime: '',
-      concretePoured: '',
+      concretePoured: 0,
       concreteFinishTime: '',
       key: Guid.create()
     }])
@@ -2491,13 +2495,13 @@ const onSwipeValueChange = (data: any) => {
         if (!concreteData || !concreteData.length) {
           setConcreteData([{
             vehicleNo: '',
-            timeOfArrival: 'Y',
-            gradeOfConcrete:'N',
-            concreteTemp: '',
-            slumpValue: '',
-            noOfCubesCasted: '',
+            timeOfArrival: '',
+            gradeOfConcrete:'',
+            concreteTemp: 0,
+            slumpValue: 0,
+            noOfCubesCasted: 0,
             concreteStartTime: '',
-            concretePoured: '',
+            concretePoured: 0,
             concreteFinishTime: '',
             key: Guid.create()
           }])

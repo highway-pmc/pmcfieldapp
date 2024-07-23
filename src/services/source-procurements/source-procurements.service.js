@@ -47,7 +47,7 @@ export const updateSourceApprovalApi = async (projectId, testMaterialId, id, bod
 }
 
 export const deleteSourceApprovalApi = async (projectId, testMaterialId, id) => {
-    return apiService.deleteRequest(`v1/auth/projects/${projectId}/test-material/${testMaterialId}/source-approvals/${id}`, body).then((response) => {
+    return apiService.deleteRequest(`v1/auth/projects/${projectId}/test-material/${testMaterialId}/source-approvals/${id}`).then((response) => {
         return response;
     }).catch((err) => {
         const errorMessge = err.message || 'Unable to update source.';
@@ -65,7 +65,7 @@ export const addSourceDetailApi = async (projectId, sourceApprovalId, body) => {
 }
 
 export const updateSourceDetailApi = async (projectId, sourceApprovalId, id, body) => {
-    return apiService.postRequest(`v1/auth/projects/${projectId}/source-approvals/${sourceApprovalId}/details/${id}`, body).then((response) => {
+    return apiService.putRequest(`v1/auth/projects/${projectId}/source-approvals/${sourceApprovalId}/details/${id}`, body).then((response) => {
         return response;
     }).catch((err) => {
         const errorMessge = err.message || 'Unable to update source details.';
@@ -103,7 +103,7 @@ export const addProcurementApi = async (projectId, testMaterialId, body) => {
 }
 
 export const updateProcurementApi = async (projectId, testMaterialId, id, body) => {
-    return apiService.postRequest(`v1/auth/projects/${projectId}/test-material/${testMaterialId}/procurements/${id}`, body).then((response) => {
+    return apiService.putRequest(`v1/auth/projects/${projectId}/test-material/${testMaterialId}/procurements/${id}`, body).then((response) => {
         return response;
     }).catch((err) => {
         const errorMessge = err.message || 'Unable to update procurements.';

@@ -262,7 +262,7 @@ export default function* testAssignmentScreenSaga() {
     yield takeLatest(PROCUREMENTS.GET_PROCUREMENTS_REQUEST, getProcurements);
     yield takeLatest(PROCUREMENTS.ADD_PROCUREMENT_REQUEST, addProcurement);
     yield takeLatest(PROCUREMENTS.UPDATE_PROCUREMENT_REQUEST, updateProcurement);
-    yield takeLatest(PROCUREMENTS.UPDATE_PROCUREMENT_REQUEST, deleteProcurement);
+    yield takeLatest(PROCUREMENTS.DELETE_PROCUREMENT_REQUEST, deleteProcurement);
 
 }
 

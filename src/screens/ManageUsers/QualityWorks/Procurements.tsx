@@ -10,7 +10,9 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import LoadingAnimation from '../../Common/LoadingAnimation';
 import { Picker } from '@react-native-picker/picker';
 import CalendarPicker from '../../../components/UI/CalenderPicker';
-import { addProcurement, clearProcurements, getProcurements, getSourceApprovalsByStatus } from '../actions';
+import { addProcurement, clearProcurements, deleteProcurement, getProcurements, getSourceApprovalsByStatus, updateProcurement } from '../actions';
+import moment from 'moment';
+import CustomAlert from '../../Common/CustomAlert';
 
 const Procurements = ({ route, navigation }: { route: any, navigation: any }) => {
 
@@ -21,6 +23,8 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
     const { sourceApprovalsByStatus,
     } = useSelector((state: any) => state.SourceApprovals);
     const [openProcurementsPopup, setOpenProcurementPopup] = useState(false);
+    const [selectedProcurement, setSelectedProcurement]: any = useState(null);
+    const [confirmationAlert, setConfirmationAlert] = useState(false);
 
     type FormState = {
         // projectId: string;
@@ -95,10 +99,6 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
         dispatch(clearProcurements());
     }, []);
 
-    const handleDelete = (id: any) => {
-        setData(data.filter((item: any) => item.id !== id));
-    };
-
     const handleDeleteAddedVehicle = (vehicleNo: any) => {
         const index = vehicleNos.indexOf(vehicleNo);
         if (index != -1) {
@@ -108,9 +108,57 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
         }
     };
 
-    const handleEdit = (id: any) => {
-        // Edit logic here
-        Alert.alert('Edit ' + id);
+    const onAddProcurement = () => {
+        setSelectedProcurement(null);
+        setSourceApprovalDetails([])
+        setVehicleNos([]);
+        setForm({
+            sourceApprovalId: '',
+            sourceApprovalDetailId: '',
+            lotNo: '',
+            qtyOfConcrete: 0,
+            procurementDateTime: '',
+            vehicleNo: [],
+            vehicleNoTemp: '',
+            invoiceFile: '',
+        });
+        setOpenProcurementPopup(true);
+    }
+
+    const handleDelete = (item: any) => {
+        setSelectedProcurement(item);
+        setConfirmationAlert(true);
+    };
+
+    const onPressAlertOkButton = () => {
+        dispatch(deleteProcurement({
+            projectId: loggedInUser.projectId,
+            testMaterialId: testMaterialId,
+            id: selectedProcurement._id,
+        }));
+    }
+
+    const onPressAlertCancelButton = () => {
+        setSelectedProcurement(null);
+        setConfirmationAlert(false);
+    }
+
+    const handleEdit = (item: any) => {
+        setSelectedProcurement(item);
+        setSourceApprovalDetails(sourceApprovals.find((x: any) => x._id === item.sourceApprovalId._id)?.sourceApprovalDetails)
+        setVehicleNos(item.vehicleNo || []);
+        setForm({
+            sourceApprovalId: item.sourceApprovalId._id,
+            sourceApprovalDetailId: item.sourceApprovalDetailId,
+            lotNo: item.lotNo,
+            qtyOfConcrete: item.metaData?.qtyOfConcrete,
+            procurementDateTime: moment(new Date(item.procurementDateTime)).format('DD/MM/YYYY'),
+            vehicleNo: item.vehicleNo,
+            vehicleNoTemp: '',
+            invoiceFile: item.invoiceFile,
+        });
+
+        setOpenProcurementPopup(true);
     };
 
     const handleInputChange = (name: keyof FormState, value: string | number | []) => {
@@ -121,23 +169,43 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
     };
 
     const handleSubmit = () => {
-        //showSnackbar('Updated Successfully', 'success', 'done'); // Show success snackbar
-        const dateTimeArray = form.procurementDateTime?.split('/');
-        dispatch(addProcurement({
-            projectId: loggedInUser.projectId,
-            testMaterialId: testMaterialId,
-            body: {
-                sourceApprovalId: form.sourceApprovalId,
-                sourceApprovalDetailId: form.sourceApprovalDetailId,
-                lotNo: form.lotNo,
-                procurementDateTime: (dateTimeArray[2] + '-' + dateTimeArray[1] + '-' + dateTimeArray[0]),
-                vehicleNo: vehicleNos.length ? vehicleNos : [form.vehicleNo || ''],
-                invoiceFile: form.invoiceFile,
-                metaData: {
-                    qtyOfConcrete: Number(form.qtyOfConcrete)
+        if (!selectedProcurement) {
+            const dateTimeArray = form.procurementDateTime?.split('/');
+            dispatch(addProcurement({
+                projectId: loggedInUser.projectId,
+                testMaterialId: testMaterialId,
+                body: {
+                    sourceApprovalId: form.sourceApprovalId,
+                    sourceApprovalDetailId: form.sourceApprovalDetailId,
+                    lotNo: form.lotNo,
+                    procurementDateTime: (dateTimeArray[2] + '-' + dateTimeArray[1] + '-' + dateTimeArray[0]),
+                    vehicleNo: vehicleNos.length ? vehicleNos : [form.vehicleNo || ''],
+                    invoiceFile: form.invoiceFile,
+                    metaData: {
+                        qtyOfConcrete: Number(form.qtyOfConcrete)
+                    }
                 }
-            }
-        }));
+            }));
+        } else {
+            const dateTimeArray = form.procurementDateTime?.split('/');
+            dispatch(updateProcurement({
+                projectId: loggedInUser.projectId,
+                testMaterialId: testMaterialId,
+                id: selectedProcurement._id,
+                body: {
+                    sourceApprovalId: form.sourceApprovalId,
+                    sourceApprovalDetailId: form.sourceApprovalDetailId,
+                    lotNo: form.lotNo,
+                    procurementDateTime: (dateTimeArray[2] + '-' + dateTimeArray[1] + '-' + dateTimeArray[0]),
+                    vehicleNo: vehicleNos.length ? vehicleNos : [form.vehicleNo || ''],
+                    invoiceFile: form.invoiceFile,
+                    metaData: {
+                        qtyOfConcrete: Number(form.qtyOfConcrete)
+                    }
+                }
+            }));
+        }
+        
     };
 
     useEffect(() => {
@@ -148,8 +216,37 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
                 projectId: loggedInUser.projectId,
                 testMaterialId: testMaterialId
             }));
+        } else if (error) {
+            showSnackbar(error, 'error');
         }
     }, [addedProcurement, error]);
+
+    useEffect(() => {
+        if (updatedProcurement) {
+            setOpenProcurementPopup(false);
+            showSnackbar('Procurement Updated Successfully', 'success'); // Show success snackbar
+            dispatch(getProcurements({
+                projectId: loggedInUser.projectId,
+                testMaterialId: testMaterialId
+            }));
+        } else if (error) {
+            showSnackbar(error, 'error');
+        }
+    }, [updatedProcurement, error]);
+
+    useEffect(() => {
+        if (deletedProcurement) {
+            showSnackbar('Procurement Deleted Successfully', 'success'); // Show success snackbar
+            dispatch(getProcurements({
+                projectId: loggedInUser.projectId,
+                testMaterialId: testMaterialId
+            }));
+            onPressAlertCancelButton();
+        } else if (error) {
+            showSnackbar(error, 'error');
+        }
+    }, [deletedProcurement, error]);
+
 
     const onAddVehicle = () => {
         if (form.vehicleNoTemp) {
@@ -187,7 +284,7 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
                     <View>
                         <Input
                             label="Qty (in cum)"
-                            value={form.qtyOfConcrete}
+                            value={''+form.qtyOfConcrete}
                             onChange={(value: string) => handleInputChange('qtyOfConcrete', value)}
                             isRequired={true}
                         />
@@ -286,11 +383,11 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
             <Text style={styles.itemText}>{item.lotNo}</Text>
             <View style={styles.iconContainer}>
                 <Image style={styles.ActionIcon}
-                    tintColor={'#333'} onPress={() => handleEdit(item.id)}
+                    tintColor={'#333'} onPress={() => handleEdit(item)}
                     source={require('./../../../images/edit.png')}
                 />
                 <Image style={styles.ActionIcon}
-                    tintColor={'#333'} onPress={() => handleDelete(item.id)}
+                    tintColor={'#333'} onPress={() => handleDelete(item)}
                     source={require('./../../../images/trash.png')}
                 />
             </View>
@@ -317,8 +414,8 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
                         <Text style={styles.AssignRoleText}>{testWorkCategoryName + ' > ' + testMaterialName}</Text>
                     </View>
                     <View>
-                        <TouchableOpacity style={styles.btnContainer} onPress={() => setOpenProcurementPopup(true)}>
-                            <Text style={styles.submitBtn}>Add procurement</Text>
+                        <TouchableOpacity style={styles.btnContainer} onPress={() => onAddProcurement()}>
+                            <Text style={styles.submitBtn}>Add/Edit procurement</Text>
                         </TouchableOpacity>
                     </View>
                     <View>
@@ -365,6 +462,20 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
                     </View>
                 </View>
             </Modal>
+
+            <CustomAlert
+                displayAlert={confirmationAlert}
+                displayAlertIcon={false}
+                alertTitleText={'Confirmation'}
+                alertMessageText={'Want to delete?'}
+                displayOkButton={true}
+                okButtonText={'Ok'}
+                displayCancelButton={true}
+                cancelButtonText={'Cancel'}
+                onPressOkButton={onPressAlertOkButton}
+                onPressCancelButton={onPressAlertCancelButton}
+            />
+
             <LoadingAnimation loading={/*loading || loadingUsers || loadingTestWorkCategory*/ false}></LoadingAnimation>
         </SafeAreaView>
     );

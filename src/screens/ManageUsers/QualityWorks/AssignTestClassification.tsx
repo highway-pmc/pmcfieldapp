@@ -222,15 +222,12 @@ const AssignTestClassification = () => {
           }).map((item: any, index) => (
           <View style={styles.UserCategory}>
             <View style={styles.FlexRowCenter}>
-              {
-                !hideTestkAssignmentCheckbox(item.name) &&
-                <CheckBox
-                  value={item.isChecked}
-                  onValueChange={() => handleRadioChange(index)}
-                  style={styles.checkbox}
-                  tintColors={{true: '#0F56B3', false: '#818181'}}
-                 />
-              }
+              <CheckBox
+                value={item.isChecked}
+                onValueChange={() => handleRadioChange(index)}
+                style={styles.checkbox}
+                tintColors={{true: '#0F56B3', false: '#818181'}}
+              />
               <View>
                 <Text style={styles.UserRole}>{item.name}</Text>
               </View>
@@ -242,10 +239,13 @@ const AssignTestClassification = () => {
                   testClassificationName: item.name,
                   workType: workType
                 })}>
-                <Image
-                  style={styles.CloseIcon}
-                  source={require('./../../../images/right-arrow.png')}
-                />
+                {
+                  !hideTestkAssignmentCheckbox(item.name) &&
+                  <Image
+                    style={styles.CloseIcon}
+                    source={require('./../../../images/right-arrow.png')}
+                  />
+                }
               </TouchableOpacity>
             </View>
           </View>

@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { clearMyWorksEvent, getMyTests, updateTestSample, } from './actions';
 import LoadingAnimation from '../Common/LoadingAnimation';
 import DropDownPicker from 'react-native-dropdown-picker';
+import { hideTestkAssignmentCheckbox } from '../../utils/Utils';
 
 const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) => {
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
@@ -94,13 +95,24 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
   }, []);
 
   const onClick = (level: number, assignmentLevel: number, testClassifIndex: number, workCateIndex: number = -1, testMateIndex: number = -1, testTypeIndex: number = -1) => {
+    const testClassifData: any = myTestsData[testClassifIndex];
+    if (hideTestkAssignmentCheckbox(testClassifData.name)) { // TODO - will introduce type in db and use it iso Classification Name
+      const testWorkCategory = testClassifData.testWorkCategoriesData[0];
+      navigation.navigate('AssignTestMaterialsPurchage', {
+        testClassificationId: testClassifData.id,
+        testClassificationName: testClassifData.name,
+        testWorkCategoryId: testWorkCategory._id,
+        testWorkCategoryName: testWorkCategory.name,
+        workType: workType
+      })
+      return;
+    }
     setSearchText('');
     setCurrentLevel(level)
     setBreadcrumbData([]);
     setCurrentTestTypesData([]);
     setCurrentSubTestTypesData([]);
     setCurrentSubTestTypeRFIsData([]);
-    const testClassifData: any = myTestsData[testClassifIndex];
     let testWorkCategoryData = null;
     let testMateData = null;
     let testTypeData = null;

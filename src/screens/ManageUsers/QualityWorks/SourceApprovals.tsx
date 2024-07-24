@@ -139,8 +139,6 @@ const SourceApprovals = ({ route, navigation }: { route: any, navigation: any })
             ratePerCum: 0,
         });
         setOpenSourceDetailsPopup(true)
-        
-        Alert.alert('vaaa')
     };
 
     const getBorderColor = (type: any) => {
@@ -286,9 +284,15 @@ const SourceApprovals = ({ route, navigation }: { route: any, navigation: any })
 
     useEffect(() => {
         if (updatedSourceDetail && selectedSourceDetail) {
-            selectedSourceDetail.metaData.gradeOfConcrete = sourceDetailForm.gradeOfConcrete;
-            selectedSourceDetail.metaData.ratePerCum = sourceDetailForm.ratePerCum;
-            setSourceApprovalDetails([...sourceApprovalDetails]);
+            const list = [...sourceApprovalDetails];
+            const editedObj = list.find((item: any) => item._id === selectedSourceDetail._id);
+            if (editedObj) {
+                editedObj.name = sourceDetailForm.gradeOfConcrete;
+                editedObj.metaData.gradeOfConcrete = sourceDetailForm.gradeOfConcrete;
+                editedObj.metaData.ratePerCum = sourceDetailForm.ratePerCum;
+                setSourceApprovalDetails(list);
+            }
+
             setSourceDetailForm({
                 sourceApprovalId: selectedSource._id,
                 gradeOfConcrete: '',

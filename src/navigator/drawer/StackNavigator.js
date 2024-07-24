@@ -67,6 +67,9 @@ const MyQualityWorksStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
       <Stack.Screen name="MyQualityWorks" component={MyQualityWorks} options={{headerShown: false}} />
+      <Stack.Screen name="AssignTestMaterialsPurchage" component={AssignTestMaterials} options={{headerShown: false}} />
+      <Stack.Screen name="SourceApprovals" component={SourceApprovals} options={{headerShown: false}} />
+      <Stack.Screen name="Procurements" component={Procurements} options={{headerShown: false}} />
     </Stack.Navigator>
   );
 };
@@ -86,8 +89,8 @@ const ManageUsersStackNavigator = () => {
       <Stack.Screen name="AssignTestWorkCategory" component={AssignTestWorkCategory} options={{headerShown: false}} />
       <Stack.Screen name="AssignTestMaterials" component={AssignTestMaterials} options={{headerShown: false}} />
       <Stack.Screen name="AssignTestTypes" component={AssignTestTypes} options={{headerShown: false}} />
-      <Stack.Screen name="SourceApprovals" component={SourceApprovals} options={{headerShown: false}} />
-      <Stack.Screen name="Procurements" component={Procurements} options={{headerShown: false}} />
+      {/* <Stack.Screen name="SourceApprovals" component={SourceApprovals} options={{headerShown: false}} />
+      <Stack.Screen name="Procurements" component={Procurements} options={{headerShown: false}} /> */}
     </Stack.Navigator>
   );
 };

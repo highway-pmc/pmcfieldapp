@@ -17,7 +17,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearTestClassificationsAssignmentData, getTestClassifications, getUsersForTestAssignment, testClassificationsTestAssignToUsers } from './actions';
 import LoadingAnimation from '../../Common/LoadingAnimation';
-import { hideTestkAssignmentCheckbox } from '../../../utils/Utils';
+import { isTestInventoryClassification } from '../../../utils/Utils';
 
 const AssignTestClassification = () => {
   const navigation: any = useNavigation();
@@ -240,7 +240,7 @@ const AssignTestClassification = () => {
                   workType: workType
                 })}>
                 {
-                  !hideTestkAssignmentCheckbox(item.name) &&
+                  !isTestInventoryClassification(item.name) &&
                   <Image
                     style={styles.CloseIcon}
                     source={require('./../../../images/right-arrow.png')}

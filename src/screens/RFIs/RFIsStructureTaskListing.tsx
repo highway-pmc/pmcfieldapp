@@ -4,9 +4,8 @@ import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import { HeaderItems, PROJECT_TYPE, RFI_STATUS, RFIs_TYPE, SEGMENT_TYPES_DISPLAY, USER_CATEGORY_DISPLAY, WORK_ASSIGNMENT_LEVEL, WORK_TYPE } from "../../constants/constants"
 import { useDispatch, useSelector } from 'react-redux';
 import { clearRFITasksEvent, getRFITaskUsers, getRFITasks, actionGenerateRFI } from './actions';
-import { groupBy } from '../../utils/Utils';
+import { getDisplayDate, groupBy } from '../../utils/Utils';
 import LoadingAnimation from '../Common/LoadingAnimation';
-import moment from 'moment';
 import CalendarPicker from 'react-native-calendar-picker';
 import DropDownPicker from 'react-native-dropdown-picker';
 
@@ -951,7 +950,7 @@ const ExpanbableComponent = ({ item, onClickFunction, onGenerateRFI }: { item: a
               returnKeyType="next"
               underlineColorAndroid="#f000"
               blurOnSubmit={false}
-              value={rfiDate ? moment(new Date(rfiDate)).format('DD-MM-YYYY') : ''}
+              value={rfiDate ? getDisplayDate(rfiDate) : ''}
               editable={false}
             />
             <TouchableOpacity onPress={() => openCloseCalendar()} style={styles.CalendarImage}>

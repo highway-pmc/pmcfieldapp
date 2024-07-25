@@ -7,9 +7,9 @@ import { BLOOD_GROUP, GENDER, HeaderItems, LANGUAGE, MARITAL_STATUS, NATIONALITY
 import { useDispatch, useSelector } from 'react-redux';
 import { clearUserProfile, getStates, getUserProfile, updateUserProfile } from './actions';
 import LoadingAnimation from '../Common/LoadingAnimation';
-import moment from 'moment';
 import { fieldRequired } from '../../utils/Validations';
 import DropDownPicker from 'react-native-dropdown-picker';
+import { getDbDate, getDisplayDate } from '../../utils/Utils';
 
 const Profile = () => {
   const [isEditProfile, saveEditFunction] = useState(false);
@@ -128,7 +128,7 @@ const Profile = () => {
       setPreviousFirm(userProfileInfo.userProfile?.previousFirm);
       setFatherName(userProfileInfo.userProfile?.fatherName);
       if (userProfileInfo.userProfile?.dob) {
-        setDOB(moment(new Date(userProfileInfo.userProfile.dob)).format('YYYY-MM-DD'));
+        setDOB(getDbDate(userProfileInfo.userProfile.dob));
       }
       setLanguage(userProfileInfo.userProfile?.language?.split(','));
       setNationality(userProfileInfo.userProfile?.nationality);
@@ -480,7 +480,7 @@ const Profile = () => {
                       returnKeyType="next"
                       underlineColorAndroid="#f000"
                       blurOnSubmit={false}
-                      value={dob ? moment(new Date(dob)).format('DD-MM-YYYY') : ''}
+                      value={dob ? getDbDate(dob) : ''}
                       editable={false}
                     />
                   <TouchableOpacity onPress={() => setOpenCalendar(!openCalendar)} style={styles.CalendarImage}>
@@ -698,7 +698,7 @@ const Profile = () => {
               </View>
               <View style={styles.FormGroup}>
                 <Text style={styles.LabelText}>Date of Birth</Text>
-                <Text style={styles.LabelSubText}>{userProfileInfo?.userProfile?.dob ? moment(new Date(userProfileInfo.userProfile.dob)).format('DD MMMM YYYY') : '--'}</Text>
+                <Text style={styles.LabelSubText}>{userProfileInfo?.userProfile?.dob ? getDisplayDate(userProfileInfo.userProfile.dob) : '--'}</Text>
               </View>
               <View style={styles.FormGroup}>
                 <Text style={styles.LabelText}>Blood Group</Text>

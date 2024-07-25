@@ -11,8 +11,8 @@ import LoadingAnimation from '../../Common/LoadingAnimation';
 import { Picker } from '@react-native-picker/picker';
 import CalendarPicker from '../../../components/UI/CalenderPicker';
 import { addProcurement, clearProcurements, deleteProcurement, getProcurements, getSourceApprovalsByStatus, updateProcurement } from '../actions';
-import moment from 'moment';
 import CustomAlert from '../../Common/CustomAlert';
+import { getDisplayDate } from '../../../utils/Utils';
 
 const Procurements = ({ route, navigation }: { route: any, navigation: any }) => {
 
@@ -152,7 +152,7 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
             sourceApprovalDetailId: item.sourceApprovalDetailId,
             lotNo: item.lotNo,
             qtyOfConcrete: item.metaData?.qtyOfConcrete,
-            procurementDateTime: moment(new Date(item.procurementDateTime)).format('DD/MM/YYYY'),
+            procurementDateTime: getDisplayDate(item.procurementDateTime),
             vehicleNo: item.vehicleNo,
             vehicleNoTemp: '',
             invoiceFile: item.invoiceFile,

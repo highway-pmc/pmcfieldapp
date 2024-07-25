@@ -5,7 +5,7 @@ import { HeaderItems } from "../../constants/constants"
 import { useDispatch, useSelector } from 'react-redux';
 import { clearProjectInfoEvent, getProjectInfo } from './actions';
 import LoadingAnimation from '../Common/LoadingAnimation';
-import moment from 'moment';
+import { getDisplayDate } from '../../utils/Utils';
 
 const ProjectInfo = ({ navigation }: { navigation: any }) => {
 
@@ -88,11 +88,11 @@ const ProjectInfo = ({ navigation }: { navigation: any }) => {
               </View>
               <View style={styles.FormGroup}>
                 <Text style={styles.LabelText}>Start Date</Text>
-                <Text style={styles.LabelSubText}>{projectInfo?.duration?.startDate ? moment(new Date(projectInfo.duration.startDate)).format('DD-MMM-YYYY') : 'NA'}</Text>
+                <Text style={styles.LabelSubText}>{projectInfo?.duration?.startDate ? getDisplayDate(projectInfo.duration.startDate) : 'NA'}</Text>
               </View>
               <View style={styles.FormGroup}>
                 <Text style={styles.LabelText}>End Date</Text>
-                <Text style={styles.LabelSubText}>{projectInfo?.duration?.endDate ? moment(new Date(projectInfo.duration.endDate)).format('DD-MMM-YYYY') : 'NA'}</Text>
+                <Text style={styles.LabelSubText}>{projectInfo?.duration?.endDate ? getDisplayDate(projectInfo.duration.endDate) : 'NA'}</Text>
               </View>
               <View style={styles.FormGroup}>
                 <Text style={styles.LabelText}>Project Length</Text>

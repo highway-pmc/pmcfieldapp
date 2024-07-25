@@ -476,7 +476,7 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
                 onPressCancelButton={onPressAlertCancelButton}
             />
 
-            <LoadingAnimation loading={/*loading || loadingUsers || loadingTestWorkCategory*/ false}></LoadingAnimation>
+            <LoadingAnimation loading={loading}></LoadingAnimation>
         </SafeAreaView>
     );
 }

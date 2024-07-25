@@ -4,7 +4,7 @@ import {Calendar} from 'react-native-calendars';
 import {format} from 'date-fns';
 
 interface CalendarPickerProps {
-  label: string;
+  label?: string;
   value: string;
   onChange: (date: string) => void;
 }
@@ -23,11 +23,14 @@ const CalendarPicker: React.FC<CalendarPickerProps> = ({
   };
 
   return (
-    <View style={styles.inputContainer}>
-      <Text style={styles.label}>{label}</Text>
+    <View style={label ? [styles.inputContainer] : {}}>
+      {
+        label && 
+        <Text style={styles.label}>{label}</Text>
+      }
       <TouchableOpacity style={styles.input} onPress={() => setShow(true)}>
         <Text style={styles.inputText}>
-          {value || `Select ${label.toLowerCase()}`}
+          {value || `Select ${label?.toLowerCase() || 'Date'}`}
         </Text>
       </TouchableOpacity>
       {show && (
@@ -37,7 +40,7 @@ const CalendarPicker: React.FC<CalendarPickerProps> = ({
               <Calendar
                 onDayPress={onDayPress}
                 markedDates={{
-                  [value.split('/').reverse().join('-')]: {
+                  [value?.split('/').reverse().join('-')]: {
                     selected: true,
                     selectedColor: '#007BFF',
                   },

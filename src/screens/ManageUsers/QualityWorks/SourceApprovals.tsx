@@ -607,7 +607,7 @@ const SourceApprovals = ({ route, navigation }: { route: any, navigation: any })
                 onPressOkButton={onPressAlertOkButton}
                 onPressCancelButton={onPressAlertCancelButton}
             />
-            <LoadingAnimation loading={/*loading || loadingUsers || loadingTestWorkCategory*/ false}></LoadingAnimation>
+            <LoadingAnimation loading={loading}></LoadingAnimation>
         </SafeAreaView>
     );
 }

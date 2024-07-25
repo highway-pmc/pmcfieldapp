@@ -7,6 +7,8 @@ import { clearMyWorksEvent, getMyTests, updateTestSample, } from './actions';
 import LoadingAnimation from '../Common/LoadingAnimation';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { hideTestkAssignmentCheckbox } from '../../utils/Utils';
+import CalendarPicker from '../../components/UI/CalenderPicker';
+import moment from 'moment';
 
 const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) => {
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
@@ -257,7 +259,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
       return;
     }
     if (item['sampleStatus_TEMP'] === TEST_SAMPLE_STATUS.PREPARED) {
-      if (!item['rfiDateTime_TEMP'] || (new Date(item['rfiDateTime_TEMP'])).toString() == 'Invalid Date') {
+      if (!item['rfiDateTime_TEMP']) {
         Alert.alert('Error', 'Please enter date');
         return;
       }
@@ -265,9 +267,11 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
       item['rfiDateTime_TEMP'] = '';
     }
     
+    const dateTimeArray = item['rfiDateTime_TEMP'].split('/');
+
     const obj = {
       sampleStatus: item['sampleStatus_TEMP'],
-      rfiDateTime: item['rfiDateTime_TEMP'],
+      rfiDateTime:(dateTimeArray[2] + '-' + dateTimeArray[1] + '-' + dateTimeArray[0]),
     };
     dispatch(updateTestSample({
       projectId: loggedInUser.projectId,
@@ -525,6 +529,22 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
           setValue(text); updateValue(text);
         }}
         onBlur={() => onBlur()}
+      />
+    )
+  }
+
+  const CustomCalendarPicker = ({ rowItem, fieldName, tempProp = false }: { rowItem: any, fieldName: any, tempProp: boolean }) => {
+    const [value, setValue] = useState(rowItem[fieldName]);
+    const updateValue = (text: any) => {
+      rowItem[fieldName + (tempProp ? '_TEMP' : '')] = text;
+    }
+
+    return (
+      <CalendarPicker
+          value={value}
+          onChange={date => {
+            setValue(date); updateValue(date);
+          }}
       />
     )
   }
@@ -949,9 +969,9 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                                 />
                               </View>
                               <View style={{ height: 45 }}>
-                                <CustomTextInput rowItem={item}
+                                <CustomCalendarPicker rowItem={item}
                                   tempProp={true}
-                                  fieldName={'rfiDateTime'}></CustomTextInput>
+                                  fieldName={'rfiDateTime'}></CustomCalendarPicker>
                               </View>
                               <View style={{ height: 45, width: 100 }}>
                                 <TouchableOpacity style={[styles.SubmitSample, styles.StartBorder]} onPress={() => onUpdateTestSample(item)}>

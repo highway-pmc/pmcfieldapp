@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, NativeEventEmitter, StyleSheet, Image, Modal, Alert, TextInput } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useIsFocused } from '@react-navigation/native';
-import { HeaderItems, TEST_ASSIGNMENT_LEVEL } from '../../../constants/constants';
+import { HeaderItems, TEST_ASSIGNMENT_LEVEL, TEST_MATERIALS_TYPES } from '../../../constants/constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearTestClassificationsAssignmentData, getUsersForTestAssignment, getTestMaterials, testMaterialsTestAssignToUsers } from './actions';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -180,26 +180,28 @@ const AssignTestMaterials = ({ route, navigation }: { route: any, navigation: an
 
   const onNext = (item: any) => {
     if (hideTestkAssignmentCheckbox(testClassificationName)) { // TODO - will introduce type in db and use it iso Classification Name
-      if (testClassificationName === 'Procurement Details') {
-        navigation.navigate('Procurements', {
-          testClassificationId: testClassificationId,
-          testClassificationName: testClassificationName,
-          testWorkCategoryId: testWorkCategoryId,
-          testWorkCategoryName: testWorkCategoryName,
-          testMaterialId: item._id,
-          testMaterialName: item.name,
-          workType: workType
-        })
-      } else if (testClassificationName === 'Source Approvals') {
-        navigation.navigate('SourceApprovals', {
-          testClassificationId: testClassificationId,
-          testClassificationName: testClassificationName,
-          testWorkCategoryId: testWorkCategoryId,
-          testWorkCategoryName: testWorkCategoryName,
-          testMaterialId: item._id,
-          testMaterialName: item.name,
-          workType: workType
-        })
+      if (item.materialType === TEST_MATERIALS_TYPES.CONCRETE) {
+        if (testClassificationName === 'Procurement Details') {
+          navigation.navigate('Procurements', {
+            testClassificationId: testClassificationId,
+            testClassificationName: testClassificationName,
+            testWorkCategoryId: testWorkCategoryId,
+            testWorkCategoryName: testWorkCategoryName,
+            testMaterialId: item._id,
+            testMaterialName: item.name,
+            workType: workType
+          })
+        } else if (testClassificationName === 'Source Approvals') {
+          navigation.navigate('SourceApprovals', {
+            testClassificationId: testClassificationId,
+            testClassificationName: testClassificationName,
+            testWorkCategoryId: testWorkCategoryId,
+            testWorkCategoryName: testWorkCategoryName,
+            testMaterialId: item._id,
+            testMaterialName: item.name,
+            workType: workType
+          })
+        }
       }
     } else {
       navigation.navigate('AssignTestTypes', {

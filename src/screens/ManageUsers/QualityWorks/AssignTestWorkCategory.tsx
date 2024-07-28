@@ -7,7 +7,7 @@ import { clearTestClassificationsAssignmentData, getTestWorkCategory, getUsersFo
 import { ScrollView } from 'react-native-gesture-handler';
 import CheckBox from '@react-native-community/checkbox';
 import LoadingAnimation from '../../Common/LoadingAnimation';
-import { hideTestkAssignmentCheckbox } from '../../../utils/Utils';
+import { isTestInventoryClassification } from '../../../utils/Utils';
 
 const AssignTestWorkCategory = ({ route, navigation }: { route: any, navigation: any }) => {
   const { testClassificationId, testClassificationName, workType } = route.params;
@@ -221,7 +221,7 @@ const AssignTestWorkCategory = ({ route, navigation }: { route: any, navigation:
           <View style={styles.UserCategory}>
             <View style={styles.FlexRowCenter}>
               {
-                !hideTestkAssignmentCheckbox(testClassificationName) &&
+                !isTestInventoryClassification(testClassificationName) &&
                 <CheckBox
                   value={item.isChecked}
                   onValueChange={() => handleRadioChange(index)}

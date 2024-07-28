@@ -7,7 +7,7 @@ import { clearTestClassificationsAssignmentData, getUsersForTestAssignment, getT
 import { ScrollView } from 'react-native-gesture-handler';
 import CheckBox from '@react-native-community/checkbox';
 import LoadingAnimation from '../../Common/LoadingAnimation';
-import { hideTestkAssignmentCheckbox } from '../../../utils/Utils';
+import { isTestInventoryClassification } from '../../../utils/Utils';
 
 const AssignTestMaterials = ({ route, navigation }: { route: any, navigation: any }) => {
   const { testClassificationId, testClassificationName, testWorkCategoryId, testWorkCategoryName, workType } = route.params;
@@ -179,7 +179,7 @@ const AssignTestMaterials = ({ route, navigation }: { route: any, navigation: an
   }, []);
 
   const onNext = (item: any) => {
-    if (hideTestkAssignmentCheckbox(testClassificationName)) { // TODO - will introduce type in db and use it iso Classification Name
+    if (isTestInventoryClassification(testClassificationName)) { // TODO - will introduce type in db and use it iso Classification Name
       if (item.materialType === TEST_MATERIALS_TYPES.CONCRETE) {
         if (testClassificationName === 'Procurement Details') {
           navigation.navigate('Procurements', {
@@ -251,7 +251,7 @@ const AssignTestMaterials = ({ route, navigation }: { route: any, navigation: an
           <View style={styles.UserCategory}>
             <View style={styles.FlexRowCenter}>
               {
-                !hideTestkAssignmentCheckbox(testClassificationName) &&
+                !isTestInventoryClassification(testClassificationName) &&
                 <CheckBox
                   value={item.isChecked}
                   onValueChange={() => handleRadioChange(index)}

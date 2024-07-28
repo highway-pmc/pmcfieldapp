@@ -5,9 +5,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import React, { Fragment, useEffect, useState } from 'react'
 import { actionGetRFIs, clearRFITasksEvent, generateRFIReport, updatedRFIs } from './actions';
 import LoadingAnimation from '../Common/LoadingAnimation';
-import moment from 'moment';
 import Pdf from 'react-native-pdf';
 import { SwipeListView } from 'react-native-swipe-list-view';
+import { getDisplayDate, getDisplayTime } from '../../utils/Utils';
 
 const RFIsRecents = (props: any) => {
   const navigation = useNavigation();
@@ -18,7 +18,7 @@ const RFIsRecents = (props: any) => {
   const [rfiData, setRfiData] = useState([]);
 
   const [openPopup, setOpenPopup] = useState(false);
-  const [selectedRFI, setSelectedRFI] = useState(null);
+  const [selectedRFI, setSelectedRFI]:any = useState(null);
 
   const [openCalendar, setOpenCalendar] = useState(false);
 
@@ -510,7 +510,7 @@ const renderSectionHeader = (rowData: any) => {
                   <View style={styles.taskCategory}>
                     <Text style={styles.subHead}>{item.workAssignmentData.projectModule.name}</Text>
                     <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
-                    <Text style={styles.subHead}>{item.workAssignmentData.segmentId.name}</Text>
+                    <Text style={styles.subHead}>{item.workAssignmentData.segmentId?.name}</Text>
                     <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
                     {
                     item.workAssignmentData.componentId ? (
@@ -533,8 +533,8 @@ const renderSectionHeader = (rowData: any) => {
                   }
                     <Text style={[styles.subHead, styles.taskCount]}>{item.workAssignmentData.taskId?.displayName}</Text>
                   </View>
-                  <Text style={styles.dateText}>Generated Date: {moment(new Date(item.rfiDateTime)).format('DD-MM-YYYY')}</Text>
-                  <Text style={styles.dateText}>Generated Time: {moment(new Date(item.rfiDateTime)).format('hh:mm A')}</Text>
+                  <Text style={styles.dateText}>Generated Date: {getDisplayDate(item.rfiDateTime)}</Text>
+                  <Text style={styles.dateText}>Generated Time: {getDisplayTime(item.rfiDateTime)}</Text>
                 </TouchableOpacity>
               ))
             }
@@ -584,7 +584,7 @@ const renderSectionHeader = (rowData: any) => {
               </View>
               {selectedRFI && !pdfSource && <View style={styles.ModalInnerContainer}>
                 <View style={styles.taskCategory}>
-                  <Text style={styles.subHead}>{selectedRFI.workAssignmentData.projectModule.name}</Text>
+                  <Text style={styles.subHead}>{selectedRFI.workAssignmentData.projectModule?.name}</Text>
                   <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
                   <Text style={styles.subHead}>{selectedRFI.workAssignmentData.segmentId?.name}</Text>
                   <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
@@ -610,8 +610,8 @@ const renderSectionHeader = (rowData: any) => {
                   
                   <Text style={[styles.subHead, styles.taskCount]}>{selectedRFI.workAssignmentData.taskId?.displayName}</Text>
                 </View>
-                <Text style={styles.dateText}>Generated Date: {moment(new Date(selectedRFI.rfiDateTime)).format('DD-MM-YYYY')}</Text>
-                <Text style={styles.dateText}>Generated Time: {moment(new Date(selectedRFI.rfiDateTime)).format('hh:mm A')}</Text>
+                <Text style={styles.dateText}>Generated Date: {getDisplayDate(selectedRFI.rfiDateTime)}</Text>
+                <Text style={styles.dateText}>Generated Time: {getDisplayTime(selectedRFI.rfiDateTime)}</Text>
                 <ScrollView style={{ paddingTop: 10, height: 500 }}>
                   <Fragment>
                     <SafeAreaView>

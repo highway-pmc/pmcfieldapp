@@ -6,9 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { clearMyWorksEvent, getMyTests, updateTestSample, } from './actions';
 import LoadingAnimation from '../Common/LoadingAnimation';
 import DropDownPicker from 'react-native-dropdown-picker';
-import { hideTestkAssignmentCheckbox } from '../../utils/Utils';
+import { isTestInventoryClassification } from '../../utils/Utils';
 import CalendarPicker from '../../components/UI/CalenderPicker';
-import moment from 'moment';
 
 const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) => {
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
@@ -98,7 +97,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
 
   const onClick = (level: number, assignmentLevel: number, testClassifIndex: number, workCateIndex: number = -1, testMateIndex: number = -1, testTypeIndex: number = -1) => {
     const testClassifData: any = myTestsData[testClassifIndex];
-    if (hideTestkAssignmentCheckbox(testClassifData.name)) { // TODO - will introduce type in db and use it iso Classification Name
+    if (isTestInventoryClassification(testClassifData.name)) { // TODO - will introduce type in db and use it iso Classification Name
       const testWorkCategory = testClassifData.testWorkCategoriesData[0];
       navigation.navigate('AssignTestMaterialsPurchage', {
         testClassificationId: testClassifData.id,

@@ -5,7 +5,7 @@ import { HeaderItems, PROJECT_TYPE, RFI_STATUS, SEGMENT_TYPES_DISPLAY, TASK_TYPE
 import { useDispatch, useSelector } from 'react-redux';
 import { clearMyWorksEvent, fillRFIsChecklist, getMyWorks, getRFIByWaId } from './actions';
 import LoadingAnimation from '../Common/LoadingAnimation';
-import { groupBy } from '../../utils/Utils';
+import { getDbDate, getDisplayDate, getDisplayTime, groupBy } from '../../utils/Utils';
 import * as ImagePicker from 'react-native-image-picker';
 import DropDownPicker from 'react-native-dropdown-picker';
 //import CalendarPicker from 'react-native-calendar-picker';
@@ -260,9 +260,9 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
 
       if (rfiData.rfiSubmitDateTime) {
 
-        setRFIDate(moment(new Date(rfiData.rfiSubmitDateTime)).format('YYYY-MM-DD'));
+        setRFIDate(getDbDate(rfiData.rfiSubmitDateTime));
 
-        const time = moment(new Date(rfiData.rfiSubmitDateTime)).format('hh:mm A')
+        const time = getDisplayTime(rfiData.rfiSubmitDateTime);
         const hourMin = time.split(' ')[0];
         setHour(hourMin.split(':')[0])
         setMinute(hourMin.split(':')[1])
@@ -1239,7 +1239,7 @@ const onSwipeValueChange = (data: any) => {
                 returnKeyType="next"
                 underlineColorAndroid="#f000"
                 blurOnSubmit={false}
-                value={rfiDate ? moment(new Date(rfiDate)).format('DD-MM-YYYY') : ''}
+                value={rfiDate ? getDisplayDate(rfiDate) : ''}
                 editable={false}
               />
               <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
@@ -1447,7 +1447,7 @@ const onSwipeValueChange = (data: any) => {
                   returnKeyType="next"
                   underlineColorAndroid="#f000"
                   blurOnSubmit={false}
-                  value={rfiDate ? moment(new Date(rfiDate)).format('DD-MM-YYYY') : ''}
+                  value={rfiDate ? getDisplayDate(rfiDate) : ''}
                   editable={false}
                 />
                 <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
@@ -1666,7 +1666,7 @@ const onSwipeValueChange = (data: any) => {
                   returnKeyType="next"
                   underlineColorAndroid="#f000"
                   blurOnSubmit={false}
-                  value={rfiDate ? moment(new Date(rfiDate)).format('DD-MM-YYYY') : ''}
+                  value={rfiDate ? getDisplayDate(rfiDate) : ''}
                   editable={false}
                 />
                 <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
@@ -1871,7 +1871,7 @@ const onSwipeValueChange = (data: any) => {
                   returnKeyType="next"
                   underlineColorAndroid="#f000"
                   blurOnSubmit={false}
-                  value={rfiDate ? moment(new Date(rfiDate)).format('DD-MM-YYYY') : ''}
+                  value={rfiDate ? getDisplayDate(rfiDate) : ''}
                   editable={false}
                 />
                 <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
@@ -2012,7 +2012,7 @@ const onSwipeValueChange = (data: any) => {
                   returnKeyType="next"
                   underlineColorAndroid="#f000"
                   blurOnSubmit={false}
-                  value={rfiDate ? moment(new Date(rfiDate)).format('DD-MM-YYYY') : ''}
+                  value={rfiDate ? getDisplayDate(rfiDate) : ''}
                   editable={false}
                 />
                 <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
@@ -2152,7 +2152,7 @@ const onSwipeValueChange = (data: any) => {
                   returnKeyType="next"
                   underlineColorAndroid="#f000"
                   blurOnSubmit={false}
-                  value={rfiDate ? moment(new Date(rfiDate)).format('DD-MM-YYYY') : ''}
+                  value={rfiDate ? getDisplayDate(rfiDate) : ''}
                   editable={false}
                 />
                 <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
@@ -2269,7 +2269,7 @@ const onSwipeValueChange = (data: any) => {
                   returnKeyType="next"
                   underlineColorAndroid="#f000"
                   blurOnSubmit={false}
-                  value={rfiDate ? moment(new Date(rfiDate)).format('DD-MM-YYYY') : ''}
+                  value={rfiDate ? getDisplayDate(rfiDate) : ''}
                   editable={false}
                 />
                 <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
@@ -2425,7 +2425,7 @@ const onSwipeValueChange = (data: any) => {
                   returnKeyType="next"
                   underlineColorAndroid="#f000"
                   blurOnSubmit={false}
-                  value={rfiDate ? moment(new Date(rfiDate)).format('DD-MM-YYYY') : ''}
+                  value={rfiDate ? getDisplayDate(rfiDate) : ''}
                   editable={false}
                 />
                 <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>

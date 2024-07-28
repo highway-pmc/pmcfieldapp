@@ -5,10 +5,10 @@ import { HeaderItems } from "../../constants/constants"
 import { RFI_STATUS, RFIs_TYPE, TASK_TYPES } from '../../constants/constants'
 import { useDispatch, useSelector } from 'react-redux';
 import LoadingAnimation from '../Common/LoadingAnimation';
-import moment from 'moment';
 import Pdf from 'react-native-pdf';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { actionDownloadRFIsReports, actionGetRFIsReports, clearRFIReportsEvent } from './actions';
+import { getDisplayDate, getDisplayTime } from '../../utils/Utils';
 
 const Reports = (props: any) => {
   if (useIsFocused()) {
@@ -107,8 +107,8 @@ const Reports = (props: any) => {
                   }
                     <Text style={[styles.subHead, styles.taskCount]}>{item.workAssignmentData.taskId?.displayName}</Text>
                   </View>
-                  <Text style={styles.dateText}>Generated Date: {moment(new Date(item.rfiDateTime)).format('DD-MM-YYYY')}</Text>
-                  <Text style={styles.dateText}>Generated Time: {moment(new Date(item.rfiDateTime)).format('hh:mm A')}</Text>
+                  <Text style={styles.dateText}>Generated Date: {getDisplayDate(item.rfiDateTime)}</Text>
+                  <Text style={styles.dateText}>Generated Time: {getDisplayTime(item.rfiDateTime)}</Text>
                 </TouchableOpacity>
               ))
             }

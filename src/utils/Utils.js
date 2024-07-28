@@ -17,6 +17,11 @@ const getDbDate = (date) => {
     return moment(new Date(date)).format('YYYY-MM-DD');
 }
 
+const getDbDateFromDDMMYYYY = (dateString) => {
+    const dateArray = dateString.split('/');
+    return dateArray[2] + '-' + dateArray[1] + '-' + dateArray[0];
+}
+
 const getDisplayDate = (date) => {
     return moment(new Date(date)).format('DD/MM/YYYY');
 }
@@ -29,6 +34,7 @@ export {
     groupBy,
     isTestInventoryClassification,
     getDbDate,
+    getDbDateFromDDMMYYYY,
     getDisplayDate,
     getDisplayTime,
 }

@@ -83,7 +83,7 @@ const DrawerNavigator = () => {
         }}
       />
       <Drawer.Screen
-        name="Reports"
+        name="ReportsDashboard"
         component={ReportsStackNavigator}
         options={{
           headerShown: false

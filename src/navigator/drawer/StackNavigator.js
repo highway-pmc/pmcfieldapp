@@ -7,7 +7,7 @@ import MyWork3 from "../../screens/MyWork/MyWork3";
 import ManageUsers from "../../screens/ManageUsers/ManageUsers";
 import Notifications from "../../screens/Notifications/Notifications";
 import Progress from "../../screens/Progress/Progress";
-import Reports from "../../screens/Reports/Reports";
+import Reports from "../../screens/Reports/ReportsFieldWork";
 import RFIsHome from "../../screens/RFIs/RFIsHome";
 import Profile from "../../screens/Profile/Profile";
 import MyTask from "../../screens/MyTask/MyTask";
@@ -33,6 +33,8 @@ import AssignTestMaterials from "../../screens/ManageUsers/QualityWorks/AssignTe
 import AssignTestTypes from "../../screens/ManageUsers/QualityWorks/AssignTestTypes";
 import SourceApprovals from "../../screens/ManageUsers/QualityWorks/SourceApprovals";
 import Procurements from "../../screens/ManageUsers/QualityWorks/Procurements";
+import ReportsDashboard from "../../screens/Reports/ReportDashboard";
+import ReportsFieldWork from "../../screens/Reports/ReportsFieldWork";
 
 const Stack = createStackNavigator();
 
@@ -126,7 +128,8 @@ const ProgressStackNavigator = () => {
 const ReportsStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
-      <Stack.Screen name="Reports" component={Reports} options={{headerShown: false}} />
+      <Stack.Screen name="ReportsDashboard" component={ReportsDashboard} options={{headerShown: false}} />
+      {/* <Stack.Screen name="ReportsFieldWork" component={ReportsFieldWork} options={{headerShown: false}} /> */}
     </Stack.Navigator>
   );
 };

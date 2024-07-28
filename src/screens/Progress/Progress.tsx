@@ -1,13 +1,14 @@
 import { View, Text, Button, NativeEventEmitter, Alert, StyleSheet, ScrollView  } from 'react-native'
 import React, {useEffect, useState} from 'react'
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
-import { HeaderItems } from "../../constants/constants"
+import { HeaderItems, TEST_SAMPLE_STATUS_LIST } from "../../constants/constants"
 import { useSnackbar } from '../../context/SnackbarContext';
 import Input from '../../components/UI/Input';
 import CalendarPicker from '../../components/UI/CalenderPicker';
 import TimePicker from '../../components/UI/TimePicker';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Picker } from '@react-native-picker/picker';
+import DropdownPicker from '../../components/UI/DropdownPicker';
 
   // return (
   //   <ScrollView style={styles.Container}>
@@ -116,6 +117,28 @@ import { Picker } from '@react-native-picker/picker';
       console.log('Form Submitted', form);
       showSnackbar('Updated Successfully', 'success', 'done'); // Show success snackbar
     };
+
+    const renderPicker = (
+      label: string,
+      name: keyof FormState,
+      options = ['Y', 'N', 'NA'],
+    ) => {
+      return (
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>{label}</Text>
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={form[name]}
+              style={styles.picker}
+              onValueChange={itemValue => handleInputChange(name, itemValue)}>
+              {options.map((option, index) => (
+                <Picker.Item key={index} label={option} value={option} />
+              ))}
+            </Picker>
+          </View>
+        </View>
+      );
+    }
   
     return (
       <ScrollView style={styles.container}>
@@ -203,7 +226,13 @@ import { Picker } from '@react-native-picker/picker';
         />
   
         <Text style={styles.header}>Observations: Pre grouting checks</Text>
-        {renderPicker('Inlet free of blockage', 'inletFree')}
+        <DropdownPicker
+              value={'pending'}
+              label='Inlet free of blockage'
+              items={TEST_SAMPLE_STATUS_LIST}
+              onChange={(value: string) => Alert.alert(''+value)}
+            />
+        {/* {renderPicker('Inlet free of blockage', 'inletFree')} */}
         {renderPicker('Outlet free of blockage', 'outletFree')}
         {renderPicker('Vents free of blockage', 'ventsFree')}
         {renderPicker('Cable Duct free of blockage', 'cableDuctFree')}
@@ -334,28 +363,6 @@ import { Picker } from '@react-native-picker/picker';
         </TouchableOpacity>
       </ScrollView>
     );
-  
-    function renderPicker(
-      label: string,
-      name: keyof FormState,
-      options = ['Y', 'N', 'NA'],
-    ) {
-      return (
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>{label}</Text>
-          <View style={styles.pickerContainer}>
-            <Picker
-              selectedValue={form[name]}
-              style={styles.picker}
-              onValueChange={itemValue => handleInputChange(name, itemValue)}>
-              {options.map((option, index) => (
-                <Picker.Item key={index} label={option} value={option} />
-              ))}
-            </Picker>
-          </View>
-        </View>
-      );
-    }
   };
   
   const styles = StyleSheet.create({

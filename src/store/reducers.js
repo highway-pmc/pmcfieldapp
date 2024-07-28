@@ -1263,6 +1263,26 @@ const MyWorkReducer = (state = myWorksState, action) => {
                 error: action.error,
                 loading: false,
             };
+        case "GENERATE_TEST_SAMPLE_REPORT_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "GENERATE_TEST_SAMPLE_REPORT_SUCCESS":
+            return {
+                ...state,
+                generatedTestSampleReport: action.response,
+                error: null,
+                loading: false,
+            };
+        case "GENERATE_TEST_SAMPLE_REPORT_FAILURE":
+            return {
+                ...state,
+                generatedTestSampleReport: null,
+                error: action.error,
+                loading: false,
+            };    
         case "CLEAR_MY_WORKS":
             return {
                 ...state,
@@ -1271,6 +1291,7 @@ const MyWorkReducer = (state = myWorksState, action) => {
                 rfiData: null,
                 rfiChecklistSaved: null,
                 testSampleUpdated: null,
+                generatedTestSampleReport: null,
                 error: null,
                 loading: false,
             };
@@ -1327,6 +1348,46 @@ const RFIsReportsReducer = (state = myWorksState, action) => {
                // rfiDataList: null,
                 reportDownloaded: null,
                 error: null,
+                loading: false,
+            };
+        case "LIST_TEST_SAMPLE_REPORT_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "LIST_TEST_SAMPLE_REPORT_SUCCESS":
+            return {
+                ...state,
+                sampleTestDataList: action.response,
+                error: null,
+                loading: false,
+            };
+        case "LIST_TEST_SAMPLE_REPORT_FAILURE":
+            return {
+                ...state,
+                sampleTestDataList: null,
+                error: action.error,
+                loading: false,
+            };
+        case "VIEW_TEST_SAMPLE_REPORT_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "VIEW_TEST_SAMPLE_REPORT_SUCCESS":
+            return {
+                ...state,
+                reportDownloaded: action.response,
+                error: null,
+                loading: false,
+            };
+        case "VIEW_TEST_SAMPLE_REPORT_FAILURE":
+            return {
+                ...state,
+                reportDownloaded: null,
+                error: action.error,
                 loading: false,
             };
         default:

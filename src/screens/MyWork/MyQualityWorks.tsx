@@ -3,17 +3,18 @@ import React, { Fragment, useEffect, useState } from 'react'
 import { useIsFocused } from '@react-navigation/native';
 import { HeaderItems, PROJECT_TYPE, RFI_STATUS, SAMPLE_BY_LIST, TEST_CONDUCTED_BY_LIST, TEST_MATERIALS_TYPES, TEST_SAMPLE_STATUS, TEST_SAMPLE_STATUS_LIST, } from "../../constants/constants"
 import { useDispatch, useSelector } from 'react-redux';
-import { clearMyWorksEvent, getMyTests, updateTestSample, } from './actions';
+import { clearMyWorksEvent, generateTestSampleReport, getMyTests, updateTestSample, } from './actions';
 import LoadingAnimation from '../Common/LoadingAnimation';
-import DropDownPicker from 'react-native-dropdown-picker';
-import { isTestInventoryClassification } from '../../utils/Utils';
+import { getDbDateFromDDMMYYYY, isTestInventoryClassification } from '../../utils/Utils';
 import CalendarPicker from '../../components/UI/CalenderPicker';
+import Input from '../../components/UI/Input';
+import DropdownPicker from '../../components/UI/DropdownPicker';
 
 const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) => {
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
   const workType = PROJECT_TYPE.QUALITY_WORK;
 
-  const { myTests, testSampleUpdated, loading, error } = useSelector((state: any) => state.MyWorks);
+  const { myTests, testSampleUpdated, generatedTestSampleReport, loading, error } = useSelector((state: any) => state.MyWorks);
   const [myTestsData, setMyTestsData] = useState([]);
   const [currentTestWorkCategoryData, setCurrentTestWorkCategoryData] = useState([]);
   const [currentTestMaterialsData, setCurrentTestMaterialsData] = useState([]);
@@ -280,10 +281,11 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
   }
 
   const onClickTestSampleItem = (item: any) => {
-    if (!item.workChecklistSubmitted) {
-      Alert.alert('Error', 'Checklist of this sample yet to be submitted.')
-      return;
-    }
+    console.log('==========', JSON.stringify(item))
+    // if (!item.workChecklistSubmitted) {
+    //   Alert.alert('Error', 'Checklist of this sample yet to be submitted.')
+    //   return;
+    // }
     if (!item.readyForDayTesting) {
       Alert.alert('Error', `Testing of this sample will be started by ${item.startTestingByDate}`);
       return;
@@ -341,6 +343,36 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
     setConcreteSampleTestItems(testObservations);
     setOpenPopup(!openPopup);
   }
+
+  const onSubmitTestSample = (status: string) => {
+    const objSampleTest7thDay = Object.assign({}, formSampleTest7thDay);
+    objSampleTest7thDay.dateOfTesting = getDbDateFromDDMMYYYY(objSampleTest7thDay.dateOfTesting);
+    objSampleTest7thDay.roomTemperature = Number(objSampleTest7thDay.roomTemperature);
+    objSampleTest7thDay.humidity = Number(objSampleTest7thDay.humidity);
+    objSampleTest7thDay.observations = Object.assign([], concreteSampleTestItems);
+    const observations: any = objSampleTest7thDay.observations && objSampleTest7thDay.observations[0];
+
+    observations['details']?.values.forEach((item: any) => {
+      item.failureLoad = Number(item.failureLoad);
+      item.testArea = Number(item.testArea);
+      item.volOfCube = Number(item.volOfCube);
+      item.wtCube = Number(item.wtCube);
+    })
+    
+    dispatch(generateTestSampleReport({
+      projectId: loggedInUser.projectId,
+      testRFIId: selectedTestSample._id,
+      body: {
+        sampleData: objSampleTest7thDay
+      }
+    }));
+  }
+
+  useEffect(() => {
+    if (generatedTestSampleReport) {
+      Alert.alert('Info', 'Test sample report generated.')
+    }
+  }, [generatedTestSampleReport, error]);
 
   const getStyle = (item: any) => {
     if (item.rfiStatus) {
@@ -441,20 +473,17 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
 
   const CustomDropdownPicker = ({ items, rowItem, fieldName, tempProp }: { items: any, rowItem: any, fieldName: any, tempProp: boolean }) => {
     const [value, setValue] = useState(rowItem[fieldName]);
-    const [openList, setOpenList] = useState(false);
-    const updateValue = () => {
+    const updateValue = (value: any) => {
+      setValue(value);
       { rowItem[fieldName + (tempProp ? '_TEMP' : '')] = value }
     }
     return (
-      <DropDownPicker style={{ width: 110, height: 30, zIndex: 10 }}
-        open={openList}
+      // style={{ width: 110, height: 30, zIndex: 10 }}
+      <DropdownPicker
         value={value}
+        label=''
         items={items}
-        setOpen={setOpenList}
-        setValue={setValue}
-        listMode='MODAL'
-        closeAfterSelecting={true}
-        onChangeValue={() => updateValue()}
+        onChange={(value: string) => updateValue(value)}
       />
     )
   }
@@ -465,7 +494,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
       { rowItem[fieldName + (tempProp ? '_TEMP' : '')] = text }
     }
 
-    const onBlur = () => {
+    /*const onBlur = () => {
       if (fieldName === 'testArea' || fieldName === 'failureLoad') {
         if (Number(rowItem['testArea']).toString() !== 'NaN' && Number(rowItem['failureLoad']).toString() !== 'NaN') {
           const testArea = Number(rowItem['testArea']);
@@ -512,7 +541,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
         setConcreteSampleTestItems(concreteSampleTestItemsTemp);
         
       }
-    }
+    }*/
 
     return (
       <TextInput
@@ -527,7 +556,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
         onChangeText={(text) => {
           setValue(text); updateValue(text);
         }}
-        onBlur={() => onBlur()}
+        //onBlur={() => onBlur()}
       />
     )
   }
@@ -549,92 +578,74 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
   }
 
   const [concreteSampleTestItems, setConcreteSampleTestItems]: any[] = useState([]);
-  const [humidity, setHumidity] = useState('')
-  const [roomTemperature, setRoomTemperature] = useState('')
-  const [openTestConductedBy, setOpenTestConductedBy] = useState(false)
-  const [testConductedBy, setTestConductedBy] = useState('')
-  const [openSampleBy, setOpenSampleBy] = useState(false)
-  const [sampleBy, setSampleBy] = useState('')
-  const [dateOfTesting, setDateOfTesting] = useState('')
+
+  type FormSampleTest7thDayState = {
+    dateOfTesting: string;
+    sampleBy: string;
+    testConductedBy: string;
+    roomTemperature: number;
+    humidity: number;
+    observations?: any[]
+  }
+
+  const [formSampleTest7thDay, setFormSampleTest7thDay] = useState<FormSampleTest7thDayState>({
+    dateOfTesting: '',
+    sampleBy: '',
+    testConductedBy: '',
+    roomTemperature: 0,
+    humidity: 0,
+    observations: []
+});
+
+  const handleInputChange = (name: keyof FormSampleTest7thDayState, value: string | number | []) => {
+    setFormSampleTest7thDay({ ...formSampleTest7thDay, [name]: value });
+  };
 
   const testSampleForm = (materialType: any) => {
     if (materialType === TEST_MATERIALS_TYPES.CONCRETE) {
       return <View>
         <View style={{ flexDirection: 'column', paddingBottom: 40 }}>
           <View style={{flexDirection: 'column'}}>
-            <Text style={styles.GenerateRFIFieldLabel}>Date of Testing</Text>
-            <TextInput
-                style={styles.inputStyle}
-                placeholder="Date of Testing"
-                autoCapitalize="none"
-                keyboardType="email-address"
-                returnKeyType="next"
-                underlineColorAndroid="#f000"
-                blurOnSubmit={false}
-                value={dateOfTesting}
-                onChangeText={(text) => {
-                  setDateOfTesting(text);
-                }}
+              <CalendarPicker
+                  label="Date of Testing"
+                  value={formSampleTest7thDay.dateOfTesting}
+                  onChange={date => handleInputChange('dateOfTesting', date)}
               />
           </View>
 
           <View style={{ flexDirection: 'column' }}>
-            <Text style={styles.GenerateRFIFieldLabel}>Sampled By</Text>
-            <View style={[styles.SectionStyle, { zIndex: 11, height: 50 }]}>
-              <DropDownPicker
-                open={openSampleBy}
-                value={sampleBy}
-                items={SAMPLE_BY_LIST}
-                setOpen={setOpenSampleBy}
-                setValue={setSampleBy}
-              />
-            </View>
+            <DropdownPicker
+              value={formSampleTest7thDay.sampleBy}
+              label='Sampled By'
+              items={SAMPLE_BY_LIST}
+              onChange={(value: string) => handleInputChange('sampleBy', value)}
+            />
           </View>
 
           <View style={{ flexDirection: 'column' }}>
-            <Text style={styles.GenerateRFIFieldLabel}>Test Conducted By</Text>
-            <View style={[styles.SectionStyle, { zIndex: 10, height: 50 }]}>
-            <DropDownPicker
-                open={openTestConductedBy}
-                value={testConductedBy}
+            <DropdownPicker
+                value={formSampleTest7thDay.testConductedBy}
+                label='Test Conducted By'
                 items={TEST_CONDUCTED_BY_LIST}
-                setOpen={setOpenTestConductedBy}
-                setValue={setTestConductedBy}
-              />
-            </View>
-          </View>
-
-          <View style={{ flexDirection: 'column' }}>
-            <Text style={styles.GenerateRFIFieldLabel}>Room Temperature/ Atmospheric Temperature in C</Text>
-            <TextInput
-                style={styles.inputStyle}
-                placeholder="Room/Atmospheric Temperature"
-                autoCapitalize="none"
-                keyboardType="email-address"
-                returnKeyType="next"
-                underlineColorAndroid="#f000"
-                blurOnSubmit={false}
-                value={roomTemperature}
-                onChangeText={(text) => {
-                  setRoomTemperature(text);
-                }}
+                onChange={(value: string) => handleInputChange('testConductedBy', value)}
               />
           </View>
 
           <View style={{ flexDirection: 'column' }}>
-            <Text style={styles.GenerateRFIFieldLabel}>Humidity in %</Text>
-            <TextInput
-                style={styles.inputStyle}
-                placeholder="Humidity in %"
-                autoCapitalize="none"
-                keyboardType="email-address"
-                returnKeyType="next"
-                underlineColorAndroid="#f000"
-                blurOnSubmit={false}
-                value={humidity}
-                onChangeText={(text) => {
-                  setHumidity(text);
-                }}
+              <Input
+                  label="Room Temperature/ Atmospheric Temperature (in C)"
+                  value={''+formSampleTest7thDay.roomTemperature}
+                  onChange={(value: string) => handleInputChange('roomTemperature', value)}
+                  isRequired={true}
+              />
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+              <Input
+                  label="Humidity in %"
+                  value={''+formSampleTest7thDay.humidity}
+                  onChange={(value: string) => handleInputChange('humidity', value)}
+                  isRequired={true}
               />
           </View>
 
@@ -668,7 +679,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                             {
                               item.details.values.map((value: any, index: number) => (
                                 <View style={{flexDirection: 'row'}}>
-                                  <View style={{flexDirection: 'column', width: 60}}>
+                                  {/* <View style={{flexDirection: 'column', width: 60}}>
                                     {
                                       index === 0 ? 
                                       <View style={{height: 40}}>
@@ -676,7 +687,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                                     </View> : null
                                     }
                                     <Text style={[styles.textStyle2, {textAlign: 'center'}]}>{value.cubeNo}</Text>
-                                  </View>
+                                  </View> */}
 
                                   <View style={{flexDirection: 'column', width: 120}}>
                                   {
@@ -726,7 +737,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                                       fieldName={'failureLoad'}></CustomTextInput>
                                   </View>
 
-                                  <View style={{flexDirection: 'column', width: 120}}>
+                                  {/* <View style={{flexDirection: 'column', width: 120}}>
                                   {
                                       index === 0 ? 
                                       <View style={{height: 40}}>
@@ -734,7 +745,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                                     </View> : null
                                     }
                                     <Text style={[styles.textStyle, {textAlign: 'center'}]}>{value.compressiveStrength}</Text>
-                                  </View>
+                                  </View> */}
 
                                 </View>
                               ))
@@ -742,7 +753,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                             {/* </View> */}
                           
                         </View>
-                        <View style={{flexDirection: 'column', width: 120}}>
+                        {/* <View style={{flexDirection: 'column', width: 120}}>
                             <View style={{height: 40}}>
                               <Text style={{fontWeight: '700'}}>{item.avgStrength.title}</Text>
                             </View>
@@ -757,7 +768,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                           <View style={styles.textStyle}>
                             <Text style={[{textAlign: 'center'}]}>{item.remarks.value}</Text>
                           </View>
-                        </View>
+                        </View> */}
                       </View>
                     )
                   )
@@ -769,10 +780,6 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
         </View>
       </View>
     }
-  }
-
-  const onSubmitTestSample = (status: string) => {
-    console.log('======', JSON.stringify(concreteSampleTestItems))
   }
 
   return (
@@ -961,7 +968,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                         {
                           item.sampleStatus != TEST_SAMPLE_STATUS.PREPARED ?
                             <View style={{ flexDirection: 'row', alignContent: 'center', alignItems: 'center' }}>
-                              <View style={[styles.SectionStyle, { width: 130 }]}>
+                              <View style={[styles.SectionStyle, { width: 140 }]}>
                                 <CustomDropdownPicker items={TEST_SAMPLE_STATUS_LIST}
                                   rowItem={item} tempProp={true}
                                   fieldName={'sampleStatus'}

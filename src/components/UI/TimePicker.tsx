@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, Platform} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet, Platform, Image} from 'react-native';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import {format} from 'date-fns';
 
@@ -33,6 +33,7 @@ const TimePicker: React.FC<TimePickerProps> = ({label, value, onChange}) => {
         <Text style={styles.inputText}>
           {value || `Select ${label.toLowerCase()}`}
         </Text>
+        <Image style={styles.CalendarIcon} source={require('./../../images/timing.png')} />
       </TouchableOpacity>
       <DateTimePicker
         isVisible={isDatePickerVisible}
@@ -45,24 +46,36 @@ const TimePicker: React.FC<TimePickerProps> = ({label, value, onChange}) => {
 };
 
 const styles = StyleSheet.create({
+  CalendarIcon: {
+    width: 24,
+    height: 24,
+    position: 'absolute',
+    right: 15,
+    top: 10
+  },
   inputContainer: {
-    marginBottom: 20,
+    marginBottom: 15,
   },
   label: {
-    fontSize: 16,
-    marginBottom: 8,
-    color: '#555',
+    fontSize: 12,
+    marginBottom: 5,
+    color: '#666',
+    fontWeight: '500'
   },
   input: {
     backgroundColor: '#fff',
-    padding: 10,
-    borderRadius: 8,
+    padding: 12,
+    borderRadius: 4,
     borderColor: '#ddd',
     borderWidth: 1,
     justifyContent: 'center',
+    fontSize: 12,
+    color: '#2c2c2c',
+    position: 'relative'
   },
   inputText: {
-    color: '#333',
+    color: '#2c2c2c',
+    fontSize: 12,
   },
 });
 

@@ -80,3 +80,30 @@ export const updateTestSampleAPi = async (projectId, id, body) => {
         throw new Error(errorMessge);
     });
 }
+
+export const generateTestSampleReportApi = async (projectId, testRFIId, body) => {
+    return apiService.postRequest(`v1/auth/projects/${projectId}/test-rfis/${testRFIId}/report`, body).then((response) => {
+        return response;
+    }).catch((err) => {
+        const errorMessge = err.message || 'Unable to generate report.';
+        throw new Error(errorMessge);
+    });
+}
+
+export const viewTestSampleReportApi = async (projectId, testRFIId) => {
+    return apiService.getRequest(`v1/auth/projects/${projectId}/test-rfis/${testRFIId}/report`).then((response) => {
+        return response;
+    }).catch((err) => {
+        const errorMessge = err.message || 'Unable to generate report.';
+        throw new Error(errorMessge);
+    });
+}
+
+export const getTestSampleReportsForLoggedinUserApi = async (projectId) => {
+    return apiService.getRequest(`v1/auth/projects/${projectId}/test-rfis/reports`).then((response) => {
+        return response;
+    }).catch((err) => {
+        const errorMessge = err.message || 'Unable to get Test Sample reports.';
+        throw new Error(errorMessge);
+    });
+}

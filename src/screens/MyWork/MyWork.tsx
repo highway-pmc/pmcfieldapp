@@ -8,9 +8,13 @@ import LoadingAnimation from '../Common/LoadingAnimation';
 import { getDbDate, getDisplayDate, getDisplayTime, groupBy } from '../../utils/Utils';
 import * as ImagePicker from 'react-native-image-picker';
 import DropDownPicker from 'react-native-dropdown-picker';
-import CalendarPicker from 'react-native-calendar-picker';
+//import CalendarPicker from 'react-native-calendar-picker';
+import CalendarPicker from '../../components/UI/CalenderPicker';
+import TimePicker from '../../components/UI/TimePicker';
+import moment from 'moment';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { Guid } from 'guid-typescript';
+import { FlatList } from 'react-native-gesture-handler';
 
 const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
@@ -1043,9 +1047,9 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
 
   // Function to render each list item 
   const renderItem = (rowData: any) => (
-    <View style={{ flexDirection: 'row', backgroundColor: 'red' }}>
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5, marginBottom: 10,}}>
       <View>
-        <Text>TM {rowData.index + 1}</Text>
+        <Text style={{fontWeight: '600', fontSize: 13}}>TM {rowData.index + 1}</Text>
       </View>
       <View>
         <CustomTextInput rowItem={rowData.item}
@@ -1091,6 +1095,15 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
           fieldName={'concreteFinishTime'}
         />
       </View>
+    <View style={styles.hiddenContainer}>
+        <TouchableOpacity 
+            style={[styles.deleteButton]} 
+            onPress={() => deleteItem(rowData, rowData.item.key)} 
+        > 
+        <Image style={[styles.CloseIcon, {tintColor: '#fff'}]} source={require('./../../images/menu/delete.png')} />
+        </TouchableOpacity> 
+    </View>
+      
         
       </View>
 );
@@ -1121,16 +1134,18 @@ const onRowOpen = (rowKey: any) => {
 const renderHiddenItem = (rowData: any, rowMap: any) => ( 
     <View style={styles.hiddenContainer}> 
         <TouchableOpacity 
-            style={[styles.hiddenButton, styles.closeButton]} 
+            style={[styles.closeButton]} 
             onPress={() => closeRow(rowMap, rowData.item.key)} 
         > 
-            <Text style={styles.buttonText}>Close</Text> 
+            {/* <Text style={styles.buttonText}>Close</Text>  */}
+            <Image style={styles.CloseIcon} source={require('./../../images/menu/close-icon.png')} />
         </TouchableOpacity> 
         <TouchableOpacity 
-            style={[styles.hiddenButton, styles.deleteButton]} 
+            style={[styles.deleteButton]} 
             onPress={() => deleteItem(rowMap, rowData.item.key)} 
         > 
-            <Text style={styles.buttonText}>Delete</Text> 
+        <Image style={[styles.CloseIcon, {tintColor: '#fff'}]} source={require('./../../images/menu/delete.png')} />
+            {/* <Text style={styles.buttonText}>Delete</Text>  */}
         </TouchableOpacity> 
     </View> 
 );
@@ -1213,7 +1228,7 @@ const onSwipeValueChange = (data: any) => {
 
         <View>
           <View style={{ flexDirection: 'column' }}>
-            <Text style={styles.GenerateRFIFieldLabel}>Date</Text>
+            <Text style={styles.Lable}>Date</Text>
 
             <View style={{ flexDirection: 'row' }}>
               <TextInput
@@ -1236,18 +1251,20 @@ const onSwipeValueChange = (data: any) => {
           {openCalendar && (
 
             <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
-              <CalendarPicker width={width - 40}
+              {/* <CalendarPicker width={width - 40}
                 initialDate={rfiDate ? new Date(rfiDate) : new Date()}
                 onDateChange={(date) => {
                   setRFIDate(date.format("YYYY-MM-DD"));
                   openCloseCalendar()
                 }}
-              />
+              /> */}
+
+<CalendarPicker label="Date" value={rfiDate} onChange={date => openCloseCalendar()}/>
             </View>
           )}
 
-          <View style={{ flexDirection: 'column', height: 80, paddingTop: 15, zIndex: 5, marginBottom: 140 }}>
-            <Text style={styles.GenerateRFIFieldLabel}>Time</Text>
+          <View style={{ flexDirection: 'column', paddingTop: 15, zIndex: 5, paddingBottom: 20 }}>
+            <Text style={styles.Lable}>Time</Text>
             <View style={{ flexDirection: 'row', gap: 20 }}>
               <View style={{ width: 80, height: 90 }}>
                 <DropDownPicker onPress={() => {
@@ -1301,7 +1318,7 @@ const onSwipeValueChange = (data: any) => {
             </View>
 
             <View style={{ flexDirection: 'column', height: 65 }}>
-              <Text style={styles.GenerateRFIFieldLabel}>Recommendations</Text>
+              <Text style={styles.Lable}>Recommendations</Text>
               <TextInput
                 style={styles.inputStyle}
                 placeholder="Recommendations"
@@ -1327,7 +1344,7 @@ const onSwipeValueChange = (data: any) => {
       case TASK_TYPES.PLACEMENT_OF_MIDDLE_AND_TOP_SHUTTER:
         return <View>
           <View style={{ flexDirection: 'column' }}>
-            <Text style={styles.GenerateRFIFieldLabel}>Cleanliness and Oil application checked</Text>
+            <Text style={styles.Lable}>Cleanliness and Oil application checked</Text>
             <View style={[styles.SectionStyle, { zIndex: 16, height: 50 }]}>
               <DropDownPicker
                 open={openCleanliness}
@@ -1340,7 +1357,7 @@ const onSwipeValueChange = (data: any) => {
           </View>
 
           <View style={{ flexDirection: 'column' }}>
-            <Text style={styles.GenerateRFIFieldLabel}>Formwork alignment checked</Text>
+            <Text style={styles.Lable}>Formwork alignment checked</Text>
             <View style={[styles.SectionStyle, { zIndex: 15, height: 50 }]}>
               <DropDownPicker
                 open={openFormworkAlignmentChecked}
@@ -1353,7 +1370,7 @@ const onSwipeValueChange = (data: any) => {
           </View>
 
           <View style={{ flexDirection: 'column' }}>
-            <Text style={styles.GenerateRFIFieldLabel}>Formwork tightness/sealing checked</Text>
+            <Text style={styles.Lable}>Formwork tightness/sealing checked</Text>
             <View style={[styles.SectionStyle, { zIndex: 14, height: 50 }]}>
               <DropDownPicker
                 open={openFormworkSealingChecked}
@@ -1366,7 +1383,7 @@ const onSwipeValueChange = (data: any) => {
           </View>
 
           <View style={{ flexDirection: 'column' }}>
-            <Text style={styles.GenerateRFIFieldLabel}>Required covers provided as per drawings checked</Text>
+            <Text style={styles.Lable}>Required covers provided as per drawings checked</Text>
             <View style={[styles.SectionStyle, { zIndex: 13, height: 50 }]}>
               <DropDownPicker
                 open={openFormworkdDrawingsChecked}
@@ -1379,7 +1396,7 @@ const onSwipeValueChange = (data: any) => {
           </View>
 
           <View style={{ flexDirection: 'column' }}>
-            <Text style={styles.GenerateRFIFieldLabel}>Concrete finish level marked</Text>
+            <Text style={styles.Lable}>Concrete finish level marked</Text>
             <View style={[styles.SectionStyle, { zIndex: 12, height: 50 }]}>
               <DropDownPicker
                 open={openConcreteFinishLevelMarked}
@@ -1392,7 +1409,7 @@ const onSwipeValueChange = (data: any) => {
           </View>
 
           <View style={{ flexDirection: 'column' }}>
-            <Text style={styles.GenerateRFIFieldLabel}>Formwork properly supported</Text>
+            <Text style={styles.Lable}>Formwork properly supported</Text>
             <View style={[styles.SectionStyle, { zIndex: 11, height: 50 }]}>
               <DropDownPicker
                 open={openFormworkProperlySupported}
@@ -1405,7 +1422,7 @@ const onSwipeValueChange = (data: any) => {
           </View>
 
           <View style={{ flexDirection: 'column' }}>
-            <Text style={styles.GenerateRFIFieldLabel}>Formwork fit for concreting</Text>
+            <Text style={styles.Lable}>Formwork fit for concreting</Text>
             <View style={[styles.SectionStyle, { zIndex: 10, height: 50 }]}>
               <DropDownPicker
                 open={openFormworkFitConcreting}
@@ -1419,7 +1436,7 @@ const onSwipeValueChange = (data: any) => {
           
           <View>
             <View style={{ flexDirection: 'column' }}>
-              <Text style={styles.GenerateRFIFieldLabel}>Date</Text>
+              <Text style={styles.Lable}>Date</Text>
 
               <View style={{ flexDirection: 'row' }}>
                 <TextInput
@@ -1442,18 +1459,20 @@ const onSwipeValueChange = (data: any) => {
             {openCalendar && (
 
               <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
-                <CalendarPicker width={width - 40}
+                {/* <CalendarPicker width={width - 40}
                   initialDate={rfiDate ? new Date(rfiDate) : new Date()}
                   onDateChange={(date) => {
                     setRFIDate(date.format("YYYY-MM-DD"));
                     openCloseCalendar()
                   }}
-                />
+                /> */}
+
+<CalendarPicker label="Date" value={rfiDate} onChange={date => openCloseCalendar()}/>
               </View>
             )}
 
-            <View style={{ flexDirection: 'column', height: 80, paddingTop: 15, zIndex: 5, marginBottom: 140 }}>
-              <Text style={styles.GenerateRFIFieldLabel}>Time</Text>
+            <View style={{ flexDirection: 'column', paddingTop: 15, zIndex: 5, paddingBottom: 20 }}>
+              <Text style={styles.Lable}>Time</Text>
               <View style={{ flexDirection: 'row', gap: 20 }}>
                 <View style={{ width: 80, height: 90 }}>
                   <DropDownPicker onPress={() => {
@@ -1507,7 +1526,7 @@ const onSwipeValueChange = (data: any) => {
               </View>
               
               <View style={{ flexDirection: 'column', height: 65 }}>
-              <Text style={styles.GenerateRFIFieldLabel}>Recommendations</Text>
+              <Text style={styles.Lable}>Recommendations</Text>
               <TextInput
                 style={styles.inputStyle}
                 placeholder="Recommendations"
@@ -1531,7 +1550,7 @@ const onSwipeValueChange = (data: any) => {
       case TASK_TYPES.REINFORCEMENT_PREPARATION:
         return <View>
           <View style={{ flexDirection: 'column' }}>
-            <Text style={styles.GenerateRFIFieldLabel}>Rebar and dimension (dia,len and shape) checked as per GFC</Text>
+            <Text style={styles.Lable}>Rebar and dimension (dia,len and shape) checked as per GFC</Text>
             <View style={[styles.SectionStyle, { zIndex: 16, height: 50 }]}>
               <DropDownPicker
                 open={openRebarAndDimensionGFC}
@@ -1544,7 +1563,7 @@ const onSwipeValueChange = (data: any) => {
           </View>
 
           <View style={{ flexDirection: 'column' }}>
-            <Text style={styles.GenerateRFIFieldLabel}>Shaping, No and Length of Bars checked as per GFC</Text>
+            <Text style={styles.Lable}>Shaping, No and Length of Bars checked as per GFC</Text>
             <View style={[styles.SectionStyle, { zIndex: 15, height: 50 }]}>
               <DropDownPicker
                 open={openShapingNoAndLengthOfBarsGFC}
@@ -1557,7 +1576,7 @@ const onSwipeValueChange = (data: any) => {
           </View>
 
           <View style={{ flexDirection: 'column' }}>
-            <Text style={styles.GenerateRFIFieldLabel}>Rebars securely tightened/bound by tie bars</Text>
+            <Text style={styles.Lable}>Rebars securely tightened/bound by tie bars</Text>
             <View style={[styles.SectionStyle, { zIndex: 14, height: 50 }]}>
               <DropDownPicker
                 open={openRebarsSecurelyTightened}
@@ -1570,7 +1589,7 @@ const onSwipeValueChange = (data: any) => {
           </View>
 
           <View style={{ flexDirection: 'column' }}>
-            <Text style={styles.GenerateRFIFieldLabel}>Splice length and location checked as per GFC</Text>
+            <Text style={styles.Lable}>Splice length and location checked as per GFC</Text>
             <View style={[styles.SectionStyle, { zIndex: 13, height: 50 }]}>
               <DropDownPicker
                 open={openSpliceLengthAndLocationGFC}
@@ -1583,7 +1602,7 @@ const onSwipeValueChange = (data: any) => {
           </View>
 
           <View style={{ flexDirection: 'column' }}>
-            <Text style={styles.GenerateRFIFieldLabel}>Rebar within tolerance limit</Text>
+            <Text style={styles.Lable}>Rebar within tolerance limit</Text>
             <View style={[styles.SectionStyle, { zIndex: 12, height: 50 }]}>
               <DropDownPicker
                 open={openRebarWithinToleranceLimit}
@@ -1596,7 +1615,7 @@ const onSwipeValueChange = (data: any) => {
           </View>
 
           <View style={{ flexDirection: 'column' }}>
-            <Text style={styles.GenerateRFIFieldLabel}>Coupler arrangements within tolerance</Text>
+            <Text style={styles.Lable}>Coupler arrangements within tolerance</Text>
             <View style={[styles.SectionStyle, { zIndex: 11, height: 50 }]}>
               <DropDownPicker
                 open={openCouplerArrangementsWithinTolerance}
@@ -1609,7 +1628,7 @@ const onSwipeValueChange = (data: any) => {
           </View>
 
           <View style={{ flexDirection: 'column' }}>
-            <Text style={styles.GenerateRFIFieldLabel}>Bar Bending schedule checked</Text>
+            <Text style={styles.Lable}>Bar Bending schedule checked</Text>
             <View style={[styles.SectionStyle, { zIndex: 10, height: 50 }]}>
               <DropDownPicker
                 open={openBarBendingScheduleChecked}
@@ -1622,7 +1641,7 @@ const onSwipeValueChange = (data: any) => {
           </View>
 
           <View style={{ flexDirection: 'column' }}>
-            <Text style={styles.GenerateRFIFieldLabel}>Spacer bar checked as per GFC</Text>
+            <Text style={styles.Lable}>Spacer bar checked as per GFC</Text>
             <View style={[styles.SectionStyle, { zIndex: 9, height: 50 }]}>
               <DropDownPicker
                 open={openSpacerBarCheckedGFC}
@@ -1636,7 +1655,7 @@ const onSwipeValueChange = (data: any) => {
           
           <View>
             <View style={{ flexDirection: 'column' }}>
-              <Text style={styles.GenerateRFIFieldLabel}>Date</Text>
+              <Text style={styles.Lable}>Date</Text>
 
               <View style={{ flexDirection: 'row' }}>
                 <TextInput
@@ -1659,18 +1678,20 @@ const onSwipeValueChange = (data: any) => {
             {openCalendar && (
 
               <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
-                <CalendarPicker width={width - 40}
+                {/* <CalendarPicker width={width - 40}
                   initialDate={rfiDate ? new Date(rfiDate) : new Date()}
                   onDateChange={(date) => {
                     setRFIDate(date.format("YYYY-MM-DD"));
                     openCloseCalendar()
                   }}
-                />
+                /> */}
+
+<CalendarPicker label="Date" value={rfiDate} onChange={date => openCloseCalendar()}/>
               </View>
             )}
 
-            <View style={{ flexDirection: 'column', height: 80, paddingTop: 15, zIndex: 5, marginBottom: 140 }}>
-              <Text style={styles.GenerateRFIFieldLabel}>Time</Text>
+            <View style={{ flexDirection: 'column', paddingTop: 15, zIndex: 5, paddingBottom: 20 }}>
+              <Text style={styles.Lable}>Time</Text>
               <View style={{ flexDirection: 'row', gap: 20 }}>
                 <View style={{ width: 80, height: 90 }}>
                   <DropDownPicker onPress={() => {
@@ -1724,7 +1745,7 @@ const onSwipeValueChange = (data: any) => {
               </View>
               
               <View style={{ flexDirection: 'column', height: 65 }}>
-              <Text style={styles.GenerateRFIFieldLabel}>Recommendations</Text>
+              <Text style={styles.Lable}>Recommendations</Text>
               <TextInput
                 style={styles.inputStyle}
                 placeholder="Recommendations"
@@ -1747,7 +1768,7 @@ const onSwipeValueChange = (data: any) => {
       case TASK_TYPES.REINFORCEMENT_PREPARATION:
         return <View>
           <View style={{ flexDirection: 'column' }}>
-            <Text style={styles.GenerateRFIFieldLabel}>Rebar and dimension (dia,len and shape) checked as per GFC</Text>
+            <Text style={styles.Lable}>Rebar and dimension (dia,len and shape) checked as per GFC</Text>
             <View style={[styles.SectionStyle, { zIndex: 16, height: 50 }]}>
               <DropDownPicker
                 open={openRebarAndDimensionGFC}
@@ -1760,7 +1781,7 @@ const onSwipeValueChange = (data: any) => {
           </View>
 
           <View style={{ flexDirection: 'column' }}>
-            <Text style={styles.GenerateRFIFieldLabel}>Shaping, No and Length of Bars checked as per GFC</Text>
+            <Text style={styles.Lable}>Shaping, No and Length of Bars checked as per GFC</Text>
             <View style={[styles.SectionStyle, { zIndex: 15, height: 50 }]}>
               <DropDownPicker
                 open={openShapingNoAndLengthOfBarsGFC}
@@ -1773,7 +1794,7 @@ const onSwipeValueChange = (data: any) => {
           </View>
 
           <View style={{ flexDirection: 'column' }}>
-            <Text style={styles.GenerateRFIFieldLabel}>Rebars securely tightened/bound by tie bars</Text>
+            <Text style={styles.Lable}>Rebars securely tightened/bound by tie bars</Text>
             <View style={[styles.SectionStyle, { zIndex: 14, height: 50 }]}>
               <DropDownPicker
                 open={openRebarsSecurelyTightened}
@@ -1786,7 +1807,7 @@ const onSwipeValueChange = (data: any) => {
           </View>
 
           <View style={{ flexDirection: 'column' }}>
-            <Text style={styles.GenerateRFIFieldLabel}>Splice length and location checked as per GFC</Text>
+            <Text style={styles.Lable}>Splice length and location checked as per GFC</Text>
             <View style={[styles.SectionStyle, { zIndex: 13, height: 50 }]}>
               <DropDownPicker
                 open={openSpliceLengthAndLocationGFC}
@@ -1799,7 +1820,7 @@ const onSwipeValueChange = (data: any) => {
           </View>
 
           <View style={{ flexDirection: 'column' }}>
-            <Text style={styles.GenerateRFIFieldLabel}>Rebar within tolerance limit</Text>
+            <Text style={styles.Lable}>Rebar within tolerance limit</Text>
             <View style={[styles.SectionStyle, { zIndex: 12, height: 50 }]}>
               <DropDownPicker
                 open={openRebarWithinToleranceLimit}
@@ -1812,7 +1833,7 @@ const onSwipeValueChange = (data: any) => {
           </View>
 
           <View style={{ flexDirection: 'column' }}>
-            <Text style={styles.GenerateRFIFieldLabel}>Coupler arrangements within tolerance</Text>
+            <Text style={styles.Lable}>Coupler arrangements within tolerance</Text>
             <View style={[styles.SectionStyle, { zIndex: 11, height: 50 }]}>
               <DropDownPicker
                 open={openCouplerArrangementsWithinTolerance}
@@ -1825,7 +1846,7 @@ const onSwipeValueChange = (data: any) => {
           </View>
 
           <View style={{ flexDirection: 'column' }}>
-            <Text style={styles.GenerateRFIFieldLabel}>Bar Bending schedule checked</Text>
+            <Text style={styles.Lable}>Bar Bending schedule checked</Text>
             <View style={[styles.SectionStyle, { zIndex: 10, height: 50 }]}>
               <DropDownPicker
                 open={openBarBendingScheduleChecked}
@@ -1839,7 +1860,7 @@ const onSwipeValueChange = (data: any) => {
           
           <View>
             <View style={{ flexDirection: 'column' }}>
-              <Text style={styles.GenerateRFIFieldLabel}>Date</Text>
+              <Text style={styles.Lable}>Date</Text>
 
               <View style={{ flexDirection: 'row' }}>
                 <TextInput
@@ -1862,18 +1883,20 @@ const onSwipeValueChange = (data: any) => {
             {openCalendar && (
 
               <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
-                <CalendarPicker width={width - 40}
+                {/* <CalendarPicker width={width - 40}
                   initialDate={rfiDate ? new Date(rfiDate) : new Date()}
                   onDateChange={(date) => {
                     setRFIDate(date.format("YYYY-MM-DD"));
                     openCloseCalendar()
                   }}
-                />
+                /> */}
+
+                <CalendarPicker label="Date" value={rfiDate} onChange={date => openCloseCalendar()}/>
               </View>
             )}
 
-            <View style={{ flexDirection: 'column', height: 80, paddingTop: 15, zIndex: 5, marginBottom: 140 }}>
-              <Text style={styles.GenerateRFIFieldLabel}>Time</Text>
+            <View style={{ flexDirection: 'column', paddingTop: 15, zIndex: 5, paddingBottom: 20 }}>
+              <Text style={styles.Lable}>Time</Text>
               <View style={{ flexDirection: 'row', gap: 20 }}>
                 <View style={{ width: 80, height: 90 }}>
                   <DropDownPicker onPress={() => {
@@ -1927,7 +1950,7 @@ const onSwipeValueChange = (data: any) => {
               </View>
               
               <View style={{ flexDirection: 'column', height: 65 }}>
-              <Text style={styles.GenerateRFIFieldLabel}>Recommendations</Text>
+              <Text style={styles.Lable}>Recommendations</Text>
               <TextInput
                 style={styles.inputStyle}
                 placeholder="Recommendations"
@@ -1950,7 +1973,7 @@ const onSwipeValueChange = (data: any) => {
       case TASK_TYPES.EXCAVATION:
         return <View>
           <View style={{ flexDirection: 'column' }}>
-            <Text style={styles.GenerateRFIFieldLabel}>Qty of earth work excavated in cum</Text>
+            <Text style={styles.Lable}>Qty of earth work excavated in cum</Text>
             <View style={[styles.SectionStyle, { zIndex: 16, height: 50 }]}>
             <TextInput
                   style={styles.inputStyle}
@@ -1978,7 +2001,7 @@ const onSwipeValueChange = (data: any) => {
           
           <View>
             <View style={{ flexDirection: 'column' }}>
-              <Text style={styles.GenerateRFIFieldLabel}>Date</Text>
+              <Text style={styles.Lable}>Date</Text>
 
               <View style={{ flexDirection: 'row' }}>
                 <TextInput
@@ -2001,18 +2024,20 @@ const onSwipeValueChange = (data: any) => {
             {openCalendar && (
 
               <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
-                <CalendarPicker width={width - 40}
+                {/* <CalendarPicker width={width - 40}
                   initialDate={rfiDate ? new Date(rfiDate) : new Date()}
                   onDateChange={(date) => {
                     setRFIDate(date.format("YYYY-MM-DD"));
                     openCloseCalendar()
                   }}
-                />
+                /> */}
+
+              <CalendarPicker label="Date" value={rfiDate} onChange={date => openCloseCalendar()}/>
               </View>
             )}
 
-            <View style={{ flexDirection: 'column', height: 80, paddingTop: 15, zIndex: 5, marginBottom: 140 }}>
-              <Text style={styles.GenerateRFIFieldLabel}>Time</Text>
+            <View style={{ flexDirection: 'column', paddingTop: 15, zIndex: 5, paddingBottom: 20 }}>
+              <Text style={styles.Lable}>Time</Text>
               <View style={{ flexDirection: 'row', gap: 20 }}>
                 <View style={{ width: 80, height: 90 }}>
                   <DropDownPicker onPress={() => {
@@ -2066,7 +2091,7 @@ const onSwipeValueChange = (data: any) => {
               </View>
               
               <View style={{ flexDirection: 'column', height: 65 }}>
-              <Text style={styles.GenerateRFIFieldLabel}>Recommendations</Text>
+              <Text style={styles.Lable}>Recommendations</Text>
               <TextInput
                 style={styles.inputStyle}
                 placeholder="Recommendations"
@@ -2090,7 +2115,7 @@ const onSwipeValueChange = (data: any) => {
       case TASK_TYPES.REMOVAL_OF_SHUTTERS:
         return <View>
           <View style={{ flexDirection: 'column' }}>
-            <Text style={styles.GenerateRFIFieldLabel}>Whether concrete has achieved desired strength</Text>
+            <Text style={styles.Lable}>Whether concrete has achieved desired strength</Text>
             <View style={[styles.SectionStyle, { zIndex: 16, height: 50 }]}>
               <DropDownPicker
                 open={openConcreteHasAchievedDesiredStrength}
@@ -2103,7 +2128,7 @@ const onSwipeValueChange = (data: any) => {
           </View>
 
           <View style={{ flexDirection: 'column' }}>
-            <Text style={styles.GenerateRFIFieldLabel}>Whether minimum time has been attained</Text>
+            <Text style={styles.Lable}>Whether minimum time has been attained</Text>
             <View style={[styles.SectionStyle, { zIndex: 15, height: 50 }]}>
               <DropDownPicker
                 open={openMinimumTimeHasBeenAttained}
@@ -2116,7 +2141,7 @@ const onSwipeValueChange = (data: any) => {
           </View>
           <View>
             <View style={{ flexDirection: 'column' }}>
-              <Text style={styles.GenerateRFIFieldLabel}>Date</Text>
+              <Text style={styles.Lable}>Date</Text>
 
               <View style={{ flexDirection: 'row' }}>
                 <TextInput
@@ -2139,18 +2164,23 @@ const onSwipeValueChange = (data: any) => {
             {openCalendar && (
 
               <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
-                <CalendarPicker width={width - 40}
+                {/* <CalendarPicker width={width - 40}
                   initialDate={rfiDate ? new Date(rfiDate) : new Date()}
                   onDateChange={(date) => {
                     setRFIDate(date.format("YYYY-MM-DD"));
                     openCloseCalendar()
                   }}
-                />
+                /> */}
+                <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => openCloseCalendar()}
+                        />
               </View>
             )}
 
-            <View style={{ flexDirection: 'column', height: 80, paddingTop: 15, zIndex: 5, marginBottom: 140 }}>
-              <Text style={styles.GenerateRFIFieldLabel}>Time</Text>
+            <View style={{ flexDirection: 'column', paddingTop: 15, zIndex: 5, paddingBottom: 20 }}>
+              <Text style={styles.Lable}>Time</Text>
               <View style={{ flexDirection: 'row', gap: 20 }}>
                 <View style={{ width: 80, height: 90 }}>
                   <DropDownPicker onPress={() => {
@@ -2204,7 +2234,7 @@ const onSwipeValueChange = (data: any) => {
               </View>
               
               <View style={{ flexDirection: 'column', height: 65 }}>
-              <Text style={styles.GenerateRFIFieldLabel}>Recommendations</Text>
+              <Text style={styles.Lable}>Recommendations</Text>
               <TextInput
                 style={styles.inputStyle}
                 placeholder="Recommendations"
@@ -2228,7 +2258,7 @@ const onSwipeValueChange = (data: any) => {
         return <View>
           <View>
             <View style={{ flexDirection: 'column' }}>
-              <Text style={styles.GenerateRFIFieldLabel}>Date</Text>
+              <Text style={styles.Lable}>Date</Text>
 
               <View style={{ flexDirection: 'row' }}>
                 <TextInput
@@ -2251,18 +2281,23 @@ const onSwipeValueChange = (data: any) => {
             {openCalendar && (
 
               <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
-                <CalendarPicker width={width - 40}
+                {/* <CalendarPicker width={width - 40}
                   initialDate={rfiDate ? new Date(rfiDate) : new Date()}
                   onDateChange={(date) => {
                     setRFIDate(date.format("YYYY-MM-DD"));
                     openCloseCalendar()
                   }}
-                />
+                /> */}
+                <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => openCloseCalendar()}
+                        />
               </View>
             )}
 
-            <View style={{ flexDirection: 'column', height: 80, paddingTop: 15, zIndex: 5, marginBottom: 140 }}>
-              <Text style={styles.GenerateRFIFieldLabel}>Time</Text>
+            <View style={{ flexDirection: 'column', paddingTop: 15, zIndex: 5, paddingBottom: 20 }}>
+              <Text style={styles.Lable}>Time</Text>
               <View style={{ flexDirection: 'row', gap: 20 }}>
                 <View style={{ width: 80, height: 90 }}>
                   <DropDownPicker onPress={() => {
@@ -2316,7 +2351,7 @@ const onSwipeValueChange = (data: any) => {
               </View>
               
               <View style={{ flexDirection: 'column', height: 65 }}>
-              <Text style={styles.GenerateRFIFieldLabel}>Recommendations</Text>
+              <Text style={styles.Lable}>Recommendations</Text>
               <TextInput
                 style={styles.inputStyle}
                 placeholder="Recommendations"
@@ -2339,7 +2374,7 @@ const onSwipeValueChange = (data: any) => {
       case TASK_TYPES.CAGE_LOWERING:
         return <View>
           <View style={{ flexDirection: 'column' }}>
-            <Text style={styles.GenerateRFIFieldLabel}>Plie shaft cleaned of all loose material or not</Text>
+            <Text style={styles.Lable}>Plie shaft cleaned of all loose material or not</Text>
             <View style={[styles.SectionStyle, { zIndex: 16, height: 50 }]}>
               <DropDownPicker
                 open={openPlieShaftCleanedLooseMaterial}
@@ -2352,7 +2387,7 @@ const onSwipeValueChange = (data: any) => {
           </View>
 
           <View style={{ flexDirection: 'column' }}>
-            <Text style={styles.GenerateRFIFieldLabel}>Suitable spacer provided to maintain the required cover to steel </Text>
+            <Text style={styles.Lable}>Suitable spacer provided to maintain the required cover to steel </Text>
             <View style={[styles.SectionStyle, { zIndex: 15, height: 50 }]}>
               <DropDownPicker
                 open={openSuitableSpacerProvidedToMaintainCoverToSteel}
@@ -2365,7 +2400,7 @@ const onSwipeValueChange = (data: any) => {
           </View>
 
           <View style={{ flexDirection: 'column' }}>
-            <Text style={styles.GenerateRFIFieldLabel}>No L bend at the bottom of the Cage checked or not </Text>
+            <Text style={styles.Lable}>No L bend at the bottom of the Cage checked or not </Text>
             <View style={[styles.SectionStyle, { zIndex: 15, height: 50 }]}>
               <DropDownPicker
                 open={openNoLBendBottomOfTheCageChecked}
@@ -2379,7 +2414,7 @@ const onSwipeValueChange = (data: any) => {
 
           <View>
             <View style={{ flexDirection: 'column' }}>
-              <Text style={styles.GenerateRFIFieldLabel}>Date</Text>
+              <Text style={styles.Lable}>Date</Text>
 
               <View style={{ flexDirection: 'row' }}>
                 <TextInput
@@ -2402,18 +2437,23 @@ const onSwipeValueChange = (data: any) => {
             {openCalendar && (
 
               <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
-                <CalendarPicker width={width - 40}
+                {/* <CalendarPicker width={width - 40}
                   initialDate={rfiDate ? new Date(rfiDate) : new Date()}
                   onDateChange={(date) => {
                     setRFIDate(date.format("YYYY-MM-DD"));
                     openCloseCalendar()
                   }}
-                />
+                /> */}
+                <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => openCloseCalendar()}
+                        />
               </View>
             )}
 
-            <View style={{ flexDirection: 'column', height: 80, paddingTop: 15, zIndex: 5, marginBottom: 140 }}>
-              <Text style={styles.GenerateRFIFieldLabel}>Time</Text>
+            <View style={{ flexDirection: 'column', paddingTop: 15, zIndex: 5, paddingBottom: 20 }}>
+              <Text style={styles.Lable}>Time</Text>
               <View style={{ flexDirection: 'row', gap: 20 }}>
                 <View style={{ width: 80, height: 90 }}>
                   <DropDownPicker onPress={() => {
@@ -2467,7 +2507,7 @@ const onSwipeValueChange = (data: any) => {
               </View>
               
               <View style={{ flexDirection: 'column', height: 65 }}>
-              <Text style={styles.GenerateRFIFieldLabel}>Recommendations</Text>
+              <Text style={styles.Lable}>Recommendations</Text>
               <TextInput
                 style={styles.inputStyle}
                 placeholder="Recommendations"
@@ -2504,149 +2544,80 @@ const onSwipeValueChange = (data: any) => {
             concreteFinishTime: '',
             key: Guid.create()
           }])
-
         }
-        return <View>
-          <ScrollView id='scrollViewConcrete' horizontal={enableScroll}>
-          <View style={{ flexDirection: 'column', padding: 10, borderBlockColor: '#cccccc', borderStyle: 'solid', borderWidth: 1}}>
-            {
-              <SwipeListView 
-                data={concreteData} 
-                renderItem={renderItem} 
-                renderHiddenItem={renderHiddenItem} 
-                renderSectionHeader={renderSectionHeader}
-                leftOpenValue={0} 
-                rightOpenValue={-430} 
-                previewRowKey={'0'} 
-                previewOpenValue={-40} 
-                previewOpenDelay={3000} 
-                onRowDidOpen={onRowOpen}
-                style={{zIndex: 10}}
-                automaticallyAdjustContentInsets={true}
-                scrollEnabled={false}
-                onSwipeValueChange={onSwipeValueChange}
-            /> 
-            
-            }
-           
-            
-          </View>
-          </ScrollView>
-          
+        return (
           <View>
-          <TouchableOpacity style={{marginTop: 50, zIndex: 8}} onPress={() => onAddMoreConcrete()}>
-              <Text>Add More</Text>
-            </TouchableOpacity>
-          </View>
+            <View style={styles.MainContainer}>
+              <ScrollView
+                id="scrollViewConcrete"
+                showsHorizontalScrollIndicator={false}
+                horizontal={enableScroll}>
+                {
+                  <FlatList
+                    data={concreteData}
+                    renderItem={renderItem}
+                    //renderHiddenItem={renderHiddenItem}
+                    //renderSectionHeader={renderSectionHeader}
+                    // leftOpenValue={0}
+                    // rightOpenValue={-430}
+                    // previewRowKey={'0'}
+                    // previewOpenValue={-40}
+                    // previewOpenDelay={3000}
+                    // onRowDidOpen={onRowOpen}
+                    style={{zIndex: 10}}
+                    automaticallyAdjustContentInsets={true}
+                    scrollEnabled={false}
+                    // onSwipeValueChange={onSwipeValueChange}
+                  />
+                }
+              </ScrollView>
+            </View>
 
-          <View>
-            <View style={{ flexDirection: 'column' }}>
-              <Text style={styles.GenerateRFIFieldLabel}>Date</Text>
+            <View>
+              <TouchableOpacity
+                style={{paddingVertical: 15, zIndex: 8}}
+                onPress={() => onAddMoreConcrete()}>
+                <Text style={styles.AddMoreLink}>+ Add More</Text>
+              </TouchableOpacity>
+            </View>
 
-              <View style={{ flexDirection: 'row' }}>
+            <View>
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={() => openCloseCalendar()}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={hour}
+                  onChange={() => setOpenTimeFormats(false)}
+                />
+              </View>
+
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
                 <TextInput
-                  style={styles.inputStyle}
-                  placeholder=""
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
                   autoCapitalize="none"
                   keyboardType="email-address"
                   returnKeyType="next"
                   underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
                   blurOnSubmit={false}
-                  value={rfiDate ? getDisplayDate(rfiDate) : ''}
-                  editable={false}
-                />
-                <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
-                  <Text style={styles.assignTagButtonText}>Icon</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-
-            {openCalendar && (
-
-              <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
-                <CalendarPicker width={width - 40}
-                  initialDate={rfiDate ? new Date(rfiDate) : new Date()}
-                  onDateChange={(date) => {
-                    setRFIDate(date.format("YYYY-MM-DD"));
-                    openCloseCalendar()
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
                   }}
                 />
               </View>
-            )}
-
-            <View style={{ flexDirection: 'column', height: 80, paddingTop: 15, zIndex: 5, marginBottom: 140 }}>
-              <Text style={styles.GenerateRFIFieldLabel}>Time</Text>
-              <View style={{ flexDirection: 'row', gap: 20 }}>
-                <View style={{ width: 80, height: 90 }}>
-                  <DropDownPicker onPress={() => {
-                    setOpenMinutes(false);
-                    setOpenTimeFormats(false);
-                  }}
-                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
-                    maxHeight={75}
-                    zIndex={1000}
-                    listMode='MODAL'
-                    open={openHours}
-                    value={hour}
-                    items={hours}
-                    setOpen={setOpenHours}
-                    setValue={setHour}
-                  />
-                </View>
-
-                <View style={{ width: 80, height: 90 }}>
-                  <DropDownPicker onPress={() => {
-                    setOpenHours(false);
-                    setOpenTimeFormats(false);
-                  }}
-                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
-                    maxHeight={75}
-                    zIndex={1000}
-                    listMode='MODAL'
-                    open={openMinutes}
-                    value={minute}
-                    items={minutes}
-                    setOpen={setOpenMinutes}
-                    setValue={setMinute}
-                  />
-                </View>
-                <View style={{ width: 80, height: 90 }}>
-                  <DropDownPicker onPress={() => {
-                    setOpenHours(false);
-                    setOpenMinutes(false);
-                  }}
-                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
-                    maxHeight={75}
-                    zIndex={1000}
-                    listMode='SCROLLVIEW'
-                    open={openTimeFormats}
-                    value={timeFormat}
-                    items={timeFormats}
-                    setOpen={setOpenTimeFormats}
-                    setValue={setTimeFormat}
-                  />
-                </View>
-              </View>
-              
-              <View style={{ flexDirection: 'column', height: 65 }}>
-              <Text style={styles.GenerateRFIFieldLabel}>Recommendations</Text>
-              <TextInput
-                style={styles.inputStyle}
-                placeholder="Recommendations"
-                autoCapitalize="none"
-                keyboardType="email-address"
-                returnKeyType="next"
-                underlineColorAndroid="#f000"
-                blurOnSubmit={false}
-                value={comments}
-                onChangeText={(text) => {
-                  setComments(text);
-                }}
-              />
-            </View>
             </View>
           </View>
-        </View>
+        );
 
 
 
@@ -2733,22 +2704,28 @@ const onSwipeValueChange = (data: any) => {
 
   return (
     <View style={styles.Container}>
-      <View style={styles.BreadcrumbContainer}>
-        {
-          breadcrumbData.map((item: any, index) => (
-            <View style={{ flexDirection: 'row' }}>
-              {
-                index == 0 ? <Text style={styles.BreadcrumbPrevTextUnderline} onPress={() => index === 0 && (setCurrentLevel(1), setBreadcrumbData([]))}>{item.name}</Text>
-                  : index === (breadcrumbData.length - 1) ? <Text style={styles.BreadcrumbCurrentText}>{item.name}</Text>
-                    : <Text style={styles.BreadcrumbPrevText}>{item.name}</Text>
-              }
-              {
-                index < (breadcrumbData.length - 1) ? <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} /> : null
-              }
-            </View>
-          ))
-        }
-      </View>
+      {
+        breadcrumbData.length ? 
+        <View style={styles.BreadcrumbContainer}>
+        <ScrollView showsHorizontalScrollIndicator={false} horizontal={true} style={styles.scrollView}>
+          {
+              breadcrumbData.map((item: any, index) => (
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  {
+                    index == 0 ? <Text style={styles.BreadcrumbPrevTextUnderline} onPress={() => index === 0 && (setCurrentLevel(1), setBreadcrumbData([]))}>{item.name}</Text>
+                      : index === (breadcrumbData.length - 1) ? <Text style={styles.BreadcrumbCurrentText}>{item.name}</Text>
+                        : <Text style={styles.BreadcrumbPrevText}>{item.name}</Text>
+                  }
+                  {
+                    index < (breadcrumbData.length - 1) ? <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} /> : null
+                  }
+                </View>
+              ))
+            }
+        </ScrollView>
+        </View>
+        : null
+      }
       {
         (currentLevel !== 1 && currentLevel !== 5) ? <View style={styles.SearchBox}>
           <Image
@@ -2788,13 +2765,19 @@ const onSwipeValueChange = (data: any) => {
                   (segItem.assignmentLevel === 2) ? (
                     projModuleItem.segmentsData?.filter((segItem: any) => segItem.assignmentLevel == 2).length === 1 ? (
                       <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(3, segItem.assignmentLevel, projModuleIndex, projModuleItem.segmentsData?.findIndex((segItem: any) => segItem.assignmentLevel == 2))}>
-                        <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
-                        <View style={styles.TaskDetails}>
-                          <Text style={styles.SubHeadingText}>Assigned:AA</Text>
-                          <View style={{ flexDirection: 'row' }}>
-                            <Text style={styles.SubHeadingText}>{SEGMENT_TYPES_DISPLAY[segItem.type]} /</Text>
-                            <Text style={[styles.SubHeadingText, styles.SubActive]}>{projModuleItem.segmentsData?.filter((segItem: any) => segItem.assignmentLevel == 2)[0].name}</Text>
-                          </View>
+
+                        <View style={styles.ContentContainer}>
+                            <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
+                            <View style={styles.TaskDetails}>
+                              <Text style={[styles.SubHeadingText, styles.BoldText]}>Assigned:</Text>
+                            </View>
+                            <View style={styles.TaskDetails}>
+                                <Text style={styles.SubHeadingText}>{SEGMENT_TYPES_DISPLAY[segItem.type]} /</Text>
+                                <Text style={styles.SubHeadingText}>{segItem.name} /</Text>
+                            </View>
+                            <View style={styles.TaskDetails}>
+                              <Text style={[styles.SubHeadingText, styles.SubActive]}>{projModuleItem.segmentsData?.filter((segItem: any) => segItem.assignmentLevel == 2)[0].name}</Text>
+                            </View>
                         </View>
                       </TouchableOpacity>
                     )
@@ -2802,10 +2785,14 @@ const onSwipeValueChange = (data: any) => {
                       (
                         Object.keys(groupBy([segItem], "type")).map((segType: any, index: any) => (
                           <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(2, segItem.assignmentLevel, projModuleIndex, -1, -1, -1, -1, segType)}>
-                            <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
-                            <View style={styles.TaskDetails}>
-                              <Text style={styles.SubHeadingText}>Assigned:BB {''+index}</Text>
-                              <Text style={[styles.SubHeadingText, styles.SubActive]}>{SEGMENT_TYPES_DISPLAY[segType]} {projModuleItem.segmentsData?.filter((segItem: any) => segItem.type == segType && segItem.assignmentLevel == 2).length}</Text>
+                            <View style={styles.ContentContainer}>
+                                <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
+                                <View style={styles.TaskDetails}>
+                                  <Text style={[styles.SubHeadingText, styles.BoldText]}>Assigned: {''+index}</Text>
+                                </View>
+                                <View style={styles.TaskDetails}>
+                                <Text style={[styles.SubHeadingText, styles.SubActive]}>{SEGMENT_TYPES_DISPLAY[segType]} {projModuleItem.segmentsData?.filter((segItem: any) => segItem.type == segType && segItem.assignmentLevel == 2).length}</Text>
+                                </View>
                             </View>
                           </TouchableOpacity>
                         ))
@@ -2817,12 +2804,18 @@ const onSwipeValueChange = (data: any) => {
                         componentItem.assignmentLevel === 3 ?
                           (
                             <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(4, componentItem.assignmentLevel, projModuleIndex, segIndex, componentIndex)}>
-                              <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
-                              <View style={styles.TaskDetails}>
-                                <Text style={styles.SubHeadingText}>Assigned:AA</Text>
-                                <Text style={styles.SubHeadingText}>{SEGMENT_TYPES_DISPLAY[segItem.type]} /</Text>
-                                <Text style={styles.SubHeadingText}>{segItem.name} /</Text>
-                                <Text style={[styles.SubHeadingText, styles.SubActive]}>{componentItem.name}</Text>
+                              <View style={styles.ContentContainer}>
+                                <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
+                                <View style={styles.TaskDetails}>
+                                  <Text style={[styles.SubHeadingText, styles.BoldText]}>Assigned:</Text>
+                                </View>
+                                <View style={styles.TaskDetails}>
+                                  <Text style={styles.SubHeadingText}>{SEGMENT_TYPES_DISPLAY[segItem.type]} /</Text>
+                                  <Text style={styles.SubHeadingText}>{segItem.name} /</Text>
+                                </View>
+                                <View style={styles.TaskDetails}>
+                                  <Text style={styles.SubHeadingText}>{componentItem.name}</Text>
+                                </View>
                               </View>
                             </TouchableOpacity>
   
@@ -2833,13 +2826,19 @@ const onSwipeValueChange = (data: any) => {
                               subComponentItem.assignmentLevel === 4 ?
                           (
                             <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(5, subComponentItem.assignmentLevel, projModuleIndex, segIndex, componentIndex, subCompIndex)}>
-                              <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
-                              <View style={styles.TaskDetails}>
-                                <Text style={styles.SubHeadingText}>Assigned:</Text>
-                                <Text style={styles.SubHeadingText}>{SEGMENT_TYPES_DISPLAY[segItem.type]} /</Text>
-                                <Text style={styles.SubHeadingText}>{segItem.name} /</Text>
-                                <Text style={styles.SubHeadingText}>{componentItem.name} /</Text>
-                                <Text style={[styles.SubHeadingText, styles.SubActive]}>{subComponentItem.name}</Text>
+                              <View style={styles.ContentContainer}>
+                                <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
+                                <View style={styles.TaskDetails}>
+                                  <Text style={[styles.SubHeadingText, styles.BoldText]}>Assigned To:</Text>
+                                </View>
+                                <View style={styles.TaskDetails}>
+                                  <Text style={styles.SubHeadingText}>{SEGMENT_TYPES_DISPLAY[segItem.type]} /</Text>
+                                  <Text style={styles.SubHeadingText}>{segItem.name} /</Text>
+                                  <Text style={styles.SubHeadingText}>{componentItem.name} /</Text>
+                                </View>
+                                <View style={styles.TaskDetails}>
+                                <Text style={[styles.SubHeadingText, styles.SubActive]}>{subComponentItem.displayName}</Text>
+                                </View>
                               </View>
                             </TouchableOpacity>
   
@@ -2848,14 +2847,19 @@ const onSwipeValueChange = (data: any) => {
                           subComponentItem.tasksData?.map((taskItem: any, taskIndex: number) => (
                             taskItem.assignmentLevel === 5 &&
                             <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(6, taskItem.assignmentLevel, projModuleIndex, segIndex, componentIndex, subCompIndex, taskIndex)}>
-                              <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
-                              <View style={styles.TaskDetails}>
-                                <Text style={styles.SubHeadingText}>Assigned:</Text>
-                                <Text style={styles.SubHeadingText}>{SEGMENT_TYPES_DISPLAY[segItem.type]} /</Text>
-                                <Text style={styles.SubHeadingText}>{segItem.name} /</Text>
-                                <Text style={styles.SubHeadingText}>{componentItem.name} /</Text>
-                                <Text style={styles.SubHeadingText}>{subComponentItem.name} /</Text>
+                              <View style={styles.ContentContainer}>
+                                <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
+                                <View style={styles.TaskDetails}>
+                                  <Text style={[styles.SubHeadingText, styles.BoldText]}>Assigned To:</Text>
+                                </View>
+                                <View style={styles.TaskDetails}>
+                                  <Text style={styles.SubHeadingText}>{SEGMENT_TYPES_DISPLAY[segItem.type]} /</Text>
+                                  <Text style={styles.SubHeadingText}>{componentItem.name} /</Text>
+                                  <Text style={styles.SubHeadingText}>{subComponentItem.name} /</Text>
+                                </View>
+                                <View style={styles.TaskDetails}>
                                 <Text style={[styles.SubHeadingText, styles.SubActive]}>{taskItem.displayName}</Text>
+                                </View>
                               </View>
                             </TouchableOpacity>
   
@@ -2866,13 +2870,19 @@ const onSwipeValueChange = (data: any) => {
                           componentItem.tasksData?.map((taskItem: any, taskIndex: number) => (
                             taskItem.assignmentLevel === 5 &&
                             <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(6, taskItem.assignmentLevel, projModuleIndex, segIndex, componentIndex, -1, taskIndex)}>
-                              <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
-                              <View style={styles.TaskDetails}>
-                                <Text style={styles.SubHeadingText}>Assigned:</Text>
-                                <Text style={styles.SubHeadingText}>{SEGMENT_TYPES_DISPLAY[segItem.type]} /</Text>
-                                <Text style={styles.SubHeadingText}>{segItem.name} /</Text>
-                                <Text style={styles.SubHeadingText}>{componentItem.name} /</Text>
+                              <View style={styles.ContentContainer}>
+                                <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
+                                <View style={styles.TaskDetails}>
+                                  <Text style={[styles.SubHeadingText, styles.BoldText]}>Assigned To:</Text>
+                                </View>
+                                <View style={styles.TaskDetails}>
+                                  <Text style={styles.SubHeadingText}>{SEGMENT_TYPES_DISPLAY[segItem.type]} /</Text>
+                                  <Text style={styles.SubHeadingText}>{segItem.name} /</Text>
+                                  <Text style={styles.SubHeadingText}>{componentItem.name} /</Text>
+                                </View>
+                                <View style={styles.TaskDetails}>
                                 <Text style={[styles.SubHeadingText, styles.SubActive]}>{taskItem.displayName}</Text>
+                                </View>
                               </View>
                             </TouchableOpacity>
   
@@ -2884,12 +2894,18 @@ const onSwipeValueChange = (data: any) => {
                     segItem.tasksData?.map((taskItem: any, taskIndex: number) => (
                       taskItem.assignmentLevel === 5 &&
                       <TouchableOpacity style={styles.MyWorkCard} onPress={() => onClick(6, taskItem.assignmentLevel, projModuleIndex, segIndex, -1, -1, taskIndex)}>
-                        <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
-                        <View style={styles.TaskDetails}>
-                          <Text style={styles.SubHeadingText}>Assigned:</Text>
-                          <Text style={styles.SubHeadingText}>{SEGMENT_TYPES_DISPLAY[segItem.type]} /</Text>
-                          <Text style={styles.SubHeadingText}>{segItem.name} /</Text>
+                        <View style={styles.ContentContainer}>
+                          <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
+                          <View style={styles.TaskDetails}>
+                            <Text style={[styles.SubHeadingText, styles.BoldText]}>Assigned To:</Text>
+                          </View>
+                          <View style={styles.TaskDetails}>
+                            <Text style={styles.SubHeadingText}>{SEGMENT_TYPES_DISPLAY[segItem.type]} /</Text>
+                            <Text style={styles.SubHeadingText}>{segItem.name} /</Text>
+                          </View>
+                          <View style={styles.TaskDetails}>
                           <Text style={[styles.SubHeadingText, styles.SubActive]}>{taskItem.displayName}</Text>
+                          </View>
                         </View>
                       </TouchableOpacity>
 
@@ -3007,10 +3023,10 @@ const onSwipeValueChange = (data: any) => {
                 </TouchableOpacity>
               </View>
               <View style={styles.ModalInnerContainer}>
-                <View>
-                  <Text style={styles.modalLabel}>Task: {selectedTask?.displayName}</Text>
+                <View style={styles.taskAddContainer}>
+                  <Text style={styles.Lable}>Task: <Text style={{fontWeight: '600', color: '#1C58C0'}}>{selectedTask?.displayName}</Text></Text>
                 </View>
-                <ScrollView style={{ paddingTop: 10, height: 500 }}>
+                <ScrollView showsVerticalScrollIndicator={false} style={{ minHeight: 100, maxHeight: 500 }}>
                   <Fragment>
                     <StatusBar barStyle="dark-content" />
                     <SafeAreaView>
@@ -3021,7 +3037,7 @@ const onSwipeValueChange = (data: any) => {
                   </Fragment>
                 </ScrollView>
 
-                <View style={[styles.btnParentSection, { flexDirection: 'row', justifyContent: 'center', gap: 20 }]}>
+                <View style={[styles.btnParentSection, { flexDirection: 'row', justifyContent: 'center', gap: 20, marginBottom: -65, backgroundColor: '#fff', paddingVertical: 10, marginHorizontal: -15 }]}>
                   <TouchableOpacity style={styles.submitButton} onPress={() => onFillChecklist(RFI_STATUS.IN_PROGRESS)}>
                     <Text style={styles.submitButtonText}>Save</Text>
                   </TouchableOpacity>
@@ -3050,7 +3066,7 @@ const CustomTextInput = ({rowItem, fieldName}: {rowItem: any, fieldName: any}) =
 
   return (
     <TextInput
-      style={styles.inputStyle2}
+      style={styles.commonInputFiels}
       placeholder=""
       autoCapitalize="none"
       keyboardType="email-address"
@@ -3072,7 +3088,7 @@ const CustomDropdownPicker = ({items, rowItem, fieldName}: {items: any, rowItem:
     {rowItem[fieldName] = value}
   }
   return (
-    <DropDownPicker style={{width: 90, height: 45, zIndex: 10}}
+    <DropDownPicker style={[styles.DropDownFiels, {minWidth: 110, maxWidth: 220}]}
       open={openList}
       value={value}
       items={items}
@@ -3086,14 +3102,29 @@ const CustomDropdownPicker = ({items, rowItem, fieldName}: {items: any, rowItem:
 }
 
 const styles = StyleSheet.create({
+  MainContainer: {
+    flexDirection: 'column', 
+    alignItems: 'center', 
+    padding: 10, 
+    paddingBottom: 0, 
+    borderColor: '#cccccc', 
+    borderStyle: 'solid', 
+    borderWidth: 1
+  },
+  AddMoreLink: {
+    color: '#1C58C0', 
+    fontSize: 12, 
+    fontWeight: '500'
+  },
   assignTagButtonText: {
     fontSize: 16,
     color: '#fff',
     fontWeight: '500',
   },
-  GenerateRFIFieldLabel: {
-    fontSize: 16,
-    color: '#150A33',
+  Lable: {
+    fontSize: 12,
+    marginBottom: 5,
+    color: '#666',
     fontWeight: '500'
   },
   SectionStyle: {
@@ -3111,9 +3142,16 @@ const styles = StyleSheet.create({
   SearchBox: {
     flexDirection: 'row',
     height: 40,
-    marginBottom: 20,
-    marginTop: 5,
+    marginBottom: 30,
     position: 'relative',
+    marginHorizontal: -20,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.25,
+    shadowRadius: 10,
+    // Shadow for Android
+    elevation: 10,
   },
   ImageSearch: {
     position: 'absolute',
@@ -3121,31 +3159,43 @@ const styles = StyleSheet.create({
     height: 24,
     zIndex: 9,
     left: 10,
-    top: '27%',
+    top: '34%',
   },
   inputStyle: {
     flex: 1,
     color: '#2c2c2c',
-    paddingLeft: 15,
+    paddingLeft: 45,
     paddingRight: 15,
-    borderWidth: 1,
-    borderRadius: 6,
-    borderColor: '#808089',
     backgroundColor: '#fff',
     fontWeight: '600',
-    paddingVertical: 5,
-    height: 45,
+    paddingVertical: 15,
+    height: 55
   },
-  inputStyle2: {
-    flex: 1,
+  commonInputFiels: {
     color: '#2c2c2c',
-    borderWidth: 1,
-    borderRadius: 0,
-    borderColor: '#808089',
+    paddingHorizontal: 15,
     backgroundColor: '#fff',
-    fontWeight: '600',
-    height: 45,
-    width: 50
+    fontWeight: '400',
+    borderWidth: 1,
+    borderRadius: 4,
+    paddingVertical: 10,
+    width: '100%',
+    borderColor: '#ccc',
+    flexDirection: 'column',
+    textAlignVertical: 'top',
+    fontSize: 12
+  },
+  DropDownFiels: {
+    color: '#2c2c2c',
+    backgroundColor: '#fff',
+    fontWeight: '400',
+    borderWidth: 1,
+    borderRadius: 4,
+    borderColor: '#ccc',
+    fontSize: 12
+  },
+  calendarInput: {
+    paddingRight: 35
   },
   //Start Work
   StartWorkCard: {
@@ -3242,9 +3292,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    paddingBottom: 10,
-    marginBottom: 10,
-    gap: 5
+    marginHorizontal: -20,
+    paddingHorizontal: 20,
+    marginTop: -21,
+    backgroundColor: '#e7ebf4',
+    gap: 5,
+  },
+  scrollView: {
+    paddingVertical: 10,
+    paddingBottom: 15,
   },
   BreadcrumbPrevText: {
     fontSize: 14,
@@ -3270,10 +3326,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#CCD6E7',
     borderRadius: 12,
     justifyContent: 'flex-start',
-    paddingVertical: 50,
-    paddingHorizontal: 20,
     marginBottom: 15,
     position: 'relative'
+  },
+  ContentContainer: {
+    paddingVertical: 10,
+    paddingBottom: 20,
+    paddingHorizontal: 20,
   },
   CompleteWork: {
     borderWidth: 1,
@@ -3305,6 +3364,18 @@ const styles = StyleSheet.create({
   SubActive: {
     color: '#1C58C0',
     fontWeight: '800'
+  },
+  BoldText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#27272A',
+  },
+  HeadingContainer: {
+    backgroundColor: '#e7ebf4',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderTopRightRadius: 12,
+    borderTopLeftRadius: 12,
   },
   NoDataContainer: {
     flexDirection: 'column',
@@ -3378,13 +3449,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '400',
     color: '#27272A',
-    marginLeft: 5,
   },
   submitButton: {
     backgroundColor: '#1C58C0',
-    borderRadius: 10,
+    borderRadius: 6,
     color: '#fff',
-    paddingHorizontal: 15,
+    paddingHorizontal: 30,
     paddingTop: 12,
     paddingBottom: 12,
     marginBottom: 10,
@@ -3392,11 +3462,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   submitButtonText: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#fff',
     fontWeight: '500',
   },
-
+  taskAddContainer: {
+    paddingTop: 15,
+  },
 
   bodyPopup: {
     backgroundColor: 'rgba(0,0,0,0.3)',
@@ -3422,7 +3494,15 @@ const styles = StyleSheet.create({
   },
   btnParentSection: {
     // alignItems: 'center',
-    marginTop: 10
+    marginTop: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
+    // Shadow for Android
+    elevation: 10,
+    borderTopWidth: 1,
+    borderColor: '#f3f3f3'
   },
   btnSection: {
     width: 150,
@@ -3478,11 +3558,12 @@ itemText: {
 }, 
 hiddenContainer: { 
     flexDirection: 'row', 
-    justifyContent: 'flex-end', 
+    justifyContent: 'flex-end',
     alignItems: 'center', 
     backgroundColor: '#FFF', 
-    height: 45, 
-    borderRadius: 20, 
+    borderRadius: 6, 
+    gap: 10,
+    marginLeft: 5,
 }, 
 hiddenButton: { 
     justifyContent: 'center', 
@@ -3492,11 +3573,20 @@ hiddenButton: {
 }, 
 closeButton: { 
     backgroundColor: 'green', // Blue 
-    borderRadius: 20, 
+    borderRadius: 6,
+    minHeight: 45,
+    paddingHorizontal: 5,
+    justifyContent: 'center', 
+    alignItems: 'center', 
+
 }, 
 deleteButton: { 
     backgroundColor: '#E74C3C', // Red 
-    borderRadius: 20, 
+    borderRadius: 6,
+    minHeight: 45,
+    paddingHorizontal: 5,
+    justifyContent: 'center', 
+    alignItems: 'center',
 }, 
 buttonText: { 
     color: '#FFF', 

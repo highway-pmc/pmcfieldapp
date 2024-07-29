@@ -23,6 +23,11 @@ export const updateTestSample = (payload) => ({
     payload: payload
 });
 
+export const generateTestSampleReport = (payload) => ({
+    type: "GENERATE_TEST_SAMPLE_REPORT_REQUEST",
+    payload: payload
+});
+
 export const clearMyWorksEvent = () => ({
     type: "CLEAR_MY_WORKS"
 });

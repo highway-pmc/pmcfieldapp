@@ -1,22 +1,20 @@
-import { View, Text, NativeEventEmitter, StyleSheet, ScrollView, TouchableOpacity, Image, Modal, SafeAreaView, Dimensions, TextInput, Alert } from 'react-native'
-import React, {Fragment, useEffect, useState} from 'react'
-import { useFocusEffect, useIsFocused } from '@react-navigation/native';
+import { View, Text, NativeEventEmitter, StyleSheet, ScrollView, TouchableOpacity, Image, Modal, Dimensions } from 'react-native'
+import React, { useEffect, useState} from 'react'
+import { useIsFocused } from '@react-navigation/native';
 import { HeaderItems } from "../../constants/constants"
-import { RFI_STATUS, RFIs_TYPE, TASK_TYPES } from '../../constants/constants'
 import { useDispatch, useSelector } from 'react-redux';
 import LoadingAnimation from '../Common/LoadingAnimation';
 import Pdf from 'react-native-pdf';
-import { SwipeListView } from 'react-native-swipe-list-view';
-import { actionDownloadRFIsReports, actionGetRFIsReports, clearRFIReportsEvent } from './actions';
+import { clearRFIReportsEvent, listTestSampleReportsForLoggedinUser, viewTestSampleReport } from './actions';
 import { getDisplayDate, getDisplayTime } from '../../utils/Utils';
 
-const Reports = (props: any) => {
+const ReportsLabWork = (props: any) => {
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();
     eventEmitter.emit('headerEvent', HeaderItems.reports);
   }
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const { rfiDataList, reportDownloaded, loading, error } = useSelector((state: any) => state.Reports);
+  const { sampleTestDataList, reportDownloaded, loading, error } = useSelector((state: any) => state.Reports);
 
   const [rfiData, setRfiData] = useState([]);
 
@@ -39,20 +37,20 @@ const Reports = (props: any) => {
   }, [focus]);
 
   const getRFIsReportsData = () => {
-    dispatch(actionGetRFIsReports({
+    dispatch(listTestSampleReportsForLoggedinUser({
       projectId: loggedInUser.projectId
     }));
   }
 
   useEffect(() => {
-    if (rfiDataList) {
-      setRfiData(rfiDataList);
+    if (sampleTestDataList) {
+      setRfiData(sampleTestDataList);
     }
     if (reportDownloaded) {
       setOpenPopup(true);
       setPdfSource({ uri: "data:application/pdf;base64," + reportDownloaded });
     }
-  }, [rfiDataList, reportDownloaded]);
+  }, [sampleTestDataList, reportDownloaded]);
 
   // unmount
   useEffect(() => () => {
@@ -63,10 +61,9 @@ const Reports = (props: any) => {
     setPdfSource(null);
     dispatch(clearRFIReportsEvent());
     setTimeout(() => {
-      dispatch(actionDownloadRFIsReports({
+      dispatch(viewTestSampleReport({
         projectId: loggedInUser.projectId,
-        projectModuleId: item.projectModuleId,
-        rfiId: item._id,
+        testRFIId: item._id,
       }));
     })
   }
@@ -79,42 +76,20 @@ const Reports = (props: any) => {
           <ScrollView showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}>
             {
-              rfiData.map((item: any, index) => (
+              rfiData?.map((item: any, index) => (
                 <TouchableOpacity style={styles.recentWorkCard} onPress={() => onDownloadReport(item)}>
                   <View style={styles.taskCategory}>
-                    <Text style={styles.subHead}>{item.workAssignmentData.projectModule.name}</Text>
+                    <Text style={styles.subHead}>{item.name}</Text>
                     <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
-                    <Text style={styles.subHead}>{item.workAssignmentData.segmentId.name}</Text>
-                    <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
-                    {
-                    item.workAssignmentData.componentId ? (
-                      <View>
-                        <Text style={styles.subHead}>{item.workAssignmentData.componentId?.name}</Text>
-                        <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
-                      </View>
-                    )
-                    : null
-                  }
-
-                  {
-                    item.workAssignmentData.subComponentId ? (
-                      <View>
-                        <Text style={styles.subHead}>{item.workAssignmentData.subComponentId?.name}</Text>
-                        <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
-                      </View>
-                    )
-                    : null
-                  }
-                    <Text style={[styles.subHead, styles.taskCount]}>{item.workAssignmentData.taskId?.displayName}</Text>
                   </View>
                   <Text style={styles.dateText}>Generated Date: {getDisplayDate(item.rfiDateTime)}</Text>
-                  <Text style={styles.dateText}>Generated Time: {getDisplayTime(item.rfiDateTime)}</Text>
+                  {/* <Text style={styles.dateText}>Generated Time: {getDisplayTime(item.rfiDateTime)}</Text> */}
                 </TouchableOpacity>
               ))
             }
 
             {
-              (!rfiData.length && !loading) &&
+              (!rfiData && !rfiData.length && !loading) &&
               <View style={styles.noDataContainer}>
                 <Image style={styles.noDataImage} source={require('../../images/no-data-found.png')} />
                 <Text style={styles.noDataHeadText}>No RFI's</Text>
@@ -422,4 +397,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Reports
+export default ReportsLabWork

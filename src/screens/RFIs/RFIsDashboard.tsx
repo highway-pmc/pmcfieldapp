@@ -31,8 +31,7 @@ const RFIsDashboard = ({ route, navigation }: { route: any, navigation: any }) =
             styles.tabItem,
             activeTab === WORK_TYPE.SITE_WORK && styles.activeTab,
           ]}
-          onPress={() => switchTab(WORK_TYPE.SITE_WORK)}
-        >
+          onPress={() => switchTab(WORK_TYPE.SITE_WORK)}>
           <Text style={styles.activeTabText}>{WORK_TYPE.SITE_WORK}</Text>
         </TouchableOpacity>
         <TouchableOpacity

@@ -22,6 +22,7 @@ export const HeaderItems = {
     assignedTasks: { showBack: true, title: 'Assigned Work - Tasks' },
     notifications: { showBack: false, title: 'Notifications' },
     progress: { showBack: false, title: 'Progress Dashboard' },
+    reportDashboard: { showBack: true, title: 'Reports' },
     reports: { showBack: false, title: 'Reports' },
     rfisHome: { showBack: false, title: 'RFIs' },
     rfisDashboard: { showBack: true, title: 'RFIs' },
@@ -135,7 +136,7 @@ export const Dashboard_MENU = [
         iconMenu: require("./../images/menu/report-menu-icon.png"),
         title: "Report",
         subTitle: "Report",
-        route: 'Reports',
+        route: 'ReportsDashboard',
         permissions: ["project-head", "structure-head", "highway-head", "other-work-head", "quality-head", "user"]
     },
 ];

@@ -6,13 +6,12 @@ import Input from '../../../components/UI/Input';
 import { useIsFocused } from '@react-navigation/native';
 import { CONCRETE_GRADE_LIST, HeaderItems, SOURCE_APPROVAL_STATUS } from '../../../constants/constants';
 import { Image } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import LoadingAnimation from '../../Common/LoadingAnimation';
 import { Picker } from '@react-native-picker/picker';
 import CalendarPicker from '../../../components/UI/CalenderPicker';
 import { addProcurement, clearProcurements, deleteProcurement, getProcurements, getSourceApprovalsByStatus, updateProcurement } from '../actions';
 import CustomAlert from '../../Common/CustomAlert';
-import { getDisplayDate } from '../../../utils/Utils';
+import { getDbDate, getDbDateFromDDMMYYYY, getDisplayDate } from '../../../utils/Utils';
 
 const Procurements = ({ route, navigation }: { route: any, navigation: any }) => {
 
@@ -170,7 +169,6 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
 
     const handleSubmit = () => {
         if (!selectedProcurement) {
-            const dateTimeArray = form.procurementDateTime?.split('/');
             dispatch(addProcurement({
                 projectId: loggedInUser.projectId,
                 testMaterialId: testMaterialId,
@@ -178,7 +176,7 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
                     sourceApprovalId: form.sourceApprovalId,
                     sourceApprovalDetailId: form.sourceApprovalDetailId,
                     lotNo: form.lotNo,
-                    procurementDateTime: (dateTimeArray[2] + '-' + dateTimeArray[1] + '-' + dateTimeArray[0]),
+                    procurementDateTime: getDbDateFromDDMMYYYY(form.procurementDateTime),
                     vehicleNo: vehicleNos.length ? vehicleNos : [form.vehicleNo || ''],
                     invoiceFile: form.invoiceFile,
                     metaData: {
@@ -187,7 +185,6 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
                 }
             }));
         } else {
-            const dateTimeArray = form.procurementDateTime?.split('/');
             dispatch(updateProcurement({
                 projectId: loggedInUser.projectId,
                 testMaterialId: testMaterialId,
@@ -196,7 +193,7 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
                     sourceApprovalId: form.sourceApprovalId,
                     sourceApprovalDetailId: form.sourceApprovalDetailId,
                     lotNo: form.lotNo,
-                    procurementDateTime: (dateTimeArray[2] + '-' + dateTimeArray[1] + '-' + dateTimeArray[0]),
+                    procurementDateTime: getDbDateFromDDMMYYYY(form.procurementDateTime),
                     vehicleNo: vehicleNos.length ? vehicleNos : [form.vehicleNo || ''],
                     invoiceFile: form.invoiceFile,
                     metaData: {

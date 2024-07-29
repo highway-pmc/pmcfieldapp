@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, Modal} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet, Modal, Image} from 'react-native';
 import {Calendar} from 'react-native-calendars';
 import {format} from 'date-fns';
 
@@ -32,6 +32,7 @@ const CalendarPicker: React.FC<CalendarPickerProps> = ({
         <Text style={styles.inputText}>
           {value || `Select ${label?.toLowerCase() || 'Date'}`}
         </Text>
+        <Image style={styles.CalendarIcon} source={require('./../../images/calendar.png')} />
       </TouchableOpacity>
       {show && (
         <Modal transparent={true} animationType="slide" visible={show}>
@@ -60,24 +61,37 @@ const CalendarPicker: React.FC<CalendarPickerProps> = ({
 };
 
 const styles = StyleSheet.create({
+  CalendarIcon: {
+    width: 24,
+    height: 24,
+    position: 'absolute',
+    right: 15,
+    top: 10
+  },
   inputContainer: {
-    marginBottom: 20,
+    marginBottom: 15,
   },
   label: {
-    fontSize: 16,
-    marginBottom: 8,
-    color: '#555',
+    fontSize: 12,
+    marginBottom: 5,
+    color: '#666',
+    fontWeight: '500'
   },
   input: {
     backgroundColor: '#fff',
-    padding: 10,
-    borderRadius: 8,
+    padding: 12,
+    borderRadius: 4,
     borderColor: '#ddd',
     borderWidth: 1,
     justifyContent: 'center',
+    fontSize: 12,
+    color: '#2c2c2c',
+    position: 'relative',
+    paddingRight: 32,
   },
   inputText: {
-    color: '#333',
+    color: '#2c2c2c',
+    fontSize: 12,
   },
   modalContainer: {
     flex: 1,

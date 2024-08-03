@@ -191,72 +191,32 @@ const RFIsRecents = (props: any) => {
 
   // Function to render each list item 
   const renderItem = (rowData: any) => (
-    <View>
-      {rowData.index === 0 &&  <View style={{ flexDirection: 'row' }}>
-      <View>
-        <Text>TM No.</Text>
-      </View>
-      <View>
-      <Text>Last 4 digits of Vehicle No.</Text>
-      </View>
-      <View>
-        <Text>Time of arrival</Text>
-      </View>
-      <View>
-        <Text>Grade of Concrete</Text>
-      </View>
-      <View>
-        <Text>Concrete temp in C</Text>
-      </View>
-      <View>
-        <Text>Slump value in mm</Text>
-      </View>
-      <View>
-        <Text>No of cubes casted</Text>
-      </View>
-      <View>
-        <Text>Concrete start time</Text>
-      </View>
-      <View>
-        <Text>Concrete poured in cum</Text>
-      </View>
-      <View>
-        <Text>Concrete finish time</Text>
-      </View>
-      </View>
-    }
-    <View style={{ flexDirection: 'row' }}>
-      <View style={{width: 80}}>
-        <Text>TM {rowData.index + 1}</Text>
-      </View>
-      <View style={{width: 80}}>
-        <Text>{rowData.item.vehicleNo}</Text>
-      </View>
-      <View style={{width: 80}}>
-        <Text>{rowData.item.timeOfArrival}</Text>
-      </View>
-      <View style={{width: 80}}>
-        <Text>{rowData.item.gradeOfConcrete}</Text>
-      </View>
-      <View style={{width: 80}}>
-          <Text>{rowData.item.concreteTemp}</Text>
-      </View>
-      <View style={{width: 80}}>
-          <Text>{rowData.item.slumpValue}</Text>
-      </View>
-      <View style={{width: 80}}>
-          <Text>{rowData.item.noOfCubesCasted}</Text>
-      </View>
-      <View style={{width: 80}}>
-        <Text>{rowData.item.concreteStartTime}</Text>
-      </View>
-      <View style={{width: 80}}>
-          <Text>{rowData.item.concretePoured}</Text>
-      </View>
-      <View style={{width: 80}}>
-        <Text>{rowData.item.concreteFinishTime}</Text>
-      </View>
-        
+    <View style={{flexDirection: 'column', gap: 5}}>
+      {rowData.index === 0 && (
+        <View style={styles.headerRow}>
+          <Text style={styles.headerCell}>TM No.</Text>
+          <Text style={styles.headerCell}>Last 4 digits of Vehicle No.</Text>
+          <Text style={styles.headerCell}>Time of arrival</Text>
+          <Text style={styles.headerCell}>Grade of Concrete</Text>
+          <Text style={styles.headerCell}>Concrete temp in C</Text>
+          <Text style={styles.headerCell}>Slump value in mm</Text>
+          <Text style={styles.headerCell}>No of cubes casted</Text>
+          <Text style={styles.headerCell}>Concrete start time</Text>
+          <Text style={styles.headerCell}>Concrete poured in cum</Text>
+          <Text style={styles.headerCell}>Concrete finish time</Text>
+        </View>
+      )}
+      <View style={styles.row}>
+        <Text style={styles.cell}>TM {rowData.index + 1}</Text>
+        <Text style={styles.cell}>{rowData.item.vehicleNo}</Text>
+        <Text style={styles.cell}>{rowData.item.timeOfArrival}</Text>
+        <Text style={styles.cell}>{rowData.item.gradeOfConcrete}</Text>
+        <Text style={styles.cell}>{rowData.item.concreteTemp}</Text>
+        <Text style={styles.cell}>{rowData.item.slumpValue}</Text>
+        <Text style={styles.cell}>{rowData.item.noOfCubesCasted}</Text>
+        <Text style={styles.cell}>{rowData.item.concreteStartTime}</Text>
+        <Text style={styles.cell}>{rowData.item.concretePoured}</Text>
+        <Text style={styles.cell}>{rowData.item.concreteFinishTime}</Text>
       </View>
     </View>
   );
@@ -473,8 +433,8 @@ const renderSectionHeader = (rowData: any) => {
         </View>
       case TASK_TYPES.CONCRETING:
         return <View>
-          <ScrollView id='scrollViewConcrete' horizontal={true}>
-          <View style={{ flexDirection: 'column', padding: 10, borderBlockColor: '#cccccc', borderStyle: 'solid', borderWidth: 1}}>
+          <ScrollView horizontal={true}>
+          <View style={{ flexDirection: 'column'}}>
             {
               <SwipeListView 
                 data={selectedRFI?.metaData.concreteData} 
@@ -507,14 +467,14 @@ const renderSectionHeader = (rowData: any) => {
             {
               rfiData.map((item: any, index) => (
                 <TouchableOpacity style={styles.recentWorkCard} onPress={() => onSelectRFI(item)}>
-                  <View style={styles.taskCategory}>
+                  <View style={[styles.taskCategory, {flexWrap: 'wrap', paddingBottom: 10}]}>
                     <Text style={styles.subHead}>{item.workAssignmentData.projectModule.name}</Text>
                     <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
                     <Text style={styles.subHead}>{item.workAssignmentData.segmentId?.name}</Text>
                     <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
                     {
                     item.workAssignmentData.componentId ? (
-                      <View>
+                      <View style={styles.taskCategory}>
                         <Text style={styles.subHead}>{item.workAssignmentData.componentId?.name}</Text>
                         <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
                       </View>
@@ -524,7 +484,7 @@ const renderSectionHeader = (rowData: any) => {
 
                   {
                     item.workAssignmentData.subComponentId ? (
-                      <View>
+                      <View style={styles.taskCategory}>
                         <Text style={styles.subHead}>{item.workAssignmentData.subComponentId?.name}</Text>
                         <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
                       </View>
@@ -533,8 +493,16 @@ const renderSectionHeader = (rowData: any) => {
                   }
                     <Text style={[styles.subHead, styles.taskCount]}>{item.workAssignmentData.taskId?.displayName}</Text>
                   </View>
-                  <Text style={styles.dateText}>Generated Date: {getDisplayDate(item.rfiDateTime)}</Text>
-                  <Text style={styles.dateText}>Generated Time: {getDisplayTime(item.rfiDateTime)}</Text>
+                  <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+                    <View>
+                      <Text style={[styles.dateText, styles.fontBold]}>Generated Date</Text>
+                      <Text style={[styles.dateText, styles.subFontText]}>{getDisplayDate(item.rfiDateTime)}</Text>
+                    </View>
+                    <View>
+                      <Text style={[styles.dateText, styles.fontBold]}>Generated Time</Text>
+                      <Text  style={[styles.dateText, styles.subFontText]}>{getDisplayTime(item.rfiDateTime)}</Text>
+                    </View>
+                  </View>
                 </TouchableOpacity>
               ))
             }
@@ -583,14 +551,14 @@ const renderSectionHeader = (rowData: any) => {
                 </TouchableOpacity>
               </View>
               {selectedRFI && !pdfSource && <View style={styles.ModalInnerContainer}>
-                <View style={styles.taskCategory}>
+                <View style={[styles.taskCategory, {flexWrap: 'wrap', paddingBottom: 20, paddingTop: 10}]}>
                   <Text style={styles.subHead}>{selectedRFI.workAssignmentData.projectModule?.name}</Text>
                   <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
                   <Text style={styles.subHead}>{selectedRFI.workAssignmentData.segmentId?.name}</Text>
                   <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
                   {
                     selectedRFI.workAssignmentData.componentId ? (
-                      <View>
+                      <View style={styles.taskCategory}>
                         <Text style={styles.subHead}>{selectedRFI.workAssignmentData.componentId?.name}</Text>
                         <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
                       </View>
@@ -600,7 +568,7 @@ const renderSectionHeader = (rowData: any) => {
 
                   {
                     selectedRFI.workAssignmentData.subComponentId ? (
-                      <View>
+                      <View style={styles.taskCategory}>
                         <Text style={styles.subHead}>{selectedRFI.workAssignmentData.subComponentId?.name}</Text>
                         <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
                       </View>
@@ -610,8 +578,16 @@ const renderSectionHeader = (rowData: any) => {
                   
                   <Text style={[styles.subHead, styles.taskCount]}>{selectedRFI.workAssignmentData.taskId?.displayName}</Text>
                 </View>
-                <Text style={styles.dateText}>Generated Date: {getDisplayDate(selectedRFI.rfiDateTime)}</Text>
-                <Text style={styles.dateText}>Generated Time: {getDisplayTime(selectedRFI.rfiDateTime)}</Text>
+                <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+                    <View>
+                      <Text style={[styles.dateText, styles.fontBold]}>Generated Date</Text>
+                      <Text style={[styles.dateText, styles.subFontText]}>{getDisplayDate(selectedRFI.rfiDateTime)}</Text>
+                    </View>
+                    <View>
+                      <Text style={[styles.dateText, styles.fontBold]}>Generated Time</Text>
+                      <Text  style={[styles.dateText, styles.subFontText]}>{getDisplayTime(selectedRFI.rfiDateTime)}</Text>
+                    </View>
+                  </View>
                 <ScrollView style={{ paddingTop: 10, height: 500 }}>
                   <Fragment>
                     <SafeAreaView>
@@ -636,12 +612,12 @@ const renderSectionHeader = (rowData: any) => {
 
                 {
                   props.rfiType === RFIs_TYPE.CLOSED &&
-                  <View style={[styles.btnParentSection, { flexDirection: 'row', justifyContent: 'center', gap: 20 }]}>
-                    <TouchableOpacity style={styles.submitButton} onPress={() => onRFIAction(RFI_STATUS.REJECTED)}>
+                  <View style={[styles.btnParentSection, { flexDirection: 'row', justifyContent: 'center', gap: 20, marginBottom: 10, backgroundColor: '#fff', paddingVertical: 10, marginHorizontal: -15 }]}>
+                    <TouchableOpacity style={[styles.submitButton,  styles.rejectRfis]} onPress={() => onRFIAction(RFI_STATUS.REJECTED)}>
                       <Text style={styles.submitButtonText}>Reject</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.submitButton} onPress={() => onRFIAction(RFI_STATUS.APPROVED)}>
+                    <TouchableOpacity style={[styles.submitButton, styles.saveButtonColor]} onPress={() => onRFIAction(RFI_STATUS.APPROVED)}>
                       <Text style={styles.submitButtonText}>Approve</Text>
                     </TouchableOpacity>
                   </View>
@@ -698,6 +674,44 @@ const renderSectionHeader = (rowData: any) => {
 }
 
 const styles = StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    textAlign: 'center'
+  },
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#f1f1f1',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    borderRightWidth: 1,
+    borderColor: '#ddd',
+    textAlign: 'center',
+  },
+  headerCell: {
+    fontWeight: '500',
+    borderLeftWidth: 1,
+    borderColor: '#ddd',
+    paddingVertical: 20,
+    paddingHorizontal: 10,
+    width: 120,
+    textAlign: 'center',
+    height: '100%',
+    alignContent: 'center'
+  },
+  cell: {
+    width: 120,
+    paddingVertical: 7,
+    textAlign: 'center'
+  },
+  fontBold: {
+    fontWeight: '600'
+  },
   containerPdf: {
     justifyContent: 'flex-start',
     alignItems: 'center',
@@ -767,6 +781,10 @@ const styles = StyleSheet.create({
     color: '#150B3D',
     fontSize: 14,
     fontWeight: '300'
+  },
+  subFontText: {
+    fontSize: 12,
+    fontWeight: '400'
   },
   footerButton: {
     padding: 20,
@@ -866,15 +884,22 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   submitButton: {
+    minWidth: 120,
     backgroundColor: '#1C58C0',
-    borderRadius: 10,
+    borderRadius: 30,
     color: '#fff',
-    paddingHorizontal: 15,
+    paddingHorizontal: 30,
     paddingTop: 12,
     paddingBottom: 12,
     marginBottom: 10,
     marginTop: 10,
     alignItems: 'center',
+  },
+  rejectRfis: {
+    backgroundColor: '#FF0000'
+  },
+  saveButtonColor: {
+    backgroundColor: '#5eab4b',
   },
   submitButtonText: {
     fontSize: 16,
@@ -905,8 +930,15 @@ const styles = StyleSheet.create({
     marginHorizontal: 3
   },
   btnParentSection: {
-    // alignItems: 'center',
-    marginTop: 10
+    marginTop: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
+    // Shadow for Android
+    elevation: 10,
+    borderTopWidth: 1,
+    borderColor: '#f3f3f3'
   },
 
   GenerateRFIFieldLabel: {

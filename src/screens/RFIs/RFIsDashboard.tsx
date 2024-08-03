@@ -32,7 +32,7 @@ const RFIsDashboard = ({ route, navigation }: { route: any, navigation: any }) =
             activeTab === WORK_TYPE.SITE_WORK && styles.activeTab,
           ]}
           onPress={() => switchTab(WORK_TYPE.SITE_WORK)}>
-          <Text style={styles.activeTabText}>{WORK_TYPE.SITE_WORK}</Text>
+          <Text style={[styles.activeTabText, activeTab === WORK_TYPE.SITE_WORK && styles.activeFontColor,]}>{WORK_TYPE.SITE_WORK}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[
@@ -41,7 +41,7 @@ const RFIsDashboard = ({ route, navigation }: { route: any, navigation: any }) =
           ]}
           onPress={() => switchTab(WORK_TYPE.LAB_WORK)}
         >
-          <Text style={styles.activeTabText}>{WORK_TYPE.LAB_WORK}</Text>
+          <Text style={[styles.activeTabText, activeTab === WORK_TYPE.LAB_WORK && styles.activeFontColor,]}>{WORK_TYPE.LAB_WORK}</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.tabContent}>
@@ -76,6 +76,9 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     borderColor: '#1C58C0'
   },
+  activeFontColor: {
+    color: '#1C58C0',
+  },
   activeTabText: {
     color: '#000',
     fontSize: 16,
@@ -84,7 +87,6 @@ const styles = StyleSheet.create({
   tabContent: {
     paddingHorizontal: 20,
     paddingTop: 20,
-    borderWidth: 1,
     height: '100%'
   },
 });

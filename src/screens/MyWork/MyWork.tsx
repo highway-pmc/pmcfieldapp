@@ -5,7 +5,7 @@ import { HeaderItems, PROJECT_TYPE, RFI_STATUS, SEGMENT_TYPES_DISPLAY, TASK_TYPE
 import { useDispatch, useSelector } from 'react-redux';
 import { clearMyWorksEvent, fillRFIsChecklist, getMyWorks, getRFIByWaId } from './actions';
 import LoadingAnimation from '../Common/LoadingAnimation';
-import { getDbDate, getDisplayDate, getDisplayTime, groupBy } from '../../utils/Utils';
+import { getDbDate, getDbDateFromDDMMYYYY, getDisplayDate, getDisplayTime, groupBy } from '../../utils/Utils';
 import * as ImagePicker from 'react-native-image-picker';
 import DropDownPicker from 'react-native-dropdown-picker';
 //import CalendarPicker from 'react-native-calendar-picker';
@@ -53,6 +53,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
   };
 
   const [rfiDate, setRFIDate] = useState('');
+  const [rfiTime, setRFITime] = useState('');
   const [hours, setHours] = useState([]);
   const [minutes, setMinutes] = useState([]);
   const [timeFormats, setTimeFormats] = useState([]);
@@ -769,27 +770,8 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
       Alert.alert('Error', 'Recommendations is required.');
       return false;
     }
-
-    let rfiSubmitDateTime = '';
-    let rfiTime = '';
-    if (rfiDate) {
-      if (timeFormat === 'PM') {
-        if (Number(hour) === 12) {
-          rfiTime = hour + ':' + minute;
-        } else {
-          rfiTime = (Number(hour) + 12) + ':' + minute;
-        }
-      } else {
-        if (Number(hour) === 12) {
-          rfiTime = '00:' + minute;
-        } else {
-          rfiTime = hour + ':' + minute;
-        }
-      }
-
-      rfiSubmitDateTime = rfiDate + ' ' + rfiTime + ":00"
-    }
-
+    //return;
+    let rfiSubmitDateTime = `${getDbDateFromDDMMYYYY(rfiDate)} ${rfiTime}:00`;
     let checkList = {};
 
     switch (selectedTask?.name) {
@@ -885,7 +867,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
       default:
         break;
     }
-    
+
     dispatch(fillRFIsChecklist({
       projectId: loggedInUser.projectId,
       projectModuleId: projectModuleId,
@@ -2586,14 +2568,14 @@ const onSwipeValueChange = (data: any) => {
                 <CalendarPicker
                   label="Date"
                   value={rfiDate}
-                  onChange={() => openCloseCalendar()}
+                  onChange={(date) => setRFIDate(date)}
                 />
               </View>
               <View>
                 <TimePicker
                   label="Time"
-                  value={hour}
-                  onChange={() => setOpenTimeFormats(false)}
+                  value={rfiTime}
+                  onChange={(time) => setRFITime(time)}
                 />
               </View>
 

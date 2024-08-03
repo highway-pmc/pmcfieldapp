@@ -349,6 +349,12 @@ export const TEST_SAMPLE_STATUS_LIST = [
     }
 ];
 
+export const TEST_SAMPLE_CONCRETE_CATEGORY = {
+    C_7TH_DAYS: '7thdays',
+    C_28TH_DAYS: '28thdays',
+    CORE_TEST: 'core-test'
+};
+
 export const WORK_TYPE = {
     SITE_WORK: "Site Work",
     LAB_WORK: "Lab Work"

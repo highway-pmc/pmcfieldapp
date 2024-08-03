@@ -1,7 +1,7 @@
 import { View, Text, NativeEventEmitter, StyleSheet, ScrollView, Image, TouchableOpacity, TextInput, Dimensions, Alert, Modal, StatusBar, SafeAreaView } from 'react-native'
 import React, { Fragment, useEffect, useState } from 'react'
 import { useIsFocused } from '@react-navigation/native';
-import { HeaderItems, PROJECT_TYPE, RFI_STATUS, SAMPLE_BY_LIST, TEST_CONDUCTED_BY_LIST, TEST_MATERIALS_TYPES, TEST_SAMPLE_STATUS, TEST_SAMPLE_STATUS_LIST, } from "../../constants/constants"
+import { HeaderItems, PROJECT_TYPE, RFI_STATUS, SAMPLE_BY_LIST, TEST_CONDUCTED_BY_LIST, TEST_MATERIALS_TYPES, TEST_SAMPLE_CONCRETE_CATEGORY, TEST_SAMPLE_STATUS, TEST_SAMPLE_STATUS_LIST, } from "../../constants/constants"
 import { useDispatch, useSelector } from 'react-redux';
 import { clearMyWorksEvent, generateTestSampleReport, getMyTests, updateTestSample, } from './actions';
 import LoadingAnimation from '../Common/LoadingAnimation';
@@ -70,14 +70,14 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
       setMyTestsData(myTests);
     }
     if (testSampleUpdated) {
-        const sampleDataTemp: any = [...currentSubTestTypeRFIsData]
-        const updatedSampleIndex = sampleDataTemp.findIndex((x: any) => x._id === testSampleUpdated._id);
-        if (updatedSampleIndex != -1) {
-          sampleDataTemp[updatedSampleIndex] = testSampleUpdated;
-        }
-        setCurrentSubTestTypeRFIsData([]);
-        setCurrentSubTestTypeRFIsData(sampleDataTemp);
-        Alert.alert('Info', 'Sample updated')
+      const sampleDataTemp: any = [...currentSubTestTypeRFIsData]
+      const updatedSampleIndex = sampleDataTemp.findIndex((x: any) => x._id === testSampleUpdated._id);
+      if (updatedSampleIndex != -1) {
+        sampleDataTemp[updatedSampleIndex] = testSampleUpdated;
+      }
+      setCurrentSubTestTypeRFIsData([]);
+      setCurrentSubTestTypeRFIsData(sampleDataTemp);
+      Alert.alert('Info', 'Sample updated')
       dispatch(clearMyWorksEvent());
     }
   }, [myTests, testSampleUpdated, error]);
@@ -109,6 +109,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
       })
       return;
     }
+
     setSearchText('');
     setCurrentLevel(level)
     setBreadcrumbData([]);
@@ -172,9 +173,20 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
         if (testTypeIndex != -1) {
           testTypeData = testMateData.testTypesData[testTypeIndex];
           breadCrumb[3].name = testTypeData.name;
+          console.log('====testTypeData===', testTypeData)
+          if (testTypeData.type === TEST_SAMPLE_CONCRETE_CATEGORY.CORE_TEST) {
+            setCurrentTestTypesData([]);
+            testTypeData.materialType = TEST_MATERIALS_TYPES.CONCRETE; // TEMP - TODO
+            setSelectedTestSample(testTypeData);
 
-          if (testTypeData.subTestTypes?.length) {
-            setCurrentSubTestTypesData(testTypeData.subTestTypes)
+            const testObservations: any = [];
+            testObservations.push(getTestSampleConcreteObject(1));
+            setConcreteSampleTestItems(testObservations);
+            setOpenPopup(!openPopup);
+          } else {
+            if (testTypeData.subTestTypes?.length) {
+              setCurrentSubTestTypesData(testTypeData.subTestTypes)
+            }
           }
           // breadCrumb.push({
           //   name: testTypeData.name,
@@ -266,12 +278,12 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
     } else {
       item['rfiDateTime_TEMP'] = '';
     }
-    
+
     const dateTimeArray = item['rfiDateTime_TEMP'].split('/');
 
     const obj = {
       sampleStatus: item['sampleStatus_TEMP'],
-      rfiDateTime:(dateTimeArray[2] + '-' + dateTimeArray[1] + '-' + dateTimeArray[0]),
+      rfiDateTime: (dateTimeArray[2] + '-' + dateTimeArray[1] + '-' + dateTimeArray[0]),
     };
     dispatch(updateTestSample({
       projectId: loggedInUser.projectId,
@@ -281,28 +293,63 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
   }
 
   const onClickTestSampleItem = (item: any) => {
-    console.log('==========', JSON.stringify(item))
-    // if (!item.workChecklistSubmitted) {
-    //   Alert.alert('Error', 'Checklist of this sample yet to be submitted.')
-    //   return;
-    // }
+    if (!item.workChecklistSubmitted) {
+      Alert.alert('Error', 'Checklist of this sample yet to be submitted.')
+      return;
+    }
     if (!item.readyForDayTesting) {
       Alert.alert('Error', `Testing of this sample will be started by ${item.startTestingByDate}`);
       return;
     }
-    
+
     item.materialType = TEST_MATERIALS_TYPES.CONCRETE; // TEMP - TODO
     setSelectedTestSample(item);
 
-    const testObservations = [
-      {
-        sampleNo: {
-          title: 'Sample no',
-          value: 1
-        },
-        details: {
-          titles: ['Cube No.', 'Wt. of cube in gm', 'Volume of Cube in Cum', 'Test Area in mm2', 'Failure Load (KN)', 'Compressive Strength (N/mm2)'],
-          values: [
+    const testObservations: any = [];
+    testObservations.push(getTestSampleConcreteObject(1));
+    if (item.testCategory === TEST_SAMPLE_CONCRETE_CATEGORY.C_28TH_DAYS) {
+      testObservations.push(getTestSampleConcreteObject(2));
+      testObservations.push(getTestSampleConcreteObject(3));
+    }
+    setConcreteSampleTestItems(testObservations);
+    setOpenPopup(!openPopup);
+  }
+
+  const onSubmitTestSample = (status: string) => {
+    const objSampleTest7thOr28thDay = Object.assign({}, formSampleTest7thOr28thDay);
+    objSampleTest7thOr28thDay.dateOfTesting = getDbDateFromDDMMYYYY(objSampleTest7thOr28thDay.dateOfTesting);
+    objSampleTest7thOr28thDay.roomTemperature = Number(objSampleTest7thOr28thDay.roomTemperature);
+    objSampleTest7thOr28thDay.humidity = Number(objSampleTest7thOr28thDay.humidity);
+    objSampleTest7thOr28thDay.observations = Object.assign([], concreteSampleTestItems);
+    const sampleObservations: any = objSampleTest7thOr28thDay.observations && objSampleTest7thOr28thDay.observations;
+    for(let i = 0; i < sampleObservations?.length; i++) {
+      const observations = sampleObservations[i];
+      observations['details']?.values.forEach((item: any) => {
+        item.failureLoad = Number(item.failureLoad);
+        item.testArea = Number(item.testArea);
+        item.volOfCube = Number(item.volOfCube);
+        item.wtCube = Number(item.wtCube);
+      })
+    }
+    console.log(JSON.stringify(objSampleTest7thOr28thDay))
+    dispatch(generateTestSampleReport({
+      projectId: loggedInUser.projectId,
+      testRFIId: selectedTestSample.type === TEST_SAMPLE_CONCRETE_CATEGORY.CORE_TEST ? selectedTestSample.testRFIsData[0]?._id : selectedTestSample._id,
+      body: {
+        sampleData: objSampleTest7thOr28thDay
+      }
+    }));
+  }
+
+  const getTestSampleConcreteObject = (sampleNum: any) => {
+    return {
+      sampleNo: {
+        title: 'Sample no',
+        value: sampleNum
+      },
+      details: {
+        titles: ['Cube No.', 'Wt. of cube in gm', 'Volume of Cube in Cum', 'Test Area in mm2', 'Failure Load (KN)', 'Compressive Strength (N/mm2)'],
+        values: [
           {
             cubeNo: 1,
             wtCube: 0,
@@ -337,35 +384,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
         title: 'Remarks',
         value: ''
       }
-      }
-    ]
-
-    setConcreteSampleTestItems(testObservations);
-    setOpenPopup(!openPopup);
-  }
-
-  const onSubmitTestSample = (status: string) => {
-    const objSampleTest7thDay = Object.assign({}, formSampleTest7thDay);
-    objSampleTest7thDay.dateOfTesting = getDbDateFromDDMMYYYY(objSampleTest7thDay.dateOfTesting);
-    objSampleTest7thDay.roomTemperature = Number(objSampleTest7thDay.roomTemperature);
-    objSampleTest7thDay.humidity = Number(objSampleTest7thDay.humidity);
-    objSampleTest7thDay.observations = Object.assign([], concreteSampleTestItems);
-    const observations: any = objSampleTest7thDay.observations && objSampleTest7thDay.observations[0];
-
-    observations['details']?.values.forEach((item: any) => {
-      item.failureLoad = Number(item.failureLoad);
-      item.testArea = Number(item.testArea);
-      item.volOfCube = Number(item.volOfCube);
-      item.wtCube = Number(item.wtCube);
-    })
-    
-    dispatch(generateTestSampleReport({
-      projectId: loggedInUser.projectId,
-      testRFIId: selectedTestSample._id,
-      body: {
-        sampleData: objSampleTest7thDay
-      }
-    }));
+    }
   }
 
   useEffect(() => {
@@ -556,7 +575,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
         onChangeText={(text) => {
           setValue(text); updateValue(text);
         }}
-        //onBlur={() => onBlur()}
+      //onBlur={() => onBlur()}
       />
     )
   }
@@ -569,17 +588,17 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
 
     return (
       <CalendarPicker
-          value={value}
-          onChange={date => {
-            setValue(date); updateValue(date);
-          }}
+        value={value}
+        onChange={date => {
+          setValue(date); updateValue(date);
+        }}
       />
     )
   }
 
   const [concreteSampleTestItems, setConcreteSampleTestItems]: any[] = useState([]);
 
-  type FormSampleTest7thDayState = {
+  type FormSampleTest7thOr28thDayState = {
     dateOfTesting: string;
     sampleBy: string;
     testConductedBy: string;
@@ -588,34 +607,34 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
     observations?: any[]
   }
 
-  const [formSampleTest7thDay, setFormSampleTest7thDay] = useState<FormSampleTest7thDayState>({
+  const [formSampleTest7thOr28thDay, setFormSampleTest7thOr28thDay] = useState<FormSampleTest7thOr28thDayState>({
     dateOfTesting: '',
     sampleBy: '',
     testConductedBy: '',
     roomTemperature: 0,
     humidity: 0,
     observations: []
-});
+  });
 
-  const handleInputChange = (name: keyof FormSampleTest7thDayState, value: string | number | []) => {
-    setFormSampleTest7thDay({ ...formSampleTest7thDay, [name]: value });
+  const handleInputChange = (name: keyof FormSampleTest7thOr28thDayState, value: string | number | []) => {
+    setFormSampleTest7thOr28thDay({ ...formSampleTest7thOr28thDay, [name]: value });
   };
 
   const testSampleForm = (materialType: any) => {
     if (materialType === TEST_MATERIALS_TYPES.CONCRETE) {
       return <View>
         <View style={{ flexDirection: 'column', paddingBottom: 40 }}>
-          <View style={{flexDirection: 'column'}}>
-              <CalendarPicker
-                  label="Date of Testing"
-                  value={formSampleTest7thDay.dateOfTesting}
-                  onChange={date => handleInputChange('dateOfTesting', date)}
-              />
+          <View style={{ flexDirection: 'column' }}>
+            <CalendarPicker
+              label="Date of Testing"
+              value={formSampleTest7thOr28thDay.dateOfTesting}
+              onChange={date => handleInputChange('dateOfTesting', date)}
+            />
           </View>
 
           <View style={{ flexDirection: 'column' }}>
             <DropdownPicker
-              value={formSampleTest7thDay.sampleBy}
+              value={formSampleTest7thOr28thDay.sampleBy}
               label='Sampled By'
               items={SAMPLE_BY_LIST}
               onChange={(value: string) => handleInputChange('sampleBy', value)}
@@ -624,49 +643,51 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
 
           <View style={{ flexDirection: 'column' }}>
             <DropdownPicker
-                value={formSampleTest7thDay.testConductedBy}
-                label='Test Conducted By'
-                items={TEST_CONDUCTED_BY_LIST}
-                onChange={(value: string) => handleInputChange('testConductedBy', value)}
-              />
+              value={formSampleTest7thOr28thDay.testConductedBy}
+              label='Test Conducted By'
+              items={TEST_CONDUCTED_BY_LIST}
+              onChange={(value: string) => handleInputChange('testConductedBy', value)}
+            />
           </View>
 
           <View style={{ flexDirection: 'column' }}>
-              <Input
-                  label="Room Temperature/ Atmospheric Temperature (in C)"
-                  value={''+formSampleTest7thDay.roomTemperature}
-                  onChange={(value: string) => handleInputChange('roomTemperature', value)}
-                  isRequired={true}
-              />
+            <Input
+              label="Room Temperature/ Atmospheric Temperature (in C)"
+              value={'' + formSampleTest7thOr28thDay.roomTemperature}
+              onChange={(value: string) => handleInputChange('roomTemperature', value)}
+              isRequired={true}
+            />
           </View>
 
           <View style={{ flexDirection: 'column' }}>
-              <Input
-                  label="Humidity in %"
-                  value={''+formSampleTest7thDay.humidity}
-                  onChange={(value: string) => handleInputChange('humidity', value)}
-                  isRequired={true}
-              />
+            <Input
+              label="Humidity in %"
+              value={'' + formSampleTest7thOr28thDay.humidity}
+              onChange={(value: string) => handleInputChange('humidity', value)}
+              isRequired={true}
+            />
           </View>
 
           <View style={{ flexDirection: 'column' }}>
             <Text style={styles.GenerateRFIFieldLabel}>Observations:</Text>
             <ScrollView style={styles.Width100} horizontal={true}>
               <View>
-                  {
-                    concreteSampleTestItems.map((item: any, index: any) => (
-                      <View style={{flexDirection: 'row'}}>
-                        <View style={{flexDirection: 'column', width: 80}}>
-                          <View style={{height: 40}}>
-                            <Text style={{fontWeight: '700'}}>{item.sampleNo.title}</Text>
-                          </View>
-                          <View>
-                            <Text style={{textAlign: 'center'}}>{item.sampleNo.value}</Text>
-                          </View>
+                {
+                  concreteSampleTestItems.map((item: any, index: any) => (
+                    <View style={{ flexDirection: 'row' }}>
+                      <View style={{ flexDirection: 'column', width: 80 }}>
+                        <View style={index === 0 && { height: 40 }}>
+                          {
+                            index === 0 && <Text style={{ fontWeight: '700' }}>{item.sampleNo.title}</Text>
+                          }
                         </View>
+                        <View>
+                          <Text style={{ textAlign: 'center' }}>{item.sampleNo.value}</Text>
+                        </View>
+                      </View>
 
-                        <View style={{flexDirection: 'column'}}>
-                          {/* <View style={{flexDirection: 'row'}}>
+                      <View style={{ flexDirection: 'column' }}>
+                        {/* <View style={{flexDirection: 'row'}}>
                             {
                               item.details.titles.map((title: any) => (
                                 <View style={{flexDirection: 'column'}}>
@@ -675,11 +696,11 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                               ))
                             }
                             </View> */}
-                            {/* <View> */}
-                            {
-                              item.details.values.map((value: any, index: number) => (
-                                <View style={{flexDirection: 'row'}}>
-                                  {/* <View style={{flexDirection: 'column', width: 60}}>
+                        {/* <View> */}
+                        {
+                          item.details.values.map((value: any, indexDetails: number) => (
+                            <View style={{ flexDirection: 'row' }}>
+                              {/* <View style={{flexDirection: 'column', width: 60}}>
                                     {
                                       index === 0 ? 
                                       <View style={{height: 40}}>
@@ -689,55 +710,55 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                                     <Text style={[styles.textStyle2, {textAlign: 'center'}]}>{value.cubeNo}</Text>
                                   </View> */}
 
-                                  <View style={{flexDirection: 'column', width: 120}}>
-                                  {
-                                      index === 0 ? 
-                                      <View style={{height: 40}}>
-                                        <Text style={{fontWeight: '700'}}>{item.details.titles[1]}</Text>
+                              <View style={{ flexDirection: 'column', width: 120 }}>
+                                {
+                                  index === 0 && indexDetails === 0 ?
+                                    <View style={{ height: 40 }}>
+                                      <Text style={{ fontWeight: '700' }}>{item.details.titles[1]}</Text>
                                     </View> : null
-                                    }
-                                    <CustomTextInput rowItem={value}
-                                      tempProp={false}
-                                      fieldName={'wtCube'}></CustomTextInput>
-                                  </View>
+                                }
+                                <CustomTextInput rowItem={value}
+                                  tempProp={false}
+                                  fieldName={'wtCube'}></CustomTextInput>
+                              </View>
 
-                                  <View style={{flexDirection: 'column', width: 120}}>
-                                  {
-                                      index === 0 ? 
-                                      <View style={{height: 40}}>
-                                        <Text style={{fontWeight: '700'}}>{item.details.titles[2]}</Text>
+                              <View style={{ flexDirection: 'column', width: 120 }}>
+                                {
+                                  index === 0 && indexDetails === 0 ?
+                                    <View style={{ height: 40 }}>
+                                      <Text style={{ fontWeight: '700' }}>{item.details.titles[2]}</Text>
                                     </View> : null
-                                    }
-                                    <CustomTextInput rowItem={value}
-                                      tempProp={false}
-                                      fieldName={'volOfCube'}></CustomTextInput>
-                                  </View>
+                                }
+                                <CustomTextInput rowItem={value}
+                                  tempProp={false}
+                                  fieldName={'volOfCube'}></CustomTextInput>
+                              </View>
 
-                                  <View style={{flexDirection: 'column', width: 120}}>
-                                  {
-                                      index === 0 ? 
-                                      <View style={{height: 40}}>
-                                        <Text style={{fontWeight: '700'}}>{item.details.titles[3]}</Text>
+                              <View style={{ flexDirection: 'column', width: 120 }}>
+                                {
+                                  index === 0 && indexDetails === 0 ?
+                                    <View style={{ height: 40 }}>
+                                      <Text style={{ fontWeight: '700' }}>{item.details.titles[3]}</Text>
                                     </View> : null
-                                    }
-                                    <CustomTextInput rowItem={value}
-                                      tempProp={false}
-                                      fieldName={'testArea'}></CustomTextInput>
-                                  </View>
+                                }
+                                <CustomTextInput rowItem={value}
+                                  tempProp={false}
+                                  fieldName={'testArea'}></CustomTextInput>
+                              </View>
 
-                                  <View style={{flexDirection: 'column', width: 120}}>
-                                  {
-                                      index === 0 ? 
-                                      <View style={{height: 40}}>
-                                        <Text style={{fontWeight: '700'}}>{item.details.titles[4]}</Text>
+                              <View style={{ flexDirection: 'column', width: 120 }}>
+                                {
+                                  index === 0 && indexDetails === 0 ?
+                                    <View style={{ height: 40 }}>
+                                      <Text style={{ fontWeight: '700' }}>{item.details.titles[4]}</Text>
                                     </View> : null
-                                    }
-                                    <CustomTextInput rowItem={value}
-                                      tempProp={false}
-                                      fieldName={'failureLoad'}></CustomTextInput>
-                                  </View>
+                                }
+                                <CustomTextInput rowItem={value}
+                                  tempProp={false}
+                                  fieldName={'failureLoad'}></CustomTextInput>
+                              </View>
 
-                                  {/* <View style={{flexDirection: 'column', width: 120}}>
+                              {/* <View style={{flexDirection: 'column', width: 120}}>
                                   {
                                       index === 0 ? 
                                       <View style={{height: 40}}>
@@ -747,13 +768,13 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                                     <Text style={[styles.textStyle, {textAlign: 'center'}]}>{value.compressiveStrength}</Text>
                                   </View> */}
 
-                                </View>
-                              ))
-                            }
-                            {/* </View> */}
-                          
-                        </View>
-                        {/* <View style={{flexDirection: 'column', width: 120}}>
+                            </View>
+                          ))
+                        }
+                        {/* </View> */}
+
+                      </View>
+                      {/* <View style={{flexDirection: 'column', width: 120}}>
                             <View style={{height: 40}}>
                               <Text style={{fontWeight: '700'}}>{item.avgStrength.title}</Text>
                             </View>
@@ -769,10 +790,10 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                             <Text style={[{textAlign: 'center'}]}>{item.remarks.value}</Text>
                           </View>
                         </View> */}
-                      </View>
-                    )
+                    </View>
                   )
-                  }
+                  )
+                }
               </View>
             </ScrollView>
           </View>
@@ -1015,7 +1036,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
           </View> : null
         }
       </ScrollView>
-      
+
       <Modal
         animationType="fade"
         transparent={true}

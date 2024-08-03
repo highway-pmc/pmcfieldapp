@@ -4,7 +4,7 @@ import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import { HeaderItems, PROJECT_TYPE, RFI_STATUS, RFIs_TYPE, SEGMENT_TYPES_DISPLAY, USER_CATEGORY_DISPLAY, WORK_ASSIGNMENT_LEVEL, WORK_TYPE } from "../../constants/constants"
 import { useDispatch, useSelector } from 'react-redux';
 import { clearRFITasksEvent, getRFITaskUsers, getRFITasks, actionGenerateRFI } from './actions';
-import { getDisplayDate, groupBy } from '../../utils/Utils';
+import { getDbDateFromDDMMYYYY, getDisplayDate, groupBy } from '../../utils/Utils';
 import LoadingAnimation from '../Common/LoadingAnimation';
 // import CalendarPicker from 'react-native-calendar-picker';
 import CalendarPicker from '../../components/UI/CalenderPicker';
@@ -529,7 +529,7 @@ const RFIsStructureTaskListing = (props: any) => {
     const reqData = {
       taskId: selectedTaskData._id,
       workAssignmentIds: selectedTaskData.workAssignmentIds,
-      rfiDateTime: selectedTaskData.formRFIDate + ' ' + selectedTaskData.formRFITime + ":00",
+      rfiDateTime: `${getDbDateFromDDMMYYYY(selectedTaskData.formRFIDate)} ${selectedTaskData.formRFITime}:00`,
       rfiStatus: RFI_STATUS.GENERATED,
       comments: "",
       receiverIds: taskUsersData.map((item: any) => {
@@ -830,28 +830,12 @@ const RFIsStructureTaskListing = (props: any) => {
 const ExpanbableComponent = ({ item, onClickFunction, onGenerateRFI }: { item: any, onClickFunction: any, onGenerateRFI: any }) => {
   const [layoutHeight, setLayoutHeight] = useState(0);
   const [rfiDate, setRFIDate] = useState('');
-  const [hours, setHours] = useState([]);
-  const [minutes, setMinutes] = useState([]);
-  const [timeFormats, setTimeFormats] = useState([]);
-
-  const [hour, setHour] = useState('12');
-  const [minute, setMinute] = useState('00');
-  const [timeFormat, setTimeFormat] = useState('AM');
-
-  const [openHours, setOpenHours] = useState(false);
-  const [openMinutes, setOpenMinutes] = useState(false);
-  const [openTimeFormats, setOpenTimeFormats] = useState(false);
+  const [rfiTime, setRFITime] = useState('');
 
   const [openCalendar, setOpenCalendar] = useState(false);
   const { width, height } = Dimensions.get('window');
   const DEFAULT_COMPONENT_HEIGHT = 245;
   const DEFAULT_CALENDAR_HEIGHT = 285;
-
-  useEffect(() => {
-    getHours();
-    getMins();
-    getTimeFormats();
-  }, [])
 
   useEffect(() => {
     if (item.isExpanded) {
@@ -870,38 +854,6 @@ const ExpanbableComponent = ({ item, onClickFunction, onGenerateRFI }: { item: a
     }
   }
 
-  const getHours = () => {
-    let hours = [];
-    for (let i = 1; i <= 12; i++) {
-      hours.push({
-        label: i < 10 ? '0' + i : '' + i,
-        value: i < 10 ? '0' + i : '' + i
-      });
-    }
-    setHours(hours);
-  }
-
-  const getMins = () => {
-    let mins = [];
-    for (let i = 0; i < 60; i = i + 10) {
-      mins.push({
-        label: i < 10 ? '0' + i : '' + i,
-        value: i < 10 ? '0' + i : '' + i
-      });
-    }
-    setMinutes(mins);
-  }
-
-  const getTimeFormats = () => {
-    setTimeFormats([{
-      label: 'AM',
-      value: 'AM'
-    }, {
-      label: 'PM',
-      value: 'PM'
-    }]);
-  }
-
   const onGenerate = () => {
     if (!rfiDate) {
       Alert.alert('Error', 'RFI Date is required.');
@@ -909,20 +861,6 @@ const ExpanbableComponent = ({ item, onClickFunction, onGenerateRFI }: { item: a
     }
     item.formRFIDate = rfiDate;
 
-    let rfiTime = '';
-    if (timeFormat === 'PM') {
-      if (Number(hour) === 12) {
-        rfiTime = hour + ':' + minute;
-      } else {
-        rfiTime = (Number(hour) + 12) + ':' + minute;
-      }
-    } else {
-      if (Number(hour) === 12) {
-        rfiTime = '00:' + minute;
-      } else {
-        rfiTime = hour + ':' + minute;
-      }
-    }
     item.formRFITime = rfiTime;
     onGenerateRFI();
   }
@@ -967,7 +905,7 @@ const ExpanbableComponent = ({ item, onClickFunction, onGenerateRFI }: { item: a
         </View> */}
 
           <View>
-            <CalendarPicker label="Date of RFI's" value={rfiDate} onChange={() => openCloseCalendar()} />
+            <CalendarPicker label="Date of RFI's" value={rfiDate} onChange={(date) => setRFIDate(date)} />
           </View>
 
         {/* {openCalendar && (
@@ -986,7 +924,7 @@ const ExpanbableComponent = ({ item, onClickFunction, onGenerateRFI }: { item: a
         )} */}
 
         <View>
-          <TimePicker label="Time" value={hour} onChange={() => setOpenTimeFormats(false)} />
+          <TimePicker label="Time" value={rfiTime} onChange={(time) => setRFITime(time)} />
         </View>
 
         {/* <View style={{ flexDirection: 'column', height: 80, paddingTop: 15, zIndex: 5 }}>

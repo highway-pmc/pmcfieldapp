@@ -1213,14 +1213,14 @@ const onSwipeValueChange = (data: any) => {
                 <CalendarPicker
                   label="Date"
                   value={rfiDate}
-                  onChange={() => openCloseCalendar()}
+                  onChange={(date) => setRFIDate(date)}
                 />
               </View>
               <View>
                 <TimePicker
                   label="Time"
-                  value={hour}
-                  onChange={() => setOpenTimeFormats(false)}
+                  value={rfiTime}
+                  onChange={(time) => setRFITime(time)}
                 />
               </View>
 
@@ -1353,14 +1353,14 @@ const onSwipeValueChange = (data: any) => {
                 <CalendarPicker
                   label="Date"
                   value={rfiDate}
-                  onChange={() => openCloseCalendar()}
+                  onChange={(date) => setRFIDate(date)}
                 />
               </View>
               <View>
                 <TimePicker
                   label="Time"
-                  value={hour}
-                  onChange={() => setOpenTimeFormats(false)}
+                  value={rfiTime}
+                  onChange={(time) => setRFITime(time)}
                 />
               </View>
 
@@ -1496,14 +1496,14 @@ const onSwipeValueChange = (data: any) => {
                 <CalendarPicker
                   label="Date"
                   value={rfiDate}
-                  onChange={() => openCloseCalendar()}
+                  onChange={(date) => setRFIDate(date)}
                 />
               </View>
               <View>
                 <TimePicker
                   label="Time"
-                  value={hour}
-                  onChange={() => setOpenTimeFormats(false)}
+                  value={rfiTime}
+                  onChange={(time) => setRFITime(time)}
                 />
               </View>
 
@@ -1625,14 +1625,14 @@ const onSwipeValueChange = (data: any) => {
                 <CalendarPicker
                   label="Date"
                   value={rfiDate}
-                  onChange={() => openCloseCalendar()}
+                  onChange={(date) => setRFIDate(date)}
                 />
               </View>
               <View>
                 <TimePicker
                   label="Time"
-                  value={hour}
-                  onChange={() => setOpenTimeFormats(false)}
+                  value={rfiTime}
+                  onChange={(time) => setRFITime(time)}
                 />
               </View>
 
@@ -1690,14 +1690,14 @@ const onSwipeValueChange = (data: any) => {
                 <CalendarPicker
                   label="Date"
                   value={rfiDate}
-                  onChange={() => openCloseCalendar()}
+                  onChange={(date) => setRFIDate(date)}
                 />
               </View>
               <View>
                 <TimePicker
                   label="Time"
-                  value={hour}
-                  onChange={() => setOpenTimeFormats(false)}
+                  value={rfiTime}
+                  onChange={(time) => setRFITime(time)}
                 />
               </View>
 
@@ -1754,14 +1754,14 @@ const onSwipeValueChange = (data: any) => {
                 <CalendarPicker
                   label="Date"
                   value={rfiDate}
-                  onChange={() => openCloseCalendar()}
+                  onChange={(date) => setRFIDate(date)}
                 />
               </View>
               <View>
                 <TimePicker
                   label="Time"
-                  value={hour}
-                  onChange={() => setOpenTimeFormats(false)}
+                  value={rfiTime}
+                  onChange={(time) => setRFITime(time)}
                 />
               </View>
 
@@ -1792,14 +1792,14 @@ const onSwipeValueChange = (data: any) => {
                 <CalendarPicker
                   label="Date"
                   value={rfiDate}
-                  onChange={() => openCloseCalendar()}
+                  onChange={(date) => setRFIDate(date)}
                 />
               </View>
               <View>
                 <TimePicker
                   label="Time"
-                  value={hour}
-                  onChange={() => setOpenTimeFormats(false)}
+                  value={rfiTime}
+                  onChange={(time) => setRFITime(time)}
                 />
               </View>
 
@@ -1869,14 +1869,14 @@ const onSwipeValueChange = (data: any) => {
                 <CalendarPicker
                   label="Date"
                   value={rfiDate}
-                  onChange={() => openCloseCalendar()}
+                  onChange={(date) => setRFIDate(date)}
                 />
               </View>
               <View>
                 <TimePicker
                   label="Time"
-                  value={hour}
-                  onChange={() => setOpenTimeFormats(false)}
+                  value={rfiTime}
+                  onChange={(time) => setRFITime(time)}
                 />
               </View>
 

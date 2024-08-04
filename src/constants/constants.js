@@ -492,3 +492,12 @@ export const CONCRETE_GRADE_LIST = [
         label: 'M75', value: 'M20'
     },
 ];
+
+export const CEMENT_GRADE_LIST = [
+    {
+        label: 'OPC 43', value: 'OPC43'
+    },
+    {
+        label: 'OPC 53', value: 'OPC53'
+    },
+];

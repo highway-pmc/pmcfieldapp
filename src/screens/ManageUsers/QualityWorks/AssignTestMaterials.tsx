@@ -180,7 +180,7 @@ const AssignTestMaterials = ({ route, navigation }: { route: any, navigation: an
 
   const onNext = (item: any) => {
     if (isTestInventoryClassification(testClassificationName)) { // TODO - will introduce type in db and use it iso Classification Name
-      if (item.materialType === TEST_MATERIALS_TYPES.CONCRETE) {
+      if (item.materialType === TEST_MATERIALS_TYPES.CONCRETE || item.materialType === TEST_MATERIALS_TYPES.CEMENT) {
         if (testClassificationName === 'Procurement Details') {
           navigation.navigate('Procurements', {
             testClassificationId: testClassificationId,
@@ -189,6 +189,7 @@ const AssignTestMaterials = ({ route, navigation }: { route: any, navigation: an
             testWorkCategoryName: testWorkCategoryName,
             testMaterialId: item._id,
             testMaterialName: item.name,
+            materialType: item.materialType,
             workType: workType
           })
         } else if (testClassificationName === 'Source Approvals') {
@@ -199,6 +200,7 @@ const AssignTestMaterials = ({ route, navigation }: { route: any, navigation: an
             testWorkCategoryName: testWorkCategoryName,
             testMaterialId: item._id,
             testMaterialName: item.name,
+            materialType: item.materialType,
             workType: workType
           })
         }

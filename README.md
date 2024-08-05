@@ -1,121 +1,74 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+This is guide to set up PMC Field App Project.
 
-# Getting Started
+### Step 1: Install Required Software
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+1. **Node.js and npm**: Ensure you have Node.js and npm installed. You can download them from [Node.js official website](https://nodejs.org/).
 
-## Step 1: Start the Metro Server
+2. **Android Studio**: Download and install [Android Studio](https://developer.android.com/studio).
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+3. JDK - Required to compile Java code.
 
-To start Metro, run the following command from the _root_ of your React Native project:
+### Step 2: Set Up Android SDK and Environment Variables
 
-```bash
-# using npm
-npm start
+1. **Open Android Studio** and go to **SDK Manager** (`Configure > SDK Manager`).
 
-# OR using Yarn
-yarn start
-```
+2. **Install Android SDK**:
 
-## emulator -list-avds
-## emulator -avd name-of-your-emulator
-## adb -s RZ8M931M24D reverse tcp:8081 tcp:8081   # run on device
+   - Ensure you have Android SDK Platform 33 (or the latest version) installed.
+   - Check the box for `Android SDK Platform 33` in the SDK Platforms tab.
+   - Click `Apply` to install.
 
-### npx react-native bundle --platform android --dev true --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
+3. **Set Up Environment Variables**:
+   - Open your terminal and set the `ANDROID_HOME` environment variable to the Android SDK location.
 
+### Step 3: Create and Start an Android Emulator
 
-## Step 2: Start your Application
+1. **Open Android Studio** and go to **AVD Manager** (`Configure > AVD Manager`).
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
+2. **Create a new virtual device**:
 
-### For Android
-### cd android && gradlew assembleRelease
-### npx react-native start --reset-cache
-```bash
-# using npm
-npm run android
+   - Click on `Create Virtual Device`.
+   - Select a device definition (e.g., Pixel 3) and click `Next`.
+   - Select a system image (e.g., Q) and click `Next`.
+   - Click `Finish` to create the virtual device.
 
-# OR using Yarn
-yarn android
-```
+3. **Start the Emulator**:
+   - Click on the `Play` button next to your newly created virtual device in the AVD Manager to start the emulator.
 
-### For iOS
+### Step 4: Verify and Fix Issues Using `npx react-native doctor`
 
-```bash
-# using npm
-npm run ios
+1. **Run the Doctor Command**:
 
-# OR using Yarn
-yarn ios
-```
+   ```sh
+   npx react-native doctor
+   ```
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+2. **Fix Errors**:
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+   - If you see the error `Adb - No devices and/or emulators connected`, ensure that your emulator is running.
+   - If you see the error `Android SDK - Required for building and installing your app on Android`, ensure that the Android SDK is properly installed and the `ANDROID_HOME` environment variable is set correctly & For this Error go to `Android Studio > More Action > SDK Manager > SDK Tools >  Android SDK Command Line Tools` (install & restart PC).
 
-## Step 3: Modifying your App
+3. **Try to Fix Issues Automatically**:
+   - Press `f` to try to fix issues automatically.
+   - Press `e` to try to fix errors.
 
-Now that you have successfully run the app, let's modify it.
+### Step 5: Initialize and Start Your React Native Project
 
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
+1. **Initialize a New React Native Project**:
 
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
+   ```sh
+   git clone https://github.com/highway-pmc/pmcfieldapp.git
+   cd pmcfieldapp
+   ```
 
-## Congratulations! :tada:
+2. **Start the Metro Server**:
 
-You've successfully run and modified your React Native App. :partying_face:
+   ```sh
+   npm start
+   ```
 
-### Now what?
+3. **Run the Android App**:
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
-
-
-
-##
- Task :app:signingReport
-Variant: debug
-Config: debug
-Store: C:\Users\HighwayPMC\Projects\highway-pmc\source\apps\pmcfieldapp\android\app\debug.keystore
-Alias: androiddebugkey
-MD5: 20:F4:61:48:B7:2D:8E:5E:5C:A2:3D:37:A4:F4:14:90
-SHA1: 5E:8F:16:06:2E:A3:CD:2C:4A:0D:54:78:76:BA:A6:F3:8C:AB:F6:25
-SHA-256: FA:C6:17:45:DC:09:03:78:6F:B9:ED:E6:2A:96:2B:39:9F:73:48:F0:BB:6F:89:9B:83:32:66:75:91:03:3B:9C
-Valid until: Wednesday, 1 May, 2052
-----------
-Variant: release
-Config: debug
-Store: C:\Users\HighwayPMC\Projects\highway-pmc\source\apps\pmcfieldapp\android\app\debug.keystore
-Alias: androiddebugkey
-MD5: 20:F4:61:48:B7:2D:8E:5E:5C:A2:3D:37:A4:F4:14:90
-SHA1: 5E:8F:16:06:2E:A3:CD:2C:4A:0D:54:78:76:BA:A6:F3:8C:AB:F6:25
-SHA-256: FA:C6:17:45:DC:09:03:78:6F:B9:ED:E6:2A:96:2B:39:9F:73:48:F0:BB:6F:89:9B:83:32:66:75:91:03:3B:9C
-Valid until: Wednesday, 1 May, 2052
-----------
-Variant: debugAndroidTest
-Config: debug
-Store: C:\Users\HighwayPMC\Projects\highway-pmc\source\apps\pmcfieldapp\android\app\debug.keystore
-Alias: androiddebugkey
-MD5: 20:F4:61:48:B7:2D:8E:5E:5C:A2:3D:37:A4:F4:14:90
-SHA1: 5E:8F:16:06:2E:A3:CD:2C:4A:0D:54:78:76:BA:A6:F3:8C:AB:F6:25
-SHA-256: FA:C6:17:45:DC:09:03:78:6F:B9:ED:E6:2A:96:2B:39:9F:73:48:F0:BB:6F:89:9B:83:32:66:75:91:03:3B:9C
-Valid until: Wednesday, 1 May, 2052
-----------
-
-##
+   ```sh
+   npm run android
+   ```

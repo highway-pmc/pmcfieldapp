@@ -406,7 +406,17 @@ export const TEST_MATERIALS_TYPES = {
     CEMENT: 'cement',
     ADMIXTURE: 'admixture',
     SILICA_FUME: 'silica-fume',
-  };
+};
+
+export const TEST_TYPES = {
+    CORE_TEST: 'core-test',
+    CUBE_TEST: 'cube-test',
+    SLUMP_TEST: 'slump-test',
+    UPV_TEST: 'upv-test',
+    REBOUND_HAMMER_TEST: 'rebound-hammer-test',
+    COMPRESSIVE_STRENGTH: 'compressive-strength',
+    SOUNDNESS: 'soundness',
+};
 
 export const YES_NO_LIST = [
     {

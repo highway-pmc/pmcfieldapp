@@ -86,7 +86,6 @@ const SourceApprovals = ({ route, navigation }: { route: any, navigation: any })
 
     type FormSourceDetailState = {
         sourceApprovalId: string;
-        [gradeField.name]: string;
         ratePerCum: number;
     };
 

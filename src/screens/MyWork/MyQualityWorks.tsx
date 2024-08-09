@@ -535,7 +535,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
     }).map((item: any, index) => (
       <View style={getStyle(item)}>
         <View style={styles.leftContainer}>
-          <Text style={styles.HeadText}>111{item.name}</Text>
+          <Text style={styles.HeadText}>{item.name}</Text>
           {/* <Text style={styles.MyWorkSubHead}>Sub Text</Text> */}
         </View>
         {

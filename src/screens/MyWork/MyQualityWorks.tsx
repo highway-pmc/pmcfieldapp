@@ -355,7 +355,6 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
       testObservations.push(getTestSampleCementCompressiveStrengthObject(1));
       testObservations[0].ageInDays.value = item.testCategory;
     }
-
     setConcreteSampleTestItems(testObservations);
     setOpenPopup(true);
   }
@@ -367,6 +366,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
     objSampleTest7thOr28thDay.humidity = Number(objSampleTest7thOr28thDay.humidity);
     objSampleTest7thOr28thDay.observations = Object.assign([], concreteSampleTestItems);
     const sampleObservations: any = objSampleTest7thOr28thDay.observations && objSampleTest7thOr28thDay.observations;
+    
     for (let i = 0; i < sampleObservations?.length; i++) {
       const observations = sampleObservations[i];
       observations['details']?.values.forEach((item: any) => {
@@ -1629,7 +1629,63 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
               {
                 currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CEMENT &&
                 (
-                  selectedTestSample.type === TEST_TYPES.COMPRESSIVE_STRENGTH ?
+                  // selectedTestSample.type === TEST_TYPES.COMPRESSIVE_STRENGTH ?
+                  selectedTestSample.type === TEST_TYPES.SOUNDNESS ?
+                  <View>
+                  {
+                    concreteSampleTestItems.map((item: any, index: any) => (
+                      <View style={{ flexDirection: 'row' }}>
+                        <View style={{ flexDirection: 'column' }}>
+                          {
+                            item.details.values.map((value: any, indexDetails: number) => (
+                              <View style={{ flexDirection: 'row' }}>
+                                <View style={{ flexDirection: 'column', width: 80 }}>
+                                  {
+                                    index === 0 && indexDetails === 0 ?
+                                      <View style={{ height: 40 }}>
+                                        <Text style={{ fontWeight: '700' }}>{item.details.titles[0]}</Text>
+                                      </View> : null
+                                  }
+                                  <Text style={[styles.textStyle2, { textAlign: 'center' }]}>{value.slNo}</Text>
+                                </View>
+
+                                <View style={{ flexDirection: 'column', width: 150 }}>
+                                  {
+                                    index === 0 && indexDetails === 0 ?
+                                      <View style={{ height: 40 }}>
+                                        <Text style={{ fontWeight: '700' }}>{item.details.titles[1]}</Text>
+                                      </View> : null
+                                  }
+                                  <CustomTextInput rowItem={value}
+                                    tempProp={false}
+                                    styleName={styles.inputStyle4}
+                                    fieldName={'beforePuttingInBoilingWater'}></CustomTextInput>
+                                </View>
+
+                                <View style={{ flexDirection: 'column', width: 150 }}>
+                                  {
+                                    index === 0 && indexDetails === 0 ?
+                                      <View style={{ height: 40 }}>
+                                        <Text style={{ fontWeight: '700' }}>{item.details.titles[2]}</Text>
+                                      </View> : null
+                                  }
+                                  <CustomTextInput rowItem={value}
+                                    tempProp={false}
+                                    styleName={styles.inputStyle4}
+                                    fieldName={'afterPuttingInBoilingWater'}></CustomTextInput>
+                                </View>
+                              </View>
+                            ))
+                          }
+
+                        </View>
+                      </View>
+                    )
+                    )
+                  }
+                </View>
+                    
+                    :
                     <View>
                       {
                         concreteSampleTestItems.map((item: any, index: any) => (
@@ -1724,60 +1780,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                         )
                       }
                     </View>
-                    :
-                    <View>
-                      {
-                        concreteSampleTestItems.map((item: any, index: any) => (
-                          <View style={{ flexDirection: 'row' }}>
-                            <View style={{ flexDirection: 'column' }}>
-                              {
-                                item.details.values.map((value: any, indexDetails: number) => (
-                                  <View style={{ flexDirection: 'row' }}>
-                                    <View style={{ flexDirection: 'column', width: 80 }}>
-                                      {
-                                        index === 0 && indexDetails === 0 ?
-                                          <View style={{ height: 40 }}>
-                                            <Text style={{ fontWeight: '700' }}>{item.details.titles[0]}</Text>
-                                          </View> : null
-                                      }
-                                      <Text style={[styles.textStyle2, { textAlign: 'center' }]}>{value.slNo}</Text>
-                                    </View>
-
-                                    <View style={{ flexDirection: 'column', width: 150 }}>
-                                      {
-                                        index === 0 && indexDetails === 0 ?
-                                          <View style={{ height: 40 }}>
-                                            <Text style={{ fontWeight: '700' }}>{item.details.titles[1]}</Text>
-                                          </View> : null
-                                      }
-                                      <CustomTextInput rowItem={value}
-                                        tempProp={false}
-                                        styleName={styles.inputStyle4}
-                                        fieldName={'beforePuttingInBoilingWater'}></CustomTextInput>
-                                    </View>
-
-                                    <View style={{ flexDirection: 'column', width: 150 }}>
-                                      {
-                                        index === 0 && indexDetails === 0 ?
-                                          <View style={{ height: 40 }}>
-                                            <Text style={{ fontWeight: '700' }}>{item.details.titles[2]}</Text>
-                                          </View> : null
-                                      }
-                                      <CustomTextInput rowItem={value}
-                                        tempProp={false}
-                                        styleName={styles.inputStyle4}
-                                        fieldName={'afterPuttingInBoilingWater'}></CustomTextInput>
-                                    </View>
-                                  </View>
-                                ))
-                              }
-
-                            </View>
-                          </View>
-                        )
-                        )
-                      }
-                    </View>
+                    
                 )
               }
               {

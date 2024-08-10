@@ -296,9 +296,9 @@ const AssignWork = ({route, navigation}: { route: any, navigation: any }) => {
               </View>
               <View style={styles.ModalInnerContainer}>
               <View>
-                <Text style={styles.AssignRoleText}>Project Module: {selectedProjectModule.name}</Text>
+                <Text style={styles.AssignRoleTextHeading}>Project Module: {selectedProjectModule.name}</Text>
               </View>
-              <ScrollView style={{paddingTop: 10, height: 500}}>
+              <ScrollView style={{paddingTop: 0, height: 500}}>
                 {userData.map((item: any, index) => (
                   <View style={styles.CategoryType}>
                     <View style={styles.FlexRowCenter}>
@@ -574,9 +574,16 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     paddingVertical: 10,
   },
+  AssignRoleTextHeading: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#27272A',
+    marginLeft: 5,
+    marginTop: 10
+  },
   AssignRoleText: {
-    fontSize: 16,
-    fontWeight: '400',
+    fontSize: 14,
+    fontWeight: '600',
     color: '#27272A',
     marginLeft: 5,
   },

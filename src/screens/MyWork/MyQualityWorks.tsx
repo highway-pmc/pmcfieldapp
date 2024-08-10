@@ -186,6 +186,13 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
               testObservations.push(getTestSampleConcreteObject(1));
               setConcreteSampleTestItems(testObservations);
               setOpenPopup(true);
+            } else if (testTypeData.type === TEST_TYPES.CUBE_TEST) {
+              setCurrentTestTypesData([]);
+              testTypeData.materialType = TEST_MATERIALS_TYPES.CONCRETE; // TEMP - TODO
+              setSelectedTestSample(testTypeData);
+              if (testTypeData.subTestTypes?.length) {
+                setCurrentSubTestTypesData(testTypeData.subTestTypes)
+              }
             }
           } else if (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CEMENT) {
             testTypeData.materialType = TEST_MATERIALS_TYPES.CEMENT;

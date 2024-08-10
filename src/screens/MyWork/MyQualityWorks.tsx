@@ -201,11 +201,19 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
               setOpenPopup(true);
             }
           } else if (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE) {
-            console.log('=======', testTypeData)
             testTypeData.materialType = TEST_MATERIALS_TYPES.FINE_AGGREGATE;
             setSelectedTestSample(testTypeData);
             const testObservations: any = [];
             testObservations.push(getTestSampleCementFineAggregateObject(1, testTypeData.type));
+            setConcreteSampleTestItems(testObservations);
+            setOpenPopup(true);
+          } else if (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE) {
+            testTypeData.materialType = TEST_MATERIALS_TYPES.COARSE_AGGREGATE;
+            setSelectedTestSample(testTypeData);
+            const testObservations: any = [];
+            testObservations.push(getTestSampleCementCoarseAggregateObject(1, testTypeData.type));
+            testObservations.push(getTestSampleCementCoarseAggregateObject(2, testTypeData.type));
+            testObservations.push(getTestSampleCementCoarseAggregateObject(3, testTypeData.type));
             setConcreteSampleTestItems(testObservations);
             setOpenPopup(true);
           }
@@ -380,10 +388,22 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
           }
         }
 
+        if (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE) {
+          if (selectedTestSample.type === TEST_TYPES.GRADATION) {
+            item.weightRetainedInGm = Number(item.weightRetainedInGm);
+          }
+        }
+
       })
 
       if (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE) {
         if (selectedTestSample.type === TEST_TYPES.GRADATION) {
+          observations.weightOfSample = Number(observations.weightOfSample);
+        }
+      }
+
+      if (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE) {
+        if (i === 0 && selectedTestSample.type === TEST_TYPES.GRADATION) {
           observations.weightOfSample = Number(observations.weightOfSample);
         }
       }
@@ -398,7 +418,9 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
     console.log('=====@@====', JSON.stringify(objSampleTest7thOr28thDay))
     dispatch(generateTestSampleReport({
       projectId: loggedInUser.projectId,
-      testRFIId: (selectedTestSample.type === TEST_TYPES.SOUNDNESS || currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE) ? selectedTestSample.testRFIsData[0]?._id : selectedTestSample._id,
+      testRFIId: (selectedTestSample.type === TEST_TYPES.SOUNDNESS || currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE
+        || currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE
+        ) ? selectedTestSample.testRFIsData[0]?._id : selectedTestSample._id,
       body: {
         sampleData: objSampleTest7thOr28thDay
       }
@@ -724,6 +746,134 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
 
   }
 
+  const getTestSampleCementCoarseAggregateObject = (sampleNum: any, taskType: string) => {
+    if (taskType === TEST_TYPES.GRADATION) {
+      if (sampleNum === 1) {
+        return {
+          weightOfSample: 0,
+          sampleNo: {
+            title: 'Sample no',
+            value: 'Sieve Analysis (for 40mm)'
+          },
+          details: {
+            titles: ['Sieve Size', 'Weight retained in gm', 'Cumulative weight retained in gm', 'Cumulative retained in %', '% Passing'],
+            values: [
+              {
+                sieveSize: '63.0 mm',
+                weightRetainedInGm: 0,
+                cumulativeWeightRetainedInGm: 0,
+                cumulativeRetainedInPercent: 0,
+                passignPercent: 0
+              },
+              {
+                sieveSize: '40.0 mm',
+                weightRetainedInGm: 0,
+                cumulativeWeightRetainedInGm: 0,
+                cumulativeRetainedInPercent: 0,
+                passignPercent: 0
+              },
+              {
+                sieveSize: '20.0 mm',
+                weightRetainedInGm: 0,
+                cumulativeWeightRetainedInGm: 0,
+                cumulativeRetainedInPercent: 0,
+                passignPercent: 0
+              },
+              {
+                sieveSize: '10.0 mm',
+                weightRetainedInGm: 0,
+                cumulativeWeightRetainedInGm: 0,
+                cumulativeRetainedInPercent: 0,
+                passignPercent: 0
+              },
+            ]
+          },
+        }
+      } else if (sampleNum === 2) {
+        return {
+          sampleNo: {
+            title: 'Sample no',
+            value: 'Sieve Analysis (for 20mm)'
+          },
+          details: {
+            titles: ['Sieve Size', 'Weight retained in gm', 'Cumulative weight retained in gm', 'Cumulative retained in %', '% Passing'],
+            values: [
+              {
+                sieveSize: '40.0 mm',
+                weightRetainedInGm: 0,
+                cumulativeWeightRetainedInGm: 0,
+                cumulativeRetainedInPercent: 0,
+                passignPercent: 0
+              },
+              {
+                sieveSize: '20.0 mm',
+                weightRetainedInGm: 0,
+                cumulativeWeightRetainedInGm: 0,
+                cumulativeRetainedInPercent: 0,
+                passignPercent: 0
+              },
+              {
+                sieveSize: '10.0 mm',
+                weightRetainedInGm: 0,
+                cumulativeWeightRetainedInGm: 0,
+                cumulativeRetainedInPercent: 0,
+                passignPercent: 0
+              },
+              {
+                sieveSize: '4.75 mm',
+                weightRetainedInGm: 0,
+                cumulativeWeightRetainedInGm: 0,
+                cumulativeRetainedInPercent: 0,
+                passignPercent: 0
+              },
+            ]
+          },
+        }
+      } else if (sampleNum === 3) {
+        return {
+          sampleNo: {
+            title: 'Sample no',
+            value: 'Sieve Analysis (for 10mm)'
+          },
+          details: {
+            titles: ['Sieve Size', 'Weight retained in gm', 'Cumulative weight retained in gm', 'Cumulative retained in %', '% Passing'],
+            values: [
+              {
+                sieveSize: '12.5 mm',
+                weightRetainedInGm: 0,
+                cumulativeWeightRetainedInGm: 0,
+                cumulativeRetainedInPercent: 0,
+                passignPercent: 0
+              },
+              {
+                sieveSize: '10.0 mm',
+                weightRetainedInGm: 0,
+                cumulativeWeightRetainedInGm: 0,
+                cumulativeRetainedInPercent: 0,
+                passignPercent: 0
+              },
+              {
+                sieveSize: '4.75 mm',
+                weightRetainedInGm: 0,
+                cumulativeWeightRetainedInGm: 0,
+                cumulativeRetainedInPercent: 0,
+                passignPercent: 0
+              },
+              {
+                sieveSize: '2.36 mm',
+                weightRetainedInGm: 0,
+                cumulativeWeightRetainedInGm: 0,
+                cumulativeRetainedInPercent: 0,
+                passignPercent: 0
+              },
+            ]
+          },
+        }
+      }
+      
+    }
+  }
+
   useEffect(() => {
     if (generatedTestSampleReport) {
       Alert.alert('Info', 'Test sample report generated.')
@@ -965,7 +1115,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
   };
 
   const testSampleForm = (materialType: any) => {
-    if (materialType === TEST_MATERIALS_TYPES.CONCRETE || materialType === TEST_MATERIALS_TYPES.CEMENT || materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE) {
+    if (materialType === TEST_MATERIALS_TYPES.CONCRETE || materialType === TEST_MATERIALS_TYPES.CEMENT || materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE || materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE) {
       return <View>
         <View style={{ flexDirection: 'column', paddingBottom: 40 }}>
           <View style={{ flexDirection: 'column' }}>
@@ -1472,6 +1622,67 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                                         tempProp={false}
                                         styleName={styles.inputStyle3}
                                         fieldName={'test3'}></CustomTextInput>
+                                    </View>
+                                  </View>
+                                ))
+                              }
+
+                            </View>
+                          </View>
+                        )
+                        )
+                      }
+                    </View>
+                    : null
+                  )
+                )
+              }
+
+              {
+                currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE &&
+                (
+                  (
+                    selectedTestSample.type === TEST_TYPES.GRADATION ?
+                    <View>
+                      <View style={{ flexDirection: 'column' }}>
+                        <Input
+                          label="Total weight of Sample in gm (T)"
+                          value={concreteSampleTestItems[0].weightOfSample}
+                          onChange={(value: any) => handleInputChangeFineAggregate(concreteSampleTestItems[0], 'weightOfSample', value)}
+                          isRequired={true}
+                        />
+                      </View>
+                      {
+                        concreteSampleTestItems.map((item: any, index: any) => (
+                          <View style={{ flexDirection: 'row' }}>
+                            <View style={{ flexDirection: 'column' }}>
+                              <View style={{ height: 40 }}>
+                                <Text style={{ fontWeight: '700' }}>{item.sampleNo.value}</Text>
+                              </View>
+                              {
+                                item.details.values.map((value: any, indexDetails: number) => (
+                                  <View style={{ flexDirection: 'row' }}>
+                                    <View style={{ flexDirection: 'column', width: 80 }}>
+                                      {
+                                        index === 0 && indexDetails === 0 ?
+                                          <View style={{ height: 40 }}>
+                                            <Text style={{ fontWeight: '700' }}>{item.details.titles[0]}</Text>
+                                          </View> : null
+                                      }
+                                      <Text style={[styles.textStyle2, { textAlign: 'center' }]}>{value.sieveSize}</Text>
+                                    </View>
+
+                                    <View style={{ flexDirection: 'column', width: 150 }}>
+                                      {
+                                        index === 0 && indexDetails === 0 ?
+                                          <View style={{ height: 40 }}>
+                                            <Text style={{ fontWeight: '700' }}>{item.details.titles[1]}</Text>
+                                          </View> : null
+                                      }
+                                      <CustomTextInput rowItem={value}
+                                        tempProp={false}
+                                        styleName={styles.inputStyle4}
+                                        fieldName={'weightRetainedInGm'}></CustomTextInput>
                                     </View>
                                   </View>
                                 ))

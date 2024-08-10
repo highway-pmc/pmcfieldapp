@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flexWrap: 'wrap',
-    gap: 10
+    gap: 5
   },
   rfiTab: {
     width: 180,

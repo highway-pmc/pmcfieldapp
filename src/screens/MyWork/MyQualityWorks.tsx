@@ -1102,7 +1102,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
         </View>
           : null
       }
-      <ScrollView style={styles.Height100}>
+      <ScrollView showsVerticalScrollIndicator={false}  style={styles.Height100}>
         {
           currentLevel === 1 ?
             myTestsData.map((testClassificationItem: any, testClassificationIndex) => (
@@ -1596,13 +1596,21 @@ const styles = StyleSheet.create({
 
   //MyQualityWork Card
   MyWorkCard: {
-    backgroundColor: '#CCD6E7',
+    backgroundColor: '#fff',
     borderRadius: 12,
-    justifyContent: 'flex-start',
-    paddingVertical: 50,
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    paddingVertical: 20,
     paddingHorizontal: 20,
-    marginBottom: 15,
-    position: 'relative'
+    marginBottom: 20,
+    marginHorizontal: 10,
+    minHeight: 100,
+    position: 'relative',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.25,
+    shadowRadius: 20,
+    elevation: 5,
   },
   CompleteWork: {
     borderWidth: 1,
@@ -1623,7 +1631,8 @@ const styles = StyleSheet.create({
   },
   TaskDetails: {
     flexDirection: 'row',
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
+    flexWrap: 'wrap'
   },
   SubHeadingText: {
     color: '#000',

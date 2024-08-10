@@ -252,7 +252,7 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
           alignItems: 'center',
           justifyContent: 'space-between',
           marginHorizontal: -15,
-          bottom: -9,
+          bottom: -15,
           backgroundColor: '#1C58C0',
         }}>
         <Pressable
@@ -402,22 +402,27 @@ const styles = StyleSheet.create({
   inputStyle: {
     flex: 1,
     color: '#2c2c2c',
-    paddingLeft: 40,
+    paddingLeft: 45,
     paddingRight: 15,
-    borderWidth: 1,
-    borderRadius: 6,
-    borderColor: '#808089',
     backgroundColor: '#fff',
     fontWeight: '600',
-    paddingVertical: 5,
-    height: 45,
+    paddingVertical: 15,
+    height: 55
   },
   SectionStyle: {
     flexDirection: 'row',
-    height: 40,
-    marginBottom: 10,
-    marginTop: 5,
+    marginBottom: 0,
     position: 'relative',
+    marginHorizontal: -15,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.25,
+    shadowRadius: 20,
+    // Shadow for Android
+    elevation: 10,
+    alignItems: 'center',
+    marginTop: -10,
   },
   ImageSearch: {
     position: 'absolute',

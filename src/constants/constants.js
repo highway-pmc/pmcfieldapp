@@ -420,7 +420,7 @@ export const TEST_TYPES = {
     SILT_CONTENT: 'silt-content',
     GRADATION: 'gradation',
     PETROGRAPHIC_EXAMINATION: 'petrographic-examination',
-    AGREGATE_IMPACT_VALUE: 'agregate-impact-value',
+    AGGREGATE_IMPACT_VALUE: 'aggregate-impact-value',
     SPECIFIC_GRAVITY_AND_WATER_ABSORPTION: 'specific-gravity-and-water-absorption',
     FI_EI: 'fi-ei',
     LOS_ANGELES_ABRATION: 'los-angeles-abration',

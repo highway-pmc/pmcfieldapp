@@ -394,7 +394,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
           if (selectedTestSample.type === TEST_TYPES.GRADATION) {
             item.weightRetainedInGm = Number(item.weightRetainedInGm);
           } else if (selectedTestSample.type === TEST_TYPES.LOS_ANGELES_ABRATION || selectedTestSample.type === TEST_TYPES.NATURAL_MOISTURE_CONTENT
-            || selectedTestSample.type === TEST_TYPES.SPECIFIC_GRAVITY_AND_WATER_ABSORPTION) {
+            || selectedTestSample.type === TEST_TYPES.SPECIFIC_GRAVITY_AND_WATER_ABSORPTION || selectedTestSample.type === TEST_TYPES.AGGREGATE_IMPACT_VALUE) {
             if (!item.hide) {
               item.test1 = Number(item.test1);
               item.test2 = Number(item.test2);
@@ -1029,6 +1029,98 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
               hide: true,
               description: 'Avg. Moisture Content',
               avgMoistureContent: 0,
+            },
+          ]
+        },
+      }
+    } else if (taskType === TEST_TYPES.AGGREGATE_IMPACT_VALUE) {
+      return {
+        sampleNo: {
+          title: 'Sample no',
+          value: sampleNum
+        },
+        details: {
+          titles: ['Description', 'Test 1', 'Test 2', 'Test 3'],
+          values: [
+            {
+              description: 'Weight of Surface dry sample passing 12.5 mm and retained on 10 mm IS sieves (W1) in gm',
+              test1: 0,
+              test2: 0,
+              test3: 0,
+            },
+            {
+              description: 'Weight of fraction passing 2.36 mm sieve after the test (W2) in gm',
+              test1: 0,
+              test2: 0,
+              test3: 0,
+            },
+            {
+              description: 'Weight of fraction retained on 2.36 mm sieve after the test (W3) in gm',
+              test1: 0,
+              test2: 0,
+              test3: 0,
+            },
+            {
+              hide: true,
+              description: 'Loss in weight (W4 = W1-(W2+W3))',
+              test1: 0,
+              test2: 0,
+              test3: 0,
+            },
+            {
+              hide: true,
+              description: 'Aggregate Impact Value (AIV = W2/W1 *100)',
+              test1: 0,
+              test2: 0,
+              test3: 0,
+            },
+            {
+              hide: true,
+              description: 'Average AIV Value',
+              avgAIVValue: 0,
+            },
+          ]
+        },
+      }
+    } else if (taskType === TEST_TYPES.FI_EI) {
+      return {
+        weightOfSample: 0,
+        sampleNo: {
+          title: 'Sample no',
+          value: 1
+        },
+        details: {
+          titles: ['Size fraction of aggregate passing on IS Sieve in mm', 'Size fraction of aggregate retained on IS Sieves (mm)', 'Total weight of aggregate retained in gm',
+          'Weight passing on flakiness gauge in gm', 'Weight retained on flakiness gauge in gm', 'Weight retained on elongation gauge in mm'],
+          values: [
+            {
+              sizeFraction: '63.0 mm',
+              sizeFractionOfAggregateRetained: '50.0',
+              totalWeightOfAggregateRetained: 0,
+              weightPassingFlakinessGauge: 0,
+              weightRetainedFlakinessGauge: 0,
+              weightRetainedElongationGauge: 0
+            },
+            {
+              sieveSize: '40.0 mm',
+              weightRetainedInGm: 0,
+              cumulativeWeightRetainedInGm: 0,
+              cumulativeRetainedInPercent: 0,
+              passignPercent: 0
+            },
+            {
+              sieveSize: '20.0 mm',
+              weightRetainedInGm: 0,
+              cumulativeWeightRetainedInGm: 0,
+              cumulativeRetainedInPercent: 0,
+              passignPercent: 0
+            },
+            {
+              sieveSize: '10.0 mm',
+              weightRetainedInGm: 0,
+              cumulativeWeightRetainedInGm: 0,
+              cumulativeRetainedInPercent: 0,
+              passignPercent: 0
             },
           ]
         },
@@ -2000,6 +2092,71 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                       }
                     </View>
                     : selectedTestSample.type === TEST_TYPES.NATURAL_MOISTURE_CONTENT ?
+                    <View>
+                      {
+                        concreteSampleTestItems.map((item: any, index: any) => (
+                          <View style={{ flexDirection: 'row' }}>
+                            <View style={{ flexDirection: 'column' }}>
+                              {
+                                item.details.values.filter((value: any) => !value.hide).map((value: any, indexDetails: number) => (
+                                  <View style={{ flexDirection: 'row' }}>
+                                    <View style={{ flexDirection: 'column', width: 80 }}>
+                                      {
+                                        index === 0 && indexDetails === 0 ?
+                                          <View style={{ height: 40 }}>
+                                            <Text style={{ fontWeight: '700' }}>{item.details.titles[0]}</Text>
+                                          </View> : null
+                                      }
+                                      <Text style={[styles.textStyle2, { textAlign: 'center' }]}>{value.description}</Text>
+                                    </View>
+
+                                    <View style={{ flexDirection: 'column', width: 120 }}>
+                                      {
+                                        index === 0 && indexDetails === 0 ?
+                                          <View style={{ height: 40 }}>
+                                            <Text style={{ fontWeight: '700' }}>{item.details.titles[1]}</Text>
+                                          </View> : null
+                                      }
+                                      <CustomTextInput rowItem={value}
+                                        tempProp={false}
+                                        styleName={styles.inputStyle3}
+                                        fieldName={'test1'}></CustomTextInput>
+                                    </View>
+                                    <View style={{ flexDirection: 'column', width: 120 }}>
+                                      {
+                                        index === 0 && indexDetails === 0 ?
+                                          <View style={{ height: 40 }}>
+                                            <Text style={{ fontWeight: '700' }}>{item.details.titles[2]}</Text>
+                                          </View> : null
+                                      }
+                                      <CustomTextInput rowItem={value}
+                                        tempProp={false}
+                                        styleName={styles.inputStyle3}
+                                        fieldName={'test2'}></CustomTextInput>
+                                    </View>
+                                    <View style={{ flexDirection: 'column', width: 120 }}>
+                                      {
+                                        index === 0 && indexDetails === 0 ?
+                                          <View style={{ height: 40 }}>
+                                            <Text style={{ fontWeight: '700' }}>{item.details.titles[3]}</Text>
+                                          </View> : null
+                                      }
+                                      <CustomTextInput rowItem={value}
+                                        tempProp={false}
+                                        styleName={styles.inputStyle3}
+                                        fieldName={'test3'}></CustomTextInput>
+                                    </View>
+                                  </View>
+                                ))
+                              }
+
+                            </View>
+                          </View>
+                        )
+                        )
+                      }
+                    </View>
+                    : selectedTestSample.type === TEST_TYPES.AGGREGATE_IMPACT_VALUE ?
                     <View>
                       {
                         concreteSampleTestItems.map((item: any, index: any) => (

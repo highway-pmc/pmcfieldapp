@@ -242,7 +242,7 @@ const AssignTestMaterials = ({ route, navigation }: { route: any, navigation: an
           }}
         />
       </View>
-      <ScrollView style={styles.Height100}>
+      <ScrollView showsVerticalScrollIndicator={false} style={styles.Height100}>
         {testMaterialsData.filter((subSeg: any) => {
             if (searchText && subSeg.name) {
               return subSeg.name.toLowerCase().includes(searchText.toLowerCase())
@@ -418,22 +418,27 @@ const styles = StyleSheet.create({
   inputStyle: {
     flex: 1,
     color: '#2c2c2c',
-    paddingLeft: 40,
+    paddingLeft: 45,
     paddingRight: 15,
-    borderWidth: 1,
-    borderRadius: 6,
-    borderColor: '#808089',
     backgroundColor: '#fff',
     fontWeight: '600',
-    paddingVertical: 5,
-    height: 45,
+    paddingVertical: 15,
+    height: 55
   },
   SectionStyle: {
     flexDirection: 'row',
-    height: 40,
-    marginBottom: 10,
-    marginTop: 5,
+    marginBottom: 20,
     position: 'relative',
+    marginHorizontal: -15,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.25,
+    shadowRadius: 20,
+    // Shadow for Android
+    elevation: 10,
+    alignItems: 'center',
+    marginTop: -10,
   },
   ImageSearch: {
     position: 'absolute',
@@ -444,25 +449,13 @@ const styles = StyleSheet.create({
     top: '27%',
   },
   UserCategory: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
     backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: '#BECADA',
-    borderStyle: 'solid',
-    borderRadius: 6,
-    paddingHorizontal: 15,
-    paddingVertical: 15,
-    marginBottom: 20,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+    borderRadius: 12,
+    padding: 20,
+    marginBottom: 15,
+    flexDirection: 'row',
+    alignContent: 'center',
+    justifyContent: 'space-between'
   },
   checkbox: {
     transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }],

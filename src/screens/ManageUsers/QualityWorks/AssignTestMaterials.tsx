@@ -243,6 +243,8 @@ const AssignTestMaterials = ({ route, navigation }: { route: any, navigation: an
         />
       </View>
       <ScrollView showsVerticalScrollIndicator={false} style={styles.Height100}>
+        <View style={{paddingBottom: 50}}>
+
         {testMaterialsData.filter((subSeg: any) => {
             if (searchText && subSeg.name) {
               return subSeg.name.toLowerCase().includes(searchText.toLowerCase())
@@ -274,6 +276,7 @@ const AssignTestMaterials = ({ route, navigation }: { route: any, navigation: an
             </TouchableOpacity>
           </View>
         ))}
+        </View>
       </ScrollView>
       {/* Modal Start */}
       <Modal

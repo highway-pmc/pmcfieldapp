@@ -9,6 +9,7 @@ const Input = ({
   isReadOnly = false,
   isRequired = false,
   style = {},
+  marginBottom = true,
   ...props
 }) => {
   const [error, setError] = useState('');
@@ -22,7 +23,7 @@ const Input = ({
   };
 
   return (
-    <View style={[styles.container, style]}>
+    <View style={[marginBottom && styles.container, style]}>
       {label && <Text style={styles.label}>{label}</Text>}
       <TextInput
         style={[styles.input, isReadOnly && styles.readOnly]}

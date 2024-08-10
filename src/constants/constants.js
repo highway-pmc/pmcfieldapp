@@ -416,6 +416,20 @@ export const TEST_TYPES = {
     REBOUND_HAMMER_TEST: 'rebound-hammer-test',
     COMPRESSIVE_STRENGTH: 'compressive-strength',
     SOUNDNESS: 'soundness',
+    NATURAL_MOISTURE_CONTENT: 'natural-moisture-content',
+    SPECIFIC_GRAVITY_AND_WATER_ABSORPTION: 'specific-gravity-and-water-absorption',
+    SILT_CONTENT: 'silt-content',
+    GRADATION: 'gradation',
+    PETROGRAPHIC_EXAMINATION: 'petrographic-examination',
+    AGREGATE_IMPACT_VALUE: 'agregate-impact-value',
+    NATURAL_MOISTURE_CONTENT: 'natural-moisture-content',
+    SPECIFIC_GRAVITY_AND_WATER_ABSORPTION: 'specific-gravity-and-water-absorption',
+    FI_EI: 'fi-ei',
+    LOS_ANGELES_ABRATION: 'los-angeles-abration',
+    ALKALI_AGGREGATE_REACTIVITY: 'alkali-aggregate-reactivity',
+    POLISHED_STONE_VALUE: 'polished-stone-value',
+    SAND_EQUIVALENT_VALUE: 'sand-equivalent-value',
+    STRIPPING_VALUE_TEST: 'stripping-value-test',
 };
 
 export const YES_NO_LIST = [

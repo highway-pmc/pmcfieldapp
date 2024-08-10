@@ -111,6 +111,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
       return;
     }
 
+    setOpenPopup(false);
     setSearchText('');
     setCurrentLevel(level)
     setBreadcrumbData([]);
@@ -180,11 +181,11 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
               setCurrentTestTypesData([]);
               testTypeData.materialType = TEST_MATERIALS_TYPES.CONCRETE; // TEMP - TODO
               setSelectedTestSample(testTypeData);
-  
+
               const testObservations: any = [];
               testObservations.push(getTestSampleConcreteObject(1));
               setConcreteSampleTestItems(testObservations);
-              setOpenPopup(!openPopup);
+              setOpenPopup(true);
             }
           } else if (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CEMENT) {
             testTypeData.materialType = TEST_MATERIALS_TYPES.CEMENT;
@@ -197,8 +198,16 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
               const testObservations: any = [];
               testObservations.push(getTestSampleCementSoundnessObject(1));
               setConcreteSampleTestItems(testObservations);
-              setOpenPopup(!openPopup);
+              setOpenPopup(true);
             }
+          } else if (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE) {
+            console.log('=======', testTypeData)
+            testTypeData.materialType = TEST_MATERIALS_TYPES.FINE_AGGREGATE;
+            setSelectedTestSample(testTypeData);
+            const testObservations: any = [];
+            testObservations.push(getTestSampleCementFineAggregateObject(1, testTypeData.type));
+            setConcreteSampleTestItems(testObservations);
+            setOpenPopup(true);
           }
           // breadCrumb.push({
           //   name: testTypeData.name,
@@ -318,7 +327,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
         Alert.alert('Error', `Testing of this sample will be started by ${item.startTestingByDate}`);
         return;
       }
-  
+
       testObservations.push(getTestSampleConcreteObject(1));
       if (item.testCategory === TEST_SAMPLE_CONCRETE_CATEGORY.C_28TH_DAYS) {
         testObservations.push(getTestSampleConcreteObject(2));
@@ -329,9 +338,9 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
       testObservations.push(getTestSampleCementCompressiveStrengthObject(1));
       testObservations[0].ageInDays.value = item.testCategory;
     }
-    
+
     setConcreteSampleTestItems(testObservations);
-    setOpenPopup(!openPopup);
+    setOpenPopup(true);
   }
 
   const onSubmitTestSample = (status: string) => {
@@ -341,14 +350,14 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
     objSampleTest7thOr28thDay.humidity = Number(objSampleTest7thOr28thDay.humidity);
     objSampleTest7thOr28thDay.observations = Object.assign([], concreteSampleTestItems);
     const sampleObservations: any = objSampleTest7thOr28thDay.observations && objSampleTest7thOr28thDay.observations;
-    for(let i = 0; i < sampleObservations?.length; i++) {
+    for (let i = 0; i < sampleObservations?.length; i++) {
       const observations = sampleObservations[i];
       observations['details']?.values.forEach((item: any) => {
         if (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CONCRETE || selectedTestSample.type === TEST_TYPES.COMPRESSIVE_STRENGTH) {
           item.wtCube = Number(item.wtCube);
           item.failureLoad = Number(item.failureLoad);
         }
-        
+
         if (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CONCRETE) {
           item.testArea = Number(item.testArea);
           item.volOfCube = Number(item.volOfCube);
@@ -358,7 +367,24 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
           item.beforePuttingInBoilingWater = Number(item.beforePuttingInBoilingWater);
           item.afterPuttingInBoilingWater = Number(item.afterPuttingInBoilingWater);
         }
+
+        if (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE) {
+          if (selectedTestSample.type === TEST_TYPES.GRADATION) {
+            item.weightRetainedInGm = Number(item.weightRetainedInGm);
+          } else if (selectedTestSample.type === TEST_TYPES.NATURAL_MOISTURE_CONTENT) {
+            item.test1 = Number(item.test1);
+            item.test2 = Number(item.test2);
+            item.test3 = Number(item.test3);
+          }
+        }
+
       })
+
+      if (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE) {
+        if (selectedTestSample.type === TEST_TYPES.GRADATION) {
+          observations.weightOfSample = Number(observations.weightOfSample);
+        }
+      }
 
       if (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CEMENT) {
         if (selectedTestSample.type === TEST_TYPES.COMPRESSIVE_STRENGTH) {
@@ -367,9 +393,10 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
       }
     }
 
+    console.log('=====@@====', JSON.stringify(objSampleTest7thOr28thDay))
     dispatch(generateTestSampleReport({
       projectId: loggedInUser.projectId,
-      testRFIId: selectedTestSample.type === TEST_TYPES.SOUNDNESS ? selectedTestSample.testRFIsData[0]?._id : selectedTestSample._id,
+      testRFIId: (selectedTestSample.type === TEST_TYPES.SOUNDNESS || currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE) ? selectedTestSample.testRFIsData[0]?._id : selectedTestSample._id,
       body: {
         sampleData: objSampleTest7thOr28thDay
       }
@@ -457,13 +484,13 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
       },
       dateOfTesting: {
         title: 'Date of Testing',
-        value: '' 
+        value: ''
       },
       avgStrength: {
         title: 'Avg. Strength (N/mm2)',
         value: 0
       },
-      
+
     }
   }
 
@@ -478,19 +505,142 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
         values: [
           {
             slNo: 1,
-            beforePuttingInBoilingWater : 0,
+            beforePuttingInBoilingWater: 0,
             afterPuttingInBoilingWater: 0,
             soundnessChatelier: 0
           },
           {
             slNo: 2,
-            beforePuttingInBoilingWater : 0,
+            beforePuttingInBoilingWater: 0,
             afterPuttingInBoilingWater: 0,
             soundnessChatelier: 0
           },
         ]
       },
     }
+  }
+
+  const getTestSampleCementFineAggregateObject = (sampleNum: any, taskType: string) => {
+    if (taskType === TEST_TYPES.GRADATION) {
+      return {
+        weightOfSample: 0,
+        sampleNo: {
+          title: 'Sample no',
+          value: sampleNum
+        },
+        details: {
+          titles: ['Sieve Size', 'Weight retained in gm', 'Cumulative weight retained in gm', 'Cumulative retained in %', '% Passing'],
+          values: [
+            {
+              sieveSize: '10.0 mm',
+              weightRetainedInGm: 0,
+              cumulativeWeightRetainedInGm: 0,
+              cumulativeRetainedInPercent: 0,
+              passignPercent: 0
+            },
+            {
+              sieveSize: '4.75 mm',
+              weightRetainedInGm: 0,
+              cumulativeWeightRetainedInGm: 0,
+              cumulativeRetainedInPercent: 0,
+              passignPercent: 0
+            },
+            {
+              sieveSize: '2.36 mm',
+              weightRetainedInGm: 0,
+              cumulativeWeightRetainedInGm: 0,
+              cumulativeRetainedInPercent: 0,
+              passignPercent: 0
+            },
+            {
+              sieveSize: '1.18 mm',
+              weightRetainedInGm: 0,
+              cumulativeWeightRetainedInGm: 0,
+              cumulativeRetainedInPercent: 0,
+              passignPercent: 0
+            },
+            {
+              sieveSize: '0.600 mm',
+              weightRetainedInGm: 0,
+              cumulativeWeightRetainedInGm: 0,
+              cumulativeRetainedInPercent: 0,
+              passignPercent: 0
+            },
+            {
+              sieveSize: '0.300 mm',
+              weightRetainedInGm: 0,
+              cumulativeWeightRetainedInGm: 0,
+              cumulativeRetainedInPercent: 0,
+              passignPercent: 0
+            },
+            {
+              sieveSize: '0.150 mm',
+              weightRetainedInGm: 0,
+              cumulativeWeightRetainedInGm: 0,
+              cumulativeRetainedInPercent: 0,
+              passignPercent: 0
+            },
+          ]
+        },
+      }
+    } else if (taskType === TEST_TYPES.NATURAL_MOISTURE_CONTENT) {
+      return {
+        sampleNo: {
+          title: 'Sample no',
+          value: sampleNum
+        },
+        details: {
+          titles: ['Description', 'Test 1', 'Test 2', 'Test 3'],
+          values: [
+            {
+              description: 'Weight of container + wet Soil in gm (W1)',
+              test1: 0,
+              test2: 0,
+              test3: 0,
+            },
+            {
+              description: 'Weight of container + Dry Soil in gm (W2)',
+              test1: 0,
+              test2: 0,
+              test3: 0,
+            },
+            {
+              description: 'Weight of container (W3) in gm',
+              test1: 0,
+              test2: 0,
+              test3: 0,
+            },
+            {
+              hide: true,
+              description: 'Weight of Water (W4 = W1-W2) in gm',
+              test1: 0,
+              test2: 0,
+              test3: 0,
+            },
+            {
+              hide: true,
+              description: 'Weight of Dry Soil (W5 = W2-W3) in gm',
+              test1: 0,
+              test2: 0,
+              test3: 0,
+            },
+            {
+              hide: true,
+              description: 'Moisture Content = (W4/W5)x100 in %',
+              test1: 0,
+              test2: 0,
+              test3: 0,
+            },
+            {
+              hide: true,
+              description: 'Avg. Moisture Content = w = (K1+K2+K3)/3',
+              avgMoistureContent: 0,
+            },
+          ]
+        },
+      }
+    }
+
   }
 
   useEffect(() => {
@@ -613,7 +763,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
     )
   }
 
-  const CustomTextInput = ({ rowItem, fieldName, tempProp = false }: { rowItem: any, fieldName: any, tempProp: boolean }) => {
+  const CustomTextInput = ({ rowItem, fieldName, tempProp = false, styleName = {} }: { rowItem: any, fieldName: any, tempProp: boolean, styleName: any }) => {
     const [value, setValue] = useState(rowItem[fieldName]);
     const updateValue = (text: any) => {
       { rowItem[fieldName + (tempProp ? '_TEMP' : '')] = text }
@@ -669,17 +819,19 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
     }*/
 
     return (
-      <TextInput
-        style={selectedTestSample.type === TEST_TYPES.SOUNDNESS ? styles.inputStyle4 : styles.inputStyle3}
+      <Input
+        style={styleName || styles.inputStyle3}
         placeholder=""
+        label={''}
+        marginBottom={false}
         autoCapitalize="none"
         keyboardType="email-address"
         returnKeyType="next"
         underlineColorAndroid="#f000"
         blurOnSubmit={false}
         value={value}
-        onChangeText={(text) => {
-          setValue(text); updateValue(text);
+        onChange={(value: string) => {
+          setValue(value); updateValue(value);
         }}
       //onBlur={() => onBlur()}
       />
@@ -726,8 +878,13 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
     setFormSampleTest7thOr28thDay({ ...formSampleTest7thOr28thDay, [name]: value });
   };
 
+  const handleInputChangeFineAggregate = (item: any, name: any, value: string | number | []) => {
+    item[name] = value;
+    setFormSampleTest7thOr28thDay({ ...formSampleTest7thOr28thDay});
+  };
+
   const testSampleForm = (materialType: any) => {
-    if (materialType === TEST_MATERIALS_TYPES.CONCRETE || materialType === TEST_MATERIALS_TYPES.CEMENT) {
+    if (materialType === TEST_MATERIALS_TYPES.CONCRETE || materialType === TEST_MATERIALS_TYPES.CEMENT || materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE) {
       return <View>
         <View style={{ flexDirection: 'column', paddingBottom: 40 }}>
           <View style={{ flexDirection: 'column' }}>
@@ -778,7 +935,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
             <Text style={styles.GenerateRFIFieldLabel}>Observations:</Text>
             <ScrollView style={styles.Width100} horizontal={true}>
               {
-                currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CONCRETE ?
+                currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CONCRETE &&
                 <View>
                   {
                     concreteSampleTestItems.map((item: any, index: any) => (
@@ -827,6 +984,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                                   }
                                   <CustomTextInput rowItem={value}
                                     tempProp={false}
+                                    styleName={styles.inputStyle3}
                                     fieldName={'wtCube'}></CustomTextInput>
                                 </View>
 
@@ -839,6 +997,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                                   }
                                   <CustomTextInput rowItem={value}
                                     tempProp={false}
+                                    styleName={styles.inputStyle3}
                                     fieldName={'volOfCube'}></CustomTextInput>
                                 </View>
 
@@ -851,6 +1010,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                                   }
                                   <CustomTextInput rowItem={value}
                                     tempProp={false}
+                                    styleName={styles.inputStyle3}
                                     fieldName={'testArea'}></CustomTextInput>
                                 </View>
 
@@ -863,6 +1023,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                                   }
                                   <CustomTextInput rowItem={value}
                                     tempProp={false}
+                                    styleName={styles.inputStyle3}
                                     fieldName={'failureLoad'}></CustomTextInput>
                                 </View>
 
@@ -903,14 +1064,16 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                     )
                   }
                 </View>
-                :
-                (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CEMENT &&
-                 (selectedTestSample.type === TEST_TYPES.COMPRESSIVE_STRENGTH ?
-                  <View>
-                    {
-                      concreteSampleTestItems.map((item: any, index: any) => (
-                        <View style={{ flexDirection: 'row' }}>
-                          {/* <View style={{ flexDirection: 'column', width: 80 }}>
+              }
+              {
+                currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CEMENT &&
+                (
+                  selectedTestSample.type === TEST_TYPES.COMPRESSIVE_STRENGTH ?
+                    <View>
+                      {
+                        concreteSampleTestItems.map((item: any, index: any) => (
+                          <View style={{ flexDirection: 'row' }}>
+                            {/* <View style={{ flexDirection: 'column', width: 80 }}>
                             <View style={index === 0 && { height: 40 }}>
                               {
                                 index === 0 && <Text style={{ fontWeight: '700' }}>{item.sampleNo.title}</Text>
@@ -921,8 +1084,8 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                             </View>
                           </View> */}
 
-                          <View style={{ flexDirection: 'column' }}>
-                            {/* <View style={{flexDirection: 'row'}}>
+                            <View style={{ flexDirection: 'column' }}>
+                              {/* <View style={{flexDirection: 'row'}}>
                                 {
                                   item.details.titles.map((title: any) => (
                                     <View style={{flexDirection: 'column'}}>
@@ -931,45 +1094,47 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                                   ))
                                 }
                                 </View> */}
-                            {/* <View> */}
-                            {
-                              item.details.values.map((value: any, indexDetails: number) => (
-                                <View style={{ flexDirection: 'row' }}>
-                                  <View style={{flexDirection: 'column', width: 60}}>
-                                        {
-                                          index === 0 && indexDetails === 0 ? 
-                                          <View style={{height: 40}}>
-                                            <Text style={{fontWeight: '700'}}>{item.details.titles[0]}</Text>
-                                        </View> : null
-                                        }
-                                        <Text style={[styles.textStyle2, {textAlign: 'center'}]}>{value.slNo}</Text>
-                                      </View>
+                              {/* <View> */}
+                              {
+                                item.details.values.map((value: any, indexDetails: number) => (
+                                  <View style={{ flexDirection: 'row' }}>
+                                    <View style={{ flexDirection: 'column', width: 60 }}>
+                                      {
+                                        index === 0 && indexDetails === 0 ?
+                                          <View style={{ height: 40 }}>
+                                            <Text style={{ fontWeight: '700' }}>{item.details.titles[0]}</Text>
+                                          </View> : null
+                                      }
+                                      <Text style={[styles.textStyle2, { textAlign: 'center' }]}>{value.slNo}</Text>
+                                    </View>
 
-                                  <View style={{ flexDirection: 'column', width: 120 }}>
-                                    {
-                                      index === 0 && indexDetails === 0 ?
-                                        <View style={{ height: 40 }}>
-                                          <Text style={{ fontWeight: '700' }}>{item.details.titles[1]}</Text>
-                                        </View> : null
-                                    }
-                                    <CustomTextInput rowItem={value}
-                                      tempProp={false}
-                                      fieldName={'wtCube'}></CustomTextInput>
-                                  </View>
+                                    <View style={{ flexDirection: 'column', width: 120 }}>
+                                      {
+                                        index === 0 && indexDetails === 0 ?
+                                          <View style={{ height: 40 }}>
+                                            <Text style={{ fontWeight: '700' }}>{item.details.titles[1]}</Text>
+                                          </View> : null
+                                      }
+                                      <CustomTextInput rowItem={value}
+                                        tempProp={false}
+                                        styleName={styles.inputStyle3}
+                                        fieldName={'wtCube'}></CustomTextInput>
+                                    </View>
 
-                                  <View style={{ flexDirection: 'column', width: 120 }}>
-                                    {
-                                      index === 0 && indexDetails === 0 ?
-                                        <View style={{ height: 40 }}>
-                                          <Text style={{ fontWeight: '700' }}>{item.details.titles[4]}</Text>
-                                        </View> : null
-                                    }
-                                    <CustomTextInput rowItem={value}
-                                      tempProp={false}
-                                      fieldName={'failureLoad'}></CustomTextInput>
-                                  </View>
+                                    <View style={{ flexDirection: 'column', width: 120 }}>
+                                      {
+                                        index === 0 && indexDetails === 0 ?
+                                          <View style={{ height: 40 }}>
+                                            <Text style={{ fontWeight: '700' }}>{item.details.titles[4]}</Text>
+                                          </View> : null
+                                      }
+                                      <CustomTextInput rowItem={value}
+                                        tempProp={false}
+                                        styleName={styles.inputStyle3}
+                                        fieldName={'failureLoad'}></CustomTextInput>
+                                    </View>
 
-                                  {/* <View style={{flexDirection: 'column', width: 120}}>
+                                    {/* <View style={{flexDirection: 'column', width: 120}}>
                                       {
                                           index === 0 ? 
                                           <View style={{height: 40}}>
@@ -979,13 +1144,13 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                                         <Text style={[styles.textStyle, {textAlign: 'center'}]}>{value.compressiveStrength}</Text>
                                       </View> */}
 
-                                </View>
-                              ))
-                            }
-                            {/* </View> */}
+                                  </View>
+                                ))
+                              }
+                              {/* </View> */}
 
-                          </View>
-                          {/* <View style={{flexDirection: 'column', width: 120}}>
+                            </View>
+                            {/* <View style={{flexDirection: 'column', width: 120}}>
                                 <View style={{height: 40}}>
                                   <Text style={{fontWeight: '700'}}>{item.avgStrength.title}</Text>
                                 </View>
@@ -993,67 +1158,190 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                                   <Text style={{textAlign: 'center'}}>{item.avgStrength.value}</Text>
                                 </View>
                             </View>*/}
-                        </View>
-                      )
-                      )
-                    }
-                  </View>
-                  :
-                  <View>
-                    {
-                      concreteSampleTestItems.map((item: any, index: any) => (
-                        <View style={{ flexDirection: 'row' }}>
-                          <View style={{ flexDirection: 'column' }}>
-                            {
-                              item.details.values.map((value: any, indexDetails: number) => (
-                                <View style={{ flexDirection: 'row' }}>
-                                  <View style={{flexDirection: 'column', width: 80}}>
-                                        {
-                                          index === 0 && indexDetails === 0 ? 
-                                          <View style={{height: 40}}>
-                                            <Text style={{fontWeight: '700'}}>{item.details.titles[0]}</Text>
-                                        </View> : null
-                                        }
-                                        <Text style={[styles.textStyle2, {textAlign: 'center'}]}>{value.slNo}</Text>
-                                      </View>
-
-                                  <View style={{ flexDirection: 'column', width: 150 }}>
-                                    {
-                                      index === 0 && indexDetails === 0 ?
-                                        <View style={{ height: 40 }}>
-                                          <Text style={{ fontWeight: '700' }}>{item.details.titles[1]}</Text>
-                                        </View> : null
-                                    }
-                                    <CustomTextInput rowItem={value}
-                                      tempProp={false}
-                                      fieldName={'beforePuttingInBoilingWater'}></CustomTextInput>
-                                  </View>
-
-                                  <View style={{ flexDirection: 'column', width: 150 }}>
-                                    {
-                                      index === 0 && indexDetails === 0 ?
-                                        <View style={{ height: 40 }}>
-                                          <Text style={{ fontWeight: '700' }}>{item.details.titles[2]}</Text>
-                                        </View> : null
-                                    }
-                                    <CustomTextInput rowItem={value}
-                                      tempProp={false}
-                                      fieldName={'afterPuttingInBoilingWater'}></CustomTextInput>
-                                  </View>
-                                </View>
-                              ))
-                            }
-
                           </View>
-                        </View>
-                      )
-                      )
-                    }
-                  </View>
-                 )
+                        )
+                        )
+                      }
+                    </View>
+                    :
+                    <View>
+                      {
+                        concreteSampleTestItems.map((item: any, index: any) => (
+                          <View style={{ flexDirection: 'row' }}>
+                            <View style={{ flexDirection: 'column' }}>
+                              {
+                                item.details.values.map((value: any, indexDetails: number) => (
+                                  <View style={{ flexDirection: 'row' }}>
+                                    <View style={{ flexDirection: 'column', width: 80 }}>
+                                      {
+                                        index === 0 && indexDetails === 0 ?
+                                          <View style={{ height: 40 }}>
+                                            <Text style={{ fontWeight: '700' }}>{item.details.titles[0]}</Text>
+                                          </View> : null
+                                      }
+                                      <Text style={[styles.textStyle2, { textAlign: 'center' }]}>{value.slNo}</Text>
+                                    </View>
+
+                                    <View style={{ flexDirection: 'column', width: 150 }}>
+                                      {
+                                        index === 0 && indexDetails === 0 ?
+                                          <View style={{ height: 40 }}>
+                                            <Text style={{ fontWeight: '700' }}>{item.details.titles[1]}</Text>
+                                          </View> : null
+                                      }
+                                      <CustomTextInput rowItem={value}
+                                        tempProp={false}
+                                        styleName={styles.inputStyle4}
+                                        fieldName={'beforePuttingInBoilingWater'}></CustomTextInput>
+                                    </View>
+
+                                    <View style={{ flexDirection: 'column', width: 150 }}>
+                                      {
+                                        index === 0 && indexDetails === 0 ?
+                                          <View style={{ height: 40 }}>
+                                            <Text style={{ fontWeight: '700' }}>{item.details.titles[2]}</Text>
+                                          </View> : null
+                                      }
+                                      <CustomTextInput rowItem={value}
+                                        tempProp={false}
+                                        styleName={styles.inputStyle4}
+                                        fieldName={'afterPuttingInBoilingWater'}></CustomTextInput>
+                                    </View>
+                                  </View>
+                                ))
+                              }
+
+                            </View>
+                          </View>
+                        )
+                        )
+                      }
+                    </View>
                 )
               }
-              
+              {
+                currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE &&
+                (
+                  (
+                    selectedTestSample.type === TEST_TYPES.GRADATION ?
+                    <View>
+                      <View style={{ flexDirection: 'column' }}>
+                        <Input
+                          label="Total weight of Sample in gm (T)"
+                          value={concreteSampleTestItems[0].weightOfSample}
+                          onChange={(value: any) => handleInputChangeFineAggregate(concreteSampleTestItems[0], 'weightOfSample', value)}
+                          isRequired={true}
+                        />
+                      </View>
+                      {
+                        concreteSampleTestItems.map((item: any, index: any) => (
+                          <View style={{ flexDirection: 'row' }}>
+                            <View style={{ flexDirection: 'column' }}>
+                              {
+                                item.details.values.map((value: any, indexDetails: number) => (
+                                  <View style={{ flexDirection: 'row' }}>
+                                    <View style={{ flexDirection: 'column', width: 80 }}>
+                                      {
+                                        index === 0 && indexDetails === 0 ?
+                                          <View style={{ height: 40 }}>
+                                            <Text style={{ fontWeight: '700' }}>{item.details.titles[0]}</Text>
+                                          </View> : null
+                                      }
+                                      <Text style={[styles.textStyle2, { textAlign: 'center' }]}>{value.sieveSize}</Text>
+                                    </View>
+
+                                    <View style={{ flexDirection: 'column', width: 150 }}>
+                                      {
+                                        index === 0 && indexDetails === 0 ?
+                                          <View style={{ height: 40 }}>
+                                            <Text style={{ fontWeight: '700' }}>{item.details.titles[1]}</Text>
+                                          </View> : null
+                                      }
+                                      <CustomTextInput rowItem={value}
+                                        tempProp={false}
+                                        styleName={styles.inputStyle4}
+                                        fieldName={'weightRetainedInGm'}></CustomTextInput>
+                                    </View>
+                                  </View>
+                                ))
+                              }
+
+                            </View>
+                          </View>
+                        )
+                        )
+                      }
+                    </View>
+                    : selectedTestSample.type === TEST_TYPES.NATURAL_MOISTURE_CONTENT ?
+                    <View>
+                      {
+                        concreteSampleTestItems.map((item: any, index: any) => (
+                          <View style={{ flexDirection: 'row' }}>
+                            <View style={{ flexDirection: 'column' }}>
+                              {
+                                item.details.values.filter((value: any) => !value.hide).map((value: any, indexDetails: number) => (
+                                  <View style={{ flexDirection: 'row' }}>
+                                    <View style={{ flexDirection: 'column', width: 80 }}>
+                                      {
+                                        index === 0 && indexDetails === 0 ?
+                                          <View style={{ height: 40 }}>
+                                            <Text style={{ fontWeight: '700' }}>{item.details.titles[0]}</Text>
+                                          </View> : null
+                                      }
+                                      <Text style={[styles.textStyle2, { textAlign: 'center' }]}>{value.description}</Text>
+                                    </View>
+
+                                    <View style={{ flexDirection: 'column', width: 120 }}>
+                                      {
+                                        index === 0 && indexDetails === 0 ?
+                                          <View style={{ height: 40 }}>
+                                            <Text style={{ fontWeight: '700' }}>{item.details.titles[1]}</Text>
+                                          </View> : null
+                                      }
+                                      <CustomTextInput rowItem={value}
+                                        tempProp={false}
+                                        styleName={styles.inputStyle3}
+                                        fieldName={'test1'}></CustomTextInput>
+                                    </View>
+                                    <View style={{ flexDirection: 'column', width: 120 }}>
+                                      {
+                                        index === 0 && indexDetails === 0 ?
+                                          <View style={{ height: 40 }}>
+                                            <Text style={{ fontWeight: '700' }}>{item.details.titles[2]}</Text>
+                                          </View> : null
+                                      }
+                                      <CustomTextInput rowItem={value}
+                                        tempProp={false}
+                                        styleName={styles.inputStyle3}
+                                        fieldName={'test2'}></CustomTextInput>
+                                    </View>
+                                    <View style={{ flexDirection: 'column', width: 120 }}>
+                                      {
+                                        index === 0 && indexDetails === 0 ?
+                                          <View style={{ height: 40 }}>
+                                            <Text style={{ fontWeight: '700' }}>{item.details.titles[3]}</Text>
+                                          </View> : null
+                                      }
+                                      <CustomTextInput rowItem={value}
+                                        tempProp={false}
+                                        styleName={styles.inputStyle3}
+                                        fieldName={'test3'}></CustomTextInput>
+                                    </View>
+                                  </View>
+                                ))
+                              }
+
+                            </View>
+                          </View>
+                        )
+                        )
+                      }
+                    </View>
+                    : null
+                  )
+                )
+              }
+
             </ScrollView>
           </View>
 
@@ -1222,7 +1510,8 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                     <Text style={styles.HeadText}>{item.name}</Text>
                   </View>
                 </TouchableOpacity>
-              )) : selectedTestSample.type != TEST_TYPES.SOUNDNESS && tasksListing()
+              )) : ((currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CONCRETE && selectedTestSample?.type === TEST_TYPES.CUBE_TEST) ||
+                (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CEMENT && selectedTestSample?.type === TEST_TYPES.COMPRESSIVE_STRENGTH)) && tasksListing()
             :
             null
         }
@@ -1301,7 +1590,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
         transparent={true}
         visible={openPopup}
         onRequestClose={() => {
-          setOpenPopup(!openPopup);
+          setOpenPopup(false);
         }}>
         <View style={styles.bodyPopup}>
           <View style={styles.centeredView}>
@@ -1310,7 +1599,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                 <Text style={styles.modalText}>Test Sample</Text>
                 <TouchableOpacity
                   style={styles.buttonClose}
-                  onPress={() => setOpenPopup(!openPopup)}>
+                  onPress={() => setOpenPopup(false)}>
                   <Image
                     style={styles.CloseIcon}
                     tintColor={'#333'}

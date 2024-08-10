@@ -417,12 +417,10 @@ export const TEST_TYPES = {
     COMPRESSIVE_STRENGTH: 'compressive-strength',
     SOUNDNESS: 'soundness',
     NATURAL_MOISTURE_CONTENT: 'natural-moisture-content',
-    SPECIFIC_GRAVITY_AND_WATER_ABSORPTION: 'specific-gravity-and-water-absorption',
     SILT_CONTENT: 'silt-content',
     GRADATION: 'gradation',
     PETROGRAPHIC_EXAMINATION: 'petrographic-examination',
     AGREGATE_IMPACT_VALUE: 'agregate-impact-value',
-    NATURAL_MOISTURE_CONTENT: 'natural-moisture-content',
     SPECIFIC_GRAVITY_AND_WATER_ABSORPTION: 'specific-gravity-and-water-absorption',
     FI_EI: 'fi-ei',
     LOS_ANGELES_ABRATION: 'los-angeles-abration',
@@ -468,6 +466,15 @@ export const TEST_CONDUCTED_BY_LIST = [
     },
     {
         label: 'Jointly', value: 'Jointly'
+    },
+];
+
+export const TYPE_OF_CONCRETE_SURFACE_LIST = [
+    {
+        label: 'Wearing surface', value: 'Wearing surface'
+    },
+    {
+        label: 'Other concrete works', value: 'Other concrete works'
     },
 ];
 

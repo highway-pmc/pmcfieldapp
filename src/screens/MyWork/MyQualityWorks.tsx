@@ -400,6 +400,11 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
               item.test2 = Number(item.test2);
               item.test3 = Number(item.test3);
             }
+          } else if (selectedTestSample.type === TEST_TYPES.FI_EI) {
+            item.totalWeightOfAggregateRetained = Number(item.totalWeightOfAggregateRetained);
+            item.weightPassingFlakinessGauge = Number(item.weightPassingFlakinessGauge);
+            item.weightRetainedFlakinessGauge = Number(item.weightRetainedFlakinessGauge);
+            item.weightRetainedElongationGauge = Number(item.weightRetainedElongationGauge);
           }
         }
 
@@ -424,7 +429,6 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
       }
     }
 
-    console.log('=====@@====', JSON.stringify(objSampleTest7thOr28thDay))
     dispatch(generateTestSampleReport({
       projectId: loggedInUser.projectId,
       testRFIId: (selectedTestSample.type === TEST_TYPES.SOUNDNESS || currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE
@@ -1094,7 +1098,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
           'Weight passing on flakiness gauge in gm', 'Weight retained on flakiness gauge in gm', 'Weight retained on elongation gauge in mm'],
           values: [
             {
-              sizeFraction: '63.0 mm',
+              sizeFraction: '63.0',
               sizeFractionOfAggregateRetained: '50.0',
               totalWeightOfAggregateRetained: 0,
               weightPassingFlakinessGauge: 0,
@@ -1102,25 +1106,77 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
               weightRetainedElongationGauge: 0
             },
             {
-              sieveSize: '40.0 mm',
-              weightRetainedInGm: 0,
-              cumulativeWeightRetainedInGm: 0,
-              cumulativeRetainedInPercent: 0,
-              passignPercent: 0
+              sizeFraction: '50.0',
+              sizeFractionOfAggregateRetained: '40.0',
+              totalWeightOfAggregateRetained: 0,
+              weightPassingFlakinessGauge: 0,
+              weightRetainedFlakinessGauge: 0,
+              weightRetainedElongationGauge: 0
             },
             {
-              sieveSize: '20.0 mm',
-              weightRetainedInGm: 0,
-              cumulativeWeightRetainedInGm: 0,
-              cumulativeRetainedInPercent: 0,
-              passignPercent: 0
+              sizeFraction: '40.0',
+              sizeFractionOfAggregateRetained: '31.5',
+              totalWeightOfAggregateRetained: 0,
+              weightPassingFlakinessGauge: 0,
+              weightRetainedFlakinessGauge: 0,
+              weightRetainedElongationGauge: 0
             },
             {
-              sieveSize: '10.0 mm',
-              weightRetainedInGm: 0,
-              cumulativeWeightRetainedInGm: 0,
-              cumulativeRetainedInPercent: 0,
-              passignPercent: 0
+              sizeFraction: '31.5',
+              sizeFractionOfAggregateRetained: '25.0',
+              totalWeightOfAggregateRetained: 0,
+              weightPassingFlakinessGauge: 0,
+              weightRetainedFlakinessGauge: 0,
+              weightRetainedElongationGauge: 0
+            },
+            {
+              sizeFraction: '25.0',
+              sizeFractionOfAggregateRetained: '20.0',
+              totalWeightOfAggregateRetained: 0,
+              weightPassingFlakinessGauge: 0,
+              weightRetainedFlakinessGauge: 0,
+              weightRetainedElongationGauge: 0
+            },
+            {
+              sizeFraction: '20.0',
+              sizeFractionOfAggregateRetained: '16.0',
+              totalWeightOfAggregateRetained: 0,
+              weightPassingFlakinessGauge: 0,
+              weightRetainedFlakinessGauge: 0,
+              weightRetainedElongationGauge: 0
+            },
+            {
+              sizeFraction: '16.0',
+              sizeFractionOfAggregateRetained: '12.5',
+              totalWeightOfAggregateRetained: 0,
+              weightPassingFlakinessGauge: 0,
+              weightRetainedFlakinessGauge: 0,
+              weightRetainedElongationGauge: 0
+            },
+            {
+              sizeFraction: '12.5',
+              sizeFractionOfAggregateRetained: '10.0',
+              totalWeightOfAggregateRetained: 0,
+              weightPassingFlakinessGauge: 0,
+              weightRetainedFlakinessGauge: 0,
+              weightRetainedElongationGauge: 0
+            },
+            {
+              sizeFraction: '10.0',
+              sizeFractionOfAggregateRetained: '6.3',
+              totalWeightOfAggregateRetained: 0,
+              weightPassingFlakinessGauge: 0,
+              weightRetainedFlakinessGauge: 0,
+              weightRetainedElongationGauge: 0
+            },
+            {
+              hide: true,
+              sizeFraction: 'Total',
+              sizeFractionOfAggregateRetained: '',
+              totalWeightOfAggregateRetained: 0,
+              weightPassingFlakinessGauge: 0,
+              weightRetainedFlakinessGauge: 0,
+              weightRetainedElongationGauge: 0
             },
           ]
         },
@@ -2210,6 +2266,92 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                                         tempProp={false}
                                         styleName={styles.inputStyle3}
                                         fieldName={'test3'}></CustomTextInput>
+                                    </View>
+                                  </View>
+                                ))
+                              }
+
+                            </View>
+                          </View>
+                        )
+                        )
+                      }
+                    </View>
+                    : selectedTestSample.type === TEST_TYPES.FI_EI ?
+                    <View>
+                      {
+                        concreteSampleTestItems.map((item: any, index: any) => (
+                          <View style={{ flexDirection: 'row' }}>
+                            <View style={{ flexDirection: 'column' }}>
+                              {
+                                item.details.values.filter((value: any) => !value.hide).map((value: any, indexDetails: number) => (
+                                  <View style={{ flexDirection: 'row' }}>
+                                    <View style={{ flexDirection: 'column', width: 80 }}>
+                                      {
+                                        index === 0 && indexDetails === 0 ?
+                                          <View style={{ height: 40 }}>
+                                            <Text style={{ fontWeight: '700' }}>{item.details.titles[0]}</Text>
+                                          </View> : null
+                                      }
+                                      <Text style={[styles.textStyle2, { textAlign: 'center' }]}>{value.sizeFraction}</Text>
+                                    </View>
+
+                                    <View style={{ flexDirection: 'column', width: 120 }}>
+                                      {
+                                        index === 0 && indexDetails === 0 ?
+                                          <View style={{ height: 40 }}>
+                                            <Text style={{ fontWeight: '700' }}>{item.details.titles[1]}</Text>
+                                          </View> : null
+                                      }
+                                      <Text style={[styles.textStyle2, { textAlign: 'center' }]}>{value.sizeFractionOfAggregateRetained}</Text>
+                                    </View>
+                                    <View style={{ flexDirection: 'column', width: 120 }}>
+                                      {
+                                        index === 0 && indexDetails === 0 ?
+                                          <View style={{ height: 40 }}>
+                                            <Text style={{ fontWeight: '700' }}>{item.details.titles[2]}</Text>
+                                          </View> : null
+                                      }
+                                      <CustomTextInput rowItem={value}
+                                        tempProp={false}
+                                        styleName={styles.inputStyle3}
+                                        fieldName={'totalWeightOfAggregateRetained'}></CustomTextInput>
+                                    </View>
+                                    <View style={{ flexDirection: 'column', width: 120 }}>
+                                      {
+                                        index === 0 && indexDetails === 0 ?
+                                          <View style={{ height: 40 }}>
+                                            <Text style={{ fontWeight: '700' }}>{item.details.titles[3]}</Text>
+                                          </View> : null
+                                      }
+                                      <CustomTextInput rowItem={value}
+                                        tempProp={false}
+                                        styleName={styles.inputStyle3}
+                                        fieldName={'weightPassingFlakinessGauge'}></CustomTextInput>
+                                    </View>
+                                    <View style={{ flexDirection: 'column', width: 120 }}>
+                                      {
+                                        index === 0 && indexDetails === 0 ?
+                                          <View style={{ height: 40 }}>
+                                            <Text style={{ fontWeight: '700' }}>{item.details.titles[4]}</Text>
+                                          </View> : null
+                                      }
+                                      <CustomTextInput rowItem={value}
+                                        tempProp={false}
+                                        styleName={styles.inputStyle3}
+                                        fieldName={'weightRetainedFlakinessGauge'}></CustomTextInput>
+                                    </View>
+                                    <View style={{ flexDirection: 'column', width: 120 }}>
+                                      {
+                                        index === 0 && indexDetails === 0 ?
+                                          <View style={{ height: 40 }}>
+                                            <Text style={{ fontWeight: '700' }}>{item.details.titles[5]}</Text>
+                                          </View> : null
+                                      }
+                                      <CustomTextInput rowItem={value}
+                                        tempProp={false}
+                                        styleName={styles.inputStyle3}
+                                        fieldName={'weightRetainedElongationGauge'}></CustomTextInput>
                                     </View>
                                   </View>
                                 ))

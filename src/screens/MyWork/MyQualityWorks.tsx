@@ -371,10 +371,12 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
         if (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE) {
           if (selectedTestSample.type === TEST_TYPES.GRADATION) {
             item.weightRetainedInGm = Number(item.weightRetainedInGm);
-          } else if (selectedTestSample.type === TEST_TYPES.NATURAL_MOISTURE_CONTENT) {
-            item.test1 = Number(item.test1);
-            item.test2 = Number(item.test2);
-            item.test3 = Number(item.test3);
+          } else if (selectedTestSample.type === TEST_TYPES.NATURAL_MOISTURE_CONTENT || selectedTestSample.type === TEST_TYPES.SPECIFIC_GRAVITY_AND_WATER_ABSORPTION) {
+            if (!item.hide) {
+              item.test1 = Number(item.test1);
+              item.test2 = Number(item.test2);
+              item.test3 = Number(item.test3);
+            }
           }
         }
 
@@ -633,8 +635,87 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
             },
             {
               hide: true,
-              description: 'Avg. Moisture Content = w = (K1+K2+K3)/3',
+              description: 'Avg. Moisture Content',
               avgMoistureContent: 0,
+            },
+          ]
+        },
+      }
+    } else if (taskType === TEST_TYPES.SPECIFIC_GRAVITY_AND_WATER_ABSORPTION) {
+      return {
+        sampleNo: {
+          title: 'Sample no',
+          value: sampleNum
+        },
+        details: {
+          titles: ['Description', 'Test 1', 'Test 2', 'Test 3'],
+          values: [
+            {
+              description: 'Temperature of Water in C',
+              test1: 0,
+              test2: 0,
+              test3: 0,
+            },
+            {
+              description: 'Pycnometer Bottle No.',
+              test1: 0,
+              test2: 0,
+              test3: 0,
+            },
+            {
+              description: 'Weight of SSD Sample in gm (W1) in gm',
+              test1: 0,
+              test2: 0,
+              test3: 0,
+            },
+            {
+              description: 'Weight of Pycnometer Bottle + water + Sample (W2) in gm ',
+              test1: 0,
+              test2: 0,
+              test3: 0,
+            },
+            {
+              description: 'Weight of Pycnometer Bottle + water (W3) in gm',
+              test1: 0,
+              test2: 0,
+              test3: 0,
+            },
+            {
+              description: 'Weight of oven dry sample (W4) in gm',
+              test1: 0,
+              test2: 0,
+              test3: 0,
+            },
+            {
+              hide: true,
+              description: 'Specific Gravity = W4/(W4-(W2-W3))',
+              test1: 0,
+              test2: 0,
+              test3: 0,
+            },
+            {
+              hide: true,
+              description: 'Apparent Specific Gravity= W4/(W4-(W2-W3))',
+              test1: 0,
+              test2: 0,
+              test3: 0,
+            },
+            {
+              hide: true,
+              description: 'Water Absorption= 100 x (W1-W4)/W4 in %',
+              test1: 0,
+              test2: 0,
+              test3: 0,
+            },
+            {
+              hide: true,
+              description: 'Avg. Specific Gravity',
+              avgSpecificGravity: 0,
+            },
+            {
+              hide: true,
+              description: 'Avg. Water Absorption in %',
+              avgWaterAbsorption: 0,
             },
           ]
         },
@@ -1273,6 +1354,71 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                       }
                     </View>
                     : selectedTestSample.type === TEST_TYPES.NATURAL_MOISTURE_CONTENT ?
+                    <View>
+                      {
+                        concreteSampleTestItems.map((item: any, index: any) => (
+                          <View style={{ flexDirection: 'row' }}>
+                            <View style={{ flexDirection: 'column' }}>
+                              {
+                                item.details.values.filter((value: any) => !value.hide).map((value: any, indexDetails: number) => (
+                                  <View style={{ flexDirection: 'row' }}>
+                                    <View style={{ flexDirection: 'column', width: 80 }}>
+                                      {
+                                        index === 0 && indexDetails === 0 ?
+                                          <View style={{ height: 40 }}>
+                                            <Text style={{ fontWeight: '700' }}>{item.details.titles[0]}</Text>
+                                          </View> : null
+                                      }
+                                      <Text style={[styles.textStyle2, { textAlign: 'center' }]}>{value.description}</Text>
+                                    </View>
+
+                                    <View style={{ flexDirection: 'column', width: 120 }}>
+                                      {
+                                        index === 0 && indexDetails === 0 ?
+                                          <View style={{ height: 40 }}>
+                                            <Text style={{ fontWeight: '700' }}>{item.details.titles[1]}</Text>
+                                          </View> : null
+                                      }
+                                      <CustomTextInput rowItem={value}
+                                        tempProp={false}
+                                        styleName={styles.inputStyle3}
+                                        fieldName={'test1'}></CustomTextInput>
+                                    </View>
+                                    <View style={{ flexDirection: 'column', width: 120 }}>
+                                      {
+                                        index === 0 && indexDetails === 0 ?
+                                          <View style={{ height: 40 }}>
+                                            <Text style={{ fontWeight: '700' }}>{item.details.titles[2]}</Text>
+                                          </View> : null
+                                      }
+                                      <CustomTextInput rowItem={value}
+                                        tempProp={false}
+                                        styleName={styles.inputStyle3}
+                                        fieldName={'test2'}></CustomTextInput>
+                                    </View>
+                                    <View style={{ flexDirection: 'column', width: 120 }}>
+                                      {
+                                        index === 0 && indexDetails === 0 ?
+                                          <View style={{ height: 40 }}>
+                                            <Text style={{ fontWeight: '700' }}>{item.details.titles[3]}</Text>
+                                          </View> : null
+                                      }
+                                      <CustomTextInput rowItem={value}
+                                        tempProp={false}
+                                        styleName={styles.inputStyle3}
+                                        fieldName={'test3'}></CustomTextInput>
+                                    </View>
+                                  </View>
+                                ))
+                              }
+
+                            </View>
+                          </View>
+                        )
+                        )
+                      }
+                    </View>
+                    : selectedTestSample.type === TEST_TYPES.SPECIFIC_GRAVITY_AND_WATER_ABSORPTION ?
                     <View>
                       {
                         concreteSampleTestItems.map((item: any, index: any) => (

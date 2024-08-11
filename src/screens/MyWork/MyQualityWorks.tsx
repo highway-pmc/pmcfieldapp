@@ -2653,7 +2653,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                 <View>
                   <Text style={styles.modalLabel}>{selectedTestSample?.name}</Text>
                 </View>
-                <ScrollView>
+                <ScrollView showsVerticalScrollIndicator={false} style={[styles.Width100, styles.Height90]}>
                   <Fragment>
                     <StatusBar barStyle="dark-content" />
                     <SafeAreaView>
@@ -2709,7 +2709,10 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   Width100: {
-    width: Dimensions.get("screen").width,
+    width: Dimensions.get("screen").width - 20,
+  },
+  Height90: {
+    height: Dimensions.get("screen").height - 300,
   },
   SearchBox: {
     flexDirection: 'row',

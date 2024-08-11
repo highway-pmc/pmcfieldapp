@@ -4,9 +4,11 @@ import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import { HeaderItems, PROJECT_TYPE, RFI_STATUS, RFIs_TYPE, SEGMENT_TYPES_DISPLAY, USER_CATEGORY_DISPLAY, WORK_ASSIGNMENT_LEVEL, WORK_TYPE } from "../../constants/constants"
 import { useDispatch, useSelector } from 'react-redux';
 import { clearRFITasksEvent, getRFITaskUsers, getRFITasks, actionGenerateRFI } from './actions';
-import { getDisplayDate, groupBy } from '../../utils/Utils';
+import { getDbDateFromDDMMYYYY, getDisplayDate, groupBy } from '../../utils/Utils';
 import LoadingAnimation from '../Common/LoadingAnimation';
-import CalendarPicker from 'react-native-calendar-picker';
+// import CalendarPicker from 'react-native-calendar-picker';
+import CalendarPicker from '../../components/UI/CalenderPicker';
+import TimePicker from '../../components/UI/TimePicker';
 import DropDownPicker from 'react-native-dropdown-picker';
 
 const RFIsStructureTaskListing = (props: any) => {
@@ -527,7 +529,7 @@ const RFIsStructureTaskListing = (props: any) => {
     const reqData = {
       taskId: selectedTaskData._id,
       workAssignmentIds: selectedTaskData.workAssignmentIds,
-      rfiDateTime: selectedTaskData.formRFIDate + ' ' + selectedTaskData.formRFITime + ":00",
+      rfiDateTime: `${getDbDateFromDDMMYYYY(selectedTaskData.formRFIDate)} ${selectedTaskData.formRFITime}:00`,
       rfiStatus: RFI_STATUS.GENERATED,
       comments: "",
       receiverIds: taskUsersData.map((item: any) => {
@@ -557,22 +559,25 @@ const RFIsStructureTaskListing = (props: any) => {
 
   return (
     <View style={styles.Container}>
-      <View style={styles.BreadcrumbContainer}>
-        {
-          breadcrumbData.map((item: any, index) => (
-            <View style={{ flexDirection: 'row' }}>
-              {
-                index == 0 ? <Text style={styles.BreadcrumbPrevTextUnderline} onPress={() => index === 0 && (setCurrentLevel(1), setBreadcrumbData([]))}>{item.name}</Text>
-                  : index === (breadcrumbData.length - 1) ? <Text style={styles.BreadcrumbCurrentText}>{item.name}</Text>
-                    : <Text style={styles.BreadcrumbPrevText}>{item.name}</Text>
-              }
-              {
-                index < (breadcrumbData.length - 1) && <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
-              }
-            </View>
-          ))
-        }
-      </View>
+      {breadcrumbData.length ? <View style={styles.BreadcrumbContainer}>
+        <ScrollView showsHorizontalScrollIndicator={false} horizontal={true} style={styles.scrollView}>
+          {
+            breadcrumbData.map((item: any, index) => (
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                {
+                  index == 0 ? <Text style={styles.BreadcrumbPrevTextUnderline} onPress={() => index === 0 && (setCurrentLevel(1), setBreadcrumbData([]))}>{item.name}</Text>
+                    : index === (breadcrumbData.length - 1) ? <Text style={styles.BreadcrumbCurrentText}>{item.name}</Text>
+                      : <Text style={styles.BreadcrumbPrevText}>{item.name}</Text>
+                }
+                {
+                  index < (breadcrumbData.length - 1) && <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
+                }
+              </View>
+            ))
+          }
+          </ScrollView>
+      </View> : null}
+      
       {
         (currentLevel !== 1 && currentLevel !== 5) && <View style={styles.SearchBox}>
           <Image
@@ -598,7 +603,7 @@ const RFIsStructureTaskListing = (props: any) => {
         {
           currentLevel === 1 &&
           rfisTasksData.map((projModuleItem: any, projModuleIndex) => (
-            <TouchableOpacity style={[styles.StartWorkCard, styles.StartBorder]} onPress={() => onClick(2, 1, projModuleIndex)}>
+            <TouchableOpacity style={[styles.item, styles.StartBorder]} onPress={() => onClick(2, 1, projModuleIndex)}>
               <View style={styles.leftContainer}>
                 <Text style={styles.HeadText}>{projModuleItem.name}</Text>
               </View>
@@ -681,7 +686,7 @@ const RFIsStructureTaskListing = (props: any) => {
         {
           currentLevel === 6 &&
           segmentsByGroupOnType && Object.keys(segmentsByGroupOnType).length && Object.keys(segmentsByGroupOnType).map((item) => (
-            <TouchableOpacity style={[styles.StartWorkCard, styles.StartBorder]} onPress={() => onSegmentTypeClick(item)}>
+            <TouchableOpacity style={[styles.item, styles.StartBorder]} onPress={() => onSegmentTypeClick(item)}>
               <View style={styles.leftContainer}>
                 <Text style={styles.HeadText}>{segmentsByGroupOnType[item].length}</Text>
                 <Text style={styles.MyWorkSubHead}>{SEGMENT_TYPES_DISPLAY[item]}</Text>
@@ -698,7 +703,7 @@ const RFIsStructureTaskListing = (props: any) => {
               return true;
             }
           }).map((item: any, index) => (
-            <TouchableOpacity style={[styles.StartWorkCard, styles.StartBorder]} onPress={() => onClickNested(3, item)}>
+            <TouchableOpacity style={[styles.item, styles.StartBorder]} onPress={() => onClickNested(3, item)}>
               <View style={styles.leftContainer}>
                 <Text style={styles.HeadText}>{item.name}</Text>
                 {/* <Text style={styles.MyWorkSubHead}>Sub Text</Text> */}
@@ -715,7 +720,7 @@ const RFIsStructureTaskListing = (props: any) => {
               return true;
             }
           }).map((item: any, index) => (
-            <TouchableOpacity style={[styles.StartWorkCard, styles.StartBorder]} onPress={() => onClickNested(4, item)}>
+            <TouchableOpacity style={[styles.item, styles.StartBorder]} onPress={() => onClickNested(4, item)}>
               <View style={styles.leftContainer}>
                 <Text style={styles.HeadText}>{item.name}</Text>
               </View>
@@ -749,7 +754,7 @@ const RFIsStructureTaskListing = (props: any) => {
               return true;
             }
           }).map((item: any, index) => (
-            <TouchableOpacity style={[styles.StartWorkCard, styles.StartBorder]} onPress={() => onClickNested(5, item)}>
+            <TouchableOpacity style={[styles.item, styles.StartBorder]} onPress={() => onClickNested(5, item)}>
               <View style={styles.leftContainer}>
                 <Text style={styles.HeadText}>{item.name}</Text>
               </View>
@@ -825,28 +830,12 @@ const RFIsStructureTaskListing = (props: any) => {
 const ExpanbableComponent = ({ item, onClickFunction, onGenerateRFI }: { item: any, onClickFunction: any, onGenerateRFI: any }) => {
   const [layoutHeight, setLayoutHeight] = useState(0);
   const [rfiDate, setRFIDate] = useState('');
-  const [hours, setHours] = useState([]);
-  const [minutes, setMinutes] = useState([]);
-  const [timeFormats, setTimeFormats] = useState([]);
-
-  const [hour, setHour] = useState('12');
-  const [minute, setMinute] = useState('00');
-  const [timeFormat, setTimeFormat] = useState('AM');
-
-  const [openHours, setOpenHours] = useState(false);
-  const [openMinutes, setOpenMinutes] = useState(false);
-  const [openTimeFormats, setOpenTimeFormats] = useState(false);
+  const [rfiTime, setRFITime] = useState('');
 
   const [openCalendar, setOpenCalendar] = useState(false);
   const { width, height } = Dimensions.get('window');
-  const DEFAULT_COMPONENT_HEIGHT = 230;
-  const DEFAULT_CALENDAR_HEIGHT = 270;
-
-  useEffect(() => {
-    getHours();
-    getMins();
-    getTimeFormats();
-  }, [])
+  const DEFAULT_COMPONENT_HEIGHT = 245;
+  const DEFAULT_CALENDAR_HEIGHT = 285;
 
   useEffect(() => {
     if (item.isExpanded) {
@@ -865,38 +854,6 @@ const ExpanbableComponent = ({ item, onClickFunction, onGenerateRFI }: { item: a
     }
   }
 
-  const getHours = () => {
-    let hours = [];
-    for (let i = 1; i <= 12; i++) {
-      hours.push({
-        label: i < 10 ? '0' + i : '' + i,
-        value: i < 10 ? '0' + i : '' + i
-      });
-    }
-    setHours(hours);
-  }
-
-  const getMins = () => {
-    let mins = [];
-    for (let i = 0; i < 60; i = i + 10) {
-      mins.push({
-        label: i < 10 ? '0' + i : '' + i,
-        value: i < 10 ? '0' + i : '' + i
-      });
-    }
-    setMinutes(mins);
-  }
-
-  const getTimeFormats = () => {
-    setTimeFormats([{
-      label: 'AM',
-      value: 'AM'
-    }, {
-      label: 'PM',
-      value: 'PM'
-    }]);
-  }
-
   const onGenerate = () => {
     if (!rfiDate) {
       Alert.alert('Error', 'RFI Date is required.');
@@ -904,20 +861,6 @@ const ExpanbableComponent = ({ item, onClickFunction, onGenerateRFI }: { item: a
     }
     item.formRFIDate = rfiDate;
 
-    let rfiTime = '';
-    if (timeFormat === 'PM') {
-      if (Number(hour) === 12) {
-        rfiTime = hour + ':' + minute;
-      } else {
-        rfiTime = (Number(hour) + 12) + ':' + minute;
-      }
-    } else {
-      if (Number(hour) === 12) {
-        rfiTime = '00:' + minute;
-      } else {
-        rfiTime = hour + ':' + minute;
-      }
-    }
     item.formRFITime = rfiTime;
     onGenerateRFI();
   }
@@ -938,7 +881,8 @@ const ExpanbableComponent = ({ item, onClickFunction, onGenerateRFI }: { item: a
       </TouchableOpacity>
       {/* <ScrollView style={styles.Height100}> */}
       <View style={[{ height: layoutHeight, zIndex: 1 }, styles.content]}>
-        <View style={{ flexDirection: 'column' }}>
+        <View style={{paddingHorizontal: 10}}>
+        {/* <View style={{ flexDirection: 'column' }}>
           <Text style={styles.GenerateRFIFieldLabel}>Date of RFI's</Text>
 
           <View style={styles.CalendarField}>
@@ -956,10 +900,15 @@ const ExpanbableComponent = ({ item, onClickFunction, onGenerateRFI }: { item: a
             <TouchableOpacity onPress={() => openCloseCalendar()} style={styles.CalendarImage}>
               <Image style={styles.WorkIconTask} source={require('../../images/date-icon.png')} />
             </TouchableOpacity>
-          </View>
-        </View>
+          </View> 
+          
+        </View> */}
 
-        {openCalendar && (
+          <View>
+            <CalendarPicker label="Date of RFI's" value={rfiDate} onChange={(date) => setRFIDate(date)} />
+          </View>
+
+        {/* {openCalendar && (
 
           <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
             <CalendarPicker width={width - 40}
@@ -972,9 +921,13 @@ const ExpanbableComponent = ({ item, onClickFunction, onGenerateRFI }: { item: a
               nextComponent = {<Image style={styles.WorkIconTask} source={require('../../images/right-arrow.png')} />}
             />
           </View>
-        )}
+        )} */}
 
-        <View style={{ flexDirection: 'column', height: 80, paddingTop: 15, zIndex: 5 }}>
+        <View>
+          <TimePicker label="Time" value={rfiTime} onChange={(time) => setRFITime(time)} />
+        </View>
+
+        {/* <View style={{ flexDirection: 'column', height: 80, paddingTop: 15, zIndex: 5 }}>
           <Text style={styles.GenerateRFIFieldLabel}>Time of RFI's</Text>
           <View style={{ flexDirection: 'row', gap: 20 }}>
             <View style={{ width: 80, height: 90 }}>
@@ -1052,8 +1005,8 @@ const ExpanbableComponent = ({ item, onClickFunction, onGenerateRFI }: { item: a
               />
             </View>
           </View>
-        </View>
-        <View style={{ flexDirection: 'row', gap: 20, paddingTop: 30, zIndex: 3, alignItems: 'center', justifyContent: 'center' }}>
+        </View> */}
+        <View style={{ flexDirection: 'row', gap: 20, paddingVertical: 10, zIndex: 3, alignItems: 'center', justifyContent: 'center' }}>
           <TouchableOpacity style={styles.btnReset}>
             <Text style={styles.btnResetText}>Reset</Text>
           </TouchableOpacity>
@@ -1061,6 +1014,7 @@ const ExpanbableComponent = ({ item, onClickFunction, onGenerateRFI }: { item: a
           }>
             <Text style={styles.btnGenerateText}>Generate</Text>
           </TouchableOpacity>
+        </View>
         </View>
       </View>
       {/* </ScrollView> */}
@@ -1094,17 +1048,25 @@ const styles = StyleSheet.create({
     height: 45,
   },
   Container: {
-    padding: 20,
+    paddingVertical: 0,
+    paddingHorizontal: 20
   },
   Height100: {
     height: '100%',
   },
   SearchBox: {
     flexDirection: 'row',
-    height: 40,
-    marginBottom: 20,
-    marginTop: 5,
+    marginBottom: 10,
     position: 'relative',
+    marginHorizontal: -26,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.25,
+    shadowRadius: 10,
+    // Shadow for Android
+    elevation: 10,
+    alignItems: 'center'
   },
   ImageSearch: {
     position: 'absolute',
@@ -1117,15 +1079,12 @@ const styles = StyleSheet.create({
   inputStyle: {
     flex: 1,
     color: '#2c2c2c',
-    paddingLeft: 40,
+    paddingLeft: 45,
     paddingRight: 15,
-    borderWidth: 1,
-    borderRadius: 6,
-    borderColor: '#808089',
     backgroundColor: '#fff',
     fontWeight: '600',
-    paddingVertical: 5,
-    height: 45,
+    paddingVertical: 15,
+    height: 55
   },
   //Start Work
   StartWorkCard: {
@@ -1200,9 +1159,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    paddingBottom: 10,
-    marginBottom: 10,
-    gap: 5
+    marginHorizontal: -20,
+    paddingHorizontal: 20,
+    marginTop: -10,
+    backgroundColor: '#e7ebf4',
+    gap: 5,
+  },
+  scrollView: {
+    paddingVertical: 10,
+    paddingBottom: 15,
   },
   BreadcrumbPrevText: {
     fontSize: 14,

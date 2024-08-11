@@ -349,6 +349,12 @@ export const TEST_SAMPLE_STATUS_LIST = [
     }
 ];
 
+export const TEST_SAMPLE_CONCRETE_CATEGORY = {
+    C_7TH_DAYS: '7thdays',
+    C_28TH_DAYS: '28thdays',
+    CORE_TEST: 'core-test'
+};
+
 export const WORK_TYPE = {
     SITE_WORK: "Site Work",
     LAB_WORK: "Lab Work"
@@ -400,7 +406,29 @@ export const TEST_MATERIALS_TYPES = {
     CEMENT: 'cement',
     ADMIXTURE: 'admixture',
     SILICA_FUME: 'silica-fume',
-  };
+};
+
+export const TEST_TYPES = {
+    CORE_TEST: 'core-test',
+    CUBE_TEST: 'cube-test',
+    SLUMP_TEST: 'slump-test',
+    UPV_TEST: 'upv-test',
+    REBOUND_HAMMER_TEST: 'rebound-hammer-test',
+    COMPRESSIVE_STRENGTH: 'compressive-strength',
+    SOUNDNESS: 'soundness',
+    NATURAL_MOISTURE_CONTENT: 'natural-moisture-content',
+    SILT_CONTENT: 'silt-content',
+    GRADATION: 'gradation',
+    PETROGRAPHIC_EXAMINATION: 'petrographic-examination',
+    AGGREGATE_IMPACT_VALUE: 'aggregate-impact-value',
+    SPECIFIC_GRAVITY_AND_WATER_ABSORPTION: 'specific-gravity-and-water-absorption',
+    FI_EI: 'fi-ei',
+    LOS_ANGELES_ABRATION: 'los-angeles-abration',
+    ALKALI_AGGREGATE_REACTIVITY: 'alkali-aggregate-reactivity',
+    POLISHED_STONE_VALUE: 'polished-stone-value',
+    SAND_EQUIVALENT_VALUE: 'sand-equivalent-value',
+    STRIPPING_VALUE_TEST: 'stripping-value-test',
+};
 
 export const YES_NO_LIST = [
     {
@@ -438,6 +466,15 @@ export const TEST_CONDUCTED_BY_LIST = [
     },
     {
         label: 'Jointly', value: 'Jointly'
+    },
+];
+
+export const TYPE_OF_CONCRETE_SURFACE_LIST = [
+    {
+        label: 'Wearing surface', value: 'Wearing surface'
+    },
+    {
+        label: 'Other concrete works', value: 'Other concrete works'
     },
 ];
 
@@ -484,5 +521,14 @@ export const CONCRETE_GRADE_LIST = [
     },
     {
         label: 'M75', value: 'M20'
+    },
+];
+
+export const CEMENT_GRADE_LIST = [
+    {
+        label: 'OPC 43', value: 'OPC43'
+    },
+    {
+        label: 'OPC 53', value: 'OPC53'
     },
 ];

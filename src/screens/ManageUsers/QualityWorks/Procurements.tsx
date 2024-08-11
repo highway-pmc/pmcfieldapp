@@ -4,7 +4,7 @@ import { useSnackbar } from '../../../context/SnackbarContext';
 import { useDispatch, useSelector } from 'react-redux';
 import Input from '../../../components/UI/Input';
 import { useIsFocused } from '@react-navigation/native';
-import { CONCRETE_GRADE_LIST, HeaderItems, SOURCE_APPROVAL_STATUS } from '../../../constants/constants';
+import { CONCRETE_GRADE_LIST, HeaderItems, SOURCE_APPROVAL_STATUS, TEST_MATERIALS_TYPES } from '../../../constants/constants';
 import { Image } from 'react-native-elements';
 import LoadingAnimation from '../../Common/LoadingAnimation';
 import { Picker } from '@react-native-picker/picker';
@@ -15,7 +15,7 @@ import { getDbDate, getDbDateFromDDMMYYYY, getDisplayDate } from '../../../utils
 
 const Procurements = ({ route, navigation }: { route: any, navigation: any }) => {
 
-    const { testWorkCategoryName, testMaterialName, testMaterialId } = route.params;
+    const { testWorkCategoryName, testMaterialName, materialType, testMaterialId } = route.params;
     const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
     const { procurements, addedProcurement, updatedProcurement, deletedProcurement,
         loading, error } = useSelector((state: any) => state.Procurements);
@@ -24,25 +24,25 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
     const [openProcurementsPopup, setOpenProcurementPopup] = useState(false);
     const [selectedProcurement, setSelectedProcurement]: any = useState(null);
     const [confirmationAlert, setConfirmationAlert] = useState(false);
+    const [gradeField, setGradeField]: any = useState({});
 
     type FormState = {
         // projectId: string;
         sourceApprovalId: string;
         sourceApprovalDetailId: string;
         lotNo: string,
-        qtyOfConcrete: number;
         procurementDateTime: string;
         vehicleNo: any[];
         vehicleNoTemp: any;
         invoiceFile: string;
     };
     const [vehicleNos, setVehicleNos]: any = useState([]);
-    const [form, setForm] = useState<FormState>({
+    const [form, setForm]: any = useState<FormState>({
         // projectId: loggedInUser.projectId,
         sourceApprovalId: '',
         sourceApprovalDetailId: '',
         lotNo: '',
-        qtyOfConcrete: 0,
+        [gradeField.name]: 0,
         procurementDateTime: '',
         vehicleNo: [],
         vehicleNoTemp: '',
@@ -81,6 +81,17 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
 
     // mount
     useEffect(() => {
+        if (materialType === TEST_MATERIALS_TYPES.CONCRETE) {
+            setGradeField({
+                name: 'gradeOfConcrete',
+                label: 'Grade Of Concrete'
+            });
+        } else if (materialType === TEST_MATERIALS_TYPES.CEMENT) {
+            setGradeField({
+                name: 'gradeOfCement',
+                label: 'Grade Of Cement'
+            });
+        }
         dispatch(getProcurements({
             projectId: loggedInUser.projectId,
             testMaterialId: testMaterialId
@@ -115,7 +126,7 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
             sourceApprovalId: '',
             sourceApprovalDetailId: '',
             lotNo: '',
-            qtyOfConcrete: 0,
+            [gradeField.name]: 0,
             procurementDateTime: '',
             vehicleNo: [],
             vehicleNoTemp: '',
@@ -150,7 +161,7 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
             sourceApprovalId: item.sourceApprovalId._id,
             sourceApprovalDetailId: item.sourceApprovalDetailId,
             lotNo: item.lotNo,
-            qtyOfConcrete: item.metaData?.qtyOfConcrete,
+            [gradeField.name]: item.metaData[gradeField.name],
             procurementDateTime: getDisplayDate(item.procurementDateTime),
             vehicleNo: item.vehicleNo,
             vehicleNoTemp: '',
@@ -180,7 +191,7 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
                     vehicleNo: vehicleNos.length ? vehicleNos : [form.vehicleNo || ''],
                     invoiceFile: form.invoiceFile,
                     metaData: {
-                        qtyOfConcrete: Number(form.qtyOfConcrete)
+                        [gradeField.name]: Number(form[gradeField.name])
                     }
                 }
             }));
@@ -197,7 +208,7 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
                     vehicleNo: vehicleNos.length ? vehicleNos : [form.vehicleNo || ''],
                     invoiceFile: form.invoiceFile,
                     metaData: {
-                        qtyOfConcrete: Number(form.qtyOfConcrete)
+                        [gradeField.name]: Number(form[gradeField.name])
                     }
                 }
             }));
@@ -281,8 +292,8 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
                     <View>
                         <Input
                             label="Qty (in cum)"
-                            value={''+form.qtyOfConcrete}
-                            onChange={(value: string) => handleInputChange('qtyOfConcrete', value)}
+                            value={''+form[gradeField.name]}
+                            onChange={(value: string) => handleInputChange(gradeField.name, value)}
                             isRequired={true}
                         />
                     </View>

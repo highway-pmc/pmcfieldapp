@@ -5,7 +5,7 @@ import { HeaderItems, PROJECT_TYPE, RFI_STATUS, SEGMENT_TYPES_DISPLAY, TASK_TYPE
 import { useDispatch, useSelector } from 'react-redux';
 import { clearMyWorksEvent, fillRFIsChecklist, getMyWorks, getRFIByWaId } from './actions';
 import LoadingAnimation from '../Common/LoadingAnimation';
-import { getDbDate, getDisplayDate, getDisplayTime, groupBy } from '../../utils/Utils';
+import { getDbDate, getDbDateFromDDMMYYYY, getDisplayDate, getDisplayTime, groupBy } from '../../utils/Utils';
 import * as ImagePicker from 'react-native-image-picker';
 import DropDownPicker from 'react-native-dropdown-picker';
 //import CalendarPicker from 'react-native-calendar-picker';
@@ -53,6 +53,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
   };
 
   const [rfiDate, setRFIDate] = useState('');
+  const [rfiTime, setRFITime] = useState('');
   const [hours, setHours] = useState([]);
   const [minutes, setMinutes] = useState([]);
   const [timeFormats, setTimeFormats] = useState([]);
@@ -769,27 +770,8 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
       Alert.alert('Error', 'Recommendations is required.');
       return false;
     }
-
-    let rfiSubmitDateTime = '';
-    let rfiTime = '';
-    if (rfiDate) {
-      if (timeFormat === 'PM') {
-        if (Number(hour) === 12) {
-          rfiTime = hour + ':' + minute;
-        } else {
-          rfiTime = (Number(hour) + 12) + ':' + minute;
-        }
-      } else {
-        if (Number(hour) === 12) {
-          rfiTime = '00:' + minute;
-        } else {
-          rfiTime = hour + ':' + minute;
-        }
-      }
-
-      rfiSubmitDateTime = rfiDate + ' ' + rfiTime + ":00"
-    }
-
+    //return;
+    let rfiSubmitDateTime = `${getDbDateFromDDMMYYYY(rfiDate)} ${rfiTime}:00`;
     let checkList = {};
 
     switch (selectedTask?.name) {
@@ -885,7 +867,7 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
       default:
         break;
     }
-    
+
     dispatch(fillRFIsChecklist({
       projectId: loggedInUser.projectId,
       projectModuleId: projectModuleId,
@@ -1227,115 +1209,40 @@ const onSwipeValueChange = (data: any) => {
         </View>
 
         <View>
-          <View style={{ flexDirection: 'column' }}>
-            <Text style={styles.Lable}>Date</Text>
-
-            <View style={{ flexDirection: 'row' }}>
-              <TextInput
-                style={styles.inputStyle}
-                placeholder=""
-                autoCapitalize="none"
-                keyboardType="email-address"
-                returnKeyType="next"
-                underlineColorAndroid="#f000"
-                blurOnSubmit={false}
-                value={rfiDate ? getDisplayDate(rfiDate) : ''}
-                editable={false}
-              />
-              <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
-                <Text style={styles.assignTagButtonText}>Icon</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          {openCalendar && (
-
-            <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
-              {/* <CalendarPicker width={width - 40}
-                initialDate={rfiDate ? new Date(rfiDate) : new Date()}
-                onDateChange={(date) => {
-                  setRFIDate(date.format("YYYY-MM-DD"));
-                  openCloseCalendar()
-                }}
-              /> */}
-
-<CalendarPicker label="Date" value={rfiDate} onChange={date => openCloseCalendar()}/>
-            </View>
-          )}
-
-          <View style={{ flexDirection: 'column', paddingTop: 15, zIndex: 5, paddingBottom: 20 }}>
-            <Text style={styles.Lable}>Time</Text>
-            <View style={{ flexDirection: 'row', gap: 20 }}>
-              <View style={{ width: 80, height: 90 }}>
-                <DropDownPicker onPress={() => {
-                  setOpenMinutes(false);
-                  setOpenTimeFormats(false);
-                }}
-                  dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
-                  maxHeight={75}
-                  zIndex={1000}
-                  listMode='MODAL'
-                  open={openHours}
-                  value={hour}
-                  items={hours}
-                  setOpen={setOpenHours}
-                  setValue={setHour}
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={(date) => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={(time) => setRFITime(time)}
                 />
               </View>
 
-              <View style={{ width: 80, height: 90 }}>
-                <DropDownPicker onPress={() => {
-                  setOpenHours(false);
-                  setOpenTimeFormats(false);
-                }}
-                  dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
-                  maxHeight={75}
-                  zIndex={1000}
-                  listMode='MODAL'
-                  open={openMinutes}
-                  value={minute}
-                  items={minutes}
-                  setOpen={setOpenMinutes}
-                  setValue={setMinute}
-                />
-              </View>
-              <View style={{ width: 80, height: 90 }}>
-                <DropDownPicker onPress={() => {
-                  setOpenHours(false);
-                  setOpenMinutes(false);
-                }}
-                  dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
-                  maxHeight={75}
-                  zIndex={1000}
-                  listMode='SCROLLVIEW'
-                  open={openTimeFormats}
-                  value={timeFormat}
-                  items={timeFormats}
-                  setOpen={setOpenTimeFormats}
-                  setValue={setTimeFormat}
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
                 />
               </View>
             </View>
-
-            <View style={{ flexDirection: 'column', height: 65 }}>
-              <Text style={styles.Lable}>Recommendations</Text>
-              <TextInput
-                style={styles.inputStyle}
-                placeholder="Recommendations"
-                autoCapitalize="none"
-                keyboardType="email-address"
-                returnKeyType="next"
-                underlineColorAndroid="#f000"
-                blurOnSubmit={false}
-                value={comments}
-                onChangeText={(text) => {
-                  setComments(text);
-                }}
-              />
-            </View>
-          </View>
-        </View>
-
       </View>
       case TASK_TYPES.FORM_WORK:
       case TASK_TYPES.PLACEMENT_OF_INNER_SHUTTERS:
@@ -1345,11 +1252,12 @@ const onSwipeValueChange = (data: any) => {
         return <View>
           <View style={{ flexDirection: 'column' }}>
             <Text style={styles.Lable}>Cleanliness and Oil application checked</Text>
-            <View style={[styles.SectionStyle, { zIndex: 16, height: 50 }]}>
+            <View style={[styles.SectionStyle, { zIndex: 16, height: 50, borderColor: '#FF0000' }]}>
               <DropDownPicker
                 open={openCleanliness}
                 value={cleanliness}
                 items={YES_NO_LIST}
+                style={styles.selectDropdown}
                 setOpen={setOpenCleanliness}
                 setValue={setCleanliness}
               />
@@ -1363,6 +1271,7 @@ const onSwipeValueChange = (data: any) => {
                 open={openFormworkAlignmentChecked}
                 value={formworkAlignmentChecked}
                 items={YES_NO_LIST}
+                style={styles.selectDropdown}
                 setOpen={setOpenFormworkAlignmentChecked}
                 setValue={setFormworkAlignmentChecked}
               />
@@ -1376,6 +1285,7 @@ const onSwipeValueChange = (data: any) => {
                 open={openFormworkSealingChecked}
                 value={formworkSealingChecked}
                 items={YES_NO_NA_LIST}
+                style={styles.selectDropdown}
                 setOpen={setOpenFormworkSealingChecked}
                 setValue={setFormworkSealingChecked}
               />
@@ -1389,6 +1299,7 @@ const onSwipeValueChange = (data: any) => {
                 open={openFormworkdDrawingsChecked}
                 value={formworkdDrawingsChecked}
                 items={YES_NO_LIST}
+                style={styles.selectDropdown}
                 setOpen={setOpenFormworkdDrawingsChecked}
                 setValue={setFormworkdDrawingsChecked}
               />
@@ -1402,6 +1313,7 @@ const onSwipeValueChange = (data: any) => {
                 open={openConcreteFinishLevelMarked}
                 value={concreteFinishLevelMarked}
                 items={YES_NO_LIST}
+                style={styles.selectDropdown}
                 setOpen={setOpenConcreteFinishLevelMarked}
                 setValue={setConcreteFinishLevelMarked}
               />
@@ -1415,6 +1327,7 @@ const onSwipeValueChange = (data: any) => {
                 open={openFormworkProperlySupported}
                 value={formworkProperlySupported}
                 items={YES_NO_NA_LIST}
+                style={styles.selectDropdown}
                 setOpen={setOpenFormworkProperlySupported}
                 setValue={setFormworkProperlySupported}
               />
@@ -1428,6 +1341,7 @@ const onSwipeValueChange = (data: any) => {
                 open={openFormworkFitConcreting}
                 value={formworkFitConcreting}
                 items={YES_NO_NA_LIST}
+                style={styles.selectDropdown}
                 setOpen={setOpenFormworkFitConcreting}
                 setValue={setFormworkFitConcreting}
               />
@@ -1435,116 +1349,40 @@ const onSwipeValueChange = (data: any) => {
           </View>
           
           <View>
-            <View style={{ flexDirection: 'column' }}>
-              <Text style={styles.Lable}>Date</Text>
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={(date) => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={(time) => setRFITime(time)}
+                />
+              </View>
 
-              <View style={{ flexDirection: 'row' }}>
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
                 <TextInput
-                  style={styles.inputStyle}
-                  placeholder=""
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
                   autoCapitalize="none"
                   keyboardType="email-address"
                   returnKeyType="next"
                   underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
                   blurOnSubmit={false}
-                  value={rfiDate ? getDisplayDate(rfiDate) : ''}
-                  editable={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
                 />
-                <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
-                  <Text style={styles.assignTagButtonText}>Icon</Text>
-                </TouchableOpacity>
               </View>
             </View>
-
-            {openCalendar && (
-
-              <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
-                {/* <CalendarPicker width={width - 40}
-                  initialDate={rfiDate ? new Date(rfiDate) : new Date()}
-                  onDateChange={(date) => {
-                    setRFIDate(date.format("YYYY-MM-DD"));
-                    openCloseCalendar()
-                  }}
-                /> */}
-
-<CalendarPicker label="Date" value={rfiDate} onChange={date => openCloseCalendar()}/>
-              </View>
-            )}
-
-            <View style={{ flexDirection: 'column', paddingTop: 15, zIndex: 5, paddingBottom: 20 }}>
-              <Text style={styles.Lable}>Time</Text>
-              <View style={{ flexDirection: 'row', gap: 20 }}>
-                <View style={{ width: 80, height: 90 }}>
-                  <DropDownPicker onPress={() => {
-                    setOpenMinutes(false);
-                    setOpenTimeFormats(false);
-                  }}
-                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
-                    maxHeight={75}
-                    zIndex={1000}
-                    listMode='MODAL'
-                    open={openHours}
-                    value={hour}
-                    items={hours}
-                    setOpen={setOpenHours}
-                    setValue={setHour}
-                  />
-                </View>
-
-                <View style={{ width: 80, height: 90 }}>
-                  <DropDownPicker onPress={() => {
-                    setOpenHours(false);
-                    setOpenTimeFormats(false);
-                  }}
-                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
-                    maxHeight={75}
-                    zIndex={1000}
-                    listMode='MODAL'
-                    open={openMinutes}
-                    value={minute}
-                    items={minutes}
-                    setOpen={setOpenMinutes}
-                    setValue={setMinute}
-                  />
-                </View>
-                <View style={{ width: 80, height: 90 }}>
-                  <DropDownPicker onPress={() => {
-                    setOpenHours(false);
-                    setOpenMinutes(false);
-                  }}
-                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
-                    maxHeight={75}
-                    zIndex={1000}
-                    listMode='SCROLLVIEW'
-                    open={openTimeFormats}
-                    value={timeFormat}
-                    items={timeFormats}
-                    setOpen={setOpenTimeFormats}
-                    setValue={setTimeFormat}
-                  />
-                </View>
-              </View>
-              
-              <View style={{ flexDirection: 'column', height: 65 }}>
-              <Text style={styles.Lable}>Recommendations</Text>
-              <TextInput
-                style={styles.inputStyle}
-                placeholder="Recommendations"
-                autoCapitalize="none"
-                keyboardType="email-address"
-                returnKeyType="next"
-                underlineColorAndroid="#f000"
-                blurOnSubmit={false}
-                value={comments}
-                onChangeText={(text) => {
-                  setComments(text);
-                }}
-              />
-            </View>
-            </View>
-          </View>
-
-          
         </View>
       case TASK_TYPES.REINFORCEMENT:
       case TASK_TYPES.REINFORCEMENT_PREPARATION:
@@ -1654,116 +1492,40 @@ const onSwipeValueChange = (data: any) => {
           </View>
           
           <View>
-            <View style={{ flexDirection: 'column' }}>
-              <Text style={styles.Lable}>Date</Text>
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={(date) => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={(time) => setRFITime(time)}
+                />
+              </View>
 
-              <View style={{ flexDirection: 'row' }}>
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
                 <TextInput
-                  style={styles.inputStyle}
-                  placeholder=""
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
                   autoCapitalize="none"
                   keyboardType="email-address"
                   returnKeyType="next"
                   underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
                   blurOnSubmit={false}
-                  value={rfiDate ? getDisplayDate(rfiDate) : ''}
-                  editable={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
                 />
-                <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
-                  <Text style={styles.assignTagButtonText}>Icon</Text>
-                </TouchableOpacity>
               </View>
             </View>
-
-            {openCalendar && (
-
-              <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
-                {/* <CalendarPicker width={width - 40}
-                  initialDate={rfiDate ? new Date(rfiDate) : new Date()}
-                  onDateChange={(date) => {
-                    setRFIDate(date.format("YYYY-MM-DD"));
-                    openCloseCalendar()
-                  }}
-                /> */}
-
-<CalendarPicker label="Date" value={rfiDate} onChange={date => openCloseCalendar()}/>
-              </View>
-            )}
-
-            <View style={{ flexDirection: 'column', paddingTop: 15, zIndex: 5, paddingBottom: 20 }}>
-              <Text style={styles.Lable}>Time</Text>
-              <View style={{ flexDirection: 'row', gap: 20 }}>
-                <View style={{ width: 80, height: 90 }}>
-                  <DropDownPicker onPress={() => {
-                    setOpenMinutes(false);
-                    setOpenTimeFormats(false);
-                  }}
-                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
-                    maxHeight={75}
-                    zIndex={1000}
-                    listMode='MODAL'
-                    open={openHours}
-                    value={hour}
-                    items={hours}
-                    setOpen={setOpenHours}
-                    setValue={setHour}
-                  />
-                </View>
-
-                <View style={{ width: 80, height: 90 }}>
-                  <DropDownPicker onPress={() => {
-                    setOpenHours(false);
-                    setOpenTimeFormats(false);
-                  }}
-                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
-                    maxHeight={75}
-                    zIndex={1000}
-                    listMode='MODAL'
-                    open={openMinutes}
-                    value={minute}
-                    items={minutes}
-                    setOpen={setOpenMinutes}
-                    setValue={setMinute}
-                  />
-                </View>
-                <View style={{ width: 80, height: 90 }}>
-                  <DropDownPicker onPress={() => {
-                    setOpenHours(false);
-                    setOpenMinutes(false);
-                  }}
-                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
-                    maxHeight={75}
-                    zIndex={1000}
-                    listMode='SCROLLVIEW'
-                    open={openTimeFormats}
-                    value={timeFormat}
-                    items={timeFormats}
-                    setOpen={setOpenTimeFormats}
-                    setValue={setTimeFormat}
-                  />
-                </View>
-              </View>
-              
-              <View style={{ flexDirection: 'column', height: 65 }}>
-              <Text style={styles.Lable}>Recommendations</Text>
-              <TextInput
-                style={styles.inputStyle}
-                placeholder="Recommendations"
-                autoCapitalize="none"
-                keyboardType="email-address"
-                returnKeyType="next"
-                underlineColorAndroid="#f000"
-                blurOnSubmit={false}
-                value={comments}
-                onChangeText={(text) => {
-                  setComments(text);
-                }}
-              />
-            </View>
-            </View>
-          </View>
-
-          
         </View>
       case TASK_TYPES.REINFORCEMENT_PREPARATION:
         return <View>
@@ -1859,116 +1621,40 @@ const onSwipeValueChange = (data: any) => {
           </View>
           
           <View>
-            <View style={{ flexDirection: 'column' }}>
-              <Text style={styles.Lable}>Date</Text>
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={(date) => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={(time) => setRFITime(time)}
+                />
+              </View>
 
-              <View style={{ flexDirection: 'row' }}>
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
                 <TextInput
-                  style={styles.inputStyle}
-                  placeholder=""
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
                   autoCapitalize="none"
                   keyboardType="email-address"
                   returnKeyType="next"
                   underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
                   blurOnSubmit={false}
-                  value={rfiDate ? getDisplayDate(rfiDate) : ''}
-                  editable={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
                 />
-                <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
-                  <Text style={styles.assignTagButtonText}>Icon</Text>
-                </TouchableOpacity>
               </View>
             </View>
-
-            {openCalendar && (
-
-              <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
-                {/* <CalendarPicker width={width - 40}
-                  initialDate={rfiDate ? new Date(rfiDate) : new Date()}
-                  onDateChange={(date) => {
-                    setRFIDate(date.format("YYYY-MM-DD"));
-                    openCloseCalendar()
-                  }}
-                /> */}
-
-                <CalendarPicker label="Date" value={rfiDate} onChange={date => openCloseCalendar()}/>
-              </View>
-            )}
-
-            <View style={{ flexDirection: 'column', paddingTop: 15, zIndex: 5, paddingBottom: 20 }}>
-              <Text style={styles.Lable}>Time</Text>
-              <View style={{ flexDirection: 'row', gap: 20 }}>
-                <View style={{ width: 80, height: 90 }}>
-                  <DropDownPicker onPress={() => {
-                    setOpenMinutes(false);
-                    setOpenTimeFormats(false);
-                  }}
-                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
-                    maxHeight={75}
-                    zIndex={1000}
-                    listMode='MODAL'
-                    open={openHours}
-                    value={hour}
-                    items={hours}
-                    setOpen={setOpenHours}
-                    setValue={setHour}
-                  />
-                </View>
-
-                <View style={{ width: 80, height: 90 }}>
-                  <DropDownPicker onPress={() => {
-                    setOpenHours(false);
-                    setOpenTimeFormats(false);
-                  }}
-                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
-                    maxHeight={75}
-                    zIndex={1000}
-                    listMode='MODAL'
-                    open={openMinutes}
-                    value={minute}
-                    items={minutes}
-                    setOpen={setOpenMinutes}
-                    setValue={setMinute}
-                  />
-                </View>
-                <View style={{ width: 80, height: 90 }}>
-                  <DropDownPicker onPress={() => {
-                    setOpenHours(false);
-                    setOpenMinutes(false);
-                  }}
-                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
-                    maxHeight={75}
-                    zIndex={1000}
-                    listMode='SCROLLVIEW'
-                    open={openTimeFormats}
-                    value={timeFormat}
-                    items={timeFormats}
-                    setOpen={setOpenTimeFormats}
-                    setValue={setTimeFormat}
-                  />
-                </View>
-              </View>
-              
-              <View style={{ flexDirection: 'column', height: 65 }}>
-              <Text style={styles.Lable}>Recommendations</Text>
-              <TextInput
-                style={styles.inputStyle}
-                placeholder="Recommendations"
-                autoCapitalize="none"
-                keyboardType="email-address"
-                returnKeyType="next"
-                underlineColorAndroid="#f000"
-                blurOnSubmit={false}
-                value={comments}
-                onChangeText={(text) => {
-                  setComments(text);
-                }}
-              />
-            </View>
-            </View>
-          </View>
-
-          
         </View>
       case TASK_TYPES.EXCAVATION:
         return <View>
@@ -1976,7 +1662,7 @@ const onSwipeValueChange = (data: any) => {
             <Text style={styles.Lable}>Qty of earth work excavated in cum</Text>
             <View style={[styles.SectionStyle, { zIndex: 16, height: 50 }]}>
             <TextInput
-                  style={styles.inputStyle}
+                  style={styles.inputFieldsText}
                   placeholder="Quantity"
                   autoCapitalize="none"
                   keyboardType="numeric"
@@ -2000,116 +1686,40 @@ const onSwipeValueChange = (data: any) => {
           </View>
           
           <View>
-            <View style={{ flexDirection: 'column' }}>
-              <Text style={styles.Lable}>Date</Text>
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={(date) => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={(time) => setRFITime(time)}
+                />
+              </View>
 
-              <View style={{ flexDirection: 'row' }}>
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
                 <TextInput
-                  style={styles.inputStyle}
-                  placeholder=""
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
                   autoCapitalize="none"
                   keyboardType="email-address"
                   returnKeyType="next"
                   underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
                   blurOnSubmit={false}
-                  value={rfiDate ? getDisplayDate(rfiDate) : ''}
-                  editable={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
                 />
-                <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
-                  <Text style={styles.assignTagButtonText}>Icon</Text>
-                </TouchableOpacity>
               </View>
             </View>
-
-            {openCalendar && (
-
-              <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
-                {/* <CalendarPicker width={width - 40}
-                  initialDate={rfiDate ? new Date(rfiDate) : new Date()}
-                  onDateChange={(date) => {
-                    setRFIDate(date.format("YYYY-MM-DD"));
-                    openCloseCalendar()
-                  }}
-                /> */}
-
-              <CalendarPicker label="Date" value={rfiDate} onChange={date => openCloseCalendar()}/>
-              </View>
-            )}
-
-            <View style={{ flexDirection: 'column', paddingTop: 15, zIndex: 5, paddingBottom: 20 }}>
-              <Text style={styles.Lable}>Time</Text>
-              <View style={{ flexDirection: 'row', gap: 20 }}>
-                <View style={{ width: 80, height: 90 }}>
-                  <DropDownPicker onPress={() => {
-                    setOpenMinutes(false);
-                    setOpenTimeFormats(false);
-                  }}
-                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
-                    maxHeight={75}
-                    zIndex={1000}
-                    listMode='MODAL'
-                    open={openHours}
-                    value={hour}
-                    items={hours}
-                    setOpen={setOpenHours}
-                    setValue={setHour}
-                  />
-                </View>
-
-                <View style={{ width: 80, height: 90 }}>
-                  <DropDownPicker onPress={() => {
-                    setOpenHours(false);
-                    setOpenTimeFormats(false);
-                  }}
-                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
-                    maxHeight={75}
-                    zIndex={1000}
-                    listMode='MODAL'
-                    open={openMinutes}
-                    value={minute}
-                    items={minutes}
-                    setOpen={setOpenMinutes}
-                    setValue={setMinute}
-                  />
-                </View>
-                <View style={{ width: 80, height: 90 }}>
-                  <DropDownPicker onPress={() => {
-                    setOpenHours(false);
-                    setOpenMinutes(false);
-                  }}
-                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
-                    maxHeight={75}
-                    zIndex={1000}
-                    listMode='SCROLLVIEW'
-                    open={openTimeFormats}
-                    value={timeFormat}
-                    items={timeFormats}
-                    setOpen={setOpenTimeFormats}
-                    setValue={setTimeFormat}
-                  />
-                </View>
-              </View>
-              
-              <View style={{ flexDirection: 'column', height: 65 }}>
-              <Text style={styles.Lable}>Recommendations</Text>
-              <TextInput
-                style={styles.inputStyle}
-                placeholder="Recommendations"
-                autoCapitalize="none"
-                keyboardType="email-address"
-                returnKeyType="next"
-                underlineColorAndroid="#f000"
-                blurOnSubmit={false}
-                value={comments}
-                onChangeText={(text) => {
-                  setComments(text);
-                }}
-              />
-            </View>
-            </View>
-          </View>
-
-          
         </View>
       case TASK_TYPES.REMOVAL_OF_SHUTTER:
       case TASK_TYPES.REMOVAL_OF_SHUTTERS:
@@ -2140,236 +1750,78 @@ const onSwipeValueChange = (data: any) => {
             </View>
           </View>
           <View>
-            <View style={{ flexDirection: 'column' }}>
-              <Text style={styles.Lable}>Date</Text>
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={(date) => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={(time) => setRFITime(time)}
+                />
+              </View>
 
-              <View style={{ flexDirection: 'row' }}>
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
                 <TextInput
-                  style={styles.inputStyle}
-                  placeholder=""
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
                   autoCapitalize="none"
                   keyboardType="email-address"
                   returnKeyType="next"
                   underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
                   blurOnSubmit={false}
-                  value={rfiDate ? getDisplayDate(rfiDate) : ''}
-                  editable={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
                 />
-                <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
-                  <Text style={styles.assignTagButtonText}>Icon</Text>
-                </TouchableOpacity>
               </View>
             </View>
-
-            {openCalendar && (
-
-              <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
-                {/* <CalendarPicker width={width - 40}
-                  initialDate={rfiDate ? new Date(rfiDate) : new Date()}
-                  onDateChange={(date) => {
-                    setRFIDate(date.format("YYYY-MM-DD"));
-                    openCloseCalendar()
-                  }}
-                /> */}
-                <CalendarPicker
-                            label="Date"
-                            value={rfiDate}
-                            onChange={date => openCloseCalendar()}
-                        />
-              </View>
-            )}
-
-            <View style={{ flexDirection: 'column', paddingTop: 15, zIndex: 5, paddingBottom: 20 }}>
-              <Text style={styles.Lable}>Time</Text>
-              <View style={{ flexDirection: 'row', gap: 20 }}>
-                <View style={{ width: 80, height: 90 }}>
-                  <DropDownPicker onPress={() => {
-                    setOpenMinutes(false);
-                    setOpenTimeFormats(false);
-                  }}
-                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
-                    maxHeight={75}
-                    zIndex={1000}
-                    listMode='MODAL'
-                    open={openHours}
-                    value={hour}
-                    items={hours}
-                    setOpen={setOpenHours}
-                    setValue={setHour}
-                  />
-                </View>
-
-                <View style={{ width: 80, height: 90 }}>
-                  <DropDownPicker onPress={() => {
-                    setOpenHours(false);
-                    setOpenTimeFormats(false);
-                  }}
-                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
-                    maxHeight={75}
-                    zIndex={1000}
-                    listMode='MODAL'
-                    open={openMinutes}
-                    value={minute}
-                    items={minutes}
-                    setOpen={setOpenMinutes}
-                    setValue={setMinute}
-                  />
-                </View>
-                <View style={{ width: 80, height: 90 }}>
-                  <DropDownPicker onPress={() => {
-                    setOpenHours(false);
-                    setOpenMinutes(false);
-                  }}
-                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
-                    maxHeight={75}
-                    zIndex={1000}
-                    listMode='SCROLLVIEW'
-                    open={openTimeFormats}
-                    value={timeFormat}
-                    items={timeFormats}
-                    setOpen={setOpenTimeFormats}
-                    setValue={setTimeFormat}
-                  />
-                </View>
-              </View>
-              
-              <View style={{ flexDirection: 'column', height: 65 }}>
-              <Text style={styles.Lable}>Recommendations</Text>
-              <TextInput
-                style={styles.inputStyle}
-                placeholder="Recommendations"
-                autoCapitalize="none"
-                keyboardType="email-address"
-                returnKeyType="next"
-                underlineColorAndroid="#f000"
-                blurOnSubmit={false}
-                value={comments}
-                onChangeText={(text) => {
-                  setComments(text);
-                }}
-              />
-            </View>
-            </View>
-          </View>
-
-          
         </View>
       case TASK_TYPES.THREADING_OF_PRE_STRESSING_STRANDS:
         return <View>
           <View>
-            <View style={{ flexDirection: 'column' }}>
-              <Text style={styles.Lable}>Date</Text>
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={(date) => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={(time) => setRFITime(time)}
+                />
+              </View>
 
-              <View style={{ flexDirection: 'row' }}>
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
                 <TextInput
-                  style={styles.inputStyle}
-                  placeholder=""
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
                   autoCapitalize="none"
                   keyboardType="email-address"
                   returnKeyType="next"
                   underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
                   blurOnSubmit={false}
-                  value={rfiDate ? getDisplayDate(rfiDate) : ''}
-                  editable={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
                 />
-                <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
-                  <Text style={styles.assignTagButtonText}>Icon</Text>
-                </TouchableOpacity>
               </View>
             </View>
-
-            {openCalendar && (
-
-              <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
-                {/* <CalendarPicker width={width - 40}
-                  initialDate={rfiDate ? new Date(rfiDate) : new Date()}
-                  onDateChange={(date) => {
-                    setRFIDate(date.format("YYYY-MM-DD"));
-                    openCloseCalendar()
-                  }}
-                /> */}
-                <CalendarPicker
-                            label="Date"
-                            value={rfiDate}
-                            onChange={date => openCloseCalendar()}
-                        />
-              </View>
-            )}
-
-            <View style={{ flexDirection: 'column', paddingTop: 15, zIndex: 5, paddingBottom: 20 }}>
-              <Text style={styles.Lable}>Time</Text>
-              <View style={{ flexDirection: 'row', gap: 20 }}>
-                <View style={{ width: 80, height: 90 }}>
-                  <DropDownPicker onPress={() => {
-                    setOpenMinutes(false);
-                    setOpenTimeFormats(false);
-                  }}
-                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
-                    maxHeight={75}
-                    zIndex={1000}
-                    listMode='MODAL'
-                    open={openHours}
-                    value={hour}
-                    items={hours}
-                    setOpen={setOpenHours}
-                    setValue={setHour}
-                  />
-                </View>
-
-                <View style={{ width: 80, height: 90 }}>
-                  <DropDownPicker onPress={() => {
-                    setOpenHours(false);
-                    setOpenTimeFormats(false);
-                  }}
-                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
-                    maxHeight={75}
-                    zIndex={1000}
-                    listMode='MODAL'
-                    open={openMinutes}
-                    value={minute}
-                    items={minutes}
-                    setOpen={setOpenMinutes}
-                    setValue={setMinute}
-                  />
-                </View>
-                <View style={{ width: 80, height: 90 }}>
-                  <DropDownPicker onPress={() => {
-                    setOpenHours(false);
-                    setOpenMinutes(false);
-                  }}
-                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
-                    maxHeight={75}
-                    zIndex={1000}
-                    listMode='SCROLLVIEW'
-                    open={openTimeFormats}
-                    value={timeFormat}
-                    items={timeFormats}
-                    setOpen={setOpenTimeFormats}
-                    setValue={setTimeFormat}
-                  />
-                </View>
-              </View>
-              
-              <View style={{ flexDirection: 'column', height: 65 }}>
-              <Text style={styles.Lable}>Recommendations</Text>
-              <TextInput
-                style={styles.inputStyle}
-                placeholder="Recommendations"
-                autoCapitalize="none"
-                keyboardType="email-address"
-                returnKeyType="next"
-                underlineColorAndroid="#f000"
-                blurOnSubmit={false}
-                value={comments}
-                onChangeText={(text) => {
-                  setComments(text);
-                }}
-              />
-            </View>
-            </View>
-          </View>
-
-          
         </View>
       case TASK_TYPES.CAGE_LOWERING:
         return <View>
@@ -2413,117 +1865,40 @@ const onSwipeValueChange = (data: any) => {
           </View>
 
           <View>
-            <View style={{ flexDirection: 'column' }}>
-              <Text style={styles.Lable}>Date</Text>
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={(date) => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={(time) => setRFITime(time)}
+                />
+              </View>
 
-              <View style={{ flexDirection: 'row' }}>
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
                 <TextInput
-                  style={styles.inputStyle}
-                  placeholder=""
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
                   autoCapitalize="none"
                   keyboardType="email-address"
                   returnKeyType="next"
                   underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
                   blurOnSubmit={false}
-                  value={rfiDate ? getDisplayDate(rfiDate) : ''}
-                  editable={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
                 />
-                <TouchableOpacity onPress={() => openCloseCalendar()} style={{ width: 40, backgroundColor: "#ccc" }}>
-                  <Text style={styles.assignTagButtonText}>Icon</Text>
-                </TouchableOpacity>
               </View>
             </View>
-
-            {openCalendar && (
-
-              <View style={{ flex: 1, backgroundColor: "#fff", zIndex: 10 }}>
-                {/* <CalendarPicker width={width - 40}
-                  initialDate={rfiDate ? new Date(rfiDate) : new Date()}
-                  onDateChange={(date) => {
-                    setRFIDate(date.format("YYYY-MM-DD"));
-                    openCloseCalendar()
-                  }}
-                /> */}
-                <CalendarPicker
-                            label="Date"
-                            value={rfiDate}
-                            onChange={date => openCloseCalendar()}
-                        />
-              </View>
-            )}
-
-            <View style={{ flexDirection: 'column', paddingTop: 15, zIndex: 5, paddingBottom: 20 }}>
-              <Text style={styles.Lable}>Time</Text>
-              <View style={{ flexDirection: 'row', gap: 20 }}>
-                <View style={{ width: 80, height: 90 }}>
-                  <DropDownPicker onPress={() => {
-                    setOpenMinutes(false);
-                    setOpenTimeFormats(false);
-                  }}
-                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
-                    maxHeight={75}
-                    zIndex={1000}
-                    listMode='MODAL'
-                    open={openHours}
-                    value={hour}
-                    items={hours}
-                    setOpen={setOpenHours}
-                    setValue={setHour}
-                  />
-                </View>
-
-                <View style={{ width: 80, height: 90 }}>
-                  <DropDownPicker onPress={() => {
-                    setOpenHours(false);
-                    setOpenTimeFormats(false);
-                  }}
-                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
-                    maxHeight={75}
-                    zIndex={1000}
-                    listMode='MODAL'
-                    open={openMinutes}
-                    value={minute}
-                    items={minutes}
-                    setOpen={setOpenMinutes}
-                    setValue={setMinute}
-                  />
-                </View>
-                <View style={{ width: 80, height: 90 }}>
-                  <DropDownPicker onPress={() => {
-                    setOpenHours(false);
-                    setOpenMinutes(false);
-                  }}
-                    dropDownContainerStyle={{ position: 'relative', top: 0, zIndex: 10000 }}
-                    maxHeight={75}
-                    zIndex={1000}
-                    listMode='SCROLLVIEW'
-                    open={openTimeFormats}
-                    value={timeFormat}
-                    items={timeFormats}
-                    setOpen={setOpenTimeFormats}
-                    setValue={setTimeFormat}
-                  />
-                </View>
-              </View>
-              
-              <View style={{ flexDirection: 'column', height: 65 }}>
-              <Text style={styles.Lable}>Recommendations</Text>
-              <TextInput
-                style={styles.inputStyle}
-                placeholder="Recommendations"
-                autoCapitalize="none"
-                keyboardType="email-address"
-                returnKeyType="next"
-                underlineColorAndroid="#f000"
-                blurOnSubmit={false}
-                value={comments}
-                onChangeText={(text) => {
-                  setComments(text);
-                }}
-              />
-            </View>
-            </View>
-          </View>
         </View>
 
 
@@ -2586,14 +1961,14 @@ const onSwipeValueChange = (data: any) => {
                 <CalendarPicker
                   label="Date"
                   value={rfiDate}
-                  onChange={() => openCloseCalendar()}
+                  onChange={(date) => setRFIDate(date)}
                 />
               </View>
               <View>
                 <TimePicker
                   label="Time"
-                  value={hour}
-                  onChange={() => setOpenTimeFormats(false)}
+                  value={rfiTime}
+                  onChange={(time) => setRFITime(time)}
                 />
               </View>
 
@@ -3038,7 +2413,7 @@ const onSwipeValueChange = (data: any) => {
                 </ScrollView>
 
                 <View style={[styles.btnParentSection, { flexDirection: 'row', justifyContent: 'center', gap: 20, marginBottom: -65, backgroundColor: '#fff', paddingVertical: 10, marginHorizontal: -15 }]}>
-                  <TouchableOpacity style={styles.submitButton} onPress={() => onFillChecklist(RFI_STATUS.IN_PROGRESS)}>
+                  <TouchableOpacity style={[styles.submitButton, styles.saveButtonColor]} onPress={() => onFillChecklist(RFI_STATUS.IN_PROGRESS)}>
                     <Text style={styles.submitButtonText}>Save</Text>
                   </TouchableOpacity>
 
@@ -3102,6 +2477,17 @@ const CustomDropdownPicker = ({items, rowItem, fieldName}: {items: any, rowItem:
 }
 
 const styles = StyleSheet.create({
+  selectDropdown: {
+    backgroundColor: '#fff',
+    padding: 12,
+    borderRadius: 4,
+    borderColor: '#ddd',
+    borderWidth: 1,
+    justifyContent: 'center',
+    fontSize: 12,
+    color: '#2c2c2c',
+    position: 'relative',
+  },
   MainContainer: {
     flexDirection: 'column', 
     alignItems: 'center', 
@@ -3183,6 +2569,20 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     flexDirection: 'column',
     textAlignVertical: 'top',
+    fontSize: 12
+  },
+  inputFieldsText: {
+    color: '#2c2c2c',
+    paddingHorizontal: 15,
+    backgroundColor: '#fff',
+    fontWeight: '400',
+    borderWidth: 1,
+    borderRadius: 4,
+    height: 42,
+    width: '100%',
+    borderColor: '#ccc',
+    flexDirection: 'column',
+    textAlignVertical: 'center',
     fontSize: 12
   },
   DropDownFiels: {
@@ -3451,8 +2851,9 @@ const styles = StyleSheet.create({
     color: '#27272A',
   },
   submitButton: {
+    width: 120,
     backgroundColor: '#1C58C0',
-    borderRadius: 6,
+    borderRadius: 30,
     color: '#fff',
     paddingHorizontal: 30,
     paddingTop: 12,
@@ -3460,6 +2861,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginTop: 10,
     alignItems: 'center',
+  },
+  saveButtonColor: {
+    backgroundColor: '#5eab4b',
   },
   submitButtonText: {
     fontSize: 14,

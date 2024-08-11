@@ -49,7 +49,7 @@ const RFIsUserCategorySelection = ({ route, navigation }: { route: any, navigati
           ]}
           onPress={() => switchTab(USER_CATEGORY_DISPLAY.STRUCTURE)}
         >
-          <Text style={styles.activeTabText}>{USER_CATEGORY_DISPLAY.STRUCTURE}</Text>
+          <Text style={[styles.activeTabText, activeTab === USER_CATEGORY_DISPLAY.STRUCTURE && styles.activeFontColor]}>{USER_CATEGORY_DISPLAY.STRUCTURE}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -59,7 +59,7 @@ const RFIsUserCategorySelection = ({ route, navigation }: { route: any, navigati
           ]}
           onPress={() => switchTab(USER_CATEGORY_DISPLAY.HIGHWAY)}
         >
-          <Text style={styles.activeTabText}>{USER_CATEGORY_DISPLAY.HIGHWAY}</Text>
+          <Text style={[styles.activeTabText, activeTab === USER_CATEGORY_DISPLAY.HIGHWAY && styles.activeFontColor]}>{USER_CATEGORY_DISPLAY.HIGHWAY}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -69,7 +69,7 @@ const RFIsUserCategorySelection = ({ route, navigation }: { route: any, navigati
           ]}
           onPress={() => switchTab(USER_CATEGORY_DISPLAY.OTHER)}
         >
-          <Text style={styles.activeTabText}>{USER_CATEGORY_DISPLAY.OTHER}</Text>
+          <Text style={[styles.activeTabText, activeTab === USER_CATEGORY_DISPLAY.OTHER && styles.activeFontColor]}>{USER_CATEGORY_DISPLAY.OTHER}</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.tabContent}>
@@ -104,7 +104,10 @@ const styles = StyleSheet.create({
   activeTab: {
     borderBottomWidth: 3,
     borderStyle: 'solid',
-    borderColor: '#1C58C0'
+    borderColor: '#1C58C0',
+  },
+  activeFontColor: {
+    color: '#1C58C0',
   },
   activeTabText: {
     color: '#000',
@@ -114,7 +117,6 @@ const styles = StyleSheet.create({
   tabContent: {
     paddingHorizontal: 5,
     paddingTop: 10,
-    borderWidth: 1,
     height: '100%'
   },
 });

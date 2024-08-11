@@ -4,7 +4,7 @@ import { useSnackbar } from '../../../context/SnackbarContext';
 import { useDispatch, useSelector } from 'react-redux';
 import Input from '../../../components/UI/Input';
 import { useIsFocused } from '@react-navigation/native';
-import { CONCRETE_GRADE_LIST, HeaderItems, SOURCE_APPROVAL_STATUS } from '../../../constants/constants';
+import { CEMENT_GRADE_LIST, CONCRETE_GRADE_LIST, HeaderItems, SOURCE_APPROVAL_STATUS, TEST_MATERIALS_TYPES } from '../../../constants/constants';
 import { Image } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import LoadingAnimation from '../../Common/LoadingAnimation';
@@ -14,7 +14,7 @@ import CustomAlert from '../../Common/CustomAlert';
 
 const SourceApprovals = ({ route, navigation }: { route: any, navigation: any }) => {
 
-    const { testWorkCategoryName, testMaterialName, testMaterialId } = route.params;
+    const { testWorkCategoryName, testMaterialName, materialType, testMaterialId } = route.params;
     const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
     const { sourceApprovals, sourceApprovalsByStatus, addedSourceApproval, patchedSourceApproval,
         updatedSourceApproval, deletedSourceApproval, addedSourceDetail, updatedSourceDetail, deletedSourceDetail,
@@ -28,6 +28,10 @@ const SourceApprovals = ({ route, navigation }: { route: any, navigation: any })
     const [confirmationAlert, setConfirmationAlert] = useState(false);
 
     const [data, setData] = useState([]);
+
+    const [gradeList, setGradeList]: any = useState([]);
+
+    const [gradeField, setGradeField]: any = useState({});
 
     if (useIsFocused()) {
         const eventEmitter = new NativeEventEmitter();
@@ -48,6 +52,19 @@ const SourceApprovals = ({ route, navigation }: { route: any, navigation: any })
 
     // mount
     useEffect(() => {
+        if (materialType === TEST_MATERIALS_TYPES.CONCRETE) {
+            setGradeField({
+                name: 'gradeOfConcrete',
+                label: 'Grade Of Concrete'
+            });
+            setGradeList(CONCRETE_GRADE_LIST);
+        } else if (materialType === TEST_MATERIALS_TYPES.CEMENT) {
+            setGradeField({
+                name: 'gradeOfCement',
+                label: 'Grade Of Cement'
+            });
+            setGradeList(CEMENT_GRADE_LIST);
+        }
         dispatch(getSourceApprovals({
             projectId: loggedInUser.projectId,
             testMaterialId: testMaterialId
@@ -69,7 +86,6 @@ const SourceApprovals = ({ route, navigation }: { route: any, navigation: any })
 
     type FormSourceDetailState = {
         sourceApprovalId: string;
-        gradeOfConcrete: string;
         ratePerCum: number;
     };
 
@@ -83,7 +99,7 @@ const SourceApprovals = ({ route, navigation }: { route: any, navigation: any })
 
     const [sourceDetailForm, setSourceDetailForm]: any = useState<FormSourceDetailState>({
         sourceApprovalId: '',
-        gradeOfConcrete: '',
+        [gradeField.name]: '',
         ratePerCum: 0,
     });
 
@@ -135,7 +151,7 @@ const SourceApprovals = ({ route, navigation }: { route: any, navigation: any })
         setSourceApprovalDetails(item.sourceApprovalDetails || []);
         setSourceDetailForm({
             sourceApprovalId: item._id,
-            gradeOfConcrete: '',
+            [gradeField.name]: '',
             ratePerCum: 0,
         });
         setOpenSourceDetailsPopup(true)
@@ -245,9 +261,9 @@ const SourceApprovals = ({ route, navigation }: { route: any, navigation: any })
                 projectId: loggedInUser.projectId,
                 sourceApprovalId: selectedSource._id,
                 body: {
-                    name: sourceDetailForm.gradeOfConcrete,
+                    name: sourceDetailForm[gradeField.name],
                     metaData: {
-                        gradeOfConcrete: sourceDetailForm.gradeOfConcrete,
+                        [gradeField.name]: sourceDetailForm[gradeField.name],
                         ratePerCum: Number(sourceDetailForm.ratePerCum),
                     }
                 }
@@ -258,9 +274,9 @@ const SourceApprovals = ({ route, navigation }: { route: any, navigation: any })
                 sourceApprovalId: selectedSource._id,
                 id: selectedSourceDetail._id,
                 body: {
-                    name: sourceDetailForm.gradeOfConcrete,
+                    name: sourceDetailForm[gradeField.name],
                     metaData: {
-                        gradeOfConcrete: sourceDetailForm.gradeOfConcrete,
+                        [gradeField.name]: sourceDetailForm[gradeField.name],
                         ratePerCum: Number(sourceDetailForm.ratePerCum),
                     }
                 }
@@ -273,7 +289,7 @@ const SourceApprovals = ({ route, navigation }: { route: any, navigation: any })
             setSourceApprovalDetails([addedSourceDetail, ...sourceApprovalDetails]);
             setSourceDetailForm({
                 sourceApprovalId: selectedSource._id,
-                gradeOfConcrete: '',
+                [gradeField.name]: '',
                 ratePerCum: 0,
             });
             onSuccess('Source Details Added Successfully');
@@ -287,15 +303,15 @@ const SourceApprovals = ({ route, navigation }: { route: any, navigation: any })
             const list = [...sourceApprovalDetails];
             const editedObj = list.find((item: any) => item._id === selectedSourceDetail._id);
             if (editedObj) {
-                editedObj.name = sourceDetailForm.gradeOfConcrete;
-                editedObj.metaData.gradeOfConcrete = sourceDetailForm.gradeOfConcrete;
+                editedObj.name = sourceDetailForm[gradeField.name];
+                editedObj.metaData[gradeField.name] = sourceDetailForm[gradeField.name];
                 editedObj.metaData.ratePerCum = sourceDetailForm.ratePerCum;
                 setSourceApprovalDetails(list);
             }
 
             setSourceDetailForm({
                 sourceApprovalId: selectedSource._id,
-                gradeOfConcrete: '',
+                [gradeField.name]: '',
                 ratePerCum: 0,
             });
             onSuccess('Source Details Updated Successfully');
@@ -324,7 +340,7 @@ const SourceApprovals = ({ route, navigation }: { route: any, navigation: any })
     const handleSourceDetailEdit = (item: any) => {
         setSelectedSourceDetail(item);
         setSourceDetailForm({
-            gradeOfConcrete: item.metaData?.gradeOfConcrete,
+            [gradeField.name]: item.metaData?.[gradeField.name],
             ratePerCum: '' + item.metaData?.ratePerCum,
             sourceApprovalId: item.sourceApprovalId,
         });
@@ -391,7 +407,7 @@ const SourceApprovals = ({ route, navigation }: { route: any, navigation: any })
             <View style={styles.reportFields}>
                 <View>
                     <View>
-                        {renderPicker('Grade of Concrete', 'gradeOfConcrete')}
+                        {renderPicker(gradeField.label, gradeField.name)}
                     </View>
                     <View>
                         <Input
@@ -411,8 +427,8 @@ const SourceApprovals = ({ route, navigation }: { route: any, navigation: any })
 
     const renderPicker = (
         label: string,
-        name: keyof FormSourceDetailState,
-        options = [{ label: 'Select', value: '' }].concat(CONCRETE_GRADE_LIST),
+        name: keyof FormSourceDetailState | any,
+        options = [{ label: 'Select', value: '' }].concat(gradeList),
     ) => {
         return (
             <View style={styles.inputContainer}>

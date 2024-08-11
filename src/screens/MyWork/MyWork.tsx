@@ -711,43 +711,6 @@ const MyWork = ({ route, navigation }: { route: any, navigation: any }) => {
     return [styles.StartWorkCardDisabled, styles.DisabledBorder];
   }
 
-
-  // const chooseImage = () => {
-  //   let options = {
-  //     title: 'Select Image',
-  //     customButtons: [
-  //       { name: 'customOptionKey', title: 'Choose Photo from Custom Option' },
-  //     ],
-  //     storageOptions: {
-  //       skipBackup: true,
-  //       path: 'images',
-  //     },
-  //   };
-  //   ImagePicker.showImagePicker(options, (response) => {
-  //     console.log('Response = ', response);
-
-  //     if (response.didCancel) {
-  //       console.log('User cancelled image picker');
-  //     } else if (response.error) {
-  //       console.log('ImagePicker Error: ', response.error);
-  //     } else if (response.customButton) {
-  //       console.log('User tapped custom button: ', response.customButton);
-  //       alert(response.customButton);
-  //     } else {
-  //       const source = { uri: response.uri };
-
-  //       // You can also display the image using data:
-  //       // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-  //       // alert(JSON.stringify(response));
-  //       console.log('response', JSON.stringify(response));
-  //       this.setState({
-  //         filePath: response,
-  //         fileData: response.data,
-  //         fileUri: response.uri
-  //       });
-  //     }
-  //   });
-  // }
   const getRFIDataByWorkAssignmentId = (task: any) => {
     setRFIDate('');
     setComments('');
@@ -1931,18 +1894,9 @@ const onSwipeValueChange = (data: any) => {
                   <FlatList
                     data={concreteData}
                     renderItem={renderItem}
-                    //renderHiddenItem={renderHiddenItem}
-                    //renderSectionHeader={renderSectionHeader}
-                    // leftOpenValue={0}
-                    // rightOpenValue={-430}
-                    // previewRowKey={'0'}
-                    // previewOpenValue={-40}
-                    // previewOpenDelay={3000}
-                    // onRowDidOpen={onRowOpen}
                     style={{zIndex: 10}}
                     automaticallyAdjustContentInsets={true}
                     scrollEnabled={false}
-                    // onSwipeValueChange={onSwipeValueChange}
                   />
                 }
               </ScrollView>

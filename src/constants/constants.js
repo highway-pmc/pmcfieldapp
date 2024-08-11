@@ -520,7 +520,10 @@ export const CONCRETE_GRADE_LIST = [
         label: 'M70', value: 'M70'
     },
     {
-        label: 'M75', value: 'M20'
+        label: 'M75', value: 'M75'
+    },
+    {
+        label: 'M80', value: 'M80'
     },
 ];
 

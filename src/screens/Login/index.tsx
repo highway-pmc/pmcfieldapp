@@ -318,15 +318,15 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     color: '#FFFFFF',
     borderColor: '#7DE24E',
-    height: 40,
     alignItems: 'center',
-    borderRadius: 8,
+    justifyContent: 'center',
+    borderRadius:8,
     marginTop: 20,
     marginBottom: 25,
+    paddingVertical: 10
   },
   buttonTextStyle: {
     color: '#FFFFFF',
-    paddingVertical: 10,
     fontSize: 16,
     fontWeight: '600',
   },

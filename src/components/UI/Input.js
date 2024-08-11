@@ -43,16 +43,22 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   label: {
-    fontSize: 16,
+    fontSize: 12,
     marginBottom: 5,
-    color: '#333',
+    color: '#666',
+    fontWeight: '500'
   },
   input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 10,
-    borderRadius: 5,
     backgroundColor: '#fff',
+    borderRadius: 4,
+    borderColor: '#ddd',
+    borderWidth: 1,
+    justifyContent: 'center',
+    fontSize: 12,
+    color: '#2c2c2c',
+    position: 'relative',
+    height: 44,
+    paddingHorizontal: 15
   },
   readOnly: {
     backgroundColor: '#f5f5f5',

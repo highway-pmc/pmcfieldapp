@@ -304,9 +304,9 @@ const ComponentsList = ({ route, navigation }: { route: any, navigation: any }) 
               </View>
               <View style={styles.ModalInnerContainer}>
                 <View>
-                  <Text style={styles.AssignRoleText}>Component: {selectedComponent.name}</Text>
+                  <Text style={styles.AssignRoleTextHeading}>Component: {selectedComponent.name}</Text>
                 </View>
-                <ScrollView style={{ paddingTop: 10, height: 500 }}>
+                <ScrollView style={{ paddingTop: 0, height: 500 }}>
                   {userData.map((item: any, index) => (
                     <View style={styles.CategoryType}>
                       <View style={styles.FlexRowCenter}>
@@ -352,6 +352,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     paddingVertical: 10,
     padding: 15,
+    paddingBottom: 35
   },
   ErrorSectionStyle: {
     flexDirection: 'row',
@@ -422,22 +423,27 @@ const styles = StyleSheet.create({
   inputStyle: {
     flex: 1,
     color: '#2c2c2c',
-    paddingLeft: 40,
+    paddingLeft: 45,
     paddingRight: 15,
-    borderWidth: 1,
-    borderRadius: 6,
-    borderColor: '#808089',
     backgroundColor: '#fff',
     fontWeight: '600',
-    paddingVertical: 5,
-    height: 45,
+    paddingVertical: 15,
+    height: 55
   },
   SectionStyle: {
     flexDirection: 'row',
-    height: 40,
-    marginBottom: 10,
-    marginTop: 5,
+    marginBottom: 0,
     position: 'relative',
+    marginHorizontal: -15,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.25,
+    shadowRadius: 20,
+    // Shadow for Android
+    elevation: 10,
+    alignItems: 'center',
+    marginTop: -10,
   },
   ImageSearch: {
     position: 'absolute',
@@ -448,28 +454,16 @@ const styles = StyleSheet.create({
     top: '27%',
   },
   UserCategory: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
     backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: '#BECADA',
-    borderStyle: 'solid',
-    borderRadius: 6,
-    paddingHorizontal: 15,
-    paddingVertical: 15,
-    marginBottom: 20,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+    borderRadius: 12,
+    padding: 20,
+    marginTop: 15,
+    flexDirection: 'row',
+    alignContent: 'center',
+    justifyContent: 'space-between'
   },
   checkbox: {
-    transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }],
+    transform: [{scaleX: 1.2}, {scaleY: 1.2}],
   },
   label: {
     margin: 8,
@@ -588,9 +582,16 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     paddingVertical: 10,
   },
+  AssignRoleTextHeading: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#27272A',
+    marginLeft: 5,
+    marginTop: 10
+  },
   AssignRoleText: {
-    fontSize: 16,
-    fontWeight: '400',
+    fontSize: 14,
+    fontWeight: '600',
     color: '#27272A',
     marginLeft: 5,
   },

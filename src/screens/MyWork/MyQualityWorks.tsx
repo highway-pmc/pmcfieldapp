@@ -1436,7 +1436,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
   const testSampleForm = (materialType: any) => {
     if (materialType === TEST_MATERIALS_TYPES.CONCRETE || materialType === TEST_MATERIALS_TYPES.CEMENT || materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE || materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE) {
       return <View>
-        <View style={{ flexDirection: 'column', paddingBottom: 40 }}>
+        <View style={{ flexDirection: 'column', paddingBottom: 40, paddingTop: 10 }}>
           <View style={{ flexDirection: 'column' }}>
             <CalendarPicker
               label="Date of Testing"
@@ -2388,22 +2388,28 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
 
   return (
     <View style={styles.Container}>
-      <View style={styles.BreadcrumbContainer}>
-        {
-          breadcrumbData.map((item: any, index) => (
-            <View style={{ flexDirection: 'row' }}>
-              {
-                index == 0 ? <Text style={styles.BreadcrumbPrevTextUnderline} onPress={() => index === 0 && (setCurrentLevel(1), setBreadcrumbData([]))}>{item.name}</Text>
-                  : index === (breadcrumbData.length - 1) ? <Text style={styles.BreadcrumbCurrentText}>{item.name}</Text>
-                    : <Text style={styles.BreadcrumbPrevText}>{item.name}</Text>
-              }
-              {
-                index < (breadcrumbData.length - 1) ? <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} /> : null
-              }
-            </View>
-          ))
-        }
-      </View>
+       {
+        breadcrumbData.length ? 
+        <View style={styles.BreadcrumbContainer}>
+        <ScrollView showsHorizontalScrollIndicator={false} horizontal={true} style={styles.scrollView}>
+          {
+              breadcrumbData.map((item: any, index) => (
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  {
+                    index == 0 ? <Text style={styles.BreadcrumbPrevTextUnderline} onPress={() => index === 0 && (setCurrentLevel(1), setBreadcrumbData([]))}>{item.name}</Text>
+                      : index === (breadcrumbData.length - 1) ? <Text style={styles.BreadcrumbCurrentText}>{item.name}</Text>
+                        : <Text style={styles.BreadcrumbPrevText}>{item.name}</Text>
+                  }
+                  {
+                    index < (breadcrumbData.length - 1) ? <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} /> : null
+                  }
+                </View>
+              ))
+            }
+        </ScrollView>
+        </View>
+        : null
+      }
       {
         (currentLevel !== 1 && currentLevel !== 4) ? <View style={styles.SearchBox}>
           <Image
@@ -2426,7 +2432,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
         </View>
           : null
       }
-      <ScrollView style={styles.Height100}>
+      <ScrollView showsVerticalScrollIndicator={false}  style={styles.Height100}>
         {
           currentLevel === 1 ?
             myTestsData.map((testClassificationItem: any, testClassificationIndex) => (
@@ -2647,7 +2653,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                 <View>
                   <Text style={styles.modalLabel}>{selectedTestSample?.name}</Text>
                 </View>
-                <ScrollView style={{ paddingTop: 10, height: 500, width: 1000 }}>
+                <ScrollView>
                   <Fragment>
                     <StatusBar barStyle="dark-content" />
                     <SafeAreaView>
@@ -2658,8 +2664,8 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                   </Fragment>
                 </ScrollView>
 
-                <View style={[styles.btnParentSection, { flexDirection: 'row', justifyContent: 'center', gap: 20 }]}>
-                  <TouchableOpacity style={styles.submitButton} onPress={() => onSubmitTestSample(RFI_STATUS.IN_PROGRESS)}>
+                <View style={[styles.btnParentSection, { flexDirection: 'row', justifyContent: 'center', gap: 20, marginBottom: -65, backgroundColor: '#fff', paddingVertical: 10, marginHorizontal: -15 }]}>
+                  <TouchableOpacity style={[styles.submitButton, styles.saveButtonColor]} onPress={() => onSubmitTestSample(RFI_STATUS.IN_PROGRESS)}>
                     <Text style={styles.submitButtonText}>Save</Text>
                   </TouchableOpacity>
 
@@ -2685,9 +2691,10 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   GenerateRFIFieldLabel: {
-    fontSize: 16,
-    color: '#150A33',
-    fontWeight: '500'
+    fontSize: 12,
+    color: '#666',
+    fontWeight: '500',
+    marginBottom: 5
   },
   SectionStyle: {
     flexDirection: 'row',
@@ -2707,9 +2714,16 @@ const styles = StyleSheet.create({
   SearchBox: {
     flexDirection: 'row',
     height: 40,
-    marginBottom: 20,
-    marginTop: 5,
+    marginBottom: 30,
     position: 'relative',
+    marginHorizontal: -20,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.25,
+    shadowRadius: 10,
+    // Shadow for Android
+    elevation: 10,
   },
   ImageSearch: {
     position: 'absolute',
@@ -2717,20 +2731,17 @@ const styles = StyleSheet.create({
     height: 24,
     zIndex: 9,
     left: 10,
-    top: '27%',
+    top: '34%',
   },
   inputStyle: {
     flex: 1,
     color: '#2c2c2c',
-    paddingLeft: 15,
+    paddingLeft: 45,
     paddingRight: 15,
-    borderWidth: 1,
-    borderRadius: 6,
-    borderColor: '#808089',
     backgroundColor: '#fff',
     fontWeight: '600',
-    paddingVertical: 5,
-    height: 45,
+    paddingVertical: 15,
+    height: 55
   },
   inputStyle2: {
     flex: 1,
@@ -2896,9 +2907,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    paddingBottom: 10,
-    marginBottom: 10,
-    gap: 5
+    marginHorizontal: -20,
+    paddingHorizontal: 20,
+    marginTop: -21,
+    backgroundColor: '#e7ebf4',
+    gap: 5,
+  },
+  scrollView: {
+    paddingVertical: 10,
+    paddingBottom: 15,
   },
   BreadcrumbPrevText: {
     fontSize: 14,
@@ -2921,13 +2938,21 @@ const styles = StyleSheet.create({
 
   //MyQualityWork Card
   MyWorkCard: {
-    backgroundColor: '#CCD6E7',
+    backgroundColor: '#fff',
     borderRadius: 12,
-    justifyContent: 'flex-start',
-    paddingVertical: 50,
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    paddingVertical: 20,
     paddingHorizontal: 20,
-    marginBottom: 15,
-    position: 'relative'
+    marginBottom: 20,
+    marginHorizontal: 10,
+    minHeight: 100,
+    position: 'relative',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.25,
+    shadowRadius: 20,
+    elevation: 5,
   },
   CompleteWork: {
     borderWidth: 1,
@@ -2948,7 +2973,8 @@ const styles = StyleSheet.create({
   },
   TaskDetails: {
     flexDirection: 'row',
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
+    flexWrap: 'wrap'
   },
   SubHeadingText: {
     color: '#000',
@@ -3029,29 +3055,37 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   modalLabel: {
-    fontSize: 16,
-    fontWeight: '400',
-    color: '#27272A',
-    marginLeft: 5,
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#666',
+    marginTop: 10
   },
   submitButton: {
+    width: 120,
     backgroundColor: '#1C58C0',
-    borderRadius: 10,
+    borderRadius: 30,
     color: '#fff',
-    paddingHorizontal: 15,
+    paddingHorizontal: 30,
     paddingTop: 12,
     paddingBottom: 12,
     marginBottom: 10,
     marginTop: 10,
     alignItems: 'center',
   },
+  saveButtonColor: {
+    backgroundColor: '#5eab4b',
+  },
   submitButtonText: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#fff',
     fontWeight: '500',
   },
-
-
+  Lable: {
+    fontSize: 12,
+    marginBottom: 5,
+    color: '#666',
+    fontWeight: '500'
+  },
   bodyPopup: {
     backgroundColor: 'rgba(0,0,0,0.3)',
     justifyContent: 'center',
@@ -3075,8 +3109,16 @@ const styles = StyleSheet.create({
     marginHorizontal: 3
   },
   btnParentSection: {
-    // alignItems: 'center',
-    marginTop: 10
+     // alignItems: 'center',
+     marginTop: 10,
+     shadowColor: '#000',
+     shadowOffset: { width: 0, height: 10 },
+     shadowOpacity: 0.5,
+     shadowRadius: 10,
+     // Shadow for Android
+     elevation: 10,
+     borderTopWidth: 1,
+     borderColor: '#f3f3f3'
   },
   btnSection: {
     width: 150,

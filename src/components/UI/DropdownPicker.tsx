@@ -59,24 +59,31 @@ const DropdownPicker: React.FC<DropdownPickerProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    width: 140,
-    marginBottom: 20,
+    width: '100%',
+    marginBottom: 15,
+    fontSize: 12,
   },
   label: {
-    fontSize: 16,
-    marginBottom: 8,
-    color: '#555',
+    fontSize: 12,
+    marginBottom: 5,
+    color: '#666',
+    fontWeight: '500',
   },
   pickerContainer: {
-    width: 140,
     backgroundColor: '#fff',
-    borderRadius: 8,
+    borderRadius: 4,
     borderColor: '#ddd',
     borderWidth: 1,
-    height: 50
+    justifyContent: 'center',
+    fontSize: 12,
+    color: '#2c2c2c',
+    position: 'relative',
+    height: 44
 },
 picker: {
   width: '100%',
+  color: '#2c2c2c',
+  fontSize: 12,
 },
 error: {
   color: '#d9534f',

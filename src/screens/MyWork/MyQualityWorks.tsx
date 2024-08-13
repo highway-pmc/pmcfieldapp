@@ -120,7 +120,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
     setCurrentSubTestTypeRFIsData([]);
     let testWorkCategoryData = null;
     let testMateData = null;
-    let testTypeData = null;
+    let testTypeData: any = null;
     let breadCrumb: any = [{
       name: testClassifData.name,
       testClassifIndex: testClassifIndex,
@@ -176,6 +176,9 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
         if (testTypeIndex != -1) {
           testTypeData = testMateData.testTypesData[testTypeIndex];
           breadCrumb[3].name = testTypeData.name;
+          testTypeData.testRFIsData?.forEach((rfi: any) => {
+            rfi.type = testTypeData.type;
+          })
           if (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CONCRETE) {
             if (testTypeData.type === TEST_SAMPLE_CONCRETE_CATEGORY.CORE_TEST) {
               setCurrentTestTypesData([]);
@@ -196,35 +199,45 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
             }
           } else if (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CEMENT) {
             testTypeData.materialType = TEST_MATERIALS_TYPES.CEMENT;
+            setCurrentSubTestTypeRFIsData(testTypeData.testRFIsData);
             setSelectedTestSample(testTypeData);
             if (testTypeData.type === TEST_TYPES.COMPRESSIVE_STRENGTH) {
               if (testTypeData.subTestTypes?.length) {
                 setCurrentSubTestTypesData(testTypeData.subTestTypes)
               }
             } else if (testTypeData.type === TEST_TYPES.SOUNDNESS) {
-              const testObservations: any = [];
-              testObservations.push(getTestSampleCementSoundnessObject(1));
-              setConcreteSampleTestItems(testObservations);
-              setOpenPopup(true);
+              setCurrentSubTestTypeRFIsData(testTypeData.testRFIsData);
+              setCurrentLevel(6);
+              // const testObservations: any = [];
+              // testObservations.push(getTestSampleCementSoundnessObject(1));
+              // setConcreteSampleTestItems(testObservations);
+              // setOpenPopup(true);
             }
           } else if (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE) {
             testTypeData.materialType = TEST_MATERIALS_TYPES.FINE_AGGREGATE;
+            testTypeData.testRFIsData?.forEach((rfi: any) => {
+              rfi.type = testTypeData.type;
+            })
+            setCurrentSubTestTypeRFIsData(testTypeData.testRFIsData);
             setSelectedTestSample(testTypeData);
-            const testObservations: any = [];
-            testObservations.push(getTestSampleCementFineAggregateObject(1, testTypeData.type));
-            setConcreteSampleTestItems(testObservations);
-            setOpenPopup(true);
+            setCurrentLevel(6);
+            // const testObservations: any = [];
+            // testObservations.push(getTestSampleCementFineAggregateObject(1, testTypeData.type));
+            // setConcreteSampleTestItems(testObservations);
+            // setOpenPopup(true);
           } else if (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE) {
             testTypeData.materialType = TEST_MATERIALS_TYPES.COARSE_AGGREGATE;
+            setCurrentSubTestTypeRFIsData(testTypeData.testRFIsData);
             setSelectedTestSample(testTypeData);
-            const testObservations: any = [];
-            testObservations.push(getTestSampleCementCoarseAggregateObject(1, testTypeData.type));
-            if (testTypeData.type === TEST_TYPES.GRADATION) {
-              testObservations.push(getTestSampleCementCoarseAggregateObject(2, testTypeData.type));
-              testObservations.push(getTestSampleCementCoarseAggregateObject(3, testTypeData.type));
-            }
-            setConcreteSampleTestItems(testObservations);
-            setOpenPopup(true);
+            setCurrentLevel(6);
+            // const testObservations: any = [];
+            // testObservations.push(getTestSampleCementCoarseAggregateObject(1, testTypeData.type));
+            // if (testTypeData.type === TEST_TYPES.GRADATION) {
+            //   testObservations.push(getTestSampleCementCoarseAggregateObject(2, testTypeData.type));
+            //   testObservations.push(getTestSampleCementCoarseAggregateObject(3, testTypeData.type));
+            // }
+            // setConcreteSampleTestItems(testObservations);
+            // setOpenPopup(true);
           }
           // breadCrumb.push({
           //   name: testTypeData.name,
@@ -333,7 +346,6 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
   const onClickTestSampleItem = (item: any) => {
     setSelectedTestSample(item);
     const testObservations: any = [];
-
     if (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CONCRETE) {
       item.materialType = TEST_MATERIALS_TYPES.CONCRETE;
       if (!item.workChecklistSubmitted) {
@@ -352,8 +364,21 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
       }
     } else if (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CEMENT) {
       item.materialType = TEST_MATERIALS_TYPES.CEMENT;
-      testObservations.push(getTestSampleCementCompressiveStrengthObject(1));
-      testObservations[0].ageInDays.value = item.testCategory;
+      if (selectedTestSample.type === TEST_TYPES.COMPRESSIVE_STRENGTH) {
+        testObservations.push(getTestSampleCementCompressiveStrengthObject(1));
+        console.log('==========', JSON.stringify(item))
+        testObservations[0].ageInDays.value = item.testCategory;
+      } else if (selectedTestSample.type === TEST_TYPES.SOUNDNESS) {
+        testObservations.push(getTestSampleCementSoundnessObject(1));
+      }
+    } else if (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE) {
+      testObservations.push(getTestSampleCementFineAggregateObject(1, selectedTestSample.type));
+    } else if (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE) {
+      testObservations.push(getTestSampleCementCoarseAggregateObject(1, selectedTestSample.type));
+      if (selectedTestSample.type === TEST_TYPES.GRADATION) {
+        testObservations.push(getTestSampleCementCoarseAggregateObject(2, selectedTestSample.type));
+        testObservations.push(getTestSampleCementCoarseAggregateObject(3, selectedTestSample.type));
+      }
     }
     setConcreteSampleTestItems(testObservations);
     setOpenPopup(true);
@@ -438,9 +463,10 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
 
     dispatch(generateTestSampleReport({
       projectId: loggedInUser.projectId,
-      testRFIId: (selectedTestSample.type === TEST_TYPES.SOUNDNESS || currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE
-        || currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE
-        ) ? selectedTestSample.testRFIsData[0]?._id : selectedTestSample._id,
+      // testRFIId: (selectedTestSample.type === TEST_TYPES.SOUNDNESS || currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE
+      //   || currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE
+      //   ) ? selectedTestSample.testRFIsData[0]?._id : selectedTestSample._id,
+      testRFIId: selectedTestSample._id,
       body: {
         sampleData: objSampleTest7thOr28thDay
       }
@@ -2570,14 +2596,14 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                     }
                   }).map((item: any) => (
                     <View>
-                      <View style={currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CONCRETE && item.sampleStatus != TEST_SAMPLE_STATUS.PREPARED && { borderColor: '#000', borderWidth: 1, borderRadius: 10, marginBottom: 10 }}>
-                        <TouchableOpacity style={getStyle(item)} disabled={(currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CONCRETE && item.sampleStatus != TEST_SAMPLE_STATUS.PREPARED) || item.rfiStatus === RFI_STATUS.APPROVED} onPress={() => onClickTestSampleItem(item)}>
+                      <View style={(item.sampleStatus != TEST_SAMPLE_STATUS.PREPARED) && { borderColor: '#000', borderWidth: 1, borderRadius: 10, marginBottom: 10 }}>
+                        <TouchableOpacity style={getStyle(item)} disabled={(item.sampleStatus != TEST_SAMPLE_STATUS.PREPARED) || item.rfiStatus === RFI_STATUS.APPROVED} onPress={() => onClickTestSampleItem(item)}>
                           <View style={styles.leftContainer}>
                             <Text style={styles.HeadText}>{item.name}</Text>
                           </View>
                         </TouchableOpacity>
                         {
-                          currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CONCRETE && item.sampleStatus != TEST_SAMPLE_STATUS.PREPARED ?
+                          item.sampleStatus != TEST_SAMPLE_STATUS.PREPARED ?
                             <View style={{ flexDirection: 'row', alignContent: 'center', alignItems: 'center' }}>
                               <View style={[styles.SectionStyle, { width: 140 }]}>
                                 <CustomDropdownPicker items={TEST_SAMPLE_STATUS_LIST}

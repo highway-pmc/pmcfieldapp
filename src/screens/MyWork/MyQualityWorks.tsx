@@ -20,7 +20,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
   const [currentTestMaterialsData, setCurrentTestMaterialsData] = useState([]);
   const [currentTestMaterialData, setCurrentTestMaterialData]: any = useState({});
   const [currentTestTypesData, setCurrentTestTypesData] = useState([]);
-  const [currentSubTestTypesData, setCurrentSubTestTypesData] = useState([]);
+  const [currentSubTestTypesData, setCurrentSubTestTypesData]:any = useState([]);
   const [currentSubTestTypeRFIsData, setCurrentSubTestTypeRFIsData] = useState([]);
   const [testClassificationId, setTestClassificationId] = useState('');
   const [currentLevel, setCurrentLevel] = useState(1);
@@ -179,7 +179,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
           testTypeData.testRFIsData?.forEach((rfi: any) => {
             rfi.type = testTypeData.type;
           })
-          if (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CONCRETE) {
+          if (testMateData.materialType === TEST_MATERIALS_TYPES.CONCRETE) {
             if (testTypeData.type === TEST_SAMPLE_CONCRETE_CATEGORY.CORE_TEST) {
               setCurrentTestTypesData([]);
               testTypeData.materialType = TEST_MATERIALS_TYPES.CONCRETE; // TEMP - TODO
@@ -194,16 +194,18 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
               testTypeData.materialType = TEST_MATERIALS_TYPES.CONCRETE; // TEMP - TODO
               setSelectedTestSample(testTypeData);
               if (testTypeData.subTestTypes?.length) {
-                setCurrentSubTestTypesData(testTypeData.subTestTypes)
+                setTimeout(() => {
+                  setCurrentSubTestTypesData([...testTypeData.subTestTypes])
+                })
               }
             }
-          } else if (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CEMENT) {
+          } else if (testMateData.materialType === TEST_MATERIALS_TYPES.CEMENT) {
             testTypeData.materialType = TEST_MATERIALS_TYPES.CEMENT;
             setCurrentSubTestTypeRFIsData(testTypeData.testRFIsData);
             setSelectedTestSample(testTypeData);
             if (testTypeData.type === TEST_TYPES.COMPRESSIVE_STRENGTH) {
               if (testTypeData.subTestTypes?.length) {
-                setCurrentSubTestTypesData(testTypeData.subTestTypes)
+                setCurrentSubTestTypesData([...testTypeData.subTestTypes])
               }
             } else if (testTypeData.type === TEST_TYPES.SOUNDNESS) {
               setCurrentSubTestTypeRFIsData(testTypeData.testRFIsData);
@@ -213,19 +215,19 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
               // setConcreteSampleTestItems(testObservations);
               // setOpenPopup(true);
             }
-          } else if (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE) {
+          } else if (testMateData.materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE) {
             testTypeData.materialType = TEST_MATERIALS_TYPES.FINE_AGGREGATE;
             testTypeData.testRFIsData?.forEach((rfi: any) => {
               rfi.type = testTypeData.type;
             })
+            setCurrentLevel(6);
             setCurrentSubTestTypeRFIsData(testTypeData.testRFIsData);
             setSelectedTestSample(testTypeData);
-            setCurrentLevel(6);
             // const testObservations: any = [];
             // testObservations.push(getTestSampleCementFineAggregateObject(1, testTypeData.type));
             // setConcreteSampleTestItems(testObservations);
             // setOpenPopup(true);
-          } else if (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE) {
+          } else if (testMateData.materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE) {
             testTypeData.materialType = TEST_MATERIALS_TYPES.COARSE_AGGREGATE;
             setCurrentSubTestTypeRFIsData(testTypeData.testRFIsData);
             setSelectedTestSample(testTypeData);
@@ -259,6 +261,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
 
   const onClickNested = (level: number, data: any) => {
     setSearchText('');
+    setCurrentTestTypesData([]);
     setCurrentSubTestTypeRFIsData([]);
     if (data.testClassificationId) {
       setTestClassificationId(data.testClassificationId);
@@ -344,8 +347,8 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
   }
 
   const onClickTestSampleItem = (item: any) => {
-    setSelectedTestSample(item);
     const testObservations: any = [];
+    item.type = selectedTestSample.type;
     if (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CONCRETE) {
       item.materialType = TEST_MATERIALS_TYPES.CONCRETE;
       if (!item.workChecklistSubmitted) {
@@ -366,20 +369,22 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
       item.materialType = TEST_MATERIALS_TYPES.CEMENT;
       if (selectedTestSample.type === TEST_TYPES.COMPRESSIVE_STRENGTH) {
         testObservations.push(getTestSampleCementCompressiveStrengthObject(1));
-        console.log('==========', JSON.stringify(item))
         testObservations[0].ageInDays.value = item.testCategory;
       } else if (selectedTestSample.type === TEST_TYPES.SOUNDNESS) {
         testObservations.push(getTestSampleCementSoundnessObject(1));
       }
     } else if (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE) {
+      item.materialType = TEST_MATERIALS_TYPES.FINE_AGGREGATE;
       testObservations.push(getTestSampleCementFineAggregateObject(1, selectedTestSample.type));
     } else if (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE) {
+      item.materialType = TEST_MATERIALS_TYPES.COARSE_AGGREGATE;
       testObservations.push(getTestSampleCementCoarseAggregateObject(1, selectedTestSample.type));
       if (selectedTestSample.type === TEST_TYPES.GRADATION) {
         testObservations.push(getTestSampleCementCoarseAggregateObject(2, selectedTestSample.type));
         testObservations.push(getTestSampleCementCoarseAggregateObject(3, selectedTestSample.type));
       }
     }
+    setSelectedTestSample(item);
     setConcreteSampleTestItems(testObservations);
     setOpenPopup(true);
   }
@@ -1460,10 +1465,11 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
   };
 
   const testSampleForm = (materialType: any) => {
-    if (materialType === TEST_MATERIALS_TYPES.CONCRETE || materialType === TEST_MATERIALS_TYPES.CEMENT || materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE || materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE) {
+    if (!materialType || materialType === TEST_MATERIALS_TYPES.CONCRETE || materialType === TEST_MATERIALS_TYPES.CEMENT || materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE || materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE) {
       return <View>
         <View style={{ flexDirection: 'column', paddingBottom: 40, paddingTop: 10 }}>
           <View style={{ flexDirection: 'column' }}>
+            <Text>aa:{materialType} == {selectedTestSample?.type}</Text>
             <CalendarPicker
               label="Date of Testing"
               value={formSampleTest7thOr28thDay.dateOfTesting}
@@ -2564,7 +2570,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
             : null
         }
         {
-          (currentLevel === 5) ?
+          (currentLevel === 5) &&
             currentSubTestTypesData?.length ?
               currentSubTestTypesData.filter((subTestType: any) => {
                 if (searchText && subTestType.name) {
@@ -2580,8 +2586,6 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                 </TouchableOpacity>
               )) : ((currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CONCRETE && selectedTestSample?.type === TEST_TYPES.CUBE_TEST) ||
                 (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CEMENT && selectedTestSample?.type === TEST_TYPES.COMPRESSIVE_STRENGTH)) && tasksListing()
-            :
-            null
         }
         {
           (currentLevel === 6) ?
@@ -2634,7 +2638,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                   ))
                 }
               </ScrollView>
-              : null//tasksListing()
+              : <Text>ehehhfbb</Text>//tasksListing()
             : null
         }
         {/* No Data Found */}

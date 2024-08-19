@@ -349,16 +349,31 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
   const onClickTestSampleItem = (item: any) => {
     const testObservations: any = [];
     item.type = selectedTestSample.type;
+    if (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CONCRETE ||
+      currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CEMENT
+    ) {
+      if (item.testCategory) {
+        if (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CONCRETE && !item.workChecklistSubmitted) {
+          Alert.alert('Error', 'Checklist of this sample yet to be submitted.')
+          return;
+        }
+        if (!item.readyForDayTesting) {
+          Alert.alert('Error', `Testing of this sample will be started by ${item.startTestingByDate}`);
+          return;
+        }
+      }
+    }
+
     if (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CONCRETE) {
       item.materialType = TEST_MATERIALS_TYPES.CONCRETE;
-      if (!item.workChecklistSubmitted) {
-        Alert.alert('Error', 'Checklist of this sample yet to be submitted.')
-        return;
-      }
-      if (!item.readyForDayTesting) {
-        Alert.alert('Error', `Testing of this sample will be started by ${item.startTestingByDate}`);
-        return;
-      }
+      // if (!item.workChecklistSubmitted) {
+      //   Alert.alert('Error', 'Checklist of this sample yet to be submitted.')
+      //   return;
+      // }
+      // if (!item.readyForDayTesting) {
+      //   Alert.alert('Error', `Testing of this sample will be started by ${item.startTestingByDate}`);
+      //   return;
+      // }
 
       testObservations.push(getTestSampleConcreteObject(1));
       if (item.testCategory === TEST_SAMPLE_CONCRETE_CATEGORY.C_28TH_DAYS) {
@@ -1469,7 +1484,6 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
       return <View>
         <View style={{ flexDirection: 'column', paddingBottom: 40, paddingTop: 10 }}>
           <View style={{ flexDirection: 'column' }}>
-            <Text>aa:{materialType} == {selectedTestSample?.type}</Text>
             <CalendarPicker
               label="Date of Testing"
               value={formSampleTest7thOr28thDay.dateOfTesting}
@@ -1875,7 +1889,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                           <View style={{ flexDirection: 'row' }}>
                             <View style={{ flexDirection: 'column' }}>
                               {
-                                item.details.values.filter((value: any) => !value.hide).map((value: any, indexDetails: number) => (
+                                item.details && item.details.values.filter((value: any) => !value.hide).map((value: any, indexDetails: number) => (
                                   <View style={{ flexDirection: 'row' }}>
                                     <View style={{ flexDirection: 'column', width: 80 }}>
                                       {
@@ -1940,7 +1954,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                           <View style={{ flexDirection: 'row' }}>
                             <View style={{ flexDirection: 'column' }}>
                               {
-                                item.details.values.filter((value: any) => !value.hide).map((value: any, indexDetails: number) => (
+                                  item.details && item.details.values.filter((value: any) => !value.hide).map((value: any, indexDetails: number) => (
                                   <View style={{ flexDirection: 'row' }}>
                                     <View style={{ flexDirection: 'column', width: 80 }}>
                                       {
@@ -2066,7 +2080,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                           <View style={{ flexDirection: 'row' }}>
                             <View style={{ flexDirection: 'column' }}>
                               {
-                                item.details.values.filter((value: any) => !value.hide).map((value: any, indexDetails: number) => (
+                                  item.details && item.details.values.filter((value: any) => !value.hide).map((value: any, indexDetails: number) => (
                                   <View style={{ flexDirection: 'row' }}>
                                     <View style={{ flexDirection: 'column', width: 80 }}>
                                       {
@@ -2131,7 +2145,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                           <View style={{ flexDirection: 'row' }}>
                             <View style={{ flexDirection: 'column' }}>
                               {
-                                item.details.values.filter((value: any) => !value.hide).map((value: any, indexDetails: number) => (
+                                  item.details && item.details.values.filter((value: any) => !value.hide).map((value: any, indexDetails: number) => (
                                   <View style={{ flexDirection: 'row' }}>
                                     <View style={{ flexDirection: 'column', width: 80 }}>
                                       {
@@ -2196,7 +2210,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                           <View style={{ flexDirection: 'row' }}>
                             <View style={{ flexDirection: 'column' }}>
                               {
-                                item.details.values.filter((value: any) => !value.hide).map((value: any, indexDetails: number) => (
+                                  item.details && item.details.values.filter((value: any) => !value.hide).map((value: any, indexDetails: number) => (
                                   <View style={{ flexDirection: 'row' }}>
                                     <View style={{ flexDirection: 'column', width: 80 }}>
                                       {
@@ -2261,7 +2275,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                           <View style={{ flexDirection: 'row' }}>
                             <View style={{ flexDirection: 'column' }}>
                               {
-                                item.details.values.filter((value: any) => !value.hide).map((value: any, indexDetails: number) => (
+                                  item.details && item.details.values.filter((value: any) => !value.hide).map((value: any, indexDetails: number) => (
                                   <View style={{ flexDirection: 'row' }}>
                                     <View style={{ flexDirection: 'column', width: 80 }}>
                                       {
@@ -2326,7 +2340,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                           <View style={{ flexDirection: 'row' }}>
                             <View style={{ flexDirection: 'column' }}>
                               {
-                                item.details.values.filter((value: any) => !value.hide).map((value: any, indexDetails: number) => (
+                                  item.details && item.details.values.filter((value: any) => !value.hide).map((value: any, indexDetails: number) => (
                                   <View style={{ flexDirection: 'row' }}>
                                     <View style={{ flexDirection: 'column', width: 80 }}>
                                       {
@@ -2638,7 +2652,7 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
                   ))
                 }
               </ScrollView>
-              : <Text>ehehhfbb</Text>//tasksListing()
+              : <Text>Sample not found.</Text>//tasksListing()
             : null
         }
         {/* No Data Found */}

@@ -12,6 +12,8 @@ import CalendarPicker from '../../../components/UI/CalenderPicker';
 import { addProcurement, clearProcurements, deleteProcurement, getProcurements, getSourceApprovalsByStatus, updateProcurement } from '../actions';
 import CustomAlert from '../../Common/CustomAlert';
 import { getDbDate, getDbDateFromDDMMYYYY, getDisplayDate } from '../../../utils/Utils';
+import DocumentPicker from 'react-native-document-picker';
+import appConfig from '../../../common/app.config';
 
 const Procurements = ({ route, navigation }: { route: any, navigation: any }) => {
 
@@ -224,6 +226,8 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
                 projectId: loggedInUser.projectId,
                 testMaterialId: testMaterialId
             }));
+            console.log('==addedProcurement===', addedProcurement)
+            uploadInvoice();
         } else if (error) {
             showSnackbar(error, 'error');
         }
@@ -237,6 +241,7 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
                 projectId: loggedInUser.projectId,
                 testMaterialId: testMaterialId
             }));
+            uploadInvoice();
         } else if (error) {
             showSnackbar(error, 'error');
         }
@@ -268,6 +273,64 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
                 setVehicleNos([...vehicleNos]);
                 setForm({ ...form });
             }
+        }
+    }
+    
+    const [fileRes, setFileRes]: any = useState(null);
+
+    const onDocumentPress = async () => {
+        try {
+            const result: any = await DocumentPicker.pick({
+                type: [DocumentPicker.types.images, DocumentPicker.types.pdf],
+                allowMultiSelection: false
+            });
+            const res = result[0];
+            setFileRes(res);
+        } catch (err) {
+            console.log('======err2===', err)
+            if (DocumentPicker.isCancel(err)) {
+                showSnackbar('No document selected');
+            } else {
+                throw err;
+            }
+        }
+    };
+
+    const uploadInvoice = async() => {
+        console.log('--222222222---', fileRes)
+        if (!fileRes) {
+            return;
+        }
+        let urlOfS = `${appConfig.API_URL}/v1/auth/projects/${loggedInUser.projectId}/procurements/${!selectedProcurement? addedProcurement._id: selectedProcurement._id}/upload`;
+        if (fileRes.size < 500000000) {
+            let data = new FormData();
+            data.append('file', fileRes);
+            try {
+                const responseOfFileUpload = await fetch(urlOfS, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        'Authorization': appConfig.getToken()
+                    },
+                    body: data,
+                });
+                console.log('===responseOfFileUpload====', responseOfFileUpload)
+                if (responseOfFileUpload.status == 200) {
+                    let responseInJs = await responseOfFileUpload.json();
+                    console.log('===responseInJs====', responseInJs)
+                    let fileName = responseInJs.data.fileUrl; // file name which will be        sent from backend
+                    showSnackbar('Upload Succesfull');
+                    setFileRes(null);
+                } else {
+                    showSnackbar('Upload Failed');
+                }
+            } catch (err) {
+                console.log('========err==', err)
+                showSnackbar('Upload Failed');
+                console.log(err, 'error in upload');
+            }
+        } else {
+            showSnackbar('File size should not exceed 50 MB');
         }
     }
 
@@ -330,7 +393,7 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
                         </View>
                     </View>
                     <View>
-                        <TouchableOpacity style={styles.upload_container}>
+                        <TouchableOpacity style={styles.upload_container} onPress={onDocumentPress}>
                             <Text style={styles.uploadBtn}>Upload Invoice</Text>
                         </TouchableOpacity>
                     </View>

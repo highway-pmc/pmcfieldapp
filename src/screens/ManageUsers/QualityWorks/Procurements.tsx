@@ -226,7 +226,6 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
                 projectId: loggedInUser.projectId,
                 testMaterialId: testMaterialId
             }));
-            console.log('==addedProcurement===', addedProcurement)
             uploadInvoice();
         } else if (error) {
             showSnackbar(error, 'error');
@@ -297,7 +296,6 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
     };
 
     const uploadInvoice = async() => {
-        console.log('--222222222---', fileRes)
         if (!fileRes) {
             return;
         }
@@ -392,10 +390,13 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
                             </ScrollView>
                         </View>
                     </View>
-                    <View>
+                    <View style={{flexDirection: 'column'}}>
                         <TouchableOpacity style={styles.upload_container} onPress={onDocumentPress}>
                             <Text style={styles.uploadBtn}>Upload Invoice</Text>
                         </TouchableOpacity>
+                        {
+                            selectedProcurement?.invoiceFile && <Image source={{uri: selectedProcurement.invoiceFile}} style={{width: 300, height: 200}}></Image>
+                        }
                     </View>
                 </View>
                 <TouchableOpacity style={styles.btnContainer} onPress={handleSubmit}>

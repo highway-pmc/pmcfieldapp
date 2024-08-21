@@ -36,7 +36,8 @@ const DropdownPicker: React.FC<DropdownPickerProps> = ({
 
   
   return (
-    <View style={label ? [styles.container, style] : {}}>
+    // <View style={label ? [styles.container, style] : {}}></View>
+    <View style={[styles.container, style]}>
       {
         label && 
         <Text style={styles.label}>{label}</Text>

@@ -93,18 +93,6 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
 
   const [rfiDate, setRFIDate] = useState('');
   const [rfiTime, setRFITime] = useState('');
-  const [hours, setHours] = useState([]);
-  const [minutes, setMinutes] = useState([]);
-  const [timeFormats, setTimeFormats] = useState([]);
-
-  const [hour, setHour] = useState('12');
-  const [minute, setMinute] = useState('00');
-  const [timeFormat, setTimeFormat] = useState('AM');
-
-  const [openHours, setOpenHours] = useState(false);
-  const [openMinutes, setOpenMinutes] = useState(false);
-  const [openTimeFormats, setOpenTimeFormats] = useState(false);
-
   const [openCalendar, setOpenCalendar] = useState(false);
 
   const [comments, setComments] = useState('');
@@ -255,9 +243,6 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       getMyWorksData();
       setSearchText('');
       setOpenPopup(false);
-      getHours();
-      getMins();
-      getTimeFormats();
     }
   }, [focus]);
 
@@ -394,11 +379,6 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         setRFIDate(getDbDate(rfiData.rfiSubmitDateTime));
 
         const time = getDisplayTime(rfiData.rfiSubmitDateTime);
-        const hourMin = time.split(' ')[0];
-        setHour(hourMin.split(':')[0]);
-        setMinute(hourMin.split(':')[1]);
-
-        setTimeFormat(time.split(' ')[1]);
       }
 
       if (rfiData.comments) {
@@ -998,10 +978,10 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         };
         break;
       case TASK_TYPES.CONCRETING:
-        // const isDataValid = validateConcreteData();
-        // if(isDataValid){
-          
-        // }
+        const isDataValid = validateConcreteData();
+        if(!isDataValid){
+          return;
+        }
         concreteData.forEach((item: any) => {
           delete item.key;
           (item.concreteTemp = Number(item.concreteTemp)),
@@ -1018,7 +998,6 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       default:
         break;
     }
-    return;
     dispatch(
       fillRFIsChecklist({
         projectId: loggedInUser.projectId,
@@ -1144,48 +1123,13 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     // }
   };
 
-  const getHours = () => {
-    let hours = [];
-    for (let i = 1; i <= 12; i++) {
-      hours.push({
-        label: i < 10 ? '0' + i : '' + i,
-        value: i < 10 ? '0' + i : '' + i,
-      });
-    }
-    setHours(hours);
-  };
-
-  const getMins = () => {
-    let mins = [];
-    for (let i = 0; i < 60; i = i + 10) {
-      mins.push({
-        label: i < 10 ? '0' + i : '' + i,
-        value: i < 10 ? '0' + i : '' + i,
-      });
-    }
-    setMinutes(mins);
-  };
-
-  const getTimeFormats = () => {
-    setTimeFormats([
-      {
-        label: 'AM',
-        value: 'AM',
-      },
-      {
-        label: 'PM',
-        value: 'PM',
-      },
-    ]);
-  };
-
   const onAddMoreConcrete = () => {
     setConcreteData([
       ...concreteData,
       {
         vehicleNo: '',
-        timeOfArrival: 'N',
-        gradeOfConcrete: 'Y',
+        timeOfArrival: '',
+        gradeOfConcrete: '',
         concreteTemp: 0,
         slumpValue: 0,
         noOfCubesCasted: 0,
@@ -2431,7 +2375,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                   <FlatList
                     data={concreteData}
                     renderItem={renderItem}
-                    keyExtractor={item => item.key.toString()}
+                    keyExtractor={item => item.key?.toString()}
                     style={{zIndex: 10}}
                     automaticallyAdjustContentInsets={true}
                     scrollEnabled={false}

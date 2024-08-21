@@ -284,6 +284,7 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
                 allowMultiSelection: false
             });
             const res = result[0];
+            console.log('==res===', res)
             setFileRes(res);
         } catch (err) {
             console.log('======err2===', err)
@@ -300,7 +301,7 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
             return;
         }
         let urlOfS = `${appConfig.API_URL}/v1/auth/projects/${loggedInUser.projectId}/procurements/${!selectedProcurement? addedProcurement._id: selectedProcurement._id}/upload`;
-        if (fileRes.size < 500000000) {
+        if (fileRes.size < 5000000) {
             let data = new FormData();
             data.append('file', fileRes);
             try {
@@ -328,7 +329,7 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
                 console.log(err, 'error in upload');
             }
         } else {
-            showSnackbar('File size should not exceed 50 MB');
+            showSnackbar('File size should not exceed 4 MB');
         }
     }
 
@@ -391,9 +392,12 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
                         </View>
                     </View>
                     <View style={{flexDirection: 'column'}}>
-                        <TouchableOpacity style={styles.upload_container} onPress={onDocumentPress}>
-                            <Text style={styles.uploadBtn}>Upload Invoice</Text>
-                        </TouchableOpacity>
+                        <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+                                <TouchableOpacity style={styles.upload_container} onPress={onDocumentPress}>
+                                    <Text style={styles.uploadBtn}>Upload Invoice</Text>
+                                </TouchableOpacity>
+                                {fileRes && <Text>{fileRes.name}</Text>}
+                        </View>
                         {
                             selectedProcurement?.invoiceFile && <Image source={{uri: selectedProcurement.invoiceFile}} style={{width: 300, height: 200}}></Image>
                         }
@@ -757,7 +761,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignContent: 'center',
         marginTop: 10,
-        width: '100%'
+        width: 210
     },
     uploadBtn: {
         borderRadius: 33,
@@ -767,7 +771,7 @@ const styles = StyleSheet.create({
         paddingVertical: 15,
         paddingHorizontal: 20,
         textAlign: 'center',
-        maxWidth: 180,
+        width: '100%',
         margin: 'auto'
     },
     addMoreContainer: {

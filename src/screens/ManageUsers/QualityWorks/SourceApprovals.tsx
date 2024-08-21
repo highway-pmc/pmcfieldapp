@@ -168,8 +168,37 @@ const SourceApprovals = ({ route, navigation }: { route: any, navigation: any })
         }
     };
 
-    const handleInputChange = (name: keyof FormState, value: string | number) => {
-        setSourceForm({ ...sourceForm, [name]: value });
+    const handleInputChange = (
+      name: keyof FormState,
+      value: string | number,
+    ) => {
+      let isValid = true;
+      let message = '';
+
+      switch (name) {
+        case 'name':
+        case 'location':
+        case 'vendorName':
+          if (typeof value === 'string' && value.length > 100) {
+            isValid = false;
+            message = `${name} should be less than 100 characters.`;
+          }
+          break;
+        case 'comments':
+          if (typeof value === 'string' && value.length > 500) {
+            isValid = false;
+            message = 'Comments should be less than 500 characters.';
+          }
+          break;
+        default:
+          break;
+      }
+
+      if (isValid) {
+        setSourceForm({...sourceForm, [name]: value});
+      } else {
+        showSnackbar(message, 'error');
+      }
     };
 
     const handleSourceDetailInputChange = (name: keyof FormSourceDetailState, value: string | number) => {

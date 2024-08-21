@@ -173,14 +173,49 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
         setOpenProcurementPopup(true);
     };
 
-    const handleInputChange = (name: keyof FormState, value: string | number | []) => {
-        setForm({ ...form, [name]: value });
-        if (name === 'sourceApprovalId') {
-            setSourceApprovalDetails(sourceApprovals.find((x: any) => x._id === value)?.sourceApprovalDetails)
+    const handleInputChange = (
+      name: keyof FormState,
+      value: string | number | [],
+    ) => {
+      let isValid = true;
+      let errorMessage = '';
+
+      if (name === 'vehicleNoTemp') {
+        const vehicleNoRegex = /^\d{4}$/;
+        if (!vehicleNoRegex.test(value as string)) {
+          isValid = false;
+          errorMessage = 'Last 4 digit of Vehicle number only';
         }
+      }
+
+      if (name === gradeField.name) {
+        const quantityValue = parseFloat(value as string);
+        if (
+          isNaN(quantityValue) ||
+          quantityValue <= 0 ||
+          quantityValue > 20 ||
+          value.toString().split('.')[1]?.length > 3
+        ) {
+          isValid = false;
+          errorMessage =
+            'Quantity must be between 0 and 20 with up to 3 decimal places.';
+        }
+      }
+      setForm({...form, [name]: value});
+      if (name === 'sourceApprovalId') {
+        setSourceApprovalDetails(
+          sourceApprovals.find((x: any) => x._id === value)
+            ?.sourceApprovalDetails,
+        );
+      }
+      if (!isValid) {
+        showSnackbar(errorMessage, 'error');
+      }
     };
 
+
     const handleSubmit = () => {
+        
         if (!selectedProcurement) {
             dispatch(addProcurement({
                 projectId: loggedInUser.projectId,
@@ -259,19 +294,25 @@ const Procurements = ({ route, navigation }: { route: any, navigation: any }) =>
         }
     }, [deletedProcurement, error]);
 
-
     const onAddVehicle = () => {
-        if (form.vehicleNoTemp) {
-            if (!vehicleNos) {
-                setVehicleNos([]);
-            }
-            const index = vehicleNos.indexOf(form.vehicleNoTemp);
-            if (index === -1) {
-                vehicleNos.push(form.vehicleNoTemp);
-                form.vehicleNoTemp = '';
-                setVehicleNos([...vehicleNos]);
-                setForm({ ...form });
-            }
+      const vehicleNoTemp = form.vehicleNoTemp.trim();
+      const vehicleNoRegex = /^\d{4}$/;
+
+      if (vehicleNoTemp && vehicleNoRegex.test(vehicleNoTemp)) {
+        if (!vehicleNos) {
+          setVehicleNos([]);
+        }
+
+        const index = vehicleNos.indexOf(vehicleNoTemp);
+        if (index === -1) {
+          vehicleNos.push(vehicleNoTemp);
+          form.vehicleNoTemp = '';
+          setVehicleNos([...vehicleNos]);
+          setForm({...form});
+        }
+        } else {
+            // Show an error message using Snackbar or any other method
+            showSnackbar('Vehicle number must be exactly 4 digits.', 'error');
         }
     }
     

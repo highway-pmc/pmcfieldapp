@@ -449,9 +449,22 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
           item.volOfCube = Number(item.volOfCube);
         }
 
-        if (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CEMENT && selectedTestSample.type === TEST_TYPES.SOUNDNESS) {
-          item.beforePuttingInBoilingWater = Number(item.beforePuttingInBoilingWater);
-          item.afterPuttingInBoilingWater = Number(item.afterPuttingInBoilingWater);
+        if (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CEMENT) {
+          if (selectedTestSample.type === TEST_TYPES.SOUNDNESS) {
+            item.beforePuttingInBoilingWater = Number(item.beforePuttingInBoilingWater);
+            item.afterPuttingInBoilingWater = Number(item.afterPuttingInBoilingWater);
+          } else if (selectedTestSample.type === TEST_TYPES.FINENESS_CONSISTENCY_INITIAL_AND_FINAL_SETTING_TIME) {
+            if (i === 0) {
+              item.weightOfSample = Number(item.weightOfSample);
+              item.weightOfCementRetained = Number(item.weightOfCementRetained);
+            } else if (i === 1) {
+              item.weightOfCement = Number(item.weightOfCement);
+              item.weightOfWater = Number(item.weightOfWater);
+              item.penetrationOfPlunger = Number(item.penetrationOfPlunger);
+            } else {
+              item.weightOfCement = Number(item.weightOfCement);
+            }
+          }
         }
 
         if (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE) {
@@ -504,7 +517,6 @@ const MyQualityWork = ({ route, navigation }: { route: any, navigation: any }) =
         }
       }
     }
-
     dispatch(generateTestSampleReport({
       projectId: loggedInUser.projectId,
       // testRFIId: (selectedTestSample.type === TEST_TYPES.SOUNDNESS || currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE

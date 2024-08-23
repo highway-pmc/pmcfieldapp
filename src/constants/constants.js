@@ -428,6 +428,7 @@ export const TEST_TYPES = {
     POLISHED_STONE_VALUE: 'polished-stone-value',
     SAND_EQUIVALENT_VALUE: 'sand-equivalent-value',
     STRIPPING_VALUE_TEST: 'stripping-value-test',
+    FINENESS_CONSISTENCY_INITIAL_AND_FINAL_SETTING_TIME: 'fineness-consistency-initial-and-final-setting-time',
 };
 
 export const YES_NO_LIST = [

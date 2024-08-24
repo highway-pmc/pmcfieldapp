@@ -1281,6 +1281,8 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       newData[index][field] = value;
       setConcreteData(newData);
     } else {
+      newData[index][field] = value;
+      setConcreteData(newData);
       showSnackbar(errorMessage, 'error');
     }
   };
@@ -1294,43 +1296,63 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
            `TM ${index + 1}: Enter the last 4 digits of the vehicle number.`,
            'error',
          );
-         return; 
+         return;
        }
 
-       if (
-         isNaN(item.concreteTemp) ||
-         item.concreteTemp <= 0 ||
-         item.concreteTemp > 60
-       ) {
+       if (!item.timeOfArrival) {
+         isValid = false;
+         showSnackbar(`TM ${index + 1}: Time of arrival is required.`, 'error');
+         return;
+       }
+
+       if (!item.gradeOfConcrete) {
          isValid = false;
          showSnackbar(
-           `TM ${index + 1}: Enter a temperature between 0 and 60.`,
+           `TM ${index + 1}: Grade of concrete is required.`,
            'error',
          );
          return;
        }
 
+       const tempValue = parseFloat(item.concreteTemp.toString());
        if (
-         isNaN(item.slumpValue) ||
-         item.slumpValue <= 0 ||
-         item.slumpValue > 300 ||
-         !Number.isInteger(item.slumpValue)
+         isNaN(tempValue) ||
+         tempValue <= 0 ||
+         tempValue > 60 ||
+         item.concreteTemp.toString().split('.')[1]?.length > 2
        ) {
          isValid = false;
          showSnackbar(
            `TM ${
              index + 1
-           }: Enter an integer between 1 and 300 for slump value.`,
+           }: Enter a temperature between 0 and 60 with up to 2 decimal places.`,
            'error',
          );
          return;
        }
 
+       const slumpValue = parseInt(item.slumpValue.toString());
        if (
-         isNaN(item.noOfCubesCasted) ||
-         item.noOfCubesCasted <= 0 ||
-         item.noOfCubesCasted > 100 ||
-         !Number.isInteger(item.noOfCubesCasted)
+         isNaN(slumpValue) ||
+         slumpValue <= 0 ||
+         slumpValue > 300 ||
+         !Number.isInteger(slumpValue)
+       ) {
+         isValid = false;
+         showSnackbar(
+           `TM ${
+             index + 1
+           }: Enter an integer between 1 and 300 for slump value in mm.`,
+           'error',
+         );
+         return;
+       }
+       const cubesValue = parseInt(item.noOfCubesCasted.toString());
+       if (
+         isNaN(cubesValue) ||
+         cubesValue <= 0 ||
+         cubesValue > 100 ||
+         !Number.isInteger(cubesValue)
        ) {
          isValid = false;
          showSnackbar(
@@ -1342,17 +1364,36 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
          return;
        }
 
+       if (!item.concreteStartTime) {
+         isValid = false;
+         showSnackbar(
+           `TM ${index + 1}: Concrete start time is required.`,
+           'error',
+         );
+         return;
+       }
+
+       const pouredValue = parseFloat(item.concretePoured.toString());
        if (
-         isNaN(item.concretePoured) ||
-         item.concretePoured <= 0 ||
-         item.concretePoured > 100 ||
+         isNaN(pouredValue) ||
+         pouredValue <= 0 ||
+         pouredValue > 100 ||
          item.concretePoured.toString().split('.')[1]?.length > 3
        ) {
          isValid = false;
          showSnackbar(
            `TM ${
              index + 1
-           }: Enter a value between 0 and 100 with up to 3 decimal places for concrete poured.`,
+           }: Enter a value between 0 and 100 with up to 3 decimal places for concrete poured in cum.`,
+           'error',
+         );
+         return;
+       }
+
+       if (!item.concreteFinishTime) {
+         isValid = false;
+         showSnackbar(
+           `TM ${index + 1}: Concrete finish time is required.`,
            'error',
          );
          return;
@@ -1361,6 +1402,8 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
 
      return isValid;
    };
+
+
 
   const renderItem = (rowData: any) => (
     <View

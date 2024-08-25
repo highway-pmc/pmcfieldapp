@@ -512,6 +512,85 @@ return (
           </View>
           </ScrollView>
         </View>
+      case TASK_TYPES.BORING_OF_PILE:
+        return <View>
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Density of Polymer in gm/ml</Text>
+            <Text>{selectedRFI?.metaData.boringOfPileData?.densityOfPolymer}</Text>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Viscosity of Polymer in sec/liter</Text>
+            <Text>{selectedRFI?.metaData.boringOfPileData?.viscosityOfPolymer}</Text>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>pH value of Polymer</Text>
+            <Text>{selectedRFI?.metaData.boringOfPileData?.valueOfPolymer}</Text>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Sand content of Polymer in %</Text>
+            <Text>{selectedRFI?.metaData.boringOfPileData?.contentOfPolymer}</Text>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Depth of Bore in m</Text>
+            <Text>{selectedRFI?.metaData.boringOfPileData?.depthOfBore}</Text>
+          </View>
+          
+        </View>
+      case TASK_TYPES.FLUSHING_OPERATIONS:
+        return <View>
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Start time of flushing</Text>
+            <Text>{selectedRFI?.metaData.flushingOperationsData?.startTimeOfFlushing}</Text>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Finish time of flushing</Text>
+            <Text>{selectedRFI?.metaData.flushingOperationsData?.finishTimeOfFlushing}</Text>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Whether Pour cleared or not</Text>
+            <Text>{selectedRFI?.metaData.flushingOperationsData?.whetherPourCleared}</Text>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Density of Polymer in gm/ml</Text>
+            <Text>{selectedRFI?.metaData.flushingOperationsData?.densityOfPolymer}</Text>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Viscosity of Polymer in sec/liter</Text>
+            <Text>{selectedRFI?.metaData.flushingOperationsData?.viscosityOfPolymer}</Text>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>pH value of Polymer</Text>
+            <Text>{selectedRFI?.metaData.flushingOperationsData?.valueOfPolymer}</Text>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Sand content of Polymer in %</Text>
+            <Text>{selectedRFI?.metaData.flushingOperationsData?.contentOfPolymer}</Text>
+          </View>
+
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>Depth of Bore in m</Text>
+            <Text>{selectedRFI?.metaData.flushingOperationsData?.depthOfBore}</Text>
+          </View>
+          
+        </View>
+      case TASK_TYPES.CHIPPING_AND_REMOVAL_OF_CONCRETE_ABOVE_CUT_OFF_LEVEL:
+        return <View>
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={styles.GenerateRFIFieldLabel}>No. of days of chipping after casting of concrete</Text>
+            <Text>{selectedRFI?.metaData.chippingAndRemovalOfConcreteData?.noOfDaysOfChipping}</Text>
+          </View>
+          
+        </View>
       default: return <View>
         <Text>TODO</Text>
       </View>

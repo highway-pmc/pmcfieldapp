@@ -50,6 +50,7 @@ import moment from 'moment';
 import {SwipeListView} from 'react-native-swipe-list-view';
 import {Guid} from 'guid-typescript';
 import {FlatList} from 'react-native-gesture-handler';
+import Input from '../../components/UI/Input';
 
 const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
@@ -226,6 +227,84 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       key: Guid.create(),
     },
   ]);
+
+  // BORING_OF_PILE
+  type FormStateBoringOfPile = {
+    densityOfPolymer: number;
+    viscosityOfPolymer: number;
+    valueOfPolymer: number;
+    contentOfPolymer: number;
+    depthOfBore: number;
+  };
+  const [boringOfPileData, setBoringOfPileData] = useState<FormStateBoringOfPile>(
+    {
+      densityOfPolymer: 0,
+      viscosityOfPolymer: 0,
+      valueOfPolymer: 0,
+      contentOfPolymer: 0,
+      depthOfBore: 0,
+    },
+  );
+
+  const handleInputChangeBoringOfPile = (
+    name: keyof FormStateBoringOfPile,
+    value: string | number | [],
+  ) => {
+    setBoringOfPileData({...boringOfPileData, [name]: Number(value)});
+  };
+
+  // FLUSHING_OPERATIONS
+  type FormStateFlushingOperations = {
+    startTimeOfFlushing: string,
+    finishTimeOfFlushing: string,
+    whetherPourCleared: string,
+    densityOfPolymer: number;
+    viscosityOfPolymer: number;
+    valueOfPolymer: number;
+    contentOfPolymer: number;
+    depthOfBore: number;
+  };
+  const [flushingOperationsData, setFlushingOperationsData] = useState<FormStateFlushingOperations>(
+    {
+      startTimeOfFlushing: '',
+      finishTimeOfFlushing: '',
+      whetherPourCleared: 'Y',
+      densityOfPolymer: 0,
+      viscosityOfPolymer: 0,
+      valueOfPolymer: 0,
+      contentOfPolymer: 0,
+      depthOfBore: 0,
+    },
+  );
+
+  const handleInputChangeFlushingOperations = (
+    name: keyof FormStateFlushingOperations,
+    value: string | number | [],
+  ) => {
+    if (name === 'startTimeOfFlushing' || name === 'finishTimeOfFlushing' || name === 'whetherPourCleared') {
+      setFlushingOperationsData({...flushingOperationsData, [name]: value});
+    } else {
+      setFlushingOperationsData({...flushingOperationsData, [name]: Number(value)});
+    }
+  };
+
+  // CHIPPING_AND_REMOVAL_OF_CONCRETE_ABOVE_CUT_OFF_LEVEL
+  type FormStateChippingAndRemovalOfConcrete = {
+    noOfDaysOfChipping: number;
+  };
+  const [chippingAndRemovalOfConcreteData, setChippingAndRemovalOfConcreteData] = useState<FormStateChippingAndRemovalOfConcrete>(
+    {
+      noOfDaysOfChipping: 0 
+    },
+  );
+
+  const handleInputChangeChippingAndRemovalOfConcrete = (
+    name: keyof FormStateChippingAndRemovalOfConcrete,
+    value: string | number | [],
+  ) => {
+    setChippingAndRemovalOfConcreteData({...chippingAndRemovalOfConcreteData, [name]: Number(value)});
+  };
+
   const dispatch = useDispatch();
   const focus = useIsFocused();
 
@@ -360,6 +439,44 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             setNoLBendBottomOfTheCageChecked(
               rfiData.metaData.noLBendBottomOfTheCageChecked,
             );
+            break;
+          case TASK_TYPES.BORING_OF_PILE:
+            if (rfiData.metaData.boringOfPileData) {
+              setBoringOfPileData(rfiData.metaData.boringOfPileData);
+            } else {
+              setBoringOfPileData({
+                densityOfPolymer: 0,
+                viscosityOfPolymer: 0,
+                valueOfPolymer: 0,
+                contentOfPolymer: 0,
+                depthOfBore: 0,
+              });
+            }
+            break;
+          case TASK_TYPES.FLUSHING_OPERATIONS:
+            if (rfiData.metaData.flushingOperationsData) {
+              setFlushingOperationsData(rfiData.metaData.flushingOperationsData);
+            } else {
+              setFlushingOperationsData({
+                startTimeOfFlushing: '',
+                finishTimeOfFlushing: '',
+                whetherPourCleared: 'Y',
+                densityOfPolymer: 0,
+                viscosityOfPolymer: 0,
+                valueOfPolymer: 0,
+                contentOfPolymer: 0,
+                depthOfBore: 0,
+              });
+            }
+            break;
+          case TASK_TYPES.CHIPPING_AND_REMOVAL_OF_CONCRETE_ABOVE_CUT_OFF_LEVEL:
+            if (rfiData.metaData.chippingAndRemovalOfConcreteData) {
+              setChippingAndRemovalOfConcreteData(rfiData.metaData.chippingAndRemovalOfConcreteData);
+            } else {
+              setChippingAndRemovalOfConcreteData({
+                noOfDaysOfChipping: 0
+              });
+            }
             break;
           case TASK_TYPES.CONCRETING:
           case TASK_TYPES.PCC_LEVELLING_COURSE:
@@ -980,6 +1097,41 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           noLBendBottomOfTheCageChecked: noLBendBottomOfTheCageChecked,
         };
         break;
+      case TASK_TYPES.BORING_OF_PILE:
+        checkList = {
+          taskName: selectedTask.name,
+          boringOfPileData: {
+            densityOfPolymer: Number(boringOfPileData.densityOfPolymer),
+            viscosityOfPolymer: Number(boringOfPileData.viscosityOfPolymer),
+            valueOfPolymer: Number(boringOfPileData.valueOfPolymer),
+            contentOfPolymer: Number(boringOfPileData.contentOfPolymer),
+            depthOfBore: Number(boringOfPileData.depthOfBore),
+          }
+        };
+        break;
+      case TASK_TYPES.FLUSHING_OPERATIONS:
+        checkList = {
+          taskName: selectedTask.name,
+          flushingOperationsData: {
+            startTimeOfFlushing: flushingOperationsData.startTimeOfFlushing,
+            finishTimeOfFlushing: flushingOperationsData.finishTimeOfFlushing,
+            whetherPourCleared: flushingOperationsData.whetherPourCleared,
+            densityOfPolymer: Number(flushingOperationsData.densityOfPolymer),
+            viscosityOfPolymer: Number(flushingOperationsData.viscosityOfPolymer),
+            valueOfPolymer: Number(flushingOperationsData.valueOfPolymer),
+            contentOfPolymer: Number(flushingOperationsData.contentOfPolymer),
+            depthOfBore: Number(flushingOperationsData.depthOfBore),
+          }
+        };
+        break;
+      case TASK_TYPES.CHIPPING_AND_REMOVAL_OF_CONCRETE_ABOVE_CUT_OFF_LEVEL:
+        checkList = {
+          taskName: selectedTask.name,
+          chippingAndRemovalOfConcreteData: {
+            noOfDaysOfChipping: Number(chippingAndRemovalOfConcreteData.noOfDaysOfChipping),
+          }
+        };
+        break;
       case TASK_TYPES.CONCRETING:
       case TASK_TYPES.PCC_LEVELLING_COURSE:
         const isDataValid = validateConcreteData(selectedTask?.name);
@@ -1461,7 +1613,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           }
         />
       </View>
-      
+
       <View style={{width: 130}}>
         <CustomTextInputValue
           rowItem={rowData.item}
@@ -2374,7 +2526,272 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             </View>
           </View>
         );
+      
+      case TASK_TYPES.BORING_OF_PILE:
+        return (
+          <View>
+            <View style={{flexDirection: 'column'}}>
+              <Input
+                label="Density of Polymer in gm/ml"
+                value={boringOfPileData.densityOfPolymer}
+                onChange={(value: string) =>
+                  handleInputChangeBoringOfPile('densityOfPolymer', value)
+                }
+              />
+            </View>
+            
+            <View style={{flexDirection: 'column'}}>
+              <Input
+                label="Viscosity of Polymer in sec/liter"
+                value={boringOfPileData.viscosityOfPolymer}
+                onChange={(value: string) =>
+                  handleInputChangeBoringOfPile('viscosityOfPolymer', value)
+                }
+              />
+            </View>
 
+            <View style={{flexDirection: 'column'}}>
+              <Input
+                label="pH value of Polymer"
+                value={boringOfPileData.valueOfPolymer}
+                onChange={(value: string) =>
+                  handleInputChangeBoringOfPile('valueOfPolymer', value)
+                }
+              />
+            </View>
+
+            <View style={{flexDirection: 'column'}}>
+              <Input
+                label="Sand content of Polymer in %"
+                value={boringOfPileData.contentOfPolymer}
+                onChange={(value: string) =>
+                  handleInputChangeBoringOfPile('contentOfPolymer', value)
+                }
+              />
+            </View>
+
+            <View style={{flexDirection: 'column'}}>
+              <Input
+                label="Depth of Bore in m"
+                value={boringOfPileData.depthOfBore}
+                onChange={(value: string) =>
+                  handleInputChangeBoringOfPile('depthOfBore', value)
+                }
+              />
+            </View>
+
+            <View>
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
+                />
+              </View>
+            </View>
+          </View>
+        );
+
+      case TASK_TYPES.FLUSHING_OPERATIONS:
+        return (
+          <View>
+            <View style={{flexDirection: 'column'}}>
+              <TimePicker
+                label="Start time of flushing"
+                value={flushingOperationsData.startTimeOfFlushing}
+                onChange={time =>
+                  handleInputChangeFlushingOperations('startTimeOfFlushing', time)
+                }
+              />
+            </View>
+
+            <View style={{flexDirection: 'column'}}>
+              <TimePicker
+                label="Finish time of flushing"
+                value={flushingOperationsData.finishTimeOfFlushing}
+                onChange={time =>
+                  handleInputChangeFlushingOperations('finishTimeOfFlushing', time)
+                }
+              />
+            </View>
+
+            <View style={{flexDirection: 'column'}}>
+              <DropdownPicker
+                label="Whether Pour cleared or not"
+                value={flushingOperationsData.whetherPourCleared}
+                items={YES_NO_LIST}
+                onChange={(newValue: string) => {
+                  handleInputChangeFlushingOperations('whetherPourCleared', newValue)
+                }}
+                isRequired={true}
+              />
+            </View>
+            
+            <View style={{flexDirection: 'column'}}>
+              <Input
+                label="Density of Polymer in gm/ml"
+                value={boringOfPileData.densityOfPolymer}
+                onChange={(value: string) =>
+                  handleInputChangeFlushingOperations('densityOfPolymer', value)
+                }
+              />
+            </View>
+            
+            <View style={{flexDirection: 'column'}}>
+              <Input
+                label="Viscosity of Polymer in sec/liter"
+                value={boringOfPileData.viscosityOfPolymer}
+                onChange={(value: string) =>
+                  handleInputChangeFlushingOperations('viscosityOfPolymer', value)
+                }
+              />
+            </View>
+
+            <View style={{flexDirection: 'column'}}>
+              <Input
+                label="pH value of Polymer"
+                value={boringOfPileData.valueOfPolymer}
+                onChange={(value: string) =>
+                  handleInputChangeFlushingOperations('valueOfPolymer', value)
+                }
+              />
+            </View>
+
+            <View style={{flexDirection: 'column'}}>
+              <Input
+                label="Sand content of Polymer in %"
+                value={boringOfPileData.contentOfPolymer}
+                onChange={(value: string) =>
+                  handleInputChangeFlushingOperations('contentOfPolymer', value)
+                }
+              />
+            </View>
+
+            <View style={{flexDirection: 'column'}}>
+              <Input
+                label="Depth of Bore in m"
+                value={boringOfPileData.depthOfBore}
+                onChange={(value: string) =>
+                  handleInputChangeFlushingOperations('depthOfBore', value)
+                }
+              />
+            </View>
+
+            <View>
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
+                />
+              </View>
+            </View>
+          </View>
+        );
+      
+      case TASK_TYPES.CHIPPING_AND_REMOVAL_OF_CONCRETE_ABOVE_CUT_OFF_LEVEL:
+        return (
+          <View>
+            <View style={{flexDirection: 'column'}}>
+              <Input
+                label="No. of days of chipping after casting of concrete"
+                value={chippingAndRemovalOfConcreteData.noOfDaysOfChipping}
+                onChange={(value: string) =>
+                  handleInputChangeChippingAndRemovalOfConcrete('noOfDaysOfChipping', value)
+                }
+              />
+            </View>
+
+            <View>
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
+                />
+              </View>
+            </View>
+          </View>
+        );
+    
       case TASK_TYPES.CONCRETING:
       case TASK_TYPES.PCC_LEVELLING_COURSE:
         if (!concreteData || !concreteData.length) {
@@ -2483,7 +2900,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       .map((item: any, index) => (
         <View style={getStyle(item)}>
           <View style={styles.leftContainer}>
-            <Text style={styles.HeadText}>{item.displayName}</Text>
+            <Text style={[styles.HeadText, {maxWidth: 300}]}>{item.displayName}</Text>
             {/* <Text style={styles.MyWorkSubHead}>Sub Text</Text> */}
           </View>
           {item.rfiStatus === RFI_STATUS.GENERATED ? (

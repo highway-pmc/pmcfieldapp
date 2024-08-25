@@ -377,6 +377,7 @@ export const TEST_ASSIGNMENT_LEVEL = {
 
 export const TASK_TYPES = {
     CNG_AND_SETTING_OUT: 'cng-and-setting-out',
+    POST_CONCRETE_CHECK: 'post-concrete-check',
     FORM_WORK: 'form-work',
     EXCAVATION: 'excavation',
     REINFORCEMENT: 'reinforcement',
@@ -391,7 +392,11 @@ export const TASK_TYPES = {
     CAGE_LOWERING: 'cage-lowering',
     PLACING_OF_SHEATHING_DUCT: 'placing-of-sheathing-duct',
     THREADING_OF_PRE_STRESSING_STRANDS: 'threading-of-pre-stressing-strands',
-    CONCRETING: 'concreting'
+    CONCRETING: 'concreting',
+    PCC_LEVELLING_COURSE: 'pcc-levelling-course',
+    BORING_OF_PILE: 'boring-of-pile',
+    FLUSHING_OPERATIONS: 'flushing-operations',
+    CHIPPING_AND_REMOVAL_OF_CONCRETE_ABOVE_CUT_OFF_LEVEL: 'chipping-and-removal-of-concrete-above-cut-off-level'
 }
 
 export const TEST_MATERIALS_TYPES = {

@@ -50,6 +50,7 @@ import moment from 'moment';
 import {SwipeListView} from 'react-native-swipe-list-view';
 import {Guid} from 'guid-typescript';
 import {FlatList} from 'react-native-gesture-handler';
+import Input from '../../components/UI/Input';
 
 const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
@@ -58,17 +59,17 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
   const {myWorks, rfiData, rfiChecklistSaved, loading, error} = useSelector(
     (state: any) => state.MyWorks,
   );
-  const [myWorksData, setMyWorksData] = useState([]);
-  const [currentSegmentsData, setCurrentSegmentsData] = useState([]);
-  const [currentComponentsData, setCurrentComponentsData] = useState([]);
-  const [currentSubComponentsData, setCurrentSubComponentsData] = useState([]);
-  const [currentTasksData, setCurrentTasksData] = useState([]);
-  const [projectModuleId, setProjectModuleId] = useState('');
-  const [currentLevel, setCurrentLevel] = useState(1);
-  const [segmentsByGroupOnType, setSegmentsByGroupOnType] = useState(null);
-  const [searchText, setSearchText] = useState('');
-  const [rfiId, setRfiId] = useState('');
-  const [breadcrumbData, setBreadcrumbData] = useState([
+  const [myWorksData, setMyWorksData]: any = useState([]);
+  const [currentSegmentsData, setCurrentSegmentsData]: any = useState([]);
+  const [currentComponentsData, setCurrentComponentsData]: any = useState([]);
+  const [currentSubComponentsData, setCurrentSubComponentsData]: any = useState([]);
+  const [currentTasksData, setCurrentTasksData]: any = useState([]);
+  const [projectModuleId, setProjectModuleId]: any = useState('');
+  const [currentLevel, setCurrentLevel]: any = useState(1);
+  const [segmentsByGroupOnType, setSegmentsByGroupOnType]: any = useState(null);
+  const [searchText, setSearchText]: any = useState('');
+  const [rfiId, setRfiId]: any = useState('');
+  const [breadcrumbData, setBreadcrumbData]: any = useState([
     {
       name: '',
       projectModuleIndex: 0,
@@ -100,9 +101,10 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
 
   // CNG_AND_SETTING_OUT
   // PLACING_OF_SHEATHING_DUCT
+  // TASK_TYPES.POST_CONCRETE_CHECK:
   const [openPopup, setOpenPopup] = useState(false);
-  const [selectedTask, setSelectedTask] = useState(null);
-  const [imageObject, setImageObject] = useState(imageObjectEmpty);
+  const [selectedTask, setSelectedTask]: any = useState(null);
+  const [imageObject, setImageObject]: any = useState(imageObjectEmpty);
 
   // FORM_WORK
   // PLACEMENT_OF_INNER_SHUTTERS
@@ -219,13 +221,90 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       gradeOfConcrete: '',
       concreteTemp: 0,
       slumpValue: 0,
-      noOfCubesCasted: 0,
-      concreteStartTime: '',
       concretePoured: 0,
+      concreteStartTime: '',
       concreteFinishTime: '',
       key: Guid.create(),
     },
   ]);
+
+  // BORING_OF_PILE
+  type FormStateBoringOfPile = {
+    densityOfPolymer: number;
+    viscosityOfPolymer: number;
+    valueOfPolymer: number;
+    contentOfPolymer: number;
+    depthOfBore: number;
+  };
+  const [boringOfPileData, setBoringOfPileData] = useState<FormStateBoringOfPile>(
+    {
+      densityOfPolymer: 0,
+      viscosityOfPolymer: 0,
+      valueOfPolymer: 0,
+      contentOfPolymer: 0,
+      depthOfBore: 0,
+    },
+  );
+
+  const handleInputChangeBoringOfPile = (
+    name: keyof FormStateBoringOfPile,
+    value: string | number | [],
+  ) => {
+    setBoringOfPileData({...boringOfPileData, [name]: Number(value)});
+  };
+
+  // FLUSHING_OPERATIONS
+  type FormStateFlushingOperations = {
+    startTimeOfFlushing: string,
+    finishTimeOfFlushing: string,
+    whetherPourCleared: string,
+    densityOfPolymer: number;
+    viscosityOfPolymer: number;
+    valueOfPolymer: number;
+    contentOfPolymer: number;
+    depthOfBore: number;
+  };
+  const [flushingOperationsData, setFlushingOperationsData] = useState<FormStateFlushingOperations>(
+    {
+      startTimeOfFlushing: '',
+      finishTimeOfFlushing: '',
+      whetherPourCleared: 'Y',
+      densityOfPolymer: 0,
+      viscosityOfPolymer: 0,
+      valueOfPolymer: 0,
+      contentOfPolymer: 0,
+      depthOfBore: 0,
+    },
+  );
+
+  const handleInputChangeFlushingOperations = (
+    name: keyof FormStateFlushingOperations,
+    value: string | number | [],
+  ) => {
+    if (name === 'startTimeOfFlushing' || name === 'finishTimeOfFlushing' || name === 'whetherPourCleared') {
+      setFlushingOperationsData({...flushingOperationsData, [name]: value});
+    } else {
+      setFlushingOperationsData({...flushingOperationsData, [name]: Number(value)});
+    }
+  };
+
+  // CHIPPING_AND_REMOVAL_OF_CONCRETE_ABOVE_CUT_OFF_LEVEL
+  type FormStateChippingAndRemovalOfConcrete = {
+    noOfDaysOfChipping: number;
+  };
+  const [chippingAndRemovalOfConcreteData, setChippingAndRemovalOfConcreteData] = useState<FormStateChippingAndRemovalOfConcrete>(
+    {
+      noOfDaysOfChipping: 0 
+    },
+  );
+
+  const handleInputChangeChippingAndRemovalOfConcrete = (
+    name: keyof FormStateChippingAndRemovalOfConcrete,
+    value: string | number | [],
+  ) => {
+    setChippingAndRemovalOfConcreteData({...chippingAndRemovalOfConcreteData, [name]: Number(value)});
+  };
+
   const dispatch = useDispatch();
   const focus = useIsFocused();
 
@@ -266,6 +345,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         switch (selectedTask?.name) {
           case TASK_TYPES.CNG_AND_SETTING_OUT:
           case TASK_TYPES.PLACING_OF_SHEATHING_DUCT:
+          case TASK_TYPES.POST_CONCRETE_CHECK:
             setImageObject({
               filePath: '',
               fileData: rfiData.metaData.base64Image,
@@ -360,7 +440,46 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
               rfiData.metaData.noLBendBottomOfTheCageChecked,
             );
             break;
+          case TASK_TYPES.BORING_OF_PILE:
+            if (rfiData.metaData.boringOfPileData) {
+              setBoringOfPileData(rfiData.metaData.boringOfPileData);
+            } else {
+              setBoringOfPileData({
+                densityOfPolymer: 0,
+                viscosityOfPolymer: 0,
+                valueOfPolymer: 0,
+                contentOfPolymer: 0,
+                depthOfBore: 0,
+              });
+            }
+            break;
+          case TASK_TYPES.FLUSHING_OPERATIONS:
+            if (rfiData.metaData.flushingOperationsData) {
+              setFlushingOperationsData(rfiData.metaData.flushingOperationsData);
+            } else {
+              setFlushingOperationsData({
+                startTimeOfFlushing: '',
+                finishTimeOfFlushing: '',
+                whetherPourCleared: 'Y',
+                densityOfPolymer: 0,
+                viscosityOfPolymer: 0,
+                valueOfPolymer: 0,
+                contentOfPolymer: 0,
+                depthOfBore: 0,
+              });
+            }
+            break;
+          case TASK_TYPES.CHIPPING_AND_REMOVAL_OF_CONCRETE_ABOVE_CUT_OFF_LEVEL:
+            if (rfiData.metaData.chippingAndRemovalOfConcreteData) {
+              setChippingAndRemovalOfConcreteData(rfiData.metaData.chippingAndRemovalOfConcreteData);
+            } else {
+              setChippingAndRemovalOfConcreteData({
+                noOfDaysOfChipping: 0
+              });
+            }
+            break;
           case TASK_TYPES.CONCRETING:
+          case TASK_TYPES.PCC_LEVELLING_COURSE:
             if (rfiData.metaData.concreteData) {
               rfiData.metaData.concreteData.forEach((item: any) => {
                 item.key = Guid.create();
@@ -899,6 +1018,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     switch (selectedTask?.name) {
       case TASK_TYPES.CNG_AND_SETTING_OUT:
       case TASK_TYPES.PLACING_OF_SHEATHING_DUCT:
+      case TASK_TYPES.POST_CONCRETE_CHECK:
         checkList = {
           taskName: selectedTask.name,
           base64Image: imageObject.fileData,
@@ -977,17 +1097,57 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           noLBendBottomOfTheCageChecked: noLBendBottomOfTheCageChecked,
         };
         break;
+      case TASK_TYPES.BORING_OF_PILE:
+        checkList = {
+          taskName: selectedTask.name,
+          boringOfPileData: {
+            densityOfPolymer: Number(boringOfPileData.densityOfPolymer),
+            viscosityOfPolymer: Number(boringOfPileData.viscosityOfPolymer),
+            valueOfPolymer: Number(boringOfPileData.valueOfPolymer),
+            contentOfPolymer: Number(boringOfPileData.contentOfPolymer),
+            depthOfBore: Number(boringOfPileData.depthOfBore),
+          }
+        };
+        break;
+      case TASK_TYPES.FLUSHING_OPERATIONS:
+        checkList = {
+          taskName: selectedTask.name,
+          flushingOperationsData: {
+            startTimeOfFlushing: flushingOperationsData.startTimeOfFlushing,
+            finishTimeOfFlushing: flushingOperationsData.finishTimeOfFlushing,
+            whetherPourCleared: flushingOperationsData.whetherPourCleared,
+            densityOfPolymer: Number(flushingOperationsData.densityOfPolymer),
+            viscosityOfPolymer: Number(flushingOperationsData.viscosityOfPolymer),
+            valueOfPolymer: Number(flushingOperationsData.valueOfPolymer),
+            contentOfPolymer: Number(flushingOperationsData.contentOfPolymer),
+            depthOfBore: Number(flushingOperationsData.depthOfBore),
+          }
+        };
+        break;
+      case TASK_TYPES.CHIPPING_AND_REMOVAL_OF_CONCRETE_ABOVE_CUT_OFF_LEVEL:
+        checkList = {
+          taskName: selectedTask.name,
+          chippingAndRemovalOfConcreteData: {
+            noOfDaysOfChipping: Number(chippingAndRemovalOfConcreteData.noOfDaysOfChipping),
+          }
+        };
+        break;
       case TASK_TYPES.CONCRETING:
-        const isDataValid = validateConcreteData();
+      case TASK_TYPES.PCC_LEVELLING_COURSE:
+        const isDataValid = validateConcreteData(selectedTask?.name);
         if(!isDataValid){
           return;
         }
         concreteData.forEach((item: any) => {
           delete item.key;
-          (item.concreteTemp = Number(item.concreteTemp)),
-            (item.slumpValue = Number(item.slumpValue)),
-            (item.noOfCubesCasted = Number(item.noOfCubesCasted)),
-            (item.concretePoured = Number(item.concretePoured));
+          if (selectedTask.name === TASK_TYPES.CONCRETING) {
+            item.concreteTemp = Number(item.concreteTemp);
+            item.slumpValue = Number(item.slumpValue);
+          } else {
+            delete item.concreteTemp;
+            delete item.slumpValue;
+          }
+          item.concretePoured = Number(item.concretePoured);
         });
         checkList = {
           taskName: selectedTask.name,
@@ -1132,9 +1292,8 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         gradeOfConcrete: '',
         concreteTemp: 0,
         slumpValue: 0,
-        noOfCubesCasted: 0,
-        concreteStartTime: '',
         concretePoured: 0,
+        concreteStartTime: '',
         concreteFinishTime: '',
         key: Guid.create(),
       },
@@ -1156,17 +1315,22 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       <View style={{width: 130, alignItems: 'center', padding: 5}}>
         <Text style={{fontWeight: '600', fontSize: 12}}>Grade of Concrete</Text>
       </View>
-      <View style={{width: 130, alignItems: 'center', padding: 5}}>
-        <Text style={{fontWeight: '600', fontSize: 12}}>
-          Concrete temp in C
-        </Text>
-      </View>
-      <View style={{width: 130, alignItems: 'center', padding: 5}}>
-        <Text style={{fontWeight: '600', fontSize: 12}}>Slump value in mm</Text>
-      </View>
-      <View style={{width: 130, alignItems: 'center', padding: 5}}>
-        <Text style={{fontWeight: '600', fontSize: 12}}>No cubes casted</Text>
-      </View>
+      {
+        selectedTask.name === TASK_TYPES.CONCRETING &&
+          <View style={{width: 130, alignItems: 'center', padding: 5}}>
+            <Text style={{fontWeight: '600', fontSize: 12}}>
+              Concrete temp in C
+            </Text>
+          </View>
+      }
+      
+      {
+        selectedTask.name === TASK_TYPES.CONCRETING &&
+          <View style={{width: 130, alignItems: 'center', padding: 5}}>
+            <Text style={{fontWeight: '600', fontSize: 12}}>Slump value in mm</Text>
+          </View>
+      }
+      
       <View style={{width: 150, alignItems: 'center', padding: 5}}>
         <Text style={{fontWeight: '600', fontSize: 12}}>
           Concrete start time
@@ -1248,7 +1412,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         }
         break;
 
-      case 'noOfCubesCasted':
+      case 'concretePoured':
         const cubesValue = parseInt(value);
         if (
           isNaN(cubesValue) ||
@@ -1259,20 +1423,6 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           isValid = false;
           errorMessage =
             'Enter an integer between 1 and 100 for number of cubes casted';
-        }
-        break;
-
-      case 'concretePoured':
-        const pouredValue = parseFloat(value);
-        if (
-          isNaN(pouredValue) ||
-          pouredValue <= 0 ||
-          pouredValue > 100 ||
-          value.split('.')[1]?.length > 3
-        ) {
-          isValid = false;
-          errorMessage =
-            'Enter a value between 0 and 100 with up to 3 decimal places for concrete poured';
         }
         break;
     }
@@ -1286,7 +1436,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       showSnackbar(errorMessage, 'error');
     }
   };
-   const validateConcreteData = () => {
+   const validateConcreteData = (taskName: string) => {
      let isValid = true;
 
      concreteData.forEach((item, index) => {
@@ -1314,40 +1464,42 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
          return;
        }
 
-       const tempValue = parseFloat(item.concreteTemp.toString());
-       if (
-         isNaN(tempValue) ||
-         tempValue <= 0 ||
-         tempValue > 60 ||
-         item.concreteTemp.toString().split('.')[1]?.length > 2
-       ) {
-         isValid = false;
-         showSnackbar(
-           `TM ${
-             index + 1
-           }: Enter a temperature between 0 and 60 with up to 2 decimal places.`,
-           'error',
-         );
-         return;
-       }
+       if (selectedTask.name === TASK_TYPES.CONCRETING) {
+        const tempValue = parseFloat(item.concreteTemp.toString());
+        if (
+          isNaN(tempValue) ||
+          tempValue <= 0 ||
+          tempValue > 60 ||
+          item.concreteTemp.toString().split('.')[1]?.length > 2
+        ) {
+          isValid = false;
+          showSnackbar(
+            `TM ${
+              index + 1
+            }: Enter a temperature between 0 and 60 with up to 2 decimal places.`,
+            'error',
+          );
+          return;
+        }
 
-       const slumpValue = parseInt(item.slumpValue.toString());
-       if (
-         isNaN(slumpValue) ||
-         slumpValue <= 0 ||
-         slumpValue > 300 ||
-         !Number.isInteger(slumpValue)
-       ) {
-         isValid = false;
-         showSnackbar(
-           `TM ${
-             index + 1
-           }: Enter an integer between 1 and 300 for slump value in mm.`,
-           'error',
-         );
-         return;
+        const slumpValue = parseInt(item.slumpValue.toString());
+        if (
+          isNaN(slumpValue) ||
+          slumpValue <= 0 ||
+          slumpValue > 300 ||
+          !Number.isInteger(slumpValue)
+        ) {
+          isValid = false;
+          showSnackbar(
+            `TM ${
+              index + 1
+            }: Enter an integer between 1 and 300 for slump value in mm.`,
+            'error',
+          );
+          return;
+        }
        }
-       const cubesValue = parseInt(item.noOfCubesCasted.toString());
+       const cubesValue = parseInt(item.concretePoured.toString());
        if (
          isNaN(cubesValue) ||
          cubesValue <= 0 ||
@@ -1368,23 +1520,6 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
          isValid = false;
          showSnackbar(
            `TM ${index + 1}: Concrete start time is required.`,
-           'error',
-         );
-         return;
-       }
-
-       const pouredValue = parseFloat(item.concretePoured.toString());
-       if (
-         isNaN(pouredValue) ||
-         pouredValue <= 0 ||
-         pouredValue > 100 ||
-         item.concretePoured.toString().split('.')[1]?.length > 3
-       ) {
-         isValid = false;
-         showSnackbar(
-           `TM ${
-             index + 1
-           }: Enter a value between 0 and 100 with up to 3 decimal places for concrete poured in cum.`,
            'error',
          );
          return;
@@ -1447,27 +1582,28 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           isRequired={true}
         />
       </View>
-      <View style={{width: 130}}>
-        <CustomTextInputValue
-          rowItem={rowData.item}
-          fieldName={'concreteTemp'}
-          index={rowData.index}
-          onChange={handleTextInputChange}></CustomTextInputValue>
-      </View>
-      <View style={{width: 140}}>
-        <CustomTextInputValue
-          rowItem={rowData.item}
-          fieldName={'slumpValue'}
-          index={rowData.index}
-          onChange={handleTextInputChange}></CustomTextInputValue>
-      </View>
-      <View style={{width: 130}}>
-        <CustomTextInputValue
-          rowItem={rowData.item}
-          fieldName={'noOfCubesCasted'}
-          index={rowData.index}
-          onChange={handleTextInputChange}></CustomTextInputValue>
-      </View>
+      {
+        selectedTask.name === TASK_TYPES.CONCRETING && 
+          <View style={{width: 130}}>
+            <CustomTextInputValue
+              rowItem={rowData.item}
+              fieldName={'concreteTemp'}
+              index={rowData.index}
+              onChange={handleTextInputChange}></CustomTextInputValue>
+          </View>
+      }
+
+      {
+        selectedTask.name === TASK_TYPES.CONCRETING && 
+        <View style={{width: 140}}>
+          <CustomTextInputValue
+            rowItem={rowData.item}
+            fieldName={'slumpValue'}
+            index={rowData.index}
+            onChange={handleTextInputChange}></CustomTextInputValue>
+        </View>
+      }
+      
       <View style={{width: 150}}>
         <TimePicker
           label=""
@@ -1477,13 +1613,15 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           }
         />
       </View>
-      <View style={{width: 150}}>
+
+      <View style={{width: 130}}>
         <CustomTextInputValue
           rowItem={rowData.item}
           fieldName={'concretePoured'}
           index={rowData.index}
           onChange={handleTextInputChange}></CustomTextInputValue>
       </View>
+      
       <View style={{width: 150}}>
         <TimePicker
           label=""
@@ -1603,6 +1741,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     switch (taskName) {
       case TASK_TYPES.CNG_AND_SETTING_OUT:
       case TASK_TYPES.PLACING_OF_SHEATHING_DUCT:
+      case TASK_TYPES.POST_CONCRETE_CHECK:
         return (
           <View>
             <Text
@@ -2387,8 +2526,274 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             </View>
           </View>
         );
+      
+      case TASK_TYPES.BORING_OF_PILE:
+        return (
+          <View>
+            <View style={{flexDirection: 'column'}}>
+              <Input
+                label="Density of Polymer in gm/ml"
+                value={boringOfPileData.densityOfPolymer}
+                onChange={(value: string) =>
+                  handleInputChangeBoringOfPile('densityOfPolymer', value)
+                }
+              />
+            </View>
+            
+            <View style={{flexDirection: 'column'}}>
+              <Input
+                label="Viscosity of Polymer in sec/liter"
+                value={boringOfPileData.viscosityOfPolymer}
+                onChange={(value: string) =>
+                  handleInputChangeBoringOfPile('viscosityOfPolymer', value)
+                }
+              />
+            </View>
 
+            <View style={{flexDirection: 'column'}}>
+              <Input
+                label="pH value of Polymer"
+                value={boringOfPileData.valueOfPolymer}
+                onChange={(value: string) =>
+                  handleInputChangeBoringOfPile('valueOfPolymer', value)
+                }
+              />
+            </View>
+
+            <View style={{flexDirection: 'column'}}>
+              <Input
+                label="Sand content of Polymer in %"
+                value={boringOfPileData.contentOfPolymer}
+                onChange={(value: string) =>
+                  handleInputChangeBoringOfPile('contentOfPolymer', value)
+                }
+              />
+            </View>
+
+            <View style={{flexDirection: 'column'}}>
+              <Input
+                label="Depth of Bore in m"
+                value={boringOfPileData.depthOfBore}
+                onChange={(value: string) =>
+                  handleInputChangeBoringOfPile('depthOfBore', value)
+                }
+              />
+            </View>
+
+            <View>
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
+                />
+              </View>
+            </View>
+          </View>
+        );
+
+      case TASK_TYPES.FLUSHING_OPERATIONS:
+        return (
+          <View>
+            <View style={{flexDirection: 'column'}}>
+              <TimePicker
+                label="Start time of flushing"
+                value={flushingOperationsData.startTimeOfFlushing}
+                onChange={time =>
+                  handleInputChangeFlushingOperations('startTimeOfFlushing', time)
+                }
+              />
+            </View>
+
+            <View style={{flexDirection: 'column'}}>
+              <TimePicker
+                label="Finish time of flushing"
+                value={flushingOperationsData.finishTimeOfFlushing}
+                onChange={time =>
+                  handleInputChangeFlushingOperations('finishTimeOfFlushing', time)
+                }
+              />
+            </View>
+
+            <View style={{flexDirection: 'column'}}>
+              <DropdownPicker
+                label="Whether Pour cleared or not"
+                value={flushingOperationsData.whetherPourCleared}
+                items={YES_NO_LIST}
+                onChange={(newValue: string) => {
+                  handleInputChangeFlushingOperations('whetherPourCleared', newValue)
+                }}
+                isRequired={true}
+              />
+            </View>
+            
+            <View style={{flexDirection: 'column'}}>
+              <Input
+                label="Density of Polymer in gm/ml"
+                value={boringOfPileData.densityOfPolymer}
+                onChange={(value: string) =>
+                  handleInputChangeFlushingOperations('densityOfPolymer', value)
+                }
+              />
+            </View>
+            
+            <View style={{flexDirection: 'column'}}>
+              <Input
+                label="Viscosity of Polymer in sec/liter"
+                value={boringOfPileData.viscosityOfPolymer}
+                onChange={(value: string) =>
+                  handleInputChangeFlushingOperations('viscosityOfPolymer', value)
+                }
+              />
+            </View>
+
+            <View style={{flexDirection: 'column'}}>
+              <Input
+                label="pH value of Polymer"
+                value={boringOfPileData.valueOfPolymer}
+                onChange={(value: string) =>
+                  handleInputChangeFlushingOperations('valueOfPolymer', value)
+                }
+              />
+            </View>
+
+            <View style={{flexDirection: 'column'}}>
+              <Input
+                label="Sand content of Polymer in %"
+                value={boringOfPileData.contentOfPolymer}
+                onChange={(value: string) =>
+                  handleInputChangeFlushingOperations('contentOfPolymer', value)
+                }
+              />
+            </View>
+
+            <View style={{flexDirection: 'column'}}>
+              <Input
+                label="Depth of Bore in m"
+                value={boringOfPileData.depthOfBore}
+                onChange={(value: string) =>
+                  handleInputChangeFlushingOperations('depthOfBore', value)
+                }
+              />
+            </View>
+
+            <View>
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
+                />
+              </View>
+            </View>
+          </View>
+        );
+      
+      case TASK_TYPES.CHIPPING_AND_REMOVAL_OF_CONCRETE_ABOVE_CUT_OFF_LEVEL:
+        return (
+          <View>
+            <View style={{flexDirection: 'column'}}>
+              <Input
+                label="No. of days of chipping after casting of concrete"
+                value={chippingAndRemovalOfConcreteData.noOfDaysOfChipping}
+                onChange={(value: string) =>
+                  handleInputChangeChippingAndRemovalOfConcrete('noOfDaysOfChipping', value)
+                }
+              />
+            </View>
+
+            <View>
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
+                />
+              </View>
+            </View>
+          </View>
+        );
+    
       case TASK_TYPES.CONCRETING:
+      case TASK_TYPES.PCC_LEVELLING_COURSE:
         if (!concreteData || !concreteData.length) {
           setConcreteData([
             {
@@ -2397,9 +2802,8 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
               gradeOfConcrete: '',
               concreteTemp: 0,
               slumpValue: 0,
-              noOfCubesCasted: 0,
-              concreteStartTime: '',
               concretePoured: 0,
+              concreteStartTime: '',
               concreteFinishTime: '',
               key: Guid.create(),
             },
@@ -2496,7 +2900,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       .map((item: any, index) => (
         <View style={getStyle(item)}>
           <View style={styles.leftContainer}>
-            <Text style={styles.HeadText}>{item.displayName}</Text>
+            <Text style={[styles.HeadText, {maxWidth: 300}]}>{item.displayName}</Text>
             {/* <Text style={styles.MyWorkSubHead}>Sub Text</Text> */}
           </View>
           {item.rfiStatus === RFI_STATUS.GENERATED ? (

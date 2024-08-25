@@ -200,7 +200,6 @@ const RFIsRecents = (props: any) => {
           <Text style={styles.headerCell}>Grade of Concrete</Text>
           <Text style={styles.headerCell}>Concrete temp in C</Text>
           <Text style={styles.headerCell}>Slump value in mm</Text>
-          <Text style={styles.headerCell}>No of cubes casted</Text>
           <Text style={styles.headerCell}>Concrete start time</Text>
           <Text style={styles.headerCell}>Concrete poured in cum</Text>
           <Text style={styles.headerCell}>Concrete finish time</Text>
@@ -243,9 +242,6 @@ const renderSectionHeader = (rowData: any) => {
         <Text>Slump value in mm</Text>
       </View>
       <View>
-        <Text>No of cubes casted</Text>
-      </View>
-      <View>
         <Text>Concrete start time</Text>
       </View>
       <View>
@@ -258,11 +254,66 @@ const renderSectionHeader = (rowData: any) => {
   )
 }
 
+const renderItemPCCLevelling = (rowData: any) => (
+  <View style={{flexDirection: 'column', gap: 5}}>
+    {rowData.index === 0 && (
+      <View style={styles.headerRow}>
+        <Text style={styles.headerCell}>TM No.</Text>
+        <Text style={styles.headerCell}>Last 4 digits of Vehicle No.</Text>
+        <Text style={styles.headerCell}>Time of arrival</Text>
+        <Text style={styles.headerCell}>Grade of Concrete</Text>
+        <Text style={styles.headerCell}>Concrete start time</Text>
+        <Text style={styles.headerCell}>Concrete poured in cum</Text>
+        <Text style={styles.headerCell}>Concrete finish time</Text>
+      </View>
+    )}
+    <View style={styles.row}>
+      <Text style={styles.cell}>TM {rowData.index + 1}</Text>
+      <Text style={styles.cell}>{rowData.item.vehicleNo}</Text>
+      <Text style={styles.cell}>{rowData.item.timeOfArrival}</Text>
+      <Text style={styles.cell}>{rowData.item.gradeOfConcrete}</Text>
+      <Text style={styles.cell}>{rowData.item.noOfCubesCasted}</Text>
+      <Text style={styles.cell}>{rowData.item.concreteStartTime}</Text>
+      <Text style={styles.cell}>{rowData.item.concretePoured}</Text>
+      <Text style={styles.cell}>{rowData.item.concreteFinishTime}</Text>
+    </View>
+  </View>
+);
+
+const renderSectionHeaderPCCLevelling = (rowData: any) => {
+return (
+  <View>
+    <View>
+      <Text>TM No.</Text>
+    </View>
+    <View>
+    <Text>Last 4 digits of Vehicle No.</Text>
+    </View>
+    <View>
+      <Text>Time of arrival</Text>
+    </View>
+    <View>
+      <Text>Grade of Concrete</Text>
+    </View>
+    <View>
+      <Text>Concrete start time</Text>
+    </View>
+    <View>
+      <Text>Concrete poured in cum</Text>
+    </View>
+    <View>
+      <Text>Concrete finish time</Text>
+    </View>
+</View>
+)
+}
+
   const taskForm = (selectedRFI: any) => {
     switch (selectedRFI?.metaData?.taskName) {
 
       case TASK_TYPES.CNG_AND_SETTING_OUT:
       case TASK_TYPES.PLACING_OF_SHEATHING_DUCT:
+      case TASK_TYPES.POST_CONCRETE_CHECK:
         return <View style={styles.ImageSections}>
       <View>
         {selectedRFI?.metaData?.base64Image && renderFileData()}
@@ -443,8 +494,21 @@ const renderSectionHeader = (rowData: any) => {
             /> 
             
             }
-           
+          </View>
+          </ScrollView>
+        </View>
+      case TASK_TYPES.PCC_LEVELLING_COURSE:
+        return <View>
+          <ScrollView horizontal={true}>
+          <View style={{ flexDirection: 'column'}}>
+            {
+              <SwipeListView 
+                data={selectedRFI?.metaData.concreteData} 
+                renderItem={renderItemPCCLevelling}
+                renderSectionHeader={renderSectionHeaderPCCLevelling}
+            /> 
             
+            }
           </View>
           </ScrollView>
         </View>

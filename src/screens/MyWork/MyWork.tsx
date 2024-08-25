@@ -58,17 +58,17 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
   const {myWorks, rfiData, rfiChecklistSaved, loading, error} = useSelector(
     (state: any) => state.MyWorks,
   );
-  const [myWorksData, setMyWorksData] = useState([]);
-  const [currentSegmentsData, setCurrentSegmentsData] = useState([]);
-  const [currentComponentsData, setCurrentComponentsData] = useState([]);
-  const [currentSubComponentsData, setCurrentSubComponentsData] = useState([]);
-  const [currentTasksData, setCurrentTasksData] = useState([]);
-  const [projectModuleId, setProjectModuleId] = useState('');
-  const [currentLevel, setCurrentLevel] = useState(1);
-  const [segmentsByGroupOnType, setSegmentsByGroupOnType] = useState(null);
-  const [searchText, setSearchText] = useState('');
-  const [rfiId, setRfiId] = useState('');
-  const [breadcrumbData, setBreadcrumbData] = useState([
+  const [myWorksData, setMyWorksData]: any = useState([]);
+  const [currentSegmentsData, setCurrentSegmentsData]: any = useState([]);
+  const [currentComponentsData, setCurrentComponentsData]: any = useState([]);
+  const [currentSubComponentsData, setCurrentSubComponentsData]: any = useState([]);
+  const [currentTasksData, setCurrentTasksData]: any = useState([]);
+  const [projectModuleId, setProjectModuleId]: any = useState('');
+  const [currentLevel, setCurrentLevel]: any = useState(1);
+  const [segmentsByGroupOnType, setSegmentsByGroupOnType]: any = useState(null);
+  const [searchText, setSearchText]: any = useState('');
+  const [rfiId, setRfiId]: any = useState('');
+  const [breadcrumbData, setBreadcrumbData]: any = useState([
     {
       name: '',
       projectModuleIndex: 0,
@@ -100,9 +100,10 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
 
   // CNG_AND_SETTING_OUT
   // PLACING_OF_SHEATHING_DUCT
+  // TASK_TYPES.POST_CONCRETE_CHECK:
   const [openPopup, setOpenPopup] = useState(false);
-  const [selectedTask, setSelectedTask] = useState(null);
-  const [imageObject, setImageObject] = useState(imageObjectEmpty);
+  const [selectedTask, setSelectedTask]: any = useState(null);
+  const [imageObject, setImageObject]: any = useState(imageObjectEmpty);
 
   // FORM_WORK
   // PLACEMENT_OF_INNER_SHUTTERS
@@ -219,9 +220,8 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       gradeOfConcrete: '',
       concreteTemp: 0,
       slumpValue: 0,
-      noOfCubesCasted: 0,
-      concreteStartTime: '',
       concretePoured: 0,
+      concreteStartTime: '',
       concreteFinishTime: '',
       key: Guid.create(),
     },
@@ -266,6 +266,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         switch (selectedTask?.name) {
           case TASK_TYPES.CNG_AND_SETTING_OUT:
           case TASK_TYPES.PLACING_OF_SHEATHING_DUCT:
+          case TASK_TYPES.POST_CONCRETE_CHECK:
             setImageObject({
               filePath: '',
               fileData: rfiData.metaData.base64Image,
@@ -361,6 +362,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             );
             break;
           case TASK_TYPES.CONCRETING:
+          case TASK_TYPES.PCC_LEVELLING_COURSE:
             if (rfiData.metaData.concreteData) {
               rfiData.metaData.concreteData.forEach((item: any) => {
                 item.key = Guid.create();
@@ -899,6 +901,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     switch (selectedTask?.name) {
       case TASK_TYPES.CNG_AND_SETTING_OUT:
       case TASK_TYPES.PLACING_OF_SHEATHING_DUCT:
+      case TASK_TYPES.POST_CONCRETE_CHECK:
         checkList = {
           taskName: selectedTask.name,
           base64Image: imageObject.fileData,
@@ -978,16 +981,21 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         };
         break;
       case TASK_TYPES.CONCRETING:
-        const isDataValid = validateConcreteData();
+      case TASK_TYPES.PCC_LEVELLING_COURSE:
+        const isDataValid = validateConcreteData(selectedTask?.name);
         if(!isDataValid){
           return;
         }
         concreteData.forEach((item: any) => {
           delete item.key;
-          (item.concreteTemp = Number(item.concreteTemp)),
-            (item.slumpValue = Number(item.slumpValue)),
-            (item.noOfCubesCasted = Number(item.noOfCubesCasted)),
-            (item.concretePoured = Number(item.concretePoured));
+          if (selectedTask.name === TASK_TYPES.CONCRETING) {
+            item.concreteTemp = Number(item.concreteTemp);
+            item.slumpValue = Number(item.slumpValue);
+          } else {
+            delete item.concreteTemp;
+            delete item.slumpValue;
+          }
+          item.concretePoured = Number(item.concretePoured);
         });
         checkList = {
           taskName: selectedTask.name,
@@ -1132,9 +1140,8 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         gradeOfConcrete: '',
         concreteTemp: 0,
         slumpValue: 0,
-        noOfCubesCasted: 0,
-        concreteStartTime: '',
         concretePoured: 0,
+        concreteStartTime: '',
         concreteFinishTime: '',
         key: Guid.create(),
       },
@@ -1156,17 +1163,22 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       <View style={{width: 130, alignItems: 'center', padding: 5}}>
         <Text style={{fontWeight: '600', fontSize: 12}}>Grade of Concrete</Text>
       </View>
-      <View style={{width: 130, alignItems: 'center', padding: 5}}>
-        <Text style={{fontWeight: '600', fontSize: 12}}>
-          Concrete temp in C
-        </Text>
-      </View>
-      <View style={{width: 130, alignItems: 'center', padding: 5}}>
-        <Text style={{fontWeight: '600', fontSize: 12}}>Slump value in mm</Text>
-      </View>
-      <View style={{width: 130, alignItems: 'center', padding: 5}}>
-        <Text style={{fontWeight: '600', fontSize: 12}}>No cubes casted</Text>
-      </View>
+      {
+        selectedTask.name === TASK_TYPES.CONCRETING &&
+          <View style={{width: 130, alignItems: 'center', padding: 5}}>
+            <Text style={{fontWeight: '600', fontSize: 12}}>
+              Concrete temp in C
+            </Text>
+          </View>
+      }
+      
+      {
+        selectedTask.name === TASK_TYPES.CONCRETING &&
+          <View style={{width: 130, alignItems: 'center', padding: 5}}>
+            <Text style={{fontWeight: '600', fontSize: 12}}>Slump value in mm</Text>
+          </View>
+      }
+      
       <View style={{width: 150, alignItems: 'center', padding: 5}}>
         <Text style={{fontWeight: '600', fontSize: 12}}>
           Concrete start time
@@ -1248,7 +1260,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         }
         break;
 
-      case 'noOfCubesCasted':
+      case 'concretePoured':
         const cubesValue = parseInt(value);
         if (
           isNaN(cubesValue) ||
@@ -1259,20 +1271,6 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           isValid = false;
           errorMessage =
             'Enter an integer between 1 and 100 for number of cubes casted';
-        }
-        break;
-
-      case 'concretePoured':
-        const pouredValue = parseFloat(value);
-        if (
-          isNaN(pouredValue) ||
-          pouredValue <= 0 ||
-          pouredValue > 100 ||
-          value.split('.')[1]?.length > 3
-        ) {
-          isValid = false;
-          errorMessage =
-            'Enter a value between 0 and 100 with up to 3 decimal places for concrete poured';
         }
         break;
     }
@@ -1286,7 +1284,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       showSnackbar(errorMessage, 'error');
     }
   };
-   const validateConcreteData = () => {
+   const validateConcreteData = (taskName: string) => {
      let isValid = true;
 
      concreteData.forEach((item, index) => {
@@ -1314,40 +1312,42 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
          return;
        }
 
-       const tempValue = parseFloat(item.concreteTemp.toString());
-       if (
-         isNaN(tempValue) ||
-         tempValue <= 0 ||
-         tempValue > 60 ||
-         item.concreteTemp.toString().split('.')[1]?.length > 2
-       ) {
-         isValid = false;
-         showSnackbar(
-           `TM ${
-             index + 1
-           }: Enter a temperature between 0 and 60 with up to 2 decimal places.`,
-           'error',
-         );
-         return;
-       }
+       if (selectedTask.name === TASK_TYPES.CONCRETING) {
+        const tempValue = parseFloat(item.concreteTemp.toString());
+        if (
+          isNaN(tempValue) ||
+          tempValue <= 0 ||
+          tempValue > 60 ||
+          item.concreteTemp.toString().split('.')[1]?.length > 2
+        ) {
+          isValid = false;
+          showSnackbar(
+            `TM ${
+              index + 1
+            }: Enter a temperature between 0 and 60 with up to 2 decimal places.`,
+            'error',
+          );
+          return;
+        }
 
-       const slumpValue = parseInt(item.slumpValue.toString());
-       if (
-         isNaN(slumpValue) ||
-         slumpValue <= 0 ||
-         slumpValue > 300 ||
-         !Number.isInteger(slumpValue)
-       ) {
-         isValid = false;
-         showSnackbar(
-           `TM ${
-             index + 1
-           }: Enter an integer between 1 and 300 for slump value in mm.`,
-           'error',
-         );
-         return;
+        const slumpValue = parseInt(item.slumpValue.toString());
+        if (
+          isNaN(slumpValue) ||
+          slumpValue <= 0 ||
+          slumpValue > 300 ||
+          !Number.isInteger(slumpValue)
+        ) {
+          isValid = false;
+          showSnackbar(
+            `TM ${
+              index + 1
+            }: Enter an integer between 1 and 300 for slump value in mm.`,
+            'error',
+          );
+          return;
+        }
        }
-       const cubesValue = parseInt(item.noOfCubesCasted.toString());
+       const cubesValue = parseInt(item.concretePoured.toString());
        if (
          isNaN(cubesValue) ||
          cubesValue <= 0 ||
@@ -1368,23 +1368,6 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
          isValid = false;
          showSnackbar(
            `TM ${index + 1}: Concrete start time is required.`,
-           'error',
-         );
-         return;
-       }
-
-       const pouredValue = parseFloat(item.concretePoured.toString());
-       if (
-         isNaN(pouredValue) ||
-         pouredValue <= 0 ||
-         pouredValue > 100 ||
-         item.concretePoured.toString().split('.')[1]?.length > 3
-       ) {
-         isValid = false;
-         showSnackbar(
-           `TM ${
-             index + 1
-           }: Enter a value between 0 and 100 with up to 3 decimal places for concrete poured in cum.`,
            'error',
          );
          return;
@@ -1447,27 +1430,28 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           isRequired={true}
         />
       </View>
-      <View style={{width: 130}}>
-        <CustomTextInputValue
-          rowItem={rowData.item}
-          fieldName={'concreteTemp'}
-          index={rowData.index}
-          onChange={handleTextInputChange}></CustomTextInputValue>
-      </View>
-      <View style={{width: 140}}>
-        <CustomTextInputValue
-          rowItem={rowData.item}
-          fieldName={'slumpValue'}
-          index={rowData.index}
-          onChange={handleTextInputChange}></CustomTextInputValue>
-      </View>
-      <View style={{width: 130}}>
-        <CustomTextInputValue
-          rowItem={rowData.item}
-          fieldName={'noOfCubesCasted'}
-          index={rowData.index}
-          onChange={handleTextInputChange}></CustomTextInputValue>
-      </View>
+      {
+        selectedTask.name === TASK_TYPES.CONCRETING && 
+          <View style={{width: 130}}>
+            <CustomTextInputValue
+              rowItem={rowData.item}
+              fieldName={'concreteTemp'}
+              index={rowData.index}
+              onChange={handleTextInputChange}></CustomTextInputValue>
+          </View>
+      }
+
+      {
+        selectedTask.name === TASK_TYPES.CONCRETING && 
+        <View style={{width: 140}}>
+          <CustomTextInputValue
+            rowItem={rowData.item}
+            fieldName={'slumpValue'}
+            index={rowData.index}
+            onChange={handleTextInputChange}></CustomTextInputValue>
+        </View>
+      }
+      
       <View style={{width: 150}}>
         <TimePicker
           label=""
@@ -1477,13 +1461,15 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           }
         />
       </View>
-      <View style={{width: 150}}>
+      
+      <View style={{width: 130}}>
         <CustomTextInputValue
           rowItem={rowData.item}
           fieldName={'concretePoured'}
           index={rowData.index}
           onChange={handleTextInputChange}></CustomTextInputValue>
       </View>
+      
       <View style={{width: 150}}>
         <TimePicker
           label=""
@@ -1603,6 +1589,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     switch (taskName) {
       case TASK_TYPES.CNG_AND_SETTING_OUT:
       case TASK_TYPES.PLACING_OF_SHEATHING_DUCT:
+      case TASK_TYPES.POST_CONCRETE_CHECK:
         return (
           <View>
             <Text
@@ -2389,6 +2376,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         );
 
       case TASK_TYPES.CONCRETING:
+      case TASK_TYPES.PCC_LEVELLING_COURSE:
         if (!concreteData || !concreteData.length) {
           setConcreteData([
             {
@@ -2397,9 +2385,8 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
               gradeOfConcrete: '',
               concreteTemp: 0,
               slumpValue: 0,
-              noOfCubesCasted: 0,
-              concreteStartTime: '',
               concretePoured: 0,
+              concreteStartTime: '',
               concreteFinishTime: '',
               key: Guid.create(),
             },

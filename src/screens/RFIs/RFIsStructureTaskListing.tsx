@@ -29,6 +29,7 @@ const RFIsStructureTaskListing = (props: any) => {
   const [currentLevel, setCurrentLevel] = useState(1);
   const [segmentsByGroupOnType, setSegmentsByGroupOnType] = useState(null);
   const [searchText, setSearchText] = useState('');
+  const { height } = Dimensions.get('window');
 
   const [breadcrumbData, setBreadcrumbData] = useState([{
     name: '',
@@ -557,6 +558,8 @@ const RFIsStructureTaskListing = (props: any) => {
     }
   }, [rfiGenerated]);
 
+  const calculatedHeight = height * 0.7;
+
   return (
     <View style={styles.Container}>
       {breadcrumbData.length ? <View style={styles.BreadcrumbContainer}>
@@ -599,7 +602,8 @@ const RFIsStructureTaskListing = (props: any) => {
           />
         </View>
       }
-      <ScrollView style={styles.Height100}>
+      
+      <ScrollView style={{height: calculatedHeight}}>
         {
           currentLevel === 1 &&
           rfisTasksData.map((projModuleItem: any, projModuleIndex) => (
@@ -879,7 +883,6 @@ const ExpanbableComponent = ({ item, onClickFunction, onGenerateRFI }: { item: a
         }
 
       </TouchableOpacity>
-      {/* <ScrollView style={styles.Height100}> */}
       <View style={[{ height: layoutHeight, zIndex: 1 }, styles.content]}>
         <View style={{paddingHorizontal: 10}}>
         {/* <View style={{ flexDirection: 'column' }}>
@@ -1017,7 +1020,6 @@ const ExpanbableComponent = ({ item, onClickFunction, onGenerateRFI }: { item: a
         </View>
         </View>
       </View>
-      {/* </ScrollView> */}
     </View>
   )
 }

@@ -1000,6 +1000,179 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       }),
     );
   };
+  
+const validateFlushingOperationsData = (
+  flushingOperationsData: any,
+): boolean => {
+
+  if (!flushingOperationsData.startTimeOfFlushing) {
+    showSnackbar('Start time of flushing cannot be empty', 'error');
+    return false;
+  }
+
+  if (!flushingOperationsData.finishTimeOfFlushing) {
+    showSnackbar('Finish time of flushing cannot be empty', 'error');
+    return false;
+  }
+  
+  if (
+    !flushingOperationsData.whetherPourCleared 
+  ) {
+    showSnackbar('Whether Pour Cleared must be either Yes or No', 'error');
+    return false;
+  }
+  const densityOfPolymer = parseFloat(flushingOperationsData.densityOfPolymer);
+  if (
+    isNaN(densityOfPolymer) ||
+    densityOfPolymer <= 0 ||
+    densityOfPolymer > 5 ||
+    !/^\d+(\.\d{1,2})?$/.test(densityOfPolymer.toString())
+  ) {
+    showSnackbar(
+      'Density of Polymer must be greater than 0, up to 2 decimal places, and less than or equal to 5 gm/ml',
+      'error',
+    );
+    return false;
+  }
+
+  const viscosityOfPolymer = parseInt(
+    flushingOperationsData.viscosityOfPolymer,
+  );
+  if (
+    isNaN(viscosityOfPolymer) ||
+    viscosityOfPolymer <= 0 ||
+    viscosityOfPolymer > 500
+  ) {
+    showSnackbar(
+      'Viscosity of Polymer must be an integer greater than 0 and less than or equal to 500 sec/liter',
+      'error',
+    );
+    return false;
+  }
+
+  const valueOfPolymer = parseInt(flushingOperationsData.valueOfPolymer);
+  if (isNaN(valueOfPolymer) || valueOfPolymer <= 0 || valueOfPolymer > 14) {
+    showSnackbar(
+      'pH Value of Polymer must be an integer greater than 0 and less than or equal to 14',
+      'error',
+    );
+    return false;
+  }
+  const contentOfPolymer = parseInt(flushingOperationsData.contentOfPolymer);
+  if (
+    isNaN(contentOfPolymer) ||
+    contentOfPolymer <= 0 ||
+    contentOfPolymer > 100
+  ) {
+    showSnackbar(
+      'Sand content of Polymer must be an integer greater than 0 and less than or equal to 100%',
+      'error',
+    );
+    return false;
+  }
+
+  const depthOfBore = parseFloat(flushingOperationsData.depthOfBore);
+  if (
+    isNaN(depthOfBore) ||
+    depthOfBore <= 0 ||
+    depthOfBore > 100 ||
+    !/^\d+(\.\d{1,3})?$/.test(depthOfBore.toString())
+  ) {
+    showSnackbar(
+      'Depth of Bore must be greater than 0, up to 3 decimal places, and less than or equal to 100 meters',
+      'error',
+    );
+    return false;
+  }
+
+  return true;
+};
+const validateBoringOfPileData = (boringOfPileData: any): boolean => {
+
+  const densityOfPolymer = parseFloat(boringOfPileData.densityOfPolymer);
+  if (
+    isNaN(densityOfPolymer) ||
+    densityOfPolymer <= 0 ||
+    densityOfPolymer > 5 ||
+    !/^\d+(\.\d{1,2})?$/.test(densityOfPolymer.toString())
+  ) {
+    showSnackbar(
+      'Density of Polymer must be greater than 0, up to 2 decimal places, and less than or equal to 5 gm/ml',
+      'error',
+    );
+    return false;
+  }
+
+  const viscosityOfPolymer = parseInt(boringOfPileData.viscosityOfPolymer);
+  if (
+    isNaN(viscosityOfPolymer) ||
+    viscosityOfPolymer <= 0 ||
+    viscosityOfPolymer > 500
+  ) {
+    showSnackbar(
+      'Viscosity of Polymer must be an integer greater than 0 and less than or equal to 500 sec/liter',
+      'error',
+    );
+    return false;
+  }
+
+  const valueOfPolymer = parseInt(boringOfPileData.valueOfPolymer);
+  if (isNaN(valueOfPolymer) || valueOfPolymer <= 0 || valueOfPolymer > 14) {
+    showSnackbar(
+      'pH Value of Polymer must be an integer greater than 0 and less than or equal to 14',
+      'error',
+    );
+    return false;
+  }
+
+  const contentOfPolymer = parseInt(boringOfPileData.contentOfPolymer);
+  if (
+    isNaN(contentOfPolymer) ||
+    contentOfPolymer <= 0 ||
+    contentOfPolymer > 100
+  ) {
+    showSnackbar(
+      'Sand content of Polymer must be an integer greater than 0 and less than or equal to 100%',
+      'error',
+    );
+    return false;
+  }
+  const depthOfBore = parseFloat(boringOfPileData.depthOfBore);
+  if (
+    isNaN(depthOfBore) ||
+    depthOfBore <= 0 ||
+    depthOfBore > 100 ||
+    !/^\d+(\.\d{1,3})?$/.test(depthOfBore.toString())
+  ) {
+    showSnackbar(
+      'Depth of Bore must be greater than 0 and less than or equal to 100 meters up to 3 decimal places, ',
+      'error',
+    );
+    return false;
+  }
+
+  return true;
+};
+const validateChippingAndRemovalData = (
+  chippingAndRemovalOfConcreteData: any,
+): boolean => {
+  const noOfDaysOfChipping = parseInt(
+    chippingAndRemovalOfConcreteData.noOfDaysOfChipping,
+  );
+  if (
+    isNaN(noOfDaysOfChipping) ||
+    noOfDaysOfChipping <= 0 ||
+    noOfDaysOfChipping > 100
+  ) {
+    showSnackbar(
+      'Number of days of chipping must be a positive integer and less than or equal to 100',
+      'error',
+    );
+    return false;
+  }
+
+  return true;
+};
 
   const onFillChecklist = (rfiStatus: string) => {
     if (!rfiDate) {
@@ -1019,6 +1192,10 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       case TASK_TYPES.CNG_AND_SETTING_OUT:
       case TASK_TYPES.PLACING_OF_SHEATHING_DUCT:
       case TASK_TYPES.POST_CONCRETE_CHECK:
+        if (!imageObject?.fileData) {
+          showSnackbar('Please upload an image file', 'error');
+          return;
+        }
         checkList = {
           taskName: selectedTask.name,
           base64Image: imageObject.fileData,
@@ -1042,6 +1219,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         break;
       case TASK_TYPES.REINFORCEMENT_PREPARATION:
       case TASK_TYPES.REINFORCEMENT:
+        
         checkList = {
           taskName: selectedTask.name,
           rebarAndDimensionGFC: rebarAndDimensionGFC,
@@ -1098,6 +1276,9 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         };
         break;
       case TASK_TYPES.BORING_OF_PILE:
+        if (!validateBoringOfPileData(boringOfPileData)) {
+          return;
+        }
         checkList = {
           taskName: selectedTask.name,
           boringOfPileData: {
@@ -1110,6 +1291,9 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         };
         break;
       case TASK_TYPES.FLUSHING_OPERATIONS:
+        if (!validateFlushingOperationsData(flushingOperationsData)) {
+          return;
+        }
         checkList = {
           taskName: selectedTask.name,
           flushingOperationsData: {
@@ -1125,6 +1309,9 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         };
         break;
       case TASK_TYPES.CHIPPING_AND_REMOVAL_OF_CONCRETE_ABOVE_CUT_OFF_LEVEL:
+        if (!validateChippingAndRemovalData(chippingAndRemovalOfConcreteData)) {
+          return;
+        }
         checkList = {
           taskName: selectedTask.name,
           chippingAndRemovalOfConcreteData: {

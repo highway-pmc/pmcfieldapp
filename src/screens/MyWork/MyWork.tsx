@@ -1345,7 +1345,6 @@ const validateChippingAndRemovalData = (
       default:
         break;
     }
-    return;
     dispatch(
       fillRFIsChecklist({
         projectId: loggedInUser.projectId,

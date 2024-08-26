@@ -25,6 +25,8 @@ import {
   YES_NO_LIST,
   YES_NO_NA_LIST,
   CONCRETE_GRADE_LIST,
+  CEMENT_GRADE_LIST,
+  CEMENT_TYPE_LIST,
 } from '../../constants/constants';
 import {useDispatch, useSelector} from 'react-redux';
 import {
@@ -305,6 +307,72 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     setChippingAndRemovalOfConcreteData({...chippingAndRemovalOfConcreteData, [name]: Number(value)});
   };
 
+  // GROUTING
+  type FormStateGrouting = {
+    inletFree: string;
+    outletFree: string;
+    ventsFree: string;
+    cableDuctFree: string;
+    leakageObserved: string;
+    sealed: string;
+    remedialMeasures: string;
+    prestressingDate: string;
+    groutingDate: string;
+    cementType: string;
+    wcRatio: number;
+    mixingWaterTemp: number;
+    groutTemp: number;
+    startTime: string;
+    finishTime: string;
+    volumeOfGrout: number;
+    groutingPressure: number;
+    cementConsumptionTheoretical: number;
+    cementConsumptionActual: number;
+    passageThroughVents: string;
+    passageThroughOutlet: string;
+    equipmentFailure: string;
+    probingByStiffwire: string;
+  };
+  const [groutingData, setGroutingData] = useState<FormStateGrouting>(
+    {
+      inletFree: 'Y',
+      outletFree: 'Y',
+      ventsFree: 'Y',
+      cableDuctFree: 'Y',
+      leakageObserved: 'Y',
+      sealed: 'Y',
+      remedialMeasures: 'Y',
+      prestressingDate: '',
+      groutingDate: '',
+      cementType: 'OPC43',
+      wcRatio: 0,
+      mixingWaterTemp: 0,
+      groutTemp: 0,
+      startTime: '',
+      finishTime: '',
+      volumeOfGrout: 0,
+      groutingPressure: 0,
+      cementConsumptionTheoretical: 0,
+      cementConsumptionActual: 0,
+      passageThroughVents: 'Y',
+      passageThroughOutlet: 'Y',
+      equipmentFailure: 'Y',
+      probingByStiffwire: 'Y',
+    },
+  );
+
+  const handleInputChangeGrouting = (
+    name: keyof FormStateGrouting,
+    value: string | number | [],
+  ) => {
+    if (name === 'wcRatio' || name === 'mixingWaterTemp' || name === 'groutTemp' ||
+        name === 'volumeOfGrout' || name === 'groutingPressure' || name === 'cementConsumptionTheoretical' ||
+        name === 'cementConsumptionActual') {
+      setGroutingData({...groutingData, [name]: Number(value)});
+    }
+    setGroutingData({...groutingData, [name]: value});
+  };
+
   const dispatch = useDispatch();
   const focus = useIsFocused();
 
@@ -466,6 +534,37 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                 valueOfPolymer: 0,
                 contentOfPolymer: 0,
                 depthOfBore: 0,
+              });
+            }
+            break;
+          case TASK_TYPES.GROUTING:
+            if (rfiData.metaData.groutingData) {
+              setBoringOfPileData(rfiData.metaData.groutingData);
+            } else {
+              setGroutingData({
+                inletFree: 'Y',
+                outletFree: 'Y',
+                ventsFree: 'Y',
+                cableDuctFree: 'Y',
+                leakageObserved: 'Y',
+                sealed: 'Y',
+                remedialMeasures: 'Y',
+                prestressingDate: '',
+                groutingDate: '',
+                cementType: 'OPC43',
+                wcRatio: 0,
+                mixingWaterTemp: 0,
+                groutTemp: 0,
+                startTime: '',
+                finishTime: '',
+                volumeOfGrout: 0,
+                groutingPressure: 0,
+                cementConsumptionTheoretical: 0,
+                cementConsumptionActual: 0,
+                passageThroughVents: 'Y',
+                passageThroughOutlet: 'Y',
+                equipmentFailure: 'Y',
+                probingByStiffwire: 'Y',
               });
             }
             break;
@@ -1340,7 +1439,15 @@ const validateChippingAndRemovalData = (
           taskName: selectedTask.name,
           concreteData: concreteData,
         };
-        
+        break;
+      case TASK_TYPES.GROUTING:
+        // if (!validateFlushingOperationsData(flushingOperationsData)) {
+        //   return;
+        // }
+        checkList = {
+          taskName: selectedTask.name,
+          groutingData: groutingData
+        };
         break;
       default:
         break;
@@ -3064,6 +3171,234 @@ const validateChippingAndRemovalData = (
           </View>
         );
 
+        case TASK_TYPES.GROUTING:
+          return (
+            <View>
+              <View style={{flexDirection: 'column'}}>
+                <DropdownPicker
+                  label="Inlet free of blockage"
+                  value={groutingData.inletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(newValue: string) => {
+                    handleInputChangeGrouting('inletFree', newValue)
+                  }}
+                  isRequired={true}
+                />
+              </View>
+              
+              <View style={{flexDirection: 'column'}}>
+                <DropdownPicker
+                  label="Outlet free of blockage"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+  
+              <View style={{flexDirection: 'column'}}>
+                <DropdownPicker
+                  label="Vents free of blockage"
+                  value={groutingData.ventsFree}
+                  items={YES_NO_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('ventsFree', value)
+                  }
+                />
+              </View>
+  
+              <View style={{flexDirection: 'column'}}>
+                <DropdownPicker
+                  label="Cable Duct free of blockage"
+                  value={groutingData.cableDuctFree}
+                  items={YES_NO_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('cableDuctFree', value)
+                  }
+                />
+              </View>
+  
+              <View style={{flexDirection: 'column'}}>
+                <DropdownPicker
+                  label="Leakage observed"
+                  value={groutingData.leakageObserved}
+                  items={YES_NO_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('leakageObserved', value)
+                  }
+                />
+              </View>
+              <View style={{flexDirection: 'column'}}>
+                <DropdownPicker
+                  label="Sealed"
+                  value={groutingData.sealed}
+                  items={YES_NO_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('sealed', value)
+                  }
+                />
+              </View>
+              <View style={{flexDirection: 'column'}}>
+                <DropdownPicker
+                  label="If cable duct blocked remedial measures taken"
+                  value={groutingData.remedialMeasures}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('remedialMeasures', value)
+                  }
+                />
+              </View>
+              <Text style={styles.HeadText}>Details of Grouting</Text>
+              <CalendarPicker
+                label="Last Date of prestressing"
+                value={groutingData.prestressingDate}
+                onChange={date => handleInputChangeGrouting('prestressingDate', date)}
+              />
+              <CalendarPicker
+                label="Date of Grouting"
+                value={groutingData.groutingDate}
+                onChange={date => handleInputChangeGrouting('groutingDate', date)}
+              />
+              <DropdownPicker
+                label="Type of cement"
+                value={groutingData.cementType}
+                items={CEMENT_TYPE_LIST}
+                onChange={(value: string) =>
+                  handleInputChangeGrouting('cementType', value)
+                }
+              />
+              <Input
+                label="W/c Ratio"
+                value={groutingData.wcRatio}
+                onChange={(value: string) => handleInputChangeGrouting('wcRatio', value)}
+                isRequired={true}
+              />
+              <Input
+                label="Temperature of mixing water (°C)"
+                value={groutingData.mixingWaterTemp}
+                onChange={(value: string) =>
+                  handleInputChangeGrouting('mixingWaterTemp', value)
+                }
+                isRequired={true}
+              />
+              <Input
+                label="Temperature of Grout (°C)"
+                value={groutingData.groutTemp}
+                onChange={(value: string) => handleInputChangeGrouting('groutTemp', value)}
+                isRequired={true}
+              />
+              <TimePicker
+                label="Start Time"
+                value={groutingData.startTime}
+                onChange={time => handleInputChangeGrouting('startTime', time)}
+              />
+              <TimePicker
+                label="Finish Time"
+                value={groutingData.finishTime}
+                onChange={time => handleInputChangeGrouting('finishTime', time)}
+              />
+              <Input
+                label="Volume of Grout (Ltr)"
+                value={groutingData.volumeOfGrout}
+                onChange={(value: string) => handleInputChangeGrouting('volumeOfGrout', value)}
+                isRequired={true}
+              />
+              <Input
+                label="Grouting Pressure (Kg/cm²)"
+                value={groutingData.groutingPressure}
+                onChange={(value: string) =>
+                  handleInputChangeGrouting('groutingPressure', value)
+                }
+                isRequired={true}
+              />
+              <Input
+                label="Cement consumption theoretical"
+                value={groutingData.cementConsumptionTheoretical}
+                onChange={(value: string) =>
+                  handleInputChangeGrouting('cementConsumptionTheoretical', value)
+                }
+                isRequired={true}
+              />
+              <Input
+                label="Cement consumption actual"
+                value={groutingData.cementConsumptionActual}
+                onChange={(value: string) =>
+                  handleInputChangeGrouting('cementConsumptionActual', value)
+                }
+                isRequired={true}
+              />
+              <DropdownPicker
+                label="Passage of grout through vents"
+                value={groutingData.passageThroughVents}
+                items={YES_NO_LIST}
+                onChange={(value: string) =>
+                  handleInputChangeGrouting('passageThroughVents', value)
+                }
+              />
+              <DropdownPicker
+                label="Passage of grout through outlet"
+                value={groutingData.passageThroughOutlet}
+                items={YES_NO_LIST}
+                onChange={(value: string) =>
+                  handleInputChangeGrouting('passageThroughOutlet', value)
+                }
+              />
+              <DropdownPicker
+                label="Any equipment failure"
+                value={groutingData.equipmentFailure}
+                items={YES_NO_LIST}
+                onChange={(value: string) =>
+                  handleInputChangeGrouting('equipmentFailure', value)
+                }
+              />
+              <DropdownPicker
+                label="Probing by Stiffwire"
+                value={groutingData.probingByStiffwire}
+                items={YES_NO_LIST}
+                onChange={(value: string) =>
+                  handleInputChangeGrouting('probingByStiffwire', value)
+                }
+              />
+
+              <View>
+                <View style={{flexDirection: 'column'}}>
+                  <CalendarPicker
+                    label="Date"
+                    value={rfiDate}
+                    onChange={date => setRFIDate(date)}
+                  />
+                </View>
+                <View>
+                  <TimePicker
+                    label="Time"
+                    value={rfiTime}
+                    onChange={time => setRFITime(time)}
+                  />
+                </View>
+  
+                <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                  <Text style={styles.Lable}>Recommendations</Text>
+                  <TextInput
+                    style={styles.commonInputFiels}
+                    placeholder="Recommendations"
+                    autoCapitalize="none"
+                    keyboardType="email-address"
+                    returnKeyType="next"
+                    underlineColorAndroid="#f000"
+                    multiline={true}
+                    numberOfLines={4}
+                    blurOnSubmit={false}
+                    value={comments}
+                    onChangeText={text => {
+                      setComments(text);
+                    }}
+                  />
+                </View>
+              </View>
+            </View>
+          );
+  
       default:
         return (
           <View>

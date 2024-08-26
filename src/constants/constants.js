@@ -396,7 +396,8 @@ export const TASK_TYPES = {
     PCC_LEVELLING_COURSE: 'pcc-levelling-course',
     BORING_OF_PILE: 'boring-of-pile',
     FLUSHING_OPERATIONS: 'flushing-operations',
-    CHIPPING_AND_REMOVAL_OF_CONCRETE_ABOVE_CUT_OFF_LEVEL: 'chipping-and-removal-of-concrete-above-cut-off-level'
+    CHIPPING_AND_REMOVAL_OF_CONCRETE_ABOVE_CUT_OFF_LEVEL: 'chipping-and-removal-of-concrete-above-cut-off-level',
+    GROUTING: 'grouting'
 }
 
 export const TEST_MATERIALS_TYPES = {
@@ -539,5 +540,14 @@ export const CEMENT_GRADE_LIST = [
     },
     {
         label: 'OPC 53', value: 'OPC53'
+    },
+];
+
+export const CEMENT_TYPE_LIST = [
+    {
+        label: 'OPC', value: 'OPC'
+    },
+    {
+        label: 'II ISOPC', value: 'II ISOPC'
     },
 ];

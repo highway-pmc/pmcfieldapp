@@ -8,6 +8,7 @@ import LoadingAnimation from '../Common/LoadingAnimation';
 import Pdf from 'react-native-pdf';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { getDisplayDate, getDisplayTime } from '../../utils/Utils';
+const { height } = Dimensions.get('window');
 
 const RFIsRecents = (props: any) => {
   const navigation = useNavigation();
@@ -156,7 +157,7 @@ const RFIsRecents = (props: any) => {
     //   setLayoutHeight(DEFAULT_COMPONENT_HEIGHT)
     // }
   }
-
+  const calculatedHeight = height * 0.6;
   // const getHours = () => {
   //   let hours = [];
   //   for (let i = 1; i <= 12; i++) {
@@ -604,7 +605,7 @@ return (
         <View style={styles.recentWorkHead}>
           <Text style={styles.headerText}>Recent RFI's (<Text style={styles.taskCount}>{rfiData.length}</Text>)</Text>
         </View>
-        <View style={props.rfiType === RFIs_TYPE.GENERATE ? styles.recentWorkContent : styles.recentWorkContentHeight100}>
+        <View style={[props.rfiType === RFIs_TYPE.GENERATE ? styles.recentWorkContent : styles.recentWorkContentHeight100, {height: calculatedHeight}]}>
           <ScrollView showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}>
             {
@@ -746,7 +747,7 @@ return (
                 </ScrollView>
                 {
                   props.rfiType === RFIs_TYPE.GENERATE &&
-                  <View style={[styles.btnParentSection, { flexDirection: 'row', justifyContent: 'center', gap: 20 }]}>
+                  <View style={[styles.btnParentSection, styles.ButtonPosition]}>
                     <TouchableOpacity style={styles.submitButton} onPress={() => onRFIAction(RFI_STATUS.CANCELLED)}>
                       <Text style={styles.submitButtonText}>Cancel</Text>
                     </TouchableOpacity>
@@ -755,7 +756,7 @@ return (
 
                 {
                   props.rfiType === RFIs_TYPE.CLOSED &&
-                  <View style={[styles.btnParentSection, { flexDirection: 'row', justifyContent: 'center', gap: 20, marginBottom: 10, backgroundColor: '#fff', paddingVertical: 10, marginHorizontal: -15 }]}>
+                  <View style={[styles.btnParentSection, styles.ButtonPosition]}>
                     <TouchableOpacity style={[styles.submitButton,  styles.rejectRfis]} onPress={() => onRFIAction(RFI_STATUS.REJECTED)}>
                       <Text style={styles.submitButtonText}>Reject</Text>
                     </TouchableOpacity>
@@ -768,7 +769,7 @@ return (
 
                 {
                   props.rfiType === RFIs_TYPE.APPROVED &&
-                  <View style={[styles.btnParentSection, { flexDirection: 'row', justifyContent: 'center', gap: 20 }]}>
+                  <View style={[styles.btnParentSection, styles.ButtonPosition]}>
                     <TouchableOpacity style={styles.submitButton} onPress={() => onGenerateReport()}>
                       <Text style={styles.submitButtonText}>Generate Report</Text>
                     </TouchableOpacity>
@@ -777,7 +778,7 @@ return (
 
                 {
                   props.rfiType === RFIs_TYPE.REJECTED &&
-                  <View style={[styles.btnParentSection, { flexDirection: 'row', justifyContent: 'center', gap: 20 }]}>
+                  <View style={[styles.btnParentSection, styles.ButtonPosition]}>
                     <TouchableOpacity style={styles.submitButton} onPress={() => onRFIAction(RFI_STATUS.RE_GENERATED)}>
                       <Text style={styles.submitButtonText}>Re-generate</Text>
                     </TouchableOpacity>
@@ -817,6 +818,15 @@ return (
 }
 
 const styles = StyleSheet.create({
+  ButtonPosition: {
+    flexDirection: 'row', 
+    justifyContent: 'center', 
+    gap: 20, 
+    marginBottom: 10, 
+    backgroundColor: '#fff', 
+    paddingVertical: 10, 
+    marginHorizontal: -15,
+  },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -876,7 +886,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 12,
     marginTop: 15,
-    height: '80%'
+    height: '80%',
   },
   recentWorkHead: {
     flexDirection: 'row',
@@ -889,11 +899,12 @@ const styles = StyleSheet.create({
   },
   recentWorkContent: {
     padding: 20,
-    height: '90%'
+    height: '90%',
+
   },
   recentWorkContentHeight100: {
     padding: 20,
-    height: '100%'
+    height: '100%',
   },
   recentWorkCard: {
     backgroundColor: '#fff',

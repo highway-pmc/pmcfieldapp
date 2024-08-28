@@ -365,11 +365,74 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     name: keyof FormStateGrouting,
     value: string | number | [],
   ) => {
-    if (name === 'wcRatio' || name === 'mixingWaterTemp' || name === 'groutTemp' ||
-        name === 'volumeOfGrout' || name === 'groutingPressure' || name === 'cementConsumptionTheoretical' ||
-        name === 'cementConsumptionActual') {
-      setGroutingData({...groutingData, [name]: Number(value)});
-    }
+  let parsedValue: number;
+  // Only parse if the value is a string or number
+  if (typeof value === 'string') {
+    parsedValue = parseFloat(value);
+  } else if (typeof value === 'number') {
+    parsedValue = value;
+  } else {
+    // If the value is not a string or number, return early without updating
+    return;
+  }
+  const isValidInput = (val: number, maxLimit: number, decimals: number) => {
+    const regex = new RegExp(`^\\d*(\\.\\d{0,${decimals}})?$`);
+    return val > 0 && val <= maxLimit && regex.test(val.toString());
+  };
+
+  switch (name) {
+    case 'wcRatio':
+      if (!isValidInput(parsedValue, 2, 2)) {
+        showSnackbar(
+          'Invalid W/C Ratio: Must be >0 and <= 2, with up to 2 decimal places.',
+          'error',
+        );
+      }
+      break;
+    case 'mixingWaterTemp':
+    case 'groutTemp':
+      if (!isValidInput(parsedValue, 60, 2)) {
+        showSnackbar(
+          'Invalid Temperature: Must be >0 and <= 60°C, with up to 2 decimal places.',
+          'error',
+        );
+      }
+      break;
+    case 'volumeOfGrout':
+      if (!isValidInput(parsedValue, 1000, 2)) {
+        showSnackbar(
+          'Invalid Volume of Grout: Must be >0 and <= 1000L, with up to 2 decimal places.',
+          'error',
+        );
+      }
+      break;
+    case 'groutingPressure':
+      if (!isValidInput(parsedValue, 50, 2)) {
+        showSnackbar(
+          'Invalid Grouting Pressure: Must be >0 and <= 50 Kg/cm², with up to 2 decimal places.',
+          'error',
+        );
+      }
+      break;
+    case 'cementConsumptionTheoretical':
+    case 'cementConsumptionActual':
+      if (!isValidInput(parsedValue, 1000, 2)) {
+        showSnackbar(
+          'Invalid Cement Consumption: Must be >0 and <= 1000, with up to 2 decimal places.',
+          'error',
+        );
+
+      }
+      break;
+    default:
+      break;
+  }
+
+    // if (name === 'wcRatio' || name === 'mixingWaterTemp' || name === 'groutTemp' ||
+    //     name === 'volumeOfGrout' || name === 'groutingPressure' || name === 'cementConsumptionTheoretical' ||
+    //     name === 'cementConsumptionActual') {
+    //   setGroutingData({...groutingData, [name]: Number(value)});
+    // }
     setGroutingData({...groutingData, [name]: value});
   };
 
@@ -1272,6 +1335,112 @@ const validateChippingAndRemovalData = (
 
   return true;
 };
+const validateGroutingData = (groutingData: any): boolean => {
+  const wcRatio = parseFloat(groutingData.wcRatio);
+  const mixingWaterTemp = parseFloat(groutingData.mixingWaterTemp);
+  const groutTemp = parseFloat(groutingData.groutTemp);
+  const volumeOfGrout = parseFloat(groutingData.volumeOfGrout);
+  const groutingPressure = parseFloat(groutingData.groutingPressure);
+  const cementConsumptionTheoretical = parseFloat(
+    groutingData.cementConsumptionTheoretical,
+  );
+  const cementConsumptionActual = parseFloat(
+    groutingData.cementConsumptionActual,
+  );
+
+  if (isNaN(wcRatio) || wcRatio <= 0 || wcRatio > 2) {
+    showSnackbar(
+      'W/C Ratio must be greater than 0 and less than or equal to 2, with up to 2 decimal places.',
+      'error',
+    );
+    return false;
+  }
+
+  if (isNaN(mixingWaterTemp) || mixingWaterTemp <= 0 || mixingWaterTemp > 60) {
+    showSnackbar(
+      'Temperature of Mixing Water must be greater than 0 and less than or equal to 60°C, with up to 2 decimal places.',
+      'error',
+    );
+    return false;
+  }
+
+  if (isNaN(groutTemp) || groutTemp <= 0 || groutTemp > 60) {
+    showSnackbar(
+      'Temperature of Grout must be greater than 0 and less than or equal to 60°C, with up to 2 decimal places.',
+      'error',
+    );
+    return false;
+  }
+
+  if (isNaN(volumeOfGrout) || volumeOfGrout <= 0 || volumeOfGrout > 1000) {
+    showSnackbar(
+      'Volume of Grout must be greater than 0 and less than or equal to 1000L, with up to 2 decimal places.',
+      'error',
+    );
+    return false;
+  }
+
+  if (
+    isNaN(groutingPressure) ||
+    groutingPressure <= 0 ||
+    groutingPressure > 50
+  ) {
+    showSnackbar(
+      'Grouting Pressure must be greater than 0 and less than or equal to 50 Kg/cm², with up to 2 decimal places.',
+      'error',
+    );
+    return false;
+  }
+
+  if (
+    isNaN(cementConsumptionTheoretical) ||
+    cementConsumptionTheoretical <= 0 ||
+    cementConsumptionTheoretical > 1000
+  ) {
+    showSnackbar(
+      'Cement Consumption Theoretical must be greater than 0 and less than or equal to 1000, with up to 2 decimal places.',
+      'error',
+    );
+    return false;
+  }
+
+  if (
+    isNaN(cementConsumptionActual) ||
+    cementConsumptionActual <= 0 ||
+    cementConsumptionActual > 1000
+  ) {
+    showSnackbar(
+      'Cement Consumption Actual must be greater than 0 and less than or equal to 1000, with up to 2 decimal places.',
+      'error',
+    );
+    return false;
+  }
+
+  if (!groutingData.prestressingDate || !groutingData.groutingDate) {
+    showSnackbar(
+      'Prestressing Date and Grouting Date must not be empty.',
+      'error',
+    );
+    return false;
+  }
+  if (!groutingData.startTime || !groutingData.finishTime) {
+    showSnackbar('Provide Start time and Finish time', 'error');
+    return false;
+  }
+  // If validation passes, convert the required fields to numbers
+  groutingData.wcRatio = Number(groutingData.wcRatio);
+  groutingData.mixingWaterTemp = Number(groutingData.mixingWaterTemp);
+  groutingData.groutTemp = Number(groutingData.groutTemp);
+  groutingData.volumeOfGrout = Number(groutingData.volumeOfGrout);
+  groutingData.groutingPressure = Number(groutingData.groutingPressure);
+  groutingData.cementConsumptionTheoretical = Number(
+    groutingData.cementConsumptionTheoretical,
+  );
+  groutingData.cementConsumptionActual = Number(
+    groutingData.cementConsumptionActual,
+  );
+  return true;
+};
 
   const onFillChecklist = (rfiStatus: string) => {
     if (!rfiDate) {
@@ -1441,9 +1610,9 @@ const validateChippingAndRemovalData = (
         };
         break;
       case TASK_TYPES.GROUTING:
-        // if (!validateFlushingOperationsData(flushingOperationsData)) {
-        //   return;
-        // }
+        if(!validateGroutingData(groutingData)){
+          return;
+        }
         checkList = {
           taskName: selectedTask.name,
           groutingData: groutingData

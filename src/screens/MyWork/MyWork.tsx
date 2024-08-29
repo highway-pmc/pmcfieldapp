@@ -64,7 +64,9 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
   const [myWorksData, setMyWorksData]: any = useState([]);
   const [currentSegmentsData, setCurrentSegmentsData]: any = useState([]);
   const [currentComponentsData, setCurrentComponentsData]: any = useState([]);
-  const [currentSubComponentsData, setCurrentSubComponentsData]: any = useState([]);
+  const [currentSubComponentsData, setCurrentSubComponentsData]: any = useState(
+    [],
+  );
   const [currentTasksData, setCurrentTasksData]: any = useState([]);
   const [projectModuleId, setProjectModuleId]: any = useState('');
   const [currentLevel, setCurrentLevel]: any = useState(1);
@@ -229,6 +231,27 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       key: Guid.create(),
     },
   ]);
+  //GLUEING
+  const [glueingData, setGlueingData] = useState([
+    {
+      jointNumbers: '',
+      ambientTemperature: 0,
+      batchNoResin: 0,
+      batchNoHardener: 0,
+      mixingStartTime: '',
+      mixingFinishTime: '',
+      applicationStartTime: '',
+      applicationFinishTime: '',
+      segmentJoiningTimeClosure: '',
+      segmentJoiningTimeTemporaryFinish: '',
+      segmentSurfaceArea: 0,
+      epoxyConsumptionTheoreticalResin: 0,
+      epoxyConsumptionTheoreticalHardener: 0,
+      epoxyConsumptionActualResin: 0,
+      epoxyConsumptionActualHardener: 0,
+      key: Guid.create(),
+    },
+  ]);
 
   // BORING_OF_PILE
   type FormStateBoringOfPile = {
@@ -238,15 +261,14 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     contentOfPolymer: number;
     depthOfBore: number;
   };
-  const [boringOfPileData, setBoringOfPileData] = useState<FormStateBoringOfPile>(
-    {
+  const [boringOfPileData, setBoringOfPileData] =
+    useState<FormStateBoringOfPile>({
       densityOfPolymer: 0,
       viscosityOfPolymer: 0,
       valueOfPolymer: 0,
       contentOfPolymer: 0,
       depthOfBore: 0,
-    },
-  );
+    });
 
   const handleInputChangeBoringOfPile = (
     name: keyof FormStateBoringOfPile,
@@ -257,17 +279,17 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
 
   // FLUSHING_OPERATIONS
   type FormStateFlushingOperations = {
-    startTimeOfFlushing: string,
-    finishTimeOfFlushing: string,
-    whetherPourCleared: string,
+    startTimeOfFlushing: string;
+    finishTimeOfFlushing: string;
+    whetherPourCleared: string;
     densityOfPolymer: number;
     viscosityOfPolymer: number;
     valueOfPolymer: number;
     contentOfPolymer: number;
     depthOfBore: number;
   };
-  const [flushingOperationsData, setFlushingOperationsData] = useState<FormStateFlushingOperations>(
-    {
+  const [flushingOperationsData, setFlushingOperationsData] =
+    useState<FormStateFlushingOperations>({
       startTimeOfFlushing: '',
       finishTimeOfFlushing: '',
       whetherPourCleared: 'Y',
@@ -276,17 +298,23 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       valueOfPolymer: 0,
       contentOfPolymer: 0,
       depthOfBore: 0,
-    },
-  );
+    });
 
   const handleInputChangeFlushingOperations = (
     name: keyof FormStateFlushingOperations,
     value: string | number | [],
   ) => {
-    if (name === 'startTimeOfFlushing' || name === 'finishTimeOfFlushing' || name === 'whetherPourCleared') {
+    if (
+      name === 'startTimeOfFlushing' ||
+      name === 'finishTimeOfFlushing' ||
+      name === 'whetherPourCleared'
+    ) {
       setFlushingOperationsData({...flushingOperationsData, [name]: value});
     } else {
-      setFlushingOperationsData({...flushingOperationsData, [name]: Number(value)});
+      setFlushingOperationsData({
+        ...flushingOperationsData,
+        [name]: Number(value),
+      });
     }
   };
 
@@ -294,17 +322,21 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
   type FormStateChippingAndRemovalOfConcrete = {
     noOfDaysOfChipping: number;
   };
-  const [chippingAndRemovalOfConcreteData, setChippingAndRemovalOfConcreteData] = useState<FormStateChippingAndRemovalOfConcrete>(
-    {
-      noOfDaysOfChipping: 0 
-    },
-  );
+  const [
+    chippingAndRemovalOfConcreteData,
+    setChippingAndRemovalOfConcreteData,
+  ] = useState<FormStateChippingAndRemovalOfConcrete>({
+    noOfDaysOfChipping: 0,
+  });
 
   const handleInputChangeChippingAndRemovalOfConcrete = (
     name: keyof FormStateChippingAndRemovalOfConcrete,
     value: string | number | [],
   ) => {
-    setChippingAndRemovalOfConcreteData({...chippingAndRemovalOfConcreteData, [name]: Number(value)});
+    setChippingAndRemovalOfConcreteData({
+      ...chippingAndRemovalOfConcreteData,
+      [name]: Number(value),
+    });
   };
 
   // GROUTING
@@ -333,100 +365,97 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     equipmentFailure: string;
     probingByStiffwire: string;
   };
-  const [groutingData, setGroutingData] = useState<FormStateGrouting>(
-    {
-      inletFree: 'Y',
-      outletFree: 'Y',
-      ventsFree: 'Y',
-      cableDuctFree: 'Y',
-      leakageObserved: 'Y',
-      sealed: 'Y',
-      remedialMeasures: 'Y',
-      prestressingDate: '',
-      groutingDate: '',
-      cementType: 'OPC43',
-      wcRatio: 0,
-      mixingWaterTemp: 0,
-      groutTemp: 0,
-      startTime: '',
-      finishTime: '',
-      volumeOfGrout: 0,
-      groutingPressure: 0,
-      cementConsumptionTheoretical: 0,
-      cementConsumptionActual: 0,
-      passageThroughVents: 'Y',
-      passageThroughOutlet: 'Y',
-      equipmentFailure: 'Y',
-      probingByStiffwire: 'Y',
-    },
-  );
+  const [groutingData, setGroutingData] = useState<FormStateGrouting>({
+    inletFree: 'Y',
+    outletFree: 'Y',
+    ventsFree: 'Y',
+    cableDuctFree: 'Y',
+    leakageObserved: 'Y',
+    sealed: 'Y',
+    remedialMeasures: 'Y',
+    prestressingDate: '',
+    groutingDate: '',
+    cementType: 'OPC43',
+    wcRatio: 0,
+    mixingWaterTemp: 0,
+    groutTemp: 0,
+    startTime: '',
+    finishTime: '',
+    volumeOfGrout: 0,
+    groutingPressure: 0,
+    cementConsumptionTheoretical: 0,
+    cementConsumptionActual: 0,
+    passageThroughVents: 'Y',
+    passageThroughOutlet: 'Y',
+    equipmentFailure: 'Y',
+    probingByStiffwire: 'Y',
+  });
 
   const handleInputChangeGrouting = (
     name: keyof FormStateGrouting,
     value: string | number | [],
   ) => {
-  let parsedValue: number;
-  // Only parse if the value is a string or number
-  if (typeof value === 'string') {
-    parsedValue = parseFloat(value);
-  } else if (typeof value === 'number') {
-    parsedValue = value;
-  } else {
-    // If the value is not a string or number, return early without updating
-    return;
-  }
-  const isValidInput = (val: number, maxLimit: number, decimals: number) => {
-    const regex = new RegExp(`^\\d*(\\.\\d{0,${decimals}})?$`);
-    return val > 0 && val <= maxLimit && regex.test(val.toString());
-  };
+    let parsedValue: number;
+    // Only parse if the value is a string or number
+    if (typeof value === 'string') {
+      parsedValue = parseFloat(value);
+    } else if (typeof value === 'number') {
+      parsedValue = value;
+    } else {
+      // If the value is not a string or number, return early without updating
+      return;
+    }
+    const isValidInput = (val: number, maxLimit: number, decimals: number) => {
+      const regex = new RegExp(`^\\d*(\\.\\d{0,${decimals}})?$`);
+      return val > 0 && val <= maxLimit && regex.test(val.toString());
+    };
 
-  switch (name) {
-    case 'wcRatio':
-      if (!isValidInput(parsedValue, 2, 2)) {
-        showSnackbar(
-          'Invalid W/C Ratio: Must be >0 and <= 2, with up to 2 decimal places.',
-          'error',
-        );
-      }
-      break;
-    case 'mixingWaterTemp':
-    case 'groutTemp':
-      if (!isValidInput(parsedValue, 60, 2)) {
-        showSnackbar(
-          'Invalid Temperature: Must be >0 and <= 60°C, with up to 2 decimal places.',
-          'error',
-        );
-      }
-      break;
-    case 'volumeOfGrout':
-      if (!isValidInput(parsedValue, 1000, 2)) {
-        showSnackbar(
-          'Invalid Volume of Grout: Must be >0 and <= 1000L, with up to 2 decimal places.',
-          'error',
-        );
-      }
-      break;
-    case 'groutingPressure':
-      if (!isValidInput(parsedValue, 50, 2)) {
-        showSnackbar(
-          'Invalid Grouting Pressure: Must be >0 and <= 50 Kg/cm², with up to 2 decimal places.',
-          'error',
-        );
-      }
-      break;
-    case 'cementConsumptionTheoretical':
-    case 'cementConsumptionActual':
-      if (!isValidInput(parsedValue, 1000, 2)) {
-        showSnackbar(
-          'Invalid Cement Consumption: Must be >0 and <= 1000, with up to 2 decimal places.',
-          'error',
-        );
-
-      }
-      break;
-    default:
-      break;
-  }
+    switch (name) {
+      case 'wcRatio':
+        if (!isValidInput(parsedValue, 2, 2)) {
+          showSnackbar(
+            'Invalid W/C Ratio: Must be >0 and <= 2, with up to 2 decimal places.',
+            'error',
+          );
+        }
+        break;
+      case 'mixingWaterTemp':
+      case 'groutTemp':
+        if (!isValidInput(parsedValue, 60, 2)) {
+          showSnackbar(
+            'Invalid Temperature: Must be >0 and <= 60°C, with up to 2 decimal places.',
+            'error',
+          );
+        }
+        break;
+      case 'volumeOfGrout':
+        if (!isValidInput(parsedValue, 1000, 2)) {
+          showSnackbar(
+            'Invalid Volume of Grout: Must be >0 and <= 1000L, with up to 2 decimal places.',
+            'error',
+          );
+        }
+        break;
+      case 'groutingPressure':
+        if (!isValidInput(parsedValue, 50, 2)) {
+          showSnackbar(
+            'Invalid Grouting Pressure: Must be >0 and <= 50 Kg/cm², with up to 2 decimal places.',
+            'error',
+          );
+        }
+        break;
+      case 'cementConsumptionTheoretical':
+      case 'cementConsumptionActual':
+        if (!isValidInput(parsedValue, 1000, 2)) {
+          showSnackbar(
+            'Invalid Cement Consumption: Must be >0 and <= 1000, with up to 2 decimal places.',
+            'error',
+          );
+        }
+        break;
+      default:
+        break;
+    }
 
     // if (name === 'wcRatio' || name === 'mixingWaterTemp' || name === 'groutTemp' ||
     //     name === 'volumeOfGrout' || name === 'groutingPressure' || name === 'cementConsumptionTheoretical' ||
@@ -586,7 +615,9 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             break;
           case TASK_TYPES.FLUSHING_OPERATIONS:
             if (rfiData.metaData.flushingOperationsData) {
-              setFlushingOperationsData(rfiData.metaData.flushingOperationsData);
+              setFlushingOperationsData(
+                rfiData.metaData.flushingOperationsData,
+              );
             } else {
               setFlushingOperationsData({
                 startTimeOfFlushing: '',
@@ -633,10 +664,12 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             break;
           case TASK_TYPES.CHIPPING_AND_REMOVAL_OF_CONCRETE_ABOVE_CUT_OFF_LEVEL:
             if (rfiData.metaData.chippingAndRemovalOfConcreteData) {
-              setChippingAndRemovalOfConcreteData(rfiData.metaData.chippingAndRemovalOfConcreteData);
+              setChippingAndRemovalOfConcreteData(
+                rfiData.metaData.chippingAndRemovalOfConcreteData,
+              );
             } else {
               setChippingAndRemovalOfConcreteData({
-                noOfDaysOfChipping: 0
+                noOfDaysOfChipping: 0,
               });
             }
             break;
@@ -650,7 +683,17 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             } else {
               setConcreteData([]);
             }
+          case TASK_TYPES.GLUEING:
+            if (rfiData.metaData.glueingData) {
+              rfiData.metaData.glueingData.forEach((item: any) => {
+                item.key = Guid.create();
+              });
+              setGlueingData(rfiData.metaData.glueingData);
+            } else {
+              setGlueingData([]);
+            }
             break;
+
           default:
             break;
         }
@@ -1162,285 +1205,439 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       }),
     );
   };
-  
-const validateFlushingOperationsData = (
-  flushingOperationsData: any,
-): boolean => {
 
-  if (!flushingOperationsData.startTimeOfFlushing) {
-    showSnackbar('Start time of flushing cannot be empty', 'error');
-    return false;
-  }
+  const validateFlushingOperationsData = (
+    flushingOperationsData: any,
+  ): boolean => {
+    if (!flushingOperationsData.startTimeOfFlushing) {
+      showSnackbar('Start time of flushing cannot be empty', 'error');
+      return false;
+    }
 
-  if (!flushingOperationsData.finishTimeOfFlushing) {
-    showSnackbar('Finish time of flushing cannot be empty', 'error');
-    return false;
-  }
-  
-  if (
-    !flushingOperationsData.whetherPourCleared 
-  ) {
-    showSnackbar('Whether Pour Cleared must be either Yes or No', 'error');
-    return false;
-  }
-  const densityOfPolymer = parseFloat(flushingOperationsData.densityOfPolymer);
-  if (
-    isNaN(densityOfPolymer) ||
-    densityOfPolymer <= 0 ||
-    densityOfPolymer > 5 ||
-    !/^\d+(\.\d{1,2})?$/.test(densityOfPolymer.toString())
-  ) {
-    showSnackbar(
-      'Density of Polymer must be greater than 0, up to 2 decimal places, and less than or equal to 5 gm/ml',
-      'error',
+    if (!flushingOperationsData.finishTimeOfFlushing) {
+      showSnackbar('Finish time of flushing cannot be empty', 'error');
+      return false;
+    }
+
+    if (!flushingOperationsData.whetherPourCleared) {
+      showSnackbar('Whether Pour Cleared must be either Yes or No', 'error');
+      return false;
+    }
+    const densityOfPolymer = parseFloat(
+      flushingOperationsData.densityOfPolymer,
     );
-    return false;
-  }
+    if (
+      isNaN(densityOfPolymer) ||
+      densityOfPolymer <= 0 ||
+      densityOfPolymer > 5 ||
+      !/^\d+(\.\d{1,2})?$/.test(densityOfPolymer.toString())
+    ) {
+      showSnackbar(
+        'Density of Polymer must be greater than 0, up to 2 decimal places, and less than or equal to 5 gm/ml',
+        'error',
+      );
+      return false;
+    }
 
-  const viscosityOfPolymer = parseInt(
-    flushingOperationsData.viscosityOfPolymer,
-  );
-  if (
-    isNaN(viscosityOfPolymer) ||
-    viscosityOfPolymer <= 0 ||
-    viscosityOfPolymer > 500
-  ) {
-    showSnackbar(
-      'Viscosity of Polymer must be an integer greater than 0 and less than or equal to 500 sec/liter',
-      'error',
+    const viscosityOfPolymer = parseInt(
+      flushingOperationsData.viscosityOfPolymer,
     );
-    return false;
-  }
+    if (
+      isNaN(viscosityOfPolymer) ||
+      viscosityOfPolymer <= 0 ||
+      viscosityOfPolymer > 500
+    ) {
+      showSnackbar(
+        'Viscosity of Polymer must be an integer greater than 0 and less than or equal to 500 sec/liter',
+        'error',
+      );
+      return false;
+    }
 
-  const valueOfPolymer = parseInt(flushingOperationsData.valueOfPolymer);
-  if (isNaN(valueOfPolymer) || valueOfPolymer <= 0 || valueOfPolymer > 14) {
-    showSnackbar(
-      'pH Value of Polymer must be an integer greater than 0 and less than or equal to 14',
-      'error',
-    );
-    return false;
-  }
-  const contentOfPolymer = parseInt(flushingOperationsData.contentOfPolymer);
-  if (
-    isNaN(contentOfPolymer) ||
-    contentOfPolymer <= 0 ||
-    contentOfPolymer > 100
-  ) {
-    showSnackbar(
-      'Sand content of Polymer must be an integer greater than 0 and less than or equal to 100%',
-      'error',
-    );
-    return false;
-  }
+    const valueOfPolymer = parseInt(flushingOperationsData.valueOfPolymer);
+    if (isNaN(valueOfPolymer) || valueOfPolymer <= 0 || valueOfPolymer > 14) {
+      showSnackbar(
+        'pH Value of Polymer must be an integer greater than 0 and less than or equal to 14',
+        'error',
+      );
+      return false;
+    }
+    const contentOfPolymer = parseInt(flushingOperationsData.contentOfPolymer);
+    if (
+      isNaN(contentOfPolymer) ||
+      contentOfPolymer <= 0 ||
+      contentOfPolymer > 100
+    ) {
+      showSnackbar(
+        'Sand content of Polymer must be an integer greater than 0 and less than or equal to 100%',
+        'error',
+      );
+      return false;
+    }
 
-  const depthOfBore = parseFloat(flushingOperationsData.depthOfBore);
-  if (
-    isNaN(depthOfBore) ||
-    depthOfBore <= 0 ||
-    depthOfBore > 100 ||
-    !/^\d+(\.\d{1,3})?$/.test(depthOfBore.toString())
-  ) {
-    showSnackbar(
-      'Depth of Bore must be greater than 0, up to 3 decimal places, and less than or equal to 100 meters',
-      'error',
-    );
-    return false;
-  }
+    const depthOfBore = parseFloat(flushingOperationsData.depthOfBore);
+    if (
+      isNaN(depthOfBore) ||
+      depthOfBore <= 0 ||
+      depthOfBore > 100 ||
+      !/^\d+(\.\d{1,3})?$/.test(depthOfBore.toString())
+    ) {
+      showSnackbar(
+        'Depth of Bore must be greater than 0, up to 3 decimal places, and less than or equal to 100 meters',
+        'error',
+      );
+      return false;
+    }
 
-  return true;
-};
-const validateBoringOfPileData = (boringOfPileData: any): boolean => {
+    return true;
+  };
+  const validateBoringOfPileData = (boringOfPileData: any): boolean => {
+    const densityOfPolymer = parseFloat(boringOfPileData.densityOfPolymer);
+    if (
+      isNaN(densityOfPolymer) ||
+      densityOfPolymer <= 0 ||
+      densityOfPolymer > 5 ||
+      !/^\d+(\.\d{1,2})?$/.test(densityOfPolymer.toString())
+    ) {
+      showSnackbar(
+        'Density of Polymer must be greater than 0, up to 2 decimal places, and less than or equal to 5 gm/ml',
+        'error',
+      );
+      return false;
+    }
 
-  const densityOfPolymer = parseFloat(boringOfPileData.densityOfPolymer);
-  if (
-    isNaN(densityOfPolymer) ||
-    densityOfPolymer <= 0 ||
-    densityOfPolymer > 5 ||
-    !/^\d+(\.\d{1,2})?$/.test(densityOfPolymer.toString())
-  ) {
-    showSnackbar(
-      'Density of Polymer must be greater than 0, up to 2 decimal places, and less than or equal to 5 gm/ml',
-      'error',
-    );
-    return false;
-  }
+    const viscosityOfPolymer = parseInt(boringOfPileData.viscosityOfPolymer);
+    if (
+      isNaN(viscosityOfPolymer) ||
+      viscosityOfPolymer <= 0 ||
+      viscosityOfPolymer > 500
+    ) {
+      showSnackbar(
+        'Viscosity of Polymer must be an integer greater than 0 and less than or equal to 500 sec/liter',
+        'error',
+      );
+      return false;
+    }
 
-  const viscosityOfPolymer = parseInt(boringOfPileData.viscosityOfPolymer);
-  if (
-    isNaN(viscosityOfPolymer) ||
-    viscosityOfPolymer <= 0 ||
-    viscosityOfPolymer > 500
-  ) {
-    showSnackbar(
-      'Viscosity of Polymer must be an integer greater than 0 and less than or equal to 500 sec/liter',
-      'error',
-    );
-    return false;
-  }
+    const valueOfPolymer = parseInt(boringOfPileData.valueOfPolymer);
+    if (isNaN(valueOfPolymer) || valueOfPolymer <= 0 || valueOfPolymer > 14) {
+      showSnackbar(
+        'pH Value of Polymer must be an integer greater than 0 and less than or equal to 14',
+        'error',
+      );
+      return false;
+    }
 
-  const valueOfPolymer = parseInt(boringOfPileData.valueOfPolymer);
-  if (isNaN(valueOfPolymer) || valueOfPolymer <= 0 || valueOfPolymer > 14) {
-    showSnackbar(
-      'pH Value of Polymer must be an integer greater than 0 and less than or equal to 14',
-      'error',
-    );
-    return false;
-  }
+    const contentOfPolymer = parseInt(boringOfPileData.contentOfPolymer);
+    if (
+      isNaN(contentOfPolymer) ||
+      contentOfPolymer <= 0 ||
+      contentOfPolymer > 100
+    ) {
+      showSnackbar(
+        'Sand content of Polymer must be an integer greater than 0 and less than or equal to 100%',
+        'error',
+      );
+      return false;
+    }
+    const depthOfBore = parseFloat(boringOfPileData.depthOfBore);
+    if (
+      isNaN(depthOfBore) ||
+      depthOfBore <= 0 ||
+      depthOfBore > 100 ||
+      !/^\d+(\.\d{1,3})?$/.test(depthOfBore.toString())
+    ) {
+      showSnackbar(
+        'Depth of Bore must be greater than 0 and less than or equal to 100 meters up to 3 decimal places, ',
+        'error',
+      );
+      return false;
+    }
 
-  const contentOfPolymer = parseInt(boringOfPileData.contentOfPolymer);
-  if (
-    isNaN(contentOfPolymer) ||
-    contentOfPolymer <= 0 ||
-    contentOfPolymer > 100
-  ) {
-    showSnackbar(
-      'Sand content of Polymer must be an integer greater than 0 and less than or equal to 100%',
-      'error',
+    return true;
+  };
+  const validateChippingAndRemovalData = (
+    chippingAndRemovalOfConcreteData: any,
+  ): boolean => {
+    const noOfDaysOfChipping = parseInt(
+      chippingAndRemovalOfConcreteData.noOfDaysOfChipping,
     );
-    return false;
-  }
-  const depthOfBore = parseFloat(boringOfPileData.depthOfBore);
-  if (
-    isNaN(depthOfBore) ||
-    depthOfBore <= 0 ||
-    depthOfBore > 100 ||
-    !/^\d+(\.\d{1,3})?$/.test(depthOfBore.toString())
-  ) {
-    showSnackbar(
-      'Depth of Bore must be greater than 0 and less than or equal to 100 meters up to 3 decimal places, ',
-      'error',
-    );
-    return false;
-  }
+    if (
+      isNaN(noOfDaysOfChipping) ||
+      noOfDaysOfChipping <= 0 ||
+      noOfDaysOfChipping > 100
+    ) {
+      showSnackbar(
+        'Number of days of chipping must be a positive integer and less than or equal to 100',
+        'error',
+      );
+      return false;
+    }
 
-  return true;
-};
-const validateChippingAndRemovalData = (
-  chippingAndRemovalOfConcreteData: any,
-): boolean => {
-  const noOfDaysOfChipping = parseInt(
-    chippingAndRemovalOfConcreteData.noOfDaysOfChipping,
-  );
-  if (
-    isNaN(noOfDaysOfChipping) ||
-    noOfDaysOfChipping <= 0 ||
-    noOfDaysOfChipping > 100
-  ) {
-    showSnackbar(
-      'Number of days of chipping must be a positive integer and less than or equal to 100',
-      'error',
-    );
-    return false;
-  }
+    return true;
+  };
+  const validateGlueingData = (glueingData: any): boolean => {
+    for (const item of glueingData) {
+      // Parsing values to float/integer
+      const ambientTemperature = parseFloat(item.ambientTemperature);
+      const segmentSurfaceArea = parseFloat(item.segmentSurfaceArea);
+      const epoxyConsumptionTheoreticalResin = parseFloat(
+        item.epoxyConsumptionTheoreticalResin,
+      );
+      const epoxyConsumptionTheoreticalHardener = parseFloat(
+        item.epoxyConsumptionTheoreticalHardener,
+      );
+      const epoxyConsumptionActualResin = parseFloat(
+        item.epoxyConsumptionActualResin,
+      );
+      const epoxyConsumptionActualHardener = parseFloat(
+        item.epoxyConsumptionActualHardener,
+      );
+      const batchNoResin = parseInt(item.batchNoResin, 10);
+      const batchNoHardener = parseInt(item.batchNoHardener, 10);
 
-  return true;
-};
-const validateGroutingData = (groutingData: any): boolean => {
-  const wcRatio = parseFloat(groutingData.wcRatio);
-  const mixingWaterTemp = parseFloat(groutingData.mixingWaterTemp);
-  const groutTemp = parseFloat(groutingData.groutTemp);
-  const volumeOfGrout = parseFloat(groutingData.volumeOfGrout);
-  const groutingPressure = parseFloat(groutingData.groutingPressure);
-  const cementConsumptionTheoretical = parseFloat(
-    groutingData.cementConsumptionTheoretical,
-  );
-  const cementConsumptionActual = parseFloat(
-    groutingData.cementConsumptionActual,
-  );
+      // Validation checks
+      if (!item.jointNumbers || item.jointNumbers.length > 50) {
+        showSnackbar(
+          'Joint Numbers must be non-empty and up to 50 characters.',
+          'error',
+        );
+        return false;
+      }
+      if (
+        isNaN(ambientTemperature) ||
+        ambientTemperature <= 0 ||
+        ambientTemperature > 100
+      ) {
+        showSnackbar(
+          'Ambient Temperature must be greater than 0 and up to 100, with up to 2 decimal places.',
+          'error',
+        );
+        return false;
+      }
+      if (
+        !Number.isInteger(batchNoResin) ||
+        batchNoResin <= 0 ||
+        batchNoResin > 100
+      ) {
+        showSnackbar(
+          'Batch No Resin must be a positive integer up to 100.',
+          'error',
+        );
+        return false;
+      }
+      if (
+        !Number.isInteger(batchNoHardener) ||
+        batchNoHardener <= 0 ||
+        batchNoHardener > 100
+      ) {
+        showSnackbar(
+          'Batch No Hardener must be a positive integer up to 100.',
+          'error',
+        );
+        return false;
+      }
+      if (
+        !item.mixingStartTime ||
+        !item.mixingFinishTime ||
+        !item.applicationStartTime ||
+        !item.applicationFinishTime ||
+        !item.segmentJoiningTimeClosure ||
+        !item.segmentJoiningTimeTemporaryFinish
+      ) {
+        showSnackbar('All time fields must be filled.', 'error');
+        return false;
+      }
+      if (
+        isNaN(segmentSurfaceArea) ||
+        segmentSurfaceArea <= 0 ||
+        segmentSurfaceArea > 1000
+      ) {
+        showSnackbar(
+          'Segment Surface Area must be greater than 0 and up to 1000 sqm, with up to 2 decimal places.',
+          'error',
+        );
+        return false;
+      }
+      if (
+        isNaN(epoxyConsumptionTheoreticalResin) ||
+        epoxyConsumptionTheoreticalResin <= 0 ||
+        epoxyConsumptionTheoreticalResin > 1000
+      ) {
+        showSnackbar(
+          'Epoxy Consumption Theoretical Resin must be greater than 0 and up to 1000 kgs, with up to 2 decimal places.',
+          'error',
+        );
+        return false;
+      }
+      if (
+        isNaN(epoxyConsumptionTheoreticalHardener) ||
+        epoxyConsumptionTheoreticalHardener <= 0 ||
+        epoxyConsumptionTheoreticalHardener > 1000
+      ) {
+        showSnackbar(
+          'Epoxy Consumption Theoretical Hardener must be greater than 0 and up to 1000 kgs, with up to 2 decimal places.',
+          'error',
+        );
+        return false;
+      }
+      if (
+        isNaN(epoxyConsumptionActualResin) ||
+        epoxyConsumptionActualResin <= 0 ||
+        epoxyConsumptionActualResin > 1000
+      ) {
+        showSnackbar(
+          'Epoxy Consumption Actual Resin must be greater than 0 and up to 1000 kgs, with up to 2 decimal places.',
+          'error',
+        );
+        return false;
+      }
+      if (
+        isNaN(epoxyConsumptionActualHardener) ||
+        epoxyConsumptionActualHardener <= 0 ||
+        epoxyConsumptionActualHardener > 1000
+      ) {
+        showSnackbar(
+          'Epoxy Consumption Actual Hardener must be greater than 0 and up to 1000 kgs, with up to 2 decimal places.',
+          'error',
+        );
+        return false;
+      }
+    }
 
-  if (isNaN(wcRatio) || wcRatio <= 0 || wcRatio > 2) {
-    showSnackbar(
-      'W/C Ratio must be greater than 0 and less than or equal to 2, with up to 2 decimal places.',
-      'error',
-    );
-    return false;
-  }
+    // Convert the values back to numbers after validation
+    glueingData.forEach((item: any) => {
+      item.ambientTemperature = Number(item.ambientTemperature);
+      item.segmentSurfaceArea = Number(item.segmentSurfaceArea);
+      item.epoxyConsumptionTheoreticalResin = Number(
+        item.epoxyConsumptionTheoreticalResin,
+      );
+      item.epoxyConsumptionTheoreticalHardener = Number(
+        item.epoxyConsumptionTheoreticalHardener,
+      );
+      item.epoxyConsumptionActualResin = Number(
+        item.epoxyConsumptionActualResin,
+      );
+      item.epoxyConsumptionActualHardener = Number(
+        item.epoxyConsumptionActualHardener,
+      );
+      item.batchNoResin = Number(item.batchNoResin);
+      item.batchNoHardener = Number(item.batchNoHardener);
+    });
 
-  if (isNaN(mixingWaterTemp) || mixingWaterTemp <= 0 || mixingWaterTemp > 60) {
-    showSnackbar(
-      'Temperature of Mixing Water must be greater than 0 and less than or equal to 60°C, with up to 2 decimal places.',
-      'error',
-    );
-    return false;
-  }
+    return true;
+  };
 
-  if (isNaN(groutTemp) || groutTemp <= 0 || groutTemp > 60) {
-    showSnackbar(
-      'Temperature of Grout must be greater than 0 and less than or equal to 60°C, with up to 2 decimal places.',
-      'error',
+  const validateGroutingData = (groutingData: any): boolean => {
+    const wcRatio = parseFloat(groutingData.wcRatio);
+    const mixingWaterTemp = parseFloat(groutingData.mixingWaterTemp);
+    const groutTemp = parseFloat(groutingData.groutTemp);
+    const volumeOfGrout = parseFloat(groutingData.volumeOfGrout);
+    const groutingPressure = parseFloat(groutingData.groutingPressure);
+    const cementConsumptionTheoretical = parseFloat(
+      groutingData.cementConsumptionTheoretical,
     );
-    return false;
-  }
+    const cementConsumptionActual = parseFloat(
+      groutingData.cementConsumptionActual,
+    );
 
-  if (isNaN(volumeOfGrout) || volumeOfGrout <= 0 || volumeOfGrout > 1000) {
-    showSnackbar(
-      'Volume of Grout must be greater than 0 and less than or equal to 1000L, with up to 2 decimal places.',
-      'error',
-    );
-    return false;
-  }
+    if (isNaN(wcRatio) || wcRatio <= 0 || wcRatio > 2) {
+      showSnackbar(
+        'W/C Ratio must be greater than 0 and less than or equal to 2, with up to 2 decimal places.',
+        'error',
+      );
+      return false;
+    }
 
-  if (
-    isNaN(groutingPressure) ||
-    groutingPressure <= 0 ||
-    groutingPressure > 50
-  ) {
-    showSnackbar(
-      'Grouting Pressure must be greater than 0 and less than or equal to 50 Kg/cm², with up to 2 decimal places.',
-      'error',
-    );
-    return false;
-  }
+    if (
+      isNaN(mixingWaterTemp) ||
+      mixingWaterTemp <= 0 ||
+      mixingWaterTemp > 60
+    ) {
+      showSnackbar(
+        'Temperature of Mixing Water must be greater than 0 and less than or equal to 60°C, with up to 2 decimal places.',
+        'error',
+      );
+      return false;
+    }
 
-  if (
-    isNaN(cementConsumptionTheoretical) ||
-    cementConsumptionTheoretical <= 0 ||
-    cementConsumptionTheoretical > 1000
-  ) {
-    showSnackbar(
-      'Cement Consumption Theoretical must be greater than 0 and less than or equal to 1000, with up to 2 decimal places.',
-      'error',
-    );
-    return false;
-  }
+    if (isNaN(groutTemp) || groutTemp <= 0 || groutTemp > 60) {
+      showSnackbar(
+        'Temperature of Grout must be greater than 0 and less than or equal to 60°C, with up to 2 decimal places.',
+        'error',
+      );
+      return false;
+    }
 
-  if (
-    isNaN(cementConsumptionActual) ||
-    cementConsumptionActual <= 0 ||
-    cementConsumptionActual > 1000
-  ) {
-    showSnackbar(
-      'Cement Consumption Actual must be greater than 0 and less than or equal to 1000, with up to 2 decimal places.',
-      'error',
-    );
-    return false;
-  }
+    if (isNaN(volumeOfGrout) || volumeOfGrout <= 0 || volumeOfGrout > 1000) {
+      showSnackbar(
+        'Volume of Grout must be greater than 0 and less than or equal to 1000L, with up to 2 decimal places.',
+        'error',
+      );
+      return false;
+    }
 
-  if (!groutingData.prestressingDate || !groutingData.groutingDate) {
-    showSnackbar(
-      'Prestressing Date and Grouting Date must not be empty.',
-      'error',
+    if (
+      isNaN(groutingPressure) ||
+      groutingPressure <= 0 ||
+      groutingPressure > 50
+    ) {
+      showSnackbar(
+        'Grouting Pressure must be greater than 0 and less than or equal to 50 Kg/cm², with up to 2 decimal places.',
+        'error',
+      );
+      return false;
+    }
+
+    if (
+      isNaN(cementConsumptionTheoretical) ||
+      cementConsumptionTheoretical <= 0 ||
+      cementConsumptionTheoretical > 1000
+    ) {
+      showSnackbar(
+        'Cement Consumption Theoretical must be greater than 0 and less than or equal to 1000, with up to 2 decimal places.',
+        'error',
+      );
+      return false;
+    }
+
+    if (
+      isNaN(cementConsumptionActual) ||
+      cementConsumptionActual <= 0 ||
+      cementConsumptionActual > 1000
+    ) {
+      showSnackbar(
+        'Cement Consumption Actual must be greater than 0 and less than or equal to 1000, with up to 2 decimal places.',
+        'error',
+      );
+      return false;
+    }
+
+    if (!groutingData.prestressingDate || !groutingData.groutingDate) {
+      showSnackbar(
+        'Prestressing Date and Grouting Date must not be empty.',
+        'error',
+      );
+      return false;
+    }
+    if (!groutingData.startTime || !groutingData.finishTime) {
+      showSnackbar('Provide Start time and Finish time', 'error');
+      return false;
+    }
+    // If validation passes, convert the required fields to numbers
+    groutingData.wcRatio = Number(groutingData.wcRatio);
+    groutingData.mixingWaterTemp = Number(groutingData.mixingWaterTemp);
+    groutingData.groutTemp = Number(groutingData.groutTemp);
+    groutingData.volumeOfGrout = Number(groutingData.volumeOfGrout);
+    groutingData.groutingPressure = Number(groutingData.groutingPressure);
+    groutingData.cementConsumptionTheoretical = Number(
+      groutingData.cementConsumptionTheoretical,
     );
-    return false;
-  }
-  if (!groutingData.startTime || !groutingData.finishTime) {
-    showSnackbar('Provide Start time and Finish time', 'error');
-    return false;
-  }
-  // If validation passes, convert the required fields to numbers
-  groutingData.wcRatio = Number(groutingData.wcRatio);
-  groutingData.mixingWaterTemp = Number(groutingData.mixingWaterTemp);
-  groutingData.groutTemp = Number(groutingData.groutTemp);
-  groutingData.volumeOfGrout = Number(groutingData.volumeOfGrout);
-  groutingData.groutingPressure = Number(groutingData.groutingPressure);
-  groutingData.cementConsumptionTheoretical = Number(
-    groutingData.cementConsumptionTheoretical,
-  );
-  groutingData.cementConsumptionActual = Number(
-    groutingData.cementConsumptionActual,
-  );
-  return true;
-};
+    groutingData.cementConsumptionActual = Number(
+      groutingData.cementConsumptionActual,
+    );
+    return true;
+  };
 
   const onFillChecklist = (rfiStatus: string) => {
     if (!rfiDate) {
@@ -1487,7 +1684,6 @@ const validateGroutingData = (groutingData: any): boolean => {
         break;
       case TASK_TYPES.REINFORCEMENT_PREPARATION:
       case TASK_TYPES.REINFORCEMENT:
-        
         checkList = {
           taskName: selectedTask.name,
           rebarAndDimensionGFC: rebarAndDimensionGFC,
@@ -1555,7 +1751,7 @@ const validateGroutingData = (groutingData: any): boolean => {
             valueOfPolymer: Number(boringOfPileData.valueOfPolymer),
             contentOfPolymer: Number(boringOfPileData.contentOfPolymer),
             depthOfBore: Number(boringOfPileData.depthOfBore),
-          }
+          },
         };
         break;
       case TASK_TYPES.FLUSHING_OPERATIONS:
@@ -1569,11 +1765,13 @@ const validateGroutingData = (groutingData: any): boolean => {
             finishTimeOfFlushing: flushingOperationsData.finishTimeOfFlushing,
             whetherPourCleared: flushingOperationsData.whetherPourCleared,
             densityOfPolymer: Number(flushingOperationsData.densityOfPolymer),
-            viscosityOfPolymer: Number(flushingOperationsData.viscosityOfPolymer),
+            viscosityOfPolymer: Number(
+              flushingOperationsData.viscosityOfPolymer,
+            ),
             valueOfPolymer: Number(flushingOperationsData.valueOfPolymer),
             contentOfPolymer: Number(flushingOperationsData.contentOfPolymer),
             depthOfBore: Number(flushingOperationsData.depthOfBore),
-          }
+          },
         };
         break;
       case TASK_TYPES.CHIPPING_AND_REMOVAL_OF_CONCRETE_ABOVE_CUT_OFF_LEVEL:
@@ -1583,14 +1781,16 @@ const validateGroutingData = (groutingData: any): boolean => {
         checkList = {
           taskName: selectedTask.name,
           chippingAndRemovalOfConcreteData: {
-            noOfDaysOfChipping: Number(chippingAndRemovalOfConcreteData.noOfDaysOfChipping),
-          }
+            noOfDaysOfChipping: Number(
+              chippingAndRemovalOfConcreteData.noOfDaysOfChipping,
+            ),
+          },
         };
         break;
       case TASK_TYPES.CONCRETING:
       case TASK_TYPES.PCC_LEVELLING_COURSE:
         const isDataValid = validateConcreteData(selectedTask?.name);
-        if(!isDataValid){
+        if (!isDataValid) {
           return;
         }
         concreteData.forEach((item: any) => {
@@ -1609,13 +1809,24 @@ const validateGroutingData = (groutingData: any): boolean => {
           concreteData: concreteData,
         };
         break;
-      case TASK_TYPES.GROUTING:
-        if(!validateGroutingData(groutingData)){
+      case TASK_TYPES.GLUEING:
+        const isDataValid1 = validateGlueingData(glueingData);
+        if (!isDataValid1) {
           return;
         }
         checkList = {
           taskName: selectedTask.name,
-          groutingData: groutingData
+          glueingData: glueingData,
+        };
+        break;
+
+      case TASK_TYPES.GROUTING:
+        if (!validateGroutingData(groutingData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          groutingData: groutingData,
         };
         break;
       default:
@@ -1762,10 +1973,120 @@ const validateGroutingData = (groutingData: any): boolean => {
       },
     ]);
   };
+  const onAddMoreGlueing = () => {
+    setGlueingData([
+      ...glueingData,
+      {
+        jointNumbers: '',
+        ambientTemperature: 0,
+        batchNoResin: 0,
+        batchNoHardener: 0,
+        mixingStartTime: '',
+        mixingFinishTime: '',
+        applicationStartTime: '',
+        applicationFinishTime: '',
+        segmentJoiningTimeClosure: '',
+        segmentJoiningTimeTemporaryFinish: '',
+        segmentSurfaceArea: 0,
+        epoxyConsumptionTheoreticalResin: 0,
+        epoxyConsumptionTheoreticalHardener: 0,
+        epoxyConsumptionActualResin: 0,
+        epoxyConsumptionActualHardener: 0,
+        key: Guid.create(),
+      },
+    ]);
+  };
   const {showSnackbar} = useSnackbar();
+  const renderGlueingHeadings = () => (
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10,
+        gap: 5,
+      }}>
+      <View style={{width: 50, alignItems: 'center', padding: 5}}>
+        <Text style={{fontWeight: '600', fontSize: 12}}>TM No.</Text>
+      </View>
+      <View style={{width: 50, alignItems: 'center', padding: 5}}>
+        <Text style={{fontWeight: '600', fontSize: 12}}>Joint No.</Text>
+      </View>
+      <View style={{width: 100, alignItems: 'center', padding: 5}}>
+        <Text style={{fontWeight: '600', fontSize: 12}}>Ambient Temp (°C)</Text>
+      </View>
+      <View style={{width: 150, alignItems: 'center', padding: 5}}>
+        <Text style={{fontWeight: '600', fontSize: 12}}>Batch No Resin</Text>
+      </View>
+      <View style={{width: 150, alignItems: 'center', padding: 5}}>
+        <Text style={{fontWeight: '600', fontSize: 12}}>Batch No Hardener</Text>
+      </View>
+      <View style={{width: 130, alignItems: 'center', padding: 5}}>
+        <Text style={{fontWeight: '600', fontSize: 12}}>Mixing Start Time</Text>
+      </View>
+      <View style={{width: 130, alignItems: 'center', padding: 5}}>
+        <Text style={{fontWeight: '600', fontSize: 12}}>
+          Mixing Finish Time
+        </Text>
+      </View>
+      <View style={{width: 150, alignItems: 'center', padding: 5}}>
+        <Text style={{fontWeight: '600', fontSize: 12}}>
+          Application Start Time
+        </Text>
+      </View>
+      <View style={{width: 150, alignItems: 'center', padding: 5}}>
+        <Text style={{fontWeight: '600', fontSize: 12}}>
+          Application Finish Time
+        </Text>
+      </View>
+      <View style={{width: 180, alignItems: 'center', padding: 5}}>
+        <Text style={{fontWeight: '600', fontSize: 12}}>
+          Segment Joining Time Closure
+        </Text>
+      </View>
+      <View style={{width: 220, alignItems: 'center', padding: 5}}>
+        <Text style={{fontWeight: '600', fontSize: 12}}>
+          Segment Joining Time Temporary PT Finish
+        </Text>
+      </View>
+      <View style={{width: 150, alignItems: 'center', padding: 5}}>
+        <Text style={{fontWeight: '600', fontSize: 12}}>
+          Segment Surface Area (SQM)
+        </Text>
+      </View>
+      <View style={{width: 200, alignItems: 'center', padding: 5}}>
+        <Text style={{fontWeight: '600', fontSize: 12}}>
+          Epoxy Consumption Theoretical Resin (Kgs)
+        </Text>
+      </View>
+      <View style={{width: 200, alignItems: 'center', padding: 5}}>
+        <Text style={{fontWeight: '600', fontSize: 12}}>
+          Epoxy Consumption Theoretical Hardener (Kgs)
+        </Text>
+      </View>
+      <View style={{width: 200, alignItems: 'center', padding: 5}}>
+        <Text style={{fontWeight: '600', fontSize: 12}}>
+          Epoxy Consumption Actual Resin (Kgs)
+        </Text>
+      </View>
+      <View style={{width: 200, alignItems: 'center', padding: 5}}>
+        <Text style={{fontWeight: '600', fontSize: 12}}>
+          Epoxy Consumption Actual Hardener (Kgs)
+        </Text>
+      </View>
+      <View style={{width: 80, alignItems: 'center', padding: 5}}>
+        <Text style={{fontWeight: '600', fontSize: 12}}>Actions</Text>
+      </View>
+    </View>
+  );
+
   const renderHeadings = () => (
     <View
-      style={{flexDirection: 'row', alignItems: 'center', marginBottom: 10,gap:5}}>
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10,
+        gap: 5,
+      }}>
       <View style={{width: 50, alignItems: 'center', padding: 5}}>
         <Text style={{fontWeight: '600', fontSize: 12}}>TM No.</Text>
       </View>
@@ -1778,22 +2099,22 @@ const validateGroutingData = (groutingData: any): boolean => {
       <View style={{width: 130, alignItems: 'center', padding: 5}}>
         <Text style={{fontWeight: '600', fontSize: 12}}>Grade of Concrete</Text>
       </View>
-      {
-        selectedTask.name === TASK_TYPES.CONCRETING &&
-          <View style={{width: 130, alignItems: 'center', padding: 5}}>
-            <Text style={{fontWeight: '600', fontSize: 12}}>
-              Concrete temp in C
-            </Text>
-          </View>
-      }
-      
-      {
-        selectedTask.name === TASK_TYPES.CONCRETING &&
-          <View style={{width: 130, alignItems: 'center', padding: 5}}>
-            <Text style={{fontWeight: '600', fontSize: 12}}>Slump value in mm</Text>
-          </View>
-      }
-      
+      {selectedTask.name === TASK_TYPES.CONCRETING && (
+        <View style={{width: 130, alignItems: 'center', padding: 5}}>
+          <Text style={{fontWeight: '600', fontSize: 12}}>
+            Concrete temp in C
+          </Text>
+        </View>
+      )}
+
+      {selectedTask.name === TASK_TYPES.CONCRETING && (
+        <View style={{width: 130, alignItems: 'center', padding: 5}}>
+          <Text style={{fontWeight: '600', fontSize: 12}}>
+            Slump value in mm
+          </Text>
+        </View>
+      )}
+
       <View style={{width: 150, alignItems: 'center', padding: 5}}>
         <Text style={{fontWeight: '600', fontSize: 12}}>
           Concrete start time
@@ -1815,20 +2136,15 @@ const validateGroutingData = (groutingData: any): boolean => {
     </View>
   );
   // Function to render each list item
-  const handleTimeChange = (index:any, field:any, value:any) => {
+  const handleTimeChange = (index: any, field: any, value: any) => {
     const newData = [...concreteData];
-    
-    if (field == 'vehicleNo'){
-      newData[index][field]=value;
-      if(value.length>4){
-        console.log("Wrong number");
-        showSnackbar("Enter only last 4 digit of vechile number",'error');
-      }
-    } 
-    else{
-      newData[index][field] = value;
-    }
-      setConcreteData(newData);
+    newData[index][field] = value;
+    setConcreteData(newData);
+  };
+  const handleTimeChangeGlueing = (index: any, field: any, value: any) => {
+    const newData = [...glueingData];
+    newData[index][field] = value;
+    setGlueingData(newData);
   };
   const handleTextInputChange = (
     index: number,
@@ -1899,35 +2215,35 @@ const validateGroutingData = (groutingData: any): boolean => {
       showSnackbar(errorMessage, 'error');
     }
   };
-   const validateConcreteData = (taskName: string) => {
-     let isValid = true;
+  const validateConcreteData = (taskName: string) => {
+    let isValid = true;
 
-     concreteData.forEach((item, index) => {
-       if (!item.vehicleNo.match(/^\d{4}$/)) {
-         isValid = false;
-         showSnackbar(
-           `TM ${index + 1}: Enter the last 4 digits of the vehicle number.`,
-           'error',
-         );
-         return;
-       }
+    concreteData.forEach((item, index) => {
+      if (!item.vehicleNo.match(/^\d{4}$/)) {
+        isValid = false;
+        showSnackbar(
+          `TM ${index + 1}: Enter the last 4 digits of the vehicle number.`,
+          'error',
+        );
+        return;
+      }
 
-       if (!item.timeOfArrival) {
-         isValid = false;
-         showSnackbar(`TM ${index + 1}: Time of arrival is required.`, 'error');
-         return;
-       }
+      if (!item.timeOfArrival) {
+        isValid = false;
+        showSnackbar(`TM ${index + 1}: Time of arrival is required.`, 'error');
+        return;
+      }
 
-       if (!item.gradeOfConcrete) {
-         isValid = false;
-         showSnackbar(
-           `TM ${index + 1}: Grade of concrete is required.`,
-           'error',
-         );
-         return;
-       }
+      if (!item.gradeOfConcrete) {
+        isValid = false;
+        showSnackbar(
+          `TM ${index + 1}: Grade of concrete is required.`,
+          'error',
+        );
+        return;
+      }
 
-       if (selectedTask.name === TASK_TYPES.CONCRETING) {
+      if (selectedTask.name === TASK_TYPES.CONCRETING) {
         const tempValue = parseFloat(item.concreteTemp.toString());
         if (
           isNaN(tempValue) ||
@@ -1961,47 +2277,301 @@ const validateGroutingData = (groutingData: any): boolean => {
           );
           return;
         }
-       }
-       const cubesValue = parseInt(item.concretePoured.toString());
-       if (
-         isNaN(cubesValue) ||
-         cubesValue <= 0 ||
-         cubesValue > 100 ||
-         !Number.isInteger(cubesValue)
-       ) {
-         isValid = false;
-         showSnackbar(
-           `TM ${
-             index + 1
-           }: Enter an integer between 1 and 100 for number of cubes casted.`,
-           'error',
-         );
-         return;
-       }
+      }
+      const cubesValue = parseInt(item.concretePoured.toString());
+      if (
+        isNaN(cubesValue) ||
+        cubesValue <= 0 ||
+        cubesValue > 100 ||
+        !Number.isInteger(cubesValue)
+      ) {
+        isValid = false;
+        showSnackbar(
+          `TM ${
+            index + 1
+          }: Enter an integer between 1 and 100 for number of cubes casted.`,
+          'error',
+        );
+        return;
+      }
 
-       if (!item.concreteStartTime) {
-         isValid = false;
-         showSnackbar(
-           `TM ${index + 1}: Concrete start time is required.`,
-           'error',
-         );
-         return;
-       }
+      if (!item.concreteStartTime) {
+        isValid = false;
+        showSnackbar(
+          `TM ${index + 1}: Concrete start time is required.`,
+          'error',
+        );
+        return;
+      }
 
-       if (!item.concreteFinishTime) {
-         isValid = false;
-         showSnackbar(
-           `TM ${index + 1}: Concrete finish time is required.`,
-           'error',
-         );
-         return;
-       }
-     });
+      if (!item.concreteFinishTime) {
+        isValid = false;
+        showSnackbar(
+          `TM ${index + 1}: Concrete finish time is required.`,
+          'error',
+        );
+        return;
+      }
+    });
 
-     return isValid;
-   };
+    return isValid;
+  };
 
+  const renderItemGlueing = (rowData: any) => (
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 5,
+        marginBottom: 10,
+      }}>
+      <View style={{width: 50, alignItems: 'center'}}>
+        <Text style={{fontWeight: '600', fontSize: 13}}>
+          TM {rowData.index + 1}
+        </Text>
+      </View>
 
+      <View style={{width: 100}}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'jointNumbers'}
+          index={rowData.index}
+          onChange={handleTextInputChangeGlueing}></CustomTextInputValue>
+      </View>
+
+      <View style={{width: 130}}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'ambientTemperature'}
+          index={rowData.index}
+          onChange={handleTextInputChangeGlueing}></CustomTextInputValue>
+      </View>
+
+      <View style={{width: 130}}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'batchNoResin'}
+          index={rowData.index}
+          onChange={handleTextInputChangeGlueing}></CustomTextInputValue>
+      </View>
+
+      <View style={{width: 130}}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'batchNoHardener'}
+          index={rowData.index}
+          onChange={handleTextInputChangeGlueing}></CustomTextInputValue>
+      </View>
+
+      <View style={{width: 150}}>
+        <TimePicker
+          label=""
+          value={rowData.item.mixingStartTime}
+          onChange={time =>
+            handleTimeChangeGlueing(rowData.index, 'mixingStartTime', time)
+          }
+        />
+      </View>
+
+      <View style={{width: 150}}>
+        <TimePicker
+          label=""
+          value={rowData.item.mixingFinishTime}
+          onChange={time =>
+            handleTimeChangeGlueing(rowData.index, 'mixingFinishTime', time)
+          }
+        />
+      </View>
+
+      <View style={{width: 150}}>
+        <TimePicker
+          label=""
+          value={rowData.item.applicationStartTime}
+          onChange={time =>
+            handleTimeChangeGlueing(rowData.index, 'applicationStartTime', time)
+          }
+        />
+      </View>
+
+      <View style={{width: 150}}>
+        <TimePicker
+          label=""
+          value={rowData.item.applicationFinishTime}
+          onChange={time =>
+            handleTimeChangeGlueing(
+              rowData.index,
+              'applicationFinishTime',
+              time,
+            )
+          }
+        />
+      </View>
+      <View style={{width: 150}}>
+        <TimePicker
+          label=""
+          value={rowData.item.segmentJoiningTimeClosure}
+          onChange={time =>
+            handleTimeChangeGlueing(
+              rowData.index,
+              'segmentJoiningTimeClosure',
+              time,
+            )
+          }
+        />
+      </View>
+      <View style={{width: 150}}>
+        <TimePicker
+          label=""
+          value={rowData.item.applicationFinishTime}
+          onChange={time =>
+            handleTimeChangeGlueing(
+              rowData.index,
+              'segmentJoiningTimeTemporaryFinish',
+              time,
+            )
+          }
+        />
+      </View>
+
+      <View style={{width: 130}}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'segmentSurfaceArea'}
+          index={rowData.index}
+          onChange={handleTextInputChangeGlueing}></CustomTextInputValue>
+      </View>
+      <View style={{width: 130}}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'epoxyConsumptionTheoreticalResin'}
+          index={rowData.index}
+          onChange={handleTextInputChangeGlueing}></CustomTextInputValue>
+      </View>
+      <View style={{width: 130}}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'epoxyConsumptionTheoreticalHardener'}
+          index={rowData.index}
+          onChange={handleTextInputChangeGlueing}></CustomTextInputValue>
+      </View>
+
+      <View style={{width: 130}}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'epoxyConsumptionActualResin'}
+          index={rowData.index}
+          onChange={handleTextInputChangeGlueing}></CustomTextInputValue>
+      </View>
+      <View style={{width: 130}}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'epoxyConsumptionActualHardener'}
+          index={rowData.index}
+          onChange={handleTextInputChangeGlueing}></CustomTextInputValue>
+      </View>
+      <View style={styles.hiddenContainer}>
+        <TouchableOpacity
+          style={[styles.deleteButton]}
+          onPress={() => deleteGlueingItem(rowData, rowData.item.key)}>
+          <Image
+            style={[styles.CloseIcon, {tintColor: '#fff'}]}
+            source={require('./../../images/menu/delete.png')}
+          />
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+
+  const handleTextInputChangeGlueing = (
+    index: number,
+    field: string,
+    value: string,
+  ) => {
+    const updatedData = [...glueingData];
+    let isValid = true;
+    let errorMessage = '';
+
+    switch (field) {
+      case 'jointNumbers':
+        if (value.length > 50) {
+          isValid = false;
+          errorMessage = 'Joint Numbers cannot exceed 50 characters';
+        }
+        break;
+
+      case 'ambientTemperature':
+        const tempValue = parseFloat(value);
+        if (
+          isNaN(tempValue) ||
+          tempValue <= 0 ||
+          tempValue > 100 ||
+          value.split('.')[1]?.length > 2
+        ) {
+          isValid = false;
+          errorMessage =
+            'Enter a temperature between 0 and 100 with up to 2 decimal places';
+        }
+        break;
+
+      case 'batchNoResin':
+      case 'batchNoHardener':
+        const batchNo = parseInt(value);
+        if (
+          isNaN(batchNo) ||
+          batchNo <= 0 ||
+          batchNo > 100 ||
+          !Number.isInteger(batchNo)
+        ) {
+          isValid = false;
+          errorMessage =
+            'Enter a positive integer between 1 and 100 for batch number';
+        }
+        break;
+
+      case 'segmentSurfaceArea':
+        const surfaceArea = parseFloat(value);
+        if (
+          isNaN(surfaceArea) ||
+          surfaceArea <= 0 ||
+          surfaceArea > 1000 ||
+          value.split('.')[1]?.length > 2
+        ) {
+          isValid = false;
+          errorMessage =
+            'Enter a surface area up to 1000 SQM with up to 2 decimal places';
+        }
+        break;
+
+      case 'epoxyConsumptionTheoreticalResin':
+      case 'epoxyConsumptionTheoreticalHardener':
+      case 'epoxyConsumptionActualResin':
+      case 'epoxyConsumptionActualHardener':
+        const epoxyConsumption = parseFloat(value);
+        if (
+          isNaN(epoxyConsumption) ||
+          epoxyConsumption <= 0 ||
+          epoxyConsumption > 1000 ||
+          value.split('.')[1]?.length > 2
+        ) {
+          isValid = false;
+          errorMessage =
+            'Enter epoxy consumption up to 1000 Kgs with up to 2 decimal places';
+        }
+        break;
+
+      default:
+        break;
+    }
+
+    if (isValid) {
+      updatedData[index][field] = value;
+      setGlueingData(updatedData);
+    } else {
+      updatedData[index][field] = value; // To reflect changes even with an error
+      setGlueingData(updatedData);
+      showSnackbar(errorMessage, 'error');
+    }
+  };
 
   const renderItem = (rowData: any) => (
     <View
@@ -2045,19 +2615,17 @@ const validateGroutingData = (groutingData: any): boolean => {
           isRequired={true}
         />
       </View>
-      {
-        selectedTask.name === TASK_TYPES.CONCRETING && 
-          <View style={{width: 130}}>
-            <CustomTextInputValue
-              rowItem={rowData.item}
-              fieldName={'concreteTemp'}
-              index={rowData.index}
-              onChange={handleTextInputChange}></CustomTextInputValue>
-          </View>
-      }
+      {selectedTask.name === TASK_TYPES.CONCRETING && (
+        <View style={{width: 130}}>
+          <CustomTextInputValue
+            rowItem={rowData.item}
+            fieldName={'concreteTemp'}
+            index={rowData.index}
+            onChange={handleTextInputChange}></CustomTextInputValue>
+        </View>
+      )}
 
-      {
-        selectedTask.name === TASK_TYPES.CONCRETING && 
+      {selectedTask.name === TASK_TYPES.CONCRETING && (
         <View style={{width: 140}}>
           <CustomTextInputValue
             rowItem={rowData.item}
@@ -2065,8 +2633,8 @@ const validateGroutingData = (groutingData: any): boolean => {
             index={rowData.index}
             onChange={handleTextInputChange}></CustomTextInputValue>
         </View>
-      }
-      
+      )}
+
       <View style={{width: 150}}>
         <TimePicker
           label=""
@@ -2084,7 +2652,7 @@ const validateGroutingData = (groutingData: any): boolean => {
           index={rowData.index}
           onChange={handleTextInputChange}></CustomTextInputValue>
       </View>
-      
+
       <View style={{width: 150}}>
         <TimePicker
           label=""
@@ -2124,7 +2692,14 @@ const validateGroutingData = (groutingData: any): boolean => {
     newData.splice(prevIndex, 1);
     setConcreteData(newData);
   };
-
+  //Function to delete glueing row
+  const deleteGlueingItem = (rowMap: any, rowKey: any) => {
+    closeRow(rowMap, rowKey);
+    const newData = [...glueingData];
+    const prevIndex = glueingData.findIndex(item => item.key === rowKey);
+    newData.splice(prevIndex, 1);
+    setGlueingData(newData);
+  };
   // Function to handle row open event
   const onRowOpen = (rowKey: any) => {
     console.log('Opened row with key:', rowKey);
@@ -2989,7 +3564,7 @@ const validateGroutingData = (groutingData: any): boolean => {
             </View>
           </View>
         );
-      
+
       case TASK_TYPES.BORING_OF_PILE:
         return (
           <View>
@@ -3002,7 +3577,7 @@ const validateGroutingData = (groutingData: any): boolean => {
                 }
               />
             </View>
-            
+
             <View style={{flexDirection: 'column'}}>
               <Input
                 label="Viscosity of Polymer in sec/liter"
@@ -3089,7 +3664,10 @@ const validateGroutingData = (groutingData: any): boolean => {
                 label="Start time of flushing"
                 value={flushingOperationsData.startTimeOfFlushing}
                 onChange={time =>
-                  handleInputChangeFlushingOperations('startTimeOfFlushing', time)
+                  handleInputChangeFlushingOperations(
+                    'startTimeOfFlushing',
+                    time,
+                  )
                 }
               />
             </View>
@@ -3099,7 +3677,10 @@ const validateGroutingData = (groutingData: any): boolean => {
                 label="Finish time of flushing"
                 value={flushingOperationsData.finishTimeOfFlushing}
                 onChange={time =>
-                  handleInputChangeFlushingOperations('finishTimeOfFlushing', time)
+                  handleInputChangeFlushingOperations(
+                    'finishTimeOfFlushing',
+                    time,
+                  )
                 }
               />
             </View>
@@ -3110,12 +3691,15 @@ const validateGroutingData = (groutingData: any): boolean => {
                 value={flushingOperationsData.whetherPourCleared}
                 items={YES_NO_LIST}
                 onChange={(newValue: string) => {
-                  handleInputChangeFlushingOperations('whetherPourCleared', newValue)
+                  handleInputChangeFlushingOperations(
+                    'whetherPourCleared',
+                    newValue,
+                  );
                 }}
                 isRequired={true}
               />
             </View>
-            
+
             <View style={{flexDirection: 'column'}}>
               <Input
                 label="Density of Polymer in gm/ml"
@@ -3125,13 +3709,16 @@ const validateGroutingData = (groutingData: any): boolean => {
                 }
               />
             </View>
-            
+
             <View style={{flexDirection: 'column'}}>
               <Input
                 label="Viscosity of Polymer in sec/liter"
                 value={boringOfPileData.viscosityOfPolymer}
                 onChange={(value: string) =>
-                  handleInputChangeFlushingOperations('viscosityOfPolymer', value)
+                  handleInputChangeFlushingOperations(
+                    'viscosityOfPolymer',
+                    value,
+                  )
                 }
               />
             </View>
@@ -3203,7 +3790,7 @@ const validateGroutingData = (groutingData: any): boolean => {
             </View>
           </View>
         );
-      
+
       case TASK_TYPES.CHIPPING_AND_REMOVAL_OF_CONCRETE_ABOVE_CUT_OFF_LEVEL:
         return (
           <View>
@@ -3212,7 +3799,10 @@ const validateGroutingData = (groutingData: any): boolean => {
                 label="No. of days of chipping after casting of concrete"
                 value={chippingAndRemovalOfConcreteData.noOfDaysOfChipping}
                 onChange={(value: string) =>
-                  handleInputChangeChippingAndRemovalOfConcrete('noOfDaysOfChipping', value)
+                  handleInputChangeChippingAndRemovalOfConcrete(
+                    'noOfDaysOfChipping',
+                    value,
+                  )
                 }
               />
             </View>
@@ -3254,7 +3844,7 @@ const validateGroutingData = (groutingData: any): boolean => {
             </View>
           </View>
         );
-    
+
       case TASK_TYPES.CONCRETING:
       case TASK_TYPES.PCC_LEVELLING_COURSE:
         if (!concreteData || !concreteData.length) {
@@ -3272,7 +3862,7 @@ const validateGroutingData = (groutingData: any): boolean => {
             },
           ]);
         }
-        
+
         return (
           <View>
             <View style={styles.MainContainer}>
@@ -3339,235 +3929,333 @@ const validateGroutingData = (groutingData: any): boolean => {
             </View>
           </View>
         );
+      case TASK_TYPES.GLUEING:
+        if (!glueingData || !glueingData.length) {
+          setGlueingData([
+            {
+              jointNumbers: '',
+              ambientTemperature: 0,
+              batchNoResin: 0,
+              batchNoHardener: 0,
+              mixingStartTime: '',
+              mixingFinishTime: '',
+              applicationStartTime: '',
+              applicationFinishTime: '',
+              segmentJoiningTimeClosure: '',
+              segmentJoiningTimeTemporaryFinish: '',
+              segmentSurfaceArea: 0,
+              epoxyConsumptionTheoreticalResin: 0,
+              epoxyConsumptionTheoreticalHardener: 0,
+              epoxyConsumptionActualResin: 0,
+              epoxyConsumptionActualHardener: 0,
+              key: Guid.create(),
+            },
+          ]);
+        }
 
-        case TASK_TYPES.GROUTING:
-          return (
+        return (
+          <View>
+            <View style={styles.MainContainer}>
+              <ScrollView
+                id="scrollViewGlueing"
+                showsHorizontalScrollIndicator={false}
+                horizontal={enableScroll}>
+                <View>
+                  {renderGlueingHeadings()}
+                  <FlatList
+                    data={glueingData}
+                    renderItem={renderItemGlueing}
+                    keyExtractor={item => item.key?.toString()}
+                    style={{zIndex: 10}}
+                    automaticallyAdjustContentInsets={true}
+                    scrollEnabled={false}
+                  />
+                </View>
+              </ScrollView>
+            </View>
+
+            <View>
+              <TouchableOpacity
+                style={{paddingVertical: 15, zIndex: 8}}
+                onPress={() => onAddMoreGlueing()}>
+                <Text style={styles.AddMoreLink}>+ Add More</Text>
+              </TouchableOpacity>
+            </View>
+
             <View>
               <View style={{flexDirection: 'column'}}>
-                <DropdownPicker
-                  label="Inlet free of blockage"
-                  value={groutingData.inletFree}
-                  items={YES_NO_NA_LIST}
-                  onChange={(newValue: string) => {
-                    handleInputChangeGrouting('inletFree', newValue)
-                  }}
-                  isRequired={true}
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
                 />
               </View>
-              
-              <View style={{flexDirection: 'column'}}>
-                <DropdownPicker
-                  label="Outlet free of blockage"
-                  value={groutingData.outletFree}
-                  items={YES_NO_NA_LIST}
-                  onChange={(value: string) =>
-                    handleInputChangeGrouting('outletFree', value)
-                  }
-                />
-              </View>
-  
-              <View style={{flexDirection: 'column'}}>
-                <DropdownPicker
-                  label="Vents free of blockage"
-                  value={groutingData.ventsFree}
-                  items={YES_NO_LIST}
-                  onChange={(value: string) =>
-                    handleInputChangeGrouting('ventsFree', value)
-                  }
-                />
-              </View>
-  
-              <View style={{flexDirection: 'column'}}>
-                <DropdownPicker
-                  label="Cable Duct free of blockage"
-                  value={groutingData.cableDuctFree}
-                  items={YES_NO_LIST}
-                  onChange={(value: string) =>
-                    handleInputChangeGrouting('cableDuctFree', value)
-                  }
-                />
-              </View>
-  
-              <View style={{flexDirection: 'column'}}>
-                <DropdownPicker
-                  label="Leakage observed"
-                  value={groutingData.leakageObserved}
-                  items={YES_NO_LIST}
-                  onChange={(value: string) =>
-                    handleInputChangeGrouting('leakageObserved', value)
-                  }
-                />
-              </View>
-              <View style={{flexDirection: 'column'}}>
-                <DropdownPicker
-                  label="Sealed"
-                  value={groutingData.sealed}
-                  items={YES_NO_LIST}
-                  onChange={(value: string) =>
-                    handleInputChangeGrouting('sealed', value)
-                  }
-                />
-              </View>
-              <View style={{flexDirection: 'column'}}>
-                <DropdownPicker
-                  label="If cable duct blocked remedial measures taken"
-                  value={groutingData.remedialMeasures}
-                  items={YES_NO_NA_LIST}
-                  onChange={(value: string) =>
-                    handleInputChangeGrouting('remedialMeasures', value)
-                  }
-                />
-              </View>
-              <Text style={styles.HeadText}>Details of Grouting</Text>
-              <CalendarPicker
-                label="Last Date of prestressing"
-                value={groutingData.prestressingDate}
-                onChange={date => handleInputChangeGrouting('prestressingDate', date)}
-              />
-              <CalendarPicker
-                label="Date of Grouting"
-                value={groutingData.groutingDate}
-                onChange={date => handleInputChangeGrouting('groutingDate', date)}
-              />
-              <DropdownPicker
-                label="Type of cement"
-                value={groutingData.cementType}
-                items={CEMENT_TYPE_LIST}
-                onChange={(value: string) =>
-                  handleInputChangeGrouting('cementType', value)
-                }
-              />
-              <Input
-                label="W/c Ratio"
-                value={groutingData.wcRatio}
-                onChange={(value: string) => handleInputChangeGrouting('wcRatio', value)}
-                isRequired={true}
-              />
-              <Input
-                label="Temperature of mixing water (°C)"
-                value={groutingData.mixingWaterTemp}
-                onChange={(value: string) =>
-                  handleInputChangeGrouting('mixingWaterTemp', value)
-                }
-                isRequired={true}
-              />
-              <Input
-                label="Temperature of Grout (°C)"
-                value={groutingData.groutTemp}
-                onChange={(value: string) => handleInputChangeGrouting('groutTemp', value)}
-                isRequired={true}
-              />
-              <TimePicker
-                label="Start Time"
-                value={groutingData.startTime}
-                onChange={time => handleInputChangeGrouting('startTime', time)}
-              />
-              <TimePicker
-                label="Finish Time"
-                value={groutingData.finishTime}
-                onChange={time => handleInputChangeGrouting('finishTime', time)}
-              />
-              <Input
-                label="Volume of Grout (Ltr)"
-                value={groutingData.volumeOfGrout}
-                onChange={(value: string) => handleInputChangeGrouting('volumeOfGrout', value)}
-                isRequired={true}
-              />
-              <Input
-                label="Grouting Pressure (Kg/cm²)"
-                value={groutingData.groutingPressure}
-                onChange={(value: string) =>
-                  handleInputChangeGrouting('groutingPressure', value)
-                }
-                isRequired={true}
-              />
-              <Input
-                label="Cement consumption theoretical"
-                value={groutingData.cementConsumptionTheoretical}
-                onChange={(value: string) =>
-                  handleInputChangeGrouting('cementConsumptionTheoretical', value)
-                }
-                isRequired={true}
-              />
-              <Input
-                label="Cement consumption actual"
-                value={groutingData.cementConsumptionActual}
-                onChange={(value: string) =>
-                  handleInputChangeGrouting('cementConsumptionActual', value)
-                }
-                isRequired={true}
-              />
-              <DropdownPicker
-                label="Passage of grout through vents"
-                value={groutingData.passageThroughVents}
-                items={YES_NO_LIST}
-                onChange={(value: string) =>
-                  handleInputChangeGrouting('passageThroughVents', value)
-                }
-              />
-              <DropdownPicker
-                label="Passage of grout through outlet"
-                value={groutingData.passageThroughOutlet}
-                items={YES_NO_LIST}
-                onChange={(value: string) =>
-                  handleInputChangeGrouting('passageThroughOutlet', value)
-                }
-              />
-              <DropdownPicker
-                label="Any equipment failure"
-                value={groutingData.equipmentFailure}
-                items={YES_NO_LIST}
-                onChange={(value: string) =>
-                  handleInputChangeGrouting('equipmentFailure', value)
-                }
-              />
-              <DropdownPicker
-                label="Probing by Stiffwire"
-                value={groutingData.probingByStiffwire}
-                items={YES_NO_LIST}
-                onChange={(value: string) =>
-                  handleInputChangeGrouting('probingByStiffwire', value)
-                }
-              />
-
               <View>
-                <View style={{flexDirection: 'column'}}>
-                  <CalendarPicker
-                    label="Date"
-                    value={rfiDate}
-                    onChange={date => setRFIDate(date)}
-                  />
-                </View>
-                <View>
-                  <TimePicker
-                    label="Time"
-                    value={rfiTime}
-                    onChange={time => setRFITime(time)}
-                  />
-                </View>
-  
-                <View style={{flexDirection: 'column', paddingBottom: 20}}>
-                  <Text style={styles.Lable}>Recommendations</Text>
-                  <TextInput
-                    style={styles.commonInputFiels}
-                    placeholder="Recommendations"
-                    autoCapitalize="none"
-                    keyboardType="email-address"
-                    returnKeyType="next"
-                    underlineColorAndroid="#f000"
-                    multiline={true}
-                    numberOfLines={4}
-                    blurOnSubmit={false}
-                    value={comments}
-                    onChangeText={text => {
-                      setComments(text);
-                    }}
-                  />
-                </View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
+                />
               </View>
             </View>
-          );
-  
+          </View>
+        );
+
+      case TASK_TYPES.GROUTING:
+        return (
+          <View>
+            <View style={{flexDirection: 'column'}}>
+              <DropdownPicker
+                label="Inlet free of blockage"
+                value={groutingData.inletFree}
+                items={YES_NO_NA_LIST}
+                onChange={(newValue: string) => {
+                  handleInputChangeGrouting('inletFree', newValue);
+                }}
+                isRequired={true}
+              />
+            </View>
+
+            <View style={{flexDirection: 'column'}}>
+              <DropdownPicker
+                label="Outlet free of blockage"
+                value={groutingData.outletFree}
+                items={YES_NO_NA_LIST}
+                onChange={(value: string) =>
+                  handleInputChangeGrouting('outletFree', value)
+                }
+              />
+            </View>
+
+            <View style={{flexDirection: 'column'}}>
+              <DropdownPicker
+                label="Vents free of blockage"
+                value={groutingData.ventsFree}
+                items={YES_NO_LIST}
+                onChange={(value: string) =>
+                  handleInputChangeGrouting('ventsFree', value)
+                }
+              />
+            </View>
+
+            <View style={{flexDirection: 'column'}}>
+              <DropdownPicker
+                label="Cable Duct free of blockage"
+                value={groutingData.cableDuctFree}
+                items={YES_NO_LIST}
+                onChange={(value: string) =>
+                  handleInputChangeGrouting('cableDuctFree', value)
+                }
+              />
+            </View>
+
+            <View style={{flexDirection: 'column'}}>
+              <DropdownPicker
+                label="Leakage observed"
+                value={groutingData.leakageObserved}
+                items={YES_NO_LIST}
+                onChange={(value: string) =>
+                  handleInputChangeGrouting('leakageObserved', value)
+                }
+              />
+            </View>
+            <View style={{flexDirection: 'column'}}>
+              <DropdownPicker
+                label="Sealed"
+                value={groutingData.sealed}
+                items={YES_NO_LIST}
+                onChange={(value: string) =>
+                  handleInputChangeGrouting('sealed', value)
+                }
+              />
+            </View>
+            <View style={{flexDirection: 'column'}}>
+              <DropdownPicker
+                label="If cable duct blocked remedial measures taken"
+                value={groutingData.remedialMeasures}
+                items={YES_NO_NA_LIST}
+                onChange={(value: string) =>
+                  handleInputChangeGrouting('remedialMeasures', value)
+                }
+              />
+            </View>
+            <Text style={styles.HeadText}>Details of Grouting</Text>
+            <CalendarPicker
+              label="Last Date of prestressing"
+              value={groutingData.prestressingDate}
+              onChange={date =>
+                handleInputChangeGrouting('prestressingDate', date)
+              }
+            />
+            <CalendarPicker
+              label="Date of Grouting"
+              value={groutingData.groutingDate}
+              onChange={date => handleInputChangeGrouting('groutingDate', date)}
+            />
+            <DropdownPicker
+              label="Type of cement"
+              value={groutingData.cementType}
+              items={CEMENT_TYPE_LIST}
+              onChange={(value: string) =>
+                handleInputChangeGrouting('cementType', value)
+              }
+            />
+            <Input
+              label="W/c Ratio"
+              value={groutingData.wcRatio}
+              onChange={(value: string) =>
+                handleInputChangeGrouting('wcRatio', value)
+              }
+              isRequired={true}
+            />
+            <Input
+              label="Temperature of mixing water (°C)"
+              value={groutingData.mixingWaterTemp}
+              onChange={(value: string) =>
+                handleInputChangeGrouting('mixingWaterTemp', value)
+              }
+              isRequired={true}
+            />
+            <Input
+              label="Temperature of Grout (°C)"
+              value={groutingData.groutTemp}
+              onChange={(value: string) =>
+                handleInputChangeGrouting('groutTemp', value)
+              }
+              isRequired={true}
+            />
+            <TimePicker
+              label="Start Time"
+              value={groutingData.startTime}
+              onChange={time => handleInputChangeGrouting('startTime', time)}
+            />
+            <TimePicker
+              label="Finish Time"
+              value={groutingData.finishTime}
+              onChange={time => handleInputChangeGrouting('finishTime', time)}
+            />
+            <Input
+              label="Volume of Grout (Ltr)"
+              value={groutingData.volumeOfGrout}
+              onChange={(value: string) =>
+                handleInputChangeGrouting('volumeOfGrout', value)
+              }
+              isRequired={true}
+            />
+            <Input
+              label="Grouting Pressure (Kg/cm²)"
+              value={groutingData.groutingPressure}
+              onChange={(value: string) =>
+                handleInputChangeGrouting('groutingPressure', value)
+              }
+              isRequired={true}
+            />
+            <Input
+              label="Cement consumption theoretical"
+              value={groutingData.cementConsumptionTheoretical}
+              onChange={(value: string) =>
+                handleInputChangeGrouting('cementConsumptionTheoretical', value)
+              }
+              isRequired={true}
+            />
+            <Input
+              label="Cement consumption actual"
+              value={groutingData.cementConsumptionActual}
+              onChange={(value: string) =>
+                handleInputChangeGrouting('cementConsumptionActual', value)
+              }
+              isRequired={true}
+            />
+            <DropdownPicker
+              label="Passage of grout through vents"
+              value={groutingData.passageThroughVents}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeGrouting('passageThroughVents', value)
+              }
+            />
+            <DropdownPicker
+              label="Passage of grout through outlet"
+              value={groutingData.passageThroughOutlet}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeGrouting('passageThroughOutlet', value)
+              }
+            />
+            <DropdownPicker
+              label="Any equipment failure"
+              value={groutingData.equipmentFailure}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeGrouting('equipmentFailure', value)
+              }
+            />
+            <DropdownPicker
+              label="Probing by Stiffwire"
+              value={groutingData.probingByStiffwire}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeGrouting('probingByStiffwire', value)
+              }
+            />
+
+            <View>
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
+                />
+              </View>
+            </View>
+          </View>
+        );
+
       default:
         return (
           <View>
@@ -3591,7 +4279,9 @@ const validateGroutingData = (groutingData: any): boolean => {
       .map((item: any, index) => (
         <View style={getStyle(item)}>
           <View style={styles.leftContainer}>
-            <Text style={[styles.HeadText, {maxWidth: 300}]}>{item.displayName}</Text>
+            <Text style={[styles.HeadText, {maxWidth: 300}]}>
+              {item.displayName}
+            </Text>
             {/* <Text style={styles.MyWorkSubHead}>Sub Text</Text> */}
           </View>
           {item.rfiStatus === RFI_STATUS.GENERATED ? (

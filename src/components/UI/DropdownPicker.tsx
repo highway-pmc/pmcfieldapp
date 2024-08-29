@@ -10,6 +10,7 @@ interface DropdownPickerProps {
   items: any[],
   isRequired?: boolean,
   style?: any,
+  cssStyle?: any;
   onChange: any;
 }
 
@@ -22,6 +23,7 @@ const DropdownPicker: React.FC<DropdownPickerProps> = ({
   isRequired,
   style = {},
   onChange,
+  cssStyle
 }) => {
 
   const [error, setError] = useState('');
@@ -40,7 +42,7 @@ const DropdownPicker: React.FC<DropdownPickerProps> = ({
     <View style={[styles.container, style]}>
       {
         label && 
-        <Text style={styles.label}>{label}</Text>
+        <Text style={[styles.label, cssStyle]}>{label}</Text>
       }
       <View style={[styles.pickerContainer]}>
         <Picker

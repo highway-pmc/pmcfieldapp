@@ -949,21 +949,253 @@ const renderSectionHeaderGlueing = (rowData: any) => {
           </View>
         );
       case TASK_TYPES.GLUEING:
-          return (
-            <View>
-              <ScrollView horizontal={true}>
-                <View style={{flexDirection: 'column'}}>
-                  <SwipeListView
-                    data={selectedRFI?.metaData.glueingData}
-                    renderItem={renderItemGlueing}
-                    renderSectionHeader={renderSectionHeaderGlueing}
-                  />
-                </View>
-              </ScrollView>
-            </View>
-          );
-        
+        return (
+          <View>
+            <ScrollView horizontal={true}>
+              <View style={{flexDirection: 'column'}}>
+                <SwipeListView
+                  data={selectedRFI?.metaData.glueingData}
+                  renderItem={renderItemGlueing}
+                  renderSectionHeader={renderSectionHeaderGlueing}
+                />
+              </View>
+            </ScrollView>
+          </View>
+        );
+      case TASK_TYPES.LIFTING_LEFT:
+      case TASK_TYPES.LIFTING_RIGHT:
+        const liftingCombinedLRProperties = [
+          {
+            title: 'Area is hard barricaded with proper signages',
+            key: 'areaBarricaded',
+          },
+          {
+            title:
+              'Temporary lights for proper illumination of the erection area is available at night',
+            key: 'temporaryLights',
+          },
+          {title: 'Flag man/Marshal available', key: 'flagManAvailable'},
+          {
+            title:
+              'Methodology & Scheme for lifting and stacking is available at site',
+            key: 'liftingMethodology',
+          },
+          {
+            title:
+              'De-shackles and slings of proper capacity and their test certificate by third party is available',
+            key: 'deshacklesTestCertificate',
+          },
+          {
+            title: 'Safety color code present on the de-shackles',
+            key: 'safetyColorCode',
+          },
+          {
+            title:
+              'Hydraulic jacks are in good condition with proper calibration certificates',
+            key: 'hydraulicJacksCondition',
+          },
+          {
+            title: 'Limit switch of lifting hoist is working properly',
+            key: 'hoistLimitSwitch',
+          },
+          {
+            title: 'Cotter pin are placed in all lifting assembly',
+            key: 'cotterPinsPlaced',
+          },
+          {
+            title:
+              'Macalloy Bars / pins for lifting of Wings in proper condition',
+            key: 'macalloyBarsCondition',
+          },
+          {
+            title: 'Work at height permit obtained from IE/concerned agency',
+            key: 'heightPermitObtained',
+          },
+          {
+            title:
+              'All Mac-alloy bars and wire rope assemblies have valid third-party test certificate',
+            key: 'macalloyBarsTestCertificate',
+          },
+          {
+            title:
+              'Lifting sequence as per the approved methodology provided at site for counter',
+            key: 'liftingSequence',
+          },
+          {
+            title:
+              'Lifting holes are in proper location as per approved drawing',
+            key: 'liftingHolesLocation',
+          },
+          {
+            title: 'Lifting arrangements are working properly',
+            key: 'liftingArrangementsWorking',
+          },
+          {
+            title:
+              'Pre-stressing duct of segments are clear of any foreign materials',
+            key: 'preStressingDuctsClear',
+          },
+          {
+            title:
+              'Comprehensive Strength of concrete of wings are gained as per the approved drawing',
+            key: 'concreteStrengthGained',
+          },
+          {
+            title: 'Slider trolley is in proper position',
+            key: 'sliderTrolleyPosition',
+          },
+          {
+            title: 'Sand blasting on match cast face done',
+            key: 'sandBlastingDone',
+          },
+          {
+            title: 'Repairing (if necessary) & finishing done',
+            key: 'repairingFinished',
+          },
+          {
+            title: 'No repairing on shearkey & gluing location',
+            key: 'noRepairsOnShearkey',
+          },
+          {
+            title:
+              'Bund for curing at top removed & top to be cleaned by broom',
+            key: 'bundRemoved',
+          },
+          {
+            title: 'Soffit & deck top cleaned by broomer',
+            key: 'soffitDeckCleaned',
+          },
+          {
+            title:
+              'Sheathing duct is cleaned, no concrete at rubber bunk portion',
+            key: 'sheathingDuctCleaned',
+          },
+          {
+            title: 'Sheathing duct alignment ok, checked by drolly passing',
+            key: 'ductAlignmentChecked',
+          },
+          {
+            title:
+              'Temporary stressing hole at soffit cleaned & dimension checked',
+            key: 'temporaryStressingHoleCleaned',
+          },
+          {
+            title: 'Fitness of Trailer with proper calibration certificate',
+            key: 'trailerFitnessChecked',
+          },
+          {
+            title: 'Tyres of trailer and air pressure checked',
+            key: 'trailerTyresChecked',
+          },
+          {
+            title: 'Ground properly leveled for placement of trailer',
+            key: 'groundLeveled',
+          },
+          {
+            title:
+              'Area is hard barricaded with proper signages (Erection Site)',
+            key: 'areaBarricadedErectionSite',
+          },
+          {
+            title:
+              'Temporary lights for proper illumination of the erection area is available at night (Erection Site)',
+            key: 'temporaryLightsErectionSite',
+          },
+          {
+            title: 'Flag man/Marshal available (Erection Site)',
+            key: 'flagManAvailableErectionSite',
+          },
+          {
+            title:
+              'Methodology & Scheme for lifting and stacking is available at site (Erection Site)',
+            key: 'liftingMethodologyErectionSite',
+          },
+          {title: 'Crane is positioned as per drawing', key: 'cranePositioned'},
+          {
+            title:
+              'De-shackles and slings of proper capacity and their test certificate by third party is available (Erection Site)',
+            key: 'deshacklesTestCertificateErectionSite',
+          },
+          {
+            title:
+              'Safety color code present on the de-shackles (Erection Site)',
+            key: 'safetyColorCodeErectionSite',
+          },
+          {
+            title:
+              'Hydraulic jacks are in good condition with proper calibration certificates (Erection Site)',
+            key: 'hydraulicJacksConditionErectionSite',
+          },
+          {
+            title:
+              'Limit switch of lifting hoist is working properly (Erection Site)',
+            key: 'hoistLimitSwitchErectionSite',
+          },
+          {
+            title:
+              'Cotter pin are placed in all lifting assembly (Erection Site)',
+            key: 'cotterPinsPlacedErectionSite',
+          },
+          {
+            title:
+              'Macalloy Bars / pins for lifting of Wings in proper condition (Erection Site)',
+            key: 'macalloyBarsConditionErectionSite',
+          },
+          {
+            title: 'TPI of all parts of Cranes & Slings done',
+            key: 'cranesTPICompleted',
+          },
+          {
+            title:
+              'Latest TPI Certificates of all parts of Cranes & Slings available at Site',
+            key: 'cranesTPICertificatesAvailable',
+          },
+          {
+            title: 'Counter-weights are available & placed as per drawing',
+            key: 'counterWeightsPlaced',
+          },
+          {
+            title: 'Positioning of segment marked',
+            key: 'positioningOfSegmentMarked',
+          },
+          {
+            title: 'Traffic properly diverted & Traffic marshals are in place',
+            key: 'trafficDiverted',
+          },
+          {
+            title:
+              'Safety & Fitness of all workers working at height checked and certified',
+            key: 'workersSafetyChecked',
+          },
+          {
+            title: 'All Safety arrangements are placed at Site',
+            key: 'safetyArrangementsPlaced',
+          },
+          {
+            title: 'Segments positioned at the specified / marked location',
+            key: 'segmentPositioned',
+          },
+          {
+            title:
+              'Necessary lateral / Site support ensured before releasing the segment by Cranes',
+            key: 'lateralSupportEnsured',
+          },
+        ];
 
+        return (
+          <View>
+            {liftingCombinedLRProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.liftingCombinedLRData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
       default:
         return (
           <View>

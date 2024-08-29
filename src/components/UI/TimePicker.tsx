@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     marginBottom: 15,
+    width: '100%'
   },
   label: {
     fontSize: 12,

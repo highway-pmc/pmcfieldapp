@@ -469,7 +469,9 @@ export const TASK_TYPES = {
   CHIPPING_AND_REMOVAL_OF_CONCRETE_ABOVE_CUT_OFF_LEVEL:
     'chipping-and-removal-of-concrete-above-cut-off-level',
   GROUTING: 'grouting',
+  LIFTING: 'Lifting',
   GLUEING:'gluing',
+  LIFTING: 'Lifting',
 };
 
 export const TEST_MATERIALS_TYPES = {

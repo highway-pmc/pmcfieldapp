@@ -4026,6 +4026,1119 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             </View>
           </View>
         );
+      //Code For Lifting
+      case TASK_TYPES.LIFTING:
+        if (!concreteData || !concreteData.length) {
+          setConcreteData([
+            {
+              vehicleNo: '',
+              timeOfArrival: '',
+              gradeOfConcrete: '',
+              concreteTemp: 0,
+              slumpValue: 0,
+              concretePoured: 0,
+              concreteStartTime: '',
+              concreteFinishTime: '',
+              key: Guid.create(),
+            },
+          ]);
+        }
+        return (
+          <ScrollView showsHorizontalScrollIndicator={false}>
+            <View style={styles.columnWiseData}>
+              <Text style={styles.headerText}>
+                Preparation of Area for Lifting at Stacking Yard
+              </Text>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Area is hard barricaded with proper signages"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Temporary lights for proper illumination of the erection area is available at night"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Flag man/Marshal available"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Methodology & Scheme for lifting and stacking is available at site"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <Text style={styles.headerText}>
+                Tools and Tackles for Lifting at Stacking Yard
+              </Text>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="De-shackles and slings of proper capacity and their test certificate by third party is available"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Safety color code present on the de-shackles"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Hydraulic jacks are in good condition with proper calibration certificates"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Limit switch of lifting hoist is working properly"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Cotter pin are placed in all lifting assembly"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Macalloy Bars / pins for lifting of Wings in proper condition"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <Text style={styles.headerText}>
+                Lifting of Segment at Stacking Yard
+              </Text>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Work at height permit obtained from IE/concerned agency"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="All Mac-alloy bars and wire rope assemblies have valid third-party test certificate"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Lifting sequence as per the approved methodology provided at site for counter"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Lifting holes are in proper location as per approved drawing"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Lifting arrangements are working properly"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Pre-stressing duct of segments are clear of any foreign materials"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Comprehensive Strength of concrete of wings are gained as per the approved drawing"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Slider trolley is in proper position"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+
+              <Text style={styles.headerText}>
+                Segment Dispatch and Transportation
+              </Text>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Sand blasting on match cast face done"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Repairing (if necessary) & finishing done"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="No repairing on shearkey & gluing location"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Bund for curing at top removed & top to be cleaned by broom"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Soffit & deck top cleaned by broomer"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Sheathing duct is cleaned, no concrete at rubber bunk portion"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Sheathing duct alignment ok, checked by drolly passing"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Temporary stressing hole at soffit cleaned & dimension checked"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Fitness of Trailer with proper calibration certificate"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Tyres of trailer and air pressure checked"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+
+              <Text style={styles.headerText}>
+                Preparation of Area for Lifting at Erection Site
+              </Text>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Ground properly leveled for placement of trailer"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Area is hard barricaded with proper signages"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Temporary lights for proper illumination of the erection area is available at night"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Flag man/Marshal available"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Methodology & Scheme for lifting and stacking is available at site"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Crane is positioned as per drawing"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+
+              <Text style={styles.headerText}>
+                Tools and Tackles for Lifting at Erection Site
+              </Text>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="De-shackles and slings of proper capacity and their test certificate by third party is available"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Safety color code present on the de-shackles"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Hydraulic jacks are in good condition with proper calibration certificates"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Limit switch of lifting hoist is working properly"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Cotter pin are placed in all lifting assembly"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Macalloy Bars / pins for lifting of Wings in proper condition"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="TPI of all parts of Cranes & Slings done"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Latest TPI Certificates of all parts of Cranes & Slings available at Site"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Counter-weights are available & placed as per drawing"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+
+              <Text style={styles.headerText}>
+                Lifting and Positioning of Segments
+              </Text>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Positioning of segment marked"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Traffic properly diverted & Traffic marshals are in place"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Safety & Fitness of all workers working at height checked and certified"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="All Safety arrangements are placed at Site"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Segments positioned at the specified / marked location"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Necessary lateral / Site support ensured before releasing the segment by Cranes"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
+                />
+              </View>
+            </View>
+          </ScrollView>
+        );
+
+      //Code For Lifting
+      case TASK_TYPES.LIFTING:
+        if (!concreteData || !concreteData.length) {
+          setConcreteData([
+            {
+              vehicleNo: '',
+              timeOfArrival: '',
+              gradeOfConcrete: '',
+              concreteTemp: 0,
+              slumpValue: 0,
+              concretePoured: 0,
+              concreteStartTime: '',
+              concreteFinishTime: '',
+              key: Guid.create(),
+            },
+          ]);
+        }
+        return (
+          <ScrollView showsHorizontalScrollIndicator={false}>
+            <View style={styles.columnWiseData}>
+              <Text style={styles.headerText}>
+                Preparation of Area for Lifting at Stacking Yard
+              </Text>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Area is hard barricaded with proper signages"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Temporary lights for proper illumination of the erection area is available at night"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Flag man/Marshal available"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Methodology & Scheme for lifting and stacking is available at site"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <Text style={styles.headerText}>
+                Tools and Tackles for Lifting at Stacking Yard
+              </Text>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="De-shackles and slings of proper capacity and their test certificate by third party is available"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Safety color code present on the de-shackles"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Hydraulic jacks are in good condition with proper calibration certificates"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Limit switch of lifting hoist is working properly"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Cotter pin are placed in all lifting assembly"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Macalloy Bars / pins for lifting of Wings in proper condition"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <Text style={styles.headerText}>
+                Lifting of Segment at Stacking Yard
+              </Text>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Work at height permit obtained from IE/concerned agency"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="All Mac-alloy bars and wire rope assemblies have valid third-party test certificate"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Lifting sequence as per the approved methodology provided at site for counter"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Lifting holes are in proper location as per approved drawing"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Lifting arrangements are working properly"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Pre-stressing duct of segments are clear of any foreign materials"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Comprehensive Strength of concrete of wings are gained as per the approved drawing"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Slider trolley is in proper position"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+
+              <Text style={styles.headerText}>
+                Segment Dispatch and Transportation
+              </Text>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Sand blasting on match cast face done"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Repairing (if necessary) & finishing done"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="No repairing on shearkey & gluing location"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Bund for curing at top removed & top to be cleaned by broom"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Soffit & deck top cleaned by broomer"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Sheathing duct is cleaned, no concrete at rubber bunk portion"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Sheathing duct alignment ok, checked by drolly passing"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Temporary stressing hole at soffit cleaned & dimension checked"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Fitness of Trailer with proper calibration certificate"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Tyres of trailer and air pressure checked"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+
+              <Text style={styles.headerText}>
+                Preparation of Area for Lifting at Erection Site
+              </Text>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Ground properly leveled for placement of trailer"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Area is hard barricaded with proper signages"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Temporary lights for proper illumination of the erection area is available at night"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Flag man/Marshal available"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Methodology & Scheme for lifting and stacking is available at site"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Crane is positioned as per drawing"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+
+              <Text style={styles.headerText}>
+                Tools and Tackles for Lifting at Erection Site
+              </Text>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="De-shackles and slings of proper capacity and their test certificate by third party is available"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Safety color code present on the de-shackles"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Hydraulic jacks are in good condition with proper calibration certificates"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Limit switch of lifting hoist is working properly"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Cotter pin are placed in all lifting assembly"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Macalloy Bars / pins for lifting of Wings in proper condition"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="TPI of all parts of Cranes & Slings done"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Latest TPI Certificates of all parts of Cranes & Slings available at Site"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Counter-weights are available & placed as per drawing"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+
+              <Text style={styles.headerText}>
+                Lifting and Positioning of Segments
+              </Text>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Positioning of segment marked"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Traffic properly diverted & Traffic marshals are in place"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Safety & Fitness of all workers working at height checked and certified"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="All Safety arrangements are placed at Site"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Segments positioned at the specified / marked location"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Necessary lateral / Site support ensured before releasing the segment by Cranes"
+                  value={groutingData.outletFree}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleInputChangeGrouting('outletFree', value)
+                  }
+                />
+              </View>
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
+                />
+              </View>
+            </View>
+          </ScrollView>
+        );
 
       //Code For Lifting
       case TASK_TYPES.LIFTING:
@@ -5657,7 +6770,7 @@ const styles = StyleSheet.create({
     marginTop: 0,
   },
   disPlayNone: {
-    display: 'none'
+    display: 'none',
   },
   selectDropdown: {
     backgroundColor: '#fff',
@@ -5752,7 +6865,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     textAlignVertical: 'top',
     fontSize: 13,
-    height: 44
+    height: 44,
   },
   inputFieldsText: {
     color: '#2c2c2c',

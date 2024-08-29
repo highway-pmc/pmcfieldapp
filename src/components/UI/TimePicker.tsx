@@ -6,10 +6,12 @@ import {format} from 'date-fns';
 interface TimePickerProps {
   label: string;
   value: string;
+  style?: any;
+  styleCont?: any;
   onChange: (time: string) => void;
 }
 
-const TimePicker: React.FC<TimePickerProps> = ({label, value, onChange}) => {
+const TimePicker: React.FC<TimePickerProps> = ({label, value, style, styleCont, onChange}) => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
   const showDatePicker = () => {
@@ -27,8 +29,8 @@ const TimePicker: React.FC<TimePickerProps> = ({label, value, onChange}) => {
   };
 
   return (
-    <View style={styles.inputContainer}>
-      <Text style={styles.label}>{label}</Text>
+    <View style={[styles.inputContainer, styleCont]}>
+      <Text style={[styles.label, style]}>{label}</Text>
       <TouchableOpacity style={styles.input} onPress={showDatePicker}>
         <Text style={styles.inputText}>
           {value || `Select ${label.toLowerCase()}`}
@@ -60,7 +62,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginBottom: 5,
     color: '#666',
-    fontWeight: '500'
+    fontWeight: '500',
   },
   input: {
     backgroundColor: '#fff',
@@ -71,7 +73,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     fontSize: 12,
     color: '#2c2c2c',
-    position: 'relative'
+    position: 'relative',
+    height: 44
   },
   inputText: {
     color: '#2c2c2c',

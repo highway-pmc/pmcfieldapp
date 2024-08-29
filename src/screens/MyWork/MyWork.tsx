@@ -2597,6 +2597,8 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         <TimePicker
           label=""
           value={rowData.item.timeOfArrival}
+          style={styles.disPlayNone}
+          styleCont={styles.marginBootomZero}
           onChange={time =>
             handleTimeChange(rowData.index, 'timeOfArrival', time)
           }
@@ -2607,6 +2609,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           label=""
           value={rowData.item.gradeOfConcrete}
           items={CONCRETE_GRADE_LIST}
+          style={styles.marginBootomZero}
           onChange={(newValue: string) => {
             const newData = [...concreteData];
             newData[rowData.index]['gradeOfConcrete'] = newValue;
@@ -2639,6 +2642,8 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         <TimePicker
           label=""
           value={rowData.item.concreteStartTime}
+          style={styles.disPlayNone}
+          styleCont={styles.marginBootomZero}
           onChange={time =>
             handleTimeChange(rowData.index, 'concreteStartTime', time)
           }
@@ -2657,6 +2662,8 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         <TimePicker
           label=""
           value={rowData.item.concreteFinishTime}
+          style={styles.disPlayNone}
+          styleCont={styles.marginBootomZero}
           onChange={time =>
             handleTimeChange(rowData.index, 'concreteFinishTime', time)
           }
@@ -5103,6 +5110,13 @@ const CustomDropdownPicker = ({
 };
 
 const styles = StyleSheet.create({
+  marginBootomZero: {
+    marginBottom: 0,
+    marginTop: 0,
+  },
+  disPlayNone: {
+    display: 'none'
+  },
   selectDropdown: {
     backgroundColor: '#fff',
     padding: 12,
@@ -5196,6 +5210,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     textAlignVertical: 'top',
     fontSize: 13,
+    height: 44
   },
   inputFieldsText: {
     color: '#2c2c2c',

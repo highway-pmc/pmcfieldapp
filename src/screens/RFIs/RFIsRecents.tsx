@@ -343,6 +343,125 @@ const RFIsRecents = (props: any) => {
       </View>
     );
   };
+  const renderItemGlueing = (rowData: any) => (
+    <View style={{flexDirection: 'column', gap: 5}}>
+      {rowData.index === 0 && (
+        <View style={styles.headerRow}>
+          <Text style={styles.headerCell}>TM No.</Text>
+          <Text style={styles.headerCell}>Joint Numbers</Text>
+          <Text style={styles.headerCell}>Ambient Temperature</Text>
+          <Text style={styles.headerCell}>Batch No Resin</Text>
+          <Text style={styles.headerCell}>Batch No Hardener</Text>
+          <Text style={styles.headerCell}>Mixing Start Time</Text>
+          <Text style={styles.headerCell}>Mixing Finish Time</Text>
+          <Text style={styles.headerCell}>Application Start Time</Text>
+          <Text style={styles.headerCell}>Application Finish Time</Text>
+          <Text style={styles.headerCell}>Segment Joining Time Closure</Text>
+          <Text style={styles.headerCell}>
+            Segment Joining Time Temporary Finish
+          </Text>
+          <Text style={styles.headerCell}>Segment Surface Area (SQM)</Text>
+          <Text style={styles.headerCell}>
+            Epoxy Consumption Theoretical Resin (Kgs)
+          </Text>
+          <Text style={styles.headerCell}>
+            Epoxy Consumption Theoretical Hardener (Kgs)
+          </Text>
+          <Text style={styles.headerCell}>
+            Epoxy Consumption Actual Resin (Kgs)
+          </Text>
+          <Text style={styles.headerCell}>
+            Epoxy Consumption Actual Hardener (Kgs)
+          </Text>
+        </View>
+      )}
+      <View style={styles.row}>
+        <Text style={styles.cell}>TM {rowData.index + 1}</Text>
+        <Text style={styles.cell}>{rowData.item.jointNumbers}</Text>
+        <Text style={styles.cell}>{rowData.item.ambientTemperature}</Text>
+        <Text style={styles.cell}>{rowData.item.batchNoResin}</Text>
+        <Text style={styles.cell}>{rowData.item.batchNoHardener}</Text>
+        <Text style={styles.cell}>{rowData.item.mixingStartTime}</Text>
+        <Text style={styles.cell}>{rowData.item.mixingFinishTime}</Text>
+        <Text style={styles.cell}>{rowData.item.applicationStartTime}</Text>
+        <Text style={styles.cell}>{rowData.item.applicationFinishTime}</Text>
+        <Text style={styles.cell}>
+          {rowData.item.segmentJoiningTimeClosure}
+        </Text>
+        <Text style={styles.cell}>
+          {rowData.item.segmentJoiningTimeTemporaryFinish}
+        </Text>
+        <Text style={styles.cell}>{rowData.item.segmentSurfaceArea}</Text>
+        <Text style={styles.cell}>
+          {rowData.item.epoxyConsumptionTheoreticalResin}
+        </Text>
+        <Text style={styles.cell}>
+          {rowData.item.epoxyConsumptionTheoreticalHardener}
+        </Text>
+        <Text style={styles.cell}>
+          {rowData.item.epoxyConsumptionActualResin}
+        </Text>
+        <Text style={styles.cell}>
+          {rowData.item.epoxyConsumptionActualHardener}
+        </Text>
+      </View>
+    </View>
+  );
+
+const renderSectionHeaderGlueing = (rowData: any) => {
+  return (
+    <View>
+      <View>
+        <Text>TM No.</Text>
+      </View>
+      <View>
+        <Text>Joint Numbers</Text>
+      </View>
+      <View>
+        <Text>Ambient Temperature</Text>
+      </View>
+      <View>
+        <Text>Batch No Resin</Text>
+      </View>
+      <View>
+        <Text>Batch No Hardener</Text>
+      </View>
+      <View>
+        <Text>Mixing Start Time</Text>
+      </View>
+      <View>
+        <Text>Mixing Finish Time</Text>
+      </View>
+      <View>
+        <Text>Application Start Time</Text>
+      </View>
+      <View>
+        <Text>Application Finish Time</Text>
+      </View>
+      <View>
+        <Text>Segment Joining Time Closure</Text>
+      </View>
+      <View>
+        <Text>Segment Joining Time Temporary Finish</Text>
+      </View>
+      <View>
+        <Text>Segment Surface Area (SQM)</Text>
+      </View>
+      <View>
+        <Text>Epoxy Consumption Theoretical Resin (Kgs)</Text>
+      </View>
+      <View>
+        <Text>Epoxy Consumption Theoretical Hardener (Kgs)</Text>
+      </View>
+      <View>
+        <Text>Epoxy Consumption Actual Resin (Kgs)</Text>
+      </View>
+      <View>
+        <Text>Epoxy Consumption Actual Hardener (Kgs)</Text>
+      </View>
+    </View>
+  );
+};
 
   const taskForm = (selectedRFI: any) => {
     switch (selectedRFI?.metaData?.taskName) {
@@ -829,6 +948,21 @@ const RFIsRecents = (props: any) => {
             ))}
           </View>
         );
+      case TASK_TYPES.GLUEING:
+          return (
+            <View>
+              <ScrollView horizontal={true}>
+                <View style={{flexDirection: 'column'}}>
+                  <SwipeListView
+                    data={selectedRFI?.metaData.glueingData}
+                    renderItem={renderItemGlueing}
+                    renderSectionHeader={renderSectionHeaderGlueing}
+                  />
+                </View>
+              </ScrollView>
+            </View>
+          );
+        
 
       default:
         return (

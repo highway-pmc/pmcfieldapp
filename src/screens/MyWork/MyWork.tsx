@@ -1998,83 +1998,77 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
   };
   const {showSnackbar} = useSnackbar();
   const renderGlueingHeadings = () => (
-    <View
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 10,
-        gap: 5,
-      }}>
-      <View style={{width: 50, alignItems: 'center', padding: 5}}>
-        <Text style={{fontWeight: '600', fontSize: 12}}>TM No.</Text>
+    <View style={styles.rowContainer}>
+      <View style={[styles.cell, {width: 50}]}>
+        <Text style={styles.cellText}>TM No.</Text>
       </View>
-      <View style={{width: 50, alignItems: 'center', padding: 5}}>
-        <Text style={{fontWeight: '600', fontSize: 12}}>Joint No.</Text>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Joint No.</Text>
       </View>
-      <View style={{width: 100, alignItems: 'center', padding: 5}}>
-        <Text style={{fontWeight: '600', fontSize: 12}}>Ambient Temp (°C)</Text>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Ambient Temp (°C)</Text>
       </View>
-      <View style={{width: 150, alignItems: 'center', padding: 5}}>
-        <Text style={{fontWeight: '600', fontSize: 12}}>Batch No Resin</Text>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Batch No Resin</Text>
       </View>
-      <View style={{width: 150, alignItems: 'center', padding: 5}}>
-        <Text style={{fontWeight: '600', fontSize: 12}}>Batch No Hardener</Text>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Batch No Hardener</Text>
       </View>
-      <View style={{width: 130, alignItems: 'center', padding: 5}}>
-        <Text style={{fontWeight: '600', fontSize: 12}}>Mixing Start Time</Text>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Mixing Start Time</Text>
       </View>
-      <View style={{width: 130, alignItems: 'center', padding: 5}}>
-        <Text style={{fontWeight: '600', fontSize: 12}}>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>
           Mixing Finish Time
         </Text>
       </View>
-      <View style={{width: 150, alignItems: 'center', padding: 5}}>
-        <Text style={{fontWeight: '600', fontSize: 12}}>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>
           Application Start Time
         </Text>
       </View>
-      <View style={{width: 150, alignItems: 'center', padding: 5}}>
-        <Text style={{fontWeight: '600', fontSize: 12}}>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>
           Application Finish Time
         </Text>
       </View>
-      <View style={{width: 180, alignItems: 'center', padding: 5}}>
-        <Text style={{fontWeight: '600', fontSize: 12}}>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>
           Segment Joining Time Closure
         </Text>
       </View>
-      <View style={{width: 220, alignItems: 'center', padding: 5}}>
-        <Text style={{fontWeight: '600', fontSize: 12}}>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>
           Segment Joining Time Temporary PT Finish
         </Text>
       </View>
-      <View style={{width: 150, alignItems: 'center', padding: 5}}>
-        <Text style={{fontWeight: '600', fontSize: 12}}>
+      <View style={styles.cell}>
+       <Text style={styles.cellText}>
           Segment Surface Area (SQM)
         </Text>
       </View>
-      <View style={{width: 200, alignItems: 'center', padding: 5}}>
-        <Text style={{fontWeight: '600', fontSize: 12}}>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>
           Epoxy Consumption Theoretical Resin (Kgs)
         </Text>
       </View>
-      <View style={{width: 200, alignItems: 'center', padding: 5}}>
-        <Text style={{fontWeight: '600', fontSize: 12}}>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>
           Epoxy Consumption Theoretical Hardener (Kgs)
         </Text>
       </View>
-      <View style={{width: 200, alignItems: 'center', padding: 5}}>
-        <Text style={{fontWeight: '600', fontSize: 12}}>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>
           Epoxy Consumption Actual Resin (Kgs)
         </Text>
       </View>
-      <View style={{width: 200, alignItems: 'center', padding: 5}}>
-        <Text style={{fontWeight: '600', fontSize: 12}}>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>
           Epoxy Consumption Actual Hardener (Kgs)
         </Text>
       </View>
-      <View style={{width: 80, alignItems: 'center', padding: 5}}>
-        <Text style={{fontWeight: '600', fontSize: 12}}>Actions</Text>
+      <View style={[styles.cell, {paddingHorizontal: 40}]}>
+        <Text style={styles.cellText}>Actions</Text>
       </View>
     </View>
   );
@@ -2318,20 +2312,14 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
   };
 
   const renderItemGlueing = (rowData: any) => (
-    <View
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 5,
-        marginBottom: 10,
-      }}>
-      <View style={{width: 50, alignItems: 'center'}}>
-        <Text style={{fontWeight: '600', fontSize: 13}}>
+    <View style={[styles.rowContainer, styles.marginBottom10]}>
+      <View style={[styles.cell, {width: 50}]}>
+        <Text style={styles.cellText}>
           TM {rowData.index + 1}
         </Text>
       </View>
 
-      <View style={{width: 100}}>
+      <View style={styles.cell}>
         <CustomTextInputValue
           rowItem={rowData.item}
           fieldName={'jointNumbers'}
@@ -2339,7 +2327,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           onChange={handleTextInputChangeGlueing}></CustomTextInputValue>
       </View>
 
-      <View style={{width: 130}}>
+      <View style={styles.cell}>
         <CustomTextInputValue
           rowItem={rowData.item}
           fieldName={'ambientTemperature'}
@@ -2347,7 +2335,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           onChange={handleTextInputChangeGlueing}></CustomTextInputValue>
       </View>
 
-      <View style={{width: 130}}>
+      <View style={styles.cell}>
         <CustomTextInputValue
           rowItem={rowData.item}
           fieldName={'batchNoResin'}
@@ -2355,7 +2343,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           onChange={handleTextInputChangeGlueing}></CustomTextInputValue>
       </View>
 
-      <View style={{width: 130}}>
+      <View style={styles.cell}>
         <CustomTextInputValue
           rowItem={rowData.item}
           fieldName={'batchNoHardener'}
@@ -2363,40 +2351,48 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           onChange={handleTextInputChangeGlueing}></CustomTextInputValue>
       </View>
 
-      <View style={{width: 150}}>
+      <View style={styles.cell}>
         <TimePicker
           label=""
           value={rowData.item.mixingStartTime}
+          styleCont={styles.marginBootomZero}
+          style={styles.disPlayNone}
           onChange={time =>
             handleTimeChangeGlueing(rowData.index, 'mixingStartTime', time)
           }
         />
       </View>
 
-      <View style={{width: 150}}>
+      <View style={styles.cell}>
         <TimePicker
           label=""
           value={rowData.item.mixingFinishTime}
+          styleCont={styles.marginBootomZero}
+          style={styles.disPlayNone}
           onChange={time =>
             handleTimeChangeGlueing(rowData.index, 'mixingFinishTime', time)
           }
         />
       </View>
 
-      <View style={{width: 150}}>
+      <View style={styles.cell}>
         <TimePicker
           label=""
           value={rowData.item.applicationStartTime}
+          styleCont={styles.marginBootomZero}
+          style={styles.disPlayNone}
           onChange={time =>
             handleTimeChangeGlueing(rowData.index, 'applicationStartTime', time)
           }
         />
       </View>
 
-      <View style={{width: 150}}>
+      <View style={styles.cell}>
         <TimePicker
           label=""
           value={rowData.item.applicationFinishTime}
+          styleCont={styles.marginBootomZero}
+          style={styles.disPlayNone}
           onChange={time =>
             handleTimeChangeGlueing(
               rowData.index,
@@ -2406,10 +2402,12 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           }
         />
       </View>
-      <View style={{width: 150}}>
+      <View style={styles.cell}>
         <TimePicker
           label=""
           value={rowData.item.segmentJoiningTimeClosure}
+          styleCont={styles.marginBootomZero}
+          style={styles.disPlayNone}
           onChange={time =>
             handleTimeChangeGlueing(
               rowData.index,
@@ -2419,10 +2417,12 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           }
         />
       </View>
-      <View style={{width: 150}}>
+      <View style={styles.cell}>
         <TimePicker
           label=""
           value={rowData.item.applicationFinishTime}
+          styleCont={styles.marginBootomZero}
+          style={styles.disPlayNone}
           onChange={time =>
             handleTimeChangeGlueing(
               rowData.index,
@@ -2433,21 +2433,21 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         />
       </View>
 
-      <View style={{width: 130}}>
+      <View style={styles.cell}>
         <CustomTextInputValue
           rowItem={rowData.item}
           fieldName={'segmentSurfaceArea'}
           index={rowData.index}
           onChange={handleTextInputChangeGlueing}></CustomTextInputValue>
       </View>
-      <View style={{width: 130}}>
+      <View style={styles.cell}>
         <CustomTextInputValue
           rowItem={rowData.item}
           fieldName={'epoxyConsumptionTheoreticalResin'}
           index={rowData.index}
           onChange={handleTextInputChangeGlueing}></CustomTextInputValue>
       </View>
-      <View style={{width: 130}}>
+      <View style={styles.cell}>
         <CustomTextInputValue
           rowItem={rowData.item}
           fieldName={'epoxyConsumptionTheoreticalHardener'}
@@ -2455,21 +2455,21 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           onChange={handleTextInputChangeGlueing}></CustomTextInputValue>
       </View>
 
-      <View style={{width: 130}}>
+      <View style={styles.cell}>
         <CustomTextInputValue
           rowItem={rowData.item}
           fieldName={'epoxyConsumptionActualResin'}
           index={rowData.index}
           onChange={handleTextInputChangeGlueing}></CustomTextInputValue>
       </View>
-      <View style={{width: 130}}>
+      <View style={styles.cell}>
         <CustomTextInputValue
           rowItem={rowData.item}
           fieldName={'epoxyConsumptionActualHardener'}
           index={rowData.index}
           onChange={handleTextInputChangeGlueing}></CustomTextInputValue>
       </View>
-      <View style={styles.hiddenContainer}>
+      <View style={[styles.cell, {paddingHorizontal: 45}]}>
         <TouchableOpacity
           style={[styles.deleteButton]}
           onPress={() => deleteGlueingItem(rowData, rowData.item.key)}>
@@ -6190,6 +6190,30 @@ const styles = StyleSheet.create({
     fontSize: 12,
     textAlign: 'center',
     marginVertical: 10
+  },
+  rowContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    rowGap: 7
+  },
+  cell: {
+    width: 150,
+    maxWidth: 220,
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    paddingHorizontal: 5,
+  },
+  marginBottom10: {
+    marginBottom: 10
+  },
+  cellText: {
+    fontWeight: '600',
+    fontSize: 13,
+  },
+  closeIcon: {
+    width: 20,
+    height: 20,
   },
 });
 

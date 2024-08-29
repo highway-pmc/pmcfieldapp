@@ -7302,11 +7302,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 12,
     textAlign: 'center',
-<<<<<<< HEAD
-    marginVertical: 10,
-=======
     marginVertical: 10
->>>>>>> 4b10d7b980fa8ac396f5f7f520202d48667d628b
   },
 });
 

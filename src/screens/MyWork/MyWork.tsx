@@ -497,6 +497,68 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     jackPressureApplied: 0.0,
   });
 
+  const [curingData, setCuringData] = useState({
+    waterUsedForCuring: 'Y',
+    phValueOfWater: 'Y',
+  });
+
+  const handleCuring = (field: string, value: string) => {
+    setCuringData(prevData => ({
+      ...prevData,
+      [field]: value,
+    }));
+  }
+
+  const [fixingShutterData, setFixingShutterData] = useState({
+    shutterMaterial: 'Y',
+    repairsAreOf: 'Y',
+    cleanlinessOfShutter: 'Y',
+    oilingOfShutter: 'Y',
+    shutterDesignOk: 'Y',
+    alignmentLevelsRigidity: 'Y',
+    checkPropsAreTheyOk: 'Y',
+    checkAcrowSapnAreTheyOk: 'Y',
+    checkBracesAreTheyOk: 'Y',
+    checkSealingJointsHoles: 'Y',
+  });
+
+  const handleFixingShutter = (field: string, value: string) => {
+    setFixingShutterData(prevData => ({
+      ...prevData,
+      [field]: value,
+    }));
+  }
+
+  const [erectionOfTemporaryStructure, setErectionOfTemporaryStructure] = useState({
+    hasAnyRiskAssessment: 'Y',
+    craneHydraLevelBase: 'Y',
+    areAllOperationTrained: 'Y',
+    isCraneTested: 'Y',
+    doesTheCraneCertificate: 'Y',
+    AllLiftingToolsAndTackles: 'Y',
+    protectionDevices: 'Y',
+    atteainedTheirStrength: 'Y',
+    workmenProvided: 'Y',
+    whetherSufficient: 'Y',
+    liftingToolsTackles: 'Y',
+    equipmentsGeneratorsProperlyEarthed: 'Y',
+    walkwayMaintainedFreeForm: 'Y',
+    safetyLatchLockingAvailable: 'Y',
+    properWarningSign: 'Y',
+    liftingArrangementsAreApproved: 'Y',
+    achieveTheirCompressiveStrength: 'Y',
+    groundLeveling: 'Y',
+    structureSetOutToTheLevels: 'Y',
+    aualificationAndSkilledCheckedAndCertified: 'Y',
+  });
+
+  const handleErectionOfTemporaryStructure = (field: string, value: string) => {
+    setErectionOfTemporaryStructure(prevData => ({
+      ...prevData,
+      [field]: value,
+    }));
+  }
+
   const handleInputChangeLifting = (field: string, value: string) => {
     setLiftingCombinedLRData(prevData => ({
       ...prevData,
@@ -5328,7 +5390,419 @@ const handleInputChangeTemporaryPrestressing = (key: string, value: any) => {
             </View>
           </View>
         );
-
+      case TASK_TYPES.CURING:
+        return (
+          <ScrollView showsHorizontalScrollIndicator={false}>
+            <View style={styles.columnWiseData}>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Water used for curing is free from oil, salt, acid and organic minerals."
+                  value={curingData.waterUsedForCuring}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleCuring('waterUsedForCuring', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="pH value of water not be less than 6."
+                  value={curingData.waterUsedForCuring}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleCuring('phValueOfWater', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <Text style={styles.Lable}>Consumption of water in Kilo liter</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Consumption of water in Kilo liter"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
+                />
+              </View>
+            </View>
+          </ScrollView>
+        );
+      case TASK_TYPES.FIXING_OF_SHUTTER:
+        return (
+          <ScrollView showsHorizontalScrollIndicator={false}>
+            <View style={styles.columnWiseData}>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Shuttering material is New"
+                  value={fixingShutterData.shutterMaterial}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleFixingShutter('shutterMaterial', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Repairs are ok"
+                  value={fixingShutterData.repairsAreOf}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleFixingShutter('repairsAreOf', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Cleanliness of shuttering"
+                  value={fixingShutterData.cleanlinessOfShutter}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleFixingShutter('cleanlinessOfShutter', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Oiling of shuttering"
+                  value={fixingShutterData.oilingOfShutter}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleFixingShutter('oilingOfShutter', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Shuttering design, ok? (Dimension, Diagonal, Sunken portion etc.)"
+                  value={fixingShutterData.shutterDesignOk}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleFixingShutter('shutterDesignOk', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Alignments /levels /rigidity, ok"
+                  value={fixingShutterData.alignmentLevelsRigidity}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleFixingShutter('alignmentLevelsRigidity', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Check props are they ok"
+                  value={fixingShutterData.checkPropsAreTheyOk}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleFixingShutter('checkPropsAreTheyOk', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Check acrow span. Are they ok"
+                  value={fixingShutterData.checkAcrowSapnAreTheyOk}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleFixingShutter('checkAcrowSapnAreTheyOk', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Check braces. Are they ok"
+                  value={fixingShutterData.checkBracesAreTheyOk}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleFixingShutter('checkBracesAreTheyOk', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Check sealing joints/holes, ok"
+                  value={fixingShutterData.checkSealingJointsHoles}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleFixingShutter('checkSealingJointsHoles', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
+                />
+              </View>
+            </View>
+          </ScrollView>
+        );
+      case TASK_TYPES.ERECTION_OF_TEMPORARY_STRUCTURE:
+        return (
+          <ScrollView showsHorizontalScrollIndicator={false}>
+            <View style={styles.columnWiseData}>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Has any risk assessment been carried out"
+                  value={erectionOfTemporaryStructure.hasAnyRiskAssessment}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleErectionOfTemporaryStructure('hasAnyRiskAssessment', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is the crane/hydra on firm level bases"
+                  value={erectionOfTemporaryStructure.craneHydraLevelBase}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleErectionOfTemporaryStructure('craneHydraLevelBase', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Are all operation trained and competent"
+                  value={erectionOfTemporaryStructure.areAllOperationTrained}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleErectionOfTemporaryStructure('areAllOperationTrained', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is crane tested and operated"
+                  value={erectionOfTemporaryStructure.isCraneTested}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleErectionOfTemporaryStructure('isCraneTested', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Does the crane have a current test certificate"
+                  value={erectionOfTemporaryStructure.doesTheCraneCertificate}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleErectionOfTemporaryStructure('doesTheCraneCertificate', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="All lifting tools and tackles are being identified, checked and have valid resister"
+                  value={erectionOfTemporaryStructure.AllLiftingToolsAndTackles}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleErectionOfTemporaryStructure('AllLiftingToolsAndTackles', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="The person working at height are trained and lash with all fall protection devices"
+                  value={erectionOfTemporaryStructure.protectionDevices}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleErectionOfTemporaryStructure('protectionDevices', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Structure on which columns / beams erected have attained their strength"
+                  value={erectionOfTemporaryStructure.atteainedTheirStrength}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleErectionOfTemporaryStructure('atteainedTheirStrength', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Workmen provided with all required PPE’s"
+                  value={erectionOfTemporaryStructure.workmenProvided}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleErectionOfTemporaryStructure('workmenProvided', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Whether sufficient illumination is provided around the working area"
+                  value={erectionOfTemporaryStructure.whetherSufficient}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleErectionOfTemporaryStructure('whetherSufficient', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is the SWL marked on all lifting tools & tackles"
+                  value={erectionOfTemporaryStructure.liftingToolsTackles}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleErectionOfTemporaryStructure('liftingToolsTackles', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="All wielding machine, electrical equipment’s & generators properly earthed."
+                  value={erectionOfTemporaryStructure.equipmentsGeneratorsProperlyEarthed}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleErectionOfTemporaryStructure('equipmentsGeneratorsProperlyEarthed', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Are the walkway maintained free from obstacle all the time."
+                  value={erectionOfTemporaryStructure.walkwayMaintainedFreeForm}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleErectionOfTemporaryStructure('walkwayMaintainedFreeForm', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is safety latch/locking available"
+                  value={erectionOfTemporaryStructure.safetyLatchLockingAvailable}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleErectionOfTemporaryStructure('safetyLatchLockingAvailable', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Proper warning sign available at site."
+                  value={erectionOfTemporaryStructure.properWarningSign}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleErectionOfTemporaryStructure('properWarningSign', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Lifting arrangements are approved by competent person"
+                  value={erectionOfTemporaryStructure.liftingArrangementsAreApproved}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleErectionOfTemporaryStructure('liftingArrangementsAreApproved', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is footing above temp. structure fixed achieve their compressive strength"
+                  value={erectionOfTemporaryStructure.achieveTheirCompressiveStrength}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleErectionOfTemporaryStructure('achieveTheirCompressiveStrength', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Ground leveling"
+                  value={erectionOfTemporaryStructure.groundLeveling}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleErectionOfTemporaryStructure('groundLeveling', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is Structure set out to the required line and levels."
+                  value={erectionOfTemporaryStructure.structureSetOutToTheLevels}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleErectionOfTemporaryStructure('structureSetOutToTheLevels', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="For welding, is welder qualification and skilled checked and certified"
+                  value={erectionOfTemporaryStructure.aualificationAndSkilledCheckedAndCertified}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handleErectionOfTemporaryStructure('aualificationAndSkilledCheckedAndCertified', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
+                />
+              </View>
+            </View>
+          </ScrollView>
+        );
       default:
         return (
           <View>

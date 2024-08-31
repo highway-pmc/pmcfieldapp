@@ -517,6 +517,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
   const [curingData, setCuringData] = useState({
     waterUsedForCuring: 'Y',
     phValueOfWater: 'Y',
+    consumptionOfWater: 0
   });
 
   const handleCuring = (field: string, value: string) => {
@@ -552,29 +553,28 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     }));
   };
 
-  const [erectionOfTemporaryStructure, setErectionOfTemporaryStructure] =
-    useState({
-      hasAnyRiskAssessment: 'Y',
-      craneHydraLevelBase: 'Y',
-      areAllOperationTrained: 'Y',
-      isCraneTested: 'Y',
-      doesTheCraneCertificate: 'Y',
-      AllLiftingToolsAndTackles: 'Y',
-      protectionDevices: 'Y',
-      atteainedTheirStrength: 'Y',
-      workmenProvided: 'Y',
-      whetherSufficient: 'Y',
-      liftingToolsTackles: 'Y',
-      equipmentsGeneratorsProperlyEarthed: 'Y',
-      walkwayMaintainedFreeForm: 'Y',
-      safetyLatchLockingAvailable: 'Y',
-      properWarningSign: 'Y',
-      liftingArrangementsAreApproved: 'Y',
-      achieveTheirCompressiveStrength: 'Y',
-      groundLeveling: 'Y',
-      structureSetOutToTheLevels: 'Y',
-      aualificationAndSkilledCheckedAndCertified: 'Y',
-    });
+  const [erectionOfTemporaryStructure, setErectionOfTemporaryStructure] = useState({
+    hasAnyRiskAssessment: 'Y',
+    craneHydraLevelBase: 'Y',
+    areAllOperationTrained: 'Y',
+    isCraneTested: 'Y',
+    doesTheCraneCertificate: 'Y',
+    allLiftingToolsAndTackles: 'Y',
+    protectionDevices: 'Y',
+    atteainedTheirStrength: 'Y',
+    workmenProvided: 'Y',
+    whetherSufficient: 'Y',
+    liftingToolsTackles: 'Y',
+    equipmentsGeneratorsProperlyEarthed: 'Y',
+    walkwayMaintainedFreeForm: 'Y',
+    safetyLatchLockingAvailable: 'Y',
+    properWarningSign: 'Y',
+    liftingArrangementsAreApproved: 'Y',
+    achieveTheirCompressiveStrength: 'Y',
+    groundLeveling: 'Y',
+    structureSetOutToTheLevels: 'Y',
+    aualificationAndSkilledCheckedAndCertified: 'Y',
+  });
 
   const handleErectionOfTemporaryStructure = (field: string, value: string) => {
     setErectionOfTemporaryStructure(prevData => ({
@@ -1070,7 +1070,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                 jackPressureApplied: 0,
               });
             }
-
+            break;
           case TASK_TYPES.LIFTING_LEFT:
           case TASK_TYPES.LIFTING_RIGHT:
           case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
@@ -1127,6 +1127,26 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                 safetyArrangementsPlaced: 'Y',
                 segmentPositioned: 'Y',
                 lateralSupportEnsured: 'Y',
+              });
+            }
+            break;
+          case TASK_TYPES.FIXING_OF_SHUTTER:
+            if (rfiData.metaData.fixingShutterData) {
+              setFixingShutterData(
+                rfiData.metaData.fixingShutterData,
+              );
+            } else {
+              setFixingShutterData({
+                shutterMaterial: 'Y',
+                repairsAreOf: 'Y',
+                cleanlinessOfShutter: 'Y',
+                oilingOfShutter: 'Y',
+                shutterDesignOk: 'Y',
+                alignmentLevelsRigidity: 'Y',
+                checkPropsAreTheyOk: 'Y',
+                checkAcrowSapnAreTheyOk: 'Y',
+                checkBracesAreTheyOk: 'Y',
+                checkSealingJointsHoles: 'Y',
               });
             }
             break;
@@ -5818,23 +5838,12 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                 />
               </View>
               <View style={styles.categoryColumn}>
-                <Text style={styles.Lable}>
-                  Consumption of water in Kilo liter
-                </Text>
-                <TextInput
-                  style={styles.commonInputFiels}
-                  placeholder="Consumption of water in Kilo liter"
-                  autoCapitalize="none"
-                  keyboardType="email-address"
-                  returnKeyType="next"
-                  underlineColorAndroid="#f000"
-                  multiline={true}
-                  numberOfLines={4}
-                  blurOnSubmit={false}
-                  value={comments}
-                  onChangeText={text => {
-                    setComments(text);
-                  }}
+                <Input
+                  label="Consumption of water in Kilo liter"
+                  value={curingData.consumptionOfWater}
+                  onChange={(value: string) =>
+                    handleCuring('consumptionOfWater', value)
+                  }
                 />
               </View>
               <View style={styles.categoryColumn}>
@@ -6052,13 +6061,10 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="All lifting tools and tackles are being identified, checked and have valid resister"
-                  value={erectionOfTemporaryStructure.AllLiftingToolsAndTackles}
+                  value={erectionOfTemporaryStructure.allLiftingToolsAndTackles}
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handleErectionOfTemporaryStructure(
-                      'AllLiftingToolsAndTackles',
-                      value,
-                    )
+                    handleErectionOfTemporaryStructure('allLiftingToolsAndTackles', value)
                   }
                 />
               </View>

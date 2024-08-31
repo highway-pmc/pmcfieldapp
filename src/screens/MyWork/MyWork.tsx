@@ -339,6 +339,24 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     });
   };
 
+  // PRE-STRESSING
+  const [prestressingData, setPrestressingData]: any = useState([
+    {
+      cableNo: '',
+      stressingSequence: '',
+      A0: 0,
+      B0: 0,
+      A1: 0,
+      B1: 0,
+      A2: 0,
+      PA: 0,
+      B2: 0,
+      PB: 0,
+      SA0: 0,
+      SB0: 0
+    },
+  ]);
+
   // GROUTING
   type FormStateGrouting = {
     inletFree: string;
@@ -693,7 +711,31 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
               setGlueingData([]);
             }
             break;
-
+          case TASK_TYPES.PRE_STRESSING:
+            if (rfiData.metaData.prestressingData) {
+              setPrestressingData(rfiData.metaData.prestressingData);
+            } else {
+              const prestressingCablesDetails = selectedTask.taskDetailsData[0].details.prestressingCablesDetails;
+              const array = [];
+              for(let prop in prestressingCablesDetails) {
+                array.push({
+                  cableNo: (array.length + 1),
+                  stressingSequence: prestressingCablesDetails[prop].stressingSequence,
+                  A0: 0,
+                  B0: 0,
+                  A1: 0,
+                  B1: 0,
+                  A2: 0,
+                  PA: 0,
+                  B2: 0,
+                  PB: 0,
+                  SA0: 0,
+                  SB0: 0
+                })
+              }
+              setPrestressingData(array);
+            }
+            break;
           default:
             break;
         }

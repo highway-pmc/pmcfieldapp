@@ -471,7 +471,7 @@ export const TASK_TYPES = {
   GROUTING: 'grouting',
   LIFTING: 'Lifting',
   GLUEING:'gluing',
-  LIFTING: 'Lifting',
+  PRE_STRESSING: 'pre-stressing'
 };
 
 export const TEST_MATERIALS_TYPES = {

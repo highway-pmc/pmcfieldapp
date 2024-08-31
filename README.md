@@ -72,3 +72,10 @@ This is guide to set up PMC Field App Project.
    ```sh
    npm run android
    ```
+## emulator -list-avds
+## emulator -avd name-of-your-emulator
+## adb -s RZ8M931M24D reverse tcp:8081 tcp:8081   # run on device
+
+### npx react-native bundle --platform android --dev true --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
+### cd android && ./gradlew assembleRelease
+### https://stackoverflow.com/questions/35935060/how-can-i-generate-an-apk-that-can-run-without-server-with-react-native

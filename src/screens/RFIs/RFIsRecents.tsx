@@ -1021,6 +1021,71 @@ const RFIsRecents = (props: any) => {
             ))}
           </View>
         );
+      case TASK_TYPES.FABRICATION_OF_MEMBERS:
+      case TASK_TYPES.FABRICATION_OF_STEEL_GIRDERS:
+        const fabricationProperties = [
+          {
+            title:
+              'Is Steel inspection for surface condition (Twist, Straightness etc.)',
+            key: 'steelInspectionSurfaceCondition',
+          },
+          {
+            title: 'Is Section checked for dimension and checked as per GFC',
+            key: 'sectionCheckedForDimension',
+          },
+          {
+            title: 'Is Material specification and checked as per GFC',
+            key: 'materialSpecificationChecked',
+          },
+          {title: 'Is connection checked as per GFC', key: 'connectionChecked'},
+          {title: 'Are bolt holes clean and to size?', key: 'boltHolesClean'},
+          {title: 'Only approved welders used', key: 'approvedWeldersUsed'},
+          {title: 'Welds identified as per welder ID', key: 'weldsIdentified'},
+          {
+            title: 'Welds inspected for dimension, shape, location, etc.',
+            key: 'weldsInspected',
+          },
+          {title: 'Welds repaired as required.', key: 'weldsRepaired'},
+          {
+            title: 'Shape edge burns, weld spatter removed.',
+            key: 'shapeEdgeBurnsRemoved',
+          },
+          {
+            title: 'Oil grease removed prior to final clean.',
+            key: 'oilGreaseRemoved',
+          },
+          {
+            title: 'Steel cleaned and painted as per specification.',
+            key: 'steelCleanedAndPainted',
+          },
+          {
+            title: 'Final shop coat applied as per approve color.',
+            key: 'finalShopCoatApplied',
+          },
+          {
+            title: 'Each member marked for erection as per scope',
+            key: 'memberMarkedForErection',
+          },
+          {
+            title: 'Each member approved by inspector prior to shipment.',
+            key: 'memberApprovedByInspector',
+          },
+        ];
+
+        return (
+          <View>
+            {fabricationProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.fabricationData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
 
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_RIGHT:

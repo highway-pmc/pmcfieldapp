@@ -390,7 +390,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     equipmentFailure: 'Y',
     probingByStiffwire: 'Y',
   });
-  const [liftingData, setLiftingData] = useState({
+  const [liftingSegmentData, setLiftingSegmentData] = useState({
     barricadedArea: 'Y',
     temporaryLights: 'Y',
     flagManAvailable: 'Y',
@@ -485,6 +485,17 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     segmentPositioned: 'Y',
     lateralSupportEnsured: 'Y',
   });
+  const [removalFormworkData, setRemovalFormworkData] = useState({
+    concreteStrengthAchieved: 'Y',
+    minimumTimeAttained: 'Y',
+  });
+  const [temporaryPrestressingData, setTemporaryPrestressingData] = useState({
+    calibrationCertificateAvailable: 'Y',
+    stressingSequenceDrawingNumber: 0,
+    prestressingDate: '',
+    maxJackPressure: 0.0,
+    jackPressureApplied: 0.0,
+  });
 
   const handleInputChangeLifting = (field: string, value: string) => {
     setLiftingCombinedLRData(prevData => ({
@@ -492,19 +503,53 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       [field]: value,
     }));
   };
+const handleInputChangeTemporaryPrestressing = (key: string, value: any) => {
+  let newValue = value;
+
+  if (key === 'maxJackPressure' || key === 'jackPressureApplied') {
+    newValue = parseFloat(value);
+
+    if (isNaN(newValue) || newValue <= 0 || newValue > 1000) {
+      showSnackbar(
+        `${
+          key === 'maxJackPressure'
+            ? 'Maximum Jack Pressure'
+            : 'Jack Pressure Applied'
+        } must be greater than 0 and less than or equal to 1000 Kg/Cm²`,
+        'error',
+      );
+      return; // Exit without updating state
+    }
+  }
+
+  if (key === 'stressingSequenceDrawingNumber') {
+    newValue = parseInt(value);
+
+    if (isNaN(newValue) || newValue <= 0) {
+      showSnackbar(
+        'Stressing Sequence Drawing Number must be greater than 0',
+        'error',
+      );
+      return; // Exit without updating state
+    }
+  }
+
+  setTemporaryPrestressingData(prevData => ({
+    ...prevData,
+    [key]: newValue,
+  }));
+};
 
   const handleInputChangeGrouting = (
     name: keyof FormStateGrouting,
     value: string | number | [],
   ) => {
     let parsedValue: number;
-    // Only parse if the value is a string or number
     if (typeof value === 'string') {
       parsedValue = parseFloat(value);
     } else if (typeof value === 'number') {
       parsedValue = value;
     } else {
-      // If the value is not a string or number, return early without updating
       return;
     }
     const isValidInput = (val: number, maxLimit: number, decimals: number) => {
@@ -789,8 +834,34 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
               setGlueingData([]);
             }
             break;
+          case TASK_TYPES.REMOVAL_OF_FORMWORK:
+            if (rfiData.metaData.removalFormworkData) {
+              setRemovalFormworkData(rfiData.metaData.removalFormworkData);
+            } else {
+              setRemovalFormworkData({
+                concreteStrengthAchieved: 'Y',
+                minimumTimeAttained: 'Y',
+              });
+            }
+            break;
+          case TASK_TYPES.TEMPORARY_PRESTRESSING:
+            if (rfiData.metaData.temporaryPrestressingData) {
+              setTemporaryPrestressingData(
+                rfiData.metaData.temporaryPrestressingData,
+              );
+            } else {
+              setTemporaryPrestressingData({
+                calibrationCertificateAvailable: 'Y',
+                stressingSequenceDrawingNumber: 0,
+                prestressingDate: '',
+                maxJackPressure: 0,
+                jackPressureApplied: 0,
+              });
+            }
+
           case TASK_TYPES.LIFTING_LEFT:
           case TASK_TYPES.LIFTING_RIGHT:
+          case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
             if (rfiData.metaData.liftingCombinedLRData) {
               setLiftingCombinedLRData(rfiData.metaData.liftingCombinedLRData);
             } else {
@@ -1529,6 +1600,63 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
 
     return true;
   };
+  // Validation Function for Temporary Prestressing Data
+  const validateTemporaryPrestressingData = (data: any): boolean => {
+    const maxJackPressure = parseFloat(data.maxJackPressure);
+    const jackPressureApplied = parseFloat(data.jackPressureApplied);
+    const stressingSequenceDrawingNumber = parseInt(
+      data.stressingSequenceDrawingNumber,
+    );
+
+    if (
+      isNaN(maxJackPressure) ||
+      maxJackPressure <= 0 ||
+      maxJackPressure > 1000
+    ) {
+      showSnackbar(
+        'Maximum Jack Pressure must be greater than 0 and less than or equal to 1000 Kg/Cm²',
+        'error',
+      );
+      return false;
+    }
+    if (
+      isNaN(jackPressureApplied) ||
+      jackPressureApplied <= 0 ||
+      jackPressureApplied > 1000
+    ) {
+      showSnackbar(
+        'Jack Pressure Applied must be greater than 0 and less than or equal to 1000 Kg/Cm²',
+        'error',
+      );
+      return false;
+    }
+    if (!data.prestressingDate) {
+      showSnackbar('Prestressing Date must not be empty.', 'error');
+      return false;
+    }
+    if (
+      isNaN(stressingSequenceDrawingNumber) ||
+      stressingSequenceDrawingNumber <= 0
+    ) {
+      showSnackbar(
+        'Stressing Sequence Drawing Number must be a valid integer greater than 0',
+        'error',
+      );
+      return false;
+    }
+    if (!data.prestressingDate){
+      showSnackbar(
+        'Please Enter Date',
+        'error',
+      );
+      return false;
+    }
+      data.maxJackPressure = Number(data.maxJackPressure);
+    data.jackPressureApplied = Number(data.jackPressureApplied);
+    data.stressingSequenceDrawingNumber = Number(data.stressingSequenceDrawingNumber);
+    return true;
+  };
+
   const validateGlueingData = (glueingData: any): boolean => {
     for (const item of glueingData) {
       // Parsing values to float/integer
@@ -1981,13 +2109,30 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           taskName: selectedTask.name,
           groutingData: groutingData,
         };
+      case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_RIGHT:
-          checkList = {
-            taskName: selectedTask.name,
-            liftingCombinedLRData: liftingCombinedLRData,
-          };
+        checkList = {
+          taskName: selectedTask.name,
+          liftingCombinedLRData: liftingCombinedLRData,
+        };
         break;
+      case TASK_TYPES.REMOVAL_OF_FORMWORK:
+        checkList = {
+          taskName: selectedTask.name,
+          removalFormworkData: removalFormworkData,
+        };
+        break;
+      case TASK_TYPES.TEMPORARY_PRESTRESSING:
+        if (!validateTemporaryPrestressingData(temporaryPrestressingData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          temporaryPrestressingData: temporaryPrestressingData,
+        };
+        break;
+
       default:
         break;
     }
@@ -2305,6 +2450,13 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     newData[index][field] = value;
     setGlueingData(newData);
   };
+  const handleInputChangeFormwork = (field: string, value: string) => {
+    setRemovalFormworkData(prevState => ({
+      ...prevState,
+      [field]: value,
+    }));
+  };
+
   const handleTextInputChange = (
     index: number,
     field: string,
@@ -4185,9 +4337,136 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             </View>
           </View>
         );
-      //Code For Lifting
+      case TASK_TYPES.REMOVAL_OF_FORMWORK:
+        return (
+          <View style={styles.columnWiseData}>
+            <Text style={styles.headerText}>Removal of Formwork</Text>
+            <View style={styles.categoryColumn}>
+              <DropdownPicker
+                label="Whether concrete has achieved desired strength"
+                value={removalFormworkData.concreteStrengthAchieved}
+                items={YES_NO_NA_LIST}
+                onChange={(value: string) =>
+                  handleInputChangeFormwork('concreteStrengthAchieved', value)
+                }
+              />
+            </View>
+            <View style={styles.categoryColumn}>
+              <DropdownPicker
+                label="Whether minimum time has been attained"
+                value={removalFormworkData.minimumTimeAttained}
+                items={YES_NO_NA_LIST}
+                onChange={(value: string) =>
+                  handleInputChangeFormwork('minimumTimeAttained', value)
+                }
+              />
+            </View>
+            <View>
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
+                />
+              </View>
+            </View>
+          </View>
+        );
+      case TASK_TYPES.TEMPORARY_PRESTRESSING:
+        return (
+          <View>
+            <View style={{flexDirection: 'column'}}>
+              <DropdownPicker
+                label="Calibration Certificate Available"
+                value={
+                  temporaryPrestressingData.calibrationCertificateAvailable
+                }
+                items={YES_NO_LIST}
+                onChange={(value: string) => {
+                  handleInputChangeTemporaryPrestressing(
+                    'calibrationCertificateAvailable',
+                    value,
+                  );
+                }}
+                isRequired={true}
+              />
+            </View>
+
+            <Input
+              label="Stressing Sequence Drawing Number"
+              value={temporaryPrestressingData.stressingSequenceDrawingNumber.toString()}
+              onChange={(value: string) =>
+                handleInputChangeTemporaryPrestressing(
+                  'stressingSequenceDrawingNumber',
+                  Number(value),
+                )
+              }
+              isRequired={true}
+            />
+
+            <CalendarPicker
+              label="Prestressing Date"
+              value={temporaryPrestressingData.prestressingDate}
+              onChange={date =>
+                handleInputChangeTemporaryPrestressing('prestressingDate', date)
+              }
+            />
+
+            <Input
+              label="Max Jack Pressure (Kg/cm²)"
+              value={temporaryPrestressingData.maxJackPressure.toString()}
+              onChange={(value: string) =>
+                handleInputChangeTemporaryPrestressing(
+                  'maxJackPressure',
+                  Number(value),
+                )
+              }
+              isRequired={true}
+            />
+
+            <Input
+              label="Jack Pressure Applied (Kg/cm²)"
+              value={temporaryPrestressingData.jackPressureApplied.toString()}
+              onChange={(value: string) =>
+                handleInputChangeTemporaryPrestressing(
+                  'jackPressureApplied',
+                  Number(value),
+                )
+              }
+              isRequired={true}
+            />
+          </View>
+        );
+
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_RIGHT:
+      case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
         return (
           <ScrollView showsHorizontalScrollIndicator={false}>
             <View style={styles.columnWiseData}>

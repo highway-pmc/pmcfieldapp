@@ -472,6 +472,9 @@ export const TASK_TYPES = {
   GLUEING: 'gluing',
   LIFTING_LEFT: 'lifting-transportation-to-site-and-erection-of-left-segment',
   LIFTING_RIGHT: 'lifting-transportation-to-site-and-erection-of-right-segment',
+  LIFTING_TRANSPORT_ERECTION: 'lifting-transportation-and-erection-at-site',
+  REMOVAL_OF_FORMWORK: 'removal-of-formwork',
+  TEMPORARY_PRESTRESSING: 'temporary-prestressing',
 };
 
 export const TEST_MATERIALS_TYPES = {

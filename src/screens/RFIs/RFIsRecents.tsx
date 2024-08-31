@@ -408,60 +408,60 @@ const RFIsRecents = (props: any) => {
     </View>
   );
 
-const renderSectionHeaderGlueing = (rowData: any) => {
-  return (
-    <View>
+  const renderSectionHeaderGlueing = (rowData: any) => {
+    return (
       <View>
-        <Text>TM No.</Text>
+        <View>
+          <Text>TM No.</Text>
+        </View>
+        <View>
+          <Text>Joint Numbers</Text>
+        </View>
+        <View>
+          <Text>Ambient Temperature</Text>
+        </View>
+        <View>
+          <Text>Batch No Resin</Text>
+        </View>
+        <View>
+          <Text>Batch No Hardener</Text>
+        </View>
+        <View>
+          <Text>Mixing Start Time</Text>
+        </View>
+        <View>
+          <Text>Mixing Finish Time</Text>
+        </View>
+        <View>
+          <Text>Application Start Time</Text>
+        </View>
+        <View>
+          <Text>Application Finish Time</Text>
+        </View>
+        <View>
+          <Text>Segment Joining Time Closure</Text>
+        </View>
+        <View>
+          <Text>Segment Joining Time Temporary Finish</Text>
+        </View>
+        <View>
+          <Text>Segment Surface Area (SQM)</Text>
+        </View>
+        <View>
+          <Text>Epoxy Consumption Theoretical Resin (Kgs)</Text>
+        </View>
+        <View>
+          <Text>Epoxy Consumption Theoretical Hardener (Kgs)</Text>
+        </View>
+        <View>
+          <Text>Epoxy Consumption Actual Resin (Kgs)</Text>
+        </View>
+        <View>
+          <Text>Epoxy Consumption Actual Hardener (Kgs)</Text>
+        </View>
       </View>
-      <View>
-        <Text>Joint Numbers</Text>
-      </View>
-      <View>
-        <Text>Ambient Temperature</Text>
-      </View>
-      <View>
-        <Text>Batch No Resin</Text>
-      </View>
-      <View>
-        <Text>Batch No Hardener</Text>
-      </View>
-      <View>
-        <Text>Mixing Start Time</Text>
-      </View>
-      <View>
-        <Text>Mixing Finish Time</Text>
-      </View>
-      <View>
-        <Text>Application Start Time</Text>
-      </View>
-      <View>
-        <Text>Application Finish Time</Text>
-      </View>
-      <View>
-        <Text>Segment Joining Time Closure</Text>
-      </View>
-      <View>
-        <Text>Segment Joining Time Temporary Finish</Text>
-      </View>
-      <View>
-        <Text>Segment Surface Area (SQM)</Text>
-      </View>
-      <View>
-        <Text>Epoxy Consumption Theoretical Resin (Kgs)</Text>
-      </View>
-      <View>
-        <Text>Epoxy Consumption Theoretical Hardener (Kgs)</Text>
-      </View>
-      <View>
-        <Text>Epoxy Consumption Actual Resin (Kgs)</Text>
-      </View>
-      <View>
-        <Text>Epoxy Consumption Actual Hardener (Kgs)</Text>
-      </View>
-    </View>
-  );
-};
+    );
+  };
 
   const taskForm = (selectedRFI: any) => {
     switch (selectedRFI?.metaData?.taskName) {
@@ -962,8 +962,69 @@ const renderSectionHeaderGlueing = (rowData: any) => {
             </ScrollView>
           </View>
         );
+      case TASK_TYPES.REMOVAL_OF_FORMWORK:
+        const formworkProperties = [
+          {
+            title: 'Whether concrete has achieved desired strength',
+            key: 'concreteStrengthAchieved',
+          },
+          {
+            title: 'Whether minimum time has been attained',
+            key: 'minimumTimeAttained',
+          },
+        ];
+
+        return (
+          <View>
+            {formworkProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.removalFormworkData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.TEMPORARY_PRESTRESSING:
+        const temporaryPrestressingProperties = [
+          {
+            title: 'Calibration Certificate Available',
+            key: 'calibrationCertificateAvailable',
+          },
+          {
+            title: 'Stressing Sequence Drawing Number',
+            key: 'stressingSequenceDrawingNumber',
+          },
+          {title: 'Prestressing Date', key: 'prestressingDate'},
+          {title: 'Max Jack Pressure (Kg/cm²)', key: 'maxJackPressure'},
+          {title: 'Jack Pressure Applied (Kg/cm²)', key: 'jackPressureApplied'},
+        ];
+
+        return (
+          <View>
+            {temporaryPrestressingProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.temporaryPrestressingData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_RIGHT:
+      case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
         const liftingCombinedLRProperties = [
           {
             title: 'Area is hard barricaded with proper signages',

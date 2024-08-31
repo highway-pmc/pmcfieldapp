@@ -473,6 +473,7 @@ export const TASK_TYPES = {
   LIFTING_LEFT: 'lifting-transportation-to-site-and-erection-of-left-segment',
   LIFTING_RIGHT: 'lifting-transportation-to-site-and-erection-of-right-segment',
   LIFTING_TRANSPORT_ERECTION: 'lifting-transportation-and-erection-at-site',
+  LIFTING_YARD: 'lifting-of-segment-and-stacking-in-yard',
   REMOVAL_OF_FORMWORK: 'removal-of-formwork',
   TEMPORARY_PRESTRESSING: 'temporary-prestressing',
   FABRICATION_OF_STEEL_GIRDERS: 'fabrication-of-steel-girders',
@@ -482,7 +483,8 @@ export const TASK_TYPES = {
   ERECTION_OF_TEMPORARY_STRUCTURE: 'erection-of-temporary-structure',
   PAINTING_OF_STEEL_GIRDERS_DIAPHRAGMS: 'painting-of-steel-girders-diaphragms',
   PLACEMENT_OF_REINFORCEMENT_CAGE: 'placement-of-reinforcement-cage',
-  TRANSPORTATION_OF_STEEL_GIRDERS_DIAPHRAGMS_ERECTION_AT_SITE: 'transportation-of-steel-girders-diaphragms-erection-at-site'
+  TRANSPORTATION_OF_STEEL_GIRDERS_DIAPHRAGMS_ERECTION_AT_SITE:
+    'transportation-of-steel-girders-diaphragms-erection-at-site',
 };
 
 export const TEST_MATERIALS_TYPES = {

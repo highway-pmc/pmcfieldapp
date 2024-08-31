@@ -642,7 +642,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     }));
   }
 
-  const [transportationOfSteelGirdersDiaphragmse, setTransportationOfSteelGirdersDiaphragms] = useState({
+  const [transportationOfSteelGirdersDiaphragms, setTransportationOfSteelGirdersDiaphragms] = useState({
     safeAccessProvided: 'Y',
     workingPlatformOnBoarded: 'Y',
     guardRailsAttached: 'Y',
@@ -1071,7 +1071,174 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
               });
             }
             break;
+          case TASK_TYPES.PAINTING_OF_STEEL_GIRDERS_DIAPHRAGMS:
+            if (rfiData.metaData.paintingOfSteelGirdersDiaphragms) {
+              setPaintingOfSteelGirdersDiaphragms(
+                rfiData.metaData.paintingOfSteelGirdersDiaphragms,
+              );
+            } else {
+              setPaintingOfSteelGirdersDiaphragms({
+                hasAnyRiskAssessment: 'Y',
+                isWorkerWarnPersonalProtective: 'Y',
+                presentAtBlastingPot: 'Y',
+                identificationTag: 'Y',
+                surfaceCheckPriorBlasting: 'Y',
+                surfaceFreeFromContamination: 'Y',
+                suitableWeatherForBlasting: 'Y',
+                compressedAirQuality: 'Y',
+                protectedAreas: 'Y',
+                highPressureWaterUsage: 'Y',
+                abrasiveSpecification: 'Y',
+                batchCertificateAvailable: 'Y',
+                nozzlePressureChecked: 'Y',
+                inspectedForCleaning: 'Y',
+                visualCheckDamage: 'Y',
+                shiftedWithoutDamage: 'Y',
+                surroundingAreaCovered: 'Y',
+                paintingSystemSpecification: 'Y',
+                paintMixedAsPerInstructions: 'Y',
+                tipSizeSprayingProcedure: 'Y',
+                solventDilutionAccordance: 'Y',
+                areasStripedBeforePainting: 'Y',
+                materialsWithinShelfLife: 'Y',
+                weatherConditionChecked: 'Y',
+                paintAppliedPerSpecification: 'Y',
+                paintMixedWithinPotLife: 'Y',
+                evenCoatingThickness: 'Y',
+                wftCheckedForDft: 'Y',
+                overcoatingIntervalMaintained: 'Y',
+                properCoatingSystemApplied: 'Y',
+                paintSurfaceQuality: 'Y',
+                recordMaintained: 'Y',
+              });
+            }
+            break;
+
+          case TASK_TYPES.PLACEMENT_OF_REINFORCEMENT_CAGE:
+            if (rfiData.metaData.placementOfReinforcementCage) {
+              setPlacementOfReinforcementCage(
+                rfiData.metaData.placementOfReinforcementCage,
+              );
+            } else {
+              setPlacementOfReinforcementCage({
+                rebarDimensionChecked: 'Y',
+                shapingCheckedAsPerGFC: 'Y',
+                rebarsSecurelyBound: 'Y',
+                spliceLengthChecked: 'Y',
+                rebarWithinTolerance: 'Y',
+                couplerArrangementsWithinTolerance: 'Y',
+                barBendingScheduleChecked: 'Y',
+              });
+            }
+            break;
+
+          case TASK_TYPES.TRANSPORTATION_OF_STEEL_GIRDERS_DIAPHRAGMS_ERECTION_AT_SITE:
+            if (rfiData.metaData.transportationOfSteelGirdersDiaphragms) {
+              setTransportationOfSteelGirdersDiaphragms(
+                rfiData.metaData.transportationOfSteelGirdersDiaphragms,
+              );
+            } else {
+              setTransportationOfSteelGirdersDiaphragms({
+                safeAccessProvided: 'Y',
+                workingPlatformOnBoarded: 'Y',
+                guardRailsAttached: 'Y',
+                fallProtectionArrangement: 'Y',
+                toolsSecuredAgainstFall: 'Y',
+                riskAssessmentCarriedOut: 'Y',
+                craneOnFirmLevelBases: 'Y',
+                operatorsTrainedAndCompetent: 'Y',
+                craneTestedAndOperated: 'Y',
+                swingAlarmInstalled: 'Y',
+                craneTestCertificateCurrent: 'Y',
+                craneBoomTestCertificateCurrent: 'Y',
+                oilLeakageChecked: 'Y',
+                greasingChecked: 'Y',
+                outriggersFullyExtended: 'Y',
+                levelIndicatorsWithinLimit: 'Y',
+                basePlateUnderOutriggers: 'Y',
+                riggingAnglesChecked: 'Y',
+                examsAndTestsCertified: 'Y',
+                liftingToolsCheckedAndValid: 'Y',
+                personnelTrainedAndProtected: 'Y',
+                ppeProvided: 'Y',
+                sufficientIlluminationProvided: 'Y',
+                swlMarkedOnTools: 'Y',
+                equipmentProperlyEarthed: 'Y',
+                walkwaysFreeFromObstacles: 'Y',
+                safetyLatchAvailable: 'Y',
+                warningSignsAvailable: 'Y',
+                liftingArrangementsChecked: 'Y',
+                groundLevelingDone: 'Y',
+                structureSetOutCorrectly: 'Y',
+                welderQualifiedAndCertified: 'Y',
+              });
+            }
+            break;
+
+          case TASK_TYPES.CURING:
+            if (rfiData.metaData.curingData) {
+              setCuringData(rfiData.metaData.curingData);
+            } else {
+              setCuringData({
+                waterUsedForCuring: 'Y',
+                phValueOfWater: 'Y',
+                consumptionOfWater: 0,
+              });
+            }
+            break;
+
+          case TASK_TYPES.FIXING_OF_SHUTTER:
+            if (rfiData.metaData.fixingShutterData) {
+              setFixingShutterData(rfiData.metaData.fixingShutterData);
+            } else {
+              setFixingShutterData({
+                shutterMaterial: 'Y',
+                repairsAreOf: 'Y',
+                cleanlinessOfShutter: 'Y',
+                oilingOfShutter: 'Y',
+                shutterDesignOk: 'Y',
+                alignmentLevelsRigidity: 'Y',
+                checkPropsAreTheyOk: 'Y',
+                checkAcrowSapnAreTheyOk: 'Y',
+                checkBracesAreTheyOk: 'Y',
+                checkSealingJointsHoles: 'Y',
+              });
+            }
+            break;
+
+          case TASK_TYPES.ERECTION_OF_TEMPORARY_STRUCTURE:
+            if (rfiData.metaData.erectionOfTemporaryStructure) {
+              setErectionOfTemporaryStructure(
+                rfiData.metaData.erectionOfTemporaryStructure,
+              );
+            } else {
+              setErectionOfTemporaryStructure({
+                hasAnyRiskAssessment: 'Y',
+                craneHydraLevelBase: 'Y',
+                areAllOperationTrained: 'Y',
+                isCraneTested: 'Y',
+                doesTheCraneCertificate: 'Y',
+                allLiftingToolsAndTackles: 'Y',
+                protectionDevices: 'Y',
+                atteainedTheirStrength: 'Y',
+                workmenProvided: 'Y',
+                whetherSufficient: 'Y',
+                liftingToolsTackles: 'Y',
+                equipmentsGeneratorsProperlyEarthed: 'Y',
+                walkwayMaintainedFreeForm: 'Y',
+                safetyLatchLockingAvailable: 'Y',
+                properWarningSign: 'Y',
+                liftingArrangementsAreApproved: 'Y',
+                achieveTheirCompressiveStrength: 'Y',
+                groundLeveling: 'Y',
+                structureSetOutToTheLevels: 'Y',
+                aualificationAndSkilledCheckedAndCertified: 'Y',
+              });
+            }
+            break;
+
           case TASK_TYPES.LIFTING_LEFT:
+          case TASK_TYPES.LIFTING_YARD:
           case TASK_TYPES.LIFTING_RIGHT:
           case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
             if (rfiData.metaData.liftingCombinedLRData) {
@@ -1127,26 +1294,6 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                 safetyArrangementsPlaced: 'Y',
                 segmentPositioned: 'Y',
                 lateralSupportEnsured: 'Y',
-              });
-            }
-            break;
-          case TASK_TYPES.FIXING_OF_SHUTTER:
-            if (rfiData.metaData.fixingShutterData) {
-              setFixingShutterData(
-                rfiData.metaData.fixingShutterData,
-              );
-            } else {
-              setFixingShutterData({
-                shutterMaterial: 'Y',
-                repairsAreOf: 'Y',
-                cleanlinessOfShutter: 'Y',
-                oilingOfShutter: 'Y',
-                shutterDesignOk: 'Y',
-                alignmentLevelsRigidity: 'Y',
-                checkPropsAreTheyOk: 'Y',
-                checkAcrowSapnAreTheyOk: 'Y',
-                checkBracesAreTheyOk: 'Y',
-                checkSealingJointsHoles: 'Y',
               });
             }
             break;
@@ -1832,6 +1979,26 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
 
     return true;
   };
+  const validateCuringData = (curingData: any): boolean => {
+    const waterConsumptionInKL = parseFloat(curingData.waterConsumptionInKL);
+
+    // Check if water consumption is a valid number, greater than 0, and within the limit of 100,000
+    if (
+      isNaN(waterConsumptionInKL) ||
+      waterConsumptionInKL <= 0 ||
+      waterConsumptionInKL > 100000 ||
+      !/^\d+(\.\d{1,3})?$/.test(curingData.waterConsumptionInKL)
+    ) {
+      showSnackbar(
+        'Water consumption must be a positive number, up to 3 decimal places, and less than or equal to 100,000',
+        'error',
+      );
+      return false;
+    }
+    curingData.waterConsumptionInKL = Number(curingData.waterConsumptionInKL);
+    return true;
+  };
+
   // Validation Function for Temporary Prestressing Data
   const validateTemporaryPrestressingData = (data: any): boolean => {
     const maxJackPressure = parseFloat(data.maxJackPressure);
@@ -2340,8 +2507,57 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           taskName: selectedTask.name,
           groutingData: groutingData,
         };
+      case TASK_TYPES.PAINTING_OF_STEEL_GIRDERS_DIAPHRAGMS:
+        checkList = {
+          taskName: selectedTask.name,
+          paintingOfSteelGirdersDiaphragms: paintingOfSteelGirdersDiaphragms,
+        };
+        break;
+
+      case TASK_TYPES.PLACEMENT_OF_REINFORCEMENT_CAGE:
+        checkList = {
+          taskName: selectedTask.name,
+          placementOfReinforcementCage: placementOfReinforcementCage,
+        };
+        break;
+
+      case TASK_TYPES.TRANSPORTATION_OF_STEEL_GIRDERS_DIAPHRAGMS_ERECTION_AT_SITE:
+        checkList = {
+          taskName: selectedTask.name,
+          transportationOfSteelGirdersDiaphragms:
+            transportationOfSteelGirdersDiaphragms,
+        };
+        break;
+
+      case TASK_TYPES.CURING:
+        if(!validateCuringData(curingData)){
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          curingData: curingData,
+        };
+        break;
+
+      case TASK_TYPES.FIXING_OF_SHUTTER:
+        checkList = {
+          taskName: selectedTask.name,
+          fixingShutterData: fixingShutterData,
+        };
+        break;
+
+      case TASK_TYPES.ERECTION_OF_TEMPORARY_STRUCTURE:
+        checkList = {
+          taskName: selectedTask.name,
+          erectionOfTemporaryStructure: erectionOfTemporaryStructure,
+        };
+        break;
+
+      default:
+        break;
       case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
       case TASK_TYPES.LIFTING_LEFT:
+      case TASK_TYPES.LIFTING_YARD:
       case TASK_TYPES.LIFTING_RIGHT:
         checkList = {
           taskName: selectedTask.name,
@@ -4950,6 +5166,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         );
 
       case TASK_TYPES.LIFTING_LEFT:
+      case TASK_TYPES.LIFTING_YARD:
       case TASK_TYPES.LIFTING_RIGHT:
       case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
         return (
@@ -5846,23 +6063,40 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                   }
                 />
               </View>
-              <View style={styles.categoryColumn}>
-                <Text style={styles.Lable}>Recommendations</Text>
-                <TextInput
-                  style={styles.commonInputFiels}
-                  placeholder="Recommendations"
-                  autoCapitalize="none"
-                  keyboardType="email-address"
-                  returnKeyType="next"
-                  underlineColorAndroid="#f000"
-                  multiline={true}
-                  numberOfLines={4}
-                  blurOnSubmit={false}
-                  value={comments}
-                  onChangeText={text => {
-                    setComments(text);
-                  }}
-                />
+              <View>
+                <View style={{flexDirection: 'column'}}>
+                  <CalendarPicker
+                    label="Date"
+                    value={rfiDate}
+                    onChange={date => setRFIDate(date)}
+                  />
+                </View>
+                <View>
+                  <TimePicker
+                    label="Time"
+                    value={rfiTime}
+                    onChange={time => setRFITime(time)}
+                  />
+                </View>
+
+                <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                  <Text style={styles.Lable}>Recommendations</Text>
+                  <TextInput
+                    style={styles.commonInputFiels}
+                    placeholder="Recommendations"
+                    autoCapitalize="none"
+                    keyboardType="email-address"
+                    returnKeyType="next"
+                    underlineColorAndroid="#f000"
+                    multiline={true}
+                    numberOfLines={4}
+                    blurOnSubmit={false}
+                    value={comments}
+                    onChangeText={text => {
+                      setComments(text);
+                    }}
+                  />
+                </View>
               </View>
             </View>
           </ScrollView>
@@ -5971,23 +6205,40 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                   }
                 />
               </View>
-              <View style={styles.categoryColumn}>
-                <Text style={styles.Lable}>Recommendations</Text>
-                <TextInput
-                  style={styles.commonInputFiels}
-                  placeholder="Recommendations"
-                  autoCapitalize="none"
-                  keyboardType="email-address"
-                  returnKeyType="next"
-                  underlineColorAndroid="#f000"
-                  multiline={true}
-                  numberOfLines={4}
-                  blurOnSubmit={false}
-                  value={comments}
-                  onChangeText={text => {
-                    setComments(text);
-                  }}
-                />
+              <View>
+                <View style={{flexDirection: 'column'}}>
+                  <CalendarPicker
+                    label="Date"
+                    value={rfiDate}
+                    onChange={date => setRFIDate(date)}
+                  />
+                </View>
+                <View>
+                  <TimePicker
+                    label="Time"
+                    value={rfiTime}
+                    onChange={time => setRFITime(time)}
+                  />
+                </View>
+
+                <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                  <Text style={styles.Lable}>Recommendations</Text>
+                  <TextInput
+                    style={styles.commonInputFiels}
+                    placeholder="Recommendations"
+                    autoCapitalize="none"
+                    keyboardType="email-address"
+                    returnKeyType="next"
+                    underlineColorAndroid="#f000"
+                    multiline={true}
+                    numberOfLines={4}
+                    blurOnSubmit={false}
+                    value={comments}
+                    onChangeText={text => {
+                      setComments(text);
+                    }}
+                  />
+                </View>
               </View>
             </View>
           </ScrollView>
@@ -6064,7 +6315,10 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                   value={erectionOfTemporaryStructure.allLiftingToolsAndTackles}
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handleErectionOfTemporaryStructure('allLiftingToolsAndTackles', value)
+                    handleErectionOfTemporaryStructure(
+                      'allLiftingToolsAndTackles',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -6256,28 +6510,45 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                   }
                 />
               </View>
-              <View style={styles.categoryColumn}>
-                <Text style={styles.Lable}>Recommendations</Text>
-                <TextInput
-                  style={styles.commonInputFiels}
-                  placeholder="Recommendations"
-                  autoCapitalize="none"
-                  keyboardType="email-address"
-                  returnKeyType="next"
-                  underlineColorAndroid="#f000"
-                  multiline={true}
-                  numberOfLines={4}
-                  blurOnSubmit={false}
-                  value={comments}
-                  onChangeText={text => {
-                    setComments(text);
-                  }}
-                />
+              <View>
+                <View style={{flexDirection: 'column'}}>
+                  <CalendarPicker
+                    label="Date"
+                    value={rfiDate}
+                    onChange={date => setRFIDate(date)}
+                  />
+                </View>
+                <View>
+                  <TimePicker
+                    label="Time"
+                    value={rfiTime}
+                    onChange={time => setRFITime(time)}
+                  />
+                </View>
+
+                <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                  <Text style={styles.Lable}>Recommendations</Text>
+                  <TextInput
+                    style={styles.commonInputFiels}
+                    placeholder="Recommendations"
+                    autoCapitalize="none"
+                    keyboardType="email-address"
+                    returnKeyType="next"
+                    underlineColorAndroid="#f000"
+                    multiline={true}
+                    numberOfLines={4}
+                    blurOnSubmit={false}
+                    value={comments}
+                    onChangeText={text => {
+                      setComments(text);
+                    }}
+                  />
+                </View>
               </View>
             </View>
           </ScrollView>
         );
-      case TASK_TYPES.PAINTING_OF_STEEL_GIRDERS_DIAPHRAGMS: 
+      case TASK_TYPES.PAINTING_OF_STEEL_GIRDERS_DIAPHRAGMS:
         return (
           <ScrollView showsHorizontalScrollIndicator={false}>
             <View style={styles.columnWiseData}>
@@ -6287,17 +6558,25 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                   value={paintingOfSteelGirdersDiaphragms.hasAnyRiskAssessment}
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handlePaintingOfSteelGirdersDiaphragms('hasAnyRiskAssessment', value)
+                    handlePaintingOfSteelGirdersDiaphragms(
+                      'hasAnyRiskAssessment',
+                      value,
+                    )
                   }
                 />
               </View>
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Is the worker worn Personal Protective Equipment"
-                  value={paintingOfSteelGirdersDiaphragms.isWorkerWarnPersonalProtective}
+                  value={
+                    paintingOfSteelGirdersDiaphragms.isWorkerWarnPersonalProtective
+                  }
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handlePaintingOfSteelGirdersDiaphragms('isWorkerWarnPersonalProtective', value)
+                    handlePaintingOfSteelGirdersDiaphragms(
+                      'isWorkerWarnPersonalProtective',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -6307,7 +6586,10 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                   value={paintingOfSteelGirdersDiaphragms.presentAtBlastingPot}
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handlePaintingOfSteelGirdersDiaphragms('presentAtBlastingPot', value)
+                    handlePaintingOfSteelGirdersDiaphragms(
+                      'presentAtBlastingPot',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -6318,7 +6600,10 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                   value={paintingOfSteelGirdersDiaphragms.identificationTag}
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handlePaintingOfSteelGirdersDiaphragms('identificationTag', value)
+                    handlePaintingOfSteelGirdersDiaphragms(
+                      'identificationTag',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -6326,10 +6611,15 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Is the surface checking prior to blasting for mechanical damages (like spatters, slag’s etc.)"
-                  value={paintingOfSteelGirdersDiaphragms.surfaceCheckPriorBlasting}
+                  value={
+                    paintingOfSteelGirdersDiaphragms.surfaceCheckPriorBlasting
+                  }
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handlePaintingOfSteelGirdersDiaphragms('surfaceCheckPriorBlasting', value)
+                    handlePaintingOfSteelGirdersDiaphragms(
+                      'surfaceCheckPriorBlasting',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -6337,10 +6627,15 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Is the surface free from oil, grease and other contamination"
-                  value={paintingOfSteelGirdersDiaphragms.surfaceFreeFromContamination}
+                  value={
+                    paintingOfSteelGirdersDiaphragms.surfaceFreeFromContamination
+                  }
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handlePaintingOfSteelGirdersDiaphragms('surfaceFreeFromContamination', value)
+                    handlePaintingOfSteelGirdersDiaphragms(
+                      'surfaceFreeFromContamination',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -6348,10 +6643,15 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Is the weather and temperature suitable for blasting"
-                  value={paintingOfSteelGirdersDiaphragms.suitableWeatherForBlasting}
+                  value={
+                    paintingOfSteelGirdersDiaphragms.suitableWeatherForBlasting
+                  }
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handlePaintingOfSteelGirdersDiaphragms('suitableWeatherForBlasting', value)
+                    handlePaintingOfSteelGirdersDiaphragms(
+                      'suitableWeatherForBlasting',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -6362,7 +6662,10 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                   value={paintingOfSteelGirdersDiaphragms.compressedAirQuality}
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handlePaintingOfSteelGirdersDiaphragms('compressedAirQuality', value)
+                    handlePaintingOfSteelGirdersDiaphragms(
+                      'compressedAirQuality',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -6373,7 +6676,10 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                   value={paintingOfSteelGirdersDiaphragms.protectedAreas}
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handlePaintingOfSteelGirdersDiaphragms('protectedAreas', value)
+                    handlePaintingOfSteelGirdersDiaphragms(
+                      'protectedAreas',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -6381,10 +6687,15 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Is there high-pressure water used to remove salt and other contaminations"
-                  value={paintingOfSteelGirdersDiaphragms.highPressureWaterUsage}
+                  value={
+                    paintingOfSteelGirdersDiaphragms.highPressureWaterUsage
+                  }
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handlePaintingOfSteelGirdersDiaphragms('highPressureWaterUsage', value)
+                    handlePaintingOfSteelGirdersDiaphragms(
+                      'highPressureWaterUsage',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -6395,7 +6706,10 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                   value={paintingOfSteelGirdersDiaphragms.abrasiveSpecification}
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handlePaintingOfSteelGirdersDiaphragms('abrasiveSpecification', value)
+                    handlePaintingOfSteelGirdersDiaphragms(
+                      'abrasiveSpecification',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -6403,10 +6717,15 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Is the copy of batch certificate of abrasive used available at the factory"
-                  value={paintingOfSteelGirdersDiaphragms.batchCertificateAvailable}
+                  value={
+                    paintingOfSteelGirdersDiaphragms.batchCertificateAvailable
+                  }
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handlePaintingOfSteelGirdersDiaphragms('batchCertificateAvailable', value)
+                    handlePaintingOfSteelGirdersDiaphragms(
+                      'batchCertificateAvailable',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -6417,7 +6736,10 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                   value={paintingOfSteelGirdersDiaphragms.nozzlePressureChecked}
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handlePaintingOfSteelGirdersDiaphragms('nozzlePressureChecked', value)
+                    handlePaintingOfSteelGirdersDiaphragms(
+                      'nozzlePressureChecked',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -6428,7 +6750,10 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                   value={paintingOfSteelGirdersDiaphragms.inspectedForCleaning}
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handlePaintingOfSteelGirdersDiaphragms('inspectedForCleaning', value)
+                    handlePaintingOfSteelGirdersDiaphragms(
+                      'inspectedForCleaning',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -6439,7 +6764,10 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                   value={paintingOfSteelGirdersDiaphragms.visualCheckDamage}
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handlePaintingOfSteelGirdersDiaphragms('visualCheckDamage', value)
+                    handlePaintingOfSteelGirdersDiaphragms(
+                      'visualCheckDamage',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -6450,7 +6778,10 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                   value={paintingOfSteelGirdersDiaphragms.shiftedWithoutDamage}
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handlePaintingOfSteelGirdersDiaphragms('shiftedWithoutDamage', value)
+                    handlePaintingOfSteelGirdersDiaphragms(
+                      'shiftedWithoutDamage',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -6458,10 +6789,15 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Are the surrounding areas covered to prevent overspray"
-                  value={paintingOfSteelGirdersDiaphragms.surroundingAreaCovered}
+                  value={
+                    paintingOfSteelGirdersDiaphragms.surroundingAreaCovered
+                  }
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handlePaintingOfSteelGirdersDiaphragms('surroundingAreaCovered', value)
+                    handlePaintingOfSteelGirdersDiaphragms(
+                      'surroundingAreaCovered',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -6469,10 +6805,15 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Is the painting system as per specification"
-                  value={paintingOfSteelGirdersDiaphragms.paintingSystemSpecification}
+                  value={
+                    paintingOfSteelGirdersDiaphragms.paintingSystemSpecification
+                  }
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handlePaintingOfSteelGirdersDiaphragms('paintingSystemSpecification', value)
+                    handlePaintingOfSteelGirdersDiaphragms(
+                      'paintingSystemSpecification',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -6480,10 +6821,15 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Is the Paint mixed and prepared in accordance with the approved manufacturer instructions"
-                  value={paintingOfSteelGirdersDiaphragms.paintMixedAsPerInstructions}
+                  value={
+                    paintingOfSteelGirdersDiaphragms.paintMixedAsPerInstructions
+                  }
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handlePaintingOfSteelGirdersDiaphragms('paintMixedAsPerInstructions', value)
+                    handlePaintingOfSteelGirdersDiaphragms(
+                      'paintMixedAsPerInstructions',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -6491,10 +6837,15 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Is the TIP size and spraying procedure adhered"
-                  value={paintingOfSteelGirdersDiaphragms.tipSizeSprayingProcedure}
+                  value={
+                    paintingOfSteelGirdersDiaphragms.tipSizeSprayingProcedure
+                  }
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handlePaintingOfSteelGirdersDiaphragms('tipSizeSprayingProcedure', value)
+                    handlePaintingOfSteelGirdersDiaphragms(
+                      'tipSizeSprayingProcedure',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -6502,10 +6853,15 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Is the Solvent dilution accordance with the manufacturer instruction and recommendation"
-                  value={paintingOfSteelGirdersDiaphragms.solventDilutionAccordance}
+                  value={
+                    paintingOfSteelGirdersDiaphragms.solventDilutionAccordance
+                  }
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handlePaintingOfSteelGirdersDiaphragms('solventDilutionAccordance', value)
+                    handlePaintingOfSteelGirdersDiaphragms(
+                      'solventDilutionAccordance',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -6513,10 +6869,15 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Is the required areas striped before applying paints"
-                  value={paintingOfSteelGirdersDiaphragms.areasStripedBeforePainting}
+                  value={
+                    paintingOfSteelGirdersDiaphragms.areasStripedBeforePainting
+                  }
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handlePaintingOfSteelGirdersDiaphragms('areasStripedBeforePainting', value)
+                    handlePaintingOfSteelGirdersDiaphragms(
+                      'areasStripedBeforePainting',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -6524,10 +6885,15 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Are the paints, curing agent, Thinner used of within the shelf life and from the same manufacturer"
-                  value={paintingOfSteelGirdersDiaphragms.materialsWithinShelfLife}
+                  value={
+                    paintingOfSteelGirdersDiaphragms.materialsWithinShelfLife
+                  }
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handlePaintingOfSteelGirdersDiaphragms('materialsWithinShelfLife', value)
+                    handlePaintingOfSteelGirdersDiaphragms(
+                      'materialsWithinShelfLife',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -6535,10 +6901,15 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Is the weather condition checked prior to painting"
-                  value={paintingOfSteelGirdersDiaphragms.weatherConditionChecked}
+                  value={
+                    paintingOfSteelGirdersDiaphragms.weatherConditionChecked
+                  }
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handlePaintingOfSteelGirdersDiaphragms('weatherConditionChecked', value)
+                    handlePaintingOfSteelGirdersDiaphragms(
+                      'weatherConditionChecked',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -6546,20 +6917,30 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Is the paint applied as per specification and related paint system"
-                  value={paintingOfSteelGirdersDiaphragms.paintAppliedPerSpecification}
+                  value={
+                    paintingOfSteelGirdersDiaphragms.paintAppliedPerSpecification
+                  }
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handlePaintingOfSteelGirdersDiaphragms('paintAppliedPerSpecification', value)
+                    handlePaintingOfSteelGirdersDiaphragms(
+                      'paintAppliedPerSpecification',
+                      value,
+                    )
                   }
                 />
               </View>
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Is the paint mixed, agitated and applied within the specified pot life"
-                  value={paintingOfSteelGirdersDiaphragms.paintMixedWithinPotLife}
+                  value={
+                    paintingOfSteelGirdersDiaphragms.paintMixedWithinPotLife
+                  }
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handlePaintingOfSteelGirdersDiaphragms('paintMixedWithinPotLife', value)
+                    handlePaintingOfSteelGirdersDiaphragms(
+                      'paintMixedWithinPotLife',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -6570,7 +6951,10 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                   value={paintingOfSteelGirdersDiaphragms.evenCoatingThickness}
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handlePaintingOfSteelGirdersDiaphragms('evenCoatingThickness', value)
+                    handlePaintingOfSteelGirdersDiaphragms(
+                      'evenCoatingThickness',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -6581,7 +6965,10 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                   value={paintingOfSteelGirdersDiaphragms.wftCheckedForDft}
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handlePaintingOfSteelGirdersDiaphragms('wftCheckedForDft', value)
+                    handlePaintingOfSteelGirdersDiaphragms(
+                      'wftCheckedForDft',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -6589,10 +6976,15 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Is the overcoating interval maintained as per requirement"
-                  value={paintingOfSteelGirdersDiaphragms.overcoatingIntervalMaintained}
+                  value={
+                    paintingOfSteelGirdersDiaphragms.overcoatingIntervalMaintained
+                  }
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handlePaintingOfSteelGirdersDiaphragms('overcoatingIntervalMaintained', value)
+                    handlePaintingOfSteelGirdersDiaphragms(
+                      'overcoatingIntervalMaintained',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -6600,10 +6992,15 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Is the proper coating system applied during intervals"
-                  value={paintingOfSteelGirdersDiaphragms.properCoatingSystemApplied}
+                  value={
+                    paintingOfSteelGirdersDiaphragms.properCoatingSystemApplied
+                  }
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handlePaintingOfSteelGirdersDiaphragms('properCoatingSystemApplied', value)
+                    handlePaintingOfSteelGirdersDiaphragms(
+                      'properCoatingSystemApplied',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -6614,7 +7011,10 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                   value={paintingOfSteelGirdersDiaphragms.paintSurfaceQuality}
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handlePaintingOfSteelGirdersDiaphragms('paintSurfaceQuality', value)
+                    handlePaintingOfSteelGirdersDiaphragms(
+                      'paintSurfaceQuality',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -6625,28 +7025,48 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                   value={paintingOfSteelGirdersDiaphragms.recordMaintained}
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handlePaintingOfSteelGirdersDiaphragms('recordMaintained', value)
+                    handlePaintingOfSteelGirdersDiaphragms(
+                      'recordMaintained',
+                      value,
+                    )
                   }
                 />
               </View>
-              
-              <View style={styles.categoryColumn}>
-                <Text style={styles.Lable}>Recommendations</Text>
-                <TextInput
-                  style={styles.commonInputFiels}
-                  placeholder="Recommendations"
-                  autoCapitalize="none"
-                  keyboardType="email-address"
-                  returnKeyType="next"
-                  underlineColorAndroid="#f000"
-                  multiline={true}
-                  numberOfLines={4}
-                  blurOnSubmit={false}
-                  value={comments}
-                  onChangeText={text => {
-                    setComments(text);
-                  }}
-                />
+
+              <View>
+                <View style={{flexDirection: 'column'}}>
+                  <CalendarPicker
+                    label="Date"
+                    value={rfiDate}
+                    onChange={date => setRFIDate(date)}
+                  />
+                </View>
+                <View>
+                  <TimePicker
+                    label="Time"
+                    value={rfiTime}
+                    onChange={time => setRFITime(time)}
+                  />
+                </View>
+
+                <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                  <Text style={styles.Lable}>Recommendations</Text>
+                  <TextInput
+                    style={styles.commonInputFiels}
+                    placeholder="Recommendations"
+                    autoCapitalize="none"
+                    keyboardType="email-address"
+                    returnKeyType="next"
+                    underlineColorAndroid="#f000"
+                    multiline={true}
+                    numberOfLines={4}
+                    blurOnSubmit={false}
+                    value={comments}
+                    onChangeText={text => {
+                      setComments(text);
+                    }}
+                  />
+                </View>
               </View>
             </View>
           </ScrollView>
@@ -6660,7 +7080,12 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                   label="Rebar and dimension (dia, len, and shape) checked as per GFC"
                   value={placementOfReinforcementCage.rebarDimensionChecked}
                   items={YES_NO_NA_LIST}
-                  onChange={(value: string) => handlePlacementOfReinforcementCage('rebarDimensionChecked', value)}
+                  onChange={(value: string) =>
+                    handlePlacementOfReinforcementCage(
+                      'rebarDimensionChecked',
+                      value,
+                    )
+                  }
                 />
               </View>
               <View style={styles.categoryColumn}>
@@ -6668,7 +7093,12 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                   label="Shaping, No and Length of Bars checked as per GFC"
                   value={placementOfReinforcementCage.shapingCheckedAsPerGFC}
                   items={YES_NO_NA_LIST}
-                  onChange={(value: string) => handlePlacementOfReinforcementCage('shapingCheckedAsPerGFC', value)}
+                  onChange={(value: string) =>
+                    handlePlacementOfReinforcementCage(
+                      'shapingCheckedAsPerGFC',
+                      value,
+                    )
+                  }
                 />
               </View>
               <View style={styles.categoryColumn}>
@@ -6676,7 +7106,12 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                   label="Rebars securely tightened/bound by tie bars"
                   value={placementOfReinforcementCage.rebarsSecurelyBound}
                   items={YES_NO_NA_LIST}
-                  onChange={(value: string) => handlePlacementOfReinforcementCage('rebarsSecurelyBound', value)}
+                  onChange={(value: string) =>
+                    handlePlacementOfReinforcementCage(
+                      'rebarsSecurelyBound',
+                      value,
+                    )
+                  }
                 />
               </View>
               <View style={styles.categoryColumn}>
@@ -6684,7 +7119,12 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                   label="Splice length and location checked as per GFC"
                   value={placementOfReinforcementCage.spliceLengthChecked}
                   items={YES_NO_NA_LIST}
-                  onChange={(value: string) => handlePlacementOfReinforcementCage('spliceLengthChecked', value)}
+                  onChange={(value: string) =>
+                    handlePlacementOfReinforcementCage(
+                      'spliceLengthChecked',
+                      value,
+                    )
+                  }
                 />
               </View>
               <View style={styles.categoryColumn}>
@@ -6692,15 +7132,27 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                   label="Rebar within tolerance limit"
                   value={placementOfReinforcementCage.rebarWithinTolerance}
                   items={YES_NO_NA_LIST}
-                  onChange={(value: string) => handlePlacementOfReinforcementCage('rebarWithinTolerance', value)}
+                  onChange={(value: string) =>
+                    handlePlacementOfReinforcementCage(
+                      'rebarWithinTolerance',
+                      value,
+                    )
+                  }
                 />
               </View>
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Coupler arrangements within tolerance"
-                  value={placementOfReinforcementCage.couplerArrangementsWithinTolerance}
+                  value={
+                    placementOfReinforcementCage.couplerArrangementsWithinTolerance
+                  }
                   items={YES_NO_NA_LIST}
-                  onChange={(value: string) => handlePlacementOfReinforcementCage('couplerArrangementsWithinTolerance', value)}
+                  onChange={(value: string) =>
+                    handlePlacementOfReinforcementCage(
+                      'couplerArrangementsWithinTolerance',
+                      value,
+                    )
+                  }
                 />
               </View>
               <View style={styles.categoryColumn}>
@@ -6708,270 +7160,565 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                   label="Bar Bending schedule checked"
                   value={placementOfReinforcementCage.barBendingScheduleChecked}
                   items={YES_NO_NA_LIST}
-                  onChange={(value: string) => handlePlacementOfReinforcementCage('barBendingScheduleChecked', value)}
+                  onChange={(value: string) =>
+                    handlePlacementOfReinforcementCage(
+                      'barBendingScheduleChecked',
+                      value,
+                    )
+                  }
+                />
+              </View>
+            </View>
+            <View>
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
                 />
               </View>
             </View>
           </ScrollView>
         );
-    case TASK_TYPES.TRANSPORTATION_OF_STEEL_GIRDERS_DIAPHRAGMS_ERECTION_AT_SITE:
+      case TASK_TYPES.TRANSPORTATION_OF_STEEL_GIRDERS_DIAPHRAGMS_ERECTION_AT_SITE:
         return (
           <ScrollView showsHorizontalScrollIndicator={false}>
             <View style={styles.columnWiseData}>
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Whether safe access to workplace is provided?"
-                  value={transportationOfSteelGirdersDiaphragmse.safeAccessProvided}
+                  value={
+                    transportationOfSteelGirdersDiaphragms.safeAccessProvided
+                  }
                   items={YES_NO_NA_LIST}
-                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('safeAccessProvided', value)}
+                  onChange={(value: string) =>
+                    handleTransportationOfSteelGirdersDiaphragms(
+                      'safeAccessProvided',
+                      value,
+                    )
+                  }
                 />
               </View>
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Is the working platform fully onboarded on the deck?"
-                  value={transportationOfSteelGirdersDiaphragmse.workingPlatformOnBoarded}
+                  value={
+                    transportationOfSteelGirdersDiaphragms.workingPlatformOnBoarded
+                  }
                   items={YES_NO_NA_LIST}
-                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('workingPlatformOnBoarded', value)}
+                  onChange={(value: string) =>
+                    handleTransportationOfSteelGirdersDiaphragms(
+                      'workingPlatformOnBoarded',
+                      value,
+                    )
+                  }
                 />
               </View>
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="All guard rails are firmly attached with mould (at 1m with mid rails and toe board)?"
-                  value={transportationOfSteelGirdersDiaphragmse.guardRailsAttached}
+                  value={
+                    transportationOfSteelGirdersDiaphragms.guardRailsAttached
+                  }
                   items={YES_NO_NA_LIST}
-                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('guardRailsAttached', value)}
+                  onChange={(value: string) =>
+                    handleTransportationOfSteelGirdersDiaphragms(
+                      'guardRailsAttached',
+                      value,
+                    )
+                  }
                 />
               </View>
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Adequate fall protection arrangement made (static line, double lanyard harness, fall arrestor)?"
-                  value={transportationOfSteelGirdersDiaphragmse.fallProtectionArrangement}
+                  value={
+                    transportationOfSteelGirdersDiaphragms.fallProtectionArrangement
+                  }
                   items={YES_NO_NA_LIST}
-                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('fallProtectionArrangement', value)}
+                  onChange={(value: string) =>
+                    handleTransportationOfSteelGirdersDiaphragms(
+                      'fallProtectionArrangement',
+                      value,
+                    )
+                  }
                 />
               </View>
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Whether hand tools and handling material secure against accidental fall?"
-                  value={transportationOfSteelGirdersDiaphragmse.toolsSecuredAgainstFall}
+                  value={
+                    transportationOfSteelGirdersDiaphragms.toolsSecuredAgainstFall
+                  }
                   items={YES_NO_NA_LIST}
-                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('toolsSecuredAgainstFall', value)}
+                  onChange={(value: string) =>
+                    handleTransportationOfSteelGirdersDiaphragms(
+                      'toolsSecuredAgainstFall',
+                      value,
+                    )
+                  }
                 />
               </View>
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Has any risk assessment been carried out?"
-                  value={transportationOfSteelGirdersDiaphragmse.riskAssessmentCarriedOut}
+                  value={
+                    transportationOfSteelGirdersDiaphragms.riskAssessmentCarriedOut
+                  }
                   items={YES_NO_NA_LIST}
-                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('riskAssessmentCarriedOut', value)}
+                  onChange={(value: string) =>
+                    handleTransportationOfSteelGirdersDiaphragms(
+                      'riskAssessmentCarriedOut',
+                      value,
+                    )
+                  }
                 />
               </View>
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Is the crane on firm level bases?"
-                  value={transportationOfSteelGirdersDiaphragmse.craneOnFirmLevelBases}
+                  value={
+                    transportationOfSteelGirdersDiaphragms.craneOnFirmLevelBases
+                  }
                   items={YES_NO_NA_LIST}
-                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('craneOnFirmLevelBases', value)}
+                  onChange={(value: string) =>
+                    handleTransportationOfSteelGirdersDiaphragms(
+                      'craneOnFirmLevelBases',
+                      value,
+                    )
+                  }
                 />
               </View>
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Are all operators trained and competent?"
-                  value={transportationOfSteelGirdersDiaphragmse.operatorsTrainedAndCompetent}
+                  value={
+                    transportationOfSteelGirdersDiaphragms.operatorsTrainedAndCompetent
+                  }
                   items={YES_NO_NA_LIST}
-                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('operatorsTrainedAndCompetent', value)}
+                  onChange={(value: string) =>
+                    handleTransportationOfSteelGirdersDiaphragms(
+                      'operatorsTrainedAndCompetent',
+                      value,
+                    )
+                  }
                 />
               </View>
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Is the crane tested and operated?"
-                  value={transportationOfSteelGirdersDiaphragmse.craneTestedAndOperated}
+                  value={
+                    transportationOfSteelGirdersDiaphragms.craneTestedAndOperated
+                  }
                   items={YES_NO_NA_LIST}
-                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('craneTestedAndOperated', value)}
+                  onChange={(value: string) =>
+                    handleTransportationOfSteelGirdersDiaphragms(
+                      'craneTestedAndOperated',
+                      value,
+                    )
+                  }
                 />
               </View>
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Is there a swing alarm installed and functioning?"
-                  value={transportationOfSteelGirdersDiaphragmse.swingAlarmInstalled}
+                  value={
+                    transportationOfSteelGirdersDiaphragms.swingAlarmInstalled
+                  }
                   items={YES_NO_NA_LIST}
-                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('swingAlarmInstalled', value)}
+                  onChange={(value: string) =>
+                    handleTransportationOfSteelGirdersDiaphragms(
+                      'swingAlarmInstalled',
+                      value,
+                    )
+                  }
                 />
               </View>
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Does the crane have a current test certificate?"
-                  value={transportationOfSteelGirdersDiaphragmse.craneTestCertificateCurrent}
+                  value={
+                    transportationOfSteelGirdersDiaphragms.craneTestCertificateCurrent
+                  }
                   items={YES_NO_NA_LIST}
-                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('craneTestCertificateCurrent', value)}
+                  onChange={(value: string) =>
+                    handleTransportationOfSteelGirdersDiaphragms(
+                      'craneTestCertificateCurrent',
+                      value,
+                    )
+                  }
                 />
               </View>
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Does the boom of the crane have a current test certificate?"
-                  value={transportationOfSteelGirdersDiaphragmse.craneBoomTestCertificateCurrent}
+                  value={
+                    transportationOfSteelGirdersDiaphragms.craneBoomTestCertificateCurrent
+                  }
                   items={YES_NO_NA_LIST}
-                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('craneBoomTestCertificateCurrent', value)}
+                  onChange={(value: string) =>
+                    handleTransportationOfSteelGirdersDiaphragms(
+                      'craneBoomTestCertificateCurrent',
+                      value,
+                    )
+                  }
                 />
               </View>
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Oil (leakage)"
-                  value={transportationOfSteelGirdersDiaphragmse.oilLeakageChecked}
+                  value={
+                    transportationOfSteelGirdersDiaphragms.oilLeakageChecked
+                  }
                   items={YES_NO_NA_LIST}
-                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('oilLeakageChecked', value)}
+                  onChange={(value: string) =>
+                    handleTransportationOfSteelGirdersDiaphragms(
+                      'oilLeakageChecked',
+                      value,
+                    )
+                  }
                 />
               </View>
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Greasing"
-                  value={transportationOfSteelGirdersDiaphragmse.greasingChecked}
+                  value={transportationOfSteelGirdersDiaphragms.greasingChecked}
                   items={YES_NO_NA_LIST}
-                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('greasingChecked', value)}
+                  onChange={(value: string) =>
+                    handleTransportationOfSteelGirdersDiaphragms(
+                      'greasingChecked',
+                      value,
+                    )
+                  }
                 />
               </View>
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Outriggers (Fully extended)"
-                  value={transportationOfSteelGirdersDiaphragmse.outriggersFullyExtended}
+                  value={
+                    transportationOfSteelGirdersDiaphragms.outriggersFullyExtended
+                  }
                   items={YES_NO_NA_LIST}
-                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('outriggersFullyExtended', value)}
+                  onChange={(value: string) =>
+                    handleTransportationOfSteelGirdersDiaphragms(
+                      'outriggersFullyExtended',
+                      value,
+                    )
+                  }
                 />
               </View>
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Level indicators (2 degree to 3 degree)"
-                  value={transportationOfSteelGirdersDiaphragmse.levelIndicatorsWithinLimit}
+                  value={
+                    transportationOfSteelGirdersDiaphragms.levelIndicatorsWithinLimit
+                  }
                   items={YES_NO_NA_LIST}
-                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('levelIndicatorsWithinLimit', value)}
+                  onChange={(value: string) =>
+                    handleTransportationOfSteelGirdersDiaphragms(
+                      'levelIndicatorsWithinLimit',
+                      value,
+                    )
+                  }
                 />
               </View>
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Base plate under the outriggers"
-                  value={transportationOfSteelGirdersDiaphragmse.basePlateUnderOutriggers}
+                  value={
+                    transportationOfSteelGirdersDiaphragms.basePlateUnderOutriggers
+                  }
                   items={YES_NO_NA_LIST}
-                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('basePlateUnderOutriggers', value)}
+                  onChange={(value: string) =>
+                    handleTransportationOfSteelGirdersDiaphragms(
+                      'basePlateUnderOutriggers',
+                      value,
+                    )
+                  }
                 />
               </View>
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Rigging (2 Nos) angles"
-                  value={transportationOfSteelGirdersDiaphragmse.riggingAnglesChecked}
+                  value={
+                    transportationOfSteelGirdersDiaphragms.riggingAnglesChecked
+                  }
                   items={YES_NO_NA_LIST}
-                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('riggingAnglesChecked', value)}
+                  onChange={(value: string) =>
+                    handleTransportationOfSteelGirdersDiaphragms(
+                      'riggingAnglesChecked',
+                      value,
+                    )
+                  }
                 />
               </View>
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Are all the examination and tests carried out and certified by a competent person?"
-                  value={transportationOfSteelGirdersDiaphragmse.examsAndTestsCertified}
+                  value={
+                    transportationOfSteelGirdersDiaphragms.examsAndTestsCertified
+                  }
                   items={YES_NO_NA_LIST}
-                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('examsAndTestsCertified', value)}
+                  onChange={(value: string) =>
+                    handleTransportationOfSteelGirdersDiaphragms(
+                      'examsAndTestsCertified',
+                      value,
+                    )
+                  }
                 />
               </View>
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="All lifting tools and tackles are being identified, checked, and have a valid register?"
-                  value={transportationOfSteelGirdersDiaphragmse.liftingToolsCheckedAndValid}
+                  value={
+                    transportationOfSteelGirdersDiaphragms.liftingToolsCheckedAndValid
+                  }
                   items={YES_NO_NA_LIST}
-                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('liftingToolsCheckedAndValid', value)}
+                  onChange={(value: string) =>
+                    handleTransportationOfSteelGirdersDiaphragms(
+                      'liftingToolsCheckedAndValid',
+                      value,
+                    )
+                  }
                 />
               </View>
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Are personnel working at height trained and equipped with all fall protection devices?"
-                  value={transportationOfSteelGirdersDiaphragmse.personnelTrainedAndProtected}
+                  value={
+                    transportationOfSteelGirdersDiaphragms.personnelTrainedAndProtected
+                  }
                   items={YES_NO_NA_LIST}
-                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('personnelTrainedAndProtected', value)}
+                  onChange={(value: string) =>
+                    handleTransportationOfSteelGirdersDiaphragms(
+                      'personnelTrainedAndProtected',
+                      value,
+                    )
+                  }
                 />
               </View>
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Are workmen provided with all required PPEs?"
-                  value={transportationOfSteelGirdersDiaphragmse.ppeProvided}
+                  value={transportationOfSteelGirdersDiaphragms.ppeProvided}
                   items={YES_NO_NA_LIST}
-                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('ppeProvided', value)}
+                  onChange={(value: string) =>
+                    handleTransportationOfSteelGirdersDiaphragms(
+                      'ppeProvided',
+                      value,
+                    )
+                  }
                 />
               </View>
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Whether sufficient illumination is provided around the working area?"
-                  value={transportationOfSteelGirdersDiaphragmse.sufficientIlluminationProvided}
+                  value={
+                    transportationOfSteelGirdersDiaphragms.sufficientIlluminationProvided
+                  }
                   items={YES_NO_NA_LIST}
-                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('sufficientIlluminationProvided', value)}
+                  onChange={(value: string) =>
+                    handleTransportationOfSteelGirdersDiaphragms(
+                      'sufficientIlluminationProvided',
+                      value,
+                    )
+                  }
                 />
               </View>
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Is the SWL marked on all lifting tools & tackles?"
-                  value={transportationOfSteelGirdersDiaphragmse.swlMarkedOnTools}
+                  value={
+                    transportationOfSteelGirdersDiaphragms.swlMarkedOnTools
+                  }
                   items={YES_NO_NA_LIST}
-                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('swlMarkedOnTools', value)}
+                  onChange={(value: string) =>
+                    handleTransportationOfSteelGirdersDiaphragms(
+                      'swlMarkedOnTools',
+                      value,
+                    )
+                  }
                 />
               </View>
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="All welding machines, electrical equipment, and generators properly earthed?"
-                  value={transportationOfSteelGirdersDiaphragmse.equipmentProperlyEarthed}
+                  value={
+                    transportationOfSteelGirdersDiaphragms.equipmentProperlyEarthed
+                  }
                   items={YES_NO_NA_LIST}
-                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('equipmentProperlyEarthed', value)}
+                  onChange={(value: string) =>
+                    handleTransportationOfSteelGirdersDiaphragms(
+                      'equipmentProperlyEarthed',
+                      value,
+                    )
+                  }
                 />
               </View>
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Are the walkways maintained free from obstacles at all times?"
-                  value={transportationOfSteelGirdersDiaphragmse.walkwaysFreeFromObstacles}
+                  value={
+                    transportationOfSteelGirdersDiaphragms.walkwaysFreeFromObstacles
+                  }
                   items={YES_NO_NA_LIST}
-                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('walkwaysFreeFromObstacles', value)}
+                  onChange={(value: string) =>
+                    handleTransportationOfSteelGirdersDiaphragms(
+                      'walkwaysFreeFromObstacles',
+                      value,
+                    )
+                  }
                 />
               </View>
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Is safety latch/locking available?"
-                  value={transportationOfSteelGirdersDiaphragmse.safetyLatchAvailable}
+                  value={
+                    transportationOfSteelGirdersDiaphragms.safetyLatchAvailable
+                  }
                   items={YES_NO_NA_LIST}
-                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('safetyLatchAvailable', value)}
+                  onChange={(value: string) =>
+                    handleTransportationOfSteelGirdersDiaphragms(
+                      'safetyLatchAvailable',
+                      value,
+                    )
+                  }
                 />
               </View>
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Are proper warning signs available at the site?"
-                  value={transportationOfSteelGirdersDiaphragmse.warningSignsAvailable}
+                  value={
+                    transportationOfSteelGirdersDiaphragms.warningSignsAvailable
+                  }
                   items={YES_NO_NA_LIST}
-                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('warningSignsAvailable', value)}
+                  onChange={(value: string) =>
+                    handleTransportationOfSteelGirdersDiaphragms(
+                      'warningSignsAvailable',
+                      value,
+                    )
+                  }
                 />
               </View>
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Lifting arrangements checked?"
-                  value={transportationOfSteelGirdersDiaphragmse.liftingArrangementsChecked}
+                  value={
+                    transportationOfSteelGirdersDiaphragms.liftingArrangementsChecked
+                  }
                   items={YES_NO_NA_LIST}
-                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('liftingArrangementsChecked', value)}
+                  onChange={(value: string) =>
+                    handleTransportationOfSteelGirdersDiaphragms(
+                      'liftingArrangementsChecked',
+                      value,
+                    )
+                  }
                 />
               </View>
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Ground leveling done?"
-                  value={transportationOfSteelGirdersDiaphragmse.groundLevelingDone}
+                  value={
+                    transportationOfSteelGirdersDiaphragms.groundLevelingDone
+                  }
                   items={YES_NO_NA_LIST}
-                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('groundLevelingDone', value)}
+                  onChange={(value: string) =>
+                    handleTransportationOfSteelGirdersDiaphragms(
+                      'groundLevelingDone',
+                      value,
+                    )
+                  }
                 />
               </View>
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Is the structure set out to the required line and levels?"
-                  value={transportationOfSteelGirdersDiaphragmse.structureSetOutCorrectly}
+                  value={
+                    transportationOfSteelGirdersDiaphragms.structureSetOutCorrectly
+                  }
                   items={YES_NO_NA_LIST}
-                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('structureSetOutCorrectly', value)}
+                  onChange={(value: string) =>
+                    handleTransportationOfSteelGirdersDiaphragms(
+                      'structureSetOutCorrectly',
+                      value,
+                    )
+                  }
                 />
               </View>
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="For welding, is welder qualification and skill checked and certified?"
-                  value={transportationOfSteelGirdersDiaphragmse.welderQualifiedAndCertified}
+                  value={
+                    transportationOfSteelGirdersDiaphragms.welderQualifiedAndCertified
+                  }
                   items={YES_NO_NA_LIST}
-                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('welderQualifiedAndCertified', value)}
+                  onChange={(value: string) =>
+                    handleTransportationOfSteelGirdersDiaphragms(
+                      'welderQualifiedAndCertified',
+                      value,
+                    )
+                  }
+                />
+              </View>
+            </View>
+            <View>
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
                 />
               </View>
             </View>

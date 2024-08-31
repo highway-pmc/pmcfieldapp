@@ -1088,6 +1088,7 @@ const RFIsRecents = (props: any) => {
         );
 
       case TASK_TYPES.LIFTING_LEFT:
+      case TASK_TYPES.LIFTING_YARD:
       case TASK_TYPES.LIFTING_RIGHT:
       case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
         const liftingCombinedLRProperties = [
@@ -1322,6 +1323,499 @@ const RFIsRecents = (props: any) => {
             ))}
           </View>
         );
+      case TASK_TYPES.PAINTING_OF_STEEL_GIRDERS:
+        const paintingOfSteelGirdersProperties = [
+          {
+            title: 'Is equipment regular inspected',
+            key: 'equipmentRegularInspected',
+          },
+          {
+            title: 'Is the worker worn Personal Protective Equipment',
+            key: 'workerWornPPE',
+          },
+          {
+            title:
+              'Is the personal present at the Blasting Pot and compressor at all times',
+            key: 'presentAtBlastingPot',
+          },
+          {
+            title:
+              'Is every structural member released for painting having identification Tag',
+            key: 'identificationTag',
+          },
+          {
+            title:
+              'Is the surface checked prior to blasting for mechanical damages',
+            key: 'surfaceCheckPriorBlasting',
+          },
+          {
+            title:
+              'Is the surface free from oil, grease and other contamination',
+            key: 'surfaceFreeFromContamination',
+          },
+          {
+            title: 'Is the weather and temperature suitable for blasting',
+            key: 'suitableWeatherForBlasting',
+          },
+          {
+            title: 'Is the compressed air free from water, oil etc.',
+            key: 'compressedAirQuality',
+          },
+          {
+            title: 'Are the areas of member protected that not to be blasted',
+            key: 'protectedAreas',
+          },
+          {
+            title:
+              'Is there high-pressure water used to remove salt and other contaminations',
+            key: 'highPressureWaterUsage',
+          },
+          {
+            title: 'Is the abrasive used as per the required specification',
+            key: 'abrasiveSpecification',
+          },
+          {
+            title:
+              'Is the copy of batch certificate of abrasive used available at the factory',
+            key: 'batchCertificateAvailable',
+          },
+          {
+            title: 'Is the Blasting Nozzle Pressure checked',
+            key: 'nozzlePressureChecked',
+          },
+          {
+            title: 'Are all blasted surfaces inspected for proper cleaning',
+            key: 'inspectedForCleaning',
+          },
+          {
+            title:
+              'Is the surface visually checked for any mechanical damage/lamination',
+            key: 'visualCheckDamage',
+          },
+          {
+            title:
+              'Is the Blasted structural member shifted carefully without damage',
+            key: 'shiftedWithoutDamage',
+          },
+          {
+            title: 'Are the surrounding areas covered to prevent overspray',
+            key: 'surroundingAreaCovered',
+          },
+          {
+            title: 'Is the painting system as per specification',
+            key: 'paintingSystemSpecification',
+          },
+          {
+            title:
+              'Is the Paint mixed and prepared in accordance with manufacturer instructions',
+            key: 'paintMixedAsPerInstructions',
+          },
+          {
+            title: 'Is the TIP size and spraying procedure adhered to',
+            key: 'tipSizeSprayingProcedure',
+          },
+          {
+            title:
+              'Is the Solvent dilution in accordance with manufacturer recommendations',
+            key: 'solventDilutionAccordance',
+          },
+          {
+            title: 'Are the required areas striped before applying paints',
+            key: 'areasStripedBeforePainting',
+          },
+          {
+            title: 'Are the materials within the shelf life',
+            key: 'materialsWithinShelfLife',
+          },
+          {
+            title: 'Is the weather condition checked prior to painting',
+            key: 'weatherConditionChecked',
+          },
+          {
+            title:
+              'Is the paint applied as per specification and related paint system',
+            key: 'paintAppliedPerSpecification',
+          },
+          {
+            title:
+              'Is the paint mixed and applied within the specified pot life',
+            key: 'paintMixedWithinPotLife',
+          },
+          {
+            title: 'Is the paint applied with even coating thickness',
+            key: 'evenCoatingThickness',
+          },
+          {
+            title: 'Is the WFT checked for required DFT',
+            key: 'wftCheckedForDft',
+          },
+          {
+            title: 'Is the overcoating interval maintained as per requirement',
+            key: 'overcoatingIntervalMaintained',
+          },
+          {
+            title: 'Is the proper coating system applied during intervals',
+            key: 'properCoatingSystemApplied',
+          },
+          {
+            title: 'Is the paint surface visually good and free from defects',
+            key: 'paintSurfaceQuality',
+          },
+          {
+            title: 'Is the record maintained for painting',
+            key: 'recordMaintained',
+          },
+        ];
+
+        return (
+          <View>
+            {paintingOfSteelGirdersProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.paintingOfSteelGirdersDiaphragms?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.PLACEMENT_OF_REINFORCEMENT_CAGE:
+        const placementOfReinforcementCageProperties = [
+          {
+            title: 'Rebar and dimension (dia, len, shape) checked as per GFC',
+            key: 'rebarDimensionChecked',
+          },
+          {
+            title: 'Shaping, No and Length of Bars checked as per GFC',
+            key: 'shapingCheckedAsPerGFC',
+          },
+          {
+            title: 'Rebars securely tightened/bound by tie bars',
+            key: 'rebarsSecurelyBound',
+          },
+          {
+            title: 'Splice length and location checked as per GFC',
+            key: 'spliceLengthChecked',
+          },
+          {title: 'Rebar within tolerance limit', key: 'rebarWithinTolerance'},
+          {
+            title: 'Coupler arrangements within tolerance',
+            key: 'couplerArrangementsWithinTolerance',
+          },
+          {
+            title: 'Bar Bending schedule checked',
+            key: 'barBendingScheduleChecked',
+          },
+        ];
+
+        return (
+          <View>
+            {placementOfReinforcementCageProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.placementOfReinforcementCage?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.TRANSPORTATION_OF_STEEL_GIRDERS_DIAPHRAGMS:
+        const transportationOfSteelGirdersDiaphragmsProperties = [
+          {
+            title: 'Safe access to work place is provided',
+            key: 'safeAccessProvided',
+          },
+          {
+            title: 'Working platform fully on boarded on the deck',
+            key: 'workingPlatformOnBoarded',
+          },
+          {title: 'Guard rails firmly attached', key: 'guardRailsAttached'},
+          {
+            title: 'Adequate fall protection arrangement made',
+            key: 'fallProtectionArrangement',
+          },
+          {
+            title: 'Tools secured against accidental fall',
+            key: 'toolsSecuredAgainstFall',
+          },
+          {
+            title: 'Risk assessment carried out',
+            key: 'riskAssessmentCarriedOut',
+          },
+          {title: 'Crane on firm level bases', key: 'craneOnFirmLevelBases'},
+          {
+            title: 'Operations trained and competent',
+            key: 'operatorsTrainedAndCompetent',
+          },
+          {title: 'Crane tested and operated', key: 'craneTestedAndOperated'},
+          {
+            title: 'Swing alarm installed and functioning',
+            key: 'swingAlarmInstalled',
+          },
+          {
+            title: 'Crane test certificate current',
+            key: 'craneTestCertificateCurrent',
+          },
+          {
+            title: 'Boom test certificate current',
+            key: 'craneBoomTestCertificateCurrent',
+          },
+          {title: 'Oil leakage checked', key: 'oilLeakageChecked'},
+          {title: 'Greasing checked', key: 'greasingChecked'},
+          {title: 'Outriggers fully extended', key: 'outriggersFullyExtended'},
+          {
+            title: 'Level indicators within limit',
+            key: 'levelIndicatorsWithinLimit',
+          },
+          {
+            title: 'Base plate under outriggers',
+            key: 'basePlateUnderOutriggers',
+          },
+          {title: 'Rigging angles checked', key: 'riggingAnglesChecked'},
+          {
+            title: 'All lifting tools checked and valid',
+            key: 'liftingToolsCheckedAndValid',
+          },
+          {
+            title: 'Personnel trained and protected',
+            key: 'personnelTrainedAndProtected',
+          },
+          {title: 'PPE provided', key: 'ppeProvided'},
+          {
+            title: 'Sufficient illumination provided',
+            key: 'sufficientIlluminationProvided',
+          },
+          {title: 'SWL marked on all tools', key: 'swlMarkedOnTools'},
+          {
+            title: 'Equipment properly earthed',
+            key: 'equipmentProperlyEarthed',
+          },
+          {
+            title: 'Walkways free from obstacles',
+            key: 'walkwaysFreeFromObstacles',
+          },
+          {title: 'Safety latch available', key: 'safetyLatchAvailable'},
+          {title: 'Warning signs available', key: 'warningSignsAvailable'},
+          {
+            title: 'Lifting arrangements checked',
+            key: 'liftingArrangementsChecked',
+          },
+          {title: 'Ground leveling done', key: 'groundLevelingDone'},
+          {
+            title: 'Structure set out correctly',
+            key: 'structureSetOutCorrectly',
+          },
+          {
+            title: 'Welder qualified and certified',
+            key: 'welderQualifiedAndCertified',
+          },
+        ];
+
+        return (
+          <View>
+            {transportationOfSteelGirdersDiaphragmsProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData
+                      .transportationOfSteelGirdersDiaphragms?.[property.key]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.ERECTION_OF_TEMPORARY_STRUCTURE:
+        const erectionOfTemporaryStructureProperties = [
+          {
+            title: 'Has any risk assessment been carried out',
+            key: 'riskAssessmentCarriedOut',
+          },
+          {
+            title: 'Is the crane/hydra on firm level bases',
+            key: 'craneOnFirmLevelBases',
+          },
+          {
+            title: 'Are all operation trained and competent',
+            key: 'operationsTrainedAndCompetent',
+          },
+          {
+            title: 'Is crane tested and operated',
+            key: 'craneTestedAndOperated',
+          },
+          {
+            title: 'Does the crane have a current test certificate',
+            key: 'craneCurrentTestCertificate',
+          },
+          {
+            title:
+              'All lifting tools and tackles are being identified, checked and have valid resister',
+            key: 'liftingToolsValidRegistered',
+          },
+          {
+            title:
+              'The person working at height are trained and lash with all fall protection devices',
+            key: 'fallProtectionDevicesForHeight',
+          },
+          {
+            title:
+              'Structure on which columns/beams erected have attained their strength',
+            key: 'structureStrengthAttained',
+          },
+          {
+            title: 'Workmen provided with all required PPE’s',
+            key: 'ppeProvided',
+          },
+          {
+            title:
+              'Whether sufficient illumination is provided around the working area',
+            key: 'sufficientIlluminationProvided',
+          },
+          {
+            title: 'Is the SWL marked on all lifting tools & tackles',
+            key: 'swlMarkedOnLiftingTools',
+          },
+          {
+            title:
+              'All wielding machines, electrical equipment & generators properly earthed',
+            key: 'equipmentProperlyEarthed',
+          },
+          {
+            title:
+              'Are the walkways maintained free from obstacles all the time',
+            key: 'walkwaysFreeFromObstacles',
+          },
+          {
+            title: 'Is safety latch/locking available',
+            key: 'safetyLatchAvailable',
+          },
+          {
+            title: 'Proper warning sign available at site',
+            key: 'warningSignAvailableAtSite',
+          },
+          {
+            title: 'Lifting arrangements are approved by a competent person',
+            key: 'liftingArrangementsApproved',
+          },
+          {
+            title:
+              'Is footing above temporary structure fixed achieve their compressive strength',
+            key: 'footingStrengthAchieved',
+          },
+          {title: 'Ground leveling', key: 'groundLeveling'},
+          {
+            title: 'Is Structure set out to the required line and levels',
+            key: 'structureSetOutToRequiredLine',
+          },
+          {
+            title:
+              'For welding, is welder qualification and skills checked and certified',
+            key: 'welderQualificationCertified',
+          },
+        ];
+
+        return (
+          <View>
+            {erectionOfTemporaryStructureProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.erectionOfTemporaryStructure?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.FIXING_OF_SHUTTER:
+        const fixingOfShutterProperties = [
+          {title: 'Shuttering material is New', key: 'shutteringMaterialNew'},
+          {title: 'Repairs are ok', key: 'repairsOk'},
+          {title: 'Cleanliness of shuttering', key: 'cleanlinessOfShuttering'},
+          {title: 'Oiling of shuttering', key: 'oilingOfShuttering'},
+          {
+            title:
+              'Shuttering design, ok? (Dimension, Diagonal, Sunken portion etc.)',
+            key: 'shutteringDesignOk',
+          },
+          {
+            title: 'Alignments /levels /rigidity, ok',
+            key: 'alignmentLevelsRigidityOk',
+          },
+          {title: 'Check props are they ok', key: 'propsOk'},
+          {title: 'Check acrow span. Are they ok', key: 'acrowSpanOk'},
+          {title: 'Check braces. Are they ok', key: 'bracesOk'},
+          {
+            title: 'Check sealing joints/holes, ok',
+            key: 'sealingJointsHolesOk',
+          },
+        ];
+
+        return (
+          <View>
+            {fixingOfShutterProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.fixingOfShutter?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.CURING:
+        const curingProperties = [
+          {
+            title:
+              'Water used for curing is free from oil, salt, acid, and organic minerals',
+            key: 'waterFreeFromContaminants',
+          },
+          {
+            title: 'pH value of water not be less than 6',
+            key: 'phValueOfWater',
+          },
+          {
+            title: 'Consumption of water in Kilo liter',
+            key: 'waterConsumptionInKL',
+          },
+        ];
+
+        return (
+          <View>
+            {curingProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>{selectedRFI?.metaData.curingData?.[property.key]}</Text>
+              </View>
+            ))}
+          </View>
+        );
+
       default:
         return (
           <View>

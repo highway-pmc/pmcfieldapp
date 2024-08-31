@@ -475,6 +475,9 @@ export const TASK_TYPES = {
   LIFTING_TRANSPORT_ERECTION: 'lifting-transportation-and-erection-at-site',
   REMOVAL_OF_FORMWORK: 'removal-of-formwork',
   TEMPORARY_PRESTRESSING: 'temporary-prestressing',
+  CURING: 'curing',
+  FIXING_OF_SHUTTER: 'fixing-of-shutter',
+  ERECTION_OF_TEMPORARY_STRUCTURE: 'erection-of-temporary-structure',
 };
 
 export const TEST_MATERIALS_TYPES = {

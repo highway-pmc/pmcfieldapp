@@ -930,6 +930,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
               });
             }
             break;
+          case TASK_TYPES.FABRICATION_OF_MEMBERS:
           case TASK_TYPES.FABRICATION_OF_STEEL_GIRDERS:
             if (rfiData.metaData.fabricationData) {
               setFabricationData(rfiData.metaData.fabricationData);
@@ -2232,6 +2233,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           removalFormworkData: removalFormworkData,
         };
         break;
+      case TASK_TYPES.FABRICATION_OF_MEMBERS:
       case TASK_TYPES.FABRICATION_OF_STEEL_GIRDERS:
         checkList = {
           taskName: selectedTask.name,
@@ -4502,6 +4504,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             </View>
           </View>
         );
+      case TASK_TYPES.FABRICATION_OF_MEMBERS:
       case TASK_TYPES.FABRICATION_OF_STEEL_GIRDERS:
         return (
           <View style={styles.columnWiseData}>
@@ -4687,24 +4690,39 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             </View>
 
             <View>
-              <CalendarPicker
-                label="Date"
-                value={rfiDate}
-                onChange={date => setRFIDate(date)}
-              />
-              <TimePicker
-                label="Time"
-                value={rfiTime}
-                onChange={time => setRFITime(time)}
-              />
-              <TextInput
-                style={styles.commonInputFiels}
-                placeholder="Recommendations"
-                multiline={true}
-                numberOfLines={4}
-                value={comments}
-                onChangeText={text => setComments(text)}
-              />
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
+                />
+              </View>
             </View>
           </View>
         );

@@ -1021,6 +1021,7 @@ const RFIsRecents = (props: any) => {
             ))}
           </View>
         );
+      case TASK_TYPES.FABRICATION_OF_MEMBERS:
       case TASK_TYPES.FABRICATION_OF_STEEL_GIRDERS:
         const fabricationProperties = [
           {

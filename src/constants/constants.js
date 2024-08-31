@@ -448,6 +448,7 @@ export const TEST_ASSIGNMENT_LEVEL = {
 export const TASK_TYPES = {
   CNG_AND_SETTING_OUT: 'cng-and-setting-out',
   POST_CONCRETE_CHECK: 'post-concrete-check',
+  FIXING_OF_BEARING_SLEEVES: 'fixing-of-bearing-sleeves',
   FORM_WORK: 'form-work',
   EXCAVATION: 'excavation',
   REINFORCEMENT: 'reinforcement',
@@ -476,7 +477,7 @@ export const TASK_TYPES = {
   LIFTING_YARD: 'lifting-of-segment-and-stacking-in-yard',
   REMOVAL_OF_FORMWORK: 'removal-of-formwork',
   TEMPORARY_PRESTRESSING: 'temporary-prestressing',
-  FABRICATION_OF_STEEL_GIRDERS: 'fabrication-of-steel-girders',
+  FABRICATION_OF_STEEL_GIRDERS: 'fabrication-of-steel-girders-diaphragms',
   FABRICATION_OF_MEMBERS: 'fabrication-of-members',
   CURING: 'curing',
   FIXING_OF_SHUTTER: 'fixing-of-shutter',

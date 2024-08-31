@@ -1323,7 +1323,7 @@ const RFIsRecents = (props: any) => {
             ))}
           </View>
         );
-      case TASK_TYPES.PAINTING_OF_STEEL_GIRDERS:
+      case TASK_TYPES.PAINTING_OF_STEEL_GIRDERS_DIAPHRAGMS:
         const paintingOfSteelGirdersProperties = [
           {
             title: 'Is equipment regular inspected',
@@ -1532,7 +1532,7 @@ const RFIsRecents = (props: any) => {
             ))}
           </View>
         );
-      case TASK_TYPES.TRANSPORTATION_OF_STEEL_GIRDERS_DIAPHRAGMS:
+      case TASK_TYPES.TRANSPORTATION_OF_STEEL_GIRDERS_DIAPHRAGMS_ERECTION_AT_SITE:
         const transportationOfSteelGirdersDiaphragmsProperties = [
           {
             title: 'Safe access to work place is provided',

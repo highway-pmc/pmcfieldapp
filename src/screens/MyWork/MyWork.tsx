@@ -105,7 +105,8 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
 
   // CNG_AND_SETTING_OUT
   // PLACING_OF_SHEATHING_DUCT
-  // TASK_TYPES.POST_CONCRETE_CHECK:
+  // POST_CONCRETE_CHECK
+  // FIXING_OF_BEARING_SLEEVES
   const [openPopup, setOpenPopup] = useState(false);
   const [selectedTask, setSelectedTask]: any = useState(null);
   const [imageObject, setImageObject]: any = useState(imageObjectEmpty);
@@ -834,6 +835,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           case TASK_TYPES.CNG_AND_SETTING_OUT:
           case TASK_TYPES.PLACING_OF_SHEATHING_DUCT:
           case TASK_TYPES.POST_CONCRETE_CHECK:
+          case TASK_TYPES.FIXING_OF_BEARING_SLEEVES:
             setImageObject({
               filePath: '',
               fileData: rfiData.metaData.base64Image,
@@ -2336,6 +2338,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       case TASK_TYPES.CNG_AND_SETTING_OUT:
       case TASK_TYPES.PLACING_OF_SHEATHING_DUCT:
       case TASK_TYPES.POST_CONCRETE_CHECK:
+      case TASK_TYPES.FIXING_OF_BEARING_SLEEVES:
         if (!imageObject?.fileData) {
           showSnackbar('Please upload an image file', 'error');
           return;
@@ -3541,6 +3544,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       case TASK_TYPES.CNG_AND_SETTING_OUT:
       case TASK_TYPES.PLACING_OF_SHEATHING_DUCT:
       case TASK_TYPES.POST_CONCRETE_CHECK:
+      case TASK_TYPES.FIXING_OF_BEARING_SLEEVES:
         return (
           <View>
             <Text

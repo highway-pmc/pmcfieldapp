@@ -486,6 +486,9 @@ export const TASK_TYPES = {
   PLACEMENT_OF_REINFORCEMENT_CAGE: 'placement-of-reinforcement-cage',
   TRANSPORTATION_OF_STEEL_GIRDERS_DIAPHRAGMS_ERECTION_AT_SITE:
     'transportation-of-steel-girders-diaphragms-erection-at-site',
+  ASSEMBLING_OF_TRUSS: 'assembling-of-truss',
+  ERECTION_USING_CRANES: 'erection-using-cranes',
+  STACKING_IN_YARD: 'stacking-in-yard',
 };
 
 export const TEST_MATERIALS_TYPES = {

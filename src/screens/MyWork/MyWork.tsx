@@ -559,6 +559,107 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     }));
   }
 
+  const [paintingOfSteelGirdersDiaphragms, setPaintingOfSteelGirdersDiaphragms] = useState({
+    hasAnyRiskAssessment: 'Y',
+    isWorkerWarnPersonalProtective: 'Y',
+    presentAtBlastingPot: 'Y',
+    identificationTag: 'Y',
+    surfaceCheckPriorBlasting: 'Y',
+    surfaceFreeFromContamination: 'Y',
+    suitableWeatherForBlasting: 'Y',
+    compressedAirQuality: 'Y',
+    protectedAreas: 'Y',
+    highPressureWaterUsage: 'Y',
+    abrasiveSpecification: 'Y',
+    batchCertificateAvailable: 'Y',
+    nozzlePressureChecked: 'Y',
+    inspectedForCleaning: 'Y',
+    visualCheckDamage: 'Y',
+    shiftedWithoutDamage: 'Y',
+    surroundingAreaCovered: 'Y',
+    paintingSystemSpecification: 'Y',
+    paintMixedAsPerInstructions: 'Y',
+    tipSizeSprayingProcedure: 'Y',
+    solventDilutionAccordance: 'Y',
+    areasStripedBeforePainting: 'Y',
+    materialsWithinShelfLife: 'Y',
+    weatherConditionChecked: 'Y',
+    paintAppliedPerSpecification: 'Y',
+    paintMixedWithinPotLife: 'Y',
+    evenCoatingThickness: 'Y',
+    wftCheckedForDft: 'Y',
+    overcoatingIntervalMaintained: 'Y',
+    properCoatingSystemApplied: 'Y',
+    paintSurfaceQuality: 'Y',
+    recordMaintained: 'Y',
+  });
+
+  const handlePaintingOfSteelGirdersDiaphragms = (field: string, value: string) => {
+    setPaintingOfSteelGirdersDiaphragms(prevData => ({
+      ...prevData,
+      [field]: value,
+    }));
+  }
+
+  const [placementOfReinforcementCage, setPlacementOfReinforcementCage] = useState({
+    rebarDimensionChecked: 'Y',
+    shapingCheckedAsPerGFC: 'Y',
+    rebarsSecurelyBound: 'Y',
+    spliceLengthChecked: 'Y',
+    rebarWithinTolerance: 'Y',
+    couplerArrangementsWithinTolerance: 'Y',
+    barBendingScheduleChecked: 'Y',
+  });
+
+  const handlePlacementOfReinforcementCage = (field: string, value: string) => {
+    setPaintingOfSteelGirdersDiaphragms(prevData => ({
+      ...prevData,
+      [field]: value,
+    }));
+  }
+
+  const [transportationOfSteelGirdersDiaphragmse, setTransportationOfSteelGirdersDiaphragms] = useState({
+    safeAccessProvided: 'Y',
+    workingPlatformOnBoarded: 'Y',
+    guardRailsAttached: 'Y',
+    fallProtectionArrangement: 'Y',
+    toolsSecuredAgainstFall: 'Y',
+    riskAssessmentCarriedOut: 'Y',
+    craneOnFirmLevelBases: 'Y',
+    operatorsTrainedAndCompetent: 'Y',
+    craneTestedAndOperated: 'Y',
+    swingAlarmInstalled: 'Y',
+    craneTestCertificateCurrent: 'Y',
+    craneBoomTestCertificateCurrent: 'Y',
+    oilLeakageChecked: 'Y',
+    greasingChecked: 'Y',
+    outriggersFullyExtended: 'Y',
+    levelIndicatorsWithinLimit: 'Y',
+    basePlateUnderOutriggers: 'Y',
+    riggingAnglesChecked: 'Y',
+    examsAndTestsCertified: 'Y',
+    liftingToolsCheckedAndValid: 'Y',
+    personnelTrainedAndProtected: 'Y',
+    ppeProvided: 'Y',
+    sufficientIlluminationProvided: 'Y',
+    swlMarkedOnTools: 'Y',
+    equipmentProperlyEarthed: 'Y',
+    walkwaysFreeFromObstacles: 'Y',
+    safetyLatchAvailable: 'Y',
+    warningSignsAvailable: 'Y',
+    liftingArrangementsChecked: 'Y',
+    groundLevelingDone: 'Y',
+    structureSetOutCorrectly: 'Y',
+    welderQualifiedAndCertified: 'Y',
+  });
+
+  const handleTransportationOfSteelGirdersDiaphragms = (field: string, value: string) => {
+    setTransportationOfSteelGirdersDiaphragms(prevData => ({
+      ...prevData,
+      [field]: value,
+    }));
+  }
+
   const handleInputChangeLifting = (field: string, value: string) => {
     setLiftingCombinedLRData(prevData => ({
       ...prevData,
@@ -5798,6 +5899,706 @@ const handleInputChangeTemporaryPrestressing = (key: string, value: any) => {
                   onChangeText={text => {
                     setComments(text);
                   }}
+                />
+              </View>
+            </View>
+          </ScrollView>
+        );
+      case TASK_TYPES.PAINTING_OF_STEEL_GIRDERS_DIAPHRAGMS: 
+        return (
+          <ScrollView showsHorizontalScrollIndicator={false}>
+            <View style={styles.columnWiseData}>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is equipment regular inspected"
+                  value={paintingOfSteelGirdersDiaphragms.hasAnyRiskAssessment}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handlePaintingOfSteelGirdersDiaphragms('hasAnyRiskAssessment', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is the worker worn Personal Protective Equipment"
+                  value={paintingOfSteelGirdersDiaphragms.isWorkerWarnPersonalProtective}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handlePaintingOfSteelGirdersDiaphragms('isWorkerWarnPersonalProtective', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is the personal present at the Blasting Pot and compressor at all times"
+                  value={paintingOfSteelGirdersDiaphragms.presentAtBlastingPot}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handlePaintingOfSteelGirdersDiaphragms('presentAtBlastingPot', value)
+                  }
+                />
+              </View>
+
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is every structural member released for painting having identification Tag"
+                  value={paintingOfSteelGirdersDiaphragms.identificationTag}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handlePaintingOfSteelGirdersDiaphragms('identificationTag', value)
+                  }
+                />
+              </View>
+
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is the surface checking prior to blasting for mechanical damages (like spatters, slag’s etc.)"
+                  value={paintingOfSteelGirdersDiaphragms.surfaceCheckPriorBlasting}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handlePaintingOfSteelGirdersDiaphragms('surfaceCheckPriorBlasting', value)
+                  }
+                />
+              </View>
+
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is the surface free from oil, grease and other contamination"
+                  value={paintingOfSteelGirdersDiaphragms.surfaceFreeFromContamination}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handlePaintingOfSteelGirdersDiaphragms('surfaceFreeFromContamination', value)
+                  }
+                />
+              </View>
+
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is the weather and temperature suitable for blasting"
+                  value={paintingOfSteelGirdersDiaphragms.suitableWeatherForBlasting}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handlePaintingOfSteelGirdersDiaphragms('suitableWeatherForBlasting', value)
+                  }
+                />
+              </View>
+
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is the compressed air free from water, oil etc."
+                  value={paintingOfSteelGirdersDiaphragms.compressedAirQuality}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handlePaintingOfSteelGirdersDiaphragms('compressedAirQuality', value)
+                  }
+                />
+              </View>
+
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Are the areas of member protected that not to be blasted"
+                  value={paintingOfSteelGirdersDiaphragms.protectedAreas}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handlePaintingOfSteelGirdersDiaphragms('protectedAreas', value)
+                  }
+                />
+              </View>
+
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is there high-pressure water used to remove salt and other contaminations"
+                  value={paintingOfSteelGirdersDiaphragms.highPressureWaterUsage}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handlePaintingOfSteelGirdersDiaphragms('highPressureWaterUsage', value)
+                  }
+                />
+              </View>
+
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is the abrasive used as per the required specification (No reuse of abrasives in open Blast condition)"
+                  value={paintingOfSteelGirdersDiaphragms.abrasiveSpecification}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handlePaintingOfSteelGirdersDiaphragms('abrasiveSpecification', value)
+                  }
+                />
+              </View>
+
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is the copy of batch certificate of abrasive used available at the factory"
+                  value={paintingOfSteelGirdersDiaphragms.batchCertificateAvailable}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handlePaintingOfSteelGirdersDiaphragms('batchCertificateAvailable', value)
+                  }
+                />
+              </View>
+
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is the Blasting Nozzle Pressure checked"
+                  value={paintingOfSteelGirdersDiaphragms.nozzlePressureChecked}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handlePaintingOfSteelGirdersDiaphragms('nozzlePressureChecked', value)
+                  }
+                />
+              </View>
+
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Are the all-blasted surface inspected for proper cleaning"
+                  value={paintingOfSteelGirdersDiaphragms.inspectedForCleaning}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handlePaintingOfSteelGirdersDiaphragms('inspectedForCleaning', value)
+                  }
+                />
+              </View>
+
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is the Visually checked for any mechanical damage/ lamination"
+                  value={paintingOfSteelGirdersDiaphragms.visualCheckDamage}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handlePaintingOfSteelGirdersDiaphragms('visualCheckDamage', value)
+                  }
+                />
+              </View>
+
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is the Blasted structural member shifted carefully without damage"
+                  value={paintingOfSteelGirdersDiaphragms.shiftedWithoutDamage}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handlePaintingOfSteelGirdersDiaphragms('shiftedWithoutDamage', value)
+                  }
+                />
+              </View>
+
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Are the surrounding areas covered to prevent overspray"
+                  value={paintingOfSteelGirdersDiaphragms.surroundingAreaCovered}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handlePaintingOfSteelGirdersDiaphragms('surroundingAreaCovered', value)
+                  }
+                />
+              </View>
+
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is the painting system as per specification"
+                  value={paintingOfSteelGirdersDiaphragms.paintingSystemSpecification}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handlePaintingOfSteelGirdersDiaphragms('paintingSystemSpecification', value)
+                  }
+                />
+              </View>
+
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is the Paint mixed and prepared in accordance with the approved manufacturer instructions"
+                  value={paintingOfSteelGirdersDiaphragms.paintMixedAsPerInstructions}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handlePaintingOfSteelGirdersDiaphragms('paintMixedAsPerInstructions', value)
+                  }
+                />
+              </View>
+
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is the TIP size and spraying procedure adhered"
+                  value={paintingOfSteelGirdersDiaphragms.tipSizeSprayingProcedure}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handlePaintingOfSteelGirdersDiaphragms('tipSizeSprayingProcedure', value)
+                  }
+                />
+              </View>
+
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is the Solvent dilution accordance with the manufacturer instruction and recommendation"
+                  value={paintingOfSteelGirdersDiaphragms.solventDilutionAccordance}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handlePaintingOfSteelGirdersDiaphragms('solventDilutionAccordance', value)
+                  }
+                />
+              </View>
+
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is the required areas striped before applying paints"
+                  value={paintingOfSteelGirdersDiaphragms.areasStripedBeforePainting}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handlePaintingOfSteelGirdersDiaphragms('areasStripedBeforePainting', value)
+                  }
+                />
+              </View>
+
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Are the paints, curing agent, Thinner used of within the shelf life and from the same manufacturer"
+                  value={paintingOfSteelGirdersDiaphragms.materialsWithinShelfLife}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handlePaintingOfSteelGirdersDiaphragms('materialsWithinShelfLife', value)
+                  }
+                />
+              </View>
+
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is the weather condition checked prior to painting"
+                  value={paintingOfSteelGirdersDiaphragms.weatherConditionChecked}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handlePaintingOfSteelGirdersDiaphragms('weatherConditionChecked', value)
+                  }
+                />
+              </View>
+
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is the paint applied as per specification and related paint system"
+                  value={paintingOfSteelGirdersDiaphragms.paintAppliedPerSpecification}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handlePaintingOfSteelGirdersDiaphragms('paintAppliedPerSpecification', value)
+                  }
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is the paint mixed, agitated and applied within the specified pot life"
+                  value={paintingOfSteelGirdersDiaphragms.paintMixedWithinPotLife}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handlePaintingOfSteelGirdersDiaphragms('paintMixedWithinPotLife', value)
+                  }
+                />
+              </View>
+
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is the paint applied having even coating thickness at the overlapping passes to achieve the specified dry film thickness"
+                  value={paintingOfSteelGirdersDiaphragms.evenCoatingThickness}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handlePaintingOfSteelGirdersDiaphragms('evenCoatingThickness', value)
+                  }
+                />
+              </View>
+
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is the WFT checked for required DFT"
+                  value={paintingOfSteelGirdersDiaphragms.wftCheckedForDft}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handlePaintingOfSteelGirdersDiaphragms('wftCheckedForDft', value)
+                  }
+                />
+              </View>
+
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is the overcoating interval maintained as per requirement"
+                  value={paintingOfSteelGirdersDiaphragms.overcoatingIntervalMaintained}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handlePaintingOfSteelGirdersDiaphragms('overcoatingIntervalMaintained', value)
+                  }
+                />
+              </View>
+
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is the proper coating system applied during intervals"
+                  value={paintingOfSteelGirdersDiaphragms.properCoatingSystemApplied}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handlePaintingOfSteelGirdersDiaphragms('properCoatingSystemApplied', value)
+                  }
+                />
+              </View>
+
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is the paint surface visually good and free from runs, sags, wrinkles etc.…"
+                  value={paintingOfSteelGirdersDiaphragms.paintSurfaceQuality}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handlePaintingOfSteelGirdersDiaphragms('paintSurfaceQuality', value)
+                  }
+                />
+              </View>
+
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is the record maintained of painting"
+                  value={paintingOfSteelGirdersDiaphragms.recordMaintained}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) =>
+                    handlePaintingOfSteelGirdersDiaphragms('recordMaintained', value)
+                  }
+                />
+              </View>
+              
+              <View style={styles.categoryColumn}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
+                />
+              </View>
+            </View>
+          </ScrollView>
+        );
+      case TASK_TYPES.PLACEMENT_OF_REINFORCEMENT_CAGE:
+        return (
+          <ScrollView showsHorizontalScrollIndicator={false}>
+            <View style={styles.columnWiseData}>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Rebar and dimension (dia, len, and shape) checked as per GFC"
+                  value={placementOfReinforcementCage.rebarDimensionChecked}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) => handlePlacementOfReinforcementCage('rebarDimensionChecked', value)}
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Shaping, No and Length of Bars checked as per GFC"
+                  value={placementOfReinforcementCage.shapingCheckedAsPerGFC}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) => handlePlacementOfReinforcementCage('shapingCheckedAsPerGFC', value)}
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Rebars securely tightened/bound by tie bars"
+                  value={placementOfReinforcementCage.rebarsSecurelyBound}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) => handlePlacementOfReinforcementCage('rebarsSecurelyBound', value)}
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Splice length and location checked as per GFC"
+                  value={placementOfReinforcementCage.spliceLengthChecked}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) => handlePlacementOfReinforcementCage('spliceLengthChecked', value)}
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Rebar within tolerance limit"
+                  value={placementOfReinforcementCage.rebarWithinTolerance}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) => handlePlacementOfReinforcementCage('rebarWithinTolerance', value)}
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Coupler arrangements within tolerance"
+                  value={placementOfReinforcementCage.couplerArrangementsWithinTolerance}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) => handlePlacementOfReinforcementCage('couplerArrangementsWithinTolerance', value)}
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Bar Bending schedule checked"
+                  value={placementOfReinforcementCage.barBendingScheduleChecked}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) => handlePlacementOfReinforcementCage('barBendingScheduleChecked', value)}
+                />
+              </View>
+            </View>
+          </ScrollView>
+        );
+    case TASK_TYPES.TRANSPORTATION_OF_STEEL_GIRDERS_DIAPHRAGMS_ERECTION_AT_SITE:
+        return (
+          <ScrollView showsHorizontalScrollIndicator={false}>
+            <View style={styles.columnWiseData}>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Whether safe access to workplace is provided?"
+                  value={transportationOfSteelGirdersDiaphragmse.safeAccessProvided}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('safeAccessProvided', value)}
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is the working platform fully onboarded on the deck?"
+                  value={transportationOfSteelGirdersDiaphragmse.workingPlatformOnBoarded}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('workingPlatformOnBoarded', value)}
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="All guard rails are firmly attached with mould (at 1m with mid rails and toe board)?"
+                  value={transportationOfSteelGirdersDiaphragmse.guardRailsAttached}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('guardRailsAttached', value)}
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Adequate fall protection arrangement made (static line, double lanyard harness, fall arrestor)?"
+                  value={transportationOfSteelGirdersDiaphragmse.fallProtectionArrangement}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('fallProtectionArrangement', value)}
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Whether hand tools and handling material secure against accidental fall?"
+                  value={transportationOfSteelGirdersDiaphragmse.toolsSecuredAgainstFall}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('toolsSecuredAgainstFall', value)}
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Has any risk assessment been carried out?"
+                  value={transportationOfSteelGirdersDiaphragmse.riskAssessmentCarriedOut}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('riskAssessmentCarriedOut', value)}
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is the crane on firm level bases?"
+                  value={transportationOfSteelGirdersDiaphragmse.craneOnFirmLevelBases}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('craneOnFirmLevelBases', value)}
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Are all operators trained and competent?"
+                  value={transportationOfSteelGirdersDiaphragmse.operatorsTrainedAndCompetent}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('operatorsTrainedAndCompetent', value)}
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is the crane tested and operated?"
+                  value={transportationOfSteelGirdersDiaphragmse.craneTestedAndOperated}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('craneTestedAndOperated', value)}
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is there a swing alarm installed and functioning?"
+                  value={transportationOfSteelGirdersDiaphragmse.swingAlarmInstalled}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('swingAlarmInstalled', value)}
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Does the crane have a current test certificate?"
+                  value={transportationOfSteelGirdersDiaphragmse.craneTestCertificateCurrent}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('craneTestCertificateCurrent', value)}
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Does the boom of the crane have a current test certificate?"
+                  value={transportationOfSteelGirdersDiaphragmse.craneBoomTestCertificateCurrent}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('craneBoomTestCertificateCurrent', value)}
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Oil (leakage)"
+                  value={transportationOfSteelGirdersDiaphragmse.oilLeakageChecked}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('oilLeakageChecked', value)}
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Greasing"
+                  value={transportationOfSteelGirdersDiaphragmse.greasingChecked}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('greasingChecked', value)}
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Outriggers (Fully extended)"
+                  value={transportationOfSteelGirdersDiaphragmse.outriggersFullyExtended}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('outriggersFullyExtended', value)}
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Level indicators (2 degree to 3 degree)"
+                  value={transportationOfSteelGirdersDiaphragmse.levelIndicatorsWithinLimit}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('levelIndicatorsWithinLimit', value)}
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Base plate under the outriggers"
+                  value={transportationOfSteelGirdersDiaphragmse.basePlateUnderOutriggers}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('basePlateUnderOutriggers', value)}
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Rigging (2 Nos) angles"
+                  value={transportationOfSteelGirdersDiaphragmse.riggingAnglesChecked}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('riggingAnglesChecked', value)}
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Are all the examination and tests carried out and certified by a competent person?"
+                  value={transportationOfSteelGirdersDiaphragmse.examsAndTestsCertified}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('examsAndTestsCertified', value)}
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="All lifting tools and tackles are being identified, checked, and have a valid register?"
+                  value={transportationOfSteelGirdersDiaphragmse.liftingToolsCheckedAndValid}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('liftingToolsCheckedAndValid', value)}
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Are personnel working at height trained and equipped with all fall protection devices?"
+                  value={transportationOfSteelGirdersDiaphragmse.personnelTrainedAndProtected}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('personnelTrainedAndProtected', value)}
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Are workmen provided with all required PPEs?"
+                  value={transportationOfSteelGirdersDiaphragmse.ppeProvided}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('ppeProvided', value)}
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Whether sufficient illumination is provided around the working area?"
+                  value={transportationOfSteelGirdersDiaphragmse.sufficientIlluminationProvided}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('sufficientIlluminationProvided', value)}
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is the SWL marked on all lifting tools & tackles?"
+                  value={transportationOfSteelGirdersDiaphragmse.swlMarkedOnTools}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('swlMarkedOnTools', value)}
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="All welding machines, electrical equipment, and generators properly earthed?"
+                  value={transportationOfSteelGirdersDiaphragmse.equipmentProperlyEarthed}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('equipmentProperlyEarthed', value)}
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Are the walkways maintained free from obstacles at all times?"
+                  value={transportationOfSteelGirdersDiaphragmse.walkwaysFreeFromObstacles}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('walkwaysFreeFromObstacles', value)}
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is safety latch/locking available?"
+                  value={transportationOfSteelGirdersDiaphragmse.safetyLatchAvailable}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('safetyLatchAvailable', value)}
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Are proper warning signs available at the site?"
+                  value={transportationOfSteelGirdersDiaphragmse.warningSignsAvailable}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('warningSignsAvailable', value)}
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Lifting arrangements checked?"
+                  value={transportationOfSteelGirdersDiaphragmse.liftingArrangementsChecked}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('liftingArrangementsChecked', value)}
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Ground leveling done?"
+                  value={transportationOfSteelGirdersDiaphragmse.groundLevelingDone}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('groundLevelingDone', value)}
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="Is the structure set out to the required line and levels?"
+                  value={transportationOfSteelGirdersDiaphragmse.structureSetOutCorrectly}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('structureSetOutCorrectly', value)}
+                />
+              </View>
+              <View style={styles.categoryColumn}>
+                <DropdownPicker
+                  label="For welding, is welder qualification and skill checked and certified?"
+                  value={transportationOfSteelGirdersDiaphragmse.welderQualifiedAndCertified}
+                  items={YES_NO_NA_LIST}
+                  onChange={(value: string) => handleTransportationOfSteelGirdersDiaphragms('welderQualifiedAndCertified', value)}
                 />
               </View>
             </View>

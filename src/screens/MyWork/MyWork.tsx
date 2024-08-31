@@ -489,6 +489,23 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     concreteStrengthAchieved: 'Y',
     minimumTimeAttained: 'Y',
   });
+  const [fabricationData, setFabricationData] = useState({
+    steelInspectionSurfaceCondition: 'Y',
+    sectionCheckedForDimension: 'Y',
+    materialSpecificationChecked: 'Y',
+    connectionChecked: 'Y',
+    boltHolesClean: 'Y',
+    approvedWeldersUsed: 'Y',
+    weldsIdentified: 'Y',
+    weldsInspected: 'Y',
+    weldsRepaired: 'Y',
+    shapeEdgeBurnsRemoved: 'Y',
+    oilGreaseRemoved: 'Y',
+    steelCleanedAndPainted: 'Y',
+    finalShopCoatApplied: 'Y',
+    memberMarkedForErection: 'Y',
+    memberApprovedByInspector: 'Y',
+  });
   const [temporaryPrestressingData, setTemporaryPrestressingData] = useState({
     calibrationCertificateAvailable: 'Y',
     stressingSequenceDrawingNumber: 0,
@@ -507,7 +524,13 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       ...prevData,
       [field]: value,
     }));
-  }
+  };
+  const handleInputChangeFabrication = (key: string, value: string) => {
+    setFabricationData(prevState => ({
+      ...prevState,
+      [key]: value,
+    }));
+  };
 
   const [fixingShutterData, setFixingShutterData] = useState({
     shutterMaterial: 'Y',
@@ -527,37 +550,38 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       ...prevData,
       [field]: value,
     }));
-  }
+  };
 
-  const [erectionOfTemporaryStructure, setErectionOfTemporaryStructure] = useState({
-    hasAnyRiskAssessment: 'Y',
-    craneHydraLevelBase: 'Y',
-    areAllOperationTrained: 'Y',
-    isCraneTested: 'Y',
-    doesTheCraneCertificate: 'Y',
-    AllLiftingToolsAndTackles: 'Y',
-    protectionDevices: 'Y',
-    atteainedTheirStrength: 'Y',
-    workmenProvided: 'Y',
-    whetherSufficient: 'Y',
-    liftingToolsTackles: 'Y',
-    equipmentsGeneratorsProperlyEarthed: 'Y',
-    walkwayMaintainedFreeForm: 'Y',
-    safetyLatchLockingAvailable: 'Y',
-    properWarningSign: 'Y',
-    liftingArrangementsAreApproved: 'Y',
-    achieveTheirCompressiveStrength: 'Y',
-    groundLeveling: 'Y',
-    structureSetOutToTheLevels: 'Y',
-    aualificationAndSkilledCheckedAndCertified: 'Y',
-  });
+  const [erectionOfTemporaryStructure, setErectionOfTemporaryStructure] =
+    useState({
+      hasAnyRiskAssessment: 'Y',
+      craneHydraLevelBase: 'Y',
+      areAllOperationTrained: 'Y',
+      isCraneTested: 'Y',
+      doesTheCraneCertificate: 'Y',
+      AllLiftingToolsAndTackles: 'Y',
+      protectionDevices: 'Y',
+      atteainedTheirStrength: 'Y',
+      workmenProvided: 'Y',
+      whetherSufficient: 'Y',
+      liftingToolsTackles: 'Y',
+      equipmentsGeneratorsProperlyEarthed: 'Y',
+      walkwayMaintainedFreeForm: 'Y',
+      safetyLatchLockingAvailable: 'Y',
+      properWarningSign: 'Y',
+      liftingArrangementsAreApproved: 'Y',
+      achieveTheirCompressiveStrength: 'Y',
+      groundLeveling: 'Y',
+      structureSetOutToTheLevels: 'Y',
+      aualificationAndSkilledCheckedAndCertified: 'Y',
+    });
 
   const handleErectionOfTemporaryStructure = (field: string, value: string) => {
     setErectionOfTemporaryStructure(prevData => ({
       ...prevData,
       [field]: value,
     }));
-  }
+  };
 
   const handleInputChangeLifting = (field: string, value: string) => {
     setLiftingCombinedLRData(prevData => ({
@@ -565,42 +589,42 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       [field]: value,
     }));
   };
-const handleInputChangeTemporaryPrestressing = (key: string, value: any) => {
-  let newValue = value;
+  const handleInputChangeTemporaryPrestressing = (key: string, value: any) => {
+    let newValue = value;
 
-  if (key === 'maxJackPressure' || key === 'jackPressureApplied') {
-    newValue = parseFloat(value);
+    if (key === 'maxJackPressure' || key === 'jackPressureApplied') {
+      newValue = parseFloat(value);
 
-    if (isNaN(newValue) || newValue <= 0 || newValue > 1000) {
-      showSnackbar(
-        `${
-          key === 'maxJackPressure'
-            ? 'Maximum Jack Pressure'
-            : 'Jack Pressure Applied'
-        } must be greater than 0 and less than or equal to 1000 Kg/Cm²`,
-        'error',
-      );
-      return; // Exit without updating state
+      if (isNaN(newValue) || newValue <= 0 || newValue > 1000) {
+        showSnackbar(
+          `${
+            key === 'maxJackPressure'
+              ? 'Maximum Jack Pressure'
+              : 'Jack Pressure Applied'
+          } must be greater than 0 and less than or equal to 1000 Kg/Cm²`,
+          'error',
+        );
+        return; // Exit without updating state
+      }
     }
-  }
 
-  if (key === 'stressingSequenceDrawingNumber') {
-    newValue = parseInt(value);
+    if (key === 'stressingSequenceDrawingNumber') {
+      newValue = parseInt(value);
 
-    if (isNaN(newValue) || newValue <= 0) {
-      showSnackbar(
-        'Stressing Sequence Drawing Number must be greater than 0',
-        'error',
-      );
-      return; // Exit without updating state
+      if (isNaN(newValue) || newValue <= 0) {
+        showSnackbar(
+          'Stressing Sequence Drawing Number must be greater than 0',
+          'error',
+        );
+        return; // Exit without updating state
+      }
     }
-  }
 
-  setTemporaryPrestressingData(prevData => ({
-    ...prevData,
-    [key]: newValue,
-  }));
-};
+    setTemporaryPrestressingData(prevData => ({
+      ...prevData,
+      [key]: newValue,
+    }));
+  };
 
   const handleInputChangeGrouting = (
     name: keyof FormStateGrouting,
@@ -906,6 +930,30 @@ const handleInputChangeTemporaryPrestressing = (key: string, value: any) => {
               });
             }
             break;
+          case TASK_TYPES.FABRICATION_OF_STEEL_GIRDERS:
+            if (rfiData.metaData.fabricationData) {
+              setFabricationData(rfiData.metaData.fabricationData);
+            } else {
+              setFabricationData({
+                steelInspectionSurfaceCondition: 'Y',
+                sectionCheckedForDimension: 'Y',
+                materialSpecificationChecked: 'Y',
+                connectionChecked: 'Y',
+                boltHolesClean: 'Y',
+                approvedWeldersUsed: 'Y',
+                weldsIdentified: 'Y',
+                weldsInspected: 'Y',
+                weldsRepaired: 'Y',
+                shapeEdgeBurnsRemoved: 'Y',
+                oilGreaseRemoved: 'Y',
+                steelCleanedAndPainted: 'Y',
+                finalShopCoatApplied: 'Y',
+                memberMarkedForErection: 'Y',
+                memberApprovedByInspector: 'Y',
+              });
+            }
+            break;
+
           case TASK_TYPES.TEMPORARY_PRESTRESSING:
             if (rfiData.metaData.temporaryPrestressingData) {
               setTemporaryPrestressingData(
@@ -1706,16 +1754,15 @@ const handleInputChangeTemporaryPrestressing = (key: string, value: any) => {
       );
       return false;
     }
-    if (!data.prestressingDate){
-      showSnackbar(
-        'Please Enter Date',
-        'error',
-      );
+    if (!data.prestressingDate) {
+      showSnackbar('Please Enter Date', 'error');
       return false;
     }
-      data.maxJackPressure = Number(data.maxJackPressure);
+    data.maxJackPressure = Number(data.maxJackPressure);
     data.jackPressureApplied = Number(data.jackPressureApplied);
-    data.stressingSequenceDrawingNumber = Number(data.stressingSequenceDrawingNumber);
+    data.stressingSequenceDrawingNumber = Number(
+      data.stressingSequenceDrawingNumber,
+    );
     return true;
   };
 
@@ -2185,6 +2232,13 @@ const handleInputChangeTemporaryPrestressing = (key: string, value: any) => {
           removalFormworkData: removalFormworkData,
         };
         break;
+      case TASK_TYPES.FABRICATION_OF_STEEL_GIRDERS:
+        checkList = {
+          taskName: selectedTask.name,
+          fabricationData: fabricationData,
+        };
+        break;
+
       case TASK_TYPES.TEMPORARY_PRESTRESSING:
         if (!validateTemporaryPrestressingData(temporaryPrestressingData)) {
           return;
@@ -2384,24 +2438,16 @@ const handleInputChangeTemporaryPrestressing = (key: string, value: any) => {
         <Text style={styles.cellText}>Mixing Start Time</Text>
       </View>
       <View style={styles.cell}>
-        <Text style={styles.cellText}>
-          Mixing Finish Time
-        </Text>
+        <Text style={styles.cellText}>Mixing Finish Time</Text>
       </View>
       <View style={styles.cell}>
-        <Text style={styles.cellText}>
-          Application Start Time
-        </Text>
+        <Text style={styles.cellText}>Application Start Time</Text>
       </View>
       <View style={styles.cell}>
-        <Text style={styles.cellText}>
-          Application Finish Time
-        </Text>
+        <Text style={styles.cellText}>Application Finish Time</Text>
       </View>
       <View style={styles.cell}>
-        <Text style={styles.cellText}>
-          Segment Joining Time Closure
-        </Text>
+        <Text style={styles.cellText}>Segment Joining Time Closure</Text>
       </View>
       <View style={styles.cell}>
         <Text style={styles.cellText}>
@@ -2409,9 +2455,7 @@ const handleInputChangeTemporaryPrestressing = (key: string, value: any) => {
         </Text>
       </View>
       <View style={styles.cell}>
-       <Text style={styles.cellText}>
-          Segment Surface Area (SQM)
-        </Text>
+        <Text style={styles.cellText}>Segment Surface Area (SQM)</Text>
       </View>
       <View style={styles.cell}>
         <Text style={styles.cellText}>
@@ -2687,9 +2731,7 @@ const handleInputChangeTemporaryPrestressing = (key: string, value: any) => {
   const renderItemGlueing = (rowData: any) => (
     <View style={[styles.rowContainer, styles.marginBottom10]}>
       <View style={[styles.cell, {width: 50}]}>
-        <Text style={styles.cellText}>
-          TM {rowData.index + 1}
-        </Text>
+        <Text style={styles.cellText}>TM {rowData.index + 1}</Text>
       </View>
 
       <View style={styles.cell}>
@@ -4460,6 +4502,213 @@ const handleInputChangeTemporaryPrestressing = (key: string, value: any) => {
             </View>
           </View>
         );
+      case TASK_TYPES.FABRICATION_OF_STEEL_GIRDERS:
+        return (
+          <View style={styles.columnWiseData}>
+            <Text style={styles.headerText}>
+              Fabrication of Steel Girders/Diaphragms
+            </Text>
+
+            <View style={styles.categoryColumn}>
+              <DropdownPicker
+                label="Is Steel inspection for surface condition (Twist, Straightness etc.)"
+                value={fabricationData.steelInspectionSurfaceCondition}
+                items={YES_NO_NA_LIST}
+                onChange={(value: string) =>
+                  handleInputChangeFabrication(
+                    'steelInspectionSurfaceCondition',
+                    value,
+                  )
+                }
+              />
+            </View>
+
+            <View style={styles.categoryColumn}>
+              <DropdownPicker
+                label="Is Section checked for dimension and checked as per GFC"
+                value={fabricationData.sectionCheckedForDimension}
+                items={YES_NO_NA_LIST}
+                onChange={(value: string) =>
+                  handleInputChangeFabrication(
+                    'sectionCheckedForDimension',
+                    value,
+                  )
+                }
+              />
+            </View>
+
+            <View style={styles.categoryColumn}>
+              <DropdownPicker
+                label="Is Material specification and checked as per GFC"
+                value={fabricationData.materialSpecificationChecked}
+                items={YES_NO_NA_LIST}
+                onChange={(value: string) =>
+                  handleInputChangeFabrication(
+                    'materialSpecificationChecked',
+                    value,
+                  )
+                }
+              />
+            </View>
+
+            <View style={styles.categoryColumn}>
+              <DropdownPicker
+                label="Is connection checked as per GFC"
+                value={fabricationData.connectionChecked}
+                items={YES_NO_NA_LIST}
+                onChange={(value: string) =>
+                  handleInputChangeFabrication('connectionChecked', value)
+                }
+              />
+            </View>
+
+            <View style={styles.categoryColumn}>
+              <DropdownPicker
+                label="Are bolt holes clean and to size?"
+                value={fabricationData.boltHolesClean}
+                items={YES_NO_NA_LIST}
+                onChange={(value: string) =>
+                  handleInputChangeFabrication('boltHolesClean', value)
+                }
+              />
+            </View>
+
+            <View style={styles.categoryColumn}>
+              <DropdownPicker
+                label="Only approved welders used"
+                value={fabricationData.approvedWeldersUsed}
+                items={YES_NO_NA_LIST}
+                onChange={(value: string) =>
+                  handleInputChangeFabrication('approvedWeldersUsed', value)
+                }
+              />
+            </View>
+
+            <View style={styles.categoryColumn}>
+              <DropdownPicker
+                label="Welds identified as per welder ID"
+                value={fabricationData.weldsIdentified}
+                items={YES_NO_NA_LIST}
+                onChange={(value: string) =>
+                  handleInputChangeFabrication('weldsIdentified', value)
+                }
+              />
+            </View>
+
+            <View style={styles.categoryColumn}>
+              <DropdownPicker
+                label="Welds inspected for dimension, shape, location, etc."
+                value={fabricationData.weldsInspected}
+                items={YES_NO_NA_LIST}
+                onChange={(value: string) =>
+                  handleInputChangeFabrication('weldsInspected', value)
+                }
+              />
+            </View>
+
+            <View style={styles.categoryColumn}>
+              <DropdownPicker
+                label="Welds repaired as required."
+                value={fabricationData.weldsRepaired}
+                items={YES_NO_NA_LIST}
+                onChange={(value: string) =>
+                  handleInputChangeFabrication('weldsRepaired', value)
+                }
+              />
+            </View>
+
+            <View style={styles.categoryColumn}>
+              <DropdownPicker
+                label="Shape edge burns, weld spatter removed."
+                value={fabricationData.shapeEdgeBurnsRemoved}
+                items={YES_NO_NA_LIST}
+                onChange={(value: string) =>
+                  handleInputChangeFabrication('shapeEdgeBurnsRemoved', value)
+                }
+              />
+            </View>
+
+            <View style={styles.categoryColumn}>
+              <DropdownPicker
+                label="Oil grease removed prior to final clean."
+                value={fabricationData.oilGreaseRemoved}
+                items={YES_NO_NA_LIST}
+                onChange={(value: string) =>
+                  handleInputChangeFabrication('oilGreaseRemoved', value)
+                }
+              />
+            </View>
+
+            <View style={styles.categoryColumn}>
+              <DropdownPicker
+                label="Steel cleaned and painted as per specification."
+                value={fabricationData.steelCleanedAndPainted}
+                items={YES_NO_NA_LIST}
+                onChange={(value: string) =>
+                  handleInputChangeFabrication('steelCleanedAndPainted', value)
+                }
+              />
+            </View>
+
+            <View style={styles.categoryColumn}>
+              <DropdownPicker
+                label="Final shop coat applied as per approve color."
+                value={fabricationData.finalShopCoatApplied}
+                items={YES_NO_NA_LIST}
+                onChange={(value: string) =>
+                  handleInputChangeFabrication('finalShopCoatApplied', value)
+                }
+              />
+            </View>
+
+            <View style={styles.categoryColumn}>
+              <DropdownPicker
+                label="Each member marked for erection as per scope"
+                value={fabricationData.memberMarkedForErection}
+                items={YES_NO_NA_LIST}
+                onChange={(value: string) =>
+                  handleInputChangeFabrication('memberMarkedForErection', value)
+                }
+              />
+            </View>
+
+            <View style={styles.categoryColumn}>
+              <DropdownPicker
+                label="Each member approved by inspector prior to shipment."
+                value={fabricationData.memberApprovedByInspector}
+                items={YES_NO_NA_LIST}
+                onChange={(value: string) =>
+                  handleInputChangeFabrication(
+                    'memberApprovedByInspector',
+                    value,
+                  )
+                }
+              />
+            </View>
+
+            <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+          </View>
+        );
+
       case TASK_TYPES.TEMPORARY_PRESTRESSING:
         return (
           <View>
@@ -4523,6 +4772,41 @@ const handleInputChangeTemporaryPrestressing = (key: string, value: any) => {
               }
               isRequired={true}
             />
+            <View>
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
+                />
+              </View>
+            </View>
           </View>
         );
 
@@ -5415,7 +5699,9 @@ const handleInputChangeTemporaryPrestressing = (key: string, value: any) => {
                 />
               </View>
               <View style={styles.categoryColumn}>
-                <Text style={styles.Lable}>Consumption of water in Kilo liter</Text>
+                <Text style={styles.Lable}>
+                  Consumption of water in Kilo liter
+                </Text>
                 <TextInput
                   style={styles.commonInputFiels}
                   placeholder="Consumption of water in Kilo liter"
@@ -5588,7 +5874,10 @@ const handleInputChangeTemporaryPrestressing = (key: string, value: any) => {
                   value={erectionOfTemporaryStructure.hasAnyRiskAssessment}
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handleErectionOfTemporaryStructure('hasAnyRiskAssessment', value)
+                    handleErectionOfTemporaryStructure(
+                      'hasAnyRiskAssessment',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -5598,7 +5887,10 @@ const handleInputChangeTemporaryPrestressing = (key: string, value: any) => {
                   value={erectionOfTemporaryStructure.craneHydraLevelBase}
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handleErectionOfTemporaryStructure('craneHydraLevelBase', value)
+                    handleErectionOfTemporaryStructure(
+                      'craneHydraLevelBase',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -5608,7 +5900,10 @@ const handleInputChangeTemporaryPrestressing = (key: string, value: any) => {
                   value={erectionOfTemporaryStructure.areAllOperationTrained}
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handleErectionOfTemporaryStructure('areAllOperationTrained', value)
+                    handleErectionOfTemporaryStructure(
+                      'areAllOperationTrained',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -5628,7 +5923,10 @@ const handleInputChangeTemporaryPrestressing = (key: string, value: any) => {
                   value={erectionOfTemporaryStructure.doesTheCraneCertificate}
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handleErectionOfTemporaryStructure('doesTheCraneCertificate', value)
+                    handleErectionOfTemporaryStructure(
+                      'doesTheCraneCertificate',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -5638,7 +5936,10 @@ const handleInputChangeTemporaryPrestressing = (key: string, value: any) => {
                   value={erectionOfTemporaryStructure.AllLiftingToolsAndTackles}
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handleErectionOfTemporaryStructure('AllLiftingToolsAndTackles', value)
+                    handleErectionOfTemporaryStructure(
+                      'AllLiftingToolsAndTackles',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -5648,7 +5949,10 @@ const handleInputChangeTemporaryPrestressing = (key: string, value: any) => {
                   value={erectionOfTemporaryStructure.protectionDevices}
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handleErectionOfTemporaryStructure('protectionDevices', value)
+                    handleErectionOfTemporaryStructure(
+                      'protectionDevices',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -5658,7 +5962,10 @@ const handleInputChangeTemporaryPrestressing = (key: string, value: any) => {
                   value={erectionOfTemporaryStructure.atteainedTheirStrength}
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handleErectionOfTemporaryStructure('atteainedTheirStrength', value)
+                    handleErectionOfTemporaryStructure(
+                      'atteainedTheirStrength',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -5678,7 +5985,10 @@ const handleInputChangeTemporaryPrestressing = (key: string, value: any) => {
                   value={erectionOfTemporaryStructure.whetherSufficient}
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handleErectionOfTemporaryStructure('whetherSufficient', value)
+                    handleErectionOfTemporaryStructure(
+                      'whetherSufficient',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -5688,17 +5998,25 @@ const handleInputChangeTemporaryPrestressing = (key: string, value: any) => {
                   value={erectionOfTemporaryStructure.liftingToolsTackles}
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handleErectionOfTemporaryStructure('liftingToolsTackles', value)
+                    handleErectionOfTemporaryStructure(
+                      'liftingToolsTackles',
+                      value,
+                    )
                   }
                 />
               </View>
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="All wielding machine, electrical equipment’s & generators properly earthed."
-                  value={erectionOfTemporaryStructure.equipmentsGeneratorsProperlyEarthed}
+                  value={
+                    erectionOfTemporaryStructure.equipmentsGeneratorsProperlyEarthed
+                  }
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handleErectionOfTemporaryStructure('equipmentsGeneratorsProperlyEarthed', value)
+                    handleErectionOfTemporaryStructure(
+                      'equipmentsGeneratorsProperlyEarthed',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -5708,17 +6026,25 @@ const handleInputChangeTemporaryPrestressing = (key: string, value: any) => {
                   value={erectionOfTemporaryStructure.walkwayMaintainedFreeForm}
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handleErectionOfTemporaryStructure('walkwayMaintainedFreeForm', value)
+                    handleErectionOfTemporaryStructure(
+                      'walkwayMaintainedFreeForm',
+                      value,
+                    )
                   }
                 />
               </View>
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Is safety latch/locking available"
-                  value={erectionOfTemporaryStructure.safetyLatchLockingAvailable}
+                  value={
+                    erectionOfTemporaryStructure.safetyLatchLockingAvailable
+                  }
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handleErectionOfTemporaryStructure('safetyLatchLockingAvailable', value)
+                    handleErectionOfTemporaryStructure(
+                      'safetyLatchLockingAvailable',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -5728,27 +6054,40 @@ const handleInputChangeTemporaryPrestressing = (key: string, value: any) => {
                   value={erectionOfTemporaryStructure.properWarningSign}
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handleErectionOfTemporaryStructure('properWarningSign', value)
+                    handleErectionOfTemporaryStructure(
+                      'properWarningSign',
+                      value,
+                    )
                   }
                 />
               </View>
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Lifting arrangements are approved by competent person"
-                  value={erectionOfTemporaryStructure.liftingArrangementsAreApproved}
+                  value={
+                    erectionOfTemporaryStructure.liftingArrangementsAreApproved
+                  }
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handleErectionOfTemporaryStructure('liftingArrangementsAreApproved', value)
+                    handleErectionOfTemporaryStructure(
+                      'liftingArrangementsAreApproved',
+                      value,
+                    )
                   }
                 />
               </View>
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Is footing above temp. structure fixed achieve their compressive strength"
-                  value={erectionOfTemporaryStructure.achieveTheirCompressiveStrength}
+                  value={
+                    erectionOfTemporaryStructure.achieveTheirCompressiveStrength
+                  }
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handleErectionOfTemporaryStructure('achieveTheirCompressiveStrength', value)
+                    handleErectionOfTemporaryStructure(
+                      'achieveTheirCompressiveStrength',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -5765,20 +6104,30 @@ const handleInputChangeTemporaryPrestressing = (key: string, value: any) => {
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="Is Structure set out to the required line and levels."
-                  value={erectionOfTemporaryStructure.structureSetOutToTheLevels}
+                  value={
+                    erectionOfTemporaryStructure.structureSetOutToTheLevels
+                  }
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handleErectionOfTemporaryStructure('structureSetOutToTheLevels', value)
+                    handleErectionOfTemporaryStructure(
+                      'structureSetOutToTheLevels',
+                      value,
+                    )
                   }
                 />
               </View>
               <View style={styles.categoryColumn}>
                 <DropdownPicker
                   label="For welding, is welder qualification and skilled checked and certified"
-                  value={erectionOfTemporaryStructure.aualificationAndSkilledCheckedAndCertified}
+                  value={
+                    erectionOfTemporaryStructure.aualificationAndSkilledCheckedAndCertified
+                  }
                   items={YES_NO_NA_LIST}
                   onChange={(value: string) =>
-                    handleErectionOfTemporaryStructure('aualificationAndSkilledCheckedAndCertified', value)
+                    handleErectionOfTemporaryStructure(
+                      'aualificationAndSkilledCheckedAndCertified',
+                      value,
+                    )
                   }
                 />
               </View>
@@ -7193,7 +7542,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    rowGap: 7
+    rowGap: 7,
   },
   cell: {
     width: 150,
@@ -7203,7 +7552,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
   },
   marginBottom10: {
-    marginBottom: 10
+    marginBottom: 10,
   },
   cellText: {
     fontWeight: '600',

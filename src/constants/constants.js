@@ -500,6 +500,8 @@ export const TASK_TYPES = {
   PAINTING: 'painting',
   STITCH_CONCRETE: 'stitch-concrete',
   AUTO_LAUNCHING: 'auto-launching',
+  PROCUREMENT_OF_STRUCTURAL_STEEL: 'procurement-of-structural-steel',
+  TRANSPORTATION_OF_MATERIAL: 'transportation-of-material-at-site',
 };
 
 export const TEST_MATERIALS_TYPES = {

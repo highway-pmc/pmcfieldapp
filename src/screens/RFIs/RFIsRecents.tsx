@@ -691,6 +691,30 @@ const RFIsRecents = (props: any) => {
             <Text>No Observations</Text>
           </View>
         );
+
+      case TASK_TYPES.PROCUREMENT_OF_STRUCTURAL_STEEL:
+        return (
+          <View>
+            <View style={{flexDirection: 'column'}}>
+              <Text style={styles.GenerateRFIFieldLabel}>
+                Total qty of steel procured in tonne
+              </Text>
+              <Text>{selectedRFI?.metaData.totalQtyOfSteelProcured}</Text>
+            </View>
+          </View>
+        );
+
+      case TASK_TYPES.TRANSPORTATION_OF_MATERIAL:
+        return (
+          <View>
+            <View style={{flexDirection: 'column'}}>
+              <Text style={styles.GenerateRFIFieldLabel}>
+                Transit Time in hrs
+              </Text>
+              <Text>{selectedRFI?.metaData.transitTime}</Text>
+            </View>
+          </View>
+        );
       case TASK_TYPES.CAGE_LOWERING:
         return (
           <View>
@@ -2379,108 +2403,108 @@ const RFIsRecents = (props: any) => {
           </View>
         );
       case TASK_TYPES.AUTO_LAUNCHING:
-const autoLaunchingProperties = [
-  {
-    title: 'First Span Lowering on Temporary Steel Stools Completed',
-    key: 'firstSpanLowering',
-  },
-  {
-    title: 'Slider as per Drawing/Methodology',
-    key: 'sliderPerDrawing',
-  },
-  {
-    title: 'Middle Support Leveling & Alignment Completed',
-    key: 'middleSupportLeveling',
-  },
-  {
-    title: 'Rear Support Leveling & Alignment Completed',
-    key: 'rearSupportLeveling',
-  },
-  {
-    title:
-      'Check for Hydraulic Jacks at Mid & Rear Support (Alignment & Seating)',
-    key: 'checkHydraulicJacks',
-  },
-  {
-    title:
-      'Ensure All Vertical Jacks at Mid Support are Connected to Single Power Pack',
-    key: 'allVerticalJacksMidSupport',
-  },
-  {
-    title:
-      'Ensure All Vertical Jacks at Rear Support are Connected to Single Power Pack',
-    key: 'allVerticalJacksRearSupport',
-  },
-  {
-    title:
-      'Ensure Cleanliness and Application of Lubricant on Sliding Surfaces at Mid & Rear Support',
-    key: 'cleanlinessAndApplicationLubricant',
-  },
-  {
-    title:
-      'Physically Checked All Accessories of Launching (Rear Support, Middle Support, Anchoring Bolt)',
-    key: 'physicallyCheckedAllAccessories',
-  },
-  {
-    title:
-      'Ensure Pins Between Jack and Monorail are Properly Fixed & in Good Condition',
-    key: 'jackAndMonorailProperlyFixed',
-  },
-  {
-    title: 'Knuckle Bearing in Position',
-    key: 'knuckleBearing',
-  },
-  {
-    title: 'Guide Rollers in Place and Functioning',
-    key: 'guideRollers',
-  },
-  {
-    title: 'Macalloy Bars Stressed - Mid Support & Rear Support',
-    key: 'macalloyBarsStressed',
-  },
-  {
-    title: 'Front Support Telescopic Leg Closed Properly',
-    key: 'frontSupportTelescopic',
-  },
-  {
-    title: 'Ensure Lock Nuts Arrangement at Mid & Rear Support is Unlocked',
-    key: 'lockNutsArrangement',
-  },
-  {
-    title: 'Check Pressure on Mid Support and Rear Support Jacks',
-    key: 'pressureOnMidRearSupport',
-  },
-  {
-    title: 'Gradient of Auto Launching Checked',
-    key: 'gradient',
-  },
-  {
-    title: 'Check Alignment of Track Rail for Rear Trolley Movement',
-    key: 'alignmentOfTrackRail',
-  },
-  {
-    title:
-      'Ensure Front Support is at Correct Position to Lower Legs as per Methodology Drawing',
-    key: 'frontSupportCorrectPosition',
-  },
-  {
-    title: 'Ensure Front Support Pins are Properly Placed and Locked',
-    key: 'frontSupportPins',
-  },
-  {
-    title: 'Ensure Inserts at Pier Cap are Tightened Properly',
-    key: 'insertsPierCap',
-  },
-  {
-    title: 'Ensure Front Support is Engaged Properly',
-    key: 'frontSupportEngaged',
-  },
-  {
-    title: 'Ensure Entire Area is Barricaded',
-    key: 'entireAreaBarricaded',
-  },
-];
-
+        const autoLaunchingProperties = [
+          {
+            title: 'First Span Lowering on Temporary Steel Stools Completed',
+            key: 'firstSpanLowering',
+          },
+          {
+            title: 'Slider as per Drawing/Methodology',
+            key: 'sliderPerDrawing',
+          },
+          {
+            title: 'Middle Support Leveling & Alignment Completed',
+            key: 'middleSupportLeveling',
+          },
+          {
+            title: 'Rear Support Leveling & Alignment Completed',
+            key: 'rearSupportLeveling',
+          },
+          {
+            title:
+              'Check for Hydraulic Jacks at Mid & Rear Support (Alignment & Seating)',
+            key: 'checkHydraulicJacks',
+          },
+          {
+            title:
+              'Ensure All Vertical Jacks at Mid Support are Connected to Single Power Pack',
+            key: 'allVerticalJacksMidSupport',
+          },
+          {
+            title:
+              'Ensure All Vertical Jacks at Rear Support are Connected to Single Power Pack',
+            key: 'allVerticalJacksRearSupport',
+          },
+          {
+            title:
+              'Ensure Cleanliness and Application of Lubricant on Sliding Surfaces at Mid & Rear Support',
+            key: 'cleanlinessAndApplicationLubricant',
+          },
+          {
+            title:
+              'Physically Checked All Accessories of Launching (Rear Support, Middle Support, Anchoring Bolt)',
+            key: 'physicallyCheckedAllAccessories',
+          },
+          {
+            title:
+              'Ensure Pins Between Jack and Monorail are Properly Fixed & in Good Condition',
+            key: 'jackAndMonorailProperlyFixed',
+          },
+          {
+            title: 'Knuckle Bearing in Position',
+            key: 'knuckleBearing',
+          },
+          {
+            title: 'Guide Rollers in Place and Functioning',
+            key: 'guideRollers',
+          },
+          {
+            title: 'Macalloy Bars Stressed - Mid Support & Rear Support',
+            key: 'macalloyBarsStressed',
+          },
+          {
+            title: 'Front Support Telescopic Leg Closed Properly',
+            key: 'frontSupportTelescopic',
+          },
+          {
+            title:
+              'Ensure Lock Nuts Arrangement at Mid & Rear Support is Unlocked',
+            key: 'lockNutsArrangement',
+          },
+          {
+            title: 'Check Pressure on Mid Support and Rear Support Jacks',
+            key: 'pressureOnMidRearSupport',
+          },
+          {
+            title: 'Gradient of Auto Launching Checked',
+            key: 'gradient',
+          },
+          {
+            title: 'Check Alignment of Track Rail for Rear Trolley Movement',
+            key: 'alignmentOfTrackRail',
+          },
+          {
+            title:
+              'Ensure Front Support is at Correct Position to Lower Legs as per Methodology Drawing',
+            key: 'frontSupportCorrectPosition',
+          },
+          {
+            title: 'Ensure Front Support Pins are Properly Placed and Locked',
+            key: 'frontSupportPins',
+          },
+          {
+            title: 'Ensure Inserts at Pier Cap are Tightened Properly',
+            key: 'insertsPierCap',
+          },
+          {
+            title: 'Ensure Front Support is Engaged Properly',
+            key: 'frontSupportEngaged',
+          },
+          {
+            title: 'Ensure Entire Area is Barricaded',
+            key: 'entireAreaBarricaded',
+          },
+        ];
 
         return (
           <View>

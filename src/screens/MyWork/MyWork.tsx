@@ -310,6 +310,19 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     bearingFixedWithMetalBedding: 'Y',
     threadedFastenerTightenedUniformly: 'Y',
   });
+  const handleInputChangeInstallationOfExpansionJoint = (key, value) => {
+    setInstallationOfExpansionJointData(prevState => ({
+      ...prevState,
+      [key]: value,
+    }));
+  };
+
+const handleInputChangeRemovalOfTemporaryStructure = (key, value) => {
+  setRemovalOfTemporaryStructureData(prevState => ({
+    ...prevState,
+    [key]: value,
+  }));
+};
 
   const handleInputChangeDeStressingOfGirder = (key: string, value: string) => {
     setDeStressingOfGirderData(prevState => ({
@@ -807,6 +820,23 @@ const [deStressingOfGirderData, setDeStressingOfGirderData] = useState({
   diamondBitSawUsed: 'Y',
   gradualUniformTransfer: 'Y',
 });
+const [installationOfExpansionJointData, setInstallationOfExpansionJointData] =
+  useState({
+    expansionJointPositionCorrect: 'Y',
+    shippingDevicesRemoved: 'Y',
+    noForeignObjects: 'Y',
+    materialsFlowProperly: 'Y',
+    anchorsAndSupportsMatched: 'Y',
+    jointsProperlyAligned: 'Y',
+    noDamageSustained: 'Y',
+  });
+
+const [removalOfTemporaryStructureData, setRemovalOfTemporaryStructureData] =
+  useState({
+    concreteAchievedStrength: 'Y',
+    minimumTimeAttained: 'Y',
+    allComponentsTightened: 'Y',
+  });
 
   const handleTransportationOfSteelGirdersDiaphragms = (
     field: string,
@@ -1505,6 +1535,36 @@ const [deStressingOfGirderData, setDeStressingOfGirderData] = useState({
                 voidBeneathBearingFilled: 'Y',
                 bearingFixedWithMetalBedding: 'Y',
                 threadedFastenerTightenedUniformly: 'Y',
+              });
+            }
+            break;
+          case TASK_TYPES.REMOVAL_OF_TEMPORARY_STRUCTURE:
+            if (rfiData.metaData.removalOfTemporaryStructureData) {
+              setRemovalOfTemporaryStructureData(
+                rfiData.metaData.removalOfTemporaryStructureData,
+              );
+            } else {
+              setRemovalOfTemporaryStructureData({
+                concreteAchievedStrength: 'Y',
+                minimumTimeAttained: 'Y',
+                allComponentsTightened: 'Y',
+              });
+            }
+            break;
+          case TASK_TYPES.INSTALLATION_OF_EXPANSION_JOINT:
+            if (rfiData.metaData.installationOfExpansionJointData) {
+              setInstallationOfExpansionJointData(
+                rfiData.metaData.installationOfExpansionJointData,
+              );
+            } else {
+              setInstallationOfExpansionJointData({
+                expansionJointPositionCorrect: 'Y',
+                shippingDevicesRemoved: 'Y',
+                noForeignObjects: 'Y',
+                materialsFlowProperly: 'Y',
+                anchorsAndSupportsMatched: 'Y',
+                jointsProperlyAligned: 'Y',
+                noDamageSustained: 'Y',
               });
             }
             break;
@@ -2866,6 +2926,18 @@ const [deStressingOfGirderData, setDeStressingOfGirderData] = useState({
         checkList = {
           taskName: selectedTask.name,
           fixingOfBearingData: fixingOfBearingData,
+        };
+        break;
+      case TASK_TYPES.REMOVAL_OF_TEMPORARY_STRUCTURE:
+        checkList = {
+          taskName: selectedTask.name,
+          removalOfTemporaryStructureData: removalOfTemporaryStructureData,
+        };
+        break;
+      case TASK_TYPES.INSTALLATION_OF_EXPANSION_JOINT:
+        checkList = {
+          taskName: selectedTask.name,
+          installationOfExpansionJointData: installationOfExpansionJointData,
         };
         break;
 
@@ -6184,6 +6256,220 @@ const [deStressingOfGirderData, setDeStressingOfGirderData] = useState({
                 value={comments}
                 onChangeText={text => setComments(text)}
               />
+            </View>
+          </View>
+        );
+      case TASK_TYPES.REMOVAL_OF_TEMPORARY_STRUCTURE:
+        return (
+          <View>
+            <DropdownPicker
+              label="Whether Concrete Has Achieved Desired Strength"
+              value={removalOfTemporaryStructureData.concreteAchievedStrength}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeRemovalOfTemporaryStructure(
+                  'concreteAchievedStrength',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Whether Minimum Time Has Been Attained"
+              value={removalOfTemporaryStructureData.minimumTimeAttained}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeRemovalOfTemporaryStructure(
+                  'minimumTimeAttained',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Whether All Main Components Tightened and Fixed at Their Position"
+              value={removalOfTemporaryStructureData.allComponentsTightened}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeRemovalOfTemporaryStructure(
+                  'allComponentsTightened',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <View>
+              {/* this should present irrespective of property */}
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
+                />
+              </View>
+            </View>
+          </View>
+        );
+      case TASK_TYPES.INSTALLATION_OF_EXPANSION_JOINT:
+        return (
+          <View>
+            <DropdownPicker
+              label="Expansion Joint in the Right Position"
+              value={
+                installationOfExpansionJointData.expansionJointPositionCorrect
+              }
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeInstallationOfExpansionJoint(
+                  'expansionJointPositionCorrect',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Shipping Devices or Stabilizers Removed"
+              value={installationOfExpansionJointData.shippingDevicesRemoved}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeInstallationOfExpansionJoint(
+                  'shippingDevicesRemoved',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="No Foreign Objects Impending the Expansion Joint"
+              value={installationOfExpansionJointData.noForeignObjects}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeInstallationOfExpansionJoint(
+                  'noForeignObjects',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Materials Flowing in the Right Direction"
+              value={installationOfExpansionJointData.materialsFlowProperly}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeInstallationOfExpansionJoint(
+                  'materialsFlowProperly',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Anchors and Supports Match System Drawing"
+              value={installationOfExpansionJointData.anchorsAndSupportsMatched}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeInstallationOfExpansionJoint(
+                  'anchorsAndSupportsMatched',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Joints Properly Aligned"
+              value={installationOfExpansionJointData.jointsProperlyAligned}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeInstallationOfExpansionJoint(
+                  'jointsProperlyAligned',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="No Damage Sustained During Shipping or Installation"
+              value={installationOfExpansionJointData.noDamageSustained}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeInstallationOfExpansionJoint(
+                  'noDamageSustained',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <View>
+              {/* Common components irrespective of property */}
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
+                />
+              </View>
             </View>
           </View>
         );

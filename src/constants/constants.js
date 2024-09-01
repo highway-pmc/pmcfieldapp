@@ -489,6 +489,7 @@ export const TASK_TYPES = {
   ASSEMBLING_OF_TRUSS: 'assembling-of-truss',
   ERECTION_USING_CRANES: 'erection-using-cranes',
   STACKING_IN_YARD: 'stacking-in-yard',
+  HACKING_OF_GIRDER: 'hacking-of-girder',
 };
 
 export const TEST_MATERIALS_TYPES = {

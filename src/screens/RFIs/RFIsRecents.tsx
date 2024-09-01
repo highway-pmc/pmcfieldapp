@@ -2069,6 +2069,45 @@ const RFIsRecents = (props: any) => {
             ))}
           </View>
         );
+      case TASK_TYPES.HACKING_OF_GIRDER:
+        const hackingOfGirderProperties = [
+          {
+            title: 'Methodology Approved for Hacking by the Contractor',
+            key: 'methodologyApproved',
+          },
+          {
+            title:
+              'Whether the Surface Cleaned and Wet at Which Hacking is to be Done',
+            key: 'surfaceCleanedAndWet',
+          },
+          {
+            title: 'Whether the Personnel are Skilled',
+            key: 'skilledPersonnel',
+          },
+          {
+            title: 'Whether the Instrument Used for Hacking is Sharpened',
+            key: 'sharpenedInstruments',
+          },
+          {
+            title: 'Whether the 300-400 Recess Cut Formed in Per Square Meter',
+            key: 'recessCutFormation',
+          },
+        ];
+
+        return (
+          <View>
+            {hackingOfGirderProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.hackingOfGirderData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
 
       default:
         return (

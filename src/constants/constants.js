@@ -494,6 +494,7 @@ export const TASK_TYPES = {
   REMOVAL_OF_SIDE_SHUTTERS: 'removal-of-side-shutters',
   REMOVAL_OF_MIDDLIE_TOP_SHUTTERS: 'removal-of-middle-and-top-shutters',
   REMOVAL_OF_INNER_SHUTTERS: 'removal-of-inner-shutters',
+  FIXING_OF_BEARING: 'fixing-of-bearing',
 };
 
 export const TEST_MATERIALS_TYPES = {

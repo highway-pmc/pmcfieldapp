@@ -299,6 +299,18 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     structureSetOut: 'Y',
     welderQualificationChecked: 'Y',
   });
+  const [fixingOfBearingData, setFixingOfBearingData] = useState({
+    bearingPlacedAsPerGFC: 'Y',
+    bearingSurfaceFullyContactWithGirder: 'Y',
+    bearingPlatesSetHorizontal: 'Y',
+    bearingPreSetWithAxis: 'Y',
+    supportsProvidedToHoldBearing: 'Y',
+    anchorBoltHolesMatching: 'Y',
+    voidBeneathBearingFilled: 'Y',
+    bearingFixedWithMetalBedding: 'Y',
+    threadedFastenerTightenedUniformly: 'Y',
+  });
+
   const handleInputChangeDeStressingOfGirder = (key: string, value: string) => {
     setDeStressingOfGirderData(prevState => ({
       ...prevState,
@@ -584,6 +596,13 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       [field]: value,
     }));
   };
+  const handleInputChangeFixingOfBearing = (key, value) => {
+    setFixingOfBearingData(prevState => ({
+      ...prevState,
+      [key]: value,
+    }));
+  };
+
   const handleInputChangeFabrication = (key: string, value: string) => {
     setFabricationData(prevState => ({
       ...prevState,
@@ -1469,6 +1488,23 @@ const [deStressingOfGirderData, setDeStressingOfGirderData] = useState({
                 strengthAchieved: 'Y',
                 diamondBitSawUsed: 'Y',
                 gradualUniformTransfer: 'Y',
+              });
+            }
+            break;
+          case TASK_TYPES.FIXING_OF_BEARING:
+            if (rfiData.metaData.fixingOfBearingData) {
+              setFixingOfBearingData(rfiData.metaData.fixingOfBearingData);
+            } else {
+              setFixingOfBearingData({
+                bearingPlacedAsPerGFC: 'Y',
+                bearingSurfaceFullyContactWithGirder: 'Y',
+                bearingPlatesSetHorizontal: 'Y',
+                bearingPreSetWithAxis: 'Y',
+                supportsProvidedToHoldBearing: 'Y',
+                anchorBoltHolesMatching: 'Y',
+                voidBeneathBearingFilled: 'Y',
+                bearingFixedWithMetalBedding: 'Y',
+                threadedFastenerTightenedUniformly: 'Y',
               });
             }
             break;
@@ -2824,6 +2860,12 @@ const [deStressingOfGirderData, setDeStressingOfGirderData] = useState({
         checkList = {
           taskName: selectedTask.name,
           deStressingOfGirderData: deStressingOfGirderData,
+        };
+        break;
+      case TASK_TYPES.FIXING_OF_BEARING:
+        checkList = {
+          taskName: selectedTask.name,
+          fixingOfBearingData: fixingOfBearingData,
         };
         break;
 
@@ -5993,6 +6035,155 @@ const [deStressingOfGirderData, setDeStressingOfGirderData] = useState({
                   }}
                 />
               </View>
+            </View>
+          </View>
+        );
+      case TASK_TYPES.FIXING_OF_BEARING:
+        return (
+          <View>
+            <DropdownPicker
+              label="Bearing Placed as Per GFC Drawing"
+              value={fixingOfBearingData.bearingPlacedAsPerGFC}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeFixingOfBearing('bearingPlacedAsPerGFC', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Bearing Surface Fully Contact with Girder"
+              value={fixingOfBearingData.bearingSurfaceFullyContactWithGirder}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeFixingOfBearing(
+                  'bearingSurfaceFullyContactWithGirder',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Bearing Plates Set Horizontal in Both Directions"
+              value={fixingOfBearingData.bearingPlatesSetHorizontal}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeFixingOfBearing(
+                  'bearingPlatesSetHorizontal',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Bearing Pre-Set with Respect to Axis"
+              value={fixingOfBearingData.bearingPreSetWithAxis}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeFixingOfBearing('bearingPreSetWithAxis', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Supports Provided to Hold Bearing in Position"
+              value={fixingOfBearingData.supportsProvidedToHoldBearing}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeFixingOfBearing(
+                  'supportsProvidedToHoldBearing',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Anchor Bolt Holes Matching"
+              value={fixingOfBearingData.anchorBoltHolesMatching}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeFixingOfBearing(
+                  'anchorBoltHolesMatching',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Void Beneath Bearing Filled with Bedding Material"
+              value={fixingOfBearingData.voidBeneathBearingFilled}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeFixingOfBearing(
+                  'voidBeneathBearingFilled',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Bearing Fixed with Metal Bedding Plate"
+              value={fixingOfBearingData.bearingFixedWithMetalBedding}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeFixingOfBearing(
+                  'bearingFixedWithMetalBedding',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Threaded Fastener Tightened Uniformly"
+              value={fixingOfBearingData.threadedFastenerTightenedUniformly}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeFixingOfBearing(
+                  'threadedFastenerTightenedUniformly',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            {/* Common fields for Date, Time, Recommendations */}
+            <View style={{flexDirection: 'column'}}>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+            </View>
+
+            <View>
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+            </View>
+
+            <View style={{flexDirection: 'column', paddingBottom: 20}}>
+              <Text style={styles.Lable}>Recommendations</Text>
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                returnKeyType="next"
+                underlineColorAndroid="#f000"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
             </View>
           </View>
         );

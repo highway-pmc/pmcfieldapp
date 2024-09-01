@@ -2145,6 +2145,60 @@ const RFIsRecents = (props: any) => {
             ))}
           </View>
         );
+      case TASK_TYPES.FIXING_OF_BEARING:
+        const fixingOfBearingProperties = [
+          {
+            title: 'Bearing Placed as Per GFC Drawing',
+            key: 'bearingPlacedAsPerGFC',
+          },
+          {
+            title: 'Bearing Surface Fully Contact with Girder',
+            key: 'bearingSurfaceFullyContactWithGirder',
+          },
+          {
+            title: 'Bearing Plates Set Horizontal in Both Directions',
+            key: 'bearingPlatesSetHorizontal',
+          },
+          {
+            title: 'Bearing Pre-Set with Respect to Axis',
+            key: 'bearingPreSetWithAxis',
+          },
+          {
+            title: 'Supports Provided to Hold Bearing in Position',
+            key: 'supportsProvidedToHoldBearing',
+          },
+          {
+            title: 'Anchor Bolt Holes Matching',
+            key: 'anchorBoltHolesMatching',
+          },
+          {
+            title: 'Void Beneath Bearing Filled with Bedding Material',
+            key: 'voidBeneathBearingFilled',
+          },
+          {
+            title: 'Bearing Fixed with Metal Bedding Plate',
+            key: 'bearingFixedWithMetalBedding',
+          },
+          {
+            title: 'Threaded Fastener Tightened Uniformly',
+            key: 'threadedFastenerTightenedUniformly',
+          },
+        ];
+
+        return (
+          <View>
+            {fixingOfBearingProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.fixingOfBearingData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
 
       default:
         return (

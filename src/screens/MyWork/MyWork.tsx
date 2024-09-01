@@ -2888,9 +2888,6 @@ const [removalOfTemporaryStructureData, setRemovalOfTemporaryStructureData] =
           erectionOfTemporaryStructure: erectionOfTemporaryStructure,
         };
         break;
-
-      default:
-        break;
       case TASK_TYPES.ERECTION_USING_CRANES:
         checkList = {
           taskName: selectedTask.name,

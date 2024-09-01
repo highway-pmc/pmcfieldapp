@@ -495,10 +495,13 @@ export const TASK_TYPES = {
   REMOVAL_OF_MIDDLIE_TOP_SHUTTERS: 'removal-of-middle-and-top-shutters',
   REMOVAL_OF_INNER_SHUTTERS: 'removal-of-inner-shutters',
   FIXING_OF_BEARING: 'fixing-of-bearing',
-  INSTALLATION_OF_EXPANSION_JOINT:
-    'installation-of-expansion-joint',
+  INSTALLATION_OF_EXPANSION_JOINT: 'installation-of-expansion-joint',
   REMOVAL_OF_TEMPORARY_STRUCTURE: 'removal-of-temporary-structure',
-  PAINTING:'painting'
+  PAINTING: 'painting',
+  STITCH_CONCRETE: 'stitch-concrete',
+  AUTO_LAUNCHING: 'auto-launching',
+  PROCUREMENT_OF_STRUCTURAL_STEEL: 'procurement-of-structural-steel',
+  TRANSPORTATION_OF_MATERIAL: 'transportation-of-material-at-site',
 };
 
 export const TEST_MATERIALS_TYPES = {

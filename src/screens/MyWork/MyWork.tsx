@@ -310,6 +310,13 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     bearingFixedWithMetalBedding: 'Y',
     threadedFastenerTightenedUniformly: 'Y',
   });
+  const handleInputChangeAutoLaunching = (key, value) => {
+    setAutoLaunchingData(prevState => ({
+      ...prevState,
+      [key]: value,
+    }));
+  };
+
   const handleInputChangeInstallationOfExpansionJoint = (key, value) => {
     setInstallationOfExpansionJointData(prevState => ({
       ...prevState,
@@ -768,6 +775,25 @@ const [paintingData, setPaintingData] = useState({
       [field]: value,
     }));
   };
+const [procurementOfSteelData, setProcurementOfSteelData] = useState({
+  totalQtyOfSteelProcured: 0.0, 
+});
+const [transportationData, setTransportationData] = useState({
+  transitTime: 0.0, 
+});
+const handleTextInputChangeProcurementOfSteel = (key:any, value:any) => {
+  setProcurementOfSteelData({
+    ...procurementOfSteelData,
+    [key]: value,
+  });
+};
+
+const handleTextInputChangeTransportation = (key:any, value:any) => {
+  setTransportationData({
+    ...transportationData,
+    [key]: value,
+  });
+};
 
   const [
     transportationOfSteelGirdersDiaphragms,
@@ -806,6 +832,32 @@ const [paintingData, setPaintingData] = useState({
     structureSetOutCorrectly: 'Y',
     welderQualifiedAndCertified: 'Y',
   });
+  const [autoLaunchingData, setAutoLaunchingData] = useState({
+    firstSpanLowering: 'Y',
+    sliderPerDrawing: 'Y',
+    middleSupportLeveling: 'Y',
+    rearSupportLeveling: 'Y',
+    checkHydraulicJacks: 'Y',
+    allVerticalJacksMidSupport: 'Y',
+    allVerticalJacksRearSupport: 'Y',
+    cleanlinessAndApplicationLubricant: 'Y',
+    physicallyCheckedAllAccessories: 'Y',
+    jackAndMonorailProperlyFixed: 'Y',
+    knuckleBearing: 'Y',
+    guideRollers: 'Y',
+    macalloyBarsStressed: 'Y',
+    frontSupportTelescopic: 'Y',
+    lockNutsArrangement: 'Y',
+    pressureOnMidRearSupport: 'Y',
+    gradient: 'Y',
+    alignmentOfTrackRail: 'Y',
+    frontSupportCorrectPosition: 'Y',
+    frontSupportPins: 'Y',
+    insertsPierCap: 'Y',
+    frontSupportEngaged: 'Y',
+    entireAreaBarricaded: 'Y',
+  });
+
 const [stackingInYardData, setStackingInYardData] = useState({
   areaBarricaded: 'Y',
   temporaryLightsAvailable: 'Y',
@@ -1206,6 +1258,7 @@ const handleInputChangePainting = (key, value) => {
               });
             }
             break;
+          case TASK_TYPES.STITCH_CONCRETE:
           case TASK_TYPES.CONCRETING:
           case TASK_TYPES.PCC_LEVELLING_COURSE:
             if (rfiData.metaData.concreteData) {
@@ -1619,6 +1672,57 @@ const handleInputChangePainting = (key, value) => {
                 secondCoatAfterTouchUp: 'Y',
                 finalCoatApplied: 'Y',
                 cleaningAndProtection: 'Y',
+              });
+            }
+            break;
+          case TASK_TYPES.AUTO_LAUNCHING:
+            if (rfiData.metaData.autoLaunchingData) {
+              setAutoLaunchingData(rfiData.metaData.autoLaunchingData);
+            } else {
+              setAutoLaunchingData({
+                firstSpanLowering: 'Y',
+                sliderPerDrawing: 'Y',
+                middleSupportLeveling: 'Y',
+                rearSupportLeveling: 'Y',
+                checkHydraulicJacks: 'Y',
+                allVerticalJacksMidSupport: 'Y',
+                allVerticalJacksRearSupport: 'Y',
+                cleanlinessAndApplicationLubricant: 'Y',
+                physicallyCheckedAllAccessories: 'Y',
+                jackAndMonorailProperlyFixed: 'Y',
+                knuckleBearing: 'Y',
+                guideRollers: 'Y',
+                macalloyBarsStressed: 'Y',
+                frontSupportTelescopic: 'Y',
+                lockNutsArrangement: 'Y',
+                pressureOnMidRearSupport: 'Y',
+                gradient: 'Y',
+                alignmentOfTrackRail: 'Y',
+                frontSupportCorrectPosition: 'Y',
+                frontSupportPins: 'Y',
+                insertsPierCap: 'Y',
+                frontSupportEngaged: 'Y',
+                entireAreaBarricaded: 'Y',
+              });
+            }
+            break;
+          case TASK_TYPES.PROCUREMENT_OF_STRUCTURAL_STEEL:
+            if (rfiData.metaData.procurementOfSteelData) {
+              setProcurementOfSteelData(
+                rfiData.metaData.procurementOfSteelData,
+              );
+            } else {
+              setProcurementOfSteelData({
+                totalQtyOfSteelProcured: 0.0, 
+              });
+            }
+            break;
+          case TASK_TYPES.TRANSPORTATION_OF_MATERIAL:
+            if (rfiData.metaData.transportationData) {
+              setTransportationData(rfiData.metaData.transportationData);
+            } else {
+              setTransportationData({
+                transitTime: 0.0, 
               });
             }
             break;
@@ -2194,6 +2298,46 @@ const handleInputChangePainting = (key, value) => {
       }),
     );
   };
+  const validateTransportationData = (data: any): boolean => {
+    const transitTime = parseFloat(data.transitTime);
+
+    // Validation for transit time
+    if (
+      isNaN(transitTime) ||
+      transitTime <= 0 ||
+      transitTime > 10000 ||
+      !/^\d+(\.\d{1,2})?$/.test(data.transitTime)
+    ) {
+      showSnackbar(
+        'Transit time must be greater than 0, up to 2 decimal places, and less than or equal to 10,000 hours.',
+        'error',
+      );
+      return false;
+    }
+
+    data.transitTime = Number(data.transitTime);
+    return true;
+  };
+
+const validateProcurementOfSteelData = (data: any): boolean => {
+  const totalQtyOfSteelProcured = parseFloat(data.totalQtyOfSteelProcured);
+
+  // Validation for total quantity of steel procured
+  if (
+    isNaN(totalQtyOfSteelProcured) ||
+    totalQtyOfSteelProcured <= 0 ||
+    totalQtyOfSteelProcured > 100000 ||
+    !/^\d+(\.\d{1,3})?$/.test(data.totalQtyOfSteelProcured)
+  ) {
+    showSnackbar(
+      'Total quantity of steel procured must be greater than 0, up to 3 decimal places, and less than or equal to 1,00,000 tonnes.',
+      'error',
+    );
+    return false;
+  }
+  data.totalQtyOfSteelProcured = Number(data.totalQtyOfSteelProcured);
+  return true;
+};
 
   const validateFlushingOperationsData = (
     flushingOperationsData: any,
@@ -2856,6 +3000,7 @@ const handleInputChangePainting = (key, value) => {
           },
         };
         break;
+      case TASK_TYPES.STITCH_CONCRETE:
       case TASK_TYPES.CONCRETING:
       case TASK_TYPES.PCC_LEVELLING_COURSE:
         const isDataValid = validateConcreteData(selectedTask?.name);
@@ -2995,6 +3140,31 @@ const handleInputChangePainting = (key, value) => {
         checkList = {
           taskName: selectedTask.name,
           paintingData: paintingData,
+        };
+        break;
+      case TASK_TYPES.AUTO_LAUNCHING:
+        checkList = {
+          taskName: selectedTask.name,
+          autoLaunchingData: autoLaunchingData,
+        };
+        break;
+      case TASK_TYPES.PROCUREMENT_OF_STRUCTURAL_STEEL:
+        if (!validateProcurementOfSteelData(procurementOfSteelData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          procurementOfSteelData: procurementOfSteelData,
+        };
+        break;
+
+      case TASK_TYPES.TRANSPORTATION_OF_MATERIAL:
+        if (!validateTransportationData(transportationData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          transportationData: transportationData,
         };
         break;
 
@@ -5054,6 +5224,7 @@ const handleInputChangePainting = (key, value) => {
         );
 
       case TASK_TYPES.CONCRETING:
+      case TASK_TYPES.STITCH_CONCRETE:
       case TASK_TYPES.PCC_LEVELLING_COURSE:
         if (!concreteData || !concreteData.length) {
           setConcreteData([
@@ -6760,7 +6931,381 @@ const handleInputChangePainting = (key, value) => {
             </View>
           </View>
         );
+      case TASK_TYPES.AUTO_LAUNCHING:
+        return (
+          <View>
+            <DropdownPicker
+              label="First Span Lowering on Temporary Steel Stools Completed"
+              value={autoLaunchingData.firstSpanLowering}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeAutoLaunching('firstSpanLowering', value)
+              }
+              isRequired={true}
+            />
 
+            <DropdownPicker
+              label="Slider as per Drawing/Methodology"
+              value={autoLaunchingData.sliderPerDrawing}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeAutoLaunching('sliderPerDrawing', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Middle Support Leveling & Alignment Completed"
+              value={autoLaunchingData.middleSupportLeveling}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeAutoLaunching('middleSupportLeveling', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Rear Support Leveling & Alignment Completed"
+              value={autoLaunchingData.rearSupportLeveling}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeAutoLaunching('rearSupportLeveling', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Check for Hydraulic Jacks at Mid & Rear Support (Alignment & Seating)"
+              value={autoLaunchingData.checkHydraulicJacks}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeAutoLaunching('checkHydraulicJacks', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Ensure All Vertical Jacks at Mid Support are Connected to Single Power Pack"
+              value={autoLaunchingData.allVerticalJacksMidSupport}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeAutoLaunching(
+                  'allVerticalJacksMidSupport',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Ensure All Vertical Jacks at Rear Support are Connected to Single Power Pack"
+              value={autoLaunchingData.allVerticalJacksRearSupport}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeAutoLaunching(
+                  'allVerticalJacksRearSupport',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Ensure Cleanliness and Application of Lubricant on Sliding Surfaces at Mid & Rear Support"
+              value={autoLaunchingData.cleanlinessAndApplicationLubricant}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeAutoLaunching(
+                  'cleanlinessAndApplicationLubricant',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Physically Checked All Accessories of Launching (Rear Support, Middle Support, Anchoring Bolt)"
+              value={autoLaunchingData.physicallyCheckedAllAccessories}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeAutoLaunching(
+                  'physicallyCheckedAllAccessories',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Ensure Pins Between Jack and Monorail are Properly Fixed & in Good Condition"
+              value={autoLaunchingData.jackAndMonorailProperlyFixed}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeAutoLaunching(
+                  'jackAndMonorailProperlyFixed',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Knuckle Bearing in Position"
+              value={autoLaunchingData.knuckleBearing}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeAutoLaunching('knuckleBearing', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Guide Rollers in Place and Functioning"
+              value={autoLaunchingData.guideRollers}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeAutoLaunching('guideRollers', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Macalloy Bars Stressed - Mid Support & Rear Support"
+              value={autoLaunchingData.macalloyBarsStressed}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeAutoLaunching('macalloyBarsStressed', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Front Support Telescopic Leg Closed Properly"
+              value={autoLaunchingData.frontSupportTelescopic}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeAutoLaunching('frontSupportTelescopic', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Ensure Lock Nuts Arrangement at Mid & Rear Support is Unlocked"
+              value={autoLaunchingData.lockNutsArrangement}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeAutoLaunching('lockNutsArrangement', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Check Pressure on Mid Support and Rear Support Jacks"
+              value={autoLaunchingData.pressureOnMidRearSupport}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeAutoLaunching(
+                  'pressureOnMidRearSupport',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Gradient of Auto Launching Checked"
+              value={autoLaunchingData.gradient}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeAutoLaunching('gradient', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Check Alignment of Track Rail for Rear Trolley Movement"
+              value={autoLaunchingData.alignmentOfTrackRail}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeAutoLaunching('alignmentOfTrackRail', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Ensure Front Support is at Correct Position to Lower Legs as per Methodology Drawing"
+              value={autoLaunchingData.frontSupportCorrectPosition}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeAutoLaunching(
+                  'frontSupportCorrectPosition',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Ensure Front Support Pins are Properly Placed and Locked"
+              value={autoLaunchingData.frontSupportPins}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeAutoLaunching('frontSupportPins', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Ensure Inserts at Pier Cap are Tightened Properly"
+              value={autoLaunchingData.insertsPierCap}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeAutoLaunching('insertsPierCap', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Ensure Front Support is Engaged Properly"
+              value={autoLaunchingData.frontSupportEngaged}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeAutoLaunching('frontSupportEngaged', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Ensure Entire Area is Barricaded"
+              value={autoLaunchingData.entireAreaBarricaded}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeAutoLaunching('entireAreaBarricaded', value)
+              }
+              isRequired={true}
+            />
+
+            {/* Date, Time, and Comments Fields */}
+            <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
+                />
+              </View>
+            </View>
+          </View>
+        );
+
+      case TASK_TYPES.PROCUREMENT_OF_STRUCTURAL_STEEL:
+        return (
+          <View>
+            <Input
+              label="Total qty of steel procured in tonne"
+              value={procurementOfSteelData.totalQtyOfSteelProcured}
+              onChange={(value: string) =>
+                handleTextInputChangeProcurementOfSteel(
+                  'totalQtyOfSteelProcured',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+            <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
+                />
+              </View>
+            </View>
+          </View>
+        );
+      case TASK_TYPES.TRANSPORTATION_OF_MATERIAL:
+         <View>
+           <Input
+             label="Transit Time in hrs"
+             value={transportationData.transitTime}
+             onChange={(value: string) =>
+               handleTextInputChangeTransportation('transitTime', value)
+             }
+             isRequired={true}
+           />
+           <View>
+             <CalendarPicker
+               label="Date"
+               value={rfiDate}
+               onChange={date => setRFIDate(date)}
+             />
+             <TimePicker
+               label="Time"
+               value={rfiTime}
+               onChange={time => setRFITime(time)}
+             />
+             <View style={{flexDirection: 'column', paddingBottom: 20}}>
+               <Text style={styles.Lable}>Recommendations</Text>
+               <TextInput
+                 style={styles.commonInputFiels}
+                 placeholder="Recommendations"
+                 autoCapitalize="none"
+                 keyboardType="email-address"
+                 returnKeyType="next"
+                 underlineColorAndroid="#f000"
+                 multiline={true}
+                 numberOfLines={4}
+                 blurOnSubmit={false}
+                 value={comments}
+                 onChangeText={text => {
+                   setComments(text);
+                 }}
+               />
+             </View>
+           </View>
+         </View>;
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
       case TASK_TYPES.LIFTING_RIGHT:

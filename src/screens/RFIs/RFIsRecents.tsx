@@ -2282,6 +2282,102 @@ const RFIsRecents = (props: any) => {
             ))}
           </View>
         );
+      case TASK_TYPES.PAINTING:
+        const paintingProperties = [
+          {
+            title:
+              'Painting System Including Materials and Color Shades Approved',
+            key: 'paintingSystemApproved',
+          },
+          {
+            title: 'Method Statement, QCP, ITP & Risk Assessment Approved',
+            key: 'documentsApproved',
+          },
+          {
+            title: 'Surface Preparation Done as Per Approved Method Statement',
+            key: 'surfacePreparationDone',
+          },
+          {
+            title: 'Defects in Substrate Corrected',
+            key: 'defectsCorrected',
+          },
+          {
+            title: 'Moisture Content Checked',
+            key: 'moistureContentChecked',
+          },
+          {
+            title: 'Plaster Surfaces Rubbed Down with Rubbing Stone',
+            key: 'plasterSurfacesRubbed',
+          },
+          {
+            title: 'Material Thoroughly Stirred Prior to Application',
+            key: 'materialStirred',
+          },
+          {
+            title: 'Filler Coat Applied Only After Curing Period of Primer',
+            key: 'fillerCoatAfterPrimer',
+          },
+          {
+            title:
+              'Suction Spots Covered with Primer Prior to Filler Coat Application',
+            key: 'suctionSpotsPrimed',
+          },
+          {
+            title:
+              'Filler Coat Applied Evenly and All Angles and Corners are Straight',
+            key: 'fillerCoatAppliedEvenly',
+          },
+          {
+            title: 'Sanding Done Between Coats',
+            key: 'sandingBetweenCoats',
+          },
+          {
+            title: 'Drying Time Allowed as Per Approved Method Statement',
+            key: 'dryingTimeAllowed',
+          },
+          {
+            title: 'Materials Mixed Properly',
+            key: 'materialsMixedProperly',
+          },
+          {
+            title: 'First Coat Applied by Roller Over the Whole Surface',
+            key: 'firstCoatAppliedByRoller',
+          },
+          {
+            title: 'Roller Joints Checked',
+            key: 'rollerJointsChecked',
+          },
+          {
+            title: 'Curing Period Allowed as Per Approved Method Statement',
+            key: 'curingPeriodAllowed',
+          },
+          {
+            title: 'Second Coat Applied After Touch Up on First Coat',
+            key: 'secondCoatAfterTouchUp',
+          },
+          {
+            title: 'Final Coat Applied',
+            key: 'finalCoatApplied',
+          },
+          {
+            title: 'Cleaning and Protection of Adjacent Surfaces',
+            key: 'cleaningAndProtection',
+          },
+        ];
+        return (
+          <View>
+            {paintingProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.paintingData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
 
       default:
         return (

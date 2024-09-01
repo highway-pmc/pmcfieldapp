@@ -719,6 +719,27 @@ const handleInputChangeRemovalOfTemporaryStructure = (key, value) => {
     paintSurfaceQuality: 'Y',
     recordMaintained: 'Y',
   });
+const [paintingData, setPaintingData] = useState({
+  paintingSystemApproved: 'Y',
+  documentsApproved: 'Y',
+  surfacePreparationDone: 'Y',
+  defectsCorrected: 'Y',
+  moistureContentChecked: 'Y',
+  plasterSurfacesRubbed: 'Y',
+  materialStirred: 'Y',
+  fillerCoatAfterPrimer: 'Y',
+  suctionSpotsPrimed: 'Y',
+  fillerCoatAppliedEvenly: 'Y',
+  sandingBetweenCoats: 'Y',
+  dryingTimeAllowed: 'Y',
+  materialsMixedProperly: 'Y',
+  firstCoatAppliedByRoller: 'Y',
+  rollerJointsChecked: 'Y',
+  curingPeriodAllowed: 'Y',
+  secondCoatAfterTouchUp: 'Y',
+  finalCoatApplied: 'Y',
+  cleaningAndProtection: 'Y',
+});
 
   const handlePaintingOfSteelGirdersDiaphragms = (
     field: string,
@@ -900,6 +921,12 @@ const [removalOfTemporaryStructureData, setRemovalOfTemporaryStructureData] =
       [key]: newValue,
     }));
   };
+const handleInputChangePainting = (key, value) => {
+  setPaintingData(prevState => ({
+    ...prevState,
+    [key]: value,
+  }));
+};
 
   const handleInputChangeGrouting = (
     name: keyof FormStateGrouting,
@@ -1565,6 +1592,33 @@ const [removalOfTemporaryStructureData, setRemovalOfTemporaryStructureData] =
                 anchorsAndSupportsMatched: 'Y',
                 jointsProperlyAligned: 'Y',
                 noDamageSustained: 'Y',
+              });
+            }
+            break;
+          case TASK_TYPES.PAINTING:
+            if (rfiData.metaData.paintingData) {
+              setPaintingData(rfiData.metaData.paintingData);
+            } else {
+              setPaintingData({
+                paintingSystemApproved: 'Y',
+                documentsApproved: 'Y',
+                surfacePreparationDone: 'Y',
+                defectsCorrected: 'Y',
+                moistureContentChecked: 'Y',
+                plasterSurfacesRubbed: 'Y',
+                materialStirred: 'Y',
+                fillerCoatAfterPrimer: 'Y',
+                suctionSpotsPrimed: 'Y',
+                fillerCoatAppliedEvenly: 'Y',
+                sandingBetweenCoats: 'Y',
+                dryingTimeAllowed: 'Y',
+                materialsMixedProperly: 'Y',
+                firstCoatAppliedByRoller: 'Y',
+                rollerJointsChecked: 'Y',
+                curingPeriodAllowed: 'Y',
+                secondCoatAfterTouchUp: 'Y',
+                finalCoatApplied: 'Y',
+                cleaningAndProtection: 'Y',
               });
             }
             break;
@@ -2935,6 +2989,12 @@ const [removalOfTemporaryStructureData, setRemovalOfTemporaryStructureData] =
         checkList = {
           taskName: selectedTask.name,
           installationOfExpansionJointData: installationOfExpansionJointData,
+        };
+        break;
+      case TASK_TYPES.PAINTING:
+        checkList = {
+          taskName: selectedTask.name,
+          paintingData: paintingData,
         };
         break;
 
@@ -6434,6 +6494,236 @@ const [removalOfTemporaryStructureData, setRemovalOfTemporaryStructureData] =
 
             <View>
               {/* Common components irrespective of property */}
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
+                />
+              </View>
+            </View>
+          </View>
+        );
+      case TASK_TYPES.PAINTING:
+        return (
+          <View>
+            <DropdownPicker
+              label="Painting System Including Materials and Color Shades Approved"
+              value={paintingData.paintingSystemApproved}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangePainting('paintingSystemApproved', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Method Statement, QCP, ITP & Risk Assessment Approved"
+              value={paintingData.documentsApproved}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangePainting('documentsApproved', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Surface Preparation Done as Per Approved Method Statement"
+              value={paintingData.surfacePreparationDone}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangePainting('surfacePreparationDone', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Defects in Substrate Corrected"
+              value={paintingData.defectsCorrected}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangePainting('defectsCorrected', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Moisture Content Checked"
+              value={paintingData.moistureContentChecked}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangePainting('moistureContentChecked', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Plaster Surfaces Rubbed Down with Rubbing Stone"
+              value={paintingData.plasterSurfacesRubbed}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangePainting('plasterSurfacesRubbed', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Material Thoroughly Stirred Prior to Application"
+              value={paintingData.materialStirred}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangePainting('materialStirred', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Filler Coat Applied Only After Curing Period of Primer"
+              value={paintingData.fillerCoatAfterPrimer}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangePainting('fillerCoatAfterPrimer', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Suction Spots Covered with Primer Prior to Filler Coat Application"
+              value={paintingData.suctionSpotsPrimed}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangePainting('suctionSpotsPrimed', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Filler Coat Applied Evenly and All Angles and Corners are Straight"
+              value={paintingData.fillerCoatAppliedEvenly}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangePainting('fillerCoatAppliedEvenly', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Sanding Done Between Coats"
+              value={paintingData.sandingBetweenCoats}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangePainting('sandingBetweenCoats', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Drying Time Allowed as Per Approved Method Statement"
+              value={paintingData.dryingTimeAllowed}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangePainting('dryingTimeAllowed', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Materials Mixed Properly"
+              value={paintingData.materialsMixedProperly}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangePainting('materialsMixedProperly', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="First Coat Applied by Roller Over the Whole Surface"
+              value={paintingData.firstCoatAppliedByRoller}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangePainting('firstCoatAppliedByRoller', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Roller Joints Checked"
+              value={paintingData.rollerJointsChecked}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangePainting('rollerJointsChecked', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Curing Period Allowed as Per Approved Method Statement"
+              value={paintingData.curingPeriodAllowed}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangePainting('curingPeriodAllowed', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Second Coat Applied After Touch Up on First Coat"
+              value={paintingData.secondCoatAfterTouchUp}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangePainting('secondCoatAfterTouchUp', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Final Coat Applied"
+              value={paintingData.finalCoatApplied}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangePainting('finalCoatApplied', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Cleaning and Protection of Adjacent Surfaces"
+              value={paintingData.cleaningAndProtection}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangePainting('cleaningAndProtection', value)
+              }
+              isRequired={true}
+            />
+
+            <View>
               <View style={{flexDirection: 'column'}}>
                 <CalendarPicker
                   label="Date"

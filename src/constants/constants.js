@@ -498,6 +498,7 @@ export const TASK_TYPES = {
   INSTALLATION_OF_EXPANSION_JOINT:
     'installation-of-expansion-joint',
   REMOVAL_OF_TEMPORARY_STRUCTURE: 'removal-of-temporary-structure',
+  PAINTING:'painting'
 };
 
 export const TEST_MATERIALS_TYPES = {

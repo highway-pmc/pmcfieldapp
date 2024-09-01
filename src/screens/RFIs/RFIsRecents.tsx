@@ -661,6 +661,9 @@ const RFIsRecents = (props: any) => {
             </View>
           </View>
         );
+      case TASK_TYPES.REMOVAL_OF_SIDE_SHUTTERS:
+      case TASK_TYPES.REMOVAL_OF_MIDDLIE_TOP_SHUTTERS:
+      case TASK_TYPES.REMOVAL_OF_INNER_SHUTTERS:
       case TASK_TYPES.REMOVAL_OF_SHUTTER:
       case TASK_TYPES.REMOVAL_OF_SHUTTERS:
         return (

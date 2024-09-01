@@ -491,6 +491,9 @@ export const TASK_TYPES = {
   STACKING_IN_YARD: 'stacking-in-yard',
   HACKING_OF_GIRDER: 'hacking-of-girder',
   DE_STRESSING_OF_GIRDER: 'de-stressing-of-girders',
+  REMOVAL_OF_SIDE_SHUTTERS: 'removal-of-side-shutters',
+  REMOVAL_OF_MIDDLIE_TOP_SHUTTERS: 'removal-of-middle-and-top-shutters',
+  REMOVAL_OF_INNER_SHUTTERS: 'removal-of-inner-shutters',
 };
 
 export const TEST_MATERIALS_TYPES = {

@@ -1034,6 +1034,9 @@ const [deStressingOfGirderData, setDeStressingOfGirderData] = useState({
           case TASK_TYPES.EXCAVATION:
             setQuantity(rfiData.metaData.quantity);
             break;
+          case TASK_TYPES.REMOVAL_OF_SIDE_SHUTTERS:
+          case TASK_TYPES.REMOVAL_OF_MIDDLIE_TOP_SHUTTERS:
+          case TASK_TYPES.REMOVAL_OF_INNER_SHUTTERS:
           case TASK_TYPES.REMOVAL_OF_SHUTTER:
           case TASK_TYPES.REMOVAL_OF_SHUTTERS:
             setConcreteHasAchievedDesiredStrength(
@@ -2629,6 +2632,9 @@ const [deStressingOfGirderData, setDeStressingOfGirderData] = useState({
           quantity: quantity,
         };
         break;
+      case TASK_TYPES.REMOVAL_OF_SIDE_SHUTTERS:
+      case TASK_TYPES.REMOVAL_OF_MIDDLIE_TOP_SHUTTERS:
+      case TASK_TYPES.REMOVAL_OF_INNER_SHUTTERS:
       case TASK_TYPES.REMOVAL_OF_SHUTTER:
       case TASK_TYPES.REMOVAL_OF_SHUTTERS:
         checkList = {
@@ -4397,6 +4403,9 @@ const [deStressingOfGirderData, setDeStressingOfGirderData] = useState({
             </View>
           </View>
         );
+      case TASK_TYPES.REMOVAL_OF_SIDE_SHUTTERS:
+      case TASK_TYPES.REMOVAL_OF_MIDDLIE_TOP_SHUTTERS:
+      case TASK_TYPES.REMOVAL_OF_INNER_SHUTTERS:
       case TASK_TYPES.REMOVAL_OF_SHUTTER:
       case TASK_TYPES.REMOVAL_OF_SHUTTERS:
         return (

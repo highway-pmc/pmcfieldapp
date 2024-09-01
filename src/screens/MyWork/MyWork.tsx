@@ -299,6 +299,13 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     structureSetOut: 'Y',
     welderQualificationChecked: 'Y',
   });
+  const handleInputChangeDeStressingOfGirder = (key: string, value: string) => {
+    setDeStressingOfGirderData(prevState => ({
+      ...prevState,
+      [key]: value,
+    }));
+  };
+
   const handleInputChangeHackingOfGirder = (key: string, value: string) => {
     setHackingOfGirderData(prevState => ({
       ...prevState,
@@ -775,6 +782,11 @@ const [hackingOfGirderData, setHackingOfGirderData] = useState({
   skilledPersonnel: 'Y',
   sharpenedInstruments: 'Y',
   recessCutFormation: 'Y',
+});
+const [deStressingOfGirderData, setDeStressingOfGirderData] = useState({
+  strengthAchieved: 'Y',
+  diamondBitSawUsed: 'Y',
+  gradualUniformTransfer: 'Y',
 });
 
   const handleTransportationOfSteelGirdersDiaphragms = (
@@ -1441,6 +1453,19 @@ const [hackingOfGirderData, setHackingOfGirderData] = useState({
                 skilledPersonnel: 'Y',
                 sharpenedInstruments: 'Y',
                 recessCutFormation: 'Y',
+              });
+            }
+            break;
+          case TASK_TYPES.DE_STRESSING_OF_GIRDER:
+            if (rfiData.metaData.deStressingOfGirderData) {
+              setDeStressingOfGirderData(
+                rfiData.metaData.deStressingOfGirderData,
+              );
+            } else {
+              setDeStressingOfGirderData({
+                strengthAchieved: 'Y',
+                diamondBitSawUsed: 'Y',
+                gradualUniformTransfer: 'Y',
               });
             }
             break;
@@ -2787,6 +2812,12 @@ const [hackingOfGirderData, setHackingOfGirderData] = useState({
         checkList = {
           taskName: selectedTask.name,
           hackingOfGirderData: hackingOfGirderData,
+        };
+        break;
+      case TASK_TYPES.DE_STRESSING_OF_GIRDER:
+        checkList = {
+          taskName: selectedTask.name,
+          deStressingOfGirderData: deStressingOfGirderData,
         };
         break;
 
@@ -5846,6 +5877,80 @@ const [hackingOfGirderData, setHackingOfGirderData] = useState({
             />
 
             <View>
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
+                />
+              </View>
+            </View>
+          </View>
+        );
+      case TASK_TYPES.DE_STRESSING_OF_GIRDER:
+        return (
+          <View>
+            <DropdownPicker
+              label="Girders and Segments Achieved Their Strength"
+              value={deStressingOfGirderData.strengthAchieved}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeDeStressingOfGirder('strengthAchieved', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Diamond Bit Saw or Grinder Used to Cut the Strands"
+              value={deStressingOfGirderData.diamondBitSawUsed}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeDeStressingOfGirder('diamondBitSawUsed', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Normal Gradual Uniform Transfer of Prestress to Girder"
+              value={deStressingOfGirderData.gradualUniformTransfer}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeDeStressingOfGirder(
+                  'gradualUniformTransfer',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <View>
+              {/* Additional common components */}
               <View style={{flexDirection: 'column'}}>
                 <CalendarPicker
                   label="Date"

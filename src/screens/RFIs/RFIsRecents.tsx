@@ -2108,6 +2108,40 @@ const RFIsRecents = (props: any) => {
             ))}
           </View>
         );
+      case TASK_TYPES.DE_STRESSING_OF_GIRDER:
+        const deStressingOfGirderProperties = [
+          {
+            title: 'Girders and Segments Achieved Their Strength',
+            key: 'strengthAchieved',
+          },
+          {
+            title: 'Diamond Bit Saw or Grinder Used to Cut the Strands',
+            key: 'diamondBitSawUsed',
+          },
+          {
+            title: 'Normal Gradual Uniform Transfer of Prestress to Girder',
+            key: 'gradualUniformTransfer',
+          },
+        ];
+
+        return (
+          <View>
+            {deStressingOfGirderProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.deStressingOfGirderData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
 
       default:
         return (

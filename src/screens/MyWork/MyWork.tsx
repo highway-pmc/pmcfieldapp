@@ -270,12 +270,81 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       contentOfPolymer: 0,
       depthOfBore: 0,
     });
+  const [erectionUsingCranesData, setErectionUsingCranesData] = useState({
+    riskAssessmentCarriedOut: 'Y',
+    craneOnFirmLevelBases: 'Y',
+    allOperatorsTrained: 'Y',
+    craneTestedAndOperated: 'Y',
+    swingAlarmFunctioning: 'Y',
+    craneTestCertificate: 'Y',
+    boomTestCertificate: 'Y',
+    oilLeakage: 'Y',
+    greasing: 'Y',
+    outriggersFullyExtended: 'Y',
+    levelIndicators: 'Y',
+    basePlateUnderOutriggers: 'Y',
+    riggingAngles: 'Y',
+    examinationCertified: 'Y',
+    liftingToolsChecked: 'Y',
+    workersWithFallProtection: 'Y',
+    ppeProvided: 'Y',
+    sufficientIllumination: 'Y',
+    swlMarked: 'Y',
+    equipmentProperlyEarthed: 'Y',
+    walkwayObstacleFree: 'Y',
+    safetyLatchAvailable: 'Y',
+    warningSignAvailable: 'Y',
+    liftingArrangements: 'Y',
+    groundLeveling: 'Y',
+    structureSetOut: 'Y',
+    welderQualificationChecked: 'Y',
+  });
+  const [fixingOfBearingData, setFixingOfBearingData] = useState({
+    bearingPlacedAsPerGFC: 'Y',
+    bearingSurfaceFullyContactWithGirder: 'Y',
+    bearingPlatesSetHorizontal: 'Y',
+    bearingPreSetWithAxis: 'Y',
+    supportsProvidedToHoldBearing: 'Y',
+    anchorBoltHolesMatching: 'Y',
+    voidBeneathBearingFilled: 'Y',
+    bearingFixedWithMetalBedding: 'Y',
+    threadedFastenerTightenedUniformly: 'Y',
+  });
 
+  const handleInputChangeDeStressingOfGirder = (key: string, value: string) => {
+    setDeStressingOfGirderData(prevState => ({
+      ...prevState,
+      [key]: value,
+    }));
+  };
+
+  const handleInputChangeHackingOfGirder = (key: string, value: string) => {
+    setHackingOfGirderData(prevState => ({
+      ...prevState,
+      [key]: value,
+    }));
+  };
+
+  const handleInputChangeErectionUsingCranes = (
+    field: string,
+    value: string,
+  ) => {
+    setErectionUsingCranesData(prevData => ({
+      ...prevData,
+      [field]: value,
+    }));
+  };
   const handleInputChangeBoringOfPile = (
     name: keyof FormStateBoringOfPile,
     value: string | number | [],
   ) => {
     setBoringOfPileData({...boringOfPileData, [name]: Number(value)});
+  };
+  const handleInputChangeAssemblingOfTruss = (field, value) => {
+    setAssemblingOfTrussData(prevData => ({
+      ...prevData,
+      [field]: value,
+    }));
   };
 
   // FLUSHING_OPERATIONS
@@ -518,7 +587,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
   const [curingData, setCuringData] = useState({
     waterUsedForCuring: 'Y',
     phValueOfWater: 'Y',
-    consumptionOfWater: 0
+    consumptionOfWater: 0,
   });
 
   const handleCuring = (field: string, value: string) => {
@@ -527,6 +596,13 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       [field]: value,
     }));
   };
+  const handleInputChangeFixingOfBearing = (key, value) => {
+    setFixingOfBearingData(prevState => ({
+      ...prevState,
+      [key]: value,
+    }));
+  };
+
   const handleInputChangeFabrication = (key: string, value: string) => {
     setFabricationData(prevState => ({
       ...prevState,
@@ -546,6 +622,14 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     checkBracesAreTheyOk: 'Y',
     checkSealingJointsHoles: 'Y',
   });
+  const [assemblingOfTrussData, setAssemblingOfTrussData] = useState({
+    partsAccuratelyAssembled: 'Y',
+    noBentOrBrokenParts: 'Y',
+    trussSpanOnBlocks: 'Y',
+    cleanJointSurfaces: 'Y',
+    fastenersWithWashers: 'Y',
+    serviceBoltsTightened: 'Y',
+  });
 
   const handleFixingShutter = (field: string, value: string) => {
     setFixingShutterData(prevData => ({
@@ -554,28 +638,29 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     }));
   };
 
-  const [erectionOfTemporaryStructure, setErectionOfTemporaryStructure] = useState({
-    hasAnyRiskAssessment: 'Y',
-    craneHydraLevelBase: 'Y',
-    areAllOperationTrained: 'Y',
-    isCraneTested: 'Y',
-    doesTheCraneCertificate: 'Y',
-    allLiftingToolsAndTackles: 'Y',
-    protectionDevices: 'Y',
-    atteainedTheirStrength: 'Y',
-    workmenProvided: 'Y',
-    whetherSufficient: 'Y',
-    liftingToolsTackles: 'Y',
-    equipmentsGeneratorsProperlyEarthed: 'Y',
-    walkwayMaintainedFreeForm: 'Y',
-    safetyLatchLockingAvailable: 'Y',
-    properWarningSign: 'Y',
-    liftingArrangementsAreApproved: 'Y',
-    achieveTheirCompressiveStrength: 'Y',
-    groundLeveling: 'Y',
-    structureSetOutToTheLevels: 'Y',
-    aualificationAndSkilledCheckedAndCertified: 'Y',
-  });
+  const [erectionOfTemporaryStructure, setErectionOfTemporaryStructure] =
+    useState({
+      hasAnyRiskAssessment: 'Y',
+      craneHydraLevelBase: 'Y',
+      areAllOperationTrained: 'Y',
+      isCraneTested: 'Y',
+      doesTheCraneCertificate: 'Y',
+      allLiftingToolsAndTackles: 'Y',
+      protectionDevices: 'Y',
+      atteainedTheirStrength: 'Y',
+      workmenProvided: 'Y',
+      whetherSufficient: 'Y',
+      liftingToolsTackles: 'Y',
+      equipmentsGeneratorsProperlyEarthed: 'Y',
+      walkwayMaintainedFreeForm: 'Y',
+      safetyLatchLockingAvailable: 'Y',
+      properWarningSign: 'Y',
+      liftingArrangementsAreApproved: 'Y',
+      achieveTheirCompressiveStrength: 'Y',
+      groundLeveling: 'Y',
+      structureSetOutToTheLevels: 'Y',
+      aualificationAndSkilledCheckedAndCertified: 'Y',
+    });
 
   const handleErectionOfTemporaryStructure = (field: string, value: string) => {
     setErectionOfTemporaryStructure(prevData => ({
@@ -584,7 +669,10 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     }));
   };
 
-  const [paintingOfSteelGirdersDiaphragms, setPaintingOfSteelGirdersDiaphragms] = useState({
+  const [
+    paintingOfSteelGirdersDiaphragms,
+    setPaintingOfSteelGirdersDiaphragms,
+  ] = useState({
     hasAnyRiskAssessment: 'Y',
     isWorkerWarnPersonalProtective: 'Y',
     presentAtBlastingPot: 'Y',
@@ -619,31 +707,38 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     recordMaintained: 'Y',
   });
 
-  const handlePaintingOfSteelGirdersDiaphragms = (field: string, value: string) => {
+  const handlePaintingOfSteelGirdersDiaphragms = (
+    field: string,
+    value: string,
+  ) => {
     setPaintingOfSteelGirdersDiaphragms(prevData => ({
       ...prevData,
       [field]: value,
     }));
-  }
+  };
 
-  const [placementOfReinforcementCage, setPlacementOfReinforcementCage] = useState({
-    rebarDimensionChecked: 'Y',
-    shapingCheckedAsPerGFC: 'Y',
-    rebarsSecurelyBound: 'Y',
-    spliceLengthChecked: 'Y',
-    rebarWithinTolerance: 'Y',
-    couplerArrangementsWithinTolerance: 'Y',
-    barBendingScheduleChecked: 'Y',
-  });
+  const [placementOfReinforcementCage, setPlacementOfReinforcementCage] =
+    useState({
+      rebarDimensionChecked: 'Y',
+      shapingCheckedAsPerGFC: 'Y',
+      rebarsSecurelyBound: 'Y',
+      spliceLengthChecked: 'Y',
+      rebarWithinTolerance: 'Y',
+      couplerArrangementsWithinTolerance: 'Y',
+      barBendingScheduleChecked: 'Y',
+    });
 
   const handlePlacementOfReinforcementCage = (field: string, value: string) => {
     setPaintingOfSteelGirdersDiaphragms(prevData => ({
       ...prevData,
       [field]: value,
     }));
-  }
+  };
 
-  const [transportationOfSteelGirdersDiaphragms, setTransportationOfSteelGirdersDiaphragms] = useState({
+  const [
+    transportationOfSteelGirdersDiaphragms,
+    setTransportationOfSteelGirdersDiaphragms,
+  ] = useState({
     safeAccessProvided: 'Y',
     workingPlatformOnBoarded: 'Y',
     guardRailsAttached: 'Y',
@@ -677,13 +772,51 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     structureSetOutCorrectly: 'Y',
     welderQualifiedAndCertified: 'Y',
   });
+const [stackingInYardData, setStackingInYardData] = useState({
+  areaBarricaded: 'Y',
+  temporaryLightsAvailable: 'Y',
+  flagManAvailable: 'Y',
+  methodologySchemeAvailable: 'Y',
+  deShacklesSlingsCertified: 'Y',
+  safetyColorCodePresent: 'Y',
+  hydraulicJacksCondition: 'Y',
+  limitSwitchWorking: 'Y',
+  cotterPinsInAssembly: 'Y',
+  macalloyBarsCondition: 'Y',
+  workAtHeightPermit: 'Y',
+  macalloyBarsTestCertificate: 'Y',
+  liftingSequenceProvided: 'Y',
+  liftingHolesLocation: 'Y',
+  liftingArrangementsWorking: 'Y',
+  prestressingDuctClear: 'Y',
+  concreteStrengthGained: 'Y',
+  sliderTrolleyPosition: 'Y',
+  stackingMethodologyApproved: 'Y',
+  stackingAreaLocated: 'Y',
+  stackingAreaLeveled: 'Y',
+});
+const [hackingOfGirderData, setHackingOfGirderData] = useState({
+  methodologyApproved: 'Y',
+  surfaceCleanedAndWet: 'Y',
+  skilledPersonnel: 'Y',
+  sharpenedInstruments: 'Y',
+  recessCutFormation: 'Y',
+});
+const [deStressingOfGirderData, setDeStressingOfGirderData] = useState({
+  strengthAchieved: 'Y',
+  diamondBitSawUsed: 'Y',
+  gradualUniformTransfer: 'Y',
+});
 
-  const handleTransportationOfSteelGirdersDiaphragms = (field: string, value: string) => {
+  const handleTransportationOfSteelGirdersDiaphragms = (
+    field: string,
+    value: string,
+  ) => {
     setTransportationOfSteelGirdersDiaphragms(prevData => ({
       ...prevData,
       [field]: value,
     }));
-  }
+  };
 
   const handleInputChangeLifting = (field: string, value: string) => {
     setLiftingCombinedLRData(prevData => ({
@@ -691,6 +824,16 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       [field]: value,
     }));
   };
+  const handleInputChangeStackingInYard = (
+    field: string,
+    value: string,
+  ) => {
+    setStackingInYardData(prevState => ({
+      ...prevState,
+      [field]: value,
+    }));
+  };
+
   const handleInputChangeTemporaryPrestressing = (key: string, value: any) => {
     let newValue = value;
 
@@ -910,6 +1053,9 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           case TASK_TYPES.EXCAVATION:
             setQuantity(rfiData.metaData.quantity);
             break;
+          case TASK_TYPES.REMOVAL_OF_SIDE_SHUTTERS:
+          case TASK_TYPES.REMOVAL_OF_MIDDLIE_TOP_SHUTTERS:
+          case TASK_TYPES.REMOVAL_OF_INNER_SHUTTERS:
           case TASK_TYPES.REMOVAL_OF_SHUTTER:
           case TASK_TYPES.REMOVAL_OF_SHUTTERS:
             setConcreteHasAchievedDesiredStrength(
@@ -1235,6 +1381,130 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                 groundLeveling: 'Y',
                 structureSetOutToTheLevels: 'Y',
                 aualificationAndSkilledCheckedAndCertified: 'Y',
+              });
+            }
+            break;
+          case TASK_TYPES.ERECTION_USING_CRANES:
+            if (rfiData.metaData.erectionUsingCranesData) {
+              setErectionUsingCranesData(
+                rfiData.metaData.erectionUsingCranesData,
+              );
+            } else {
+              setErectionUsingCranesData({
+                riskAssessmentCarriedOut: 'Y',
+                craneOnFirmLevelBases: 'Y',
+                allOperatorsTrained: 'Y',
+                craneTestedAndOperated: 'Y',
+                swingAlarmFunctioning: 'Y',
+                craneTestCertificate: 'Y',
+                boomTestCertificate: 'Y',
+                oilLeakage: 'Y',
+                greasing: 'Y',
+                outriggersFullyExtended: 'Y',
+                levelIndicators: 'Y',
+                basePlateUnderOutriggers: 'Y',
+                riggingAngles: 'Y',
+                examinationCertified: 'Y',
+                liftingToolsChecked: 'Y',
+                workersWithFallProtection: 'Y',
+                ppeProvided: 'Y',
+                sufficientIllumination: 'Y',
+                swlMarked: 'Y',
+                equipmentProperlyEarthed: 'Y',
+                walkwayObstacleFree: 'Y',
+                safetyLatchAvailable: 'Y',
+                warningSignAvailable: 'Y',
+                liftingArrangements: 'Y',
+                groundLeveling: 'Y',
+                structureSetOut: 'Y',
+                welderQualificationChecked: 'Y',
+              });
+            }
+            break;
+          case TASK_TYPES.STACKING_IN_YARD:
+            if (rfiData.metaData.stackingInYardData) {
+              setStackingInYardData(rfiData.metaData.stackingInYardData);
+            } else {
+              setStackingInYardData({
+                areaBarricaded: 'Y',
+                temporaryLightsAvailable: 'Y',
+                flagManAvailable: 'Y',
+                methodologySchemeAvailable: 'Y',
+                deShacklesSlingsCertified: 'Y',
+                safetyColorCodePresent: 'Y',
+                hydraulicJacksCondition: 'Y',
+                limitSwitchWorking: 'Y',
+                cotterPinsInAssembly: 'Y',
+                macalloyBarsCondition: 'Y',
+                workAtHeightPermit: 'Y',
+                macalloyBarsTestCertificate: 'Y',
+                liftingSequenceProvided: 'Y',
+                liftingHolesLocation: 'Y',
+                liftingArrangementsWorking: 'Y',
+                prestressingDuctClear: 'Y',
+                concreteStrengthGained: 'Y',
+                sliderTrolleyPosition: 'Y',
+                stackingMethodologyApproved: 'Y',
+                stackingAreaLocated: 'Y',
+                stackingAreaLeveled: 'Y',
+              });
+            }
+            break;
+
+          case TASK_TYPES.ASSEMBLING_OF_TRUSS:
+            if (rfiData.metaData.assemblingOfTrussData) {
+              setAssemblingOfTrussData(rfiData.metaData.assemblingOfTrussData);
+            } else {
+              setAssemblingOfTrussData({
+                partsAccuratelyAssembled: 'Y',
+                noBentOrBrokenParts: 'Y',
+                trussSpanOnBlocks: 'Y',
+                cleanJointSurfaces: 'Y',
+                fastenersWithWashers: 'Y',
+                serviceBoltsTightened: 'Y',
+              });
+            }
+            break;
+          case TASK_TYPES.HACKING_OF_GIRDER:
+            if (rfiData.metaData.hackingOfGirderData) {
+              setHackingOfGirderData(rfiData.metaData.hackingOfGirderData);
+            } else {
+              setHackingOfGirderData({
+                methodologyApproved: 'Y',
+                surfaceCleanedAndWet: 'Y',
+                skilledPersonnel: 'Y',
+                sharpenedInstruments: 'Y',
+                recessCutFormation: 'Y',
+              });
+            }
+            break;
+          case TASK_TYPES.DE_STRESSING_OF_GIRDER:
+            if (rfiData.metaData.deStressingOfGirderData) {
+              setDeStressingOfGirderData(
+                rfiData.metaData.deStressingOfGirderData,
+              );
+            } else {
+              setDeStressingOfGirderData({
+                strengthAchieved: 'Y',
+                diamondBitSawUsed: 'Y',
+                gradualUniformTransfer: 'Y',
+              });
+            }
+            break;
+          case TASK_TYPES.FIXING_OF_BEARING:
+            if (rfiData.metaData.fixingOfBearingData) {
+              setFixingOfBearingData(rfiData.metaData.fixingOfBearingData);
+            } else {
+              setFixingOfBearingData({
+                bearingPlacedAsPerGFC: 'Y',
+                bearingSurfaceFullyContactWithGirder: 'Y',
+                bearingPlatesSetHorizontal: 'Y',
+                bearingPreSetWithAxis: 'Y',
+                supportsProvidedToHoldBearing: 'Y',
+                anchorBoltHolesMatching: 'Y',
+                voidBeneathBearingFilled: 'Y',
+                bearingFixedWithMetalBedding: 'Y',
+                threadedFastenerTightenedUniformly: 'Y',
               });
             }
             break;
@@ -2398,6 +2668,9 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           quantity: quantity,
         };
         break;
+      case TASK_TYPES.REMOVAL_OF_SIDE_SHUTTERS:
+      case TASK_TYPES.REMOVAL_OF_MIDDLIE_TOP_SHUTTERS:
+      case TASK_TYPES.REMOVAL_OF_INNER_SHUTTERS:
       case TASK_TYPES.REMOVAL_OF_SHUTTER:
       case TASK_TYPES.REMOVAL_OF_SHUTTERS:
         checkList = {
@@ -2533,7 +2806,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         break;
 
       case TASK_TYPES.CURING:
-        if(!validateCuringData(curingData)){
+        if (!validateCuringData(curingData)) {
           return;
         }
         checkList = {
@@ -2558,6 +2831,44 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
 
       default:
         break;
+      case TASK_TYPES.ERECTION_USING_CRANES:
+        checkList = {
+          taskName: selectedTask.name,
+          erectionUsingCranesData: erectionUsingCranesData,
+        };
+        break;
+      case TASK_TYPES.STACKING_IN_YARD:
+        checkList = {
+          taskName: selectedTask.name,
+          stackingInYardData: stackingInYardData,
+        };
+        break;
+
+      case TASK_TYPES.ASSEMBLING_OF_TRUSS:
+        checkList = {
+          taskName: selectedTask.name,
+          assemblingOfTrussData: assemblingOfTrussData,
+        };
+        break;
+      case TASK_TYPES.HACKING_OF_GIRDER:
+        checkList = {
+          taskName: selectedTask.name,
+          hackingOfGirderData: hackingOfGirderData,
+        };
+        break;
+      case TASK_TYPES.DE_STRESSING_OF_GIRDER:
+        checkList = {
+          taskName: selectedTask.name,
+          deStressingOfGirderData: deStressingOfGirderData,
+        };
+        break;
+      case TASK_TYPES.FIXING_OF_BEARING:
+        checkList = {
+          taskName: selectedTask.name,
+          fixingOfBearingData: fixingOfBearingData,
+        };
+        break;
+
       case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
@@ -4134,6 +4445,9 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             </View>
           </View>
         );
+      case TASK_TYPES.REMOVAL_OF_SIDE_SHUTTERS:
+      case TASK_TYPES.REMOVAL_OF_MIDDLIE_TOP_SHUTTERS:
+      case TASK_TYPES.REMOVAL_OF_INNER_SHUTTERS:
       case TASK_TYPES.REMOVAL_OF_SHUTTER:
       case TASK_TYPES.REMOVAL_OF_SHUTTERS:
         return (
@@ -5165,6 +5479,711 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                   }}
                 />
               </View>
+            </View>
+          </View>
+        );
+      case TASK_TYPES.ERECTION_USING_CRANES:
+        const erectionUsingCranesProperties = [
+          {
+            label: 'Has any risk assessment been carried out',
+            key: 'riskAssessmentCarriedOut',
+          },
+          {
+            label: 'Is the crane on firm level bases',
+            key: 'craneOnFirmLevelBases',
+          },
+          {
+            label: 'Are all operators trained and competent',
+            key: 'allOperatorsTrained',
+          },
+          {
+            label: 'Is crane tested and operated',
+            key: 'craneTestedAndOperated',
+          },
+          {
+            label: 'Is there swing alarm installed and functioning',
+            key: 'swingAlarmFunctioning',
+          },
+          {
+            label: 'Does the crane have a current test certificate',
+            key: 'craneTestCertificate',
+          },
+          {
+            label: 'Boom of crane have a current test certificate',
+            key: 'boomTestCertificate',
+          },
+          {label: 'Oil (leakage)', key: 'oilLeakage'},
+          {label: 'Greasing', key: 'greasing'},
+          {
+            label: 'Outriggers (Fully extended)',
+            key: 'outriggersFullyExtended',
+          },
+          {
+            label: 'Level indicators (2 degree to 3 degree)',
+            key: 'levelIndicators',
+          },
+          {
+            label: 'Base plate under the outriggers',
+            key: 'basePlateUnderOutriggers',
+          },
+          {label: 'Rigging (2 Nos) angles', key: 'riggingAngles'},
+          {
+            label:
+              'Are all the examination and test carried out and certified by competent person',
+            key: 'examinationCertified',
+          },
+          {
+            label:
+              'All lifting tools and tackles are being identified, checked and have valid register',
+            key: 'liftingToolsChecked',
+          },
+          {
+            label:
+              'The person working at height are trained and lash with all fall protection devices',
+            key: 'workersWithFallProtection',
+          },
+          {
+            label: 'Workmen provided with all required PPE’s',
+            key: 'ppeProvided',
+          },
+          {
+            label:
+              'Whether sufficient illumination is provided around the working area',
+            key: 'sufficientIllumination',
+          },
+          {
+            label: 'Is the SWL marked on all lifting tools & tackles',
+            key: 'swlMarked',
+          },
+          {
+            label:
+              'All welding machine, electrical equipment’s & generators properly earthed',
+            key: 'equipmentProperlyEarthed',
+          },
+          {
+            label: 'Are the walkway maintained free from obstacle all the time',
+            key: 'walkwayObstacleFree',
+          },
+          {
+            label: 'Is safety latch/locking available',
+            key: 'safetyLatchAvailable',
+          },
+          {
+            label: 'Proper warning sign available at site',
+            key: 'warningSignAvailable',
+          },
+          {label: 'Lifting arrangements', key: 'liftingArrangements'},
+          {label: 'Ground leveling', key: 'groundLeveling'},
+          {
+            label: 'Is Structure set out to the required line and levels',
+            key: 'structureSetOut',
+          },
+          {
+            label:
+              'For welding, is welder qualification and skill checked and certified',
+            key: 'welderQualificationChecked',
+          },
+        ];
+
+        return (
+          <View>
+            {erectionUsingCranesProperties.map(property => (
+              <DropdownPicker
+                label={property.label}
+                value={erectionUsingCranesData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value: string) =>
+                  handleInputChangeErectionUsingCranes(property.key, value)
+                }
+                isRequired={true}
+              />
+            ))}
+
+            {/* Additional form elements */}
+            <View>
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
+                />
+              </View>
+            </View>
+          </View>
+        );
+      case TASK_TYPES.STACKING_IN_YARD:
+        const stackingInYardProperties = [
+          {
+            title: 'Area Barricaded with Proper Signages',
+            key: 'areaBarricaded',
+          },
+          {
+            title: 'Temporary Lights Available at Night',
+            key: 'temporaryLightsAvailable',
+          },
+          {title: 'Flag Man/Marshal Available', key: 'flagManAvailable'},
+          {
+            title: 'Methodology & Scheme for Lifting and Stacking Available',
+            key: 'methodologyAvailable',
+          },
+          {
+            title: 'De-shackles and Slings with Test Certificate',
+            key: 'deShacklesAndSlings',
+          },
+          {title: 'Safety Color Code on De-shackles', key: 'safetyColorCode'},
+          {
+            title: 'Hydraulic Jacks in Good Condition',
+            key: 'hydraulicJacksCondition',
+          },
+          {
+            title: 'Limit Switch of Lifting Hoist Working',
+            key: 'limitSwitchWorking',
+          },
+          {
+            title: 'Cotter Pins in All Lifting Assemblies',
+            key: 'cotterPinsInPlace',
+          },
+          {
+            title: 'Macalloy Bars/Pins for Lifting in Proper Condition',
+            key: 'macalloyBarsCondition',
+          },
+          {title: 'Work at Height Permit Obtained', key: 'workAtHeightPermit'},
+          {
+            title: 'All Macalloy Bars and Wire Rope Assemblies Certified',
+            key: 'macalloyBarsCertificate',
+          },
+          {
+            title: 'Lifting Sequence as per Approved Methodology',
+            key: 'liftingSequenceProvided',
+          },
+          {
+            title: 'Lifting Holes in Proper Location',
+            key: 'liftingHolesLocation',
+          },
+          {
+            title: 'Lifting Arrangements Working Properly',
+            key: 'liftingArrangementsWorking',
+          },
+          {
+            title: 'Pre-stressing Duct Clear of Foreign Materials',
+            key: 'preStressingDuctClear',
+          },
+          {
+            title: 'Concrete Strength as per Approved Drawing',
+            key: 'concreteStrength',
+          },
+          {
+            title: 'Slider Trolley in Proper Position',
+            key: 'sliderTrolleyPosition',
+          },
+          {
+            title: 'Methodology for Stacking Approved',
+            key: 'methodologyForStackingApproved',
+          },
+          {
+            title: 'Stacking Area Properly Located and Earmarked',
+            key: 'stackingAreaLocation',
+          },
+          {
+            title: 'Stacking Area Level and Supported',
+            key: 'stackingAreaLevelSupport',
+          },
+        ];
+        return (
+          <View>
+            {stackingInYardProperties.map(property => (
+              <DropdownPicker
+                key={property.key}
+                label={property.title}
+                value={stackingInYardData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value: string) =>
+                  handleInputChangeStackingInYard(property.key, value)
+                }
+                isRequired={true}
+              />
+            ))}
+            <View>
+              {/* This should present irrespective of property */}
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  keyboardType="default"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => setComments(text)}
+                />
+              </View>
+            </View>
+          </View>
+        );
+
+      case TASK_TYPES.ASSEMBLING_OF_TRUSS:
+        return (
+          <View>
+            <DropdownPicker
+              label="Parts Accurately Assembled (GFC)"
+              value={assemblingOfTrussData.partsAccuratelyAssembled}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeAssemblingOfTruss(
+                  'partsAccuratelyAssembled',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="No Bent or Broken Parts During Handling"
+              value={assemblingOfTrussData.noBentOrBrokenParts}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeAssemblingOfTruss('noBentOrBrokenParts', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Truss Span Laid on Blocks for Proper Camber"
+              value={assemblingOfTrussData.trussSpanOnBlocks}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeAssemblingOfTruss('trussSpanOnBlocks', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="All Joint Surfaces Free from Dirt, Burrs"
+              value={assemblingOfTrussData.cleanJointSurfaces}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeAssemblingOfTruss('cleanJointSurfaces', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="All Fasteners Have Washer Under Nut or Bolt"
+              value={assemblingOfTrussData.fastenersWithWashers}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeAssemblingOfTruss(
+                  'fastenersWithWashers',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Service Bolts Fully Tightened"
+              value={assemblingOfTrussData.serviceBoltsTightened}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeAssemblingOfTruss(
+                  'serviceBoltsTightened',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+            <View>
+              {/* this should present irrespective of property */}
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
+                />
+              </View>
+            </View>
+          </View>
+        );
+      case TASK_TYPES.HACKING_OF_GIRDER:
+        return (
+          <View>
+            <DropdownPicker
+              label="Methodology Approved for Hacking by the Contractor"
+              value={hackingOfGirderData.methodologyApproved}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeHackingOfGirder('methodologyApproved', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Whether the Surface Cleaned and Wet at Which Hacking is to be Done"
+              value={hackingOfGirderData.surfaceCleanedAndWet}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeHackingOfGirder('surfaceCleanedAndWet', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Whether the Personnel are Skilled"
+              value={hackingOfGirderData.skilledPersonnel}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeHackingOfGirder('skilledPersonnel', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Whether the Instrument Used for Hacking is Sharpened"
+              value={hackingOfGirderData.sharpenedInstruments}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeHackingOfGirder('sharpenedInstruments', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Whether the 300-400 Recess Cut Formed in Per Square Meter"
+              value={hackingOfGirderData.recessCutFormation}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeHackingOfGirder('recessCutFormation', value)
+              }
+              isRequired={true}
+            />
+
+            <View>
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
+                />
+              </View>
+            </View>
+          </View>
+        );
+      case TASK_TYPES.DE_STRESSING_OF_GIRDER:
+        return (
+          <View>
+            <DropdownPicker
+              label="Girders and Segments Achieved Their Strength"
+              value={deStressingOfGirderData.strengthAchieved}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeDeStressingOfGirder('strengthAchieved', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Diamond Bit Saw or Grinder Used to Cut the Strands"
+              value={deStressingOfGirderData.diamondBitSawUsed}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeDeStressingOfGirder('diamondBitSawUsed', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Normal Gradual Uniform Transfer of Prestress to Girder"
+              value={deStressingOfGirderData.gradualUniformTransfer}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeDeStressingOfGirder(
+                  'gradualUniformTransfer',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <View>
+              {/* Additional common components */}
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
+                />
+              </View>
+            </View>
+          </View>
+        );
+      case TASK_TYPES.FIXING_OF_BEARING:
+        return (
+          <View>
+            <DropdownPicker
+              label="Bearing Placed as Per GFC Drawing"
+              value={fixingOfBearingData.bearingPlacedAsPerGFC}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeFixingOfBearing('bearingPlacedAsPerGFC', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Bearing Surface Fully Contact with Girder"
+              value={fixingOfBearingData.bearingSurfaceFullyContactWithGirder}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeFixingOfBearing(
+                  'bearingSurfaceFullyContactWithGirder',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Bearing Plates Set Horizontal in Both Directions"
+              value={fixingOfBearingData.bearingPlatesSetHorizontal}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeFixingOfBearing(
+                  'bearingPlatesSetHorizontal',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Bearing Pre-Set with Respect to Axis"
+              value={fixingOfBearingData.bearingPreSetWithAxis}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeFixingOfBearing('bearingPreSetWithAxis', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Supports Provided to Hold Bearing in Position"
+              value={fixingOfBearingData.supportsProvidedToHoldBearing}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeFixingOfBearing(
+                  'supportsProvidedToHoldBearing',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Anchor Bolt Holes Matching"
+              value={fixingOfBearingData.anchorBoltHolesMatching}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeFixingOfBearing(
+                  'anchorBoltHolesMatching',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Void Beneath Bearing Filled with Bedding Material"
+              value={fixingOfBearingData.voidBeneathBearingFilled}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeFixingOfBearing(
+                  'voidBeneathBearingFilled',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Bearing Fixed with Metal Bedding Plate"
+              value={fixingOfBearingData.bearingFixedWithMetalBedding}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeFixingOfBearing(
+                  'bearingFixedWithMetalBedding',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Threaded Fastener Tightened Uniformly"
+              value={fixingOfBearingData.threadedFastenerTightenedUniformly}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeFixingOfBearing(
+                  'threadedFastenerTightenedUniformly',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            {/* Common fields for Date, Time, Recommendations */}
+            <View style={{flexDirection: 'column'}}>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+            </View>
+
+            <View>
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+            </View>
+
+            <View style={{flexDirection: 'column', paddingBottom: 20}}>
+              <Text style={styles.Lable}>Recommendations</Text>
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                returnKeyType="next"
+                underlineColorAndroid="#f000"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
             </View>
           </View>
         );

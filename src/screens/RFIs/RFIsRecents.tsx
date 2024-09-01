@@ -661,6 +661,9 @@ const RFIsRecents = (props: any) => {
             </View>
           </View>
         );
+      case TASK_TYPES.REMOVAL_OF_SIDE_SHUTTERS:
+      case TASK_TYPES.REMOVAL_OF_MIDDLIE_TOP_SHUTTERS:
+      case TASK_TYPES.REMOVAL_OF_INNER_SHUTTERS:
       case TASK_TYPES.REMOVAL_OF_SHUTTER:
       case TASK_TYPES.REMOVAL_OF_SHUTTERS:
         return (
@@ -1811,6 +1814,387 @@ const RFIsRecents = (props: any) => {
                   {property.title}
                 </Text>
                 <Text>{selectedRFI?.metaData.curingData?.[property.key]}</Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.ERECTION_USING_CRANES:
+        const erectionUsingCranesProperties = [
+          {
+            title: 'Has any risk assessment been carried out',
+            key: 'riskAssessmentCarriedOut',
+          },
+          {
+            title: 'Is the crane on firm level bases',
+            key: 'craneOnFirmLevelBases',
+          },
+          {
+            title: 'Are all operators trained and competent',
+            key: 'allOperatorsTrained',
+          },
+          {
+            title: 'Is crane tested and operated',
+            key: 'craneTestedAndOperated',
+          },
+          {
+            title: 'Is there swing alarm installed and functioning',
+            key: 'swingAlarmFunctioning',
+          },
+          {
+            title: 'Does the crane have a current test certificate',
+            key: 'craneTestCertificate',
+          },
+          {
+            title: 'Boom of crane have a current test certificate',
+            key: 'boomTestCertificate',
+          },
+          {title: 'Oil (leakage)', key: 'oilLeakage'},
+          {title: 'Greasing', key: 'greasing'},
+          {
+            title: 'Outriggers (Fully extended)',
+            key: 'outriggersFullyExtended',
+          },
+          {
+            title: 'Level indicators (2 degree to 3 degree)',
+            key: 'levelIndicators',
+          },
+          {
+            title: 'Base plate under the outriggers',
+            key: 'basePlateUnderOutriggers',
+          },
+          {title: 'Rigging (2 Nos) angles', key: 'riggingAngles'},
+          {
+            title:
+              'Are all the examination and test carried out and certified by competent person',
+            key: 'examinationCertified',
+          },
+          {
+            title:
+              'All lifting tools and tackles are being identified, checked and have valid register',
+            key: 'liftingToolsChecked',
+          },
+          {
+            title:
+              'The person working at height are trained and lash with all fall protection devices',
+            key: 'workersWithFallProtection',
+          },
+          {
+            title: 'Workmen provided with all required PPE’s',
+            key: 'ppeProvided',
+          },
+          {
+            title:
+              'Whether sufficient illumination is provided around the working area',
+            key: 'sufficientIllumination',
+          },
+          {
+            title: 'Is the SWL marked on all lifting tools & tackles',
+            key: 'swlMarked',
+          },
+          {
+            title:
+              'All welding machine, electrical equipment’s & generators properly earthed',
+            key: 'equipmentProperlyEarthed',
+          },
+          {
+            title: 'Are the walkway maintained free from obstacle all the time',
+            key: 'walkwayObstacleFree',
+          },
+          {
+            title: 'Is safety latch/locking available',
+            key: 'safetyLatchAvailable',
+          },
+          {
+            title: 'Proper warning sign available at site',
+            key: 'warningSignAvailable',
+          },
+          {title: 'Lifting arrangements', key: 'liftingArrangements'},
+          {title: 'Ground leveling', key: 'groundLeveling'},
+          {
+            title: 'Is Structure set out to the required line and levels',
+            key: 'structureSetOut',
+          },
+          {
+            title:
+              'For welding, is welder qualification and skill checked and certified',
+            key: 'welderQualificationChecked',
+          },
+        ];
+        return (
+          <View>
+            {erectionUsingCranesProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.erectionUsingCranesData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.STACKING_IN_YARD:
+        const stackingInYardProperties = [
+          {
+            title: 'Area Barricaded with Proper Signages',
+            key: 'areaBarricaded',
+          },
+          {
+            title: 'Temporary Lights Available at Night',
+            key: 'temporaryLightsAvailable',
+          },
+          {title: 'Flag Man/Marshal Available', key: 'flagManAvailable'},
+          {
+            title: 'Methodology & Scheme for Lifting and Stacking Available',
+            key: 'methodologyAvailable',
+          },
+          {
+            title: 'De-shackles and Slings with Test Certificate',
+            key: 'deShacklesAndSlings',
+          },
+          {title: 'Safety Color Code on De-shackles', key: 'safetyColorCode'},
+          {
+            title: 'Hydraulic Jacks in Good Condition',
+            key: 'hydraulicJacksCondition',
+          },
+          {
+            title: 'Limit Switch of Lifting Hoist Working',
+            key: 'limitSwitchWorking',
+          },
+          {
+            title: 'Cotter Pins in All Lifting Assemblies',
+            key: 'cotterPinsInPlace',
+          },
+          {
+            title: 'Macalloy Bars/Pins for Lifting in Proper Condition',
+            key: 'macalloyBarsCondition',
+          },
+          {title: 'Work at Height Permit Obtained', key: 'workAtHeightPermit'},
+          {
+            title: 'All Macalloy Bars and Wire Rope Assemblies Certified',
+            key: 'macalloyBarsCertificate',
+          },
+          {
+            title: 'Lifting Sequence as per Approved Methodology',
+            key: 'liftingSequenceProvided',
+          },
+          {
+            title: 'Lifting Holes in Proper Location',
+            key: 'liftingHolesLocation',
+          },
+          {
+            title: 'Lifting Arrangements Working Properly',
+            key: 'liftingArrangementsWorking',
+          },
+          {
+            title: 'Pre-stressing Duct Clear of Foreign Materials',
+            key: 'preStressingDuctClear',
+          },
+          {
+            title: 'Concrete Strength as per Approved Drawing',
+            key: 'concreteStrength',
+          },
+          {
+            title: 'Slider Trolley in Proper Position',
+            key: 'sliderTrolleyPosition',
+          },
+          {
+            title: 'Methodology for Stacking Approved',
+            key: 'methodologyForStackingApproved',
+          },
+          {
+            title: 'Stacking Area Properly Located and Earmarked',
+            key: 'stackingAreaLocation',
+          },
+          {
+            title: 'Stacking Area Level and Supported',
+            key: 'stackingAreaLevelSupport',
+          },
+        ];
+        return (
+          <View>
+            {stackingInYardProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.stackingInYardData[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.ASSEMBLING_OF_TRUSS:
+        const assemblingOfTrussProperties = [
+          {
+            title: 'Parts Accurately Assembled (GFC)',
+            key: 'partsAccuratelyAssembled',
+          },
+          {
+            title: 'No Bent or Broken Parts During Handling',
+            key: 'noBentOrBrokenParts',
+          },
+          {
+            title: 'Truss Span Laid on Blocks for Proper Camber',
+            key: 'trussSpanOnBlocks',
+          },
+          {
+            title: 'All Joint Surfaces, Bolts, Nuts, Washers Free from Dirt',
+            key: 'cleanJointSurfaces',
+          },
+          {
+            title:
+              'All Fasteners Have Washer Under Nut or Bolt During Tightening',
+            key: 'fastenersWithWashers',
+          },
+          {
+            title: 'Service Bolts Fully Tightened After Assembly',
+            key: 'serviceBoltsTightened',
+          },
+        ];
+        return (
+          <View>
+            {assemblingOfTrussProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.assemblingOfTrussData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.HACKING_OF_GIRDER:
+        const hackingOfGirderProperties = [
+          {
+            title: 'Methodology Approved for Hacking by the Contractor',
+            key: 'methodologyApproved',
+          },
+          {
+            title:
+              'Whether the Surface Cleaned and Wet at Which Hacking is to be Done',
+            key: 'surfaceCleanedAndWet',
+          },
+          {
+            title: 'Whether the Personnel are Skilled',
+            key: 'skilledPersonnel',
+          },
+          {
+            title: 'Whether the Instrument Used for Hacking is Sharpened',
+            key: 'sharpenedInstruments',
+          },
+          {
+            title: 'Whether the 300-400 Recess Cut Formed in Per Square Meter',
+            key: 'recessCutFormation',
+          },
+        ];
+
+        return (
+          <View>
+            {hackingOfGirderProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.hackingOfGirderData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.DE_STRESSING_OF_GIRDER:
+        const deStressingOfGirderProperties = [
+          {
+            title: 'Girders and Segments Achieved Their Strength',
+            key: 'strengthAchieved',
+          },
+          {
+            title: 'Diamond Bit Saw or Grinder Used to Cut the Strands',
+            key: 'diamondBitSawUsed',
+          },
+          {
+            title: 'Normal Gradual Uniform Transfer of Prestress to Girder',
+            key: 'gradualUniformTransfer',
+          },
+        ];
+
+        return (
+          <View>
+            {deStressingOfGirderProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.deStressingOfGirderData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.FIXING_OF_BEARING:
+        const fixingOfBearingProperties = [
+          {
+            title: 'Bearing Placed as Per GFC Drawing',
+            key: 'bearingPlacedAsPerGFC',
+          },
+          {
+            title: 'Bearing Surface Fully Contact with Girder',
+            key: 'bearingSurfaceFullyContactWithGirder',
+          },
+          {
+            title: 'Bearing Plates Set Horizontal in Both Directions',
+            key: 'bearingPlatesSetHorizontal',
+          },
+          {
+            title: 'Bearing Pre-Set with Respect to Axis',
+            key: 'bearingPreSetWithAxis',
+          },
+          {
+            title: 'Supports Provided to Hold Bearing in Position',
+            key: 'supportsProvidedToHoldBearing',
+          },
+          {
+            title: 'Anchor Bolt Holes Matching',
+            key: 'anchorBoltHolesMatching',
+          },
+          {
+            title: 'Void Beneath Bearing Filled with Bedding Material',
+            key: 'voidBeneathBearingFilled',
+          },
+          {
+            title: 'Bearing Fixed with Metal Bedding Plate',
+            key: 'bearingFixedWithMetalBedding',
+          },
+          {
+            title: 'Threaded Fastener Tightened Uniformly',
+            key: 'threadedFastenerTightenedUniformly',
+          },
+        ];
+
+        return (
+          <View>
+            {fixingOfBearingProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.fixingOfBearingData?.[property.key]}
+                </Text>
               </View>
             ))}
           </View>

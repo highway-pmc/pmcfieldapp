@@ -486,6 +486,15 @@ export const TASK_TYPES = {
   PLACEMENT_OF_REINFORCEMENT_CAGE: 'placement-of-reinforcement-cage',
   TRANSPORTATION_OF_STEEL_GIRDERS_DIAPHRAGMS_ERECTION_AT_SITE:
     'transportation-of-steel-girders-diaphragms-erection-at-site',
+  ASSEMBLING_OF_TRUSS: 'assembling-of-truss',
+  ERECTION_USING_CRANES: 'erection-using-cranes',
+  STACKING_IN_YARD: 'stacking-in-yard',
+  HACKING_OF_GIRDER: 'hacking-of-girder',
+  DE_STRESSING_OF_GIRDER: 'de-stressing-of-girders',
+  REMOVAL_OF_SIDE_SHUTTERS: 'removal-of-side-shutters',
+  REMOVAL_OF_MIDDLIE_TOP_SHUTTERS: 'removal-of-middle-and-top-shutters',
+  REMOVAL_OF_INNER_SHUTTERS: 'removal-of-inner-shutters',
+  FIXING_OF_BEARING: 'fixing-of-bearing',
 };
 
 export const TEST_MATERIALS_TYPES = {

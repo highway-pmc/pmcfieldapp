@@ -2199,6 +2199,89 @@ const RFIsRecents = (props: any) => {
             ))}
           </View>
         );
+      case TASK_TYPES.REMOVAL_OF_TEMPORARY_STRUCTURE:
+        const removalOfTemporaryStructureProperties = [
+          {
+            title: 'Whether Concrete Has Achieved Desired Strength',
+            key: 'concreteAchievedStrength',
+          },
+          {
+            title: 'Whether Minimum Time Has Been Attained',
+            key: 'minimumTimeAttained',
+          },
+          {
+            title:
+              'Whether All Main Components Tightened and Fixed at Their Position',
+            key: 'allComponentsTightened',
+          },
+        ];
+        return (
+          <View>
+            {removalOfTemporaryStructureProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.removalOfTemporaryStructureData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.INSTALLATION_OF_EXPANSION_JOINT:
+        const installationOfExpansionJointProperties = [
+          {
+            title: 'Expansion Joint in the Right Position',
+            key: 'expansionJointPositionCorrect',
+          },
+          {
+            title: 'Shipping Devices or Stabilizers Removed',
+            key: 'shippingDevicesRemoved',
+          },
+          {
+            title: 'No Foreign Objects Impending the Expansion Joint',
+            key: 'noForeignObjects',
+          },
+          {
+            title: 'Materials Flowing in the Right Direction',
+            key: 'materialsFlowProperly',
+          },
+          {
+            title: 'Anchors and Supports Match System Drawing',
+            key: 'anchorsAndSupportsMatched',
+          },
+          {
+            title: 'Joints Properly Aligned',
+            key: 'jointsProperlyAligned',
+          },
+          {
+            title: 'No Damage Sustained During Shipping or Installation',
+            key: 'noDamageSustained',
+          },
+        ];
+        return (
+          <View>
+            {installationOfExpansionJointProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.installationOfExpansionJointData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
 
       default:
         return (

@@ -787,6 +787,12 @@ const handleTextInputChangeProcurementOfSteel = (key:any, value:any) => {
     [key]: value,
   });
 };
+const handleInputChangeFixingOfSheathingJoints = (key:any, value:any) => {
+  setFixingOfSheathingJointsData(prevState => ({
+    ...prevState,
+    [key]: value,
+  }));
+};
 
 const handleTextInputChangeTransportation = (key:any, value:any) => {
   setTransportationData({
@@ -794,6 +800,16 @@ const handleTextInputChangeTransportation = (key:any, value:any) => {
     [key]: value,
   });
 };
+const [fixingOfSheathingJointsData, setFixingOfSheathingJointsData] = useState({
+  temporaryOpeningsPlugged: 'Y',
+  jointWaterTight: 'Y',
+  sheathingNeatlyFitted: 'Y',
+  anchorageEndSealed: 'Y',
+  couplerTightlyScrewed: 'Y',
+  couplerLengthSufficient: 'Y',
+  jointSealedWithTape: 'Y',
+  couplerStaggered: 'Y',
+});
 
   const [
     transportationOfSteelGirdersDiaphragms,
@@ -1713,7 +1729,7 @@ const handleInputChangePainting = (key, value) => {
               );
             } else {
               setProcurementOfSteelData({
-                totalQtyOfSteelProcured: 0.0, 
+                totalQtyOfSteelProcured: 0.0,
               });
             }
             break;
@@ -1722,7 +1738,25 @@ const handleInputChangePainting = (key, value) => {
               setTransportationData(rfiData.metaData.transportationData);
             } else {
               setTransportationData({
-                transitTime: 0.0, 
+                transitTime: 0.0,
+              });
+            }
+            break;
+          case TASK_TYPES.FIXING_OF_SHEATHING_JOINTS:
+            if (rfiData.metaData.fixingOfSheathingJointsData) {
+              setFixingOfSheathingJointsData(
+                rfiData.metaData.fixingOfSheathingJointsData,
+              );
+            } else {
+              setFixingOfSheathingJointsData({
+                temporaryOpeningsPlugged: 'Y',
+                jointWaterTight: 'Y',
+                sheathingNeatlyFitted: 'Y',
+                anchorageEndSealed: 'Y',
+                couplerTightlyScrewed: 'Y',
+                couplerLengthSufficient: 'Y',
+                jointSealedWithTape: 'Y',
+                couplerStaggered: 'Y',
               });
             }
             break;
@@ -3165,6 +3199,12 @@ const validateProcurementOfSteelData = (data: any): boolean => {
         checkList = {
           taskName: selectedTask.name,
           transportationData: transportationData,
+        };
+        break;
+      case TASK_TYPES.FIXING_OF_SHEATHING_JOINTS:
+        checkList = {
+          taskName: selectedTask.name,
+          fixingOfSheathingJointsData: fixingOfSheathingJointsData,
         };
         break;
 
@@ -7266,46 +7306,192 @@ const validateProcurementOfSteelData = (data: any): boolean => {
           </View>
         );
       case TASK_TYPES.TRANSPORTATION_OF_MATERIAL:
-         <View>
-           <Input
-             label="Transit Time in hrs"
-             value={transportationData.transitTime}
-             onChange={(value: string) =>
-               handleTextInputChangeTransportation('transitTime', value)
-             }
-             isRequired={true}
-           />
-           <View>
-             <CalendarPicker
-               label="Date"
-               value={rfiDate}
-               onChange={date => setRFIDate(date)}
-             />
-             <TimePicker
-               label="Time"
-               value={rfiTime}
-               onChange={time => setRFITime(time)}
-             />
-             <View style={{flexDirection: 'column', paddingBottom: 20}}>
-               <Text style={styles.Lable}>Recommendations</Text>
-               <TextInput
-                 style={styles.commonInputFiels}
-                 placeholder="Recommendations"
-                 autoCapitalize="none"
-                 keyboardType="email-address"
-                 returnKeyType="next"
-                 underlineColorAndroid="#f000"
-                 multiline={true}
-                 numberOfLines={4}
-                 blurOnSubmit={false}
-                 value={comments}
-                 onChangeText={text => {
-                   setComments(text);
-                 }}
-               />
-             </View>
-           </View>
-         </View>;
+        <View>
+          <Input
+            label="Transit Time in hrs"
+            value={transportationData.transitTime}
+            onChange={(value: string) =>
+              handleTextInputChangeTransportation('transitTime', value)
+            }
+            isRequired={true}
+          />
+          <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <View style={{flexDirection: 'column', paddingBottom: 20}}>
+              <Text style={styles.Lable}>Recommendations</Text>
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                returnKeyType="next"
+                underlineColorAndroid="#f000"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => {
+                  setComments(text);
+                }}
+              />
+            </View>
+          </View>
+        </View>;
+      case TASK_TYPES.FIXING_OF_SHEATHING_JOINTS:
+        return (
+          <View>
+            <DropdownPicker
+              label="All Temporary Openings in Sheathing Satisfactory Plugged"
+              value={fixingOfSheathingJointsData.temporaryOpeningsPlugged}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeFixingOfSheathingJoints(
+                  'temporaryOpeningsPlugged',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Has Joint Water Tight"
+              value={fixingOfSheathingJointsData.jointWaterTight}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeFixingOfSheathingJoints(
+                  'jointWaterTight',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Sheathing Neatly Fitted at Joint without Internal Projection"
+              value={fixingOfSheathingJointsData.sheathingNeatlyFitted}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeFixingOfSheathingJoints(
+                  'sheathingNeatlyFitted',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Sheathing Tightly Fitted on Anchorage End and Sealed with Tape"
+              value={fixingOfSheathingJointsData.anchorageEndSealed}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeFixingOfSheathingJoints(
+                  'anchorageEndSealed',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Coupler Tightly Screwed on Outer Side of Sheathing Duct"
+              value={fixingOfSheathingJointsData.couplerTightlyScrewed}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeFixingOfSheathingJoints(
+                  'couplerTightlyScrewed',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Length of Coupler Not Less Than 150mm (Up to 200mm)"
+              value={fixingOfSheathingJointsData.couplerLengthSufficient}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeFixingOfSheathingJoints(
+                  'couplerLengthSufficient',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Joint Between Coupler End and Duct Sealed with Tape"
+              value={fixingOfSheathingJointsData.jointSealedWithTape}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeFixingOfSheathingJoints(
+                  'jointSealedWithTape',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Coupler of Adjacent Duct Staggered"
+              value={fixingOfSheathingJointsData.couplerStaggered}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeFixingOfSheathingJoints(
+                  'couplerStaggered',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <View>
+              {/* Common Date and Time Picker Section */}
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
+                />
+              </View>
+            </View>
+          </View>
+        );
+
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
       case TASK_TYPES.LIFTING_RIGHT:

@@ -2096,6 +2096,63 @@ const RFIsRecents = (props: any) => {
             ))}
           </View>
         );
+      case TASK_TYPES.FIXING_OF_SHEATHING_JOINTS:
+        const fixingOfSheathingJointsProperties = [
+          {
+            title: 'All Temporary Openings in Sheathing Satisfactory Plugged',
+            key: 'temporaryOpeningsPlugged',
+          },
+          {
+            title: 'Has Joint Water Tight',
+            key: 'jointWaterTight',
+          },
+          {
+            title:
+              'Sheathing Neatly Fitted at Joint without Internal Projection',
+            key: 'sheathingNeatlyFitted',
+          },
+          {
+            title:
+              'Sheathing Tightly Fitted on Anchorage End and Sealed with Tape',
+            key: 'anchorageEndSealed',
+          },
+          {
+            title: 'Coupler Tightly Screwed on Outer Side of Sheathing Duct',
+            key: 'couplerTightlyScrewed',
+          },
+          {
+            title: 'Length of Coupler Not Less Than 150mm (Up to 200mm)',
+            key: 'couplerLengthSufficient',
+          },
+          {
+            title: 'Joint Between Coupler End and Duct Sealed with Tape',
+            key: 'jointSealedWithTape',
+          },
+          {
+            title: 'Coupler of Adjacent Duct Staggered',
+            key: 'couplerStaggered',
+          },
+        ];
+
+        return (
+          <View>
+            {fixingOfSheathingJointsProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.fixingOfSheathingJointsData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+
       case TASK_TYPES.HACKING_OF_GIRDER:
         const hackingOfGirderProperties = [
           {

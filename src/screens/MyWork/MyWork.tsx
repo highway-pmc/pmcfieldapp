@@ -324,12 +324,12 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     }));
   };
 
-const handleInputChangeRemovalOfTemporaryStructure = (key, value) => {
-  setRemovalOfTemporaryStructureData(prevState => ({
-    ...prevState,
-    [key]: value,
-  }));
-};
+  const handleInputChangeRemovalOfTemporaryStructure = (key, value) => {
+    setRemovalOfTemporaryStructureData(prevState => ({
+      ...prevState,
+      [key]: value,
+    }));
+  };
 
   const handleInputChangeDeStressingOfGirder = (key: string, value: string) => {
     setDeStressingOfGirderData(prevState => ({
@@ -726,27 +726,27 @@ const handleInputChangeRemovalOfTemporaryStructure = (key, value) => {
     paintSurfaceQuality: 'Y',
     recordMaintained: 'Y',
   });
-const [paintingData, setPaintingData] = useState({
-  paintingSystemApproved: 'Y',
-  documentsApproved: 'Y',
-  surfacePreparationDone: 'Y',
-  defectsCorrected: 'Y',
-  moistureContentChecked: 'Y',
-  plasterSurfacesRubbed: 'Y',
-  materialStirred: 'Y',
-  fillerCoatAfterPrimer: 'Y',
-  suctionSpotsPrimed: 'Y',
-  fillerCoatAppliedEvenly: 'Y',
-  sandingBetweenCoats: 'Y',
-  dryingTimeAllowed: 'Y',
-  materialsMixedProperly: 'Y',
-  firstCoatAppliedByRoller: 'Y',
-  rollerJointsChecked: 'Y',
-  curingPeriodAllowed: 'Y',
-  secondCoatAfterTouchUp: 'Y',
-  finalCoatApplied: 'Y',
-  cleaningAndProtection: 'Y',
-});
+  const [paintingData, setPaintingData] = useState({
+    paintingSystemApproved: 'Y',
+    documentsApproved: 'Y',
+    surfacePreparationDone: 'Y',
+    defectsCorrected: 'Y',
+    moistureContentChecked: 'Y',
+    plasterSurfacesRubbed: 'Y',
+    materialStirred: 'Y',
+    fillerCoatAfterPrimer: 'Y',
+    suctionSpotsPrimed: 'Y',
+    fillerCoatAppliedEvenly: 'Y',
+    sandingBetweenCoats: 'Y',
+    dryingTimeAllowed: 'Y',
+    materialsMixedProperly: 'Y',
+    firstCoatAppliedByRoller: 'Y',
+    rollerJointsChecked: 'Y',
+    curingPeriodAllowed: 'Y',
+    secondCoatAfterTouchUp: 'Y',
+    finalCoatApplied: 'Y',
+    cleaningAndProtection: 'Y',
+  });
 
   const handlePaintingOfSteelGirdersDiaphragms = (
     field: string,
@@ -775,41 +775,66 @@ const [paintingData, setPaintingData] = useState({
       [field]: value,
     }));
   };
-const [procurementOfSteelData, setProcurementOfSteelData] = useState({
-  totalQtyOfSteelProcured: 0.0, 
-});
-const [transportationData, setTransportationData] = useState({
-  transitTime: 0.0, 
-});
-const handleTextInputChangeProcurementOfSteel = (key:any, value:any) => {
-  setProcurementOfSteelData({
-    ...procurementOfSteelData,
-    [key]: value,
+  const [procurementOfSteelData, setProcurementOfSteelData] = useState({
+    totalQtyOfSteelProcured: 0.0,
   });
-};
-const handleInputChangeFixingOfSheathingJoints = (key:any, value:any) => {
-  setFixingOfSheathingJointsData(prevState => ({
-    ...prevState,
-    [key]: value,
-  }));
-};
+  const [transportationData, setTransportationData] = useState({
+    transitTime: 0.0,
+  });
+  const handleTextInputChangeProcurementOfSteel = (key: any, value: any) => {
+    setProcurementOfSteelData({
+      ...procurementOfSteelData,
+      [key]: value,
+    });
+  };
+  const handleInputChangeFixingOfSheathingJoints = (key: any, value: any) => {
+    setFixingOfSheathingJointsData(prevState => ({
+      ...prevState,
+      [key]: value,
+    }));
+  };
+  const handleInputChangeStitchConcrete = (key: any, value: any) => {
+    setStitchConcreteData(prevState => ({
+      ...prevState,
+      [key]: value,
+    }));
+  };
 
-const handleTextInputChangeTransportation = (key:any, value:any) => {
-  setTransportationData({
-    ...transportationData,
-    [key]: value,
+  const handleTextInputChangeTransportation = (key: any, value: any) => {
+    setTransportationData({
+      ...transportationData,
+      [key]: value,
+    });
+  };
+  const [stitchConcreteData, setStitchConcreteData] = useState({
+    gradeOfConcrete: 'Y',
+    methodStatementApproved: 'Y',
+    htStrandsInserted: 'Y',
+    materialsApproved: 'Y',
+    formworkApproved: 'Y',
+    reinforcementCageApproved: 'Y',
+    equipmentWorking: 'Y',
+    accessProvided: 'Y',
+    safetyArrangements: 'Y',
+    rainfallProtection: 'Y',
+    needleVibratorStatus: 'Y',
+    needleVibratorNos: 'Y',
+    slumpConeApparatusAvailable: 'Y',
+    startPreStressing: 'Y',
+    groutingFormatFollowed: 'Y',
   });
-};
-const [fixingOfSheathingJointsData, setFixingOfSheathingJointsData] = useState({
-  temporaryOpeningsPlugged: 'Y',
-  jointWaterTight: 'Y',
-  sheathingNeatlyFitted: 'Y',
-  anchorageEndSealed: 'Y',
-  couplerTightlyScrewed: 'Y',
-  couplerLengthSufficient: 'Y',
-  jointSealedWithTape: 'Y',
-  couplerStaggered: 'Y',
-});
+
+  const [fixingOfSheathingJointsData, setFixingOfSheathingJointsData] =
+    useState({
+      temporaryOpeningsPlugged: 'Y',
+      jointWaterTight: 'Y',
+      sheathingNeatlyFitted: 'Y',
+      anchorageEndSealed: 'Y',
+      couplerTightlyScrewed: 'Y',
+      couplerLengthSufficient: 'Y',
+      jointSealedWithTape: 'Y',
+      couplerStaggered: 'Y',
+    });
 
   const [
     transportationOfSteelGirdersDiaphragms,
@@ -874,43 +899,45 @@ const [fixingOfSheathingJointsData, setFixingOfSheathingJointsData] = useState({
     entireAreaBarricaded: 'Y',
   });
 
-const [stackingInYardData, setStackingInYardData] = useState({
-  areaBarricaded: 'Y',
-  temporaryLightsAvailable: 'Y',
-  flagManAvailable: 'Y',
-  methodologySchemeAvailable: 'Y',
-  deShacklesSlingsCertified: 'Y',
-  safetyColorCodePresent: 'Y',
-  hydraulicJacksCondition: 'Y',
-  limitSwitchWorking: 'Y',
-  cotterPinsInAssembly: 'Y',
-  macalloyBarsCondition: 'Y',
-  workAtHeightPermit: 'Y',
-  macalloyBarsTestCertificate: 'Y',
-  liftingSequenceProvided: 'Y',
-  liftingHolesLocation: 'Y',
-  liftingArrangementsWorking: 'Y',
-  prestressingDuctClear: 'Y',
-  concreteStrengthGained: 'Y',
-  sliderTrolleyPosition: 'Y',
-  stackingMethodologyApproved: 'Y',
-  stackingAreaLocated: 'Y',
-  stackingAreaLeveled: 'Y',
-});
-const [hackingOfGirderData, setHackingOfGirderData] = useState({
-  methodologyApproved: 'Y',
-  surfaceCleanedAndWet: 'Y',
-  skilledPersonnel: 'Y',
-  sharpenedInstruments: 'Y',
-  recessCutFormation: 'Y',
-});
-const [deStressingOfGirderData, setDeStressingOfGirderData] = useState({
-  strengthAchieved: 'Y',
-  diamondBitSawUsed: 'Y',
-  gradualUniformTransfer: 'Y',
-});
-const [installationOfExpansionJointData, setInstallationOfExpansionJointData] =
-  useState({
+  const [stackingInYardData, setStackingInYardData] = useState({
+    areaBarricaded: 'Y',
+    temporaryLightsAvailable: 'Y',
+    flagManAvailable: 'Y',
+    methodologySchemeAvailable: 'Y',
+    deShacklesSlingsCertified: 'Y',
+    safetyColorCodePresent: 'Y',
+    hydraulicJacksCondition: 'Y',
+    limitSwitchWorking: 'Y',
+    cotterPinsInAssembly: 'Y',
+    macalloyBarsCondition: 'Y',
+    workAtHeightPermit: 'Y',
+    macalloyBarsTestCertificate: 'Y',
+    liftingSequenceProvided: 'Y',
+    liftingHolesLocation: 'Y',
+    liftingArrangementsWorking: 'Y',
+    prestressingDuctClear: 'Y',
+    concreteStrengthGained: 'Y',
+    sliderTrolleyPosition: 'Y',
+    stackingMethodologyApproved: 'Y',
+    stackingAreaLocated: 'Y',
+    stackingAreaLeveled: 'Y',
+  });
+  const [hackingOfGirderData, setHackingOfGirderData] = useState({
+    methodologyApproved: 'Y',
+    surfaceCleanedAndWet: 'Y',
+    skilledPersonnel: 'Y',
+    sharpenedInstruments: 'Y',
+    recessCutFormation: 'Y',
+  });
+  const [deStressingOfGirderData, setDeStressingOfGirderData] = useState({
+    strengthAchieved: 'Y',
+    diamondBitSawUsed: 'Y',
+    gradualUniformTransfer: 'Y',
+  });
+  const [
+    installationOfExpansionJointData,
+    setInstallationOfExpansionJointData,
+  ] = useState({
     expansionJointPositionCorrect: 'Y',
     shippingDevicesRemoved: 'Y',
     noForeignObjects: 'Y',
@@ -920,12 +947,12 @@ const [installationOfExpansionJointData, setInstallationOfExpansionJointData] =
     noDamageSustained: 'Y',
   });
 
-const [removalOfTemporaryStructureData, setRemovalOfTemporaryStructureData] =
-  useState({
-    concreteAchievedStrength: 'Y',
-    minimumTimeAttained: 'Y',
-    allComponentsTightened: 'Y',
-  });
+  const [removalOfTemporaryStructureData, setRemovalOfTemporaryStructureData] =
+    useState({
+      concreteAchievedStrength: 'Y',
+      minimumTimeAttained: 'Y',
+      allComponentsTightened: 'Y',
+    });
 
   const handleTransportationOfSteelGirdersDiaphragms = (
     field: string,
@@ -943,10 +970,7 @@ const [removalOfTemporaryStructureData, setRemovalOfTemporaryStructureData] =
       [field]: value,
     }));
   };
-  const handleInputChangeStackingInYard = (
-    field: string,
-    value: string,
-  ) => {
+  const handleInputChangeStackingInYard = (field: string, value: string) => {
     setStackingInYardData(prevState => ({
       ...prevState,
       [field]: value,
@@ -989,12 +1013,12 @@ const [removalOfTemporaryStructureData, setRemovalOfTemporaryStructureData] =
       [key]: newValue,
     }));
   };
-const handleInputChangePainting = (key, value) => {
-  setPaintingData(prevState => ({
-    ...prevState,
-    [key]: value,
-  }));
-};
+  const handleInputChangePainting = (key, value) => {
+    setPaintingData(prevState => ({
+      ...prevState,
+      [key]: value,
+    }));
+  };
 
   const handleInputChangeGrouting = (
     name: keyof FormStateGrouting,
@@ -1275,6 +1299,36 @@ const handleInputChangePainting = (key, value) => {
             }
             break;
           case TASK_TYPES.STITCH_CONCRETE:
+            if (rfiData.metaData.concreteData) {
+              rfiData.metaData.concreteData.forEach((item: any) => {
+                item.key = Guid.create();
+              });
+              setConcreteData(rfiData.metaData.concreteData);
+            } else {
+              setConcreteData([]);
+            }
+            if (rfiData.metaData.stitchConcreteData) {
+              setStitchConcreteData(rfiData.metaData.stitchConcreteData);
+            } else {
+              setStitchConcreteData({
+                gradeOfConcrete: 'Y',
+                methodStatementApproved: 'Y',
+                htStrandsInserted: 'Y',
+                materialsApproved: 'Y',
+                formworkApproved: 'Y',
+                reinforcementCageApproved: 'Y',
+                equipmentWorking: 'Y',
+                accessProvided: 'Y',
+                safetyArrangements: 'Y',
+                rainfallProtection: 'Y',
+                needleVibratorStatus: 'Y',
+                needleVibratorNos: 'Y',
+                slumpConeApparatusAvailable: 'Y',
+                startPreStressing: 'Y',
+                groutingFormatFollowed: 'Y',
+              });
+            }
+            break;
           case TASK_TYPES.CONCRETING:
           case TASK_TYPES.PCC_LEVELLING_COURSE:
             if (rfiData.metaData.concreteData) {
@@ -1285,6 +1339,7 @@ const handleInputChangePainting = (key, value) => {
             } else {
               setConcreteData([]);
             }
+            break;
           case TASK_TYPES.GLUEING:
             if (rfiData.metaData.glueingData) {
               rfiData.metaData.glueingData.forEach((item: any) => {
@@ -2353,25 +2408,25 @@ const handleInputChangePainting = (key, value) => {
     return true;
   };
 
-const validateProcurementOfSteelData = (data: any): boolean => {
-  const totalQtyOfSteelProcured = parseFloat(data.totalQtyOfSteelProcured);
+  const validateProcurementOfSteelData = (data: any): boolean => {
+    const totalQtyOfSteelProcured = parseFloat(data.totalQtyOfSteelProcured);
 
-  // Validation for total quantity of steel procured
-  if (
-    isNaN(totalQtyOfSteelProcured) ||
-    totalQtyOfSteelProcured <= 0 ||
-    totalQtyOfSteelProcured > 100000 ||
-    !/^\d+(\.\d{1,3})?$/.test(data.totalQtyOfSteelProcured)
-  ) {
-    showSnackbar(
-      'Total quantity of steel procured must be greater than 0, up to 3 decimal places, and less than or equal to 1,00,000 tonnes.',
-      'error',
-    );
-    return false;
-  }
-  data.totalQtyOfSteelProcured = Number(data.totalQtyOfSteelProcured);
-  return true;
-};
+    // Validation for total quantity of steel procured
+    if (
+      isNaN(totalQtyOfSteelProcured) ||
+      totalQtyOfSteelProcured <= 0 ||
+      totalQtyOfSteelProcured > 100000 ||
+      !/^\d+(\.\d{1,3})?$/.test(data.totalQtyOfSteelProcured)
+    ) {
+      showSnackbar(
+        'Total quantity of steel procured must be greater than 0, up to 3 decimal places, and less than or equal to 1,00,000 tonnes.',
+        'error',
+      );
+      return false;
+    }
+    data.totalQtyOfSteelProcured = Number(data.totalQtyOfSteelProcured);
+    return true;
+  };
 
   const validateFlushingOperationsData = (
     flushingOperationsData: any,
@@ -3035,6 +3090,27 @@ const validateProcurementOfSteelData = (data: any): boolean => {
         };
         break;
       case TASK_TYPES.STITCH_CONCRETE:
+        if (!validateConcreteData(selectedTask?.name)) {
+          return;
+        }
+        concreteData.forEach((item: any) => {
+          delete item.key;
+          if (selectedTask.name === TASK_TYPES.CONCRETING) {
+            item.concreteTemp = Number(item.concreteTemp);
+            item.slumpValue = Number(item.slumpValue);
+          } else {
+            delete item.concreteTemp;
+            delete item.slumpValue;
+          }
+          item.concretePoured = Number(item.concretePoured);
+        });
+        checkList = {
+          taskName: selectedTask.name,
+          stitchConcreteData: stitchConcreteData,
+          concreteData: concreteData,
+        };
+        break;
+
       case TASK_TYPES.CONCRETING:
       case TASK_TYPES.PCC_LEVELLING_COURSE:
         const isDataValid = validateConcreteData(selectedTask?.name);
@@ -5262,9 +5338,248 @@ const validateProcurementOfSteelData = (data: any): boolean => {
             </View>
           </View>
         );
-
-      case TASK_TYPES.CONCRETING:
       case TASK_TYPES.STITCH_CONCRETE:
+        if (!concreteData || !concreteData.length) {
+          setConcreteData([
+            {
+              vehicleNo: '',
+              timeOfArrival: '',
+              gradeOfConcrete: '',
+              concreteTemp: 0,
+              slumpValue: 0,
+              concretePoured: 0,
+              concreteStartTime: '',
+              concreteFinishTime: '',
+              key: Guid.create(),
+            },
+          ]);
+        }
+
+        return (
+          <View>
+            <DropdownPicker
+              label="Grade of Concrete (Reference approved drawing)"
+              value={stitchConcreteData.gradeOfConcrete}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeStitchConcrete('gradeOfConcrete', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Method statement is approved"
+              value={stitchConcreteData.methodStatementApproved}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeStitchConcrete(
+                  'methodStatementApproved',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="All HT strands for all duct inserted before concreting"
+              value={stitchConcreteData.htStrandsInserted}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeStitchConcrete('htStrandsInserted', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Water, sand, coarse aggregate, cement, admixture approved by IE"
+              value={stitchConcreteData.materialsApproved}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeStitchConcrete('materialsApproved', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Formwork approved by IE"
+              value={stitchConcreteData.formworkApproved}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeStitchConcrete('formworkApproved', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Reinforcement cage approved"
+              value={stitchConcreteData.reinforcementCageApproved}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeStitchConcrete(
+                  'reinforcementCageApproved',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Concreting equipment is in proper working condition"
+              value={stitchConcreteData.equipmentWorking}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeStitchConcrete('equipmentWorking', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Access provided"
+              value={stitchConcreteData.accessProvided}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeStitchConcrete('accessProvided', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Safety arrangements are adequate"
+              value={stitchConcreteData.safetyArrangements}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeStitchConcrete('safetyArrangements', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Heavy rainfall protection available"
+              value={stitchConcreteData.rainfallProtection}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeStitchConcrete('rainfallProtection', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Needle Vibrators status"
+              value={stitchConcreteData.needleVibratorStatus}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeStitchConcrete('needleVibratorStatus', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Needles vibrator’s nos and status"
+              value={stitchConcreteData.needleVibratorNos}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeStitchConcrete('needleVibratorNos', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Slump cone apparatus and sufficient Cube moulds available"
+              value={stitchConcreteData.slumpConeApparatusAvailable}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeStitchConcrete(
+                  'slumpConeApparatusAvailable',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Start pre-stressing after getting strength 30 Mpa or 5 days"
+              value={stitchConcreteData.startPreStressing}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeStitchConcrete('startPreStressing', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Pre-stressing & Grouting format followed as per Spine"
+              value={stitchConcreteData.groutingFormatFollowed}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeStitchConcrete('groutingFormatFollowed', value)
+              }
+              isRequired={true}
+            />
+            <View style={styles.MainContainer}>
+              <ScrollView
+                id="scrollViewConcrete"
+                showsHorizontalScrollIndicator={false}
+                horizontal={enableScroll}>
+                <View>
+                  {renderHeadings()}
+                  <FlatList
+                    data={concreteData}
+                    renderItem={renderItem}
+                    keyExtractor={item => item.key?.toString()}
+                    style={{zIndex: 10}}
+                    automaticallyAdjustContentInsets={true}
+                    scrollEnabled={false}
+                  />
+                </View>
+              </ScrollView>
+            </View>
+
+            <View>
+              <TouchableOpacity
+                style={{paddingVertical: 15, zIndex: 8}}
+                onPress={() => onAddMoreConcrete()}>
+                <Text style={styles.AddMoreLink}>+ Add More</Text>
+              </TouchableOpacity>
+            </View>
+
+            <View>
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
+                />
+              </View>
+            </View>
+          </View>
+        );
+      case TASK_TYPES.CONCRETING:
       case TASK_TYPES.PCC_LEVELLING_COURSE:
         if (!concreteData || !concreteData.length) {
           setConcreteData([

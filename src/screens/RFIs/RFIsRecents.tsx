@@ -745,6 +745,97 @@ const RFIsRecents = (props: any) => {
             </View>
           </View>
         );
+      case TASK_TYPES.STITCH_CONCRETE:
+        const stitchConcreteProperties = [
+          {
+            title: 'Grade of Concrete (Reference approved drawing)',
+            key: 'gradeOfConcrete',
+          },
+          {
+            title: 'Method statement is approved',
+            key: 'methodStatementApproved',
+          },
+          {
+            title: 'HT strands for all duct inserted before concreting',
+            key: 'htStrandsInserted',
+          },
+          {
+            title:
+              'Water, sand, coarse aggregate, cement, admixture approved by IE',
+            key: 'materialsApproved',
+          },
+          {
+            title: 'Formwork approved by IE',
+            key: 'formworkApproved',
+          },
+          {
+            title: 'Reinforcement cage approved',
+            key: 'reinforcementCageApproved',
+          },
+          {
+            title: 'Concreting equipment is in proper working condition',
+            key: 'equipmentWorking',
+          },
+          {
+            title: 'Access provided',
+            key: 'accessProvided',
+          },
+          {
+            title: 'Safety arrangements are adequate',
+            key: 'safetyArrangements',
+          },
+          {
+            title: 'Heavy rainfall protection available',
+            key: 'rainfallProtection',
+          },
+          {
+            title: 'Needle Vibrators status',
+            key: 'needleVibratorStatus',
+          },
+          {
+            title: 'Needles vibrator’s nos and status',
+            key: 'needleVibratorNos',
+          },
+          {
+            title: 'Slump cone apparatus and sufficient Cube moulds available',
+            key: 'slumpConeApparatusAvailable',
+          },
+          {
+            title:
+              'Start pre-stressing after getting strength 30 Mpa or 5 days',
+            key: 'startPreStressing',
+          },
+          {
+            title: 'Pre-stressing & Grouting format followed as per Spine',
+            key: 'groutingFormatFollowed',
+          },
+        ];
+        return (
+          <View>
+            {stitchConcreteProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.stitchConcreteData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+            <ScrollView horizontal={true}>
+              <View style={{flexDirection: 'column'}}>
+                {
+                  <SwipeListView
+                    data={selectedRFI?.metaData.concreteData}
+                    renderItem={renderItem}
+                    renderSectionHeader={renderSectionHeader}
+                  />
+                }
+              </View>
+            </ScrollView>
+          </View>
+        );
+
       case TASK_TYPES.CONCRETING:
         return (
           <View>

@@ -407,6 +407,92 @@ const RFIsRecents = (props: any) => {
       </View>
     </View>
   );
+  const renderItemTorquing = (rowData: any) => (
+    <View style={{flexDirection: 'column', gap: 5}}>
+      {rowData.index === 0 && (
+        <View style={styles.headerRow}>
+          <Text style={styles.headerCell}>TM No.</Text>
+          <Text style={styles.headerCell}>Date</Text>
+          <Text style={styles.headerCell}>Component</Text>
+          <Text style={styles.headerCell}>Details of Joints</Text>
+          <Text style={styles.headerCell}>Nos of Bolt</Text>
+          <Text style={styles.headerCell}>Dia of Bolt in mm</Text>
+          <Text style={styles.headerCell}>Size in mm</Text>
+          <Text style={styles.headerCell}>Sl.No. of Invoice/MTC File</Text>
+          <Text style={styles.headerCell}>Sl.No. of Torque Wrench</Text>
+          <Text style={styles.headerCell}>Torque Applied</Text>
+          <Text style={styles.headerCell}>Nos. of Refusals (3nos)</Text>
+          <Text style={styles.headerCell}>Nos. of Refusals (4nos)</Text>
+          <Text style={styles.headerCell}>Nos. of Refusals (5nos)</Text>
+          <Text style={styles.headerCell}>Nos. of Refusals (6nos)</Text>
+        </View>
+      )}
+      <View style={styles.row}>
+        <Text style={styles.cell}>TM {rowData.index + 1}</Text>
+        <Text style={styles.cell}>{rowData.item.date}</Text>
+        <Text style={styles.cell}>{rowData.item.component}</Text>
+        <Text style={styles.cell}>{rowData.item.detailsOfJoints}</Text>
+        <Text style={styles.cell}>{rowData.item.nosOfBolt}</Text>
+        <Text style={styles.cell}>{rowData.item.diaOfBoltInMm}</Text>
+        <Text style={styles.cell}>{rowData.item.sizeInMm}</Text>
+        <Text style={styles.cell}>{rowData.item.slNoOfInvoiceMTCFile}</Text>
+        <Text style={styles.cell}>{rowData.item.slNoOfTorqueWrench}</Text>
+        <Text style={styles.cell}>{rowData.item.torqueApplied}</Text>
+        <Text style={styles.cell}>{rowData.item.refusalsGauage3nos}</Text>
+        <Text style={styles.cell}>{rowData.item.refusalsGauage4nos}</Text>
+        <Text style={styles.cell}>{rowData.item.refusalsGauage5nos}</Text>
+        <Text style={styles.cell}>{rowData.item.refusalsGauage6nos}</Text>
+      </View>
+    </View>
+  );
+  const renderSectionHeaderTorquing = (rowData: any) => {
+    return (
+      <View>
+        <View>
+          <Text>TM No.</Text>
+        </View>
+        <View>
+          <Text>Date</Text>
+        </View>
+        <View>
+          <Text>Component</Text>
+        </View>
+        <View>
+          <Text>Details of Joints</Text>
+        </View>
+        <View>
+          <Text>Nos of Bolt</Text>
+        </View>
+        <View>
+          <Text>Dia of Bolt in mm</Text>
+        </View>
+        <View>
+          <Text>Size in mm</Text>
+        </View>
+        <View>
+          <Text>Sl.No. of Invoice/MTC File</Text>
+        </View>
+        <View>
+          <Text>Sl.No. of Torque Wrench</Text>
+        </View>
+        <View>
+          <Text>Torque Applied</Text>
+        </View>
+        <View>
+          <Text>Nos. of Refusals (3nos)</Text>
+        </View>
+        <View>
+          <Text>Nos. of Refusals (4nos)</Text>
+        </View>
+        <View>
+          <Text>Nos. of Refusals (5nos)</Text>
+        </View>
+        <View>
+          <Text>Nos. of Refusals (6nos)</Text>
+        </View>
+      </View>
+    );
+  };
 
   const renderSectionHeaderGlueing = (rowData: any) => {
     return (
@@ -1066,6 +1152,21 @@ const RFIsRecents = (props: any) => {
             ))}
           </View>
         );
+      case TASK_TYPES.TORQUING:
+        return (
+          <View>
+            <ScrollView horizontal={true}>
+              <View style={{flexDirection: 'column'}}>
+                <SwipeListView
+                  data={selectedRFI?.metaData.torquingData}
+                  renderItem={renderItemTorquing}
+                  renderSectionHeader={renderSectionHeaderTorquing}
+                />
+              </View>
+            </ScrollView>
+          </View>
+        );
+
       case TASK_TYPES.GLUEING:
         return (
           <View>

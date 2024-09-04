@@ -616,7 +616,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       [field]: value,
     }));
   };
-  const handleInputChangeFixingOfBearing = (key, value) => {
+  const handleInputChangeFixingOfBearing = (key: any, value: any) => {
     setFixingOfBearingData(prevState => ({
       ...prevState,
       [key]: value,
@@ -799,7 +799,24 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       [key]: value,
     }));
   };
-
+  const [torquingData, setTorquingData] = useState([
+    {
+      date: '',
+      component: '',
+      detailsOfJoints: '',
+      nosOfBolt: 0,
+      diaOfBoltInMm: 0,
+      sizeInMm: 0,
+      slNoOfInvoiceMTCFile: '',
+      slNoOfTorqueWrench: '',
+      torqueApplied: 0,
+      refusalsGauage3nos: 'Y',
+      refusalsGauage4nos: 'Y',
+      refusalsGauage5nos: 'Y',
+      refusalsGauage6nos: 'Y',
+      key: Guid.create(),
+    },
+  ]);
   const handleTextInputChangeTransportation = (key: any, value: any) => {
     setTransportationData({
       ...transportationData,
@@ -1350,6 +1367,17 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
               setGlueingData([]);
             }
             break;
+          case TASK_TYPES.TORQUING:
+            if (rfiData.metaData.torquingData) {
+              rfiData.metaData.torquingData.forEach((item: any) => {
+                item.key = Guid.create();
+              });
+              setTorquingData(rfiData.metaData.torquingData);
+            } else {
+              setTorquingData([]);
+            }
+            break;
+
           case TASK_TYPES.REMOVAL_OF_FORMWORK:
             if (rfiData.metaData.removalFormworkData) {
               setRemovalFormworkData(rfiData.metaData.removalFormworkData);
@@ -3143,6 +3171,15 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           glueingData: glueingData,
         };
         break;
+      case TASK_TYPES.TORQUING:
+        if (!validateTorquingData(torquingData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          torquingData: torquingData,
+        };
+        break;
 
       case TASK_TYPES.GROUTING:
         if (!validateGroutingData(groutingData)) {
@@ -3461,6 +3498,28 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       },
     ]);
   };
+  const onAddMoreTorquing = () => {
+    setTorquingData([
+      ...torquingData,
+      {
+        date: '',
+        component: '',
+        detailsOfJoints: '',
+        nosOfBolt: 0,
+        diaOfBoltInMm: 0,
+        sizeInMm: 0,
+        slNoOfInvoiceMTCFile: '',
+        slNoOfTorqueWrench: '',
+        torqueApplied: 0,
+        refusalsGauage3nos: 'Y',
+        refusalsGauage4nos: 'Y',
+        refusalsGauage5nos: 'Y',
+        refusalsGauage6nos: 'Y',
+        key: Guid.create(),
+      },
+    ]);
+  };
+
   const onAddMoreGlueing = () => {
     setGlueingData([
       ...glueingData,
@@ -3550,6 +3609,316 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       </View>
     </View>
   );
+  const renderItemTorquing = (rowData: any) => (
+    <View style={[styles.rowContainer, styles.marginBottom10]}>
+      <View style={[styles.cell, {width: 50}]}>
+        <Text style={styles.cellText}>TM {rowData.index + 1}</Text>
+      </View>
+
+      <View style={styles.cell}>
+        <TimePicker
+          label=""
+          value={rowData.item.date}
+          styleCont={styles.marginBootomZero}
+          style={styles.disPlayNone}
+          onChange={time =>
+            handleTextInputChangeTorquing(rowData.index, 'date', time)
+          }
+        />
+      </View>
+
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'component'}
+          index={rowData.index}
+          onChange={handleTextInputChangeTorquing}></CustomTextInputValue>
+      </View>
+
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'detailsOfJoints'}
+          index={rowData.index}
+          onChange={handleTextInputChangeTorquing}></CustomTextInputValue>
+      </View>
+
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'nosOfBolt'}
+          index={rowData.index}
+          onChange={handleTextInputChangeTorquing}></CustomTextInputValue>
+      </View>
+
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'diaOfBoltInMm'}
+          index={rowData.index}
+          onChange={handleTextInputChangeTorquing}></CustomTextInputValue>
+      </View>
+
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'sizeInMm'}
+          index={rowData.index}
+          onChange={handleTextInputChangeTorquing}></CustomTextInputValue>
+      </View>
+
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'slNoOfInvoiceMTCFile'}
+          index={rowData.index}
+          onChange={handleTextInputChangeTorquing}></CustomTextInputValue>
+      </View>
+
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'slNoOfTorqueWrench'}
+          index={rowData.index}
+          onChange={handleTextInputChangeTorquing}></CustomTextInputValue>
+      </View>
+
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'torqueApplied'}
+          index={rowData.index}
+          onChange={handleTextInputChangeTorquing}></CustomTextInputValue>
+      </View>
+
+      <View style={styles.cell}>
+        <Text>{rowData.item.refusalsGauage3nos}</Text>
+      </View>
+
+      <View style={styles.cell}>
+        <Text>{rowData.item.refusalsGauage4nos}</Text>
+      </View>
+
+      <View style={styles.cell}>
+        <Text>{rowData.item.refusalsGauage5nos}</Text>
+      </View>
+
+      <View style={styles.cell}>
+        <Text>{rowData.item.refusalsGauage6nos}</Text>
+      </View>
+
+      <View style={[styles.cell, {paddingHorizontal: 45}]}>
+        <TouchableOpacity
+          style={[styles.deleteButton]}
+          onPress={() => deleteTorquingItem(rowData, rowData.item.key)}>
+          <Image
+            style={[styles.CloseIcon, {tintColor: '#fff'}]}
+            source={require('./../../images/menu/delete.png')}
+          />
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+
+  const renderTorquingHeadings = () => (
+    <View style={styles.rowContainer}>
+      <View style={[styles.cell, {width: 50}]}>
+        <Text style={styles.cellText}>TM No.</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Date</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Component</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Details of Joints</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Nos of Bolt</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Dia of Bolt (mm)</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Size (mm)</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Invoice/MTC File No.</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Torque Wrench Sl. No.</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Torque Applied</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Refusals (Gauage 3nos)</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Refusals (Gauage 4nos)</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Refusals (Gauage 5nos)</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Refusals (Gauage 6nos)</Text>
+      </View>
+      <View style={[styles.cell, {paddingHorizontal: 40}]}>
+        <Text style={styles.cellText}>Actions</Text>
+      </View>
+    </View>
+  );
+  const handleTextInputChangeTorquing = (
+    index: number,
+    field: string,
+    value: string,
+  ) => {
+    const updatedData = [...torquingData];
+    let isValid = true;
+    let errorMessage = '';
+
+    switch (field) {
+      case 'component':
+      case 'detailsOfJoints':
+        if (value.length > 20) {
+          isValid = false;
+          errorMessage = `${field} cannot exceed 20 characters`;
+        }
+        break;
+
+      case 'nosOfBolt':
+        const nosOfBolt = parseInt(value);
+        if (isNaN(nosOfBolt) || nosOfBolt <= 0 || nosOfBolt > 1000000) {
+          isValid = false;
+          errorMessage =
+            'Enter a positive integer up to 10 lakh for Nos of Bolt';
+        }
+        break;
+
+      case 'diaOfBoltInMm':
+      case 'sizeInMm':
+        const sizeValue = parseFloat(value);
+        if (
+          isNaN(sizeValue) ||
+          sizeValue <= 0 ||
+          sizeValue > 100 ||
+          value.split('.')[1]?.length > 2
+        ) {
+          isValid = false;
+          errorMessage =
+            'Enter a size value greater than 0 and up to 100 mm with up to 2 decimal places';
+        }
+        break;
+
+      case 'slNoOfInvoiceMTCFile':
+      case 'slNoOfTorqueWrench':
+        if (value.length > 50) {
+          isValid = false;
+          errorMessage = `${field} cannot exceed 50 characters`;
+        }
+        break;
+
+      case 'torqueApplied':
+        const torqueApplied = parseFloat(value);
+        if (
+          isNaN(torqueApplied) ||
+          torqueApplied <= 0 ||
+          torqueApplied > 1000000 ||
+          value.split('.')[1]?.length > 2
+        ) {
+          isValid = false;
+          errorMessage =
+            'Enter a torque value greater than 0 and up to 10 lakh with up to 2 decimal places';
+        }
+        break;
+
+      default:
+        break;
+    }
+
+    if (isValid) {
+      updatedData[index][field] = value;
+      setTorquingData(updatedData);
+    } else {
+      updatedData[index][field] = value;
+      setTorquingData(updatedData);
+      showSnackbar(errorMessage, 'error');
+    }
+  };
+  const validateTorquingData = (torquingData: any): boolean => {
+    for (const item of torquingData) {
+      if (!item.date) {
+        showSnackbar('Please select a date for Torquing', 'error');
+        return false;
+      }
+      if (!item.component || item.component.length > 20) {
+        showSnackbar(
+          'Please enter a valid component (max 20 characters)',
+          'error',
+        );
+        return false;
+      }
+      if (!item.detailsOfJoints || item.detailsOfJoints.length > 20) {
+        showSnackbar(
+          'Please enter valid details of joints (max 20 characters)',
+          'error',
+        );
+        return false;
+      }
+      if (
+        isNaN(item.nosOfBolt) ||
+        item.nosOfBolt <= 0 ||
+        item.nosOfBolt > 1000000
+      ) {
+        showSnackbar('Please enter a valid number of bolts', 'error');
+        return false;
+      }
+      if (
+        isNaN(item.diaOfBoltInMm) ||
+        item.diaOfBoltInMm <= 0 ||
+        item.diaOfBoltInMm > 100 ||
+        item.diaOfBoltInMm.split('.')[1]?.length > 2
+      ) {
+        showSnackbar('Please enter a valid diameter of bolt (mm)', 'error');
+        return false;
+      }
+      if (
+        isNaN(item.sizeInMm) ||
+        item.sizeInMm <= 0 ||
+        item.sizeInMm > 100 ||
+        item.sizeInMm.split('.')[1]?.length > 2
+      ) {
+        showSnackbar('Please enter a valid size (mm)', 'error');
+        return false;
+      }
+      if (!item.slNoOfInvoiceMTCFile || item.slNoOfInvoiceMTCFile.length > 50) {
+        showSnackbar(
+          'Please enter a valid Invoice/MTC file number (max 50 characters)',
+          'error',
+        );
+        return false;
+      }
+      if (!item.slNoOfTorqueWrench || item.slNoOfTorqueWrench.length > 50) {
+        showSnackbar(
+          'Please enter a valid Torque Wrench Sl. No. (max 50 characters)',
+          'error',
+        );
+        return false;
+      }
+      if (
+        isNaN(item.torqueApplied) ||
+        item.torqueApplied <= 0 ||
+        item.torqueApplied > 1000000 ||
+        item.torqueApplied.split('.')[1]?.length > 2
+      ) {
+        showSnackbar('Please enter a valid torque applied value', 'error');
+        return false;
+      }
+      // Additional validations can be added here for refusals or other fields if needed
+    }
+    return true;
+  };
 
   const renderHeadings = () => (
     <View
@@ -4182,6 +4551,14 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     newData.splice(prevIndex, 1);
     setConcreteData(newData);
   };
+  const deleteTorquingItem = (rowMap: any, rowKey: any) => {
+    closeRow(rowMap, rowKey);
+    const newData = [...torquingData];
+    const prevIndex = torquingData.findIndex(item => item.key === rowKey);
+    newData.splice(prevIndex, 1);
+    setTorquingData(newData);
+  };
+
   //Function to delete glueing row
   const deleteGlueingItem = (rowMap: any, rowKey: any) => {
     closeRow(rowMap, rowKey);
@@ -5663,6 +6040,93 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             </View>
           </View>
         );
+      case TASK_TYPES.TORQUING:
+        if (!torquingData || !torquingData.length) {
+          setTorquingData([
+            {
+              date: '',
+              component: '',
+              detailsOfJoints: '',
+              nosOfBolt: 0,
+              diaOfBoltInMm: 0,
+              sizeInMm: 0,
+              slNoOfInvoiceMTCFile: '',
+              slNoOfTorqueWrench: '',
+              torqueApplied: 0,
+              refusalsGauage3nos: 'Y',
+              refusalsGauage4nos: 'Y',
+              refusalsGauage5nos: 'Y',
+              refusalsGauage6nos: 'Y',
+              key: Guid.create(),
+            },
+          ]);
+        }
+        return (
+          <View>
+            <View style={styles.MainContainer}>
+              <ScrollView
+                id="scrollViewTorquing"
+                showsHorizontalScrollIndicator={false}
+                horizontal={enableScroll}>
+                <View>
+                  {renderTorquingHeadings()}
+                  <FlatList
+                    data={torquingData}
+                    renderItem={renderItemTorquing}
+                    keyExtractor={item => item.key?.toString()}
+                    style={{zIndex: 10}}
+                    automaticallyAdjustContentInsets={true}
+                    scrollEnabled={false}
+                  />
+                </View>
+              </ScrollView>
+            </View>
+
+            <View>
+              <TouchableOpacity
+                style={{paddingVertical: 15, zIndex: 8}}
+                onPress={() => onAddMoreTorquing()}>
+                <Text style={styles.AddMoreLink}>+ Add More</Text>
+              </TouchableOpacity>
+            </View>
+            <View>
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
+                />
+              </View>
+            </View>
+          </View>
+        );
+
       case TASK_TYPES.GLUEING:
         if (!glueingData || !glueingData.length) {
           setGlueingData([

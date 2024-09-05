@@ -802,6 +802,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
   const [torquingData, setTorquingData] = useState([
     {
       date: '',
+      time:'',
       component: '',
       detailsOfJoints: '',
       nosOfBolt: 0,
@@ -3503,6 +3504,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       ...torquingData,
       {
         date: '',
+        time:'',
         component: '',
         detailsOfJoints: '',
         nosOfBolt: 0,
@@ -3616,13 +3618,22 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       </View>
 
       <View style={styles.cell}>
+        <CalendarPicker
+          label="Date"
+          value={rowData.item.date}
+          onChange={date =>
+            handleTextInputChangeTorquing(rowData.index, 'date', date)
+          }
+        />
+      </View>
+      <View style={styles.cell}>
         <TimePicker
           label=""
           value={rowData.item.date}
           styleCont={styles.marginBootomZero}
           style={styles.disPlayNone}
           onChange={time =>
-            handleTextInputChangeTorquing(rowData.index, 'date', time)
+            handleTextInputChangeTorquing(rowData.index, 'time', time)
           }
         />
       </View>
@@ -3723,10 +3734,10 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
   const renderTorquingHeadings = () => (
     <View style={styles.rowContainer}>
       <View style={[styles.cell, {width: 50}]}>
-        <Text style={styles.cellText}>TM No.</Text>
+        <Text style={styles.cellText}>Date</Text>
       </View>
       <View style={styles.cell}>
-        <Text style={styles.cellText}>Date</Text>
+        <Text style={styles.cellText}>Time</Text>
       </View>
       <View style={styles.cell}>
         <Text style={styles.cellText}>Component</Text>
@@ -3848,8 +3859,8 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
   };
   const validateTorquingData = (torquingData: any): boolean => {
     for (const item of torquingData) {
-      if (!item.date) {
-        showSnackbar('Please select a date for Torquing', 'error');
+      if (!item.date || !item.time) {
+        showSnackbar('Please select a date and Time for Torquing', 'error');
         return false;
       }
       if (!item.component || item.component.length > 20) {

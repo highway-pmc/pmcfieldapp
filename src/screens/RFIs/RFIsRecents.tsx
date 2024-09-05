@@ -411,8 +411,8 @@ const RFIsRecents = (props: any) => {
     <View style={{flexDirection: 'column', gap: 5}}>
       {rowData.index === 0 && (
         <View style={styles.headerRow}>
-          <Text style={styles.headerCell}>TM No.</Text>
           <Text style={styles.headerCell}>Date</Text>
+          <Text style={styles.headerCell}>Time</Text>
           <Text style={styles.headerCell}>Component</Text>
           <Text style={styles.headerCell}>Details of Joints</Text>
           <Text style={styles.headerCell}>Nos of Bolt</Text>
@@ -428,8 +428,9 @@ const RFIsRecents = (props: any) => {
         </View>
       )}
       <View style={styles.row}>
-        <Text style={styles.cell}>TM {rowData.index + 1}</Text>
         <Text style={styles.cell}>{rowData.item.date}</Text>
+        <Text style={styles.cell}>{rowData.index.time}</Text>
+
         <Text style={styles.cell}>{rowData.item.component}</Text>
         <Text style={styles.cell}>{rowData.item.detailsOfJoints}</Text>
         <Text style={styles.cell}>{rowData.item.nosOfBolt}</Text>
@@ -449,10 +450,10 @@ const RFIsRecents = (props: any) => {
     return (
       <View>
         <View>
-          <Text>TM No.</Text>
+          <Text>Date</Text>
         </View>
         <View>
-          <Text>Date</Text>
+          <Text>Time</Text>
         </View>
         <View>
           <Text>Component</Text>

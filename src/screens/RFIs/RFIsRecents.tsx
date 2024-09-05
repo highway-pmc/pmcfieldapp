@@ -494,6 +494,57 @@ const RFIsRecents = (props: any) => {
       </View>
     );
   };
+const renderItemTemporaryPrestressing = (rowData: any) => (
+  <View style={{flexDirection: 'column', gap: 5}}>
+    {rowData.index === 0 && (
+      <View style={styles.headerRow}>
+        <Text style={styles.headerCell}>Joint Numbers</Text>
+        <Text style={styles.headerCell}>Calibration Done</Text>
+        <Text style={styles.headerCell}>Stressing Sequence Drawing Number</Text>
+        <Text style={styles.headerCell}>Date of Prestressing</Text>
+        <Text style={styles.headerCell}>Time of Prestressing</Text>
+        <Text style={styles.headerCell}>Max Jack Pressure (Kg/Cm²)</Text>
+        <Text style={styles.headerCell}>Jack Pressure Applied (Kg/Cm²)</Text>
+      </View>
+    )}
+    <View style={styles.row}>
+      <Text style={styles.cell}>{rowData.item.jointNumbers}</Text>
+      <Text style={styles.cell}>{rowData.item.calibrationDone}</Text>
+      <Text style={styles.cell}>
+        {rowData.item.stressingSequenceDrawingNumber}
+      </Text>
+      <Text style={styles.cell}>{rowData.item.dateOfPrestressing}</Text>
+      <Text style={styles.cell}>{rowData.item.timeOfPrestressing}</Text>
+      <Text style={styles.cell}>{rowData.item.maxJackPressure}</Text>
+      <Text style={styles.cell}>{rowData.item.jackPressureApplied}</Text>
+    </View>
+  </View>
+);
+const renderSectionHeaderTemporaryPrestressing = (rowData: any) => (
+  <View>
+    <View>
+      <Text>Joint Numbers</Text>
+    </View>
+    <View>
+      <Text>Calibration Done</Text>
+    </View>
+    <View>
+      <Text>Stressing Sequence Drawing Number</Text>
+    </View>
+    <View>
+      <Text>Date of Prestressing</Text>
+    </View>
+    <View>
+      <Text>Time of Prestressing</Text>
+    </View>
+    <View>
+      <Text>Max Jack Pressure (Kg/Cm²)</Text>
+    </View>
+    <View>
+      <Text>Jack Pressure Applied (Kg/Cm²)</Text>
+    </View>
+  </View>
+);
 
   const renderSectionHeaderGlueing = (rowData: any) => {
     return (
@@ -1209,38 +1260,20 @@ const RFIsRecents = (props: any) => {
           </View>
         );
       case TASK_TYPES.TEMPORARY_PRESTRESSING:
-        const temporaryPrestressingProperties = [
-          {
-            title: 'Calibration Certificate Available',
-            key: 'calibrationCertificateAvailable',
-          },
-          {
-            title: 'Stressing Sequence Drawing Number',
-            key: 'stressingSequenceDrawingNumber',
-          },
-          {title: 'Prestressing Date', key: 'prestressingDate'},
-          {title: 'Max Jack Pressure (Kg/cm²)', key: 'maxJackPressure'},
-          {title: 'Jack Pressure Applied (Kg/cm²)', key: 'jackPressureApplied'},
-        ];
-
         return (
           <View>
-            {temporaryPrestressingProperties.map(property => (
-              <View style={{flexDirection: 'column'}} key={property.key}>
-                <Text style={styles.GenerateRFIFieldLabel}>
-                  {property.title}
-                </Text>
-                <Text>
-                  {
-                    selectedRFI?.metaData.temporaryPrestressingData?.[
-                      property.key
-                    ]
-                  }
-                </Text>
+            <ScrollView horizontal={true}>
+              <View style={{flexDirection: 'column'}}>
+                <SwipeListView
+                  data={selectedRFI?.metaData.temporaryPrestressingData}
+                  renderItem={renderItemTemporaryPrestressing}
+                  renderSectionHeader={renderSectionHeaderTemporaryPrestressing}
+                />
               </View>
-            ))}
+            </ScrollView>
           </View>
         );
+
       case TASK_TYPES.FABRICATION_OF_MEMBERS:
       case TASK_TYPES.FABRICATION_OF_STEEL_GIRDERS:
         const fabricationProperties = [

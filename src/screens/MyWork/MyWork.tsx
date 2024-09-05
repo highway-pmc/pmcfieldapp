@@ -596,13 +596,34 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     memberMarkedForErection: 'Y',
     memberApprovedByInspector: 'Y',
   });
-  const [temporaryPrestressingData, setTemporaryPrestressingData] = useState({
-    calibrationCertificateAvailable: 'Y',
-    stressingSequenceDrawingNumber: 0,
-    prestressingDate: '',
-    maxJackPressure: 0.0,
-    jackPressureApplied: 0.0,
-  });
+  const [temporaryPrestressingData, setTemporaryPrestressingData] = useState([
+    {
+      jointNumbers: '',
+      calibrationDone: 'Y', // default value 'Y'
+      stressingSequenceDrawingNumber: '',
+      dateOfPrestressing: '',
+      timeOfPrestressing: '',
+      maxJackPressure: 0, // up to 3 decimals, >0, max limit 1000
+      jackPressureApplied: 0, // up to 3 decimals, >0, max limit 1000
+      key: Guid.create(),
+    },
+  ]);
+
+  const onAddMoreTemporaryPrestressing = () => {
+    setTemporaryPrestressingData([
+      ...temporaryPrestressingData,
+      {
+        jointNumbers: '',
+        calibrationDone: 'Y',
+        stressingSequenceDrawingNumber: '',
+        dateOfPrestressing: '',
+        timeOfPrestressing: '',
+        maxJackPressure: 0,
+        jackPressureApplied: 0,
+        key: Guid.create(),
+      },
+    ]);
+  };
 
   const [curingData, setCuringData] = useState({
     waterUsedForCuring: 'Y',
@@ -799,10 +820,54 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       [key]: value,
     }));
   };
+  const handleTextInputChangeTemporaryPrestressing = (
+    index: number,
+    field: string,
+    value: string,
+  ) => {
+    const updatedData = [...temporaryPrestressingData];
+    let isValid = true;
+    let errorMessage = '';
+
+    switch (field) {
+      case 'jointNumbers':
+        if (value.length > 50) {
+          isValid = false;
+          errorMessage = 'Joint Numbers cannot exceed 50 characters';
+        }
+        break;
+
+      case 'maxJackPressure':
+      case 'jackPressureApplied':
+        const pressureValue = parseFloat(value);
+        if (
+          isNaN(pressureValue) ||
+          pressureValue <= 0 ||
+          pressureValue > 1000 ||
+          value.split('.')[1]?.length > 3
+        ) {
+          isValid = false;
+          errorMessage =
+            'Pressure must be between 0 and 1000 with up to 3 decimal places';
+        }
+        break;
+
+      default:
+        break;
+    }
+
+    if (!isValid) {
+      showSnackbar(errorMessage, 'error');
+    }
+
+    updatedData[index][field] = value;
+    setTemporaryPrestressingData(updatedData);
+  };
+
   const [torquingData, setTorquingData] = useState([
     {
       date: '',
-      time:'',
+      time: '',
       component: '',
       detailsOfJoints: '',
       nosOfBolt: 0,
@@ -1416,19 +1481,19 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
 
           case TASK_TYPES.TEMPORARY_PRESTRESSING:
             if (rfiData.metaData.temporaryPrestressingData) {
+              rfiData.metaData.temporaryPrestressingData.forEach(
+                (item: any) => {
+                  item.key = Guid.create();
+                },
+              );
               setTemporaryPrestressingData(
                 rfiData.metaData.temporaryPrestressingData,
               );
             } else {
-              setTemporaryPrestressingData({
-                calibrationCertificateAvailable: 'Y',
-                stressingSequenceDrawingNumber: 0,
-                prestressingDate: '',
-                maxJackPressure: 0,
-                jackPressureApplied: 0,
-              });
+              setTemporaryPrestressingData([]);
             }
             break;
+
           case TASK_TYPES.PAINTING_OF_STEEL_GIRDERS_DIAPHRAGMS:
             if (rfiData.metaData.paintingOfSteelGirdersDiaphragms) {
               setPaintingOfSteelGirdersDiaphragms(
@@ -2647,62 +2712,6 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     return true;
   };
 
-  // Validation Function for Temporary Prestressing Data
-  const validateTemporaryPrestressingData = (data: any): boolean => {
-    const maxJackPressure = parseFloat(data.maxJackPressure);
-    const jackPressureApplied = parseFloat(data.jackPressureApplied);
-    const stressingSequenceDrawingNumber = parseInt(
-      data.stressingSequenceDrawingNumber,
-    );
-
-    if (
-      isNaN(maxJackPressure) ||
-      maxJackPressure <= 0 ||
-      maxJackPressure > 1000
-    ) {
-      showSnackbar(
-        'Maximum Jack Pressure must be greater than 0 and less than or equal to 1000 Kg/Cm²',
-        'error',
-      );
-      return false;
-    }
-    if (
-      isNaN(jackPressureApplied) ||
-      jackPressureApplied <= 0 ||
-      jackPressureApplied > 1000
-    ) {
-      showSnackbar(
-        'Jack Pressure Applied must be greater than 0 and less than or equal to 1000 Kg/Cm²',
-        'error',
-      );
-      return false;
-    }
-    if (!data.prestressingDate) {
-      showSnackbar('Prestressing Date must not be empty.', 'error');
-      return false;
-    }
-    if (
-      isNaN(stressingSequenceDrawingNumber) ||
-      stressingSequenceDrawingNumber <= 0
-    ) {
-      showSnackbar(
-        'Stressing Sequence Drawing Number must be a valid integer greater than 0',
-        'error',
-      );
-      return false;
-    }
-    if (!data.prestressingDate) {
-      showSnackbar('Please Enter Date', 'error');
-      return false;
-    }
-    data.maxJackPressure = Number(data.maxJackPressure);
-    data.jackPressureApplied = Number(data.jackPressureApplied);
-    data.stressingSequenceDrawingNumber = Number(
-      data.stressingSequenceDrawingNumber,
-    );
-    return true;
-  };
-
   const validateGlueingData = (glueingData: any): boolean => {
     for (const item of glueingData) {
       // Parsing values to float/integer
@@ -3504,7 +3513,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       ...torquingData,
       {
         date: '',
-        time:'',
+        time: '',
         component: '',
         detailsOfJoints: '',
         nosOfBolt: 0,
@@ -3611,6 +3620,149 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       </View>
     </View>
   );
+  const renderTemporaryPrestressingHeadings = () => (
+    <View style={styles.rowContainer}>
+      <View style={[styles.cell, {width: 50}]}>
+        <Text style={styles.cellText}>TM No.</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Joint No.</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Calibration Done</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Stressing Sequence Drawing No.</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Date of Prestressing</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Time of Prestressing</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Max Jack Pressure (Kg/Cm²)</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Jack Pressure Applied (Kg/Cm²)</Text>
+      </View>
+      <View style={[styles.cell, {paddingHorizontal: 40}]}>
+        <Text style={styles.cellText}>Actions</Text>
+      </View>
+    </View>
+  );
+  const renderItemTemporaryPrestressing = (rowData: any) => (
+    <View style={[styles.rowContainer, styles.marginBottom10]}>
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'jointNumbers'}
+          index={rowData.index}
+          onChange={
+            handleTextInputChangeTemporaryPrestressing
+          }></CustomTextInputValue>
+      </View>
+
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'calibrationDone'}
+          index={rowData.index}
+          onChange={
+            handleTextInputChangeTemporaryPrestressing
+          }></CustomTextInputValue>
+      </View>
+
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'stressingSequenceDrawingNumber'}
+          index={rowData.index}
+          onChange={
+            handleTextInputChangeTemporaryPrestressing
+          }></CustomTextInputValue>
+      </View>
+
+      <View style={styles.cell}>
+        <TimePicker
+          label=""
+          value={rowData.item.dateOfPrestressing}
+          styleCont={styles.marginBootomZero}
+          style={styles.disPlayNone}
+          onChange={time =>
+            handleTimeChangeTemporaryPrestressing(
+              rowData.index,
+              'dateOfPrestressing',
+              time,
+            )
+          }
+        />
+      </View>
+      <View style={styles.cell}>
+        <CalendarPicker
+          label=""
+          value={rowData.item.dateOfPrestressing}
+          onChange={date =>
+            handleTextInputChangeTemporaryPrestressing(
+              rowData.index,
+              'dateOfPrestressing',
+              date,
+            )
+          }
+        />
+      </View>
+
+      <View style={styles.cell}>
+        <TimePicker
+          label=""
+          value={rowData.item.timeOfPrestressing}
+          styleCont={styles.marginBootomZero}
+          style={styles.disPlayNone}
+          onChange={time =>
+            handleTextInputChangeTemporaryPrestressing(
+              rowData.index,
+              'timeOfPrestressing',
+              time,
+            )
+          }
+        />
+      </View>
+
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'maxJackPressure'}
+          index={rowData.index}
+          onChange={
+            handleTextInputChangeTemporaryPrestressing
+          }></CustomTextInputValue>
+      </View>
+
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'jackPressureApplied'}
+          index={rowData.index}
+          onChange={
+            handleTextInputChangeTemporaryPrestressing
+          }></CustomTextInputValue>
+      </View>
+
+      <View style={[styles.cell, {paddingHorizontal: 45}]}>
+        <TouchableOpacity
+          style={[styles.deleteButton]}
+          onPress={() =>
+            deleteTemporaryPrestressingItem(rowData, rowData.item.key)
+          }>
+          <Image
+            style={[styles.CloseIcon, {tintColor: '#fff'}]}
+            source={require('./../../images/menu/delete.png')}
+          />
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+
   const renderItemTorquing = (rowData: any) => (
     <View style={[styles.rowContainer, styles.marginBottom10]}>
       <View style={[styles.cell, {width: 50}]}>
@@ -3619,7 +3771,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
 
       <View style={styles.cell}>
         <CalendarPicker
-          label="Date"
+          label=""
           value={rowData.item.date}
           onChange={date =>
             handleTextInputChangeTorquing(rowData.index, 'date', date)
@@ -3859,10 +4011,18 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
   };
   const validateTorquingData = (torquingData: any): boolean => {
     for (const item of torquingData) {
+      // Parsing values to float
+      const nosOfBolt = parseFloat(item.nosOfBolt);
+      const diaOfBoltInMm = parseFloat(item.diaOfBoltInMm);
+      const sizeInMm = parseFloat(item.sizeInMm);
+      const torqueApplied = parseFloat(item.torqueApplied);
+
+      // Validation checks
       if (!item.date || !item.time) {
         showSnackbar('Please select a date and Time for Torquing', 'error');
         return false;
       }
+
       if (!item.component || item.component.length > 20) {
         showSnackbar(
           'Please enter a valid component (max 20 characters)',
@@ -3870,6 +4030,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         );
         return false;
       }
+
       if (!item.detailsOfJoints || item.detailsOfJoints.length > 20) {
         showSnackbar(
           'Please enter valid details of joints (max 20 characters)',
@@ -3877,32 +4038,32 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         );
         return false;
       }
-      if (
-        isNaN(item.nosOfBolt) ||
-        item.nosOfBolt <= 0 ||
-        item.nosOfBolt > 1000000
-      ) {
+
+      if (isNaN(nosOfBolt) || nosOfBolt <= 0 || nosOfBolt > 1000000) {
         showSnackbar('Please enter a valid number of bolts', 'error');
         return false;
       }
+
       if (
-        isNaN(item.diaOfBoltInMm) ||
-        item.diaOfBoltInMm <= 0 ||
-        item.diaOfBoltInMm > 100 ||
+        isNaN(diaOfBoltInMm) ||
+        diaOfBoltInMm <= 0 ||
+        diaOfBoltInMm > 100 ||
         item.diaOfBoltInMm.split('.')[1]?.length > 2
       ) {
         showSnackbar('Please enter a valid diameter of bolt (mm)', 'error');
         return false;
       }
+
       if (
-        isNaN(item.sizeInMm) ||
-        item.sizeInMm <= 0 ||
-        item.sizeInMm > 100 ||
+        isNaN(sizeInMm) ||
+        sizeInMm <= 0 ||
+        sizeInMm > 100 ||
         item.sizeInMm.split('.')[1]?.length > 2
       ) {
         showSnackbar('Please enter a valid size (mm)', 'error');
         return false;
       }
+
       if (!item.slNoOfInvoiceMTCFile || item.slNoOfInvoiceMTCFile.length > 50) {
         showSnackbar(
           'Please enter a valid Invoice/MTC file number (max 50 characters)',
@@ -3910,6 +4071,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         );
         return false;
       }
+
       if (!item.slNoOfTorqueWrench || item.slNoOfTorqueWrench.length > 50) {
         showSnackbar(
           'Please enter a valid Torque Wrench Sl. No. (max 50 characters)',
@@ -3917,19 +4079,86 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         );
         return false;
       }
+
       if (
-        isNaN(item.torqueApplied) ||
-        item.torqueApplied <= 0 ||
-        item.torqueApplied > 1000000 ||
+        isNaN(torqueApplied) ||
+        torqueApplied <= 0 ||
+        torqueApplied > 1000000 ||
         item.torqueApplied.split('.')[1]?.length > 2
       ) {
         showSnackbar('Please enter a valid torque applied value', 'error');
         return false;
       }
-      // Additional validations can be added here for refusals or other fields if needed
     }
+
+    // Convert the values back to numbers after validation
+    torquingData.forEach((item: any) => {
+      item.nosOfBolt = Number(item.nosOfBolt);
+      item.diaOfBoltInMm = Number(item.diaOfBoltInMm);
+      item.sizeInMm = Number(item.sizeInMm);
+      item.torqueApplied = Number(item.torqueApplied);
+    });
+
     return true;
   };
+
+const validateTemporaryPrestressingData = (
+  temporaryPrestressingData: any[],
+): boolean => {
+  for (const item of temporaryPrestressingData) {
+    // Parsing values to float
+    const maxJackPressure = parseFloat(item.maxJackPressure);
+    const jackPressureApplied = parseFloat(item.jackPressureApplied);
+
+    // Validation checks
+    if (!item.jointNumbers || item.jointNumbers.length > 50) {
+      showSnackbar(
+        'Joint Numbers must be non-empty and up to 50 characters.',
+        'error',
+      );
+      return false;
+    }
+
+    if (
+      isNaN(maxJackPressure) ||
+      maxJackPressure <= 0 ||
+      maxJackPressure > 1000 ||
+      item.maxJackPressure.split('.')[1]?.length > 3
+    ) {
+      showSnackbar(
+        'Max Jack Pressure must be greater than 0 and up to 1000 Kg/Cm² with up to 3 decimal places.',
+        'error',
+      );
+      return false;
+    }
+
+    if (
+      isNaN(jackPressureApplied) ||
+      jackPressureApplied <= 0 ||
+      jackPressureApplied > 1000 ||
+      item.jackPressureApplied.split('.')[1]?.length > 3
+    ) {
+      showSnackbar(
+        'Jack Pressure Applied must be greater than 0 and up to 1000 Kg/Cm² with up to 3 decimal places.',
+        'error',
+      );
+      return false;
+    }
+
+    if (!item.dateOfPrestressing || !item.timeOfPrestressing) {
+      showSnackbar('Date and Time of Prestressing must be filled.', 'error');
+      return false;
+    }
+  }
+
+  // Convert the values back to numbers after validation
+  temporaryPrestressingData.forEach((item: any) => {
+    item.maxJackPressure = Number(item.maxJackPressure);
+    item.jackPressureApplied = Number(item.jackPressureApplied);
+  });
+
+  return true;
+};
 
   const renderHeadings = () => (
     <View
@@ -6513,68 +6742,50 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         );
 
       case TASK_TYPES.TEMPORARY_PRESTRESSING:
+        if (!temporaryPrestressingData || !temporaryPrestressingData.length) {
+          setTemporaryPrestressingData([
+            {
+              jointNumbers: '',
+              calibrationDone: 'Y',
+              stressingSequenceDrawingNumber: '',
+              dateOfPrestressing: '',
+              timeOfPrestressing: '',
+              maxJackPressure: 0,
+              jackPressureApplied: 0,
+              key: Guid.create(),
+            },
+          ]);
+        }
+
         return (
           <View>
-            <View style={{flexDirection: 'column'}}>
-              <DropdownPicker
-                label="Calibration Certificate Available"
-                value={
-                  temporaryPrestressingData.calibrationCertificateAvailable
-                }
-                items={YES_NO_LIST}
-                onChange={(value: string) => {
-                  handleInputChangeTemporaryPrestressing(
-                    'calibrationCertificateAvailable',
-                    value,
-                  );
-                }}
-                isRequired={true}
-              />
+            <View style={styles.MainContainer}>
+              <ScrollView
+                id="scrollViewTemporaryPrestressing"
+                showsHorizontalScrollIndicator={false}
+                horizontal={enableScroll}>
+                <View>
+                  {renderTemporaryPrestressingHeadings()}
+                  <FlatList
+                    data={temporaryPrestressingData}
+                    renderItem={renderItemTemporaryPrestressing}
+                    keyExtractor={item => item.key?.toString()}
+                    style={{zIndex: 10}}
+                    automaticallyAdjustContentInsets={true}
+                    scrollEnabled={false}
+                  />
+                </View>
+              </ScrollView>
             </View>
 
-            <Input
-              label="Stressing Sequence Drawing Number"
-              value={temporaryPrestressingData.stressingSequenceDrawingNumber.toString()}
-              onChange={(value: string) =>
-                handleInputChangeTemporaryPrestressing(
-                  'stressingSequenceDrawingNumber',
-                  Number(value),
-                )
-              }
-              isRequired={true}
-            />
+            <View>
+              <TouchableOpacity
+                style={{paddingVertical: 15, zIndex: 8}}
+                onPress={() => onAddMoreTemporaryPrestressing()}>
+                <Text style={styles.AddMoreLink}>+ Add More</Text>
+              </TouchableOpacity>
+            </View>
 
-            <CalendarPicker
-              label="Prestressing Date"
-              value={temporaryPrestressingData.prestressingDate}
-              onChange={date =>
-                handleInputChangeTemporaryPrestressing('prestressingDate', date)
-              }
-            />
-
-            <Input
-              label="Max Jack Pressure (Kg/cm²)"
-              value={temporaryPrestressingData.maxJackPressure.toString()}
-              onChange={(value: string) =>
-                handleInputChangeTemporaryPrestressing(
-                  'maxJackPressure',
-                  Number(value),
-                )
-              }
-              isRequired={true}
-            />
-
-            <Input
-              label="Jack Pressure Applied (Kg/cm²)"
-              value={temporaryPrestressingData.jackPressureApplied.toString()}
-              onChange={(value: string) =>
-                handleInputChangeTemporaryPrestressing(
-                  'jackPressureApplied',
-                  Number(value),
-                )
-              }
-              isRequired={true}
-            />
             <View>
               <View style={{flexDirection: 'column'}}>
                 <CalendarPicker

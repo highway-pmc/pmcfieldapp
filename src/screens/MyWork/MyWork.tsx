@@ -324,12 +324,12 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     }));
   };
 
-const handleInputChangeRemovalOfTemporaryStructure = (key, value) => {
-  setRemovalOfTemporaryStructureData(prevState => ({
-    ...prevState,
-    [key]: value,
-  }));
-};
+  const handleInputChangeRemovalOfTemporaryStructure = (key, value) => {
+    setRemovalOfTemporaryStructureData(prevState => ({
+      ...prevState,
+      [key]: value,
+    }));
+  };
 
   const handleInputChangeDeStressingOfGirder = (key: string, value: string) => {
     setDeStressingOfGirderData(prevState => ({
@@ -596,13 +596,34 @@ const handleInputChangeRemovalOfTemporaryStructure = (key, value) => {
     memberMarkedForErection: 'Y',
     memberApprovedByInspector: 'Y',
   });
-  const [temporaryPrestressingData, setTemporaryPrestressingData] = useState({
-    calibrationCertificateAvailable: 'Y',
-    stressingSequenceDrawingNumber: 0,
-    prestressingDate: '',
-    maxJackPressure: 0.0,
-    jackPressureApplied: 0.0,
-  });
+  const [temporaryPrestressingData, setTemporaryPrestressingData] = useState([
+    {
+      jointNumbers: '',
+      calibrationDone: 'Y', // default value 'Y'
+      stressingSequenceDrawingNumber: '',
+      dateOfPrestressing: '',
+      timeOfPrestressing: '',
+      maxJackPressure: 0, // up to 3 decimals, >0, max limit 1000
+      jackPressureApplied: 0, // up to 3 decimals, >0, max limit 1000
+      key: Guid.create(),
+    },
+  ]);
+
+  const onAddMoreTemporaryPrestressing = () => {
+    setTemporaryPrestressingData([
+      ...temporaryPrestressingData,
+      {
+        jointNumbers: '',
+        calibrationDone: 'Y',
+        stressingSequenceDrawingNumber: '',
+        dateOfPrestressing: '',
+        timeOfPrestressing: '',
+        maxJackPressure: 0,
+        jackPressureApplied: 0,
+        key: Guid.create(),
+      },
+    ]);
+  };
 
   const [curingData, setCuringData] = useState({
     waterUsedForCuring: 'Y',
@@ -616,7 +637,7 @@ const handleInputChangeRemovalOfTemporaryStructure = (key, value) => {
       [field]: value,
     }));
   };
-  const handleInputChangeFixingOfBearing = (key, value) => {
+  const handleInputChangeFixingOfBearing = (key: any, value: any) => {
     setFixingOfBearingData(prevState => ({
       ...prevState,
       [key]: value,
@@ -726,27 +747,27 @@ const handleInputChangeRemovalOfTemporaryStructure = (key, value) => {
     paintSurfaceQuality: 'Y',
     recordMaintained: 'Y',
   });
-const [paintingData, setPaintingData] = useState({
-  paintingSystemApproved: 'Y',
-  documentsApproved: 'Y',
-  surfacePreparationDone: 'Y',
-  defectsCorrected: 'Y',
-  moistureContentChecked: 'Y',
-  plasterSurfacesRubbed: 'Y',
-  materialStirred: 'Y',
-  fillerCoatAfterPrimer: 'Y',
-  suctionSpotsPrimed: 'Y',
-  fillerCoatAppliedEvenly: 'Y',
-  sandingBetweenCoats: 'Y',
-  dryingTimeAllowed: 'Y',
-  materialsMixedProperly: 'Y',
-  firstCoatAppliedByRoller: 'Y',
-  rollerJointsChecked: 'Y',
-  curingPeriodAllowed: 'Y',
-  secondCoatAfterTouchUp: 'Y',
-  finalCoatApplied: 'Y',
-  cleaningAndProtection: 'Y',
-});
+  const [paintingData, setPaintingData] = useState({
+    paintingSystemApproved: 'Y',
+    documentsApproved: 'Y',
+    surfacePreparationDone: 'Y',
+    defectsCorrected: 'Y',
+    moistureContentChecked: 'Y',
+    plasterSurfacesRubbed: 'Y',
+    materialStirred: 'Y',
+    fillerCoatAfterPrimer: 'Y',
+    suctionSpotsPrimed: 'Y',
+    fillerCoatAppliedEvenly: 'Y',
+    sandingBetweenCoats: 'Y',
+    dryingTimeAllowed: 'Y',
+    materialsMixedProperly: 'Y',
+    firstCoatAppliedByRoller: 'Y',
+    rollerJointsChecked: 'Y',
+    curingPeriodAllowed: 'Y',
+    secondCoatAfterTouchUp: 'Y',
+    finalCoatApplied: 'Y',
+    cleaningAndProtection: 'Y',
+  });
 
   const handlePaintingOfSteelGirdersDiaphragms = (
     field: string,
@@ -775,25 +796,128 @@ const [paintingData, setPaintingData] = useState({
       [field]: value,
     }));
   };
-const [procurementOfSteelData, setProcurementOfSteelData] = useState({
-  totalQtyOfSteelProcured: 0.0, 
-});
-const [transportationData, setTransportationData] = useState({
-  transitTime: 0.0, 
-});
-const handleTextInputChangeProcurementOfSteel = (key:any, value:any) => {
-  setProcurementOfSteelData({
-    ...procurementOfSteelData,
-    [key]: value,
+  const [procurementOfSteelData, setProcurementOfSteelData] = useState({
+    totalQtyOfSteelProcured: 0.0,
   });
-};
+  const [transportationData, setTransportationData] = useState({
+    transitTime: 0.0,
+  });
+  const handleTextInputChangeProcurementOfSteel = (key: any, value: any) => {
+    setProcurementOfSteelData({
+      ...procurementOfSteelData,
+      [key]: value,
+    });
+  };
+  const handleInputChangeFixingOfSheathingJoints = (key: any, value: any) => {
+    setFixingOfSheathingJointsData(prevState => ({
+      ...prevState,
+      [key]: value,
+    }));
+  };
+  const handleInputChangeStitchConcrete = (key: any, value: any) => {
+    setStitchConcreteData(prevState => ({
+      ...prevState,
+      [key]: value,
+    }));
+  };
+  const handleTextInputChangeTemporaryPrestressing = (
+    index: number,
+    field: string,
+    value: string,
+  ) => {
+    const updatedData = [...temporaryPrestressingData];
+    let isValid = true;
+    let errorMessage = '';
 
-const handleTextInputChangeTransportation = (key:any, value:any) => {
-  setTransportationData({
-    ...transportationData,
-    [key]: value,
+    switch (field) {
+      case 'jointNumbers':
+        if (value.length > 50) {
+          isValid = false;
+          errorMessage = 'Joint Numbers cannot exceed 50 characters';
+        }
+        break;
+
+      case 'maxJackPressure':
+      case 'jackPressureApplied':
+        const pressureValue = parseFloat(value);
+        if (
+          isNaN(pressureValue) ||
+          pressureValue <= 0 ||
+          pressureValue > 1000 ||
+          value.split('.')[1]?.length > 3
+        ) {
+          isValid = false;
+          errorMessage =
+            'Pressure must be between 0 and 1000 with up to 3 decimal places';
+        }
+        break;
+
+      default:
+        break;
+    }
+
+    if (!isValid) {
+      showSnackbar(errorMessage, 'error');
+    }
+
+    updatedData[index][field] = value;
+    setTemporaryPrestressingData(updatedData);
+  };
+
+  const [torquingData, setTorquingData] = useState([
+    {
+      date: '',
+      time: '',
+      component: '',
+      detailsOfJoints: '',
+      nosOfBolt: 0,
+      diaOfBoltInMm: 0,
+      sizeInMm: 0,
+      slNoOfInvoiceMTCFile: '',
+      slNoOfTorqueWrench: '',
+      torqueApplied: 0,
+      refusalsGauage3nos: 'Y',
+      refusalsGauage4nos: 'Y',
+      refusalsGauage5nos: 'Y',
+      refusalsGauage6nos: 'Y',
+      key: Guid.create(),
+    },
+  ]);
+  const handleTextInputChangeTransportation = (key: any, value: any) => {
+    setTransportationData({
+      ...transportationData,
+      [key]: value,
+    });
+  };
+  const [stitchConcreteData, setStitchConcreteData] = useState({
+    gradeOfConcrete: 'Y',
+    methodStatementApproved: 'Y',
+    htStrandsInserted: 'Y',
+    materialsApproved: 'Y',
+    formworkApproved: 'Y',
+    reinforcementCageApproved: 'Y',
+    equipmentWorking: 'Y',
+    accessProvided: 'Y',
+    safetyArrangements: 'Y',
+    rainfallProtection: 'Y',
+    needleVibratorStatus: 'Y',
+    needleVibratorNos: 'Y',
+    slumpConeApparatusAvailable: 'Y',
+    startPreStressing: 'Y',
+    groutingFormatFollowed: 'Y',
   });
-};
+
+  const [fixingOfSheathingJointsData, setFixingOfSheathingJointsData] =
+    useState({
+      temporaryOpeningsPlugged: 'Y',
+      jointWaterTight: 'Y',
+      sheathingNeatlyFitted: 'Y',
+      anchorageEndSealed: 'Y',
+      couplerTightlyScrewed: 'Y',
+      couplerLengthSufficient: 'Y',
+      jointSealedWithTape: 'Y',
+      couplerStaggered: 'Y',
+    });
 
   const [
     transportationOfSteelGirdersDiaphragms,
@@ -858,43 +982,45 @@ const handleTextInputChangeTransportation = (key:any, value:any) => {
     entireAreaBarricaded: 'Y',
   });
 
-const [stackingInYardData, setStackingInYardData] = useState({
-  areaBarricaded: 'Y',
-  temporaryLightsAvailable: 'Y',
-  flagManAvailable: 'Y',
-  methodologySchemeAvailable: 'Y',
-  deShacklesSlingsCertified: 'Y',
-  safetyColorCodePresent: 'Y',
-  hydraulicJacksCondition: 'Y',
-  limitSwitchWorking: 'Y',
-  cotterPinsInAssembly: 'Y',
-  macalloyBarsCondition: 'Y',
-  workAtHeightPermit: 'Y',
-  macalloyBarsTestCertificate: 'Y',
-  liftingSequenceProvided: 'Y',
-  liftingHolesLocation: 'Y',
-  liftingArrangementsWorking: 'Y',
-  prestressingDuctClear: 'Y',
-  concreteStrengthGained: 'Y',
-  sliderTrolleyPosition: 'Y',
-  stackingMethodologyApproved: 'Y',
-  stackingAreaLocated: 'Y',
-  stackingAreaLeveled: 'Y',
-});
-const [hackingOfGirderData, setHackingOfGirderData] = useState({
-  methodologyApproved: 'Y',
-  surfaceCleanedAndWet: 'Y',
-  skilledPersonnel: 'Y',
-  sharpenedInstruments: 'Y',
-  recessCutFormation: 'Y',
-});
-const [deStressingOfGirderData, setDeStressingOfGirderData] = useState({
-  strengthAchieved: 'Y',
-  diamondBitSawUsed: 'Y',
-  gradualUniformTransfer: 'Y',
-});
-const [installationOfExpansionJointData, setInstallationOfExpansionJointData] =
-  useState({
+  const [stackingInYardData, setStackingInYardData] = useState({
+    areaBarricaded: 'Y',
+    temporaryLightsAvailable: 'Y',
+    flagManAvailable: 'Y',
+    methodologySchemeAvailable: 'Y',
+    deShacklesSlingsCertified: 'Y',
+    safetyColorCodePresent: 'Y',
+    hydraulicJacksCondition: 'Y',
+    limitSwitchWorking: 'Y',
+    cotterPinsInAssembly: 'Y',
+    macalloyBarsCondition: 'Y',
+    workAtHeightPermit: 'Y',
+    macalloyBarsTestCertificate: 'Y',
+    liftingSequenceProvided: 'Y',
+    liftingHolesLocation: 'Y',
+    liftingArrangementsWorking: 'Y',
+    prestressingDuctClear: 'Y',
+    concreteStrengthGained: 'Y',
+    sliderTrolleyPosition: 'Y',
+    stackingMethodologyApproved: 'Y',
+    stackingAreaLocated: 'Y',
+    stackingAreaLeveled: 'Y',
+  });
+  const [hackingOfGirderData, setHackingOfGirderData] = useState({
+    methodologyApproved: 'Y',
+    surfaceCleanedAndWet: 'Y',
+    skilledPersonnel: 'Y',
+    sharpenedInstruments: 'Y',
+    recessCutFormation: 'Y',
+  });
+  const [deStressingOfGirderData, setDeStressingOfGirderData] = useState({
+    strengthAchieved: 'Y',
+    diamondBitSawUsed: 'Y',
+    gradualUniformTransfer: 'Y',
+  });
+  const [
+    installationOfExpansionJointData,
+    setInstallationOfExpansionJointData,
+  ] = useState({
     expansionJointPositionCorrect: 'Y',
     shippingDevicesRemoved: 'Y',
     noForeignObjects: 'Y',
@@ -904,12 +1030,12 @@ const [installationOfExpansionJointData, setInstallationOfExpansionJointData] =
     noDamageSustained: 'Y',
   });
 
-const [removalOfTemporaryStructureData, setRemovalOfTemporaryStructureData] =
-  useState({
-    concreteAchievedStrength: 'Y',
-    minimumTimeAttained: 'Y',
-    allComponentsTightened: 'Y',
-  });
+  const [removalOfTemporaryStructureData, setRemovalOfTemporaryStructureData] =
+    useState({
+      concreteAchievedStrength: 'Y',
+      minimumTimeAttained: 'Y',
+      allComponentsTightened: 'Y',
+    });
 
   const handleTransportationOfSteelGirdersDiaphragms = (
     field: string,
@@ -927,10 +1053,7 @@ const [removalOfTemporaryStructureData, setRemovalOfTemporaryStructureData] =
       [field]: value,
     }));
   };
-  const handleInputChangeStackingInYard = (
-    field: string,
-    value: string,
-  ) => {
+  const handleInputChangeStackingInYard = (field: string, value: string) => {
     setStackingInYardData(prevState => ({
       ...prevState,
       [field]: value,
@@ -973,12 +1096,12 @@ const [removalOfTemporaryStructureData, setRemovalOfTemporaryStructureData] =
       [key]: newValue,
     }));
   };
-const handleInputChangePainting = (key, value) => {
-  setPaintingData(prevState => ({
-    ...prevState,
-    [key]: value,
-  }));
-};
+  const handleInputChangePainting = (key, value) => {
+    setPaintingData(prevState => ({
+      ...prevState,
+      [key]: value,
+    }));
+  };
 
   const handleInputChangeGrouting = (
     name: keyof FormStateGrouting,
@@ -1259,6 +1382,36 @@ const handleInputChangePainting = (key, value) => {
             }
             break;
           case TASK_TYPES.STITCH_CONCRETE:
+            if (rfiData.metaData.concreteData) {
+              rfiData.metaData.concreteData.forEach((item: any) => {
+                item.key = Guid.create();
+              });
+              setConcreteData(rfiData.metaData.concreteData);
+            } else {
+              setConcreteData([]);
+            }
+            if (rfiData.metaData.stitchConcreteData) {
+              setStitchConcreteData(rfiData.metaData.stitchConcreteData);
+            } else {
+              setStitchConcreteData({
+                gradeOfConcrete: 'Y',
+                methodStatementApproved: 'Y',
+                htStrandsInserted: 'Y',
+                materialsApproved: 'Y',
+                formworkApproved: 'Y',
+                reinforcementCageApproved: 'Y',
+                equipmentWorking: 'Y',
+                accessProvided: 'Y',
+                safetyArrangements: 'Y',
+                rainfallProtection: 'Y',
+                needleVibratorStatus: 'Y',
+                needleVibratorNos: 'Y',
+                slumpConeApparatusAvailable: 'Y',
+                startPreStressing: 'Y',
+                groutingFormatFollowed: 'Y',
+              });
+            }
+            break;
           case TASK_TYPES.CONCRETING:
           case TASK_TYPES.PCC_LEVELLING_COURSE:
             if (rfiData.metaData.concreteData) {
@@ -1269,6 +1422,7 @@ const handleInputChangePainting = (key, value) => {
             } else {
               setConcreteData([]);
             }
+            break;
           case TASK_TYPES.GLUEING:
             if (rfiData.metaData.glueingData) {
               rfiData.metaData.glueingData.forEach((item: any) => {
@@ -1279,6 +1433,17 @@ const handleInputChangePainting = (key, value) => {
               setGlueingData([]);
             }
             break;
+          case TASK_TYPES.TORQUING:
+            if (rfiData.metaData.torquingData) {
+              rfiData.metaData.torquingData.forEach((item: any) => {
+                item.key = Guid.create();
+              });
+              setTorquingData(rfiData.metaData.torquingData);
+            } else {
+              setTorquingData([]);
+            }
+            break;
+
           case TASK_TYPES.REMOVAL_OF_FORMWORK:
             if (rfiData.metaData.removalFormworkData) {
               setRemovalFormworkData(rfiData.metaData.removalFormworkData);
@@ -1316,19 +1481,19 @@ const handleInputChangePainting = (key, value) => {
 
           case TASK_TYPES.TEMPORARY_PRESTRESSING:
             if (rfiData.metaData.temporaryPrestressingData) {
+              rfiData.metaData.temporaryPrestressingData.forEach(
+                (item: any) => {
+                  item.key = Guid.create();
+                },
+              );
               setTemporaryPrestressingData(
                 rfiData.metaData.temporaryPrestressingData,
               );
             } else {
-              setTemporaryPrestressingData({
-                calibrationCertificateAvailable: 'Y',
-                stressingSequenceDrawingNumber: 0,
-                prestressingDate: '',
-                maxJackPressure: 0,
-                jackPressureApplied: 0,
-              });
+              setTemporaryPrestressingData([]);
             }
             break;
+
           case TASK_TYPES.PAINTING_OF_STEEL_GIRDERS_DIAPHRAGMS:
             if (rfiData.metaData.paintingOfSteelGirdersDiaphragms) {
               setPaintingOfSteelGirdersDiaphragms(
@@ -1713,7 +1878,7 @@ const handleInputChangePainting = (key, value) => {
               );
             } else {
               setProcurementOfSteelData({
-                totalQtyOfSteelProcured: 0.0, 
+                totalQtyOfSteelProcured: 0.0,
               });
             }
             break;
@@ -1722,7 +1887,25 @@ const handleInputChangePainting = (key, value) => {
               setTransportationData(rfiData.metaData.transportationData);
             } else {
               setTransportationData({
-                transitTime: 0.0, 
+                transitTime: 0.0,
+              });
+            }
+            break;
+          case TASK_TYPES.FIXING_OF_SHEATHING_JOINTS:
+            if (rfiData.metaData.fixingOfSheathingJointsData) {
+              setFixingOfSheathingJointsData(
+                rfiData.metaData.fixingOfSheathingJointsData,
+              );
+            } else {
+              setFixingOfSheathingJointsData({
+                temporaryOpeningsPlugged: 'Y',
+                jointWaterTight: 'Y',
+                sheathingNeatlyFitted: 'Y',
+                anchorageEndSealed: 'Y',
+                couplerTightlyScrewed: 'Y',
+                couplerLengthSufficient: 'Y',
+                jointSealedWithTape: 'Y',
+                couplerStaggered: 'Y',
               });
             }
             break;
@@ -2319,25 +2502,25 @@ const handleInputChangePainting = (key, value) => {
     return true;
   };
 
-const validateProcurementOfSteelData = (data: any): boolean => {
-  const totalQtyOfSteelProcured = parseFloat(data.totalQtyOfSteelProcured);
+  const validateProcurementOfSteelData = (data: any): boolean => {
+    const totalQtyOfSteelProcured = parseFloat(data.totalQtyOfSteelProcured);
 
-  // Validation for total quantity of steel procured
-  if (
-    isNaN(totalQtyOfSteelProcured) ||
-    totalQtyOfSteelProcured <= 0 ||
-    totalQtyOfSteelProcured > 100000 ||
-    !/^\d+(\.\d{1,3})?$/.test(data.totalQtyOfSteelProcured)
-  ) {
-    showSnackbar(
-      'Total quantity of steel procured must be greater than 0, up to 3 decimal places, and less than or equal to 1,00,000 tonnes.',
-      'error',
-    );
-    return false;
-  }
-  data.totalQtyOfSteelProcured = Number(data.totalQtyOfSteelProcured);
-  return true;
-};
+    // Validation for total quantity of steel procured
+    if (
+      isNaN(totalQtyOfSteelProcured) ||
+      totalQtyOfSteelProcured <= 0 ||
+      totalQtyOfSteelProcured > 100000 ||
+      !/^\d+(\.\d{1,3})?$/.test(data.totalQtyOfSteelProcured)
+    ) {
+      showSnackbar(
+        'Total quantity of steel procured must be greater than 0, up to 3 decimal places, and less than or equal to 1,00,000 tonnes.',
+        'error',
+      );
+      return false;
+    }
+    data.totalQtyOfSteelProcured = Number(data.totalQtyOfSteelProcured);
+    return true;
+  };
 
   const validateFlushingOperationsData = (
     flushingOperationsData: any,
@@ -2526,62 +2709,6 @@ const validateProcurementOfSteelData = (data: any): boolean => {
       return false;
     }
     curingData.waterConsumptionInKL = Number(curingData.waterConsumptionInKL);
-    return true;
-  };
-
-  // Validation Function for Temporary Prestressing Data
-  const validateTemporaryPrestressingData = (data: any): boolean => {
-    const maxJackPressure = parseFloat(data.maxJackPressure);
-    const jackPressureApplied = parseFloat(data.jackPressureApplied);
-    const stressingSequenceDrawingNumber = parseInt(
-      data.stressingSequenceDrawingNumber,
-    );
-
-    if (
-      isNaN(maxJackPressure) ||
-      maxJackPressure <= 0 ||
-      maxJackPressure > 1000
-    ) {
-      showSnackbar(
-        'Maximum Jack Pressure must be greater than 0 and less than or equal to 1000 Kg/Cm²',
-        'error',
-      );
-      return false;
-    }
-    if (
-      isNaN(jackPressureApplied) ||
-      jackPressureApplied <= 0 ||
-      jackPressureApplied > 1000
-    ) {
-      showSnackbar(
-        'Jack Pressure Applied must be greater than 0 and less than or equal to 1000 Kg/Cm²',
-        'error',
-      );
-      return false;
-    }
-    if (!data.prestressingDate) {
-      showSnackbar('Prestressing Date must not be empty.', 'error');
-      return false;
-    }
-    if (
-      isNaN(stressingSequenceDrawingNumber) ||
-      stressingSequenceDrawingNumber <= 0
-    ) {
-      showSnackbar(
-        'Stressing Sequence Drawing Number must be a valid integer greater than 0',
-        'error',
-      );
-      return false;
-    }
-    if (!data.prestressingDate) {
-      showSnackbar('Please Enter Date', 'error');
-      return false;
-    }
-    data.maxJackPressure = Number(data.maxJackPressure);
-    data.jackPressureApplied = Number(data.jackPressureApplied);
-    data.stressingSequenceDrawingNumber = Number(
-      data.stressingSequenceDrawingNumber,
-    );
     return true;
   };
 
@@ -3001,6 +3128,27 @@ const validateProcurementOfSteelData = (data: any): boolean => {
         };
         break;
       case TASK_TYPES.STITCH_CONCRETE:
+        if (!validateConcreteData(selectedTask?.name)) {
+          return;
+        }
+        concreteData.forEach((item: any) => {
+          delete item.key;
+          if (selectedTask.name === TASK_TYPES.CONCRETING) {
+            item.concreteTemp = Number(item.concreteTemp);
+            item.slumpValue = Number(item.slumpValue);
+          } else {
+            delete item.concreteTemp;
+            delete item.slumpValue;
+          }
+          item.concretePoured = Number(item.concretePoured);
+        });
+        checkList = {
+          taskName: selectedTask.name,
+          stitchConcreteData: stitchConcreteData,
+          concreteData: concreteData,
+        };
+        break;
+
       case TASK_TYPES.CONCRETING:
       case TASK_TYPES.PCC_LEVELLING_COURSE:
         const isDataValid = validateConcreteData(selectedTask?.name);
@@ -3031,6 +3179,15 @@ const validateProcurementOfSteelData = (data: any): boolean => {
         checkList = {
           taskName: selectedTask.name,
           glueingData: glueingData,
+        };
+        break;
+      case TASK_TYPES.TORQUING:
+        if (!validateTorquingData(torquingData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          torquingData: torquingData,
         };
         break;
 
@@ -3165,6 +3322,12 @@ const validateProcurementOfSteelData = (data: any): boolean => {
         checkList = {
           taskName: selectedTask.name,
           transportationData: transportationData,
+        };
+        break;
+      case TASK_TYPES.FIXING_OF_SHEATHING_JOINTS:
+        checkList = {
+          taskName: selectedTask.name,
+          fixingOfSheathingJointsData: fixingOfSheathingJointsData,
         };
         break;
 
@@ -3345,6 +3508,29 @@ const validateProcurementOfSteelData = (data: any): boolean => {
       },
     ]);
   };
+  const onAddMoreTorquing = () => {
+    setTorquingData([
+      ...torquingData,
+      {
+        date: '',
+        time: '',
+        component: '',
+        detailsOfJoints: '',
+        nosOfBolt: 0,
+        diaOfBoltInMm: 0,
+        sizeInMm: 0,
+        slNoOfInvoiceMTCFile: '',
+        slNoOfTorqueWrench: '',
+        torqueApplied: 0,
+        refusalsGauage3nos: 'Y',
+        refusalsGauage4nos: 'Y',
+        refusalsGauage5nos: 'Y',
+        refusalsGauage6nos: 'Y',
+        key: Guid.create(),
+      },
+    ]);
+  };
+
   const onAddMoreGlueing = () => {
     setGlueingData([
       ...glueingData,
@@ -3434,6 +3620,545 @@ const validateProcurementOfSteelData = (data: any): boolean => {
       </View>
     </View>
   );
+  const renderTemporaryPrestressingHeadings = () => (
+    <View style={styles.rowContainer}>
+      <View style={[styles.cell, {width: 50}]}>
+        <Text style={styles.cellText}>TM No.</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Joint No.</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Calibration Done</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Stressing Sequence Drawing No.</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Date of Prestressing</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Time of Prestressing</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Max Jack Pressure (Kg/Cm²)</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Jack Pressure Applied (Kg/Cm²)</Text>
+      </View>
+      <View style={[styles.cell, {paddingHorizontal: 40}]}>
+        <Text style={styles.cellText}>Actions</Text>
+      </View>
+    </View>
+  );
+  const renderItemTemporaryPrestressing = (rowData: any) => (
+    <View style={[styles.rowContainer, styles.marginBottom10]}>
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'jointNumbers'}
+          index={rowData.index}
+          onChange={
+            handleTextInputChangeTemporaryPrestressing
+          }></CustomTextInputValue>
+      </View>
+
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'calibrationDone'}
+          index={rowData.index}
+          onChange={
+            handleTextInputChangeTemporaryPrestressing
+          }></CustomTextInputValue>
+      </View>
+
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'stressingSequenceDrawingNumber'}
+          index={rowData.index}
+          onChange={
+            handleTextInputChangeTemporaryPrestressing
+          }></CustomTextInputValue>
+      </View>
+
+      <View style={styles.cell}>
+        <TimePicker
+          label=""
+          value={rowData.item.dateOfPrestressing}
+          styleCont={styles.marginBootomZero}
+          style={styles.disPlayNone}
+          onChange={time =>
+            handleTimeChangeTemporaryPrestressing(
+              rowData.index,
+              'dateOfPrestressing',
+              time,
+            )
+          }
+        />
+      </View>
+      <View style={styles.cell}>
+        <CalendarPicker
+          label=""
+          value={rowData.item.dateOfPrestressing}
+          onChange={date =>
+            handleTextInputChangeTemporaryPrestressing(
+              rowData.index,
+              'dateOfPrestressing',
+              date,
+            )
+          }
+        />
+      </View>
+
+      <View style={styles.cell}>
+        <TimePicker
+          label=""
+          value={rowData.item.timeOfPrestressing}
+          styleCont={styles.marginBootomZero}
+          style={styles.disPlayNone}
+          onChange={time =>
+            handleTextInputChangeTemporaryPrestressing(
+              rowData.index,
+              'timeOfPrestressing',
+              time,
+            )
+          }
+        />
+      </View>
+
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'maxJackPressure'}
+          index={rowData.index}
+          onChange={
+            handleTextInputChangeTemporaryPrestressing
+          }></CustomTextInputValue>
+      </View>
+
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'jackPressureApplied'}
+          index={rowData.index}
+          onChange={
+            handleTextInputChangeTemporaryPrestressing
+          }></CustomTextInputValue>
+      </View>
+
+      <View style={[styles.cell, {paddingHorizontal: 45}]}>
+        <TouchableOpacity
+          style={[styles.deleteButton]}
+          onPress={() =>
+            deleteTemporaryPrestressingItem(rowData, rowData.item.key)
+          }>
+          <Image
+            style={[styles.CloseIcon, {tintColor: '#fff'}]}
+            source={require('./../../images/menu/delete.png')}
+          />
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+
+  const renderItemTorquing = (rowData: any) => (
+    <View style={[styles.rowContainer, styles.marginBottom10]}>
+      <View style={[styles.cell, {width: 50}]}>
+        <Text style={styles.cellText}>TM {rowData.index + 1}</Text>
+      </View>
+
+      <View style={styles.cell}>
+        <CalendarPicker
+          label=""
+          value={rowData.item.date}
+          onChange={date =>
+            handleTextInputChangeTorquing(rowData.index, 'date', date)
+          }
+        />
+      </View>
+      <View style={styles.cell}>
+        <TimePicker
+          label=""
+          value={rowData.item.date}
+          styleCont={styles.marginBootomZero}
+          style={styles.disPlayNone}
+          onChange={time =>
+            handleTextInputChangeTorquing(rowData.index, 'time', time)
+          }
+        />
+      </View>
+
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'component'}
+          index={rowData.index}
+          onChange={handleTextInputChangeTorquing}></CustomTextInputValue>
+      </View>
+
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'detailsOfJoints'}
+          index={rowData.index}
+          onChange={handleTextInputChangeTorquing}></CustomTextInputValue>
+      </View>
+
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'nosOfBolt'}
+          index={rowData.index}
+          onChange={handleTextInputChangeTorquing}></CustomTextInputValue>
+      </View>
+
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'diaOfBoltInMm'}
+          index={rowData.index}
+          onChange={handleTextInputChangeTorquing}></CustomTextInputValue>
+      </View>
+
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'sizeInMm'}
+          index={rowData.index}
+          onChange={handleTextInputChangeTorquing}></CustomTextInputValue>
+      </View>
+
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'slNoOfInvoiceMTCFile'}
+          index={rowData.index}
+          onChange={handleTextInputChangeTorquing}></CustomTextInputValue>
+      </View>
+
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'slNoOfTorqueWrench'}
+          index={rowData.index}
+          onChange={handleTextInputChangeTorquing}></CustomTextInputValue>
+      </View>
+
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'torqueApplied'}
+          index={rowData.index}
+          onChange={handleTextInputChangeTorquing}></CustomTextInputValue>
+      </View>
+
+      <View style={styles.cell}>
+        <Text>{rowData.item.refusalsGauage3nos}</Text>
+      </View>
+
+      <View style={styles.cell}>
+        <Text>{rowData.item.refusalsGauage4nos}</Text>
+      </View>
+
+      <View style={styles.cell}>
+        <Text>{rowData.item.refusalsGauage5nos}</Text>
+      </View>
+
+      <View style={styles.cell}>
+        <Text>{rowData.item.refusalsGauage6nos}</Text>
+      </View>
+
+      <View style={[styles.cell, {paddingHorizontal: 45}]}>
+        <TouchableOpacity
+          style={[styles.deleteButton]}
+          onPress={() => deleteTorquingItem(rowData, rowData.item.key)}>
+          <Image
+            style={[styles.CloseIcon, {tintColor: '#fff'}]}
+            source={require('./../../images/menu/delete.png')}
+          />
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+
+  const renderTorquingHeadings = () => (
+    <View style={styles.rowContainer}>
+      <View style={[styles.cell, {width: 50}]}>
+        <Text style={styles.cellText}>Date</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Time</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Component</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Details of Joints</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Nos of Bolt</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Dia of Bolt (mm)</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Size (mm)</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Invoice/MTC File No.</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Torque Wrench Sl. No.</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Torque Applied</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Refusals (Gauage 3nos)</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Refusals (Gauage 4nos)</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Refusals (Gauage 5nos)</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Refusals (Gauage 6nos)</Text>
+      </View>
+      <View style={[styles.cell, {paddingHorizontal: 40}]}>
+        <Text style={styles.cellText}>Actions</Text>
+      </View>
+    </View>
+  );
+  const handleTextInputChangeTorquing = (
+    index: number,
+    field: string,
+    value: string,
+  ) => {
+    const updatedData = [...torquingData];
+    let isValid = true;
+    let errorMessage = '';
+
+    switch (field) {
+      case 'component':
+      case 'detailsOfJoints':
+        if (value.length > 20) {
+          isValid = false;
+          errorMessage = `${field} cannot exceed 20 characters`;
+        }
+        break;
+
+      case 'nosOfBolt':
+        const nosOfBolt = parseInt(value);
+        if (isNaN(nosOfBolt) || nosOfBolt <= 0 || nosOfBolt > 1000000) {
+          isValid = false;
+          errorMessage =
+            'Enter a positive integer up to 10 lakh for Nos of Bolt';
+        }
+        break;
+
+      case 'diaOfBoltInMm':
+      case 'sizeInMm':
+        const sizeValue = parseFloat(value);
+        if (
+          isNaN(sizeValue) ||
+          sizeValue <= 0 ||
+          sizeValue > 100 ||
+          value.split('.')[1]?.length > 2
+        ) {
+          isValid = false;
+          errorMessage =
+            'Enter a size value greater than 0 and up to 100 mm with up to 2 decimal places';
+        }
+        break;
+
+      case 'slNoOfInvoiceMTCFile':
+      case 'slNoOfTorqueWrench':
+        if (value.length > 50) {
+          isValid = false;
+          errorMessage = `${field} cannot exceed 50 characters`;
+        }
+        break;
+
+      case 'torqueApplied':
+        const torqueApplied = parseFloat(value);
+        if (
+          isNaN(torqueApplied) ||
+          torqueApplied <= 0 ||
+          torqueApplied > 1000000 ||
+          value.split('.')[1]?.length > 2
+        ) {
+          isValid = false;
+          errorMessage =
+            'Enter a torque value greater than 0 and up to 10 lakh with up to 2 decimal places';
+        }
+        break;
+
+      default:
+        break;
+    }
+
+    if (isValid) {
+      updatedData[index][field] = value;
+      setTorquingData(updatedData);
+    } else {
+      updatedData[index][field] = value;
+      setTorquingData(updatedData);
+      showSnackbar(errorMessage, 'error');
+    }
+  };
+  const validateTorquingData = (torquingData: any): boolean => {
+    for (const item of torquingData) {
+      // Parsing values to float
+      const nosOfBolt = parseFloat(item.nosOfBolt);
+      const diaOfBoltInMm = parseFloat(item.diaOfBoltInMm);
+      const sizeInMm = parseFloat(item.sizeInMm);
+      const torqueApplied = parseFloat(item.torqueApplied);
+
+      // Validation checks
+      if (!item.date || !item.time) {
+        showSnackbar('Please select a date and Time for Torquing', 'error');
+        return false;
+      }
+
+      if (!item.component || item.component.length > 20) {
+        showSnackbar(
+          'Please enter a valid component (max 20 characters)',
+          'error',
+        );
+        return false;
+      }
+
+      if (!item.detailsOfJoints || item.detailsOfJoints.length > 20) {
+        showSnackbar(
+          'Please enter valid details of joints (max 20 characters)',
+          'error',
+        );
+        return false;
+      }
+
+      if (isNaN(nosOfBolt) || nosOfBolt <= 0 || nosOfBolt > 1000000) {
+        showSnackbar('Please enter a valid number of bolts', 'error');
+        return false;
+      }
+
+      if (
+        isNaN(diaOfBoltInMm) ||
+        diaOfBoltInMm <= 0 ||
+        diaOfBoltInMm > 100 ||
+        item.diaOfBoltInMm.split('.')[1]?.length > 2
+      ) {
+        showSnackbar('Please enter a valid diameter of bolt (mm)', 'error');
+        return false;
+      }
+
+      if (
+        isNaN(sizeInMm) ||
+        sizeInMm <= 0 ||
+        sizeInMm > 100 ||
+        item.sizeInMm.split('.')[1]?.length > 2
+      ) {
+        showSnackbar('Please enter a valid size (mm)', 'error');
+        return false;
+      }
+
+      if (!item.slNoOfInvoiceMTCFile || item.slNoOfInvoiceMTCFile.length > 50) {
+        showSnackbar(
+          'Please enter a valid Invoice/MTC file number (max 50 characters)',
+          'error',
+        );
+        return false;
+      }
+
+      if (!item.slNoOfTorqueWrench || item.slNoOfTorqueWrench.length > 50) {
+        showSnackbar(
+          'Please enter a valid Torque Wrench Sl. No. (max 50 characters)',
+          'error',
+        );
+        return false;
+      }
+
+      if (
+        isNaN(torqueApplied) ||
+        torqueApplied <= 0 ||
+        torqueApplied > 1000000 ||
+        item.torqueApplied.split('.')[1]?.length > 2
+      ) {
+        showSnackbar('Please enter a valid torque applied value', 'error');
+        return false;
+      }
+    }
+
+    // Convert the values back to numbers after validation
+    torquingData.forEach((item: any) => {
+      item.nosOfBolt = Number(item.nosOfBolt);
+      item.diaOfBoltInMm = Number(item.diaOfBoltInMm);
+      item.sizeInMm = Number(item.sizeInMm);
+      item.torqueApplied = Number(item.torqueApplied);
+    });
+
+    return true;
+  };
+
+const validateTemporaryPrestressingData = (
+  temporaryPrestressingData: any[],
+): boolean => {
+  for (const item of temporaryPrestressingData) {
+    // Parsing values to float
+    const maxJackPressure = parseFloat(item.maxJackPressure);
+    const jackPressureApplied = parseFloat(item.jackPressureApplied);
+
+    // Validation checks
+    if (!item.jointNumbers || item.jointNumbers.length > 50) {
+      showSnackbar(
+        'Joint Numbers must be non-empty and up to 50 characters.',
+        'error',
+      );
+      return false;
+    }
+
+    if (
+      isNaN(maxJackPressure) ||
+      maxJackPressure <= 0 ||
+      maxJackPressure > 1000 ||
+      item.maxJackPressure.split('.')[1]?.length > 3
+    ) {
+      showSnackbar(
+        'Max Jack Pressure must be greater than 0 and up to 1000 Kg/Cm² with up to 3 decimal places.',
+        'error',
+      );
+      return false;
+    }
+
+    if (
+      isNaN(jackPressureApplied) ||
+      jackPressureApplied <= 0 ||
+      jackPressureApplied > 1000 ||
+      item.jackPressureApplied.split('.')[1]?.length > 3
+    ) {
+      showSnackbar(
+        'Jack Pressure Applied must be greater than 0 and up to 1000 Kg/Cm² with up to 3 decimal places.',
+        'error',
+      );
+      return false;
+    }
+
+    if (!item.dateOfPrestressing || !item.timeOfPrestressing) {
+      showSnackbar('Date and Time of Prestressing must be filled.', 'error');
+      return false;
+    }
+  }
+
+  // Convert the values back to numbers after validation
+  temporaryPrestressingData.forEach((item: any) => {
+    item.maxJackPressure = Number(item.maxJackPressure);
+    item.jackPressureApplied = Number(item.jackPressureApplied);
+  });
+
+  return true;
+};
 
   const renderHeadings = () => (
     <View
@@ -4066,6 +4791,14 @@ const validateProcurementOfSteelData = (data: any): boolean => {
     newData.splice(prevIndex, 1);
     setConcreteData(newData);
   };
+  const deleteTorquingItem = (rowMap: any, rowKey: any) => {
+    closeRow(rowMap, rowKey);
+    const newData = [...torquingData];
+    const prevIndex = torquingData.findIndex(item => item.key === rowKey);
+    newData.splice(prevIndex, 1);
+    setTorquingData(newData);
+  };
+
   //Function to delete glueing row
   const deleteGlueingItem = (rowMap: any, rowKey: any) => {
     closeRow(rowMap, rowKey);
@@ -5222,9 +5955,248 @@ const validateProcurementOfSteelData = (data: any): boolean => {
             </View>
           </View>
         );
-
-      case TASK_TYPES.CONCRETING:
       case TASK_TYPES.STITCH_CONCRETE:
+        if (!concreteData || !concreteData.length) {
+          setConcreteData([
+            {
+              vehicleNo: '',
+              timeOfArrival: '',
+              gradeOfConcrete: '',
+              concreteTemp: 0,
+              slumpValue: 0,
+              concretePoured: 0,
+              concreteStartTime: '',
+              concreteFinishTime: '',
+              key: Guid.create(),
+            },
+          ]);
+        }
+
+        return (
+          <View>
+            <DropdownPicker
+              label="Grade of Concrete (Reference approved drawing)"
+              value={stitchConcreteData.gradeOfConcrete}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeStitchConcrete('gradeOfConcrete', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Method statement is approved"
+              value={stitchConcreteData.methodStatementApproved}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeStitchConcrete(
+                  'methodStatementApproved',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="All HT strands for all duct inserted before concreting"
+              value={stitchConcreteData.htStrandsInserted}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeStitchConcrete('htStrandsInserted', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Water, sand, coarse aggregate, cement, admixture approved by IE"
+              value={stitchConcreteData.materialsApproved}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeStitchConcrete('materialsApproved', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Formwork approved by IE"
+              value={stitchConcreteData.formworkApproved}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeStitchConcrete('formworkApproved', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Reinforcement cage approved"
+              value={stitchConcreteData.reinforcementCageApproved}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeStitchConcrete(
+                  'reinforcementCageApproved',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Concreting equipment is in proper working condition"
+              value={stitchConcreteData.equipmentWorking}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeStitchConcrete('equipmentWorking', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Access provided"
+              value={stitchConcreteData.accessProvided}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeStitchConcrete('accessProvided', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Safety arrangements are adequate"
+              value={stitchConcreteData.safetyArrangements}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeStitchConcrete('safetyArrangements', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Heavy rainfall protection available"
+              value={stitchConcreteData.rainfallProtection}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeStitchConcrete('rainfallProtection', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Needle Vibrators status"
+              value={stitchConcreteData.needleVibratorStatus}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeStitchConcrete('needleVibratorStatus', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Needles vibrator’s nos and status"
+              value={stitchConcreteData.needleVibratorNos}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeStitchConcrete('needleVibratorNos', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Slump cone apparatus and sufficient Cube moulds available"
+              value={stitchConcreteData.slumpConeApparatusAvailable}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeStitchConcrete(
+                  'slumpConeApparatusAvailable',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Start pre-stressing after getting strength 30 Mpa or 5 days"
+              value={stitchConcreteData.startPreStressing}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeStitchConcrete('startPreStressing', value)
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Pre-stressing & Grouting format followed as per Spine"
+              value={stitchConcreteData.groutingFormatFollowed}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeStitchConcrete('groutingFormatFollowed', value)
+              }
+              isRequired={true}
+            />
+            <View style={styles.MainContainer}>
+              <ScrollView
+                id="scrollViewConcrete"
+                showsHorizontalScrollIndicator={false}
+                horizontal={enableScroll}>
+                <View>
+                  {renderHeadings()}
+                  <FlatList
+                    data={concreteData}
+                    renderItem={renderItem}
+                    keyExtractor={item => item.key?.toString()}
+                    style={{zIndex: 10}}
+                    automaticallyAdjustContentInsets={true}
+                    scrollEnabled={false}
+                  />
+                </View>
+              </ScrollView>
+            </View>
+
+            <View>
+              <TouchableOpacity
+                style={{paddingVertical: 15, zIndex: 8}}
+                onPress={() => onAddMoreConcrete()}>
+                <Text style={styles.AddMoreLink}>+ Add More</Text>
+              </TouchableOpacity>
+            </View>
+
+            <View>
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
+                />
+              </View>
+            </View>
+          </View>
+        );
+      case TASK_TYPES.CONCRETING:
       case TASK_TYPES.PCC_LEVELLING_COURSE:
         if (!concreteData || !concreteData.length) {
           setConcreteData([
@@ -5308,6 +6280,93 @@ const validateProcurementOfSteelData = (data: any): boolean => {
             </View>
           </View>
         );
+      case TASK_TYPES.TORQUING:
+        if (!torquingData || !torquingData.length) {
+          setTorquingData([
+            {
+              date: '',
+              component: '',
+              detailsOfJoints: '',
+              nosOfBolt: 0,
+              diaOfBoltInMm: 0,
+              sizeInMm: 0,
+              slNoOfInvoiceMTCFile: '',
+              slNoOfTorqueWrench: '',
+              torqueApplied: 0,
+              refusalsGauage3nos: 'Y',
+              refusalsGauage4nos: 'Y',
+              refusalsGauage5nos: 'Y',
+              refusalsGauage6nos: 'Y',
+              key: Guid.create(),
+            },
+          ]);
+        }
+        return (
+          <View>
+            <View style={styles.MainContainer}>
+              <ScrollView
+                id="scrollViewTorquing"
+                showsHorizontalScrollIndicator={false}
+                horizontal={enableScroll}>
+                <View>
+                  {renderTorquingHeadings()}
+                  <FlatList
+                    data={torquingData}
+                    renderItem={renderItemTorquing}
+                    keyExtractor={item => item.key?.toString()}
+                    style={{zIndex: 10}}
+                    automaticallyAdjustContentInsets={true}
+                    scrollEnabled={false}
+                  />
+                </View>
+              </ScrollView>
+            </View>
+
+            <View>
+              <TouchableOpacity
+                style={{paddingVertical: 15, zIndex: 8}}
+                onPress={() => onAddMoreTorquing()}>
+                <Text style={styles.AddMoreLink}>+ Add More</Text>
+              </TouchableOpacity>
+            </View>
+            <View>
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
+                />
+              </View>
+            </View>
+          </View>
+        );
+
       case TASK_TYPES.GLUEING:
         if (!glueingData || !glueingData.length) {
           setGlueingData([
@@ -5683,68 +6742,50 @@ const validateProcurementOfSteelData = (data: any): boolean => {
         );
 
       case TASK_TYPES.TEMPORARY_PRESTRESSING:
+        if (!temporaryPrestressingData || !temporaryPrestressingData.length) {
+          setTemporaryPrestressingData([
+            {
+              jointNumbers: '',
+              calibrationDone: 'Y',
+              stressingSequenceDrawingNumber: '',
+              dateOfPrestressing: '',
+              timeOfPrestressing: '',
+              maxJackPressure: 0,
+              jackPressureApplied: 0,
+              key: Guid.create(),
+            },
+          ]);
+        }
+
         return (
           <View>
-            <View style={{flexDirection: 'column'}}>
-              <DropdownPicker
-                label="Calibration Certificate Available"
-                value={
-                  temporaryPrestressingData.calibrationCertificateAvailable
-                }
-                items={YES_NO_LIST}
-                onChange={(value: string) => {
-                  handleInputChangeTemporaryPrestressing(
-                    'calibrationCertificateAvailable',
-                    value,
-                  );
-                }}
-                isRequired={true}
-              />
+            <View style={styles.MainContainer}>
+              <ScrollView
+                id="scrollViewTemporaryPrestressing"
+                showsHorizontalScrollIndicator={false}
+                horizontal={enableScroll}>
+                <View>
+                  {renderTemporaryPrestressingHeadings()}
+                  <FlatList
+                    data={temporaryPrestressingData}
+                    renderItem={renderItemTemporaryPrestressing}
+                    keyExtractor={item => item.key?.toString()}
+                    style={{zIndex: 10}}
+                    automaticallyAdjustContentInsets={true}
+                    scrollEnabled={false}
+                  />
+                </View>
+              </ScrollView>
             </View>
 
-            <Input
-              label="Stressing Sequence Drawing Number"
-              value={temporaryPrestressingData.stressingSequenceDrawingNumber.toString()}
-              onChange={(value: string) =>
-                handleInputChangeTemporaryPrestressing(
-                  'stressingSequenceDrawingNumber',
-                  Number(value),
-                )
-              }
-              isRequired={true}
-            />
+            <View>
+              <TouchableOpacity
+                style={{paddingVertical: 15, zIndex: 8}}
+                onPress={() => onAddMoreTemporaryPrestressing()}>
+                <Text style={styles.AddMoreLink}>+ Add More</Text>
+              </TouchableOpacity>
+            </View>
 
-            <CalendarPicker
-              label="Prestressing Date"
-              value={temporaryPrestressingData.prestressingDate}
-              onChange={date =>
-                handleInputChangeTemporaryPrestressing('prestressingDate', date)
-              }
-            />
-
-            <Input
-              label="Max Jack Pressure (Kg/cm²)"
-              value={temporaryPrestressingData.maxJackPressure.toString()}
-              onChange={(value: string) =>
-                handleInputChangeTemporaryPrestressing(
-                  'maxJackPressure',
-                  Number(value),
-                )
-              }
-              isRequired={true}
-            />
-
-            <Input
-              label="Jack Pressure Applied (Kg/cm²)"
-              value={temporaryPrestressingData.jackPressureApplied.toString()}
-              onChange={(value: string) =>
-                handleInputChangeTemporaryPrestressing(
-                  'jackPressureApplied',
-                  Number(value),
-                )
-              }
-              isRequired={true}
-            />
             <View>
               <View style={{flexDirection: 'column'}}>
                 <CalendarPicker
@@ -7266,46 +8307,192 @@ const validateProcurementOfSteelData = (data: any): boolean => {
           </View>
         );
       case TASK_TYPES.TRANSPORTATION_OF_MATERIAL:
-         <View>
-           <Input
-             label="Transit Time in hrs"
-             value={transportationData.transitTime}
-             onChange={(value: string) =>
-               handleTextInputChangeTransportation('transitTime', value)
-             }
-             isRequired={true}
-           />
-           <View>
-             <CalendarPicker
-               label="Date"
-               value={rfiDate}
-               onChange={date => setRFIDate(date)}
-             />
-             <TimePicker
-               label="Time"
-               value={rfiTime}
-               onChange={time => setRFITime(time)}
-             />
-             <View style={{flexDirection: 'column', paddingBottom: 20}}>
-               <Text style={styles.Lable}>Recommendations</Text>
-               <TextInput
-                 style={styles.commonInputFiels}
-                 placeholder="Recommendations"
-                 autoCapitalize="none"
-                 keyboardType="email-address"
-                 returnKeyType="next"
-                 underlineColorAndroid="#f000"
-                 multiline={true}
-                 numberOfLines={4}
-                 blurOnSubmit={false}
-                 value={comments}
-                 onChangeText={text => {
-                   setComments(text);
-                 }}
-               />
-             </View>
-           </View>
-         </View>;
+        <View>
+          <Input
+            label="Transit Time in hrs"
+            value={transportationData.transitTime}
+            onChange={(value: string) =>
+              handleTextInputChangeTransportation('transitTime', value)
+            }
+            isRequired={true}
+          />
+          <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <View style={{flexDirection: 'column', paddingBottom: 20}}>
+              <Text style={styles.Lable}>Recommendations</Text>
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                returnKeyType="next"
+                underlineColorAndroid="#f000"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => {
+                  setComments(text);
+                }}
+              />
+            </View>
+          </View>
+        </View>;
+      case TASK_TYPES.FIXING_OF_SHEATHING_JOINTS:
+        return (
+          <View>
+            <DropdownPicker
+              label="All Temporary Openings in Sheathing Satisfactory Plugged"
+              value={fixingOfSheathingJointsData.temporaryOpeningsPlugged}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeFixingOfSheathingJoints(
+                  'temporaryOpeningsPlugged',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Has Joint Water Tight"
+              value={fixingOfSheathingJointsData.jointWaterTight}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeFixingOfSheathingJoints(
+                  'jointWaterTight',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Sheathing Neatly Fitted at Joint without Internal Projection"
+              value={fixingOfSheathingJointsData.sheathingNeatlyFitted}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeFixingOfSheathingJoints(
+                  'sheathingNeatlyFitted',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Sheathing Tightly Fitted on Anchorage End and Sealed with Tape"
+              value={fixingOfSheathingJointsData.anchorageEndSealed}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeFixingOfSheathingJoints(
+                  'anchorageEndSealed',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Coupler Tightly Screwed on Outer Side of Sheathing Duct"
+              value={fixingOfSheathingJointsData.couplerTightlyScrewed}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeFixingOfSheathingJoints(
+                  'couplerTightlyScrewed',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Length of Coupler Not Less Than 150mm (Up to 200mm)"
+              value={fixingOfSheathingJointsData.couplerLengthSufficient}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeFixingOfSheathingJoints(
+                  'couplerLengthSufficient',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Joint Between Coupler End and Duct Sealed with Tape"
+              value={fixingOfSheathingJointsData.jointSealedWithTape}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeFixingOfSheathingJoints(
+                  'jointSealedWithTape',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Coupler of Adjacent Duct Staggered"
+              value={fixingOfSheathingJointsData.couplerStaggered}
+              items={YES_NO_LIST}
+              onChange={(value: string) =>
+                handleInputChangeFixingOfSheathingJoints(
+                  'couplerStaggered',
+                  value,
+                )
+              }
+              isRequired={true}
+            />
+
+            <View>
+              {/* Common Date and Time Picker Section */}
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
+                />
+              </View>
+            </View>
+          </View>
+        );
+
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
       case TASK_TYPES.LIFTING_RIGHT:

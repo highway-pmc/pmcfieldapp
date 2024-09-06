@@ -502,6 +502,8 @@ export const TASK_TYPES = {
   AUTO_LAUNCHING: 'auto-launching',
   PROCUREMENT_OF_STRUCTURAL_STEEL: 'procurement-of-structural-steel',
   TRANSPORTATION_OF_MATERIAL: 'transportation-of-material-at-site',
+  FIXING_OF_SHEATHING_JOINTS: 'fixing-of-sheathing-joints',
+  TORQUING: 'torquing',
 };
 
 export const TEST_MATERIALS_TYPES = {

@@ -407,6 +407,144 @@ const RFIsRecents = (props: any) => {
       </View>
     </View>
   );
+  const renderItemTorquing = (rowData: any) => (
+    <View style={{flexDirection: 'column', gap: 5}}>
+      {rowData.index === 0 && (
+        <View style={styles.headerRow}>
+          <Text style={styles.headerCell}>Date</Text>
+          <Text style={styles.headerCell}>Time</Text>
+          <Text style={styles.headerCell}>Component</Text>
+          <Text style={styles.headerCell}>Details of Joints</Text>
+          <Text style={styles.headerCell}>Nos of Bolt</Text>
+          <Text style={styles.headerCell}>Dia of Bolt in mm</Text>
+          <Text style={styles.headerCell}>Size in mm</Text>
+          <Text style={styles.headerCell}>Sl.No. of Invoice/MTC File</Text>
+          <Text style={styles.headerCell}>Sl.No. of Torque Wrench</Text>
+          <Text style={styles.headerCell}>Torque Applied</Text>
+          <Text style={styles.headerCell}>Nos. of Refusals (3nos)</Text>
+          <Text style={styles.headerCell}>Nos. of Refusals (4nos)</Text>
+          <Text style={styles.headerCell}>Nos. of Refusals (5nos)</Text>
+          <Text style={styles.headerCell}>Nos. of Refusals (6nos)</Text>
+        </View>
+      )}
+      <View style={styles.row}>
+        <Text style={styles.cell}>{rowData.item.date}</Text>
+        <Text style={styles.cell}>{rowData.index.time}</Text>
+
+        <Text style={styles.cell}>{rowData.item.component}</Text>
+        <Text style={styles.cell}>{rowData.item.detailsOfJoints}</Text>
+        <Text style={styles.cell}>{rowData.item.nosOfBolt}</Text>
+        <Text style={styles.cell}>{rowData.item.diaOfBoltInMm}</Text>
+        <Text style={styles.cell}>{rowData.item.sizeInMm}</Text>
+        <Text style={styles.cell}>{rowData.item.slNoOfInvoiceMTCFile}</Text>
+        <Text style={styles.cell}>{rowData.item.slNoOfTorqueWrench}</Text>
+        <Text style={styles.cell}>{rowData.item.torqueApplied}</Text>
+        <Text style={styles.cell}>{rowData.item.refusalsGauage3nos}</Text>
+        <Text style={styles.cell}>{rowData.item.refusalsGauage4nos}</Text>
+        <Text style={styles.cell}>{rowData.item.refusalsGauage5nos}</Text>
+        <Text style={styles.cell}>{rowData.item.refusalsGauage6nos}</Text>
+      </View>
+    </View>
+  );
+  const renderSectionHeaderTorquing = (rowData: any) => {
+    return (
+      <View>
+        <View>
+          <Text>Date</Text>
+        </View>
+        <View>
+          <Text>Time</Text>
+        </View>
+        <View>
+          <Text>Component</Text>
+        </View>
+        <View>
+          <Text>Details of Joints</Text>
+        </View>
+        <View>
+          <Text>Nos of Bolt</Text>
+        </View>
+        <View>
+          <Text>Dia of Bolt in mm</Text>
+        </View>
+        <View>
+          <Text>Size in mm</Text>
+        </View>
+        <View>
+          <Text>Sl.No. of Invoice/MTC File</Text>
+        </View>
+        <View>
+          <Text>Sl.No. of Torque Wrench</Text>
+        </View>
+        <View>
+          <Text>Torque Applied</Text>
+        </View>
+        <View>
+          <Text>Nos. of Refusals (3nos)</Text>
+        </View>
+        <View>
+          <Text>Nos. of Refusals (4nos)</Text>
+        </View>
+        <View>
+          <Text>Nos. of Refusals (5nos)</Text>
+        </View>
+        <View>
+          <Text>Nos. of Refusals (6nos)</Text>
+        </View>
+      </View>
+    );
+  };
+const renderItemTemporaryPrestressing = (rowData: any) => (
+  <View style={{flexDirection: 'column', gap: 5}}>
+    {rowData.index === 0 && (
+      <View style={styles.headerRow}>
+        <Text style={styles.headerCell}>Joint Numbers</Text>
+        <Text style={styles.headerCell}>Calibration Done</Text>
+        <Text style={styles.headerCell}>Stressing Sequence Drawing Number</Text>
+        <Text style={styles.headerCell}>Date of Prestressing</Text>
+        <Text style={styles.headerCell}>Time of Prestressing</Text>
+        <Text style={styles.headerCell}>Max Jack Pressure (Kg/Cm²)</Text>
+        <Text style={styles.headerCell}>Jack Pressure Applied (Kg/Cm²)</Text>
+      </View>
+    )}
+    <View style={styles.row}>
+      <Text style={styles.cell}>{rowData.item.jointNumbers}</Text>
+      <Text style={styles.cell}>{rowData.item.calibrationDone}</Text>
+      <Text style={styles.cell}>
+        {rowData.item.stressingSequenceDrawingNumber}
+      </Text>
+      <Text style={styles.cell}>{rowData.item.dateOfPrestressing}</Text>
+      <Text style={styles.cell}>{rowData.item.timeOfPrestressing}</Text>
+      <Text style={styles.cell}>{rowData.item.maxJackPressure}</Text>
+      <Text style={styles.cell}>{rowData.item.jackPressureApplied}</Text>
+    </View>
+  </View>
+);
+const renderSectionHeaderTemporaryPrestressing = (rowData: any) => (
+  <View>
+    <View>
+      <Text>Joint Numbers</Text>
+    </View>
+    <View>
+      <Text>Calibration Done</Text>
+    </View>
+    <View>
+      <Text>Stressing Sequence Drawing Number</Text>
+    </View>
+    <View>
+      <Text>Date of Prestressing</Text>
+    </View>
+    <View>
+      <Text>Time of Prestressing</Text>
+    </View>
+    <View>
+      <Text>Max Jack Pressure (Kg/Cm²)</Text>
+    </View>
+    <View>
+      <Text>Jack Pressure Applied (Kg/Cm²)</Text>
+    </View>
+  </View>
+);
 
   const renderSectionHeaderGlueing = (rowData: any) => {
     return (
@@ -745,6 +883,97 @@ const RFIsRecents = (props: any) => {
             </View>
           </View>
         );
+      case TASK_TYPES.STITCH_CONCRETE:
+        const stitchConcreteProperties = [
+          {
+            title: 'Grade of Concrete (Reference approved drawing)',
+            key: 'gradeOfConcrete',
+          },
+          {
+            title: 'Method statement is approved',
+            key: 'methodStatementApproved',
+          },
+          {
+            title: 'HT strands for all duct inserted before concreting',
+            key: 'htStrandsInserted',
+          },
+          {
+            title:
+              'Water, sand, coarse aggregate, cement, admixture approved by IE',
+            key: 'materialsApproved',
+          },
+          {
+            title: 'Formwork approved by IE',
+            key: 'formworkApproved',
+          },
+          {
+            title: 'Reinforcement cage approved',
+            key: 'reinforcementCageApproved',
+          },
+          {
+            title: 'Concreting equipment is in proper working condition',
+            key: 'equipmentWorking',
+          },
+          {
+            title: 'Access provided',
+            key: 'accessProvided',
+          },
+          {
+            title: 'Safety arrangements are adequate',
+            key: 'safetyArrangements',
+          },
+          {
+            title: 'Heavy rainfall protection available',
+            key: 'rainfallProtection',
+          },
+          {
+            title: 'Needle Vibrators status',
+            key: 'needleVibratorStatus',
+          },
+          {
+            title: 'Needles vibrator’s nos and status',
+            key: 'needleVibratorNos',
+          },
+          {
+            title: 'Slump cone apparatus and sufficient Cube moulds available',
+            key: 'slumpConeApparatusAvailable',
+          },
+          {
+            title:
+              'Start pre-stressing after getting strength 30 Mpa or 5 days',
+            key: 'startPreStressing',
+          },
+          {
+            title: 'Pre-stressing & Grouting format followed as per Spine',
+            key: 'groutingFormatFollowed',
+          },
+        ];
+        return (
+          <View>
+            {stitchConcreteProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.stitchConcreteData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+            <ScrollView horizontal={true}>
+              <View style={{flexDirection: 'column'}}>
+                {
+                  <SwipeListView
+                    data={selectedRFI?.metaData.concreteData}
+                    renderItem={renderItem}
+                    renderSectionHeader={renderSectionHeader}
+                  />
+                }
+              </View>
+            </ScrollView>
+          </View>
+        );
+
       case TASK_TYPES.CONCRETING:
         return (
           <View>
@@ -975,6 +1204,21 @@ const RFIsRecents = (props: any) => {
             ))}
           </View>
         );
+      case TASK_TYPES.TORQUING:
+        return (
+          <View>
+            <ScrollView horizontal={true}>
+              <View style={{flexDirection: 'column'}}>
+                <SwipeListView
+                  data={selectedRFI?.metaData.torquingData}
+                  renderItem={renderItemTorquing}
+                  renderSectionHeader={renderSectionHeaderTorquing}
+                />
+              </View>
+            </ScrollView>
+          </View>
+        );
+
       case TASK_TYPES.GLUEING:
         return (
           <View>
@@ -1016,38 +1260,20 @@ const RFIsRecents = (props: any) => {
           </View>
         );
       case TASK_TYPES.TEMPORARY_PRESTRESSING:
-        const temporaryPrestressingProperties = [
-          {
-            title: 'Calibration Certificate Available',
-            key: 'calibrationCertificateAvailable',
-          },
-          {
-            title: 'Stressing Sequence Drawing Number',
-            key: 'stressingSequenceDrawingNumber',
-          },
-          {title: 'Prestressing Date', key: 'prestressingDate'},
-          {title: 'Max Jack Pressure (Kg/cm²)', key: 'maxJackPressure'},
-          {title: 'Jack Pressure Applied (Kg/cm²)', key: 'jackPressureApplied'},
-        ];
-
         return (
           <View>
-            {temporaryPrestressingProperties.map(property => (
-              <View style={{flexDirection: 'column'}} key={property.key}>
-                <Text style={styles.GenerateRFIFieldLabel}>
-                  {property.title}
-                </Text>
-                <Text>
-                  {
-                    selectedRFI?.metaData.temporaryPrestressingData?.[
-                      property.key
-                    ]
-                  }
-                </Text>
+            <ScrollView horizontal={true}>
+              <View style={{flexDirection: 'column'}}>
+                <SwipeListView
+                  data={selectedRFI?.metaData.temporaryPrestressingData}
+                  renderItem={renderItemTemporaryPrestressing}
+                  renderSectionHeader={renderSectionHeaderTemporaryPrestressing}
+                />
               </View>
-            ))}
+            </ScrollView>
           </View>
         );
+
       case TASK_TYPES.FABRICATION_OF_MEMBERS:
       case TASK_TYPES.FABRICATION_OF_STEEL_GIRDERS:
         const fabricationProperties = [
@@ -2096,6 +2322,63 @@ const RFIsRecents = (props: any) => {
             ))}
           </View>
         );
+      case TASK_TYPES.FIXING_OF_SHEATHING_JOINTS:
+        const fixingOfSheathingJointsProperties = [
+          {
+            title: 'All Temporary Openings in Sheathing Satisfactory Plugged',
+            key: 'temporaryOpeningsPlugged',
+          },
+          {
+            title: 'Has Joint Water Tight',
+            key: 'jointWaterTight',
+          },
+          {
+            title:
+              'Sheathing Neatly Fitted at Joint without Internal Projection',
+            key: 'sheathingNeatlyFitted',
+          },
+          {
+            title:
+              'Sheathing Tightly Fitted on Anchorage End and Sealed with Tape',
+            key: 'anchorageEndSealed',
+          },
+          {
+            title: 'Coupler Tightly Screwed on Outer Side of Sheathing Duct',
+            key: 'couplerTightlyScrewed',
+          },
+          {
+            title: 'Length of Coupler Not Less Than 150mm (Up to 200mm)',
+            key: 'couplerLengthSufficient',
+          },
+          {
+            title: 'Joint Between Coupler End and Duct Sealed with Tape',
+            key: 'jointSealedWithTape',
+          },
+          {
+            title: 'Coupler of Adjacent Duct Staggered',
+            key: 'couplerStaggered',
+          },
+        ];
+
+        return (
+          <View>
+            {fixingOfSheathingJointsProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.fixingOfSheathingJointsData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+
       case TASK_TYPES.HACKING_OF_GIRDER:
         const hackingOfGirderProperties = [
           {

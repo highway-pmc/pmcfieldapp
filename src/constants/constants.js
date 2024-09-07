@@ -510,7 +510,11 @@ export const TASK_TYPES = {
   ERECTION_OF_COLUMNS: 'erection-of-columns',
   APPLICATION_OF_FILTER_MEDIA: 'application-of-filter-media',
   FIXING_OF_BRACINGS: 'fixing-of-bracings',
-  FIXING_OF_RAILING:'fixing-of-railing',
+  FIXING_OF_RAILING: 'fixing-of-railing',
+  PLACING_OF_COVER: 'placing-of-cover',
+  COMPACTION: 'compaction',
+  FIXING_OF_SHEET: 'fixing-of-sheet',
+  GRADING: 'grading',
 };
 
 export const TEST_MATERIALS_TYPES = {

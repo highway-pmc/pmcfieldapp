@@ -823,6 +823,10 @@ const renderSectionHeaderTemporaryPrestressing = (rowData: any) => (
             </View>
           </View>
         );
+      case TASK_TYPES.PLACING_OF_COVER:
+      case TASK_TYPES.COMPACTION:
+      case TASK_TYPES.FIXING_OF_SHEET:
+      case TASK_TYPES.GRADING:
       case TASK_TYPES.THREADING_OF_PRE_STRESSING_STRANDS:
         return (
           <View>

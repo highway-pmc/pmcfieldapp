@@ -2988,6 +2988,36 @@ const renderSectionHeaderTemporaryPrestressing = (rowData: any) => (
             </View>
           </View>
         );
+      case TASK_TYPES.FIXING_OF_BRACINGS:
+        const fixingOfBracingsProperties = [
+          {
+            title: 'Line/Levels Checked',
+            key: 'lineLevelsChecked',
+          },
+          {
+            title: 'Welding Done as per Approved Drawing',
+            key: 'weldingAsPerApprovedDrawing',
+          },
+          {
+            title: 'Bracings are as per Approved Drawing',
+            key: 'bracingsAsPerApprovedDrawing',
+          },
+        ];
+
+        return (
+          <View>
+            {fixingOfBracingsProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.fixingOfBracingsData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
 
       // ReadOnlyRfi
       default:

@@ -508,7 +508,8 @@ export const TASK_TYPES = {
   ERECTION_OF_FRICTION_SLAB: 'erection-of-friction-slab',
   ERECTION_OF_FACIA_PANELS: 'erection-of-facia-panels',
   ERECTION_OF_COLUMNS: 'erection-of-columns',
-  APPLICATION_OF_FILTER_MEDIA:'application-of-filter-media',
+  APPLICATION_OF_FILTER_MEDIA: 'application-of-filter-media',
+  FIXING_OF_BRACINGS:'fixing-of-bracings',
 };
 
 export const TEST_MATERIALS_TYPES = {

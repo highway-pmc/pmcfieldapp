@@ -456,6 +456,13 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     probingByStiffwire: string;
   };
   //FormUseStates
+  const [fixingOfBracingsData, setFixingOfBracingsData] = useState({
+    lineLevelsChecked: 'Y',
+    weldingAsPerApprovedDrawing: 'Y',
+    bracingsAsPerApprovedDrawing: 'Y',
+  });
+
+
   const [applicationOfFilterMediaData, setApplicationOfFilterMediaData] =
     useState({
       filterMediaAsPerDrawing: 'Y',
@@ -2052,6 +2059,17 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             });
           }
           break;
+        case TASK_TYPES.FIXING_OF_BRACINGS:
+          if (rfiData.metaData.fixingOfBracingsData) {
+            setFixingOfBracingsData(rfiData.metaData.fixingOfBracingsData);
+          } else {
+            setFixingOfBracingsData({
+              lineLevelsChecked: 'Y',
+              weldingAsPerApprovedDrawing: 'Y',
+              bracingsAsPerApprovedDrawing: 'Y',
+            });
+          }
+          break;
 
         case TASK_TYPES.LIFTING_LEFT:
         case TASK_TYPES.LIFTING_YARD:
@@ -3495,6 +3513,12 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         checkList = {
           taskName: selectedTask.name,
           applicationOfFilterMediaData: applicationOfFilterMediaData,
+        };
+        break;
+      case TASK_TYPES.FIXING_OF_BRACINGS:
+        checkList = {
+          taskName: selectedTask.name,
+          fixingOfBracingsData: fixingOfBracingsData,
         };
         break;
 
@@ -8993,6 +9017,72 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                 value={comments}
                 onChangeText={text => setComments(text)}
               />
+            </View>
+          </View>
+        );
+      case TASK_TYPES.FIXING_OF_BRACINGS:
+        const fixingOfBracingsProperties = [
+          {
+            title: 'Line/Levels Checked',
+            key: 'lineLevelsChecked',
+          },
+          {
+            title: 'Welding Done as per Approved Drawing',
+            key: 'weldingAsPerApprovedDrawing',
+          },
+          {
+            title: 'Bracings are as per Approved Drawing',
+            key: 'bracingsAsPerApprovedDrawing',
+          },
+        ];
+
+        return (
+          <View>
+            {fixingOfBracingsProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={fixingOfBracingsData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setFixingOfBracingsData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <View>
+              {/* Common Section for Date, Time, and Recommendations */}
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => setComments(text)}
+                />
+              </View>
             </View>
           </View>
         );

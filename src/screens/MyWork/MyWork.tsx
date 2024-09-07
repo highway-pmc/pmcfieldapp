@@ -233,25 +233,25 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     },
   ]);
   //GLUEING
-  const [glueingData, setGlueingData] = useState([
-    {
-      jointNumbers: '',
-      ambientTemperature: 0,
-      batchNoResin: 0,
-      batchNoHardener: 0,
-      mixingStartTime: '',
-      mixingFinishTime: '',
-      applicationStartTime: '',
-      applicationFinishTime: '',
-      segmentJoiningTimeClosure: '',
-      segmentJoiningTimeTemporaryFinish: '',
-      segmentSurfaceArea: 0,
-      epoxyConsumptionTheoreticalResin: 0,
-      epoxyConsumptionTheoreticalHardener: 0,
-      epoxyConsumptionActualResin: 0,
-      epoxyConsumptionActualHardener: 0,
-      key: Guid.create(),
-    },
+  const [glueingData, setGlueingData]:any = useState([
+    // {
+    //   jointNumbers: '',
+    //   ambientTemperature: 0,
+    //   batchNoResin: 0,
+    //   batchNoHardener: 0,
+    //   mixingStartTime: '',
+    //   mixingFinishTime: '',
+    //   applicationStartTime: '',
+    //   applicationFinishTime: '',
+    //   segmentJoiningTimeClosure: '',
+    //   segmentJoiningTimeTemporaryFinish: '',
+    //   segmentSurfaceArea: 0,
+    //   epoxyConsumptionTheoreticalResin: 0,
+    //   epoxyConsumptionTheoreticalHardener: 0,
+    //   epoxyConsumptionActualResin: 0,
+    //   epoxyConsumptionActualHardener: 0,
+    //   key: Guid.create(),
+    // },
   ]);
 
   // BORING_OF_PILE
@@ -645,17 +645,34 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     memberMarkedForErection: 'Y',
     memberApprovedByInspector: 'Y',
   });
-  const [temporaryPrestressingData, setTemporaryPrestressingData] = useState([
+
+  const [prestressingData, setPrestressingData]: any = useState([
     {
-      jointNumbers: '',
-      calibrationDone: 'Y',
-      stressingSequenceDrawingNumber: '',
-      dateOfPrestressing: '',
-      timeOfPrestressing: '',
-      maxJackPressure: 0,
-      jackPressureApplied: 0,
-      key: Guid.create(),
+      cableNo: '',
+      stressingSequence: '',
+      A0: 0,
+      B0: 0,
+      A1: 0,
+      B1: 0,
+      A2: 0,
+      PA: 0,
+      B2: 0,
+      PB: 0,
+      SA0: 0,
+      SB0: 0
     },
+  ]);
+  const [temporaryPrestressingData, setTemporaryPrestressingData]: any = useState([
+    // {
+    //   jointNumbers: '',
+    //   calibrationDone: 'Y',
+    //   stressingSequenceDrawingNumber: '',
+    //   dateOfPrestressing: '',
+    //   timeOfPrestressing: '',
+    //   maxJackPressure: 0,
+    //   jackPressureApplied: 0,
+    //   key: Guid.create(),
+    // },
   ]);
 
   const onAddMoreTemporaryPrestressing = () => {
@@ -2143,6 +2160,32 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             });
           }
           break;
+          case TASK_TYPES.PRE_STRESSING:
+            if (rfiData.metaData?.prestressingData) {
+              setPrestressingData(rfiData.metaData.prestressingData);
+            } else {
+              const prestressingCablesDetails = selectedTask.taskDetailsData[0]?.details?.prestressingCablesDetails;
+              console.log('====prestressing===', JSON.stringify(prestressingCablesDetails));
+              const array = [];
+              for(let prop in prestressingCablesDetails) {
+                array.push({
+                  cableNo: (array.length + 1),
+                  stressingSequence: prestressingCablesDetails[prop].stressingSequence,
+                  A0: 0,
+                  B0: 0,
+                  A1: 0,
+                  B1: 0,
+                  A2: 0,
+                  PA: 0,
+                  B2: 0,
+                  PB: 0,
+                  SA0: 0,
+                  SB0: 0
+                })
+              }
+              setPrestressingData(array);
+            }
+            break;
         default:
           break;
       }
@@ -2470,7 +2513,6 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         const subComponentData =
           componentData.subComponentsData[subComponentIndex];
         const taskData: any = [subComponentData.tasksData[taskIndex]];
-        console.log('======', JSON.stringify(taskData));
         setProjectModuleId(segmentData.projectModuleId);
         setCurrentTasksData(taskData);
         breadcrumbItems.push(
@@ -2537,7 +2579,6 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
   };
 
   const onClickNested = (level: number, data: any) => {
-    console.log('==ss====', level);
     setSearchText('');
     if (data.projectModuleId) {
       setProjectModuleId(data.projectModuleId);
@@ -6559,30 +6600,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         );
 
       case TASK_TYPES.GLUEING:
-        if (!glueingData || !glueingData.length) {
-          setGlueingData([
-            {
-              jointNumbers: '',
-              ambientTemperature: 0,
-              batchNoResin: 0,
-              batchNoHardener: 0,
-              mixingStartTime: '',
-              mixingFinishTime: '',
-              applicationStartTime: '',
-              applicationFinishTime: '',
-              segmentJoiningTimeClosure: '',
-              segmentJoiningTimeTemporaryFinish: '',
-              segmentSurfaceArea: 0,
-              epoxyConsumptionTheoreticalResin: 0,
-              epoxyConsumptionTheoreticalHardener: 0,
-              epoxyConsumptionActualResin: 0,
-              epoxyConsumptionActualHardener: 0,
-              key: Guid.create(),
-            },
-          ]);
-        }
-
-        return (
+       return (
           <View>
             <View style={styles.MainContainer}>
               <ScrollView
@@ -6933,21 +6951,6 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         );
 
       case TASK_TYPES.TEMPORARY_PRESTRESSING:
-        if (!temporaryPrestressingData || !temporaryPrestressingData.length) {
-          setTemporaryPrestressingData([
-            {
-              jointNumbers: '',
-              calibrationDone: 'Y',
-              stressingSequenceDrawingNumber: '',
-              dateOfPrestressing: '',
-              timeOfPrestressing: '',
-              maxJackPressure: 0,
-              jackPressureApplied: 0,
-              key: Guid.create(),
-            },
-          ]);
-        }
-
         return (
           <View>
             <View style={styles.MainContainer}>
@@ -6968,14 +6971,6 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                 </View>
               </ScrollView>
             </View>
-
-            {/* <View>
-              <TouchableOpacity
-                style={{paddingVertical: 15, zIndex: 8}}
-                onPress={() => onAddMoreTemporaryPrestressing()}>
-                <Text style={styles.AddMoreLink}>+ Add More</Text>
-              </TouchableOpacity>
-            </View> */}
 
             <View>
               <View style={{flexDirection: 'column'}}>

@@ -3018,6 +3018,32 @@ const renderSectionHeaderTemporaryPrestressing = (rowData: any) => (
             ))}
           </View>
         );
+      case TASK_TYPES.FIXING_OF_RAILING:
+        const fixingOfRailingProperties = [
+          {
+            title: 'Line/Levels Checked',
+            key: 'lineLevelsChecked',
+          },
+          {
+            title: 'Railing is as per Approved Drawing',
+            key: 'railingAsPerApprovedDrawing',
+          },
+        ];
+
+        return (
+          <View>
+            {fixingOfRailingProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.fixingOfRailingData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
 
       // ReadOnlyRfi
       default:

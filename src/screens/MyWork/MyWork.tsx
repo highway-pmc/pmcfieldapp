@@ -461,8 +461,10 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     weldingAsPerApprovedDrawing: 'Y',
     bracingsAsPerApprovedDrawing: 'Y',
   });
-
-
+  const [fixingOfRailingData, setFixingOfRailingData] = useState({
+    lineLevelsChecked: 'Y',
+    railingAsPerApprovedDrawing: 'Y',
+  });
   const [applicationOfFilterMediaData, setApplicationOfFilterMediaData] =
     useState({
       filterMediaAsPerDrawing: 'Y',
@@ -2070,6 +2072,16 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             });
           }
           break;
+        case TASK_TYPES.FIXING_OF_RAILING:
+          if (rfiData.metaData.fixingOfRailingData) {
+            setFixingOfRailingData(rfiData.metaData.fixingOfRailingData);
+          } else {
+            setFixingOfRailingData({
+              lineLevelsChecked: 'Y',
+              railingAsPerApprovedDrawing: 'Y',
+            });
+          }
+          break;
 
         case TASK_TYPES.LIFTING_LEFT:
         case TASK_TYPES.LIFTING_YARD:
@@ -3519,6 +3531,12 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         checkList = {
           taskName: selectedTask.name,
           fixingOfBracingsData: fixingOfBracingsData,
+        };
+        break;
+      case TASK_TYPES.FIXING_OF_RAILING:
+        checkList = {
+          taskName: selectedTask.name,
+          fixingOfRailingData: fixingOfRailingData,
         };
         break;
 
@@ -9046,6 +9064,68 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                   items={YES_NO_LIST}
                   onChange={(value: any) =>
                     setFixingOfBracingsData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <View>
+              {/* Common Section for Date, Time, and Recommendations */}
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => setComments(text)}
+                />
+              </View>
+            </View>
+          </View>
+        );
+      case TASK_TYPES.FIXING_OF_RAILING:
+        const fixingOfRailingProperties = [
+          {
+            title: 'Line/Levels Checked',
+            key: 'lineLevelsChecked',
+          },
+          {
+            title: 'Railing is as per Approved Drawing',
+            key: 'railingAsPerApprovedDrawing',
+          },
+        ];
+
+        return (
+          <View>
+            {fixingOfRailingProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={fixingOfRailingData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setFixingOfRailingData(prevData => ({
                       ...prevData,
                       [property.key]: value,
                     }))

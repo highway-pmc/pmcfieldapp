@@ -3770,9 +3770,6 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
   const {showSnackbar} = useSnackbar();
   const renderGlueingHeadings = () => (
     <View style={styles.rowContainer}>
-      <View style={[styles.cell, {width: 50}]}>
-        <Text style={styles.cellText}>TM No.</Text>
-      </View>
       <View style={styles.cell}>
         <Text style={styles.cellText}>Joint No.</Text>
       </View>
@@ -3827,9 +3824,6 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         <Text style={styles.cellText}>
           Epoxy Consumption Actual Hardener (Kgs)
         </Text>
-      </View>
-      <View style={[styles.cell, {paddingHorizontal: 40}]}>
-        <Text style={styles.cellText}>Actions</Text>
       </View>
     </View>
   );
@@ -4617,10 +4611,6 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
 
   const renderItemGlueing = (rowData: any) => (
     <View style={[styles.rowContainer, styles.marginBottom10]}>
-      <View style={[styles.cell, {width: 50}]}>
-        <Text style={styles.cellText}>TM {rowData.index + 1}</Text>
-      </View>
-
       <View style={styles.cell}>
         <Text style={styles.cellText}>{rowData.item['jointNumbers']}</Text>
       </View>
@@ -4718,7 +4708,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       <View style={styles.cell}>
         <TimePicker
           label=""
-          value={rowData.item.applicationFinishTime}
+          value={rowData.item.segmentJoiningTimeTemporaryFinish}
           styleCont={styles.marginBootomZero}
           style={styles.disPlayNone}
           onChange={time =>

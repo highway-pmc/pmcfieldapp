@@ -2803,7 +2803,193 @@ const renderSectionHeaderTemporaryPrestressing = (rowData: any) => (
             ))}
           </View>
         );
+      case TASK_TYPES.FIXING_OF_GEO_GRID:
+        const fixingOfGeoGridProperties = [
+          {
+            title: 'Material of Geo Grid Approved by Engineer',
+            key: 'materialApprovedByEngineer',
+          },
+          {
+            title: 'Specifications/Strength as per Approved Drawing',
+            key: 'specificationsAsPerApprovedDrawing',
+          },
+          {
+            title:
+              'Underneath Soil Layer Compacted, Tested (Moisture & Density)',
+            key: 'soilProperlyCompacted',
+          },
+          {
+            title: 'Geo Grids Properly Anchored into Facia Panels',
+            key: 'geoGridsAnchoredIntoFaciaPanels',
+          },
+          {
+            title: 'Geo Grids Properly Tensioned and Nailed into Soil',
+            key: 'geoGridsTensionedAndNailed',
+          },
+          {
+            title: 'Minimum Length of Geo Grid as per Approved Drawing',
+            key: 'minimumLengthAsPerApprovedDrawing',
+          },
+        ];
 
+        return (
+          <View>
+            {fixingOfGeoGridProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.fixingOfGeoGridData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.ERECTION_OF_FRICTION_SLAB:
+        const erectionOfFrictionSlabProperties = [
+          {
+            title: 'Friction Slab cum Crash Barrier has Sufficient Strength',
+            key: 'sufficientStrength',
+          },
+          {
+            title: 'Friction Slab cum Crash Barrier Not Damaged',
+            key: 'notDamaged',
+          },
+          {
+            title: 'Line/Levels Checked',
+            key: 'lineLevelsChecked',
+          },
+          {
+            title: 'Vertical Slope as per Drawing',
+            key: 'verticalSlopeAsPerDrawing',
+          },
+          {
+            title: 'Soil Compacted & Geo Grids Fixed under Panels',
+            key: 'soilCompactedAndGeoGridsFixed',
+          },
+          {
+            title: 'Coping Done',
+            key: 'copingDone',
+          },
+        ];
+
+        return (
+          <View>
+            {erectionOfFrictionSlabProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.erectionOfFrictionSlabData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.ERECTION_OF_FACIA_PANELS:
+        const erectionOfFaciaPanelsProperties = [
+          {
+            title: 'Facia Panels have Sufficient Strength',
+            key: 'sufficientStrength',
+          },
+          {
+            title: 'Facia Panels Not Damaged',
+            key: 'notDamaged',
+          },
+          {
+            title: 'Line/Levels Checked',
+            key: 'lineLevelsChecked',
+          },
+          {
+            title: 'Male-Female Joints Checked',
+            key: 'maleFemaleJointsChecked',
+          },
+          {
+            title: 'Vertical Slope as per Drawing',
+            key: 'verticalSlopeAsPerDrawing',
+          },
+          {
+            title: 'Soil Compacted & Geo Grids Fixed under Panels',
+            key: 'soilCompactedAndGeoGridsFixed',
+          },
+        ];
+
+        return (
+          <View>
+            {erectionOfFaciaPanelsProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.erectionOfFaciaPanelsData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.ERECTION_OF_COLUMNS:
+        const erectionOfColumnsProperties = [
+          {
+            title: 'Position Checked',
+            key: 'positionChecked',
+          },
+          {
+            title: 'Welding Done as per Approved Drawing',
+            key: 'weldingAsPerDrawing',
+          },
+          {
+            title: 'Columns are as per Approved Drawing',
+            key: 'columnsAsPerDrawing',
+          },
+          {
+            title: 'Necessary Support Provided',
+            key: 'supportProvided',
+          },
+        ];
+
+        return (
+          <View>
+            {erectionOfColumnsProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.erectionOfColumnsData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.APPLICATION_OF_FILTER_MEDIA:
+        return (
+          <View>
+            <View style={{flexDirection: 'column'}}>
+              <Text style={styles.GenerateRFIFieldLabel}>
+                Filter Media is as per the approved drawing
+              </Text>
+              <Text>
+                {
+                  selectedRFI?.metaData.applicationOfFilterMediaData
+                    ?.filterMediaAsPerDrawing
+                }
+              </Text>
+            </View>
+          </View>
+        );
+
+      // ReadOnlyRfi
       default:
         return (
           <View>

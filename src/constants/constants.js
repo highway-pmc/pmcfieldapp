@@ -476,7 +476,7 @@ export const TASK_TYPES = {
   LIFTING_TRANSPORT_ERECTION: 'lifting-transportation-and-erection-at-site',
   LIFTING_YARD: 'lifting-of-segment-and-stacking-in-yard',
   REMOVAL_OF_FORMWORK: 'removal-of-formwork',
-  TEMPORARY_PRESTRESSING: 'temporary-prestressing',
+  TEMPORARY_PRESTRESSING: 'temporary-pre-stressing',
   FABRICATION_OF_STEEL_GIRDERS: 'fabrication-of-steel-girders-diaphragms',
   FABRICATION_OF_MEMBERS: 'fabrication-of-members',
   CURING: 'curing',

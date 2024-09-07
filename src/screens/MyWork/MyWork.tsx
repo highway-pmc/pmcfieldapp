@@ -1205,7 +1205,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
 
     if (rfiData) {
       setRfiId(rfiData._id);
-      if (rfiData.metaData) {
+      //if (rfiData.metaData) {
         switch (selectedTask?.name) {
           case TASK_TYPES.CNG_AND_SETTING_OUT:
           case TASK_TYPES.PLACING_OF_SHEATHING_DUCT:
@@ -1213,7 +1213,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           case TASK_TYPES.FIXING_OF_BEARING_SLEEVES:
             setImageObject({
               filePath: '',
-              fileData: rfiData.metaData.base64Image,
+              fileData: rfiData.metaData?.base64Image,
               fileUri: '',
             });
             break;
@@ -1222,68 +1222,68 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           case TASK_TYPES.PLACEMENT_OF_SIDE_SHUTTERS:
           case TASK_TYPES.PLACEMENT_OF_BOTTOM_SHUTTER:
           case TASK_TYPES.PLACEMENT_OF_MIDDLE_AND_TOP_SHUTTER:
-            setCleanliness(rfiData.metaData.cleanliness);
+            setCleanliness(rfiData.metaData?.cleanliness);
             setFormworkAlignmentChecked(
-              rfiData.metaData.formworkAlignmentChecked,
+              rfiData.metaData?.formworkAlignmentChecked,
             );
-            setFormworkSealingChecked(rfiData.metaData.formworkSealingChecked);
+            setFormworkSealingChecked(rfiData.metaData?.formworkSealingChecked);
             setFormworkdDrawingsChecked(
-              rfiData.metaData.formworkdDrawingsChecked,
+              rfiData.metaData?.formworkdDrawingsChecked,
             );
             setConcreteFinishLevelMarked(
-              rfiData.metaData.concreteFinishLevelMarked,
+              rfiData.metaData?.concreteFinishLevelMarked,
             );
             setFormworkProperlySupported(
-              rfiData.metaData.formworkProperlySupported,
+              rfiData.metaData?.formworkProperlySupported,
             );
-            setFormworkFitConcreting(rfiData.metaData.formworkFitConcreting);
+            setFormworkFitConcreting(rfiData.metaData?.formworkFitConcreting);
             break;
           case TASK_TYPES.REINFORCEMENT_PREPARATION:
           case TASK_TYPES.REINFORCEMENT:
-            setRebarAndDimensionGFC(rfiData.metaData.rebarAndDimensionGFC);
+            setRebarAndDimensionGFC(rfiData.metaData?.rebarAndDimensionGFC);
             setShapingNoAndLengthOfBarsGFC(
-              rfiData.metaData.shapingNoAndLengthOfBarsGFC,
+              rfiData.metaData?.shapingNoAndLengthOfBarsGFC,
             );
             setRebarsSecurelyTightened(
-              rfiData.metaData.rebarsSecurelyTightened,
+              rfiData.metaData?.rebarsSecurelyTightened,
             );
             setSpliceLengthAndLocationGFC(
-              rfiData.metaData.spliceLengthAndLocationGFC,
+              rfiData.metaData?.spliceLengthAndLocationGFC,
             );
             setRebarWithinToleranceLimit(
-              rfiData.metaData.rebarWithinToleranceLimit,
+              rfiData.metaData?.rebarWithinToleranceLimit,
             );
             setCouplerArrangementsWithinTolerance(
-              rfiData.metaData.couplerArrangementsWithinTolerance,
+              rfiData.metaData?.couplerArrangementsWithinTolerance,
             );
             setBarBendingScheduleChecked(
-              rfiData.metaData.barBendingScheduleChecked,
+              rfiData.metaData?.barBendingScheduleChecked,
             );
-            setSpacerBarCheckedGFC(rfiData.metaData.spacerBarCheckedGFC);
+            setSpacerBarCheckedGFC(rfiData.metaData?.spacerBarCheckedGFC);
             break;
           case TASK_TYPES.PLACEMENT_OF_REINFORCEMENT_CAGE:
-            setRebarAndDimensionGFC(rfiData.metaData.rebarAndDimensionGFC);
+            setRebarAndDimensionGFC(rfiData.metaData?.rebarAndDimensionGFC);
             setShapingNoAndLengthOfBarsGFC(
-              rfiData.metaData.shapingNoAndLengthOfBarsGFC,
+              rfiData.metaData?.shapingNoAndLengthOfBarsGFC,
             );
             setRebarsSecurelyTightened(
-              rfiData.metaData.rebarsSecurelyTightened,
+              rfiData.metaData?.rebarsSecurelyTightened,
             );
             setSpliceLengthAndLocationGFC(
-              rfiData.metaData.spliceLengthAndLocationGFC,
+              rfiData.metaData?.spliceLengthAndLocationGFC,
             );
             setRebarWithinToleranceLimit(
-              rfiData.metaData.rebarWithinToleranceLimit,
+              rfiData.metaData?.rebarWithinToleranceLimit,
             );
             setCouplerArrangementsWithinTolerance(
-              rfiData.metaData.couplerArrangementsWithinTolerance,
+              rfiData.metaData?.couplerArrangementsWithinTolerance,
             );
             setBarBendingScheduleChecked(
-              rfiData.metaData.barBendingScheduleChecked,
+              rfiData.metaData?.barBendingScheduleChecked,
             );
             break;
           case TASK_TYPES.EXCAVATION:
-            setQuantity(rfiData.metaData.quantity);
+            setQuantity(rfiData.metaData?.quantity);
             break;
           case TASK_TYPES.REMOVAL_OF_SIDE_SHUTTERS:
           case TASK_TYPES.REMOVAL_OF_MIDDLIE_TOP_SHUTTERS:
@@ -1291,26 +1291,26 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           case TASK_TYPES.REMOVAL_OF_SHUTTER:
           case TASK_TYPES.REMOVAL_OF_SHUTTERS:
             setConcreteHasAchievedDesiredStrength(
-              rfiData.metaData.concreteHasAchievedDesiredStrength,
+              rfiData.metaData?.concreteHasAchievedDesiredStrength,
             );
             setMinimumTimeHasBeenAttained(
-              rfiData.metaData.minimumTimeHasBeenAttained,
+              rfiData.metaData?.minimumTimeHasBeenAttained,
             );
             break;
           case TASK_TYPES.CAGE_LOWERING:
             setPlieShaftCleanedLooseMaterial(
-              rfiData.metaData.plieShaftCleanedLooseMaterial,
+              rfiData.metaData?.plieShaftCleanedLooseMaterial,
             );
             setSuitableSpacerProvidedToMaintainCoverToSteel(
-              rfiData.metaData.suitableSpacerProvidedToMaintainCoverToSteel,
+              rfiData.metaData?.suitableSpacerProvidedToMaintainCoverToSteel,
             );
             setNoLBendBottomOfTheCageChecked(
-              rfiData.metaData.noLBendBottomOfTheCageChecked,
+              rfiData.metaData?.noLBendBottomOfTheCageChecked,
             );
             break;
           case TASK_TYPES.BORING_OF_PILE:
-            if (rfiData.metaData.boringOfPileData) {
-              setBoringOfPileData(rfiData.metaData.boringOfPileData);
+            if (rfiData.metaData?.boringOfPileData) {
+              setBoringOfPileData(rfiData.metaData?.boringOfPileData);
             } else {
               setBoringOfPileData({
                 densityOfPolymer: 0,
@@ -1322,9 +1322,9 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             }
             break;
           case TASK_TYPES.FLUSHING_OPERATIONS:
-            if (rfiData.metaData.flushingOperationsData) {
+            if (rfiData.metaData?.flushingOperationsData) {
               setFlushingOperationsData(
-                rfiData.metaData.flushingOperationsData,
+                rfiData.metaData?.flushingOperationsData,
               );
             } else {
               setFlushingOperationsData({
@@ -1340,8 +1340,8 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             }
             break;
           case TASK_TYPES.GROUTING:
-            if (rfiData.metaData.groutingData) {
-              setBoringOfPileData(rfiData.metaData.groutingData);
+            if (rfiData.metaData?.groutingData) {
+              setBoringOfPileData(rfiData.metaData?.groutingData);
             } else {
               setGroutingData({
                 inletFree: 'Y',
@@ -1371,9 +1371,9 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             }
             break;
           case TASK_TYPES.CHIPPING_AND_REMOVAL_OF_CONCRETE_ABOVE_CUT_OFF_LEVEL:
-            if (rfiData.metaData.chippingAndRemovalOfConcreteData) {
+            if (rfiData.metaData?.chippingAndRemovalOfConcreteData) {
               setChippingAndRemovalOfConcreteData(
-                rfiData.metaData.chippingAndRemovalOfConcreteData,
+                rfiData.metaData?.chippingAndRemovalOfConcreteData,
               );
             } else {
               setChippingAndRemovalOfConcreteData({
@@ -1382,16 +1382,16 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             }
             break;
           case TASK_TYPES.STITCH_CONCRETE:
-            if (rfiData.metaData.concreteData) {
-              rfiData.metaData.concreteData.forEach((item: any) => {
+            if (rfiData.metaData?.concreteData) {
+              rfiData.metaData?.concreteData.forEach((item: any) => {
                 item.key = Guid.create();
               });
-              setConcreteData(rfiData.metaData.concreteData);
+              setConcreteData(rfiData.metaData?.concreteData);
             } else {
               setConcreteData([]);
             }
-            if (rfiData.metaData.stitchConcreteData) {
-              setStitchConcreteData(rfiData.metaData.stitchConcreteData);
+            if (rfiData.metaData?.stitchConcreteData) {
+              setStitchConcreteData(rfiData.metaData?.stitchConcreteData);
             } else {
               setStitchConcreteData({
                 gradeOfConcrete: 'Y',
@@ -1414,39 +1414,39 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             break;
           case TASK_TYPES.CONCRETING:
           case TASK_TYPES.PCC_LEVELLING_COURSE:
-            if (rfiData.metaData.concreteData) {
-              rfiData.metaData.concreteData.forEach((item: any) => {
+            if (rfiData.metaData?.concreteData) {
+              rfiData.metaData?.concreteData.forEach((item: any) => {
                 item.key = Guid.create();
               });
-              setConcreteData(rfiData.metaData.concreteData);
+              setConcreteData(rfiData.metaData?.concreteData);
             } else {
               setConcreteData([]);
             }
             break;
           case TASK_TYPES.GLUEING:
-            if (rfiData.metaData.glueingData) {
-              rfiData.metaData.glueingData.forEach((item: any) => {
+            if (rfiData.metaData?.glueingData) {
+              rfiData.metaData?.glueingData.forEach((item: any) => {
                 item.key = Guid.create();
               });
-              setGlueingData(rfiData.metaData.glueingData);
+              setGlueingData(rfiData.metaData?.glueingData);
             } else {
               setGlueingData([]);
             }
             break;
           case TASK_TYPES.TORQUING:
-            if (rfiData.metaData.torquingData) {
-              rfiData.metaData.torquingData.forEach((item: any) => {
+            if (rfiData.metaData?.torquingData) {
+              rfiData.metaData?.torquingData.forEach((item: any) => {
                 item.key = Guid.create();
               });
-              setTorquingData(rfiData.metaData.torquingData);
+              setTorquingData(rfiData.metaData?.torquingData);
             } else {
               setTorquingData([]);
             }
             break;
 
           case TASK_TYPES.REMOVAL_OF_FORMWORK:
-            if (rfiData.metaData.removalFormworkData) {
-              setRemovalFormworkData(rfiData.metaData.removalFormworkData);
+            if (rfiData.metaData?.removalFormworkData) {
+              setRemovalFormworkData(rfiData.metaData?.removalFormworkData);
             } else {
               setRemovalFormworkData({
                 concreteStrengthAchieved: 'Y',
@@ -1456,8 +1456,8 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             break;
           case TASK_TYPES.FABRICATION_OF_MEMBERS:
           case TASK_TYPES.FABRICATION_OF_STEEL_GIRDERS:
-            if (rfiData.metaData.fabricationData) {
-              setFabricationData(rfiData.metaData.fabricationData);
+            if (rfiData.metaData?.fabricationData) {
+              setFabricationData(rfiData.metaData?.fabricationData);
             } else {
               setFabricationData({
                 steelInspectionSurfaceCondition: 'Y',
@@ -1480,24 +1480,41 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             break;
 
           case TASK_TYPES.TEMPORARY_PRESTRESSING:
-            if (rfiData.metaData.temporaryPrestressingData) {
-              rfiData.metaData.temporaryPrestressingData.forEach(
+            if (rfiData.metaData?.temporaryPrestressingData) {
+              rfiData.metaData?.temporaryPrestressingData.forEach(
                 (item: any) => {
                   item.key = Guid.create();
                 },
               );
               setTemporaryPrestressingData(
-                rfiData.metaData.temporaryPrestressingData,
+                rfiData.metaData?.temporaryPrestressingData,
               );
             } else {
-              setTemporaryPrestressingData([]);
+              if (selectedTask.taskDetailsData) {
+                const taskDetails: any = [];
+                selectedTask.taskDetailsData.forEach((item: any) => {
+                  taskDetails.push({
+                    jointNumbers: item.name,
+                    calibrationDone: 'Y',
+                    stressingSequenceDrawingNumber: '',
+                    dateOfPrestressing: '',
+                    timeOfPrestressing: '',
+                    maxJackPressure: 0,
+                    jackPressureApplied: 0,
+                    key: Guid.create(),
+                  })
+                });
+                setTemporaryPrestressingData(taskDetails);
+              } else {
+                setTemporaryPrestressingData([]);
+              }
             }
             break;
 
           case TASK_TYPES.PAINTING_OF_STEEL_GIRDERS_DIAPHRAGMS:
-            if (rfiData.metaData.paintingOfSteelGirdersDiaphragms) {
+            if (rfiData.metaData?.paintingOfSteelGirdersDiaphragms) {
               setPaintingOfSteelGirdersDiaphragms(
-                rfiData.metaData.paintingOfSteelGirdersDiaphragms,
+                rfiData.metaData?.paintingOfSteelGirdersDiaphragms,
               );
             } else {
               setPaintingOfSteelGirdersDiaphragms({
@@ -1538,9 +1555,9 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             break;
 
           case TASK_TYPES.PLACEMENT_OF_REINFORCEMENT_CAGE:
-            if (rfiData.metaData.placementOfReinforcementCage) {
+            if (rfiData.metaData?.placementOfReinforcementCage) {
               setPlacementOfReinforcementCage(
-                rfiData.metaData.placementOfReinforcementCage,
+                rfiData.metaData?.placementOfReinforcementCage,
               );
             } else {
               setPlacementOfReinforcementCage({
@@ -1556,9 +1573,9 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             break;
 
           case TASK_TYPES.TRANSPORTATION_OF_STEEL_GIRDERS_DIAPHRAGMS_ERECTION_AT_SITE:
-            if (rfiData.metaData.transportationOfSteelGirdersDiaphragms) {
+            if (rfiData.metaData?.transportationOfSteelGirdersDiaphragms) {
               setTransportationOfSteelGirdersDiaphragms(
-                rfiData.metaData.transportationOfSteelGirdersDiaphragms,
+                rfiData.metaData?.transportationOfSteelGirdersDiaphragms,
               );
             } else {
               setTransportationOfSteelGirdersDiaphragms({
@@ -1599,8 +1616,8 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             break;
 
           case TASK_TYPES.CURING:
-            if (rfiData.metaData.curingData) {
-              setCuringData(rfiData.metaData.curingData);
+            if (rfiData.metaData?.curingData) {
+              setCuringData(rfiData.metaData?.curingData);
             } else {
               setCuringData({
                 waterUsedForCuring: 'Y',
@@ -1611,8 +1628,8 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             break;
 
           case TASK_TYPES.FIXING_OF_SHUTTER:
-            if (rfiData.metaData.fixingShutterData) {
-              setFixingShutterData(rfiData.metaData.fixingShutterData);
+            if (rfiData.metaData?.fixingShutterData) {
+              setFixingShutterData(rfiData.metaData?.fixingShutterData);
             } else {
               setFixingShutterData({
                 shutterMaterial: 'Y',
@@ -1630,9 +1647,9 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             break;
 
           case TASK_TYPES.ERECTION_OF_TEMPORARY_STRUCTURE:
-            if (rfiData.metaData.erectionOfTemporaryStructure) {
+            if (rfiData.metaData?.erectionOfTemporaryStructure) {
               setErectionOfTemporaryStructure(
-                rfiData.metaData.erectionOfTemporaryStructure,
+                rfiData.metaData?.erectionOfTemporaryStructure,
               );
             } else {
               setErectionOfTemporaryStructure({
@@ -1660,9 +1677,9 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             }
             break;
           case TASK_TYPES.ERECTION_USING_CRANES:
-            if (rfiData.metaData.erectionUsingCranesData) {
+            if (rfiData.metaData?.erectionUsingCranesData) {
               setErectionUsingCranesData(
-                rfiData.metaData.erectionUsingCranesData,
+                rfiData.metaData?.erectionUsingCranesData,
               );
             } else {
               setErectionUsingCranesData({
@@ -1697,8 +1714,8 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             }
             break;
           case TASK_TYPES.STACKING_IN_YARD:
-            if (rfiData.metaData.stackingInYardData) {
-              setStackingInYardData(rfiData.metaData.stackingInYardData);
+            if (rfiData.metaData?.stackingInYardData) {
+              setStackingInYardData(rfiData.metaData?.stackingInYardData);
             } else {
               setStackingInYardData({
                 areaBarricaded: 'Y',
@@ -1727,8 +1744,8 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             break;
 
           case TASK_TYPES.ASSEMBLING_OF_TRUSS:
-            if (rfiData.metaData.assemblingOfTrussData) {
-              setAssemblingOfTrussData(rfiData.metaData.assemblingOfTrussData);
+            if (rfiData.metaData?.assemblingOfTrussData) {
+              setAssemblingOfTrussData(rfiData.metaData?.assemblingOfTrussData);
             } else {
               setAssemblingOfTrussData({
                 partsAccuratelyAssembled: 'Y',
@@ -1741,8 +1758,8 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             }
             break;
           case TASK_TYPES.HACKING_OF_GIRDER:
-            if (rfiData.metaData.hackingOfGirderData) {
-              setHackingOfGirderData(rfiData.metaData.hackingOfGirderData);
+            if (rfiData.metaData?.hackingOfGirderData) {
+              setHackingOfGirderData(rfiData.metaData?.hackingOfGirderData);
             } else {
               setHackingOfGirderData({
                 methodologyApproved: 'Y',
@@ -1754,9 +1771,9 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             }
             break;
           case TASK_TYPES.DE_STRESSING_OF_GIRDER:
-            if (rfiData.metaData.deStressingOfGirderData) {
+            if (rfiData.metaData?.deStressingOfGirderData) {
               setDeStressingOfGirderData(
-                rfiData.metaData.deStressingOfGirderData,
+                rfiData.metaData?.deStressingOfGirderData,
               );
             } else {
               setDeStressingOfGirderData({
@@ -1767,8 +1784,8 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             }
             break;
           case TASK_TYPES.FIXING_OF_BEARING:
-            if (rfiData.metaData.fixingOfBearingData) {
-              setFixingOfBearingData(rfiData.metaData.fixingOfBearingData);
+            if (rfiData.metaData?.fixingOfBearingData) {
+              setFixingOfBearingData(rfiData.metaData?.fixingOfBearingData);
             } else {
               setFixingOfBearingData({
                 bearingPlacedAsPerGFC: 'Y',
@@ -1784,9 +1801,9 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             }
             break;
           case TASK_TYPES.REMOVAL_OF_TEMPORARY_STRUCTURE:
-            if (rfiData.metaData.removalOfTemporaryStructureData) {
+            if (rfiData.metaData?.removalOfTemporaryStructureData) {
               setRemovalOfTemporaryStructureData(
-                rfiData.metaData.removalOfTemporaryStructureData,
+                rfiData.metaData?.removalOfTemporaryStructureData,
               );
             } else {
               setRemovalOfTemporaryStructureData({
@@ -1797,9 +1814,9 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             }
             break;
           case TASK_TYPES.INSTALLATION_OF_EXPANSION_JOINT:
-            if (rfiData.metaData.installationOfExpansionJointData) {
+            if (rfiData.metaData?.installationOfExpansionJointData) {
               setInstallationOfExpansionJointData(
-                rfiData.metaData.installationOfExpansionJointData,
+                rfiData.metaData?.installationOfExpansionJointData,
               );
             } else {
               setInstallationOfExpansionJointData({
@@ -1814,8 +1831,8 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             }
             break;
           case TASK_TYPES.PAINTING:
-            if (rfiData.metaData.paintingData) {
-              setPaintingData(rfiData.metaData.paintingData);
+            if (rfiData.metaData?.paintingData) {
+              setPaintingData(rfiData.metaData?.paintingData);
             } else {
               setPaintingData({
                 paintingSystemApproved: 'Y',
@@ -1841,8 +1858,8 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             }
             break;
           case TASK_TYPES.AUTO_LAUNCHING:
-            if (rfiData.metaData.autoLaunchingData) {
-              setAutoLaunchingData(rfiData.metaData.autoLaunchingData);
+            if (rfiData.metaData?.autoLaunchingData) {
+              setAutoLaunchingData(rfiData.metaData?.autoLaunchingData);
             } else {
               setAutoLaunchingData({
                 firstSpanLowering: 'Y',
@@ -1872,9 +1889,9 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             }
             break;
           case TASK_TYPES.PROCUREMENT_OF_STRUCTURAL_STEEL:
-            if (rfiData.metaData.procurementOfSteelData) {
+            if (rfiData.metaData?.procurementOfSteelData) {
               setProcurementOfSteelData(
-                rfiData.metaData.procurementOfSteelData,
+                rfiData.metaData?.procurementOfSteelData,
               );
             } else {
               setProcurementOfSteelData({
@@ -1883,8 +1900,8 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             }
             break;
           case TASK_TYPES.TRANSPORTATION_OF_MATERIAL:
-            if (rfiData.metaData.transportationData) {
-              setTransportationData(rfiData.metaData.transportationData);
+            if (rfiData.metaData?.transportationData) {
+              setTransportationData(rfiData.metaData?.transportationData);
             } else {
               setTransportationData({
                 transitTime: 0.0,
@@ -1892,9 +1909,9 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             }
             break;
           case TASK_TYPES.FIXING_OF_SHEATHING_JOINTS:
-            if (rfiData.metaData.fixingOfSheathingJointsData) {
+            if (rfiData.metaData?.fixingOfSheathingJointsData) {
               setFixingOfSheathingJointsData(
-                rfiData.metaData.fixingOfSheathingJointsData,
+                rfiData.metaData?.fixingOfSheathingJointsData,
               );
             } else {
               setFixingOfSheathingJointsData({
@@ -1914,8 +1931,8 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           case TASK_TYPES.LIFTING_YARD:
           case TASK_TYPES.LIFTING_RIGHT:
           case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
-            if (rfiData.metaData.liftingCombinedLRData) {
-              setLiftingCombinedLRData(rfiData.metaData.liftingCombinedLRData);
+            if (rfiData.metaData?.liftingCombinedLRData) {
+              setLiftingCombinedLRData(rfiData.metaData?.liftingCombinedLRData);
             } else {
               setLiftingCombinedLRData({
                 areaBarricaded: 'Y',
@@ -1973,7 +1990,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           default:
             break;
         }
-      }
+      //}
 
       if (rfiData.rfiSubmitDateTime) {
         setRFIDate(getDbDate(rfiData.rfiSubmitDateTime));
@@ -2297,6 +2314,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         const subComponentData =
           componentData.subComponentsData[subComponentIndex];
         const taskData: any = [subComponentData.tasksData[taskIndex]];
+        console.log('======', JSON.stringify(taskData))
         setProjectModuleId(segmentData.projectModuleId);
         setCurrentTasksData(taskData);
         breadcrumbItems.push(
@@ -2363,6 +2381,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
   };
 
   const onClickNested = (level: number, data: any) => {
+    console.log('==ss====', level)
     setSearchText('');
     if (data.projectModuleId) {
       setProjectModuleId(data.projectModuleId);
@@ -2733,13 +2752,13 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       const batchNoHardener = parseInt(item.batchNoHardener, 10);
 
       // Validation checks
-      if (!item.jointNumbers || item.jointNumbers.length > 50) {
-        showSnackbar(
-          'Joint Numbers must be non-empty and up to 50 characters.',
-          'error',
-        );
-        return false;
-      }
+      // if (!item.jointNumbers || item.jointNumbers.length > 50) {
+      //   showSnackbar(
+      //     'Joint Numbers must be non-empty and up to 50 characters.',
+      //     'error',
+      //   );
+      //   return false;
+      // }
       if (
         isNaN(ambientTemperature) ||
         ambientTemperature <= 0 ||
@@ -3622,9 +3641,9 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
   );
   const renderTemporaryPrestressingHeadings = () => (
     <View style={styles.rowContainer}>
-      <View style={[styles.cell, {width: 50}]}>
+      {/* <View style={[styles.cell, {width: 50}]}>
         <Text style={styles.cellText}>TM No.</Text>
-      </View>
+      </View> */}
       <View style={styles.cell}>
         <Text style={styles.cellText}>Joint No.</Text>
       </View>
@@ -3646,31 +3665,45 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       <View style={styles.cell}>
         <Text style={styles.cellText}>Jack Pressure Applied (Kg/Cm²)</Text>
       </View>
-      <View style={[styles.cell, {paddingHorizontal: 40}]}>
+      {/* <View style={[styles.cell, {paddingHorizontal: 40}]}>
         <Text style={styles.cellText}>Actions</Text>
-      </View>
+      </View> */}
     </View>
   );
   const renderItemTemporaryPrestressing = (rowData: any) => (
     <View style={[styles.rowContainer, styles.marginBottom10]}>
       <View style={styles.cell}>
-        <CustomTextInputValue
+        {/* <CustomTextInputValue
           rowItem={rowData.item}
           fieldName={'jointNumbers'}
           index={rowData.index}
           onChange={
             handleTextInputChangeTemporaryPrestressing
-          }></CustomTextInputValue>
+          }></CustomTextInputValue> */}
+          <Text style={styles.cellText}>{rowData.item['jointNumbers']}</Text>
       </View>
 
       <View style={styles.cell}>
-        <CustomTextInputValue
+        {/* <CustomTextInputValue
           rowItem={rowData.item}
           fieldName={'calibrationDone'}
           index={rowData.index}
           onChange={
             handleTextInputChangeTemporaryPrestressing
-          }></CustomTextInputValue>
+          }></CustomTextInputValue> */}
+
+        <DropdownPicker
+          label=""
+          value={rowData.item.calibrationDone}
+          items={YES_NO_NA_LIST}
+          style={styles.marginBootomZero}
+          onChange={(newValue: string) => {
+            const newData = [...temporaryPrestressingData];
+            newData[rowData.index]['calibrationDone'] = newValue;
+            setTemporaryPrestressingData(newData);
+          }}
+          isRequired={true}
+        />
       </View>
 
       <View style={styles.cell}>
@@ -3682,22 +3715,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             handleTextInputChangeTemporaryPrestressing
           }></CustomTextInputValue>
       </View>
-
-      <View style={styles.cell}>
-        <TimePicker
-          label=""
-          value={rowData.item.dateOfPrestressing}
-          styleCont={styles.marginBootomZero}
-          style={styles.disPlayNone}
-          onChange={time =>
-            handleTimeChangeTemporaryPrestressing(
-              rowData.index,
-              'dateOfPrestressing',
-              time,
-            )
-          }
-        />
-      </View>
+      
       <View style={styles.cell}>
         <CalendarPicker
           label=""
@@ -3711,7 +3729,6 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           }
         />
       </View>
-
       <View style={styles.cell}>
         <TimePicker
           label=""
@@ -3727,7 +3744,6 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           }
         />
       </View>
-
       <View style={styles.cell}>
         <CustomTextInputValue
           rowItem={rowData.item}
@@ -3748,7 +3764,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           }></CustomTextInputValue>
       </View>
 
-      <View style={[styles.cell, {paddingHorizontal: 45}]}>
+      {/* <View style={[styles.cell, {paddingHorizontal: 45}]}>
         <TouchableOpacity
           style={[styles.deleteButton]}
           onPress={() =>
@@ -3759,7 +3775,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             source={require('./../../images/menu/delete.png')}
           />
         </TouchableOpacity>
-      </View>
+      </View> */}
     </View>
   );
 
@@ -4111,13 +4127,13 @@ const validateTemporaryPrestressingData = (
     const jackPressureApplied = parseFloat(item.jackPressureApplied);
 
     // Validation checks
-    if (!item.jointNumbers || item.jointNumbers.length > 50) {
-      showSnackbar(
-        'Joint Numbers must be non-empty and up to 50 characters.',
-        'error',
-      );
-      return false;
-    }
+    // if (!item.jointNumbers || item.jointNumbers.length > 50) {
+    //   showSnackbar(
+    //     'Joint Numbers must be non-empty and up to 50 characters.',
+    //     'error',
+    //   );
+    //   return false;
+    // }
 
     if (
       isNaN(maxJackPressure) ||
@@ -4221,6 +4237,11 @@ const validateTemporaryPrestressingData = (
     const newData = [...concreteData];
     newData[index][field] = value;
     setConcreteData(newData);
+  };
+  const handleTimeChangeTemporaryPrestressing = (index: any, field: any, value: any) => {
+    const newData = [...temporaryPrestressingData];
+    newData[index][field] = value;
+    setTemporaryPrestressingData(newData);
   };
   const handleTimeChangeGlueing = (index: any, field: any, value: any) => {
     const newData = [...glueingData];
@@ -6778,13 +6799,13 @@ const validateTemporaryPrestressingData = (
               </ScrollView>
             </View>
 
-            <View>
+            {/* <View>
               <TouchableOpacity
                 style={{paddingVertical: 15, zIndex: 8}}
                 onPress={() => onAddMoreTemporaryPrestressing()}>
                 <Text style={styles.AddMoreLink}>+ Add More</Text>
               </TouchableOpacity>
-            </View>
+            </View> */}
 
             <View>
               <View style={{flexDirection: 'column'}}>

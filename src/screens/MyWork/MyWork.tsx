@@ -455,6 +455,55 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     equipmentFailure: string;
     probingByStiffwire: string;
   };
+  //FormUseStates
+  const [fixingOfBracingsData, setFixingOfBracingsData] = useState({
+    lineLevelsChecked: 'Y',
+    weldingAsPerApprovedDrawing: 'Y',
+    bracingsAsPerApprovedDrawing: 'Y',
+  });
+  const [fixingOfRailingData, setFixingOfRailingData] = useState({
+    lineLevelsChecked: 'Y',
+    railingAsPerApprovedDrawing: 'Y',
+  });
+  const [applicationOfFilterMediaData, setApplicationOfFilterMediaData] =
+    useState({
+      filterMediaAsPerDrawing: 'Y',
+    });
+
+  const [erectionOfColumnsData, setErectionOfColumnsData] = useState({
+    positionChecked: 'Y',
+    weldingAsPerDrawing: 'Y',
+    columnsAsPerDrawing: 'Y',
+    supportProvided: 'Y',
+  });
+
+  const [erectionOfFaciaPanelsData, setErectionOfFaciaPanelsData] = useState({
+    sufficientStrength: 'Y',
+    notDamaged: 'Y',
+    lineLevelsChecked: 'Y',
+    maleFemaleJointsChecked: 'Y',
+    verticalSlopeAsPerDrawing: 'Y',
+    soilCompactedAndGeoGridsFixed: 'Y',
+  });
+
+  const [erectionOfFrictionSlabData, setErectionOfFrictionSlabData] = useState({
+    sufficientStrength: 'Y',
+    notDamaged: 'Y',
+    lineLevelsChecked: 'Y',
+    verticalSlopeAsPerDrawing: 'Y',
+    soilCompactedAndGeoGridsFixed: 'Y',
+    copingDone: 'Y',
+  });
+
+  const [fixingOfGeoGridData, setFixingOfGeoGridData] = useState({
+    materialApprovedByEngineer: 'Y',
+    specificationsAsPerApprovedDrawing: 'Y',
+    soilProperlyCompacted: 'Y',
+    geoGridsAnchoredIntoFaciaPanels: 'Y',
+    geoGridsTensionedAndNailed: 'Y',
+    minimumLengthAsPerApprovedDrawing: 'Y',
+  });
+
   const [groutingData, setGroutingData] = useState<FormStateGrouting>({
     inletFree: 'Y',
     outletFree: 'Y',
@@ -599,12 +648,12 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
   const [temporaryPrestressingData, setTemporaryPrestressingData] = useState([
     {
       jointNumbers: '',
-      calibrationDone: 'Y', // default value 'Y'
+      calibrationDone: 'Y',
       stressingSequenceDrawingNumber: '',
       dateOfPrestressing: '',
       timeOfPrestressing: '',
-      maxJackPressure: 0, // up to 3 decimals, >0, max limit 1000
-      jackPressureApplied: 0, // up to 3 decimals, >0, max limit 1000
+      maxJackPressure: 0,
+      jackPressureApplied: 0,
       key: Guid.create(),
     },
   ]);
@@ -1206,790 +1255,897 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     if (rfiData) {
       setRfiId(rfiData._id);
       //if (rfiData.metaData) {
-        switch (selectedTask?.name) {
-          case TASK_TYPES.CNG_AND_SETTING_OUT:
-          case TASK_TYPES.PLACING_OF_SHEATHING_DUCT:
-          case TASK_TYPES.POST_CONCRETE_CHECK:
-          case TASK_TYPES.FIXING_OF_BEARING_SLEEVES:
-            setImageObject({
-              filePath: '',
-              fileData: rfiData.metaData?.base64Image,
-              fileUri: '',
+      switch (selectedTask?.name) {
+        case TASK_TYPES.CNG_AND_SETTING_OUT:
+        case TASK_TYPES.PLACING_OF_SHEATHING_DUCT:
+        case TASK_TYPES.POST_CONCRETE_CHECK:
+        case TASK_TYPES.FIXING_OF_BEARING_SLEEVES:
+          setImageObject({
+            filePath: '',
+            fileData: rfiData.metaData?.base64Image,
+            fileUri: '',
+          });
+          break;
+        case TASK_TYPES.FORM_WORK:
+        case TASK_TYPES.PLACEMENT_OF_INNER_SHUTTERS:
+        case TASK_TYPES.PLACEMENT_OF_SIDE_SHUTTERS:
+        case TASK_TYPES.PLACEMENT_OF_BOTTOM_SHUTTER:
+        case TASK_TYPES.PLACEMENT_OF_MIDDLE_AND_TOP_SHUTTER:
+          setCleanliness(rfiData.metaData?.cleanliness);
+          setFormworkAlignmentChecked(
+            rfiData.metaData?.formworkAlignmentChecked,
+          );
+          setFormworkSealingChecked(rfiData.metaData?.formworkSealingChecked);
+          setFormworkdDrawingsChecked(
+            rfiData.metaData?.formworkdDrawingsChecked,
+          );
+          setConcreteFinishLevelMarked(
+            rfiData.metaData?.concreteFinishLevelMarked,
+          );
+          setFormworkProperlySupported(
+            rfiData.metaData?.formworkProperlySupported,
+          );
+          setFormworkFitConcreting(rfiData.metaData?.formworkFitConcreting);
+          break;
+        case TASK_TYPES.REINFORCEMENT_PREPARATION:
+        case TASK_TYPES.REINFORCEMENT:
+          setRebarAndDimensionGFC(rfiData.metaData?.rebarAndDimensionGFC);
+          setShapingNoAndLengthOfBarsGFC(
+            rfiData.metaData?.shapingNoAndLengthOfBarsGFC,
+          );
+          setRebarsSecurelyTightened(rfiData.metaData?.rebarsSecurelyTightened);
+          setSpliceLengthAndLocationGFC(
+            rfiData.metaData?.spliceLengthAndLocationGFC,
+          );
+          setRebarWithinToleranceLimit(
+            rfiData.metaData?.rebarWithinToleranceLimit,
+          );
+          setCouplerArrangementsWithinTolerance(
+            rfiData.metaData?.couplerArrangementsWithinTolerance,
+          );
+          setBarBendingScheduleChecked(
+            rfiData.metaData?.barBendingScheduleChecked,
+          );
+          setSpacerBarCheckedGFC(rfiData.metaData?.spacerBarCheckedGFC);
+          break;
+        case TASK_TYPES.PLACEMENT_OF_REINFORCEMENT_CAGE:
+          setRebarAndDimensionGFC(rfiData.metaData?.rebarAndDimensionGFC);
+          setShapingNoAndLengthOfBarsGFC(
+            rfiData.metaData?.shapingNoAndLengthOfBarsGFC,
+          );
+          setRebarsSecurelyTightened(rfiData.metaData?.rebarsSecurelyTightened);
+          setSpliceLengthAndLocationGFC(
+            rfiData.metaData?.spliceLengthAndLocationGFC,
+          );
+          setRebarWithinToleranceLimit(
+            rfiData.metaData?.rebarWithinToleranceLimit,
+          );
+          setCouplerArrangementsWithinTolerance(
+            rfiData.metaData?.couplerArrangementsWithinTolerance,
+          );
+          setBarBendingScheduleChecked(
+            rfiData.metaData?.barBendingScheduleChecked,
+          );
+          break;
+        case TASK_TYPES.EXCAVATION:
+          setQuantity(rfiData.metaData?.quantity);
+          break;
+        case TASK_TYPES.REMOVAL_OF_SIDE_SHUTTERS:
+        case TASK_TYPES.REMOVAL_OF_MIDDLIE_TOP_SHUTTERS:
+        case TASK_TYPES.REMOVAL_OF_INNER_SHUTTERS:
+        case TASK_TYPES.REMOVAL_OF_SHUTTER:
+        case TASK_TYPES.REMOVAL_OF_SHUTTERS:
+          setConcreteHasAchievedDesiredStrength(
+            rfiData.metaData?.concreteHasAchievedDesiredStrength,
+          );
+          setMinimumTimeHasBeenAttained(
+            rfiData.metaData?.minimumTimeHasBeenAttained,
+          );
+          break;
+        case TASK_TYPES.CAGE_LOWERING:
+          setPlieShaftCleanedLooseMaterial(
+            rfiData.metaData?.plieShaftCleanedLooseMaterial,
+          );
+          setSuitableSpacerProvidedToMaintainCoverToSteel(
+            rfiData.metaData?.suitableSpacerProvidedToMaintainCoverToSteel,
+          );
+          setNoLBendBottomOfTheCageChecked(
+            rfiData.metaData?.noLBendBottomOfTheCageChecked,
+          );
+          break;
+        case TASK_TYPES.BORING_OF_PILE:
+          if (rfiData.metaData?.boringOfPileData) {
+            setBoringOfPileData(rfiData.metaData?.boringOfPileData);
+          } else {
+            setBoringOfPileData({
+              densityOfPolymer: 0,
+              viscosityOfPolymer: 0,
+              valueOfPolymer: 0,
+              contentOfPolymer: 0,
+              depthOfBore: 0,
             });
-            break;
-          case TASK_TYPES.FORM_WORK:
-          case TASK_TYPES.PLACEMENT_OF_INNER_SHUTTERS:
-          case TASK_TYPES.PLACEMENT_OF_SIDE_SHUTTERS:
-          case TASK_TYPES.PLACEMENT_OF_BOTTOM_SHUTTER:
-          case TASK_TYPES.PLACEMENT_OF_MIDDLE_AND_TOP_SHUTTER:
-            setCleanliness(rfiData.metaData?.cleanliness);
-            setFormworkAlignmentChecked(
-              rfiData.metaData?.formworkAlignmentChecked,
+          }
+          break;
+        case TASK_TYPES.FLUSHING_OPERATIONS:
+          if (rfiData.metaData?.flushingOperationsData) {
+            setFlushingOperationsData(rfiData.metaData?.flushingOperationsData);
+          } else {
+            setFlushingOperationsData({
+              startTimeOfFlushing: '',
+              finishTimeOfFlushing: '',
+              whetherPourCleared: 'Y',
+              densityOfPolymer: 0,
+              viscosityOfPolymer: 0,
+              valueOfPolymer: 0,
+              contentOfPolymer: 0,
+              depthOfBore: 0,
+            });
+          }
+          break;
+        case TASK_TYPES.GROUTING:
+          if (rfiData.metaData?.groutingData) {
+            setBoringOfPileData(rfiData.metaData?.groutingData);
+          } else {
+            setGroutingData({
+              inletFree: 'Y',
+              outletFree: 'Y',
+              ventsFree: 'Y',
+              cableDuctFree: 'Y',
+              leakageObserved: 'Y',
+              sealed: 'Y',
+              remedialMeasures: 'Y',
+              prestressingDate: '',
+              groutingDate: '',
+              cementType: 'OPC43',
+              wcRatio: 0,
+              mixingWaterTemp: 0,
+              groutTemp: 0,
+              startTime: '',
+              finishTime: '',
+              volumeOfGrout: 0,
+              groutingPressure: 0,
+              cementConsumptionTheoretical: 0,
+              cementConsumptionActual: 0,
+              passageThroughVents: 'Y',
+              passageThroughOutlet: 'Y',
+              equipmentFailure: 'Y',
+              probingByStiffwire: 'Y',
+            });
+          }
+          break;
+        case TASK_TYPES.CHIPPING_AND_REMOVAL_OF_CONCRETE_ABOVE_CUT_OFF_LEVEL:
+          if (rfiData.metaData?.chippingAndRemovalOfConcreteData) {
+            setChippingAndRemovalOfConcreteData(
+              rfiData.metaData?.chippingAndRemovalOfConcreteData,
             );
-            setFormworkSealingChecked(rfiData.metaData?.formworkSealingChecked);
-            setFormworkdDrawingsChecked(
-              rfiData.metaData?.formworkdDrawingsChecked,
-            );
-            setConcreteFinishLevelMarked(
-              rfiData.metaData?.concreteFinishLevelMarked,
-            );
-            setFormworkProperlySupported(
-              rfiData.metaData?.formworkProperlySupported,
-            );
-            setFormworkFitConcreting(rfiData.metaData?.formworkFitConcreting);
-            break;
-          case TASK_TYPES.REINFORCEMENT_PREPARATION:
-          case TASK_TYPES.REINFORCEMENT:
-            setRebarAndDimensionGFC(rfiData.metaData?.rebarAndDimensionGFC);
-            setShapingNoAndLengthOfBarsGFC(
-              rfiData.metaData?.shapingNoAndLengthOfBarsGFC,
-            );
-            setRebarsSecurelyTightened(
-              rfiData.metaData?.rebarsSecurelyTightened,
-            );
-            setSpliceLengthAndLocationGFC(
-              rfiData.metaData?.spliceLengthAndLocationGFC,
-            );
-            setRebarWithinToleranceLimit(
-              rfiData.metaData?.rebarWithinToleranceLimit,
-            );
-            setCouplerArrangementsWithinTolerance(
-              rfiData.metaData?.couplerArrangementsWithinTolerance,
-            );
-            setBarBendingScheduleChecked(
-              rfiData.metaData?.barBendingScheduleChecked,
-            );
-            setSpacerBarCheckedGFC(rfiData.metaData?.spacerBarCheckedGFC);
-            break;
-          case TASK_TYPES.PLACEMENT_OF_REINFORCEMENT_CAGE:
-            setRebarAndDimensionGFC(rfiData.metaData?.rebarAndDimensionGFC);
-            setShapingNoAndLengthOfBarsGFC(
-              rfiData.metaData?.shapingNoAndLengthOfBarsGFC,
-            );
-            setRebarsSecurelyTightened(
-              rfiData.metaData?.rebarsSecurelyTightened,
-            );
-            setSpliceLengthAndLocationGFC(
-              rfiData.metaData?.spliceLengthAndLocationGFC,
-            );
-            setRebarWithinToleranceLimit(
-              rfiData.metaData?.rebarWithinToleranceLimit,
-            );
-            setCouplerArrangementsWithinTolerance(
-              rfiData.metaData?.couplerArrangementsWithinTolerance,
-            );
-            setBarBendingScheduleChecked(
-              rfiData.metaData?.barBendingScheduleChecked,
-            );
-            break;
-          case TASK_TYPES.EXCAVATION:
-            setQuantity(rfiData.metaData?.quantity);
-            break;
-          case TASK_TYPES.REMOVAL_OF_SIDE_SHUTTERS:
-          case TASK_TYPES.REMOVAL_OF_MIDDLIE_TOP_SHUTTERS:
-          case TASK_TYPES.REMOVAL_OF_INNER_SHUTTERS:
-          case TASK_TYPES.REMOVAL_OF_SHUTTER:
-          case TASK_TYPES.REMOVAL_OF_SHUTTERS:
-            setConcreteHasAchievedDesiredStrength(
-              rfiData.metaData?.concreteHasAchievedDesiredStrength,
-            );
-            setMinimumTimeHasBeenAttained(
-              rfiData.metaData?.minimumTimeHasBeenAttained,
-            );
-            break;
-          case TASK_TYPES.CAGE_LOWERING:
-            setPlieShaftCleanedLooseMaterial(
-              rfiData.metaData?.plieShaftCleanedLooseMaterial,
-            );
-            setSuitableSpacerProvidedToMaintainCoverToSteel(
-              rfiData.metaData?.suitableSpacerProvidedToMaintainCoverToSteel,
-            );
-            setNoLBendBottomOfTheCageChecked(
-              rfiData.metaData?.noLBendBottomOfTheCageChecked,
-            );
-            break;
-          case TASK_TYPES.BORING_OF_PILE:
-            if (rfiData.metaData?.boringOfPileData) {
-              setBoringOfPileData(rfiData.metaData?.boringOfPileData);
-            } else {
-              setBoringOfPileData({
-                densityOfPolymer: 0,
-                viscosityOfPolymer: 0,
-                valueOfPolymer: 0,
-                contentOfPolymer: 0,
-                depthOfBore: 0,
+          } else {
+            setChippingAndRemovalOfConcreteData({
+              noOfDaysOfChipping: 0,
+            });
+          }
+          break;
+        case TASK_TYPES.STITCH_CONCRETE:
+          if (rfiData.metaData?.concreteData) {
+            rfiData.metaData?.concreteData.forEach((item: any) => {
+              item.key = Guid.create();
+            });
+            setConcreteData(rfiData.metaData?.concreteData);
+          } else {
+            setConcreteData([]);
+          }
+          if (rfiData.metaData?.stitchConcreteData) {
+            setStitchConcreteData(rfiData.metaData?.stitchConcreteData);
+          } else {
+            setStitchConcreteData({
+              gradeOfConcrete: 'Y',
+              methodStatementApproved: 'Y',
+              htStrandsInserted: 'Y',
+              materialsApproved: 'Y',
+              formworkApproved: 'Y',
+              reinforcementCageApproved: 'Y',
+              equipmentWorking: 'Y',
+              accessProvided: 'Y',
+              safetyArrangements: 'Y',
+              rainfallProtection: 'Y',
+              needleVibratorStatus: 'Y',
+              needleVibratorNos: 'Y',
+              slumpConeApparatusAvailable: 'Y',
+              startPreStressing: 'Y',
+              groutingFormatFollowed: 'Y',
+            });
+          }
+          break;
+        case TASK_TYPES.CONCRETING:
+        case TASK_TYPES.PCC_LEVELLING_COURSE:
+          if (rfiData.metaData?.concreteData) {
+            rfiData.metaData?.concreteData.forEach((item: any) => {
+              item.key = Guid.create();
+            });
+            setConcreteData(rfiData.metaData?.concreteData);
+          } else {
+            setConcreteData([]);
+          }
+          break;
+        case TASK_TYPES.GLUEING:
+          if (rfiData.metaData?.glueingData) {
+            rfiData.metaData?.glueingData.forEach((item: any) => {
+              item.key = Guid.create();
+            });
+            setGlueingData(rfiData.metaData?.glueingData);
+          } else {
+            if (selectedTask.taskDetailsData) {
+              const taskDetails: any = [];
+              selectedTask.taskDetailsData.forEach((item: any) => {
+                taskDetails.push({
+                  jointNumbers: item.name,
+                  ambientTemperature: 0,
+                  batchNoResin: 0,
+                  batchNoHardener: 0,
+                  mixingStartTime: '',
+                  mixingFinishTime: '',
+                  applicationStartTime: '',
+                  applicationFinishTime: '',
+                  segmentJoiningTimeClosure: '',
+                  segmentJoiningTimeTemporaryFinish: '',
+                  segmentSurfaceArea: 0,
+                  epoxyConsumptionTheoreticalResin: 0,
+                  epoxyConsumptionTheoreticalHardener: 0,
+                  epoxyConsumptionActualResin: 0,
+                  epoxyConsumptionActualHardener: 0,
+                  key: Guid.create(),
+                });
               });
-            }
-            break;
-          case TASK_TYPES.FLUSHING_OPERATIONS:
-            if (rfiData.metaData?.flushingOperationsData) {
-              setFlushingOperationsData(
-                rfiData.metaData?.flushingOperationsData,
-              );
-            } else {
-              setFlushingOperationsData({
-                startTimeOfFlushing: '',
-                finishTimeOfFlushing: '',
-                whetherPourCleared: 'Y',
-                densityOfPolymer: 0,
-                viscosityOfPolymer: 0,
-                valueOfPolymer: 0,
-                contentOfPolymer: 0,
-                depthOfBore: 0,
-              });
-            }
-            break;
-          case TASK_TYPES.GROUTING:
-            if (rfiData.metaData?.groutingData) {
-              setBoringOfPileData(rfiData.metaData?.groutingData);
-            } else {
-              setGroutingData({
-                inletFree: 'Y',
-                outletFree: 'Y',
-                ventsFree: 'Y',
-                cableDuctFree: 'Y',
-                leakageObserved: 'Y',
-                sealed: 'Y',
-                remedialMeasures: 'Y',
-                prestressingDate: '',
-                groutingDate: '',
-                cementType: 'OPC43',
-                wcRatio: 0,
-                mixingWaterTemp: 0,
-                groutTemp: 0,
-                startTime: '',
-                finishTime: '',
-                volumeOfGrout: 0,
-                groutingPressure: 0,
-                cementConsumptionTheoretical: 0,
-                cementConsumptionActual: 0,
-                passageThroughVents: 'Y',
-                passageThroughOutlet: 'Y',
-                equipmentFailure: 'Y',
-                probingByStiffwire: 'Y',
-              });
-            }
-            break;
-          case TASK_TYPES.CHIPPING_AND_REMOVAL_OF_CONCRETE_ABOVE_CUT_OFF_LEVEL:
-            if (rfiData.metaData?.chippingAndRemovalOfConcreteData) {
-              setChippingAndRemovalOfConcreteData(
-                rfiData.metaData?.chippingAndRemovalOfConcreteData,
-              );
-            } else {
-              setChippingAndRemovalOfConcreteData({
-                noOfDaysOfChipping: 0,
-              });
-            }
-            break;
-          case TASK_TYPES.STITCH_CONCRETE:
-            if (rfiData.metaData?.concreteData) {
-              rfiData.metaData?.concreteData.forEach((item: any) => {
-                item.key = Guid.create();
-              });
-              setConcreteData(rfiData.metaData?.concreteData);
-            } else {
-              setConcreteData([]);
-            }
-            if (rfiData.metaData?.stitchConcreteData) {
-              setStitchConcreteData(rfiData.metaData?.stitchConcreteData);
-            } else {
-              setStitchConcreteData({
-                gradeOfConcrete: 'Y',
-                methodStatementApproved: 'Y',
-                htStrandsInserted: 'Y',
-                materialsApproved: 'Y',
-                formworkApproved: 'Y',
-                reinforcementCageApproved: 'Y',
-                equipmentWorking: 'Y',
-                accessProvided: 'Y',
-                safetyArrangements: 'Y',
-                rainfallProtection: 'Y',
-                needleVibratorStatus: 'Y',
-                needleVibratorNos: 'Y',
-                slumpConeApparatusAvailable: 'Y',
-                startPreStressing: 'Y',
-                groutingFormatFollowed: 'Y',
-              });
-            }
-            break;
-          case TASK_TYPES.CONCRETING:
-          case TASK_TYPES.PCC_LEVELLING_COURSE:
-            if (rfiData.metaData?.concreteData) {
-              rfiData.metaData?.concreteData.forEach((item: any) => {
-                item.key = Guid.create();
-              });
-              setConcreteData(rfiData.metaData?.concreteData);
-            } else {
-              setConcreteData([]);
-            }
-            break;
-          case TASK_TYPES.GLUEING:
-            if (rfiData.metaData?.glueingData) {
-              rfiData.metaData?.glueingData.forEach((item: any) => {
-                item.key = Guid.create();
-              });
-              setGlueingData(rfiData.metaData?.glueingData);
+              setGlueingData(taskDetails);
             } else {
               setGlueingData([]);
             }
-            break;
-          case TASK_TYPES.TORQUING:
-            if (rfiData.metaData?.torquingData) {
-              rfiData.metaData?.torquingData.forEach((item: any) => {
-                item.key = Guid.create();
-              });
-              setTorquingData(rfiData.metaData?.torquingData);
-            } else {
-              setTorquingData([]);
-            }
-            break;
+          }
+          break;
+        case TASK_TYPES.TORQUING:
+          if (rfiData.metaData?.torquingData) {
+            rfiData.metaData?.torquingData.forEach((item: any) => {
+              item.key = Guid.create();
+            });
+            setTorquingData(rfiData.metaData?.torquingData);
+          } else {
+            setTorquingData([]);
+          }
+          break;
 
-          case TASK_TYPES.REMOVAL_OF_FORMWORK:
-            if (rfiData.metaData?.removalFormworkData) {
-              setRemovalFormworkData(rfiData.metaData?.removalFormworkData);
-            } else {
-              setRemovalFormworkData({
-                concreteStrengthAchieved: 'Y',
-                minimumTimeAttained: 'Y',
-              });
-            }
-            break;
-          case TASK_TYPES.FABRICATION_OF_MEMBERS:
-          case TASK_TYPES.FABRICATION_OF_STEEL_GIRDERS:
-            if (rfiData.metaData?.fabricationData) {
-              setFabricationData(rfiData.metaData?.fabricationData);
-            } else {
-              setFabricationData({
-                steelInspectionSurfaceCondition: 'Y',
-                sectionCheckedForDimension: 'Y',
-                materialSpecificationChecked: 'Y',
-                connectionChecked: 'Y',
-                boltHolesClean: 'Y',
-                approvedWeldersUsed: 'Y',
-                weldsIdentified: 'Y',
-                weldsInspected: 'Y',
-                weldsRepaired: 'Y',
-                shapeEdgeBurnsRemoved: 'Y',
-                oilGreaseRemoved: 'Y',
-                steelCleanedAndPainted: 'Y',
-                finalShopCoatApplied: 'Y',
-                memberMarkedForErection: 'Y',
-                memberApprovedByInspector: 'Y',
-              });
-            }
-            break;
+        case TASK_TYPES.REMOVAL_OF_FORMWORK:
+          if (rfiData.metaData?.removalFormworkData) {
+            setRemovalFormworkData(rfiData.metaData?.removalFormworkData);
+          } else {
+            setRemovalFormworkData({
+              concreteStrengthAchieved: 'Y',
+              minimumTimeAttained: 'Y',
+            });
+          }
+          break;
+        case TASK_TYPES.FABRICATION_OF_MEMBERS:
+        case TASK_TYPES.FABRICATION_OF_STEEL_GIRDERS:
+          if (rfiData.metaData?.fabricationData) {
+            setFabricationData(rfiData.metaData?.fabricationData);
+          } else {
+            setFabricationData({
+              steelInspectionSurfaceCondition: 'Y',
+              sectionCheckedForDimension: 'Y',
+              materialSpecificationChecked: 'Y',
+              connectionChecked: 'Y',
+              boltHolesClean: 'Y',
+              approvedWeldersUsed: 'Y',
+              weldsIdentified: 'Y',
+              weldsInspected: 'Y',
+              weldsRepaired: 'Y',
+              shapeEdgeBurnsRemoved: 'Y',
+              oilGreaseRemoved: 'Y',
+              steelCleanedAndPainted: 'Y',
+              finalShopCoatApplied: 'Y',
+              memberMarkedForErection: 'Y',
+              memberApprovedByInspector: 'Y',
+            });
+          }
+          break;
 
-          case TASK_TYPES.TEMPORARY_PRESTRESSING:
-            if (rfiData.metaData?.temporaryPrestressingData) {
-              rfiData.metaData?.temporaryPrestressingData.forEach(
-                (item: any) => {
-                  item.key = Guid.create();
-                },
-              );
-              setTemporaryPrestressingData(
-                rfiData.metaData?.temporaryPrestressingData,
-              );
-            } else {
-              if (selectedTask.taskDetailsData) {
-                const taskDetails: any = [];
-                selectedTask.taskDetailsData.forEach((item: any) => {
-                  taskDetails.push({
-                    jointNumbers: item.name,
-                    calibrationDone: 'Y',
-                    stressingSequenceDrawingNumber: '',
-                    dateOfPrestressing: '',
-                    timeOfPrestressing: '',
-                    maxJackPressure: 0,
-                    jackPressureApplied: 0,
-                    key: Guid.create(),
-                  })
+        case TASK_TYPES.TEMPORARY_PRESTRESSING:
+          if (rfiData.metaData?.temporaryPrestressingData) {
+            rfiData.metaData?.temporaryPrestressingData.forEach((item: any) => {
+              item.maxJackPressure = item.maxJackPressure.toString();
+              item.jackPressureApplied = item.jackPressureApplied.toString();
+              item.key = Guid.create();
+            });
+            setTemporaryPrestressingData(
+              rfiData.metaData?.temporaryPrestressingData,
+            );
+          } else {
+            if (selectedTask.taskDetailsData) {
+              const taskDetails: any = [];
+              selectedTask.taskDetailsData.forEach((item: any) => {
+                taskDetails.push({
+                  jointNumbers: item.name,
+                  calibrationDone: 'Y',
+                  stressingSequenceDrawingNumber: '',
+                  dateOfPrestressing: '',
+                  timeOfPrestressing: '',
+                  maxJackPressure: 0,
+                  jackPressureApplied: 0,
+                  key: Guid.create(),
                 });
-                setTemporaryPrestressingData(taskDetails);
-              } else {
-                setTemporaryPrestressingData([]);
-              }
+              });
+              setTemporaryPrestressingData(taskDetails);
+            } else {
+              setTemporaryPrestressingData([]);
             }
-            break;
+          }
+          break;
 
-          case TASK_TYPES.PAINTING_OF_STEEL_GIRDERS_DIAPHRAGMS:
-            if (rfiData.metaData?.paintingOfSteelGirdersDiaphragms) {
-              setPaintingOfSteelGirdersDiaphragms(
-                rfiData.metaData?.paintingOfSteelGirdersDiaphragms,
-              );
-            } else {
-              setPaintingOfSteelGirdersDiaphragms({
-                hasAnyRiskAssessment: 'Y',
-                isWorkerWarnPersonalProtective: 'Y',
-                presentAtBlastingPot: 'Y',
-                identificationTag: 'Y',
-                surfaceCheckPriorBlasting: 'Y',
-                surfaceFreeFromContamination: 'Y',
-                suitableWeatherForBlasting: 'Y',
-                compressedAirQuality: 'Y',
-                protectedAreas: 'Y',
-                highPressureWaterUsage: 'Y',
-                abrasiveSpecification: 'Y',
-                batchCertificateAvailable: 'Y',
-                nozzlePressureChecked: 'Y',
-                inspectedForCleaning: 'Y',
-                visualCheckDamage: 'Y',
-                shiftedWithoutDamage: 'Y',
-                surroundingAreaCovered: 'Y',
-                paintingSystemSpecification: 'Y',
-                paintMixedAsPerInstructions: 'Y',
-                tipSizeSprayingProcedure: 'Y',
-                solventDilutionAccordance: 'Y',
-                areasStripedBeforePainting: 'Y',
-                materialsWithinShelfLife: 'Y',
-                weatherConditionChecked: 'Y',
-                paintAppliedPerSpecification: 'Y',
-                paintMixedWithinPotLife: 'Y',
-                evenCoatingThickness: 'Y',
-                wftCheckedForDft: 'Y',
-                overcoatingIntervalMaintained: 'Y',
-                properCoatingSystemApplied: 'Y',
-                paintSurfaceQuality: 'Y',
-                recordMaintained: 'Y',
-              });
-            }
-            break;
+        case TASK_TYPES.PAINTING_OF_STEEL_GIRDERS_DIAPHRAGMS:
+          if (rfiData.metaData?.paintingOfSteelGirdersDiaphragms) {
+            setPaintingOfSteelGirdersDiaphragms(
+              rfiData.metaData?.paintingOfSteelGirdersDiaphragms,
+            );
+          } else {
+            setPaintingOfSteelGirdersDiaphragms({
+              hasAnyRiskAssessment: 'Y',
+              isWorkerWarnPersonalProtective: 'Y',
+              presentAtBlastingPot: 'Y',
+              identificationTag: 'Y',
+              surfaceCheckPriorBlasting: 'Y',
+              surfaceFreeFromContamination: 'Y',
+              suitableWeatherForBlasting: 'Y',
+              compressedAirQuality: 'Y',
+              protectedAreas: 'Y',
+              highPressureWaterUsage: 'Y',
+              abrasiveSpecification: 'Y',
+              batchCertificateAvailable: 'Y',
+              nozzlePressureChecked: 'Y',
+              inspectedForCleaning: 'Y',
+              visualCheckDamage: 'Y',
+              shiftedWithoutDamage: 'Y',
+              surroundingAreaCovered: 'Y',
+              paintingSystemSpecification: 'Y',
+              paintMixedAsPerInstructions: 'Y',
+              tipSizeSprayingProcedure: 'Y',
+              solventDilutionAccordance: 'Y',
+              areasStripedBeforePainting: 'Y',
+              materialsWithinShelfLife: 'Y',
+              weatherConditionChecked: 'Y',
+              paintAppliedPerSpecification: 'Y',
+              paintMixedWithinPotLife: 'Y',
+              evenCoatingThickness: 'Y',
+              wftCheckedForDft: 'Y',
+              overcoatingIntervalMaintained: 'Y',
+              properCoatingSystemApplied: 'Y',
+              paintSurfaceQuality: 'Y',
+              recordMaintained: 'Y',
+            });
+          }
+          break;
 
-          case TASK_TYPES.PLACEMENT_OF_REINFORCEMENT_CAGE:
-            if (rfiData.metaData?.placementOfReinforcementCage) {
-              setPlacementOfReinforcementCage(
-                rfiData.metaData?.placementOfReinforcementCage,
-              );
-            } else {
-              setPlacementOfReinforcementCage({
-                rebarDimensionChecked: 'Y',
-                shapingCheckedAsPerGFC: 'Y',
-                rebarsSecurelyBound: 'Y',
-                spliceLengthChecked: 'Y',
-                rebarWithinTolerance: 'Y',
-                couplerArrangementsWithinTolerance: 'Y',
-                barBendingScheduleChecked: 'Y',
-              });
-            }
-            break;
+        case TASK_TYPES.PLACEMENT_OF_REINFORCEMENT_CAGE:
+          if (rfiData.metaData?.placementOfReinforcementCage) {
+            setPlacementOfReinforcementCage(
+              rfiData.metaData?.placementOfReinforcementCage,
+            );
+          } else {
+            setPlacementOfReinforcementCage({
+              rebarDimensionChecked: 'Y',
+              shapingCheckedAsPerGFC: 'Y',
+              rebarsSecurelyBound: 'Y',
+              spliceLengthChecked: 'Y',
+              rebarWithinTolerance: 'Y',
+              couplerArrangementsWithinTolerance: 'Y',
+              barBendingScheduleChecked: 'Y',
+            });
+          }
+          break;
 
-          case TASK_TYPES.TRANSPORTATION_OF_STEEL_GIRDERS_DIAPHRAGMS_ERECTION_AT_SITE:
-            if (rfiData.metaData?.transportationOfSteelGirdersDiaphragms) {
-              setTransportationOfSteelGirdersDiaphragms(
-                rfiData.metaData?.transportationOfSteelGirdersDiaphragms,
-              );
-            } else {
-              setTransportationOfSteelGirdersDiaphragms({
-                safeAccessProvided: 'Y',
-                workingPlatformOnBoarded: 'Y',
-                guardRailsAttached: 'Y',
-                fallProtectionArrangement: 'Y',
-                toolsSecuredAgainstFall: 'Y',
-                riskAssessmentCarriedOut: 'Y',
-                craneOnFirmLevelBases: 'Y',
-                operatorsTrainedAndCompetent: 'Y',
-                craneTestedAndOperated: 'Y',
-                swingAlarmInstalled: 'Y',
-                craneTestCertificateCurrent: 'Y',
-                craneBoomTestCertificateCurrent: 'Y',
-                oilLeakageChecked: 'Y',
-                greasingChecked: 'Y',
-                outriggersFullyExtended: 'Y',
-                levelIndicatorsWithinLimit: 'Y',
-                basePlateUnderOutriggers: 'Y',
-                riggingAnglesChecked: 'Y',
-                examsAndTestsCertified: 'Y',
-                liftingToolsCheckedAndValid: 'Y',
-                personnelTrainedAndProtected: 'Y',
-                ppeProvided: 'Y',
-                sufficientIlluminationProvided: 'Y',
-                swlMarkedOnTools: 'Y',
-                equipmentProperlyEarthed: 'Y',
-                walkwaysFreeFromObstacles: 'Y',
-                safetyLatchAvailable: 'Y',
-                warningSignsAvailable: 'Y',
-                liftingArrangementsChecked: 'Y',
-                groundLevelingDone: 'Y',
-                structureSetOutCorrectly: 'Y',
-                welderQualifiedAndCertified: 'Y',
-              });
-            }
-            break;
+        case TASK_TYPES.TRANSPORTATION_OF_STEEL_GIRDERS_DIAPHRAGMS_ERECTION_AT_SITE:
+          if (rfiData.metaData?.transportationOfSteelGirdersDiaphragms) {
+            setTransportationOfSteelGirdersDiaphragms(
+              rfiData.metaData?.transportationOfSteelGirdersDiaphragms,
+            );
+          } else {
+            setTransportationOfSteelGirdersDiaphragms({
+              safeAccessProvided: 'Y',
+              workingPlatformOnBoarded: 'Y',
+              guardRailsAttached: 'Y',
+              fallProtectionArrangement: 'Y',
+              toolsSecuredAgainstFall: 'Y',
+              riskAssessmentCarriedOut: 'Y',
+              craneOnFirmLevelBases: 'Y',
+              operatorsTrainedAndCompetent: 'Y',
+              craneTestedAndOperated: 'Y',
+              swingAlarmInstalled: 'Y',
+              craneTestCertificateCurrent: 'Y',
+              craneBoomTestCertificateCurrent: 'Y',
+              oilLeakageChecked: 'Y',
+              greasingChecked: 'Y',
+              outriggersFullyExtended: 'Y',
+              levelIndicatorsWithinLimit: 'Y',
+              basePlateUnderOutriggers: 'Y',
+              riggingAnglesChecked: 'Y',
+              examsAndTestsCertified: 'Y',
+              liftingToolsCheckedAndValid: 'Y',
+              personnelTrainedAndProtected: 'Y',
+              ppeProvided: 'Y',
+              sufficientIlluminationProvided: 'Y',
+              swlMarkedOnTools: 'Y',
+              equipmentProperlyEarthed: 'Y',
+              walkwaysFreeFromObstacles: 'Y',
+              safetyLatchAvailable: 'Y',
+              warningSignsAvailable: 'Y',
+              liftingArrangementsChecked: 'Y',
+              groundLevelingDone: 'Y',
+              structureSetOutCorrectly: 'Y',
+              welderQualifiedAndCertified: 'Y',
+            });
+          }
+          break;
 
-          case TASK_TYPES.CURING:
-            if (rfiData.metaData?.curingData) {
-              setCuringData(rfiData.metaData?.curingData);
-            } else {
-              setCuringData({
-                waterUsedForCuring: 'Y',
-                phValueOfWater: 'Y',
-                consumptionOfWater: 0,
-              });
-            }
-            break;
+        case TASK_TYPES.CURING:
+          if (rfiData.metaData?.curingData) {
+            setCuringData(rfiData.metaData?.curingData);
+          } else {
+            setCuringData({
+              waterUsedForCuring: 'Y',
+              phValueOfWater: 'Y',
+              consumptionOfWater: 0,
+            });
+          }
+          break;
 
-          case TASK_TYPES.FIXING_OF_SHUTTER:
-            if (rfiData.metaData?.fixingShutterData) {
-              setFixingShutterData(rfiData.metaData?.fixingShutterData);
-            } else {
-              setFixingShutterData({
-                shutterMaterial: 'Y',
-                repairsAreOf: 'Y',
-                cleanlinessOfShutter: 'Y',
-                oilingOfShutter: 'Y',
-                shutterDesignOk: 'Y',
-                alignmentLevelsRigidity: 'Y',
-                checkPropsAreTheyOk: 'Y',
-                checkAcrowSapnAreTheyOk: 'Y',
-                checkBracesAreTheyOk: 'Y',
-                checkSealingJointsHoles: 'Y',
-              });
-            }
-            break;
+        case TASK_TYPES.FIXING_OF_SHUTTER:
+          if (rfiData.metaData?.fixingShutterData) {
+            setFixingShutterData(rfiData.metaData?.fixingShutterData);
+          } else {
+            setFixingShutterData({
+              shutterMaterial: 'Y',
+              repairsAreOf: 'Y',
+              cleanlinessOfShutter: 'Y',
+              oilingOfShutter: 'Y',
+              shutterDesignOk: 'Y',
+              alignmentLevelsRigidity: 'Y',
+              checkPropsAreTheyOk: 'Y',
+              checkAcrowSapnAreTheyOk: 'Y',
+              checkBracesAreTheyOk: 'Y',
+              checkSealingJointsHoles: 'Y',
+            });
+          }
+          break;
 
-          case TASK_TYPES.ERECTION_OF_TEMPORARY_STRUCTURE:
-            if (rfiData.metaData?.erectionOfTemporaryStructure) {
-              setErectionOfTemporaryStructure(
-                rfiData.metaData?.erectionOfTemporaryStructure,
-              );
-            } else {
-              setErectionOfTemporaryStructure({
-                hasAnyRiskAssessment: 'Y',
-                craneHydraLevelBase: 'Y',
-                areAllOperationTrained: 'Y',
-                isCraneTested: 'Y',
-                doesTheCraneCertificate: 'Y',
-                allLiftingToolsAndTackles: 'Y',
-                protectionDevices: 'Y',
-                atteainedTheirStrength: 'Y',
-                workmenProvided: 'Y',
-                whetherSufficient: 'Y',
-                liftingToolsTackles: 'Y',
-                equipmentsGeneratorsProperlyEarthed: 'Y',
-                walkwayMaintainedFreeForm: 'Y',
-                safetyLatchLockingAvailable: 'Y',
-                properWarningSign: 'Y',
-                liftingArrangementsAreApproved: 'Y',
-                achieveTheirCompressiveStrength: 'Y',
-                groundLeveling: 'Y',
-                structureSetOutToTheLevels: 'Y',
-                aualificationAndSkilledCheckedAndCertified: 'Y',
-              });
-            }
-            break;
-          case TASK_TYPES.ERECTION_USING_CRANES:
-            if (rfiData.metaData?.erectionUsingCranesData) {
-              setErectionUsingCranesData(
-                rfiData.metaData?.erectionUsingCranesData,
-              );
-            } else {
-              setErectionUsingCranesData({
-                riskAssessmentCarriedOut: 'Y',
-                craneOnFirmLevelBases: 'Y',
-                allOperatorsTrained: 'Y',
-                craneTestedAndOperated: 'Y',
-                swingAlarmFunctioning: 'Y',
-                craneTestCertificate: 'Y',
-                boomTestCertificate: 'Y',
-                oilLeakage: 'Y',
-                greasing: 'Y',
-                outriggersFullyExtended: 'Y',
-                levelIndicators: 'Y',
-                basePlateUnderOutriggers: 'Y',
-                riggingAngles: 'Y',
-                examinationCertified: 'Y',
-                liftingToolsChecked: 'Y',
-                workersWithFallProtection: 'Y',
-                ppeProvided: 'Y',
-                sufficientIllumination: 'Y',
-                swlMarked: 'Y',
-                equipmentProperlyEarthed: 'Y',
-                walkwayObstacleFree: 'Y',
-                safetyLatchAvailable: 'Y',
-                warningSignAvailable: 'Y',
-                liftingArrangements: 'Y',
-                groundLeveling: 'Y',
-                structureSetOut: 'Y',
-                welderQualificationChecked: 'Y',
-              });
-            }
-            break;
-          case TASK_TYPES.STACKING_IN_YARD:
-            if (rfiData.metaData?.stackingInYardData) {
-              setStackingInYardData(rfiData.metaData?.stackingInYardData);
-            } else {
-              setStackingInYardData({
-                areaBarricaded: 'Y',
-                temporaryLightsAvailable: 'Y',
-                flagManAvailable: 'Y',
-                methodologySchemeAvailable: 'Y',
-                deShacklesSlingsCertified: 'Y',
-                safetyColorCodePresent: 'Y',
-                hydraulicJacksCondition: 'Y',
-                limitSwitchWorking: 'Y',
-                cotterPinsInAssembly: 'Y',
-                macalloyBarsCondition: 'Y',
-                workAtHeightPermit: 'Y',
-                macalloyBarsTestCertificate: 'Y',
-                liftingSequenceProvided: 'Y',
-                liftingHolesLocation: 'Y',
-                liftingArrangementsWorking: 'Y',
-                prestressingDuctClear: 'Y',
-                concreteStrengthGained: 'Y',
-                sliderTrolleyPosition: 'Y',
-                stackingMethodologyApproved: 'Y',
-                stackingAreaLocated: 'Y',
-                stackingAreaLeveled: 'Y',
-              });
-            }
-            break;
+        case TASK_TYPES.ERECTION_OF_TEMPORARY_STRUCTURE:
+          if (rfiData.metaData?.erectionOfTemporaryStructure) {
+            setErectionOfTemporaryStructure(
+              rfiData.metaData?.erectionOfTemporaryStructure,
+            );
+          } else {
+            setErectionOfTemporaryStructure({
+              hasAnyRiskAssessment: 'Y',
+              craneHydraLevelBase: 'Y',
+              areAllOperationTrained: 'Y',
+              isCraneTested: 'Y',
+              doesTheCraneCertificate: 'Y',
+              allLiftingToolsAndTackles: 'Y',
+              protectionDevices: 'Y',
+              atteainedTheirStrength: 'Y',
+              workmenProvided: 'Y',
+              whetherSufficient: 'Y',
+              liftingToolsTackles: 'Y',
+              equipmentsGeneratorsProperlyEarthed: 'Y',
+              walkwayMaintainedFreeForm: 'Y',
+              safetyLatchLockingAvailable: 'Y',
+              properWarningSign: 'Y',
+              liftingArrangementsAreApproved: 'Y',
+              achieveTheirCompressiveStrength: 'Y',
+              groundLeveling: 'Y',
+              structureSetOutToTheLevels: 'Y',
+              aualificationAndSkilledCheckedAndCertified: 'Y',
+            });
+          }
+          break;
+        case TASK_TYPES.ERECTION_USING_CRANES:
+          if (rfiData.metaData?.erectionUsingCranesData) {
+            setErectionUsingCranesData(
+              rfiData.metaData?.erectionUsingCranesData,
+            );
+          } else {
+            setErectionUsingCranesData({
+              riskAssessmentCarriedOut: 'Y',
+              craneOnFirmLevelBases: 'Y',
+              allOperatorsTrained: 'Y',
+              craneTestedAndOperated: 'Y',
+              swingAlarmFunctioning: 'Y',
+              craneTestCertificate: 'Y',
+              boomTestCertificate: 'Y',
+              oilLeakage: 'Y',
+              greasing: 'Y',
+              outriggersFullyExtended: 'Y',
+              levelIndicators: 'Y',
+              basePlateUnderOutriggers: 'Y',
+              riggingAngles: 'Y',
+              examinationCertified: 'Y',
+              liftingToolsChecked: 'Y',
+              workersWithFallProtection: 'Y',
+              ppeProvided: 'Y',
+              sufficientIllumination: 'Y',
+              swlMarked: 'Y',
+              equipmentProperlyEarthed: 'Y',
+              walkwayObstacleFree: 'Y',
+              safetyLatchAvailable: 'Y',
+              warningSignAvailable: 'Y',
+              liftingArrangements: 'Y',
+              groundLeveling: 'Y',
+              structureSetOut: 'Y',
+              welderQualificationChecked: 'Y',
+            });
+          }
+          break;
+        case TASK_TYPES.STACKING_IN_YARD:
+          if (rfiData.metaData?.stackingInYardData) {
+            setStackingInYardData(rfiData.metaData?.stackingInYardData);
+          } else {
+            setStackingInYardData({
+              areaBarricaded: 'Y',
+              temporaryLightsAvailable: 'Y',
+              flagManAvailable: 'Y',
+              methodologySchemeAvailable: 'Y',
+              deShacklesSlingsCertified: 'Y',
+              safetyColorCodePresent: 'Y',
+              hydraulicJacksCondition: 'Y',
+              limitSwitchWorking: 'Y',
+              cotterPinsInAssembly: 'Y',
+              macalloyBarsCondition: 'Y',
+              workAtHeightPermit: 'Y',
+              macalloyBarsTestCertificate: 'Y',
+              liftingSequenceProvided: 'Y',
+              liftingHolesLocation: 'Y',
+              liftingArrangementsWorking: 'Y',
+              prestressingDuctClear: 'Y',
+              concreteStrengthGained: 'Y',
+              sliderTrolleyPosition: 'Y',
+              stackingMethodologyApproved: 'Y',
+              stackingAreaLocated: 'Y',
+              stackingAreaLeveled: 'Y',
+            });
+          }
+          break;
 
-          case TASK_TYPES.ASSEMBLING_OF_TRUSS:
-            if (rfiData.metaData?.assemblingOfTrussData) {
-              setAssemblingOfTrussData(rfiData.metaData?.assemblingOfTrussData);
-            } else {
-              setAssemblingOfTrussData({
-                partsAccuratelyAssembled: 'Y',
-                noBentOrBrokenParts: 'Y',
-                trussSpanOnBlocks: 'Y',
-                cleanJointSurfaces: 'Y',
-                fastenersWithWashers: 'Y',
-                serviceBoltsTightened: 'Y',
-              });
-            }
-            break;
-          case TASK_TYPES.HACKING_OF_GIRDER:
-            if (rfiData.metaData?.hackingOfGirderData) {
-              setHackingOfGirderData(rfiData.metaData?.hackingOfGirderData);
-            } else {
-              setHackingOfGirderData({
-                methodologyApproved: 'Y',
-                surfaceCleanedAndWet: 'Y',
-                skilledPersonnel: 'Y',
-                sharpenedInstruments: 'Y',
-                recessCutFormation: 'Y',
-              });
-            }
-            break;
-          case TASK_TYPES.DE_STRESSING_OF_GIRDER:
-            if (rfiData.metaData?.deStressingOfGirderData) {
-              setDeStressingOfGirderData(
-                rfiData.metaData?.deStressingOfGirderData,
-              );
-            } else {
-              setDeStressingOfGirderData({
-                strengthAchieved: 'Y',
-                diamondBitSawUsed: 'Y',
-                gradualUniformTransfer: 'Y',
-              });
-            }
-            break;
-          case TASK_TYPES.FIXING_OF_BEARING:
-            if (rfiData.metaData?.fixingOfBearingData) {
-              setFixingOfBearingData(rfiData.metaData?.fixingOfBearingData);
-            } else {
-              setFixingOfBearingData({
-                bearingPlacedAsPerGFC: 'Y',
-                bearingSurfaceFullyContactWithGirder: 'Y',
-                bearingPlatesSetHorizontal: 'Y',
-                bearingPreSetWithAxis: 'Y',
-                supportsProvidedToHoldBearing: 'Y',
-                anchorBoltHolesMatching: 'Y',
-                voidBeneathBearingFilled: 'Y',
-                bearingFixedWithMetalBedding: 'Y',
-                threadedFastenerTightenedUniformly: 'Y',
-              });
-            }
-            break;
-          case TASK_TYPES.REMOVAL_OF_TEMPORARY_STRUCTURE:
-            if (rfiData.metaData?.removalOfTemporaryStructureData) {
-              setRemovalOfTemporaryStructureData(
-                rfiData.metaData?.removalOfTemporaryStructureData,
-              );
-            } else {
-              setRemovalOfTemporaryStructureData({
-                concreteAchievedStrength: 'Y',
-                minimumTimeAttained: 'Y',
-                allComponentsTightened: 'Y',
-              });
-            }
-            break;
-          case TASK_TYPES.INSTALLATION_OF_EXPANSION_JOINT:
-            if (rfiData.metaData?.installationOfExpansionJointData) {
-              setInstallationOfExpansionJointData(
-                rfiData.metaData?.installationOfExpansionJointData,
-              );
-            } else {
-              setInstallationOfExpansionJointData({
-                expansionJointPositionCorrect: 'Y',
-                shippingDevicesRemoved: 'Y',
-                noForeignObjects: 'Y',
-                materialsFlowProperly: 'Y',
-                anchorsAndSupportsMatched: 'Y',
-                jointsProperlyAligned: 'Y',
-                noDamageSustained: 'Y',
-              });
-            }
-            break;
-          case TASK_TYPES.PAINTING:
-            if (rfiData.metaData?.paintingData) {
-              setPaintingData(rfiData.metaData?.paintingData);
-            } else {
-              setPaintingData({
-                paintingSystemApproved: 'Y',
-                documentsApproved: 'Y',
-                surfacePreparationDone: 'Y',
-                defectsCorrected: 'Y',
-                moistureContentChecked: 'Y',
-                plasterSurfacesRubbed: 'Y',
-                materialStirred: 'Y',
-                fillerCoatAfterPrimer: 'Y',
-                suctionSpotsPrimed: 'Y',
-                fillerCoatAppliedEvenly: 'Y',
-                sandingBetweenCoats: 'Y',
-                dryingTimeAllowed: 'Y',
-                materialsMixedProperly: 'Y',
-                firstCoatAppliedByRoller: 'Y',
-                rollerJointsChecked: 'Y',
-                curingPeriodAllowed: 'Y',
-                secondCoatAfterTouchUp: 'Y',
-                finalCoatApplied: 'Y',
-                cleaningAndProtection: 'Y',
-              });
-            }
-            break;
-          case TASK_TYPES.AUTO_LAUNCHING:
-            if (rfiData.metaData?.autoLaunchingData) {
-              setAutoLaunchingData(rfiData.metaData?.autoLaunchingData);
-            } else {
-              setAutoLaunchingData({
-                firstSpanLowering: 'Y',
-                sliderPerDrawing: 'Y',
-                middleSupportLeveling: 'Y',
-                rearSupportLeveling: 'Y',
-                checkHydraulicJacks: 'Y',
-                allVerticalJacksMidSupport: 'Y',
-                allVerticalJacksRearSupport: 'Y',
-                cleanlinessAndApplicationLubricant: 'Y',
-                physicallyCheckedAllAccessories: 'Y',
-                jackAndMonorailProperlyFixed: 'Y',
-                knuckleBearing: 'Y',
-                guideRollers: 'Y',
-                macalloyBarsStressed: 'Y',
-                frontSupportTelescopic: 'Y',
-                lockNutsArrangement: 'Y',
-                pressureOnMidRearSupport: 'Y',
-                gradient: 'Y',
-                alignmentOfTrackRail: 'Y',
-                frontSupportCorrectPosition: 'Y',
-                frontSupportPins: 'Y',
-                insertsPierCap: 'Y',
-                frontSupportEngaged: 'Y',
-                entireAreaBarricaded: 'Y',
-              });
-            }
-            break;
-          case TASK_TYPES.PROCUREMENT_OF_STRUCTURAL_STEEL:
-            if (rfiData.metaData?.procurementOfSteelData) {
-              setProcurementOfSteelData(
-                rfiData.metaData?.procurementOfSteelData,
-              );
-            } else {
-              setProcurementOfSteelData({
-                totalQtyOfSteelProcured: 0.0,
-              });
-            }
-            break;
-          case TASK_TYPES.TRANSPORTATION_OF_MATERIAL:
-            if (rfiData.metaData?.transportationData) {
-              setTransportationData(rfiData.metaData?.transportationData);
-            } else {
-              setTransportationData({
-                transitTime: 0.0,
-              });
-            }
-            break;
-          case TASK_TYPES.FIXING_OF_SHEATHING_JOINTS:
-            if (rfiData.metaData?.fixingOfSheathingJointsData) {
-              setFixingOfSheathingJointsData(
-                rfiData.metaData?.fixingOfSheathingJointsData,
-              );
-            } else {
-              setFixingOfSheathingJointsData({
-                temporaryOpeningsPlugged: 'Y',
-                jointWaterTight: 'Y',
-                sheathingNeatlyFitted: 'Y',
-                anchorageEndSealed: 'Y',
-                couplerTightlyScrewed: 'Y',
-                couplerLengthSufficient: 'Y',
-                jointSealedWithTape: 'Y',
-                couplerStaggered: 'Y',
-              });
-            }
-            break;
+        case TASK_TYPES.ASSEMBLING_OF_TRUSS:
+          if (rfiData.metaData?.assemblingOfTrussData) {
+            setAssemblingOfTrussData(rfiData.metaData?.assemblingOfTrussData);
+          } else {
+            setAssemblingOfTrussData({
+              partsAccuratelyAssembled: 'Y',
+              noBentOrBrokenParts: 'Y',
+              trussSpanOnBlocks: 'Y',
+              cleanJointSurfaces: 'Y',
+              fastenersWithWashers: 'Y',
+              serviceBoltsTightened: 'Y',
+            });
+          }
+          break;
+        case TASK_TYPES.HACKING_OF_GIRDER:
+          if (rfiData.metaData?.hackingOfGirderData) {
+            setHackingOfGirderData(rfiData.metaData?.hackingOfGirderData);
+          } else {
+            setHackingOfGirderData({
+              methodologyApproved: 'Y',
+              surfaceCleanedAndWet: 'Y',
+              skilledPersonnel: 'Y',
+              sharpenedInstruments: 'Y',
+              recessCutFormation: 'Y',
+            });
+          }
+          break;
+        case TASK_TYPES.DE_STRESSING_OF_GIRDER:
+          if (rfiData.metaData?.deStressingOfGirderData) {
+            setDeStressingOfGirderData(
+              rfiData.metaData?.deStressingOfGirderData,
+            );
+          } else {
+            setDeStressingOfGirderData({
+              strengthAchieved: 'Y',
+              diamondBitSawUsed: 'Y',
+              gradualUniformTransfer: 'Y',
+            });
+          }
+          break;
+        case TASK_TYPES.FIXING_OF_BEARING:
+          if (rfiData.metaData?.fixingOfBearingData) {
+            setFixingOfBearingData(rfiData.metaData?.fixingOfBearingData);
+          } else {
+            setFixingOfBearingData({
+              bearingPlacedAsPerGFC: 'Y',
+              bearingSurfaceFullyContactWithGirder: 'Y',
+              bearingPlatesSetHorizontal: 'Y',
+              bearingPreSetWithAxis: 'Y',
+              supportsProvidedToHoldBearing: 'Y',
+              anchorBoltHolesMatching: 'Y',
+              voidBeneathBearingFilled: 'Y',
+              bearingFixedWithMetalBedding: 'Y',
+              threadedFastenerTightenedUniformly: 'Y',
+            });
+          }
+          break;
+        case TASK_TYPES.REMOVAL_OF_TEMPORARY_STRUCTURE:
+          if (rfiData.metaData?.removalOfTemporaryStructureData) {
+            setRemovalOfTemporaryStructureData(
+              rfiData.metaData?.removalOfTemporaryStructureData,
+            );
+          } else {
+            setRemovalOfTemporaryStructureData({
+              concreteAchievedStrength: 'Y',
+              minimumTimeAttained: 'Y',
+              allComponentsTightened: 'Y',
+            });
+          }
+          break;
+        case TASK_TYPES.INSTALLATION_OF_EXPANSION_JOINT:
+          if (rfiData.metaData?.installationOfExpansionJointData) {
+            setInstallationOfExpansionJointData(
+              rfiData.metaData?.installationOfExpansionJointData,
+            );
+          } else {
+            setInstallationOfExpansionJointData({
+              expansionJointPositionCorrect: 'Y',
+              shippingDevicesRemoved: 'Y',
+              noForeignObjects: 'Y',
+              materialsFlowProperly: 'Y',
+              anchorsAndSupportsMatched: 'Y',
+              jointsProperlyAligned: 'Y',
+              noDamageSustained: 'Y',
+            });
+          }
+          break;
+        case TASK_TYPES.PAINTING:
+          if (rfiData.metaData?.paintingData) {
+            setPaintingData(rfiData.metaData?.paintingData);
+          } else {
+            setPaintingData({
+              paintingSystemApproved: 'Y',
+              documentsApproved: 'Y',
+              surfacePreparationDone: 'Y',
+              defectsCorrected: 'Y',
+              moistureContentChecked: 'Y',
+              plasterSurfacesRubbed: 'Y',
+              materialStirred: 'Y',
+              fillerCoatAfterPrimer: 'Y',
+              suctionSpotsPrimed: 'Y',
+              fillerCoatAppliedEvenly: 'Y',
+              sandingBetweenCoats: 'Y',
+              dryingTimeAllowed: 'Y',
+              materialsMixedProperly: 'Y',
+              firstCoatAppliedByRoller: 'Y',
+              rollerJointsChecked: 'Y',
+              curingPeriodAllowed: 'Y',
+              secondCoatAfterTouchUp: 'Y',
+              finalCoatApplied: 'Y',
+              cleaningAndProtection: 'Y',
+            });
+          }
+          break;
+        case TASK_TYPES.AUTO_LAUNCHING:
+          if (rfiData.metaData?.autoLaunchingData) {
+            setAutoLaunchingData(rfiData.metaData?.autoLaunchingData);
+          } else {
+            setAutoLaunchingData({
+              firstSpanLowering: 'Y',
+              sliderPerDrawing: 'Y',
+              middleSupportLeveling: 'Y',
+              rearSupportLeveling: 'Y',
+              checkHydraulicJacks: 'Y',
+              allVerticalJacksMidSupport: 'Y',
+              allVerticalJacksRearSupport: 'Y',
+              cleanlinessAndApplicationLubricant: 'Y',
+              physicallyCheckedAllAccessories: 'Y',
+              jackAndMonorailProperlyFixed: 'Y',
+              knuckleBearing: 'Y',
+              guideRollers: 'Y',
+              macalloyBarsStressed: 'Y',
+              frontSupportTelescopic: 'Y',
+              lockNutsArrangement: 'Y',
+              pressureOnMidRearSupport: 'Y',
+              gradient: 'Y',
+              alignmentOfTrackRail: 'Y',
+              frontSupportCorrectPosition: 'Y',
+              frontSupportPins: 'Y',
+              insertsPierCap: 'Y',
+              frontSupportEngaged: 'Y',
+              entireAreaBarricaded: 'Y',
+            });
+          }
+          break;
+        case TASK_TYPES.PROCUREMENT_OF_STRUCTURAL_STEEL:
+          if (rfiData.metaData?.procurementOfSteelData) {
+            setProcurementOfSteelData(rfiData.metaData?.procurementOfSteelData);
+          } else {
+            setProcurementOfSteelData({
+              totalQtyOfSteelProcured: 0.0,
+            });
+          }
+          break;
+        case TASK_TYPES.TRANSPORTATION_OF_MATERIAL:
+          if (rfiData.metaData?.transportationData) {
+            setTransportationData(rfiData.metaData?.transportationData);
+          } else {
+            setTransportationData({
+              transitTime: 0.0,
+            });
+          }
+          break;
+        case TASK_TYPES.FIXING_OF_SHEATHING_JOINTS:
+          if (rfiData.metaData?.fixingOfSheathingJointsData) {
+            setFixingOfSheathingJointsData(
+              rfiData.metaData?.fixingOfSheathingJointsData,
+            );
+          } else {
+            setFixingOfSheathingJointsData({
+              temporaryOpeningsPlugged: 'Y',
+              jointWaterTight: 'Y',
+              sheathingNeatlyFitted: 'Y',
+              anchorageEndSealed: 'Y',
+              couplerTightlyScrewed: 'Y',
+              couplerLengthSufficient: 'Y',
+              jointSealedWithTape: 'Y',
+              couplerStaggered: 'Y',
+            });
+          }
+          break;
+        case TASK_TYPES.FIXING_OF_GEO_GRID:
+          if (rfiData.metaData.fixingOfGeoGridData) {
+            setFixingOfGeoGridData(rfiData.metaData.fixingOfGeoGridData);
+          } else {
+            setFixingOfGeoGridData({
+              materialApprovedByEngineer: 'Y',
+              specificationsAsPerApprovedDrawing: 'Y',
+              soilProperlyCompacted: 'Y',
+              geoGridsAnchoredIntoFaciaPanels: 'Y',
+              geoGridsTensionedAndNailed: 'Y',
+              minimumLengthAsPerApprovedDrawing: 'Y',
+            });
+          }
+          break;
+        case TASK_TYPES.ERECTION_OF_FRICTION_SLAB:
+          if (rfiData.metaData.erectionOfFrictionSlabData) {
+            setErectionOfFrictionSlabData(
+              rfiData.metaData.erectionOfFrictionSlabData,
+            );
+          } else {
+            setErectionOfFrictionSlabData({
+              sufficientStrength: 'Y',
+              notDamaged: 'Y',
+              lineLevelsChecked: 'Y',
+              verticalSlopeAsPerDrawing: 'Y',
+              soilCompactedAndGeoGridsFixed: 'Y',
+              copingDone: 'Y',
+            });
+          }
+          break;
+        case TASK_TYPES.ERECTION_OF_FACIA_PANELS:
+          if (rfiData.metaData.erectionOfFaciaPanelsData) {
+            setErectionOfFaciaPanelsData(
+              rfiData.metaData.erectionOfFaciaPanelsData,
+            );
+          } else {
+            setErectionOfFaciaPanelsData({
+              sufficientStrength: 'Y',
+              notDamaged: 'Y',
+              lineLevelsChecked: 'Y',
+              maleFemaleJointsChecked: 'Y',
+              verticalSlopeAsPerDrawing: 'Y',
+              soilCompactedAndGeoGridsFixed: 'Y',
+            });
+          }
+          break;
+        case TASK_TYPES.ERECTION_OF_COLUMNS:
+          if (rfiData.metaData.erectionOfColumnsData) {
+            setErectionOfColumnsData(rfiData.metaData.erectionOfColumnsData);
+          } else {
+            setErectionOfColumnsData({
+              positionChecked: 'Y',
+              weldingAsPerDrawing: 'Y',
+              columnsAsPerDrawing: 'Y',
+              supportProvided: 'Y',
+            });
+          }
+          break;
+        case TASK_TYPES.APPLICATION_OF_FILTER_MEDIA:
+          if (rfiData.metaData.applicationOfFilterMediaData) {
+            setApplicationOfFilterMediaData(
+              rfiData.metaData.applicationOfFilterMediaData,
+            );
+          } else {
+            setApplicationOfFilterMediaData({
+              filterMediaAsPerDrawing: 'Y',
+            });
+          }
+          break;
+        case TASK_TYPES.FIXING_OF_BRACINGS:
+          if (rfiData.metaData.fixingOfBracingsData) {
+            setFixingOfBracingsData(rfiData.metaData.fixingOfBracingsData);
+          } else {
+            setFixingOfBracingsData({
+              lineLevelsChecked: 'Y',
+              weldingAsPerApprovedDrawing: 'Y',
+              bracingsAsPerApprovedDrawing: 'Y',
+            });
+          }
+          break;
+        case TASK_TYPES.FIXING_OF_RAILING:
+          if (rfiData.metaData.fixingOfRailingData) {
+            setFixingOfRailingData(rfiData.metaData.fixingOfRailingData);
+          } else {
+            setFixingOfRailingData({
+              lineLevelsChecked: 'Y',
+              railingAsPerApprovedDrawing: 'Y',
+            });
+          }
+          break;
 
-          case TASK_TYPES.LIFTING_LEFT:
-          case TASK_TYPES.LIFTING_YARD:
-          case TASK_TYPES.LIFTING_RIGHT:
-          case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
-            if (rfiData.metaData?.liftingCombinedLRData) {
-              setLiftingCombinedLRData(rfiData.metaData?.liftingCombinedLRData);
-            } else {
-              setLiftingCombinedLRData({
-                areaBarricaded: 'Y',
-                temporaryLights: 'Y',
-                flagManAvailable: 'Y',
-                liftingMethodology: 'Y',
-                deshacklesTestCertificate: 'Y',
-                safetyColorCode: 'Y',
-                hydraulicJacksCondition: 'Y',
-                hoistLimitSwitch: 'Y',
-                cotterPinsPlaced: 'Y',
-                macalloyBarsCondition: 'Y',
-                heightPermitObtained: 'Y',
-                macalloyBarsTestCertificate: 'Y',
-                liftingSequence: 'Y',
-                liftingHolesLocation: 'Y',
-                liftingArrangementsWorking: 'Y',
-                preStressingDuctsClear: 'Y',
-                concreteStrengthGained: 'Y',
-                sliderTrolleyPosition: 'Y',
-                sandBlastingDone: 'Y',
-                repairingFinished: 'Y',
-                noRepairsOnShearkey: 'Y',
-                bundRemoved: 'Y',
-                soffitDeckCleaned: 'Y',
-                sheathingDuctCleaned: 'Y',
-                ductAlignmentChecked: 'Y',
-                temporaryStressingHoleCleaned: 'Y',
-                trailerFitnessChecked: 'Y',
-                trailerTyresChecked: 'Y',
-                groundLeveled: 'Y',
-                areaBarricadedErectionSite: 'Y',
-                temporaryLightsErectionSite: 'Y',
-                flagManAvailableErectionSite: 'Y',
-                liftingMethodologyErectionSite: 'Y',
-                cranePositioned: 'Y',
-                deshacklesTestCertificateErectionSite: 'Y',
-                safetyColorCodeErectionSite: 'Y',
-                hydraulicJacksConditionErectionSite: 'Y',
-                hoistLimitSwitchErectionSite: 'Y',
-                cotterPinsPlacedErectionSite: 'Y',
-                macalloyBarsConditionErectionSite: 'Y',
-                cranesTPICompleted: 'Y',
-                cranesTPICertificatesAvailable: 'Y',
-                counterWeightsPlaced: 'Y',
-                positioningOfSegmentMarked: 'Y',
-                trafficDiverted: 'Y',
-                workersSafetyChecked: 'Y',
-                safetyArrangementsPlaced: 'Y',
-                segmentPositioned: 'Y',
-                lateralSupportEnsured: 'Y',
-              });
-            }
-            break;
-          default:
-            break;
-        }
+        case TASK_TYPES.LIFTING_LEFT:
+        case TASK_TYPES.LIFTING_YARD:
+        case TASK_TYPES.LIFTING_RIGHT:
+        case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
+          if (rfiData.metaData?.liftingCombinedLRData) {
+            setLiftingCombinedLRData(rfiData.metaData?.liftingCombinedLRData);
+          } else {
+            setLiftingCombinedLRData({
+              areaBarricaded: 'Y',
+              temporaryLights: 'Y',
+              flagManAvailable: 'Y',
+              liftingMethodology: 'Y',
+              deshacklesTestCertificate: 'Y',
+              safetyColorCode: 'Y',
+              hydraulicJacksCondition: 'Y',
+              hoistLimitSwitch: 'Y',
+              cotterPinsPlaced: 'Y',
+              macalloyBarsCondition: 'Y',
+              heightPermitObtained: 'Y',
+              macalloyBarsTestCertificate: 'Y',
+              liftingSequence: 'Y',
+              liftingHolesLocation: 'Y',
+              liftingArrangementsWorking: 'Y',
+              preStressingDuctsClear: 'Y',
+              concreteStrengthGained: 'Y',
+              sliderTrolleyPosition: 'Y',
+              sandBlastingDone: 'Y',
+              repairingFinished: 'Y',
+              noRepairsOnShearkey: 'Y',
+              bundRemoved: 'Y',
+              soffitDeckCleaned: 'Y',
+              sheathingDuctCleaned: 'Y',
+              ductAlignmentChecked: 'Y',
+              temporaryStressingHoleCleaned: 'Y',
+              trailerFitnessChecked: 'Y',
+              trailerTyresChecked: 'Y',
+              groundLeveled: 'Y',
+              areaBarricadedErectionSite: 'Y',
+              temporaryLightsErectionSite: 'Y',
+              flagManAvailableErectionSite: 'Y',
+              liftingMethodologyErectionSite: 'Y',
+              cranePositioned: 'Y',
+              deshacklesTestCertificateErectionSite: 'Y',
+              safetyColorCodeErectionSite: 'Y',
+              hydraulicJacksConditionErectionSite: 'Y',
+              hoistLimitSwitchErectionSite: 'Y',
+              cotterPinsPlacedErectionSite: 'Y',
+              macalloyBarsConditionErectionSite: 'Y',
+              cranesTPICompleted: 'Y',
+              cranesTPICertificatesAvailable: 'Y',
+              counterWeightsPlaced: 'Y',
+              positioningOfSegmentMarked: 'Y',
+              trafficDiverted: 'Y',
+              workersSafetyChecked: 'Y',
+              safetyArrangementsPlaced: 'Y',
+              segmentPositioned: 'Y',
+              lateralSupportEnsured: 'Y',
+            });
+          }
+          break;
+        default:
+          break;
+      }
       //}
 
       if (rfiData.rfiSubmitDateTime) {
@@ -2314,7 +2470,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         const subComponentData =
           componentData.subComponentsData[subComponentIndex];
         const taskData: any = [subComponentData.tasksData[taskIndex]];
-        console.log('======', JSON.stringify(taskData))
+        console.log('======', JSON.stringify(taskData));
         setProjectModuleId(segmentData.projectModuleId);
         setCurrentTasksData(taskData);
         breadcrumbItems.push(
@@ -2381,7 +2537,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
   };
 
   const onClickNested = (level: number, data: any) => {
-    console.log('==ss====', level)
+    console.log('==ss====', level);
     setSearchText('');
     if (data.projectModuleId) {
       setProjectModuleId(data.projectModuleId);
@@ -2752,13 +2908,6 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       const batchNoHardener = parseInt(item.batchNoHardener, 10);
 
       // Validation checks
-      // if (!item.jointNumbers || item.jointNumbers.length > 50) {
-      //   showSnackbar(
-      //     'Joint Numbers must be non-empty and up to 50 characters.',
-      //     'error',
-      //   );
-      //   return false;
-      // }
       if (
         isNaN(ambientTemperature) ||
         ambientTemperature <= 0 ||
@@ -3191,8 +3340,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         };
         break;
       case TASK_TYPES.GLUEING:
-        const isDataValid1 = validateGlueingData(glueingData);
-        if (!isDataValid1) {
+        if (!validateGlueingData(glueingData)) {
           return;
         }
         checkList = {
@@ -3347,6 +3495,48 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         checkList = {
           taskName: selectedTask.name,
           fixingOfSheathingJointsData: fixingOfSheathingJointsData,
+        };
+        break;
+      case TASK_TYPES.FIXING_OF_GEO_GRID:
+        checkList = {
+          taskName: selectedTask.name,
+          fixingOfGeoGridData: fixingOfGeoGridData,
+        };
+        break;
+      case TASK_TYPES.ERECTION_OF_FRICTION_SLAB:
+        checkList = {
+          taskName: selectedTask.name,
+          erectionOfFrictionSlabData: erectionOfFrictionSlabData,
+        };
+        break;
+      case TASK_TYPES.ERECTION_OF_FACIA_PANELS:
+        checkList = {
+          taskName: selectedTask.name,
+          erectionOfFaciaPanelsData: erectionOfFaciaPanelsData,
+        };
+        break;
+      case TASK_TYPES.ERECTION_OF_COLUMNS:
+        checkList = {
+          taskName: selectedTask.name,
+          erectionOfColumnsData: erectionOfColumnsData,
+        };
+        break;
+      case TASK_TYPES.APPLICATION_OF_FILTER_MEDIA:
+        checkList = {
+          taskName: selectedTask.name,
+          applicationOfFilterMediaData: applicationOfFilterMediaData,
+        };
+        break;
+      case TASK_TYPES.FIXING_OF_BRACINGS:
+        checkList = {
+          taskName: selectedTask.name,
+          fixingOfBracingsData: fixingOfBracingsData,
+        };
+        break;
+      case TASK_TYPES.FIXING_OF_RAILING:
+        checkList = {
+          taskName: selectedTask.name,
+          fixingOfRailingData: fixingOfRailingData,
         };
         break;
 
@@ -3550,29 +3740,29 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     ]);
   };
 
-  const onAddMoreGlueing = () => {
-    setGlueingData([
-      ...glueingData,
-      {
-        jointNumbers: '',
-        ambientTemperature: 0,
-        batchNoResin: 0,
-        batchNoHardener: 0,
-        mixingStartTime: '',
-        mixingFinishTime: '',
-        applicationStartTime: '',
-        applicationFinishTime: '',
-        segmentJoiningTimeClosure: '',
-        segmentJoiningTimeTemporaryFinish: '',
-        segmentSurfaceArea: 0,
-        epoxyConsumptionTheoreticalResin: 0,
-        epoxyConsumptionTheoreticalHardener: 0,
-        epoxyConsumptionActualResin: 0,
-        epoxyConsumptionActualHardener: 0,
-        key: Guid.create(),
-      },
-    ]);
-  };
+  // const onAddMoreGlueing = () => {
+  //   setGlueingData([
+  //     ...glueingData,
+  //     {
+  //       jointNumbers: '',
+  //       ambientTemperature: 0,
+  //       batchNoResin: 0,
+  //       batchNoHardener: 0,
+  //       mixingStartTime: '',
+  //       mixingFinishTime: '',
+  //       applicationStartTime: '',
+  //       applicationFinishTime: '',
+  //       segmentJoiningTimeClosure: '',
+  //       segmentJoiningTimeTemporaryFinish: '',
+  //       segmentSurfaceArea: 0,
+  //       epoxyConsumptionTheoreticalResin: 0,
+  //       epoxyConsumptionTheoreticalHardener: 0,
+  //       epoxyConsumptionActualResin: 0,
+  //       epoxyConsumptionActualHardener: 0,
+  //       key: Guid.create(),
+  //     },
+  //   ]);
+  // };
   const {showSnackbar} = useSnackbar();
   const renderGlueingHeadings = () => (
     <View style={styles.rowContainer}>
@@ -3680,7 +3870,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           onChange={
             handleTextInputChangeTemporaryPrestressing
           }></CustomTextInputValue> */}
-          <Text style={styles.cellText}>{rowData.item['jointNumbers']}</Text>
+        <Text style={styles.cellText}>{rowData.item['jointNumbers']}</Text>
       </View>
 
       <View style={styles.cell}>
@@ -3715,7 +3905,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             handleTextInputChangeTemporaryPrestressing
           }></CustomTextInputValue>
       </View>
-      
+
       <View style={styles.cell}>
         <CalendarPicker
           label=""
@@ -4118,63 +4308,54 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     return true;
   };
 
-const validateTemporaryPrestressingData = (
-  temporaryPrestressingData: any[],
-): boolean => {
-  for (const item of temporaryPrestressingData) {
-    // Parsing values to float
-    const maxJackPressure = parseFloat(item.maxJackPressure);
-    const jackPressureApplied = parseFloat(item.jackPressureApplied);
+  const validateTemporaryPrestressingData = (
+    temporaryPrestressingData: any[],
+  ): boolean => {
+    for (const item of temporaryPrestressingData) {
+      // Parsing values to float
+      const maxJackPressure = parseFloat(item.maxJackPressure);
+      const jackPressureApplied = parseFloat(item.jackPressureApplied);
 
-    // Validation checks
-    // if (!item.jointNumbers || item.jointNumbers.length > 50) {
-    //   showSnackbar(
-    //     'Joint Numbers must be non-empty and up to 50 characters.',
-    //     'error',
-    //   );
-    //   return false;
-    // }
+      if (
+        isNaN(maxJackPressure) ||
+        maxJackPressure <= 0 ||
+        maxJackPressure > 1000 ||
+        item.maxJackPressure.split('.')[1]?.length > 3
+      ) {
+        showSnackbar(
+          'Max Jack Pressure must be greater than 0 and up to 1000 Kg/Cm² with up to 3 decimal places.',
+          'error',
+        );
+        return false;
+      }
 
-    if (
-      isNaN(maxJackPressure) ||
-      maxJackPressure <= 0 ||
-      maxJackPressure > 1000 ||
-      item.maxJackPressure.split('.')[1]?.length > 3
-    ) {
-      showSnackbar(
-        'Max Jack Pressure must be greater than 0 and up to 1000 Kg/Cm² with up to 3 decimal places.',
-        'error',
-      );
-      return false;
+      if (
+        isNaN(jackPressureApplied) ||
+        jackPressureApplied <= 0 ||
+        jackPressureApplied > 1000 ||
+        item.jackPressureApplied.split('.')[1]?.length > 3
+      ) {
+        showSnackbar(
+          'Jack Pressure Applied must be greater than 0 and up to 1000 Kg/Cm² with up to 3 decimal places.',
+          'error',
+        );
+        return false;
+      }
+
+      if (!item.dateOfPrestressing || !item.timeOfPrestressing) {
+        showSnackbar('Date and Time of Prestressing must be filled.', 'error');
+        return false;
+      }
     }
 
-    if (
-      isNaN(jackPressureApplied) ||
-      jackPressureApplied <= 0 ||
-      jackPressureApplied > 1000 ||
-      item.jackPressureApplied.split('.')[1]?.length > 3
-    ) {
-      showSnackbar(
-        'Jack Pressure Applied must be greater than 0 and up to 1000 Kg/Cm² with up to 3 decimal places.',
-        'error',
-      );
-      return false;
-    }
+    // Convert the values back to numbers after validation
+    temporaryPrestressingData.forEach((item: any) => {
+      item.maxJackPressure = Number(item.maxJackPressure);
+      item.jackPressureApplied = Number(item.jackPressureApplied);
+    });
 
-    if (!item.dateOfPrestressing || !item.timeOfPrestressing) {
-      showSnackbar('Date and Time of Prestressing must be filled.', 'error');
-      return false;
-    }
-  }
-
-  // Convert the values back to numbers after validation
-  temporaryPrestressingData.forEach((item: any) => {
-    item.maxJackPressure = Number(item.maxJackPressure);
-    item.jackPressureApplied = Number(item.jackPressureApplied);
-  });
-
-  return true;
-};
+    return true;
+  };
 
   const renderHeadings = () => (
     <View
@@ -4238,7 +4419,11 @@ const validateTemporaryPrestressingData = (
     newData[index][field] = value;
     setConcreteData(newData);
   };
-  const handleTimeChangeTemporaryPrestressing = (index: any, field: any, value: any) => {
+  const handleTimeChangeTemporaryPrestressing = (
+    index: any,
+    field: any,
+    value: any,
+  ) => {
     const newData = [...temporaryPrestressingData];
     newData[index][field] = value;
     setTemporaryPrestressingData(newData);
@@ -4433,11 +4618,7 @@ const validateTemporaryPrestressingData = (
       </View>
 
       <View style={styles.cell}>
-        <CustomTextInputValue
-          rowItem={rowData.item}
-          fieldName={'jointNumbers'}
-          index={rowData.index}
-          onChange={handleTextInputChangeGlueing}></CustomTextInputValue>
+        <Text style={styles.cellText}>{rowData.item['jointNumbers']}</Text>
       </View>
 
       <View style={styles.cell}>
@@ -4581,16 +4762,6 @@ const validateTemporaryPrestressingData = (
           fieldName={'epoxyConsumptionActualHardener'}
           index={rowData.index}
           onChange={handleTextInputChangeGlueing}></CustomTextInputValue>
-      </View>
-      <View style={[styles.cell, {paddingHorizontal: 45}]}>
-        <TouchableOpacity
-          style={[styles.deleteButton]}
-          onPress={() => deleteGlueingItem(rowData, rowData.item.key)}>
-          <Image
-            style={[styles.CloseIcon, {tintColor: '#fff'}]}
-            source={require('./../../images/menu/delete.png')}
-          />
-        </TouchableOpacity>
       </View>
     </View>
   );
@@ -6306,6 +6477,7 @@ const validateTemporaryPrestressingData = (
           setTorquingData([
             {
               date: '',
+              time: '',
               component: '',
               detailsOfJoints: '',
               nosOfBolt: 0,
@@ -6433,13 +6605,13 @@ const validateTemporaryPrestressingData = (
               </ScrollView>
             </View>
 
-            <View>
+            {/* <View>
               <TouchableOpacity
                 style={{paddingVertical: 15, zIndex: 8}}
                 onPress={() => onAddMoreGlueing()}>
                 <Text style={styles.AddMoreLink}>+ Add More</Text>
               </TouchableOpacity>
-            </View>
+            </View> */}
 
             <View>
               <View style={{flexDirection: 'column'}}>
@@ -8508,6 +8680,487 @@ const validateTemporaryPrestressingData = (
                   onChangeText={text => {
                     setComments(text);
                   }}
+                />
+              </View>
+            </View>
+          </View>
+        );
+      case TASK_TYPES.FIXING_OF_GEO_GRID:
+        const fixingOfGeoGridProperties = [
+          {
+            title: 'Material of Geo Grid Approved by Engineer',
+            key: 'materialApprovedByEngineer',
+          },
+          {
+            title: 'Specifications/Strength as per Approved Drawing',
+            key: 'specificationsAsPerApprovedDrawing',
+          },
+          {
+            title:
+              'Underneath Soil Layer Compacted, Tested (Moisture & Density)',
+            key: 'soilProperlyCompacted',
+          },
+          {
+            title: 'Geo Grids Properly Anchored into Facia Panels',
+            key: 'geoGridsAnchoredIntoFaciaPanels',
+          },
+          {
+            title: 'Geo Grids Properly Tensioned and Nailed into Soil',
+            key: 'geoGridsTensionedAndNailed',
+          },
+          {
+            title: 'Minimum Length of Geo Grid as per Approved Drawing',
+            key: 'minimumLengthAsPerApprovedDrawing',
+          },
+        ];
+
+        return (
+          <View>
+            {fixingOfGeoGridProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={fixingOfGeoGridData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setFixingOfGeoGridData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <View>
+              {/* This section can remain the same for date, time, and recommendations */}
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => setComments(text)}
+                />
+              </View>
+            </View>
+          </View>
+        );
+      case TASK_TYPES.ERECTION_OF_FRICTION_SLAB:
+        const erectionOfFrictionSlabProperties = [
+          {
+            title: 'Friction Slab cum Crash Barrier has Sufficient Strength',
+            key: 'sufficientStrength',
+          },
+          {
+            title: 'Friction Slab cum Crash Barrier Not Damaged',
+            key: 'notDamaged',
+          },
+          {
+            title: 'Line/Levels Checked',
+            key: 'lineLevelsChecked',
+          },
+          {
+            title: 'Vertical Slope as per Drawing',
+            key: 'verticalSlopeAsPerDrawing',
+          },
+          {
+            title: 'Soil Compacted & Geo Grids Fixed under Panels',
+            key: 'soilCompactedAndGeoGridsFixed',
+          },
+          {
+            title: 'Coping Done',
+            key: 'copingDone',
+          },
+        ];
+
+        return (
+          <View>
+            {erectionOfFrictionSlabProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={erectionOfFrictionSlabData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setErectionOfFrictionSlabData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <View>
+              {/* Common Section for Date, Time, and Recommendations */}
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => setComments(text)}
+                />
+              </View>
+            </View>
+          </View>
+        );
+      case TASK_TYPES.ERECTION_OF_FACIA_PANELS:
+        const erectionOfFaciaPanelsProperties = [
+          {
+            title: 'Facia Panels have Sufficient Strength',
+            key: 'sufficientStrength',
+          },
+          {
+            title: 'Facia Panels Not Damaged',
+            key: 'notDamaged',
+          },
+          {
+            title: 'Line/Levels Checked',
+            key: 'lineLevelsChecked',
+          },
+          {
+            title: 'Male-Female Joints Checked',
+            key: 'maleFemaleJointsChecked',
+          },
+          {
+            title: 'Vertical Slope as per Drawing',
+            key: 'verticalSlopeAsPerDrawing',
+          },
+          {
+            title: 'Soil Compacted & Geo Grids Fixed under Panels',
+            key: 'soilCompactedAndGeoGridsFixed',
+          },
+        ];
+
+        return (
+          <View>
+            {erectionOfFaciaPanelsProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={erectionOfFaciaPanelsData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setErectionOfFaciaPanelsData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <View>
+              {/* Common Section for Date, Time, and Recommendations */}
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => setComments(text)}
+                />
+              </View>
+            </View>
+          </View>
+        );
+      case TASK_TYPES.ERECTION_OF_COLUMNS:
+        const erectionOfColumnsProperties = [
+          {
+            title: 'Position Checked',
+            key: 'positionChecked',
+          },
+          {
+            title: 'Welding Done as per Approved Drawing',
+            key: 'weldingAsPerDrawing',
+          },
+          {
+            title: 'Columns are as per Approved Drawing',
+            key: 'columnsAsPerDrawing',
+          },
+          {
+            title: 'Necessary Support Provided',
+            key: 'supportProvided',
+          },
+        ];
+
+        return (
+          <View>
+            {erectionOfColumnsProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={erectionOfColumnsData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setErectionOfColumnsData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <View>
+              {/* Common Section for Date, Time, and Recommendations */}
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => setComments(text)}
+                />
+              </View>
+            </View>
+          </View>
+        );
+      case TASK_TYPES.APPLICATION_OF_FILTER_MEDIA:
+        return (
+          <View>
+            <View style={{flexDirection: 'column'}}>
+              <DropdownPicker
+                label="Filter Media is as per the approved drawing"
+                value={applicationOfFilterMediaData.filterMediaAsPerDrawing}
+                items={YES_NO_LIST}
+                onChange={(value: any) =>
+                  setApplicationOfFilterMediaData(prevData => ({
+                    ...prevData,
+                    filterMediaAsPerDrawing: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+
+            {/* Common Section for Date, Time, and Recommendations */}
+            <View style={{flexDirection: 'column'}}>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+            </View>
+            <View>
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+            </View>
+            <View style={{flexDirection: 'column', paddingBottom: 20}}>
+              <Text style={styles.Lable}>Recommendations</Text>
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                autoCapitalize="none"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+          </View>
+        );
+      case TASK_TYPES.FIXING_OF_BRACINGS:
+        const fixingOfBracingsProperties = [
+          {
+            title: 'Line/Levels Checked',
+            key: 'lineLevelsChecked',
+          },
+          {
+            title: 'Welding Done as per Approved Drawing',
+            key: 'weldingAsPerApprovedDrawing',
+          },
+          {
+            title: 'Bracings are as per Approved Drawing',
+            key: 'bracingsAsPerApprovedDrawing',
+          },
+        ];
+
+        return (
+          <View>
+            {fixingOfBracingsProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={fixingOfBracingsData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setFixingOfBracingsData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <View>
+              {/* Common Section for Date, Time, and Recommendations */}
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => setComments(text)}
+                />
+              </View>
+            </View>
+          </View>
+        );
+      case TASK_TYPES.FIXING_OF_RAILING:
+        const fixingOfRailingProperties = [
+          {
+            title: 'Line/Levels Checked',
+            key: 'lineLevelsChecked',
+          },
+          {
+            title: 'Railing is as per Approved Drawing',
+            key: 'railingAsPerApprovedDrawing',
+          },
+        ];
+
+        return (
+          <View>
+            {fixingOfRailingProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={fixingOfRailingData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setFixingOfRailingData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <View>
+              {/* Common Section for Date, Time, and Recommendations */}
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => setComments(text)}
                 />
               </View>
             </View>

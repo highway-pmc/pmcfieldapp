@@ -504,6 +504,13 @@ export const TASK_TYPES = {
   TRANSPORTATION_OF_MATERIAL: 'transportation-of-material-at-site',
   FIXING_OF_SHEATHING_JOINTS: 'fixing-of-sheathing-joints',
   TORQUING: 'torquing',
+  FIXING_OF_GEO_GRID: 'fixing-of-geo-grid',
+  ERECTION_OF_FRICTION_SLAB: 'erection-of-friction-slab',
+  ERECTION_OF_FACIA_PANELS: 'erection-of-facia-panels',
+  ERECTION_OF_COLUMNS: 'erection-of-columns',
+  APPLICATION_OF_FILTER_MEDIA: 'application-of-filter-media',
+  FIXING_OF_BRACINGS: 'fixing-of-bracings',
+  FIXING_OF_RAILING:'fixing-of-railing',
 };
 
 export const TEST_MATERIALS_TYPES = {

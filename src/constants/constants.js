@@ -518,6 +518,7 @@ export const TASK_TYPES = {
   PRE_STRESSING: 'pre-stressing',
   PROCUREMENT_OF_SHEET: 'procurement-of-sheet',
   DUMPING_OF_SOIL:'dumping-of-soil',
+  BORING_OF_DIAPHRAGM:'boring-of-diaphragm',
 };
 
 export const TEST_MATERIALS_TYPES = {

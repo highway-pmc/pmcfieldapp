@@ -3093,6 +3093,44 @@ const renderSectionHeaderTemporaryPrestressing = (rowData: any) => (
             </View>
           </View>
         );
+      case TASK_TYPES.BORING_OF_DIAPHRAGM:
+        const boringOfDiaphragmProperties = [
+          {
+            title: 'Density of Polymer',
+            key: 'densityOfPolymer',
+          },
+          {
+            title: 'Viscosity of Polymer',
+            key: 'viscosityOfPolymer',
+          },
+          {
+            title: 'pH Value of Polymer',
+            key: 'pHValueOfPolymer',
+          },
+          {
+            title: 'Sand Content of Polymer',
+            key: 'sandContentOfPolymer',
+          },
+          {
+            title: 'Depth of Wall',
+            key: 'depthOfWall',
+          },
+        ];
+
+        return (
+          <View>
+            {boringOfDiaphragmProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.boringOfDiaphragmData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
 
       // ReadOnlyRfi
       default:

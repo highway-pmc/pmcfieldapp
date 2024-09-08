@@ -233,7 +233,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     },
   ]);
   //GLUEING
-  const [glueingData, setGlueingData]:any = useState([
+  const [glueingData, setGlueingData]: any = useState([
     // {
     //   jointNumbers: '',
     //   ambientTemperature: 0,
@@ -456,14 +456,22 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     probingByStiffwire: string;
   };
   //FormUseStates
+  const [boringOfDiaphragmData, setBoringOfDiaphragmData] = useState({
+    densityOfPolymer: 0.0,
+    viscosityOfPolymer: 0,
+    pHValueOfPolymer: 0,
+    sandContentOfPolymer: 0,
+    depthOfWall: 0.0,
+  });
+
   const [dumpingOfSoilData, setDumpingOfSoilData] = useState({
     soilApprovedSource: 'Y',
     soilWithoutUnwantedMaterials: 'Y',
     quantityOfSoilDumped: '0.0',
   });
-const [procurementOfSheetData, setProcurementOfSheetData] = useState({
-  totalSheetPurchased: 0,
-});
+  const [procurementOfSheetData, setProcurementOfSheetData] = useState({
+    totalSheetPurchased: 0,
+  });
   const [fixingOfBracingsData, setFixingOfBracingsData] = useState({
     lineLevelsChecked: 'Y',
     weldingAsPerApprovedDrawing: 'Y',
@@ -667,21 +675,22 @@ const [procurementOfSheetData, setProcurementOfSheetData] = useState({
       B2: 0,
       PB: 0,
       SA0: 0,
-      SB0: 0
+      SB0: 0,
     },
   ]);
-  const [temporaryPrestressingData, setTemporaryPrestressingData]: any = useState([
-    // {
-    //   jointNumbers: '',
-    //   calibrationDone: 'Y',
-    //   stressingSequenceDrawingNumber: '',
-    //   dateOfPrestressing: '',
-    //   timeOfPrestressing: '',
-    //   maxJackPressure: 0,
-    //   jackPressureApplied: 0,
-    //   key: Guid.create(),
-    // },
-  ]);
+  const [temporaryPrestressingData, setTemporaryPrestressingData]: any =
+    useState([
+      // {
+      //   jointNumbers: '',
+      //   calibrationDone: 'Y',
+      //   stressingSequenceDrawingNumber: '',
+      //   dateOfPrestressing: '',
+      //   timeOfPrestressing: '',
+      //   maxJackPressure: 0,
+      //   jackPressureApplied: 0,
+      //   key: Guid.create(),
+      // },
+    ]);
 
   const onAddMoreTemporaryPrestressing = () => {
     setTemporaryPrestressingData([
@@ -779,6 +788,91 @@ const [procurementOfSheetData, setProcurementOfSheetData] = useState({
 
   const handleErectionOfTemporaryStructure = (field: string, value: string) => {
     setErectionOfTemporaryStructure(prevData => ({
+      ...prevData,
+      [field]: value,
+    }));
+  };
+  const handleBoringOfDiaphragmInputChange = (field: string, value: string) => {
+    let isValid = true;
+    let errorMessage = '';
+
+    switch (field) {
+      case 'densityOfPolymer':
+        const densityOfPolymer = parseFloat(value);
+        if (
+          isNaN(densityOfPolymer) ||
+          densityOfPolymer <= 0 ||
+          densityOfPolymer > 5 ||
+          !/^\d+(\.\d{1,2})?$/.test(value)
+        ) {
+          isValid = false;
+          errorMessage =
+            'Density of Polymer must be greater than 0, up to 2 decimal places, and less than or equal to 5 gm/ml.';
+        }
+        break;
+
+      case 'viscosityOfPolymer':
+        const viscosityOfPolymer = parseInt(value, 10);
+        if (
+          isNaN(viscosityOfPolymer) ||
+          viscosityOfPolymer <= 0 ||
+          viscosityOfPolymer > 500
+        ) {
+          isValid = false;
+          errorMessage =
+            'Viscosity of Polymer must be an integer greater than 0 and less than or equal to 500 sec/liter.';
+        }
+        break;
+
+      case 'pHValueOfPolymer':
+        const pHValueOfPolymer = parseInt(value, 10);
+        if (
+          isNaN(pHValueOfPolymer) ||
+          pHValueOfPolymer <= 0 ||
+          pHValueOfPolymer > 14
+        ) {
+          isValid = false;
+          errorMessage =
+            'pH Value of Polymer must be an integer greater than 0 and less than or equal to 14.';
+        }
+        break;
+
+      case 'sandContentOfPolymer':
+        const sandContentOfPolymer = parseInt(value, 10);
+        if (
+          isNaN(sandContentOfPolymer) ||
+          sandContentOfPolymer <= 0 ||
+          sandContentOfPolymer > 100
+        ) {
+          isValid = false;
+          errorMessage =
+            'Sand Content of Polymer must be an integer greater than 0 and less than or equal to 100%.';
+        }
+        break;
+
+      case 'depthOfWall':
+        const depthOfWall = parseFloat(value);
+        if (
+          isNaN(depthOfWall) ||
+          depthOfWall <= 0 ||
+          depthOfWall > 100 ||
+          !/^\d+(\.\d{1,3})?$/.test(value)
+        ) {
+          isValid = false;
+          errorMessage =
+            'Depth of Wall must be greater than 0, up to 3 decimal places, and less than or equal to 100 meters.';
+        }
+        break;
+
+      default:
+        break;
+    }
+
+    if (!isValid) {
+      showSnackbar(errorMessage, 'error');
+    }
+
+    setBoringOfDiaphragmData(prevData => ({
       ...prevData,
       [field]: value,
     }));
@@ -2127,6 +2221,19 @@ const [procurementOfSheetData, setProcurementOfSheetData] = useState({
             });
           }
           break;
+        case TASK_TYPES.BORING_OF_DIAPHRAGM:
+          if (rfiData.metaData.boringOfDiaphragmData) {
+            setBoringOfDiaphragmData(rfiData.metaData.boringOfDiaphragmData);
+          } else {
+            setBoringOfDiaphragmData({
+              densityOfPolymer: 0.0,
+              viscosityOfPolymer: 0,
+              pHValueOfPolymer: 0,
+              sandContentOfPolymer: 0,
+              depthOfWall: 0.0,
+            });
+          }
+          break;
 
         case TASK_TYPES.LIFTING_LEFT:
         case TASK_TYPES.LIFTING_YARD:
@@ -2731,6 +2838,87 @@ const [procurementOfSheetData, setProcurementOfSheetData] = useState({
       }),
     );
   };
+  const validateBoringOfDiaphragmData = (data: any): boolean => {
+    const densityOfPolymer = parseFloat(data.densityOfPolymer);
+    const viscosityOfPolymer = parseInt(data.viscosityOfPolymer, 10);
+    const pHValueOfPolymer = parseInt(data.pHValueOfPolymer, 10);
+    const sandContentOfPolymer = parseInt(data.sandContentOfPolymer, 10);
+    const depthOfWall = parseFloat(data.depthOfWall);
+
+    // Validation for Density of Polymer
+    if (
+      isNaN(densityOfPolymer) ||
+      densityOfPolymer <= 0 ||
+      densityOfPolymer > 5 ||
+      !/^\d+(\.\d{1,2})?$/.test(data.densityOfPolymer)
+    ) {
+      showSnackbar(
+        'Density of Polymer must be greater than 0, up to 2 decimal places, and less than or equal to 5 gm/ml.',
+        'error',
+      );
+      return false;
+    }
+
+    // Validation for Viscosity of Polymer
+    if (
+      isNaN(viscosityOfPolymer) ||
+      viscosityOfPolymer <= 0 ||
+      viscosityOfPolymer > 500
+    ) {
+      showSnackbar(
+        'Viscosity of Polymer must be an integer greater than 0 and less than or equal to 500 sec/liter.',
+        'error',
+      );
+      return false;
+    }
+
+    // Validation for pH Value of Polymer
+    if (
+      isNaN(pHValueOfPolymer) ||
+      pHValueOfPolymer <= 0 ||
+      pHValueOfPolymer > 14
+    ) {
+      showSnackbar(
+        'pH Value of Polymer must be an integer greater than 0 and less than or equal to 14.',
+        'error',
+      );
+      return false;
+    }
+
+    // Validation for Sand Content of Polymer
+    if (
+      isNaN(sandContentOfPolymer) ||
+      sandContentOfPolymer <= 0 ||
+      sandContentOfPolymer > 100
+    ) {
+      showSnackbar(
+        'Sand Content of Polymer must be an integer greater than 0 and less than or equal to 100%.',
+        'error',
+      );
+      return false;
+    }
+
+    // Validation for Depth of Wall
+    if (
+      isNaN(depthOfWall) ||
+      depthOfWall <= 0 ||
+      depthOfWall > 100 ||
+      !/^\d+(\.\d{1,3})?$/.test(data.depthOfWall)
+    ) {
+      showSnackbar(
+        'Depth of Wall must be greater than 0, up to 3 decimal places, and less than or equal to 100 meters.',
+        'error',
+      );
+      return false;
+    }
+    data.densityOfPolymer = Number(data.densityOfPolymer);
+    data.viscosityOfPolymer = Number(data.viscosityOfPolymer);
+    data.pHValueOfPolymer = Number(data.pHValueOfPolymer);
+    data.sandContentOfPolymer = Number(data.sandContentOfPolymer);
+    data.depthOfWall = Number(data.depthOfWall);
+    return true;
+  };
+
   const validateTransportationData = (data: any): boolean => {
     const transitTime = parseFloat(data.transitTime);
 
@@ -3632,6 +3820,15 @@ const [procurementOfSheetData, setProcurementOfSheetData] = useState({
         checkList = {
           taskName: selectedTask.name,
           dumpingOfSoilData: dumpingOfSoilData,
+        };
+        break;
+      case TASK_TYPES.BORING_OF_DIAPHRAGM:
+        if (!validateBoringOfDiaphragmData(boringOfDiaphragmData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          boringOfDiaphragmData: boringOfDiaphragmData,
         };
         break;
 
@@ -9337,6 +9534,95 @@ const [procurementOfSheetData, setProcurementOfSheetData] = useState({
             </View>
           </View>
         );
+      case TASK_TYPES.BORING_OF_DIAPHRAGM:
+        return (
+          <View>
+            <View>
+              {/* Density of Polymer */}
+              <Input
+                label="Density of Polymer (gm/ml)"
+                value={boringOfDiaphragmData.densityOfPolymer}
+                onChange={(value: string) =>
+                  handleBoringOfDiaphragmInputChange('densityOfPolymer', value)
+                }
+                isRequired={true}
+              />
+
+              {/* Viscosity of Polymer */}
+              <Input
+                label="Viscosity of Polymer (sec/liter)"
+                value={boringOfDiaphragmData.viscosityOfPolymer}
+                onChange={(value: string) =>
+                  handleBoringOfDiaphragmInputChange(
+                    'viscosityOfPolymer',
+                    value,
+                  )
+                }
+                isRequired={true}
+              />
+
+              {/* pH Value of Polymer */}
+              <Input
+                label="pH Value of Polymer"
+                value={boringOfDiaphragmData.pHValueOfPolymer}
+                onChange={(value: string) =>
+                  handleBoringOfDiaphragmInputChange('pHValueOfPolymer', value)
+                }
+                isRequired={true}
+              />
+
+              {/* Sand Content of Polymer */}
+              <Input
+                label="Sand Content of Polymer (%)"
+                value={boringOfDiaphragmData.sandContentOfPolymer}
+                onChange={(value: string) =>
+                  handleBoringOfDiaphragmInputChange(
+                    'sandContentOfPolymer',
+                    value,
+                  )
+                }
+                isRequired={true}
+              />
+
+              {/* Depth of Wall */}
+              <Input
+                label="Depth of Wall (mtr)"
+                value={boringOfDiaphragmData.depthOfWall}
+                onChange={(value: string) =>
+                  handleBoringOfDiaphragmInputChange('depthOfWall', value)
+                }
+                isRequired={true}
+              />
+            </View>
+            <View>
+              {/* Date, time, and recommendations remain the same */}
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => setComments(text)}
+                />
+              </View>
+            </View>
+          </View>
+        );
+
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
       case TASK_TYPES.LIFTING_RIGHT:

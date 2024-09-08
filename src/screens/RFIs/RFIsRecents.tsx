@@ -972,7 +972,7 @@ const renderSectionHeaderTemporaryPrestressing = (rowData: any) => (
             </ScrollView>
           </View>
         );
-
+      case TASK_TYPES.COPING:
       case TASK_TYPES.CONCRETING:
         return (
           <View>

@@ -517,8 +517,9 @@ export const TASK_TYPES = {
   GRADING: 'grading',
   PRE_STRESSING: 'pre-stressing',
   PROCUREMENT_OF_SHEET: 'procurement-of-sheet',
-  DUMPING_OF_SOIL:'dumping-of-soil',
-  BORING_OF_DIAPHRAGM:'boring-of-diaphragm',
+  DUMPING_OF_SOIL: 'dumping-of-soil',
+  BORING_OF_DIAPHRAGM: 'boring-of-diaphragm',
+  COPING:'coping',
 };
 
 export const TEST_MATERIALS_TYPES = {

@@ -1574,6 +1574,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             });
           }
           break;
+        case TASK_TYPES.COPING:
         case TASK_TYPES.CONCRETING:
         case TASK_TYPES.PCC_LEVELLING_COURSE:
           if (rfiData.metaData?.concreteData) {
@@ -3583,7 +3584,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           concreteData: concreteData,
         };
         break;
-
+      case TASK_TYPES.COPING:
       case TASK_TYPES.CONCRETING:
       case TASK_TYPES.PCC_LEVELLING_COURSE:
         const isDataValid = validateConcreteData(selectedTask?.name);
@@ -6674,6 +6675,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             </View>
           </View>
         );
+      case TASK_TYPES.COPING:
       case TASK_TYPES.CONCRETING:
       case TASK_TYPES.PCC_LEVELLING_COURSE:
         if (!concreteData || !concreteData.length) {

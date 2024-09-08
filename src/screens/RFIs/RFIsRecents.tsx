@@ -343,6 +343,81 @@ const RFIsRecents = (props: any) => {
       </View>
     );
   };
+  const renderItemPrestressing = (rowData: any) => (
+    <View style={{flexDirection: 'column', gap: 5}}>
+      {rowData.index === 0 && (
+        <View style={styles.headerRow}>
+          <Text style={styles.headerCell}>Cable No.</Text>
+          <Text style={styles.headerCell}>Stressing Sequence</Text>
+          <Text style={styles.headerCell}>Gauge A0 (100 Kg/cm²)</Text>
+          <Text style={styles.headerCell}>Gauge B0 (100 Kg/cm²)</Text>
+          <Text style={styles.headerCell}>Gauge A1 (200 Kg/cm²)</Text>
+          <Text style={styles.headerCell}>Gauge B1 (200 Kg/cm²)</Text>
+          <Text style={styles.headerCell}>Gauge A2 (Locking)</Text>
+          <Text style={styles.headerCell}>Pressure PA (Locking)</Text>
+          <Text style={styles.headerCell}>Gauge B2 (Locking)</Text>
+          <Text style={styles.headerCell}>Pressure PB (Locking)</Text>
+          <Text style={styles.headerCell}>Slip SA0 (Locking)</Text>
+          <Text style={styles.headerCell}>Slip SB0 (Locking)</Text>
+        </View>
+      )}
+      <View style={styles.row}>
+        <Text style={styles.cell}>{rowData.item.cableNo}</Text>
+        <Text style={styles.cell}>{rowData.item.stressingSequence}</Text>
+        <Text style={styles.cell}>{rowData.item.gaugeA0}</Text>
+        <Text style={styles.cell}>{rowData.item.gaugeB0}</Text>
+        <Text style={styles.cell}>{rowData.item.gaugeA1}</Text>
+        <Text style={styles.cell}>{rowData.item.gaugeB1}</Text>
+        <Text style={styles.cell}>{rowData.item.gaugeA2}</Text>
+        <Text style={styles.cell}>{rowData.item.pressurePA}</Text>
+        <Text style={styles.cell}>{rowData.item.gaugeB2}</Text>
+        <Text style={styles.cell}>{rowData.item.pressurePB}</Text>
+        <Text style={styles.cell}>{rowData.item.slipSA0}</Text>
+        <Text style={styles.cell}>{rowData.item.slipSB0}</Text>
+      </View>
+    </View>
+  );
+
+  const renderSectionHeaderPrestressing = (rowData: any) => (
+    <View>
+      <View>
+        <Text>Cable No.</Text>
+      </View>
+      <View>
+        <Text>Stressing Sequence</Text>
+      </View>
+      <View>
+        <Text>Gauge A0 (100 Kg/cm²)</Text>
+      </View>
+      <View>
+        <Text>Gauge B0 (100 Kg/cm²)</Text>
+      </View>
+      <View>
+        <Text>Gauge A1 (200 Kg/cm²)</Text>
+      </View>
+      <View>
+        <Text>Gauge B1 (200 Kg/cm²)</Text>
+      </View>
+      <View>
+        <Text>Gauge A2 (Locking)</Text>
+      </View>
+      <View>
+        <Text>Pressure PA (Locking)</Text>
+      </View>
+      <View>
+        <Text>Gauge B2 (Locking)</Text>
+      </View>
+      <View>
+        <Text>Pressure PB (Locking)</Text>
+      </View>
+      <View>
+        <Text>Slip SA0 (Locking)</Text>
+      </View>
+      <View>
+        <Text>Slip SB0 (Locking)</Text>
+      </View>
+    </View>
+  );
   const renderItemGlueing = (rowData: any) => (
     <View style={{flexDirection: 'column', gap: 5}}>
       {rowData.index === 0 && (
@@ -1232,6 +1307,21 @@ const renderSectionHeaderTemporaryPrestressing = (rowData: any) => (
             </ScrollView>
           </View>
         );
+      case TASK_TYPES.PRE_STRESSING:
+        return (
+          <View>
+            <ScrollView horizontal={true}>
+              <View style={{flexDirection: 'column'}}>
+                <SwipeListView
+                  data={selectedRFI?.metaData.prestressingData}
+                  renderItem={renderItemPrestressing}
+                  renderSectionHeader={renderSectionHeaderPrestressing}
+                />
+              </View>
+            </ScrollView>
+          </View>
+        );
+
       case TASK_TYPES.REMOVAL_OF_FORMWORK:
         const formworkProperties = [
           {

@@ -3295,6 +3295,109 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
 
     return true;
   };
+const validatePrestressingData = (prestressingData: any): boolean => {
+  for (const item of prestressingData) {
+    // Parsing values to float
+    const A0 = parseFloat(item.A0);
+    const B0 = parseFloat(item.B0);
+    const A1 = parseFloat(item.A1);
+    const B1 = parseFloat(item.B1);
+    const A2 = parseFloat(item.A2);
+    const B2 = parseFloat(item.B2);
+    const PA = parseFloat(item.PA);
+    const PB = parseFloat(item.PB);
+    const SA0 = parseFloat(item.SA0);
+    const SB0 = parseFloat(item.SB0);
+
+    // Validation checks
+    if (isNaN(A0) || A0 <= 0 || A0 > 500) {
+      showSnackbar(
+        'A0 must be greater than 0 and up to 500, with up to 2 decimal places.',
+        'error',
+      );
+      return false;
+    }
+    if (isNaN(B0) || B0 <= 0 || B0 > 500) {
+      showSnackbar(
+        'B0 must be greater than 0 and up to 500, with up to 2 decimal places.',
+        'error',
+      );
+      return false;
+    }
+    if (isNaN(A1) || A1 <= 0 || A1 > 500) {
+      showSnackbar(
+        'A1 must be greater than 0 and up to 500, with up to 2 decimal places.',
+        'error',
+      );
+      return false;
+    }
+    if (isNaN(B1) || B1 <= 0 || B1 > 500) {
+      showSnackbar(
+        'B1 must be greater than 0 and up to 500, with up to 2 decimal places.',
+        'error',
+      );
+      return false;
+    }
+    if (isNaN(A2) || A2 <= 0 || A2 > 500) {
+      showSnackbar(
+        'A2 must be greater than 0 and up to 500, with up to 2 decimal places.',
+        'error',
+      );
+      return false;
+    }
+    if (isNaN(B2) || B2 <= 0 || B2 > 500) {
+      showSnackbar(
+        'B2 must be greater than 0 and up to 500, with up to 2 decimal places.',
+        'error',
+      );
+      return false;
+    }
+    if (isNaN(PA) || PA <= 0 || PA > 500) {
+      showSnackbar(
+        'PA must be greater than 0 and up to 500, with up to 2 decimal places.',
+        'error',
+      );
+      return false;
+    }
+    if (isNaN(PB) || PB <= 0 || PB > 500) {
+      showSnackbar(
+        'PB must be greater than 0 and up to 500, with up to 2 decimal places.',
+        'error',
+      );
+      return false;
+    }
+    if (isNaN(SA0) || SA0 <= 0 || SA0 > 500) {
+      showSnackbar(
+        'SA0 must be greater than 0 and up to 500, with up to 2 decimal places.',
+        'error',
+      );
+      return false;
+    }
+    if (isNaN(SB0) || SB0 <= 0 || SB0 > 500) {
+      showSnackbar(
+        'SB0 must be greater than 0 and up to 500, with up to 2 decimal places.',
+        'error',
+      );
+      return false;
+    }
+  }
+
+  // Convert the values back to numbers after validation
+  prestressingData.forEach((item: any) => {
+    item.A0 = Number(item.A0);
+    item.B0 = Number(item.B0);
+    item.A1 = Number(item.A1);
+    item.B1 = Number(item.B1);
+    item.A2 = Number(item.A2);
+    item.B2 = Number(item.B2);
+    item.PA = Number(item.PA);
+    item.PB = Number(item.PB);
+    item.SA0 = Number(item.SA0);
+    item.SB0 = Number(item.SB0);
+  });
+
+  return true;
+};
 
   const validateGroutingData = (groutingData: any): boolean => {
     const wcRatio = parseFloat(groutingData.wcRatio);
@@ -3865,7 +3968,15 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           temporaryPrestressingData: temporaryPrestressingData,
         };
         break;
-
+      case TASK_TYPES.PRE_STRESSING:
+        if (!validatePrestressingData(prestressingData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          prestressingData: prestressingData,
+        };
+        break;
       default:
         break;
     }
@@ -4643,6 +4754,137 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
 
     return true;
   };
+const renderPrestressingHeadings = () => (
+  <View style={styles.rowContainer}>
+    <View style={styles.cell}>
+      <Text style={styles.cellText}>Cable No.</Text>
+    </View>
+    <View style={styles.cell}>
+      <Text style={styles.cellText}>Stressing Sequence</Text>
+    </View>
+    <View style={styles.cell}>
+      <Text style={styles.cellText}>Gauge A0 (100 Kg/cm²)</Text>
+    </View>
+    <View style={styles.cell}>
+      <Text style={styles.cellText}>Gauge B0 (100 Kg/cm²)</Text>
+    </View>
+    <View style={styles.cell}>
+      <Text style={styles.cellText}>Gauge A1 (200 Kg/cm²)</Text>
+    </View>
+    <View style={styles.cell}>
+      <Text style={styles.cellText}>Gauge B1 (200 Kg/cm²)</Text>
+    </View>
+    <View style={styles.cell}>
+      <Text style={styles.cellText}>Gauge A2 (Locking)</Text>
+    </View>
+    <View style={styles.cell}>
+      <Text style={styles.cellText}>Pressure PA (Locking)</Text>
+    </View>
+    <View style={styles.cell}>
+      <Text style={styles.cellText}>Gauge B2 (Locking)</Text>
+    </View>
+    <View style={styles.cell}>
+      <Text style={styles.cellText}>Pressure PB (Locking)</Text>
+    </View>
+    <View style={styles.cell}>
+      <Text style={styles.cellText}>Slip SA0 (Locking)</Text>
+    </View>
+    <View style={styles.cell}>
+      <Text style={styles.cellText}>Slip SB0 (Locking)</Text>
+    </View>
+  </View>
+);
+const renderItemPrestressing = (rowData: any) => (
+  <View style={[styles.rowContainer, styles.marginBottom10]}>
+    <View style={styles.cell}>
+      <Text style={styles.cellText}>{rowData.item['cableNo']}</Text>
+    </View>
+
+    <View style={styles.cell}>
+      <Text style={styles.cellText}>{rowData.item['stressingSequence']}</Text>
+    </View>
+
+    <View style={styles.cell}>
+      <CustomTextInputValue
+        rowItem={rowData.item}
+        fieldName={'A0'}
+        index={rowData.index}
+        onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
+    </View>
+
+    <View style={styles.cell}>
+      <CustomTextInputValue
+        rowItem={rowData.item}
+        fieldName={'B0'}
+        index={rowData.index}
+        onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
+    </View>
+
+    <View style={styles.cell}>
+      <CustomTextInputValue
+        rowItem={rowData.item}
+        fieldName={'A1'}
+        index={rowData.index}
+        onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
+    </View>
+
+    <View style={styles.cell}>
+      <CustomTextInputValue
+        rowItem={rowData.item}
+        fieldName={'B1'}
+        index={rowData.index}
+        onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
+    </View>
+
+    <View style={styles.cell}>
+      <CustomTextInputValue
+        rowItem={rowData.item}
+        fieldName={'A2'}
+        index={rowData.index}
+        onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
+    </View>
+
+    <View style={styles.cell}>
+      <CustomTextInputValue
+        rowItem={rowData.item}
+        fieldName={'PA'}
+        index={rowData.index}
+        onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
+    </View>
+
+    <View style={styles.cell}>
+      <CustomTextInputValue
+        rowItem={rowData.item}
+        fieldName={'B2'}
+        index={rowData.index}
+        onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
+    </View>
+
+    <View style={styles.cell}>
+      <CustomTextInputValue
+        rowItem={rowData.item}
+        fieldName={'PB'}
+        index={rowData.index}
+        onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
+    </View>
+
+    <View style={styles.cell}>
+      <CustomTextInputValue
+        rowItem={rowData.item}
+        fieldName={'SA0'}
+        index={rowData.index}
+        onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
+    </View>
+
+    <View style={styles.cell}>
+      <CustomTextInputValue
+        rowItem={rowData.item}
+        fieldName={'SB0'}
+        index={rowData.index}
+        onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
+    </View>
+  </View>
+);
 
   const renderHeadings = () => (
     <View
@@ -4726,6 +4968,32 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       [field]: value,
     }));
   };
+const handleTextInputChangePrestressing = (
+  index: number,
+  field: string,
+  value: string,
+) => {
+  const updatedData = [...prestressingData];
+  let isValid = true;
+  let errorMessage = '';
+
+  const readingValue = parseFloat(value);
+
+  if (isNaN(readingValue) || readingValue <= 0 || readingValue > 500) {
+    isValid = false;
+    errorMessage =
+      'Enter a valid number greater than 0 and less than or equal to 500';
+  } else if (!/^\d+(\.\d{1,2})?$/.test(value)) {
+    isValid = false;
+    errorMessage = 'Enter a number with up to 2 decimal places';
+  }
+
+  if (!isValid) {
+    showSnackbar(errorMessage, 'error');
+  }
+  updatedData[index][field] = value;
+  setPrestressingData(updatedData);
+};
 
   const handleTextInputChange = (
     index: number,
@@ -6869,14 +7137,6 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                 </View>
               </ScrollView>
             </View>
-
-            {/* <View>
-              <TouchableOpacity
-                style={{paddingVertical: 15, zIndex: 8}}
-                onPress={() => onAddMoreGlueing()}>
-                <Text style={styles.AddMoreLink}>+ Add More</Text>
-              </TouchableOpacity>
-            </View> */}
 
             <View>
               <View style={{flexDirection: 'column'}}>
@@ -9619,6 +9879,61 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                   blurOnSubmit={false}
                   value={comments}
                   onChangeText={text => setComments(text)}
+                />
+              </View>
+            </View>
+          </View>
+        );
+      case TASK_TYPES.PRE_STRESSING:
+        return (
+          <View>
+            <View style={styles.MainContainer}>
+              <ScrollView
+                id="scrollViewPrestressing"
+                showsHorizontalScrollIndicator={false}
+                horizontal={enableScroll}>
+                <View>
+                  {renderPrestressingHeadings()}
+                  <FlatList
+                    data={prestressingData}
+                    renderItem={renderItemPrestressing}
+                    keyExtractor={item => item.key?.toString()}
+                    style={{zIndex: 10}}
+                    automaticallyAdjustContentInsets={true}
+                    scrollEnabled={false}
+                  />
+                </View>
+              </ScrollView>
+            </View>
+
+            <View>
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
                 />
               </View>
             </View>

@@ -456,6 +456,14 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     probingByStiffwire: string;
   };
   //FormUseStates
+  const [dumpingOfSoilData, setDumpingOfSoilData] = useState({
+    soilApprovedSource: 'Y',
+    soilWithoutUnwantedMaterials: 'Y',
+    quantityOfSoilDumped: '0.0',
+  });
+const [procurementOfSheetData, setProcurementOfSheetData] = useState({
+  totalSheetPurchased: 0,
+});
   const [fixingOfBracingsData, setFixingOfBracingsData] = useState({
     lineLevelsChecked: 'Y',
     weldingAsPerApprovedDrawing: 'Y',
@@ -2099,6 +2107,26 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             });
           }
           break;
+        case TASK_TYPES.PROCUREMENT_OF_SHEET:
+          if (rfiData.metaData.procurementOfSheetData) {
+            setProcurementOfSheetData(rfiData.metaData.procurementOfSheetData);
+          } else {
+            setProcurementOfSheetData({
+              totalSheetPurchased: 0,
+            });
+          }
+          break;
+        case TASK_TYPES.DUMPING_OF_SOIL:
+          if (rfiData.metaData.dumpingOfSoilData) {
+            setDumpingOfSoilData(rfiData.metaData.dumpingOfSoilData);
+          } else {
+            setDumpingOfSoilData({
+              soilApprovedSource: 'Y',
+              soilWithoutUnwantedMaterials: 'Y',
+              quantityOfSoilDumped: '0.0',
+            });
+          }
+          break;
 
         case TASK_TYPES.LIFTING_LEFT:
         case TASK_TYPES.LIFTING_YARD:
@@ -2160,32 +2188,38 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             });
           }
           break;
-          case TASK_TYPES.PRE_STRESSING:
-            if (rfiData.metaData?.prestressingData) {
-              setPrestressingData(rfiData.metaData.prestressingData);
-            } else {
-              const prestressingCablesDetails = selectedTask.taskDetailsData[0]?.details?.prestressingCablesDetails;
-              console.log('====prestressing===', JSON.stringify(prestressingCablesDetails));
-              const array = [];
-              for(let prop in prestressingCablesDetails) {
-                array.push({
-                  cableNo: (array.length + 1),
-                  stressingSequence: prestressingCablesDetails[prop].stressingSequence,
-                  A0: 0,
-                  B0: 0,
-                  A1: 0,
-                  B1: 0,
-                  A2: 0,
-                  PA: 0,
-                  B2: 0,
-                  PB: 0,
-                  SA0: 0,
-                  SB0: 0
-                })
-              }
-              setPrestressingData(array);
+        case TASK_TYPES.PRE_STRESSING:
+          if (rfiData.metaData?.prestressingData) {
+            setPrestressingData(rfiData.metaData.prestressingData);
+          } else {
+            const prestressingCablesDetails =
+              selectedTask.taskDetailsData[0]?.details
+                ?.prestressingCablesDetails;
+            console.log(
+              '====prestressing===',
+              JSON.stringify(prestressingCablesDetails),
+            );
+            const array = [];
+            for (let prop in prestressingCablesDetails) {
+              array.push({
+                cableNo: array.length + 1,
+                stressingSequence:
+                  prestressingCablesDetails[prop].stressingSequence,
+                A0: 0,
+                B0: 0,
+                A1: 0,
+                B1: 0,
+                A2: 0,
+                PA: 0,
+                B2: 0,
+                PB: 0,
+                SA0: 0,
+                SB0: 0,
+              });
             }
-            break;
+            setPrestressingData(array);
+          }
+          break;
         default:
           break;
       }
@@ -3277,7 +3311,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       case TASK_TYPES.PLACING_OF_COVER:
       case TASK_TYPES.COMPACTION:
       case TASK_TYPES.FIXING_OF_SHEET:
-      case TASK_TYPES.GRADING:  
+      case TASK_TYPES.GRADING:
       case TASK_TYPES.THREADING_OF_PRE_STRESSING_STRANDS:
         checkList = {
           taskName: selectedTask.name,
@@ -3582,6 +3616,22 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         checkList = {
           taskName: selectedTask.name,
           fixingOfRailingData: fixingOfRailingData,
+        };
+        break;
+      case TASK_TYPES.PROCUREMENT_OF_SHEET:
+        checkList = {
+          taskName: selectedTask.name,
+          procurementOfSheetData: {
+            totalSheetPurchased: Number(
+              procurementOfSheetData.totalSheetPurchased,
+            ),
+          },
+        };
+        break;
+      case TASK_TYPES.DUMPING_OF_SOIL:
+        checkList = {
+          taskName: selectedTask.name,
+          dumpingOfSoilData: dumpingOfSoilData,
         };
         break;
 
@@ -6600,7 +6650,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         );
 
       case TASK_TYPES.GLUEING:
-       return (
+        return (
           <View>
             <View style={styles.MainContainer}>
               <ScrollView
@@ -9159,7 +9209,134 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             </View>
           </View>
         );
+      case TASK_TYPES.PROCUREMENT_OF_SHEET:
+        return (
+          <View>
+            <View style={{flexDirection: 'column'}}>
+              <Input
+                label="Total Sheet purchased (sqm)"
+                value={procurementOfSheetData.totalSheetPurchased}
+                onChange={(value: any) =>
+                  setProcurementOfSheetData(prevData => ({
+                    ...prevData,
+                    totalSheetPurchased: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
 
+            <View>
+              {/* This section can remain the same for date, time, and recommendations */}
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => setComments(text)}
+                />
+              </View>
+            </View>
+          </View>
+        );
+      case TASK_TYPES.DUMPING_OF_SOIL:
+        return (
+          <View>
+            <View style={{flexDirection: 'column'}}>
+              <DropdownPicker
+                label="Soil from Approved Source"
+                value={dumpingOfSoilData.soilApprovedSource}
+                items={YES_NO_LIST}
+                onChange={(value: any) =>
+                  setDumpingOfSoilData(prevData => ({
+                    ...prevData,
+                    soilApprovedSource: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+
+            <View style={{flexDirection: 'column'}}>
+              <DropdownPicker
+                label="Soil without Unwanted Materials"
+                value={dumpingOfSoilData.soilWithoutUnwantedMaterials}
+                items={YES_NO_LIST}
+                onChange={(value: any) =>
+                  setDumpingOfSoilData(prevData => ({
+                    ...prevData,
+                    soilWithoutUnwantedMaterials: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+
+            <View style={{flexDirection: 'column'}}>
+              <Input
+                label="Quantity of Soil Dumped (cum)"
+                value={dumpingOfSoilData.quantityOfSoilDumped}
+                onChange={(value: any) =>
+                  setDumpingOfSoilData(prevData => ({
+                    ...prevData,
+                    quantityOfSoilDumped: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+
+            {/* Date and Time */}
+            <View style={{flexDirection: 'column'}}>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+            </View>
+            <View>
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+            </View>
+
+            {/* Recommendations */}
+            <View style={{flexDirection: 'column', paddingBottom: 20}}>
+              <Text style={styles.Lable}>Recommendations</Text>
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                autoCapitalize="none"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+          </View>
+        );
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
       case TASK_TYPES.LIFTING_RIGHT:

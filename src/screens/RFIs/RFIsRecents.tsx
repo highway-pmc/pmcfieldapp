@@ -3043,6 +3043,56 @@ const renderSectionHeaderTemporaryPrestressing = (rowData: any) => (
             ))}
           </View>
         );
+      case TASK_TYPES.PROCUREMENT_OF_SHEET:
+        return (
+          <View>
+            <View style={{flexDirection: 'column'}}>
+              <Text style={styles.GenerateRFIFieldLabel}>
+                Total Sheet purchased (sqm)
+              </Text>
+              <Text>
+                {
+                  selectedRFI?.metaData.procurementOfSheetData
+                    ?.totalSheetPurchased
+                }
+              </Text>
+            </View>
+          </View>
+        );
+      case TASK_TYPES.DUMPING_OF_SOIL:
+        return (
+          <View>
+            <View style={{flexDirection: 'column'}}>
+              <Text style={styles.GenerateRFIFieldLabel}>
+                Soil from Approved Source
+              </Text>
+              <Text>
+                {selectedRFI?.metaData.dumpingOfSoilData?.soilApprovedSource}
+              </Text>
+            </View>
+
+            <View style={{flexDirection: 'column'}}>
+              <Text style={styles.GenerateRFIFieldLabel}>
+                Soil without Unwanted Materials
+              </Text>
+              <Text>
+                {
+                  selectedRFI?.metaData.dumpingOfSoilData
+                    ?.soilWithoutUnwantedMaterials
+                }
+              </Text>
+            </View>
+
+            <View style={{flexDirection: 'column'}}>
+              <Text style={styles.GenerateRFIFieldLabel}>
+                Quantity of Soil Dumped (cum)
+              </Text>
+              <Text>
+                {selectedRFI?.metaData.dumpingOfSoilData?.quantityOfSoilDumped}
+              </Text>
+            </View>
+          </View>
+        );
 
       // ReadOnlyRfi
       default:

@@ -515,7 +515,9 @@ export const TASK_TYPES = {
   COMPACTION: 'compaction',
   FIXING_OF_SHEET: 'fixing-of-sheet',
   GRADING: 'grading',
-  PRE_STRESSING: 'pre-stressing'
+  PRE_STRESSING: 'pre-stressing',
+  PROCUREMENT_OF_SHEET: 'procurement-of-sheet',
+  DUMPING_OF_SOIL:'dumping-of-soil',
 };
 
 export const TEST_MATERIALS_TYPES = {

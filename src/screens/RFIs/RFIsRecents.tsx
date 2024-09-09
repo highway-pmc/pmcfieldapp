@@ -567,57 +567,59 @@ const RFIsRecents = (props: any) => {
       </View>
     );
   };
-const renderItemTemporaryPrestressing = (rowData: any) => (
-  <View style={{flexDirection: 'column', gap: 5}}>
-    {rowData.index === 0 && (
-      <View style={styles.headerRow}>
-        <Text style={styles.headerCell}>Joint Numbers</Text>
-        <Text style={styles.headerCell}>Calibration Done</Text>
-        <Text style={styles.headerCell}>Stressing Sequence Drawing Number</Text>
-        <Text style={styles.headerCell}>Date of Prestressing</Text>
-        <Text style={styles.headerCell}>Time of Prestressing</Text>
-        <Text style={styles.headerCell}>Max Jack Pressure (Kg/Cm²)</Text>
-        <Text style={styles.headerCell}>Jack Pressure Applied (Kg/Cm²)</Text>
+  const renderItemTemporaryPrestressing = (rowData: any) => (
+    <View style={{flexDirection: 'column', gap: 5}}>
+      {rowData.index === 0 && (
+        <View style={styles.headerRow}>
+          <Text style={styles.headerCell}>Joint Numbers</Text>
+          <Text style={styles.headerCell}>Calibration Done</Text>
+          <Text style={styles.headerCell}>
+            Stressing Sequence Drawing Number
+          </Text>
+          <Text style={styles.headerCell}>Date of Prestressing</Text>
+          <Text style={styles.headerCell}>Time of Prestressing</Text>
+          <Text style={styles.headerCell}>Max Jack Pressure (Kg/Cm²)</Text>
+          <Text style={styles.headerCell}>Jack Pressure Applied (Kg/Cm²)</Text>
+        </View>
+      )}
+      <View style={styles.row}>
+        <Text style={styles.cell}>{rowData.item.jointNumbers}</Text>
+        <Text style={styles.cell}>{rowData.item.calibrationDone}</Text>
+        <Text style={styles.cell}>
+          {rowData.item.stressingSequenceDrawingNumber}
+        </Text>
+        <Text style={styles.cell}>{rowData.item.dateOfPrestressing}</Text>
+        <Text style={styles.cell}>{rowData.item.timeOfPrestressing}</Text>
+        <Text style={styles.cell}>{rowData.item.maxJackPressure}</Text>
+        <Text style={styles.cell}>{rowData.item.jackPressureApplied}</Text>
       </View>
-    )}
-    <View style={styles.row}>
-      <Text style={styles.cell}>{rowData.item.jointNumbers}</Text>
-      <Text style={styles.cell}>{rowData.item.calibrationDone}</Text>
-      <Text style={styles.cell}>
-        {rowData.item.stressingSequenceDrawingNumber}
-      </Text>
-      <Text style={styles.cell}>{rowData.item.dateOfPrestressing}</Text>
-      <Text style={styles.cell}>{rowData.item.timeOfPrestressing}</Text>
-      <Text style={styles.cell}>{rowData.item.maxJackPressure}</Text>
-      <Text style={styles.cell}>{rowData.item.jackPressureApplied}</Text>
     </View>
-  </View>
-);
-const renderSectionHeaderTemporaryPrestressing = (rowData: any) => (
-  <View>
+  );
+  const renderSectionHeaderTemporaryPrestressing = (rowData: any) => (
     <View>
-      <Text>Joint Numbers</Text>
+      <View>
+        <Text>Joint Numbers</Text>
+      </View>
+      <View>
+        <Text>Calibration Done</Text>
+      </View>
+      <View>
+        <Text>Stressing Sequence Drawing Number</Text>
+      </View>
+      <View>
+        <Text>Date of Prestressing</Text>
+      </View>
+      <View>
+        <Text>Time of Prestressing</Text>
+      </View>
+      <View>
+        <Text>Max Jack Pressure (Kg/Cm²)</Text>
+      </View>
+      <View>
+        <Text>Jack Pressure Applied (Kg/Cm²)</Text>
+      </View>
     </View>
-    <View>
-      <Text>Calibration Done</Text>
-    </View>
-    <View>
-      <Text>Stressing Sequence Drawing Number</Text>
-    </View>
-    <View>
-      <Text>Date of Prestressing</Text>
-    </View>
-    <View>
-      <Text>Time of Prestressing</Text>
-    </View>
-    <View>
-      <Text>Max Jack Pressure (Kg/Cm²)</Text>
-    </View>
-    <View>
-      <Text>Jack Pressure Applied (Kg/Cm²)</Text>
-    </View>
-  </View>
-);
+  );
 
   const renderSectionHeaderGlueing = (rowData: any) => {
     return (
@@ -3210,6 +3212,84 @@ const renderSectionHeaderTemporaryPrestressing = (rowData: any) => (
         return (
           <View>
             {boringOfDiaphragmProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.boringOfDiaphragmData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.ERECTION:
+        const erectionProperties = [
+          {
+            title: 'Ground properly leveled for trailer placement',
+            key: 'groundLeveled',
+          },
+          {
+            title: 'Area is barricaded with proper signages',
+            key: 'areaBarricaded',
+          },
+          {
+            title: 'Temporary lights for proper illumination at night',
+            key: 'temporaryLights',
+          },
+          {title: 'Flag man/Marshal available', key: 'flagManAvailable'},
+          {
+            title: 'Methodology & Scheme available at site',
+            key: 'methodologyAvailable',
+          },
+          {title: 'Crane positioned as per drawing', key: 'cranePositioned'},
+          {title: 'De-shackles certified', key: 'deShacklesCertified'},
+          {
+            title: 'Safety color code present on de-shackles',
+            key: 'safetyColorCode',
+          },
+          {
+            title: 'Hydraulic jacks calibrated',
+            key: 'hydraulicJacksCalibrated',
+          },
+          {
+            title: 'Limit switch of hoist working properly',
+            key: 'limitSwitchWorking',
+          },
+          {
+            title: 'Cotter pins placed in lifting assembly',
+            key: 'cotterPinPlaced',
+          },
+          {
+            title: 'Macalloy bars in proper condition',
+            key: 'macalloyBarsCondition',
+          },
+          {title: 'TPI of Cranes & Slings done', key: 'tpiDone'},
+          {
+            title: 'TPI certificates available',
+            key: 'tpiCertificatesAvailable',
+          },
+          {
+            title: 'Counter-weights placed as per drawing',
+            key: 'counterWeightsPlaced',
+          },
+          {title: 'Positioning marked at site', key: 'positioningMarked'},
+          {
+            title: 'Traffic diverted & marshals in place',
+            key: 'trafficDiverted',
+          },
+          {title: 'Workers safety certified', key: 'workersSafetyCertified'},
+          {title: 'Safety arrangements at site', key: 'safetyArrangements'},
+          {title: 'Positioned at marked location', key: 'sitePositioned'},
+          {
+            title: 'Lateral support ensured before release',
+            key: 'lateralSupportEnsured',
+          },
+        ];
+
+        return (
+          <View>
+            {erectionProperties.map(property => (
               <View style={{flexDirection: 'column'}} key={property.key}>
                 <Text style={styles.GenerateRFIFieldLabel}>
                   {property.title}

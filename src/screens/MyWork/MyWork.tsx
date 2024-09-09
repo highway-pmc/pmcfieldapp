@@ -456,6 +456,30 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     probingByStiffwire: string;
   };
   //FormUseStates
+  const [erectionData, setErectionData] = useState({
+    groundLeveled: 'Y',
+    areaBarricaded: 'Y',
+    temporaryLights: 'Y',
+    flagManAvailable: 'Y',
+    methodologyAvailable: 'Y',
+    cranePositioned: 'Y',
+    deShacklesCertified: 'Y',
+    safetyColorCode: 'Y',
+    hydraulicJacksCalibrated: 'Y',
+    limitSwitchWorking: 'Y',
+    cotterPinPlaced: 'Y',
+    macalloyBarsCondition: 'Y',
+    tpiDone: 'Y',
+    tpiCertificatesAvailable: 'Y',
+    counterWeightsPlaced: 'Y',
+    positioningMarked: 'Y',
+    trafficDiverted: 'Y',
+    workersSafetyCertified: 'Y',
+    safetyArrangements: 'Y',
+    sitePositioned: 'Y',
+    lateralSupportEnsured: 'Y',
+  });
+
   const [boringOfDiaphragmData, setBoringOfDiaphragmData] = useState({
     densityOfPolymer: 0.0,
     viscosityOfPolymer: 0,
@@ -2235,6 +2259,35 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             });
           }
           break;
+        case TASK_TYPES.ERECTION:
+          if (rfiData.metaData.erectionData) {
+            setErectionData(rfiData.metaData.erectionData);
+          } else {
+            setErectionData({
+              groundLeveled: 'Y',
+              areaBarricaded: 'Y',
+              temporaryLights: 'Y',
+              flagManAvailable: 'Y',
+              methodologyAvailable: 'Y',
+              cranePositioned: 'Y',
+              deShacklesCertified: 'Y',
+              safetyColorCode: 'Y',
+              hydraulicJacksCalibrated: 'Y',
+              limitSwitchWorking: 'Y',
+              cotterPinPlaced: 'Y',
+              macalloyBarsCondition: 'Y',
+              tpiDone: 'Y',
+              tpiCertificatesAvailable: 'Y',
+              counterWeightsPlaced: 'Y',
+              positioningMarked: 'Y',
+              trafficDiverted: 'Y',
+              workersSafetyCertified: 'Y',
+              safetyArrangements: 'Y',
+              sitePositioned: 'Y',
+              lateralSupportEnsured: 'Y',
+            });
+          }
+          break;
 
         case TASK_TYPES.LIFTING_LEFT:
         case TASK_TYPES.LIFTING_YARD:
@@ -3935,7 +3988,12 @@ const validatePrestressingData = (prestressingData: any): boolean => {
           boringOfDiaphragmData: boringOfDiaphragmData,
         };
         break;
-
+      case TASK_TYPES.ERECTION:
+        checkList = {
+          taskName: selectedTask.name,
+          erectionData: erectionData,
+        };
+        break;
       case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
@@ -9939,7 +9997,119 @@ const handleTextInputChangePrestressing = (
             </View>
           </View>
         );
-
+      case TASK_TYPES.ERECTION:
+        const erectionProperties = [
+          {
+            title: 'Ground properly leveled for trailer placement',
+            key: 'groundLeveled',
+          },
+          {
+            title: 'Area is barricaded with proper signages',
+            key: 'areaBarricaded',
+          },
+          {
+            title: 'Temporary lights for proper illumination at night',
+            key: 'temporaryLights',
+          },
+          {title: 'Flag man/Marshal available', key: 'flagManAvailable'},
+          {
+            title: 'Methodology & Scheme available at site',
+            key: 'methodologyAvailable',
+          },
+          {title: 'Crane positioned as per drawing', key: 'cranePositioned'},
+          {title: 'De-shackles certified', key: 'deShacklesCertified'},
+          {
+            title: 'Safety color code present on de-shackles',
+            key: 'safetyColorCode',
+          },
+          {
+            title: 'Hydraulic jacks calibrated',
+            key: 'hydraulicJacksCalibrated',
+          },
+          {
+            title: 'Limit switch of hoist working properly',
+            key: 'limitSwitchWorking',
+          },
+          {
+            title: 'Cotter pins placed in lifting assembly',
+            key: 'cotterPinPlaced',
+          },
+          {
+            title: 'Macalloy bars in proper condition',
+            key: 'macalloyBarsCondition',
+          },
+          {title: 'TPI of Cranes & Slings done', key: 'tpiDone'},
+          {
+            title: 'TPI certificates available',
+            key: 'tpiCertificatesAvailable',
+          },
+          {
+            title: 'Counter-weights placed as per drawing',
+            key: 'counterWeightsPlaced',
+          },
+          {title: 'Positioning marked at site', key: 'positioningMarked'},
+          {
+            title: 'Traffic diverted & marshals in place',
+            key: 'trafficDiverted',
+          },
+          {title: 'Workers safety certified', key: 'workersSafetyCertified'},
+          {title: 'Safety arrangements at site', key: 'safetyArrangements'},
+          {title: 'Positioned at marked location', key: 'sitePositioned'},
+          {
+            title: 'Lateral support ensured before release',
+            key: 'lateralSupportEnsured',
+          },
+        ];
+        return (
+          <View>
+            {erectionProperties.map(property => (
+              <View key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={erectionData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value:any) =>
+                    setErectionData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <View>
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
+                />
+              </View>
+            </View>
+          </View>
+        );
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
       case TASK_TYPES.LIFTING_RIGHT:

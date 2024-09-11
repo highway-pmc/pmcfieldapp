@@ -524,6 +524,7 @@ export const TASK_TYPES = {
   COMPACTING_GROUND_SUPPORT_FOR_EMBANKMENT:
     'compacting-ground-support-for-embankment',
   DEWATERING: 'dewatering',
+  STRIPPING_AND_STORING_TOP_SOIL:'stripping-and-storing-top-soil',
 };
 
 export const TEST_MATERIALS_TYPES = {

@@ -456,6 +456,11 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     probingByStiffwire: string;
   };
   //FormUseStates
+  const [strippingAndStoringTopSoilData, setStrippingAndStoringTopSoilData] =
+    useState({
+      topSoilCollectedStored: 0, // Default value for top soil collected (cum)
+    });
+
   const [erectionData, setErectionData] = useState({
     groundLeveled: 'Y',
     areaBarricaded: 'Y',
@@ -2288,6 +2293,17 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             });
           }
           break;
+        case TASK_TYPES.STRIPPING_AND_STORING_TOP_SOIL:
+          if (rfiData.metaData.strippingAndStoringTopSoilData) {
+            setStrippingAndStoringTopSoilData(
+              rfiData.metaData.strippingAndStoringTopSoilData,
+            );
+          } else {
+            setStrippingAndStoringTopSoilData({
+              topSoilCollectedStored: 0, // Default value
+            });
+          }
+          break;
 
         case TASK_TYPES.LIFTING_LEFT:
         case TASK_TYPES.LIFTING_YARD:
@@ -3203,7 +3219,30 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     curingData.waterConsumptionInKL = Number(curingData.waterConsumptionInKL);
     return true;
   };
+  
+  const validateStrippingAndStoringTopSoilData = (data: any) => {
+    const value = parseFloat(data.topSoilCollectedStored);
+    if (isNaN(value)) {
+      showSnackbar(
+        'Invalid value for topsoil collected. Please enter a valid number.',
+      );
+      return false;
+    }
+    if (value <= 0) {
+      showSnackbar('Quantity of topsoil collected must be greater than 0.');
+      return false;
+    }
+    if (!/^\d+(\.\d{1,2})?$/.test(data.topSoilCollectedStored)) {
+      showSnackbar('Topsoil quantity must have up to two decimal places.');
+      return false;
+    }
+    if (value > 100000) {
+      showSnackbar('Topsoil quantity cannot exceed 100,000 cubic meters.');
+      return false;
+    }
 
+    return true;
+  };
   const validateGlueingData = (glueingData: any): boolean => {
     for (const item of glueingData) {
       // Parsing values to float/integer
@@ -3996,6 +4035,24 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           erectionData: erectionData,
         };
         break;
+      case TASK_TYPES.STRIPPING_AND_STORING_TOP_SOIL:
+        if (
+          !validateStrippingAndStoringTopSoilData(
+            strippingAndStoringTopSoilData,
+          )
+        ) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          strippingAndStoringTopSoilData: {
+            topSoilCollectedStored: Number(
+              strippingAndStoringTopSoilData.topSoilCollectedStored,
+            ), // Ensuring it's a number
+          },
+        };
+        break;
+
       case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
@@ -10114,6 +10171,55 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             </View>
           </View>
         );
+      case TASK_TYPES.STRIPPING_AND_STORING_TOP_SOIL:
+        return (
+          <View>
+            <View style={{flexDirection: 'column'}}>
+              <Input
+                label="Qty of Top Soil collected and stored (cum)"
+                value={strippingAndStoringTopSoilData.topSoilCollectedStored}
+                onChange={(value: any) =>
+                  setStrippingAndStoringTopSoilData(prevData => ({
+                    ...prevData,
+                    topSoilCollectedStored: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+
+            <View>
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => setComments(text)}
+                />
+              </View>
+            </View>
+          </View>
+        );
+
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
       case TASK_TYPES.LIFTING_RIGHT:

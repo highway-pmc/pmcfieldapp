@@ -3303,6 +3303,22 @@ const RFIsRecents = (props: any) => {
             ))}
           </View>
         );
+      case TASK_TYPES.STRIPPING_AND_STORING_TOP_SOIL:
+        return (
+          <View>
+            <View style={{flexDirection: 'column'}}>
+              <Text style={styles.GenerateRFIFieldLabel}>
+                Qty of Top Soil collected and stored (cum)
+              </Text>
+              <Text>
+                {
+                  selectedRFI?.metaData.strippingAndStoringTopSoilData
+                    ?.topSoilCollectedStored
+                }
+              </Text>
+            </View>
+          </View>
+        );
 
       // ReadOnlyRfi
       default:

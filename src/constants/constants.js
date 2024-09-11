@@ -505,7 +505,7 @@ export const TASK_TYPES = {
   FIXING_OF_SHEATHING_JOINTS: 'fixing-of-sheathing-joints',
   TORQUING: 'torquing',
   FIXING_OF_GEO_GRID: 'fixing-of-geo-grid',
-  ERECTION:'erection',
+  ERECTION: 'erection',
   ERECTION_OF_FRICTION_SLAB: 'erection-of-friction-slab',
   ERECTION_OF_FACIA_PANELS: 'erection-of-facia-panels',
   ERECTION_OF_COLUMNS: 'erection-of-columns',
@@ -521,6 +521,9 @@ export const TASK_TYPES = {
   DUMPING_OF_SOIL: 'dumping-of-soil',
   BORING_OF_DIAPHRAGM: 'boring-of-diaphragm',
   COPING: 'coping',
+  COMPACTING_GROUND_SUPPORT_FOR_EMBANKMENT:
+    'compacting-ground-support-for-embankment',
+  DEWATERING: 'dewatering',
 };
 
 export const TEST_MATERIALS_TYPES = {

@@ -895,6 +895,8 @@ const RFIsRecents = (props: any) => {
             </View>
           </View>
         );
+      case TASK_TYPES.COMPACTING_GROUND_SUPPORT_FOR_EMBANKMENT:
+      case TASK_TYPES.DEWATERING:
       case TASK_TYPES.PLACING_OF_COVER:
       case TASK_TYPES.COMPACTION:
       case TASK_TYPES.FIXING_OF_SHEET:

@@ -456,6 +456,35 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     probingByStiffwire: string;
   };
   //FormUseStates
+  const [strippingAndStoringTopSoilData, setStrippingAndStoringTopSoilData] =
+    useState({
+      topSoilCollectedStored: 0, // Default value for top soil collected (cum)
+    });
+
+  const [erectionData, setErectionData] = useState({
+    groundLeveled: 'Y',
+    areaBarricaded: 'Y',
+    temporaryLights: 'Y',
+    flagManAvailable: 'Y',
+    methodologyAvailable: 'Y',
+    cranePositioned: 'Y',
+    deShacklesCertified: 'Y',
+    safetyColorCode: 'Y',
+    hydraulicJacksCalibrated: 'Y',
+    limitSwitchWorking: 'Y',
+    cotterPinPlaced: 'Y',
+    macalloyBarsCondition: 'Y',
+    tpiDone: 'Y',
+    tpiCertificatesAvailable: 'Y',
+    counterWeightsPlaced: 'Y',
+    positioningMarked: 'Y',
+    trafficDiverted: 'Y',
+    workersSafetyCertified: 'Y',
+    safetyArrangements: 'Y',
+    sitePositioned: 'Y',
+    lateralSupportEnsured: 'Y',
+  });
+
   const [boringOfDiaphragmData, setBoringOfDiaphragmData] = useState({
     densityOfPolymer: 0.0,
     viscosityOfPolymer: 0,
@@ -2235,6 +2264,46 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             });
           }
           break;
+        case TASK_TYPES.ERECTION:
+          if (rfiData.metaData.erectionData) {
+            setErectionData(rfiData.metaData.erectionData);
+          } else {
+            setErectionData({
+              groundLeveled: 'Y',
+              areaBarricaded: 'Y',
+              temporaryLights: 'Y',
+              flagManAvailable: 'Y',
+              methodologyAvailable: 'Y',
+              cranePositioned: 'Y',
+              deShacklesCertified: 'Y',
+              safetyColorCode: 'Y',
+              hydraulicJacksCalibrated: 'Y',
+              limitSwitchWorking: 'Y',
+              cotterPinPlaced: 'Y',
+              macalloyBarsCondition: 'Y',
+              tpiDone: 'Y',
+              tpiCertificatesAvailable: 'Y',
+              counterWeightsPlaced: 'Y',
+              positioningMarked: 'Y',
+              trafficDiverted: 'Y',
+              workersSafetyCertified: 'Y',
+              safetyArrangements: 'Y',
+              sitePositioned: 'Y',
+              lateralSupportEnsured: 'Y',
+            });
+          }
+          break;
+        case TASK_TYPES.STRIPPING_AND_STORING_TOP_SOIL:
+          if (rfiData.metaData.strippingAndStoringTopSoilData) {
+            setStrippingAndStoringTopSoilData(
+              rfiData.metaData.strippingAndStoringTopSoilData,
+            );
+          } else {
+            setStrippingAndStoringTopSoilData({
+              topSoilCollectedStored: 0, // Default value
+            });
+          }
+          break;
 
         case TASK_TYPES.LIFTING_LEFT:
         case TASK_TYPES.LIFTING_YARD:
@@ -3150,7 +3219,30 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     curingData.waterConsumptionInKL = Number(curingData.waterConsumptionInKL);
     return true;
   };
+  
+  const validateStrippingAndStoringTopSoilData = (data: any) => {
+    const value = parseFloat(data.topSoilCollectedStored);
+    if (isNaN(value)) {
+      showSnackbar(
+        'Invalid value for topsoil collected. Please enter a valid number.',
+      );
+      return false;
+    }
+    if (value <= 0) {
+      showSnackbar('Quantity of topsoil collected must be greater than 0.');
+      return false;
+    }
+    if (!/^\d+(\.\d{1,2})?$/.test(data.topSoilCollectedStored)) {
+      showSnackbar('Topsoil quantity must have up to two decimal places.');
+      return false;
+    }
+    if (value > 100000) {
+      showSnackbar('Topsoil quantity cannot exceed 100,000 cubic meters.');
+      return false;
+    }
 
+    return true;
+  };
   const validateGlueingData = (glueingData: any): boolean => {
     for (const item of glueingData) {
       // Parsing values to float/integer
@@ -3295,109 +3387,109 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
 
     return true;
   };
-const validatePrestressingData = (prestressingData: any): boolean => {
-  for (const item of prestressingData) {
-    // Parsing values to float
-    const A0 = parseFloat(item.A0);
-    const B0 = parseFloat(item.B0);
-    const A1 = parseFloat(item.A1);
-    const B1 = parseFloat(item.B1);
-    const A2 = parseFloat(item.A2);
-    const B2 = parseFloat(item.B2);
-    const PA = parseFloat(item.PA);
-    const PB = parseFloat(item.PB);
-    const SA0 = parseFloat(item.SA0);
-    const SB0 = parseFloat(item.SB0);
+  const validatePrestressingData = (prestressingData: any): boolean => {
+    for (const item of prestressingData) {
+      // Parsing values to float
+      const A0 = parseFloat(item.A0);
+      const B0 = parseFloat(item.B0);
+      const A1 = parseFloat(item.A1);
+      const B1 = parseFloat(item.B1);
+      const A2 = parseFloat(item.A2);
+      const B2 = parseFloat(item.B2);
+      const PA = parseFloat(item.PA);
+      const PB = parseFloat(item.PB);
+      const SA0 = parseFloat(item.SA0);
+      const SB0 = parseFloat(item.SB0);
 
-    // Validation checks
-    if (isNaN(A0) || A0 <= 0 || A0 > 500) {
-      showSnackbar(
-        'A0 must be greater than 0 and up to 500, with up to 2 decimal places.',
-        'error',
-      );
-      return false;
+      // Validation checks
+      if (isNaN(A0) || A0 <= 0 || A0 > 500) {
+        showSnackbar(
+          'A0 must be greater than 0 and up to 500, with up to 2 decimal places.',
+          'error',
+        );
+        return false;
+      }
+      if (isNaN(B0) || B0 <= 0 || B0 > 500) {
+        showSnackbar(
+          'B0 must be greater than 0 and up to 500, with up to 2 decimal places.',
+          'error',
+        );
+        return false;
+      }
+      if (isNaN(A1) || A1 <= 0 || A1 > 500) {
+        showSnackbar(
+          'A1 must be greater than 0 and up to 500, with up to 2 decimal places.',
+          'error',
+        );
+        return false;
+      }
+      if (isNaN(B1) || B1 <= 0 || B1 > 500) {
+        showSnackbar(
+          'B1 must be greater than 0 and up to 500, with up to 2 decimal places.',
+          'error',
+        );
+        return false;
+      }
+      if (isNaN(A2) || A2 <= 0 || A2 > 500) {
+        showSnackbar(
+          'A2 must be greater than 0 and up to 500, with up to 2 decimal places.',
+          'error',
+        );
+        return false;
+      }
+      if (isNaN(B2) || B2 <= 0 || B2 > 500) {
+        showSnackbar(
+          'B2 must be greater than 0 and up to 500, with up to 2 decimal places.',
+          'error',
+        );
+        return false;
+      }
+      if (isNaN(PA) || PA <= 0 || PA > 500) {
+        showSnackbar(
+          'PA must be greater than 0 and up to 500, with up to 2 decimal places.',
+          'error',
+        );
+        return false;
+      }
+      if (isNaN(PB) || PB <= 0 || PB > 500) {
+        showSnackbar(
+          'PB must be greater than 0 and up to 500, with up to 2 decimal places.',
+          'error',
+        );
+        return false;
+      }
+      if (isNaN(SA0) || SA0 <= 0 || SA0 > 500) {
+        showSnackbar(
+          'SA0 must be greater than 0 and up to 500, with up to 2 decimal places.',
+          'error',
+        );
+        return false;
+      }
+      if (isNaN(SB0) || SB0 <= 0 || SB0 > 500) {
+        showSnackbar(
+          'SB0 must be greater than 0 and up to 500, with up to 2 decimal places.',
+          'error',
+        );
+        return false;
+      }
     }
-    if (isNaN(B0) || B0 <= 0 || B0 > 500) {
-      showSnackbar(
-        'B0 must be greater than 0 and up to 500, with up to 2 decimal places.',
-        'error',
-      );
-      return false;
-    }
-    if (isNaN(A1) || A1 <= 0 || A1 > 500) {
-      showSnackbar(
-        'A1 must be greater than 0 and up to 500, with up to 2 decimal places.',
-        'error',
-      );
-      return false;
-    }
-    if (isNaN(B1) || B1 <= 0 || B1 > 500) {
-      showSnackbar(
-        'B1 must be greater than 0 and up to 500, with up to 2 decimal places.',
-        'error',
-      );
-      return false;
-    }
-    if (isNaN(A2) || A2 <= 0 || A2 > 500) {
-      showSnackbar(
-        'A2 must be greater than 0 and up to 500, with up to 2 decimal places.',
-        'error',
-      );
-      return false;
-    }
-    if (isNaN(B2) || B2 <= 0 || B2 > 500) {
-      showSnackbar(
-        'B2 must be greater than 0 and up to 500, with up to 2 decimal places.',
-        'error',
-      );
-      return false;
-    }
-    if (isNaN(PA) || PA <= 0 || PA > 500) {
-      showSnackbar(
-        'PA must be greater than 0 and up to 500, with up to 2 decimal places.',
-        'error',
-      );
-      return false;
-    }
-    if (isNaN(PB) || PB <= 0 || PB > 500) {
-      showSnackbar(
-        'PB must be greater than 0 and up to 500, with up to 2 decimal places.',
-        'error',
-      );
-      return false;
-    }
-    if (isNaN(SA0) || SA0 <= 0 || SA0 > 500) {
-      showSnackbar(
-        'SA0 must be greater than 0 and up to 500, with up to 2 decimal places.',
-        'error',
-      );
-      return false;
-    }
-    if (isNaN(SB0) || SB0 <= 0 || SB0 > 500) {
-      showSnackbar(
-        'SB0 must be greater than 0 and up to 500, with up to 2 decimal places.',
-        'error',
-      );
-      return false;
-    }
-  }
 
-  // Convert the values back to numbers after validation
-  prestressingData.forEach((item: any) => {
-    item.A0 = Number(item.A0);
-    item.B0 = Number(item.B0);
-    item.A1 = Number(item.A1);
-    item.B1 = Number(item.B1);
-    item.A2 = Number(item.A2);
-    item.B2 = Number(item.B2);
-    item.PA = Number(item.PA);
-    item.PB = Number(item.PB);
-    item.SA0 = Number(item.SA0);
-    item.SB0 = Number(item.SB0);
-  });
+    // Convert the values back to numbers after validation
+    prestressingData.forEach((item: any) => {
+      item.A0 = Number(item.A0);
+      item.B0 = Number(item.B0);
+      item.A1 = Number(item.A1);
+      item.B1 = Number(item.B1);
+      item.A2 = Number(item.A2);
+      item.B2 = Number(item.B2);
+      item.PA = Number(item.PA);
+      item.PB = Number(item.PB);
+      item.SA0 = Number(item.SA0);
+      item.SB0 = Number(item.SB0);
+    });
 
-  return true;
-};
+    return true;
+  };
 
   const validateGroutingData = (groutingData: any): boolean => {
     const wcRatio = parseFloat(groutingData.wcRatio);
@@ -3600,6 +3692,8 @@ const validatePrestressingData = (prestressingData: any): boolean => {
           minimumTimeHasBeenAttained: minimumTimeHasBeenAttained,
         };
         break;
+      case TASK_TYPES.COMPACTING_GROUND_SUPPORT_FOR_EMBANKMENT:
+      case TASK_TYPES.DEWATERING:
       case TASK_TYPES.PLACING_OF_COVER:
       case TASK_TYPES.COMPACTION:
       case TASK_TYPES.FIXING_OF_SHEET:
@@ -3933,6 +4027,29 @@ const validatePrestressingData = (prestressingData: any): boolean => {
         checkList = {
           taskName: selectedTask.name,
           boringOfDiaphragmData: boringOfDiaphragmData,
+        };
+        break;
+      case TASK_TYPES.ERECTION:
+        checkList = {
+          taskName: selectedTask.name,
+          erectionData: erectionData,
+        };
+        break;
+      case TASK_TYPES.STRIPPING_AND_STORING_TOP_SOIL:
+        if (
+          !validateStrippingAndStoringTopSoilData(
+            strippingAndStoringTopSoilData,
+          )
+        ) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          strippingAndStoringTopSoilData: {
+            topSoilCollectedStored: Number(
+              strippingAndStoringTopSoilData.topSoilCollectedStored,
+            ), // Ensuring it's a number
+          },
         };
         break;
 
@@ -4754,137 +4871,137 @@ const validatePrestressingData = (prestressingData: any): boolean => {
 
     return true;
   };
-const renderPrestressingHeadings = () => (
-  <View style={styles.rowContainer}>
-    <View style={styles.cell}>
-      <Text style={styles.cellText}>Cable No.</Text>
+  const renderPrestressingHeadings = () => (
+    <View style={styles.rowContainer}>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Cable No.</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Stressing Sequence</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Gauge A0 (100 Kg/cm²)</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Gauge B0 (100 Kg/cm²)</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Gauge A1 (200 Kg/cm²)</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Gauge B1 (200 Kg/cm²)</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Gauge A2 (Locking)</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Pressure PA (Locking)</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Gauge B2 (Locking)</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Pressure PB (Locking)</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Slip SA0 (Locking)</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>Slip SB0 (Locking)</Text>
+      </View>
     </View>
-    <View style={styles.cell}>
-      <Text style={styles.cellText}>Stressing Sequence</Text>
-    </View>
-    <View style={styles.cell}>
-      <Text style={styles.cellText}>Gauge A0 (100 Kg/cm²)</Text>
-    </View>
-    <View style={styles.cell}>
-      <Text style={styles.cellText}>Gauge B0 (100 Kg/cm²)</Text>
-    </View>
-    <View style={styles.cell}>
-      <Text style={styles.cellText}>Gauge A1 (200 Kg/cm²)</Text>
-    </View>
-    <View style={styles.cell}>
-      <Text style={styles.cellText}>Gauge B1 (200 Kg/cm²)</Text>
-    </View>
-    <View style={styles.cell}>
-      <Text style={styles.cellText}>Gauge A2 (Locking)</Text>
-    </View>
-    <View style={styles.cell}>
-      <Text style={styles.cellText}>Pressure PA (Locking)</Text>
-    </View>
-    <View style={styles.cell}>
-      <Text style={styles.cellText}>Gauge B2 (Locking)</Text>
-    </View>
-    <View style={styles.cell}>
-      <Text style={styles.cellText}>Pressure PB (Locking)</Text>
-    </View>
-    <View style={styles.cell}>
-      <Text style={styles.cellText}>Slip SA0 (Locking)</Text>
-    </View>
-    <View style={styles.cell}>
-      <Text style={styles.cellText}>Slip SB0 (Locking)</Text>
-    </View>
-  </View>
-);
-const renderItemPrestressing = (rowData: any) => (
-  <View style={[styles.rowContainer, styles.marginBottom10]}>
-    <View style={styles.cell}>
-      <Text style={styles.cellText}>{rowData.item['cableNo']}</Text>
-    </View>
+  );
+  const renderItemPrestressing = (rowData: any) => (
+    <View style={[styles.rowContainer, styles.marginBottom10]}>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>{rowData.item['cableNo']}</Text>
+      </View>
 
-    <View style={styles.cell}>
-      <Text style={styles.cellText}>{rowData.item['stressingSequence']}</Text>
-    </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>{rowData.item['stressingSequence']}</Text>
+      </View>
 
-    <View style={styles.cell}>
-      <CustomTextInputValue
-        rowItem={rowData.item}
-        fieldName={'A0'}
-        index={rowData.index}
-        onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
-    </View>
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'A0'}
+          index={rowData.index}
+          onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
+      </View>
 
-    <View style={styles.cell}>
-      <CustomTextInputValue
-        rowItem={rowData.item}
-        fieldName={'B0'}
-        index={rowData.index}
-        onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
-    </View>
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'B0'}
+          index={rowData.index}
+          onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
+      </View>
 
-    <View style={styles.cell}>
-      <CustomTextInputValue
-        rowItem={rowData.item}
-        fieldName={'A1'}
-        index={rowData.index}
-        onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
-    </View>
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'A1'}
+          index={rowData.index}
+          onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
+      </View>
 
-    <View style={styles.cell}>
-      <CustomTextInputValue
-        rowItem={rowData.item}
-        fieldName={'B1'}
-        index={rowData.index}
-        onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
-    </View>
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'B1'}
+          index={rowData.index}
+          onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
+      </View>
 
-    <View style={styles.cell}>
-      <CustomTextInputValue
-        rowItem={rowData.item}
-        fieldName={'A2'}
-        index={rowData.index}
-        onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
-    </View>
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'A2'}
+          index={rowData.index}
+          onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
+      </View>
 
-    <View style={styles.cell}>
-      <CustomTextInputValue
-        rowItem={rowData.item}
-        fieldName={'PA'}
-        index={rowData.index}
-        onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
-    </View>
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'PA'}
+          index={rowData.index}
+          onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
+      </View>
 
-    <View style={styles.cell}>
-      <CustomTextInputValue
-        rowItem={rowData.item}
-        fieldName={'B2'}
-        index={rowData.index}
-        onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
-    </View>
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'B2'}
+          index={rowData.index}
+          onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
+      </View>
 
-    <View style={styles.cell}>
-      <CustomTextInputValue
-        rowItem={rowData.item}
-        fieldName={'PB'}
-        index={rowData.index}
-        onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
-    </View>
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'PB'}
+          index={rowData.index}
+          onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
+      </View>
 
-    <View style={styles.cell}>
-      <CustomTextInputValue
-        rowItem={rowData.item}
-        fieldName={'SA0'}
-        index={rowData.index}
-        onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
-    </View>
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'SA0'}
+          index={rowData.index}
+          onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
+      </View>
 
-    <View style={styles.cell}>
-      <CustomTextInputValue
-        rowItem={rowData.item}
-        fieldName={'SB0'}
-        index={rowData.index}
-        onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'SB0'}
+          index={rowData.index}
+          onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
+      </View>
     </View>
-  </View>
-);
+  );
 
   const renderHeadings = () => (
     <View
@@ -4968,32 +5085,32 @@ const renderItemPrestressing = (rowData: any) => (
       [field]: value,
     }));
   };
-const handleTextInputChangePrestressing = (
-  index: number,
-  field: string,
-  value: string,
-) => {
-  const updatedData = [...prestressingData];
-  let isValid = true;
-  let errorMessage = '';
+  const handleTextInputChangePrestressing = (
+    index: number,
+    field: string,
+    value: string,
+  ) => {
+    const updatedData = [...prestressingData];
+    let isValid = true;
+    let errorMessage = '';
 
-  const readingValue = parseFloat(value);
+    const readingValue = parseFloat(value);
 
-  if (isNaN(readingValue) || readingValue <= 0 || readingValue > 500) {
-    isValid = false;
-    errorMessage =
-      'Enter a valid number greater than 0 and less than or equal to 500';
-  } else if (!/^\d+(\.\d{1,2})?$/.test(value)) {
-    isValid = false;
-    errorMessage = 'Enter a number with up to 2 decimal places';
-  }
+    if (isNaN(readingValue) || readingValue <= 0 || readingValue > 500) {
+      isValid = false;
+      errorMessage =
+        'Enter a valid number greater than 0 and less than or equal to 500';
+    } else if (!/^\d+(\.\d{1,2})?$/.test(value)) {
+      isValid = false;
+      errorMessage = 'Enter a number with up to 2 decimal places';
+    }
 
-  if (!isValid) {
-    showSnackbar(errorMessage, 'error');
-  }
-  updatedData[index][field] = value;
-  setPrestressingData(updatedData);
-};
+    if (!isValid) {
+      showSnackbar(errorMessage, 'error');
+    }
+    updatedData[index][field] = value;
+    setPrestressingData(updatedData);
+  };
 
   const handleTextInputChange = (
     index: number,
@@ -6293,6 +6410,8 @@ const handleTextInputChangePrestressing = (
             </View>
           </View>
         );
+      case TASK_TYPES.COMPACTING_GROUND_SUPPORT_FOR_EMBANKMENT:
+      case TASK_TYPES.DEWATERING:
       case TASK_TYPES.PLACING_OF_COVER:
       case TASK_TYPES.COMPACTION:
       case TASK_TYPES.FIXING_OF_SHEET:
@@ -9934,6 +10053,167 @@ const handleTextInputChangePrestressing = (
                   onChangeText={text => {
                     setComments(text);
                   }}
+                />
+              </View>
+            </View>
+          </View>
+        );
+      case TASK_TYPES.ERECTION:
+        const erectionProperties = [
+          {
+            title: 'Ground properly leveled for trailer placement',
+            key: 'groundLeveled',
+          },
+          {
+            title: 'Area is barricaded with proper signages',
+            key: 'areaBarricaded',
+          },
+          {
+            title: 'Temporary lights for proper illumination at night',
+            key: 'temporaryLights',
+          },
+          {title: 'Flag man/Marshal available', key: 'flagManAvailable'},
+          {
+            title: 'Methodology & Scheme available at site',
+            key: 'methodologyAvailable',
+          },
+          {title: 'Crane positioned as per drawing', key: 'cranePositioned'},
+          {title: 'De-shackles certified', key: 'deShacklesCertified'},
+          {
+            title: 'Safety color code present on de-shackles',
+            key: 'safetyColorCode',
+          },
+          {
+            title: 'Hydraulic jacks calibrated',
+            key: 'hydraulicJacksCalibrated',
+          },
+          {
+            title: 'Limit switch of hoist working properly',
+            key: 'limitSwitchWorking',
+          },
+          {
+            title: 'Cotter pins placed in lifting assembly',
+            key: 'cotterPinPlaced',
+          },
+          {
+            title: 'Macalloy bars in proper condition',
+            key: 'macalloyBarsCondition',
+          },
+          {title: 'TPI of Cranes & Slings done', key: 'tpiDone'},
+          {
+            title: 'TPI certificates available',
+            key: 'tpiCertificatesAvailable',
+          },
+          {
+            title: 'Counter-weights placed as per drawing',
+            key: 'counterWeightsPlaced',
+          },
+          {title: 'Positioning marked at site', key: 'positioningMarked'},
+          {
+            title: 'Traffic diverted & marshals in place',
+            key: 'trafficDiverted',
+          },
+          {title: 'Workers safety certified', key: 'workersSafetyCertified'},
+          {title: 'Safety arrangements at site', key: 'safetyArrangements'},
+          {title: 'Positioned at marked location', key: 'sitePositioned'},
+          {
+            title: 'Lateral support ensured before release',
+            key: 'lateralSupportEnsured',
+          },
+        ];
+        return (
+          <View>
+            {erectionProperties.map(property => (
+              <View key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={erectionData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setErectionData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <View>
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
+                />
+              </View>
+            </View>
+          </View>
+        );
+      case TASK_TYPES.STRIPPING_AND_STORING_TOP_SOIL:
+        return (
+          <View>
+            <View style={{flexDirection: 'column'}}>
+              <Input
+                label="Qty of Top Soil collected and stored (cum)"
+                value={strippingAndStoringTopSoilData.topSoilCollectedStored}
+                onChange={(value: any) =>
+                  setStrippingAndStoringTopSoilData(prevData => ({
+                    ...prevData,
+                    topSoilCollectedStored: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+
+            <View>
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => setComments(text)}
                 />
               </View>
             </View>

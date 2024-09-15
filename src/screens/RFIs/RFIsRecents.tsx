@@ -3319,6 +3319,322 @@ const RFIsRecents = (props: any) => {
             </View>
           </View>
         );
+      case TASK_TYPES.SPREADING_AND_COMPACTION:
+        const spreadingAndCompactionProperties = [
+          {
+            title: 'Source of material is approved',
+            key: 'sourceOfMaterialApproved',
+          },
+          {
+            title: 'Ground improvement is done if required',
+            key: 'groundImprovementDone',
+          },
+          {
+            title: 'Under laying layer is approved',
+            key: 'underLayingLayerApproved',
+          },
+          {
+            title:
+              'Adequate grade and survey stakes available for control of layer placement',
+            key: 'gradeSurveyStakesAvailable',
+          },
+          {
+            title:
+              'Adequate no. of grader available for spreading and levelling of fill',
+            key: 'graderAvailable',
+          },
+          {
+            title: 'Grading is done as per the required gradient and camber',
+            key: 'gradingDoneAsPerRequirement',
+          },
+          {
+            title:
+              'Uniform sprinkling of water done on previous layer if required',
+            key: 'uniformSprinklingDone',
+          },
+          {title: 'Dumping pattern is followed', key: 'dumpingPatternFollowed'},
+          {
+            title: 'Material free from deleterious material',
+            key: 'materialFreeFromDeleterious',
+          },
+          {
+            title: 'Material contains over size boulders/ stones',
+            key: 'containsOverSizeBoulders',
+          },
+          {
+            title: 'Loose thickness of layer checked',
+            key: 'looseThicknessChecked',
+          },
+          {
+            title: 'OMC is maintained before commencement of rolling',
+            key: 'omcMaintained',
+          },
+          {
+            title: 'Suitable roller available for compaction',
+            key: 'suitableRollerAvailable',
+          },
+          {
+            title: 'Number of passes, speed, and rolling pattern followed',
+            key: 'rollingPatternFollowed',
+          },
+          {
+            title: 'Finished compacted layer thickness is as specified',
+            key: 'finishedLayerThicknessSpecified',
+          },
+          {
+            title: 'Any localized wet, soft, and under compacted area found',
+            key: 'localizedIssuesFound',
+          },
+          {
+            title: 'Layer is free from segregation',
+            key: 'layerFreeFromSegregation',
+          },
+          {
+            title: 'Arrangement for protection of finished surface available',
+            key: 'protectionOfFinishedSurfaceAvailable',
+          },
+          {
+            title: 'Any non-conformance/ noncompliance found',
+            key: 'nonConformanceFound',
+          },
+        ];
+
+        return (
+          <View>
+            {spreadingAndCompactionProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.spreadingAndCompactionData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.PRIME_COAT_TACK_COAT:
+        const primeCoatProperties = [
+          {
+            title: 'Previous Layer Approved',
+            key: 'previousLayerApproved',
+          },
+          {
+            title: 'Surface Preparation Satisfactory (Surface Condition)',
+            key: 'surfacePreparationSatisfactory',
+          },
+          {
+            title: 'Grade of Material Approved',
+            key: 'materialGradeApproved',
+          },
+          {
+            title: 'Bituminous Emulsion Temperature Checked',
+            key: 'bituminousEmulsionTemperatureChecked',
+          },
+          {
+            title: 'Uniform Rate of Spray',
+            key: 'uniformSprayRate',
+          },
+          {
+            title: 'Non-Conformance/Non-Compliance Found',
+            key: 'nonConformanceFound',
+          },
+        ];
+
+        return (
+          <View>
+            {primeCoatProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.primeCoatData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.ROAD_MARKING:
+        const roadMarkingProperties = [
+          {
+            title: 'Drawing & Method Statement Approved by Client',
+            key: 'drawingAndMethodApproved',
+          },
+          {
+            title: 'Thermoplastic Paint & Glass Bead Approved by Client',
+            key: 'thermoplasticAndGlassBeadApproved',
+          },
+          {
+            title: 'Heater Condition and Laying Checked',
+            key: 'heaterConditionChecked',
+          },
+          {
+            title: 'Thermometer of Heater Working Properly',
+            key: 'thermometerWorking',
+          },
+          {
+            title: 'Thermoplastic Material Heated to Specified Temperature',
+            key: 'materialHeatedToSpecifiedTemperature',
+          },
+          {
+            title: 'Surface is Free from Dust, Dirt, Grease, and Oil',
+            key: 'surfaceClean',
+          },
+          {
+            title: 'Marking Done Before Laying Thermoplastic',
+            key: 'markingDoneBeforeLaying',
+          },
+          {
+            title: 'Glass Beads Applied at Rate of 250gms/sqm',
+            key: 'glassBeadsApplied',
+          },
+          {
+            title: 'Thermoplastic Paint Laid in Molten State',
+            key: 'paintLaidInMoltenState',
+          },
+          {
+            title: 'Thermoplastic Paint Thickness Checked',
+            key: 'paintThicknessChecked',
+          },
+          {
+            title: 'Non-conformance/Non-compliance Found',
+            key: 'nonConformanceFound',
+          },
+        ];
+
+        return (
+          <View>
+            {roadMarkingProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.roadMarkingData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.LAYING_AND_COMPACTION:
+        const layingAndCompactionProperties = [
+          {
+            title:
+              'Whether all the safety measures has been taken as per the plan',
+            key: 'safetyMeasuresTaken',
+          },
+          {
+            title:
+              'Approved methodology of work is available with the Paving-in-charge',
+            key: 'approvedMethodologyAvailable',
+          },
+          {
+            title: 'Prime coat is cured and cleaned properly',
+            key: 'primeCoatCured',
+          },
+          {
+            title:
+              'Is the rate of spray for tact coat checked & recorded, if required',
+            key: 'sprayRateChecked',
+          },
+          {
+            title: 'Is the joint trimmed & prepared as per method statement',
+            key: 'jointTrimmedPrepared',
+          },
+          {
+            title:
+              'Whether the program of laying conveyed to plant and machinery and QA/QC in-charges',
+            key: 'programConveyed',
+          },
+          {
+            title: 'Whether the thermometer is available at laying location',
+            key: 'thermometerAvailable',
+          },
+          {
+            title: 'Paver sensors are set as per requirement',
+            key: 'paverSensorsSet',
+          },
+          {
+            title:
+              'Whether alignment of paving has been marked with lime powder and equipment’s positioned accordingly',
+            key: 'alignmentMarked',
+          },
+          {
+            title:
+              'Whether the paver is placed at the laying area well in advance & the skeed of the paver is cleaned',
+            key: 'paverPlacedCleaned',
+          },
+          {
+            title:
+              'Whether mix has been transported to paving location with the tarpaulin covering',
+            key: 'mixTransported',
+          },
+          {
+            title:
+              'Whether mix temperature is found as per table 500-2 before spreading',
+            key: 'mixTemperatureFound',
+          },
+          {
+            title:
+              'Whether loose thickness of layer has been checked to ensure required compacted layer thickness',
+            key: 'looseThicknessChecked',
+          },
+          {
+            title:
+              'Whether rolling pattern is followed as established in the trial patch',
+            key: 'rollingPatternFollowed',
+          },
+          {
+            title:
+              'Whether surface level has been checked and found within specified tolerance limit',
+            key: 'surfaceLevelChecked',
+          },
+          {
+            title:
+              'Whether Transverse joints prepared is as per method statement',
+            key: 'transverseJointsPrepared',
+          },
+          {
+            title: 'Was a Non-conformance/Non-compliance found',
+            key: 'nonConformanceFound',
+          },
+          {
+            title: 'Thickness of Layer laid in mm',
+            key: 'layerThickness',
+          },
+          {
+            title: 'Total material qty laid in tonne',
+            key: 'totalMaterialQtyLaid',
+          },
+          {
+            title: 'Total material qty in Sqm',
+            key: 'totalMaterialQtySqm',
+          },
+        ];
+
+        return (
+          <View>
+            {layingAndCompactionProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.layingAndCompactionData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
 
       // ReadOnlyRfi
       default:

@@ -456,6 +456,73 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     probingByStiffwire: string;
   };
   //FormUseStates
+  const [layingAndCompactionData, setLayingAndCompactionData] = useState({
+    safetyMeasuresTaken: 'Y',
+    approvedMethodologyAvailable: 'Y',
+    primeCoatCured: 'Y',
+    sprayRateChecked: 'Y',
+    jointTrimmedPrepared: 'Y',
+    programConveyed: 'Y',
+    thermometerAvailable: 'Y',
+    paverSensorsSet: 'Y',
+    alignmentMarked: 'Y',
+    paverPlacedCleaned: 'Y',
+    mixTransported: 'Y',
+    mixTemperatureFound: 'Y',
+    looseThicknessChecked: 'Y',
+    rollingPatternFollowed: 'Y',
+    surfaceLevelChecked: 'Y',
+    transverseJointsPrepared: 'Y',
+    nonConformanceFound: 'N',
+    layerThickness: 0.0,
+    totalMaterialQtyLaid: 0.0,
+    totalMaterialQtySqm: 0.0,
+  });
+
+  const [roadMarkingData, setRoadMarkingData] = useState({
+    drawingAndMethodApproved: 'Y',
+    thermoplasticAndGlassBeadApproved: 'Y',
+    heaterConditionChecked: 'Y',
+    thermometerWorking: 'Y',
+    materialHeatedToSpecifiedTemperature: 'Y',
+    surfaceClean: 'Y',
+    markingDoneBeforeLaying: 'Y',
+    glassBeadsApplied: 'Y',
+    paintLaidInMoltenState: 'Y',
+    paintThicknessChecked: 'Y',
+    nonConformanceFound: 'N',
+  });
+  const [primeCoatData, setPrimeCoatData] = useState({
+    previousLayerApproved: 'Y',
+    surfacePreparationSatisfactory: 'Y',
+    materialGradeApproved: 'Y',
+    bituminousEmulsionTemperatureChecked: 'Y',
+    uniformSprayRate: 'Y',
+    nonConformanceFound: 'N',
+  });
+
+  const [spreadingAndCompactionData, setSpreadingAndCompactionData] = useState({
+    sourceOfMaterialApproved: 'Y',
+    groundImprovementDone: 'Y',
+    underLayingLayerApproved: 'Y',
+    gradeSurveyStakesAvailable: 'Y',
+    graderAvailable: 'Y',
+    gradingDoneAsPerRequirement: 'Y',
+    uniformSprinklingDone: 'Y',
+    dumpingPatternFollowed: 'Y',
+    materialFreeFromDeleterious: 'Y',
+    containsOverSizeBoulders: 'Y',
+    looseThicknessChecked: 'Y',
+    omcMaintained: 'Y',
+    suitableRollerAvailable: 'Y',
+    rollingPatternFollowed: 'Y',
+    finishedLayerThicknessSpecified: 'Y',
+    localizedIssuesFound: 'N',
+    layerFreeFromSegregation: 'Y',
+    protectionOfFinishedSurfaceAvailable: 'Y',
+    nonConformanceFound: 'N',
+  });
+
   const [strippingAndStoringTopSoilData, setStrippingAndStoringTopSoilData] =
     useState({
       topSoilCollectedStored: 0, // Default value for top soil collected (cum)
@@ -2304,6 +2371,98 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             });
           }
           break;
+        case TASK_TYPES.SPREADING_AND_COMPACTION:
+          if (rfiData.metaData.spreadingAndCompactionData) {
+            setSpreadingAndCompactionData(
+              rfiData.metaData.spreadingAndCompactionData,
+            );
+          } else {
+            setSpreadingAndCompactionData({
+              sourceOfMaterialApproved: 'Y',
+              groundImprovementDone: 'Y',
+              underLayingLayerApproved: 'Y',
+              gradeSurveyStakesAvailable: 'Y',
+              graderAvailable: 'Y',
+              gradingDoneAsPerRequirement: 'Y',
+              uniformSprinklingDone: 'Y',
+              dumpingPatternFollowed: 'Y',
+              materialFreeFromDeleterious: 'Y',
+              containsOverSizeBoulders: 'Y',
+              looseThicknessChecked: 'Y',
+              omcMaintained: 'Y',
+              suitableRollerAvailable: 'Y',
+              rollingPatternFollowed: 'Y',
+              finishedLayerThicknessSpecified: 'Y',
+              localizedIssuesFound: 'N',
+              layerFreeFromSegregation: 'Y',
+              protectionOfFinishedSurfaceAvailable: 'Y',
+              nonConformanceFound: 'N',
+            });
+          }
+          break;
+        case TASK_TYPES.PRIME_COAT_TACK_COAT:
+          if (rfiData.metaData.primeCoatData) {
+            setPrimeCoatData(rfiData.metaData.primeCoatData);
+          } else {
+            setPrimeCoatData({
+              previousLayerApproved: 'Y',
+              surfacePreparationSatisfactory: 'Y',
+              materialGradeApproved: 'Y',
+              bituminousEmulsionTemperatureChecked: 'Y',
+              uniformSprayRate: 'Y',
+              nonConformanceFound: 'N',
+            });
+          }
+          break;
+        case TASK_TYPES.ROAD_MARKING:
+          if (rfiData.metaData.roadMarkingData) {
+            setRoadMarkingData(rfiData.metaData.roadMarkingData);
+          } else {
+            setRoadMarkingData({
+              drawingAndMethodApproved: 'Y',
+              thermoplasticAndGlassBeadApproved: 'Y',
+              heaterConditionChecked: 'Y',
+              thermometerWorking: 'Y',
+              materialHeatedToSpecifiedTemperature: 'Y',
+              surfaceClean: 'Y',
+              markingDoneBeforeLaying: 'Y',
+              glassBeadsApplied: 'Y',
+              paintLaidInMoltenState: 'Y',
+              paintThicknessChecked: 'Y',
+              nonConformanceFound: 'N',
+            });
+          }
+          break;
+        case TASK_TYPES.LAYING_AND_COMPACTION:
+          if (rfiData.metaData.layingAndCompactionData) {
+            setLayingAndCompactionData(
+              rfiData.metaData.layingAndCompactionData,
+            );
+          } else {
+            setLayingAndCompactionData({
+              safetyMeasuresTaken: 'Y',
+              approvedMethodologyAvailable: 'Y',
+              primeCoatCured: 'Y',
+              sprayRateChecked: 'Y',
+              jointTrimmedPrepared: 'Y',
+              programConveyed: 'Y',
+              thermometerAvailable: 'Y',
+              paverSensorsSet: 'Y',
+              alignmentMarked: 'Y',
+              paverPlacedCleaned: 'Y',
+              mixTransported: 'Y',
+              mixTemperatureFound: 'Y',
+              looseThicknessChecked: 'Y',
+              rollingPatternFollowed: 'Y',
+              surfaceLevelChecked: 'Y',
+              transverseJointsPrepared: 'Y',
+              nonConformanceFound: 'N',
+              layerThickness: 0.0,
+              totalMaterialQtyLaid: 0.0,
+              totalMaterialQtySqm: 0.0,
+            });
+          }
+          break;
 
         case TASK_TYPES.LIFTING_LEFT:
         case TASK_TYPES.LIFTING_YARD:
@@ -2908,6 +3067,74 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       }),
     );
   };
+  const validateLayingAndCompactionData = (
+    layingAndCompactionData: any,
+  ): boolean => {
+    // Parsing values to float
+    const thicknessOfLayer = parseFloat(layingAndCompactionData.layerThickness);
+    const totalMaterialQtyTonne = parseFloat(
+      layingAndCompactionData.totalMaterialQtyLaid,
+    );
+    const totalMaterialQtySqm = parseFloat(
+      layingAndCompactionData.totalMaterialQtySqm,
+    );
+
+    // Validation for Thickness of Layer laid in mm
+    if (
+      isNaN(thicknessOfLayer) ||
+      thicknessOfLayer <= 0 ||
+      thicknessOfLayer > 1000 ||
+      layingAndCompactionData.layerThickness.split('.')[1]?.length > 3
+    ) {
+      showSnackbar(
+        'Please enter a valid Thickness of Layer laid (in mm) with max 3 decimal places, value should be > 0 and <= 1000',
+        'error',
+      );
+      return false;
+    }
+
+    // Validation for Total material qty laid in tonne
+    if (
+      isNaN(totalMaterialQtyTonne) ||
+      totalMaterialQtyTonne <= 0 ||
+      totalMaterialQtyTonne > 10000 ||
+      layingAndCompactionData.totalMaterialQtyLaid.split('.')[1]?.length > 3
+    ) {
+      showSnackbar(
+        'Please enter a valid Total material quantity laid (in tonne) with max 3 decimal places, value should be > 0 and <= 10000',
+        'error',
+      );
+      return false;
+    }
+
+    // Validation for Total material qty in Sqm
+    if (
+      isNaN(totalMaterialQtySqm) ||
+      totalMaterialQtySqm <= 0 ||
+      totalMaterialQtySqm > 100000 ||
+      layingAndCompactionData.totalMaterialQtySqm.split('.')[1]?.length > 3
+    ) {
+      showSnackbar(
+        'Please enter a valid Total material quantity in Sqm with max 3 decimal places, value should be > 0 and <= 100000',
+        'error',
+      );
+      return false;
+    }
+
+    // Converting the values back to numbers after validation
+    layingAndCompactionData.layerThickness = Number(
+      layingAndCompactionData.layerThickness,
+    );
+    layingAndCompactionData.totalMaterialQtyLaid = Number(
+      layingAndCompactionData.totalMaterialQtyLaid,
+    );
+    layingAndCompactionData.totalMaterialQtySqm = Number(
+      layingAndCompactionData.totalMaterialQtySqm,
+    );
+
+    return true;
+  };
+
   const validateBoringOfDiaphragmData = (data: any): boolean => {
     const densityOfPolymer = parseFloat(data.densityOfPolymer);
     const viscosityOfPolymer = parseInt(data.viscosityOfPolymer, 10);
@@ -3219,7 +3446,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     curingData.waterConsumptionInKL = Number(curingData.waterConsumptionInKL);
     return true;
   };
-  
+
   const validateStrippingAndStoringTopSoilData = (data: any) => {
     const value = parseFloat(data.topSoilCollectedStored);
     if (isNaN(value)) {
@@ -4050,6 +4277,33 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
               strippingAndStoringTopSoilData.topSoilCollectedStored,
             ), // Ensuring it's a number
           },
+        };
+        break;
+      case TASK_TYPES.ROAD_MARKING:
+        checkList = {
+          taskName: selectedTask.name,
+          roadMarkingData: roadMarkingData,
+        };
+        break;
+      case TASK_TYPES.PRIME_COAT_TACK_COAT:
+        checkList = {
+          taskName: selectedTask.name,
+          primeCoatData: primeCoatData,
+        };
+        break;
+      case TASK_TYPES.SPREADING_AND_COMPACTION:
+        checkList = {
+          taskName: selectedTask.name,
+          spreadingAndCompactionData: spreadingAndCompactionData,
+        };
+        break;
+      case TASK_TYPES.LAYING_AND_COMPACTION:
+        if (!validateLayingAndCompactionData(layingAndCompactionData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          layingAndCompactionData: layingAndCompactionData,
         };
         break;
 
@@ -10219,6 +10473,439 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             </View>
           </View>
         );
+      case TASK_TYPES.SPREADING_AND_COMPACTION:
+        const spreadingAndCompactionProperties = [
+          {
+            title: 'Source of material is approved',
+            key: 'sourceOfMaterialApproved',
+          },
+          {
+            title: 'Ground improvement is done if required',
+            key: 'groundImprovementDone',
+          },
+          {
+            title: 'Under laying layer is approved',
+            key: 'underLayingLayerApproved',
+          },
+          {
+            title:
+              'Adequate grade and survey stakes available for control of layer placement',
+            key: 'gradeSurveyStakesAvailable',
+          },
+          {
+            title:
+              'Adequate no. of grader available for spreading and levelling of fill',
+            key: 'graderAvailable',
+          },
+          {
+            title: 'Grading is done as per the required gradient and camber',
+            key: 'gradingDoneAsPerRequirement',
+          },
+          {
+            title:
+              'Uniform sprinkling of water done on previous layer if required',
+            key: 'uniformSprinklingDone',
+          },
+          {title: 'Dumping pattern is followed', key: 'dumpingPatternFollowed'},
+          {
+            title: 'Material free from deleterious material',
+            key: 'materialFreeFromDeleterious',
+          },
+          {
+            title: 'Material contains over size boulders/ stones',
+            key: 'containsOverSizeBoulders',
+          },
+          {
+            title: 'Loose thickness of layer checked',
+            key: 'looseThicknessChecked',
+          },
+          {
+            title: 'OMC is maintained before commencement of rolling',
+            key: 'omcMaintained',
+          },
+          {
+            title: 'Suitable roller available for compaction',
+            key: 'suitableRollerAvailable',
+          },
+          {
+            title: 'Number of passes, speed, and rolling pattern followed',
+            key: 'rollingPatternFollowed',
+          },
+          {
+            title: 'Finished compacted layer thickness is as specified',
+            key: 'finishedLayerThicknessSpecified',
+          },
+          {
+            title: 'Any localized wet, soft, and under compacted area found',
+            key: 'localizedIssuesFound',
+          },
+          {
+            title: 'Layer is free from segregation',
+            key: 'layerFreeFromSegregation',
+          },
+          {
+            title: 'Arrangement for protection of finished surface available',
+            key: 'protectionOfFinishedSurfaceAvailable',
+          },
+          {
+            title: 'Any non-conformance/ noncompliance found',
+            key: 'nonConformanceFound',
+          },
+        ];
+
+        return (
+          <View>
+            {spreadingAndCompactionProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={spreadingAndCompactionData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setSpreadingAndCompactionData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+
+            <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+          </View>
+        );
+      case TASK_TYPES.PRIME_COAT_TACK_COAT:
+        const primeCoatProperties = [
+          {
+            title: 'Previous Layer Approved',
+            key: 'previousLayerApproved',
+          },
+          {
+            title: 'Surface Preparation Satisfactory (Surface Condition)',
+            key: 'surfacePreparationSatisfactory',
+          },
+          {
+            title: 'Grade of Material Approved',
+            key: 'materialGradeApproved',
+          },
+          {
+            title: 'Bituminous Emulsion Temperature Checked',
+            key: 'bituminousEmulsionTemperatureChecked',
+          },
+          {
+            title: 'Uniform Rate of Spray',
+            key: 'uniformSprayRate',
+          },
+          {
+            title: 'Non-Conformance/Non-Compliance Found',
+            key: 'nonConformanceFound',
+          },
+        ];
+
+        return (
+          <View>
+            {primeCoatProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={primeCoatData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setPrimeCoatData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <View>
+              {/* Date and Time Pickers */}
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => setComments(text)}
+                />
+              </View>
+            </View>
+          </View>
+        );
+      case TASK_TYPES.ROAD_MARKING:
+        const roadMarkingProperties = [
+          {
+            title: 'Drawing & Method Statement Approved by Client',
+            key: 'drawingAndMethodApproved',
+          },
+          {
+            title: 'Thermoplastic Paint & Glass Bead Approved by Client',
+            key: 'thermoplasticAndGlassBeadApproved',
+          },
+          {
+            title: 'Heater Condition and Laying Checked',
+            key: 'heaterConditionChecked',
+          },
+          {
+            title: 'Thermometer of Heater Working Properly',
+            key: 'thermometerWorking',
+          },
+          {
+            title: 'Thermoplastic Material Heated to Specified Temperature',
+            key: 'materialHeatedToSpecifiedTemperature',
+          },
+          {
+            title: 'Surface is Free from Dust, Dirt, Grease, and Oil',
+            key: 'surfaceClean',
+          },
+          {
+            title: 'Marking Done Before Laying Thermoplastic',
+            key: 'markingDoneBeforeLaying',
+          },
+          {
+            title: 'Glass Beads Applied at Rate of 250gms/sqm',
+            key: 'glassBeadsApplied',
+          },
+          {
+            title: 'Thermoplastic Paint Laid in Molten State',
+            key: 'paintLaidInMoltenState',
+          },
+          {
+            title: 'Thermoplastic Paint Thickness Checked',
+            key: 'paintThicknessChecked',
+          },
+          {
+            title: 'Non-conformance/Non-compliance Found',
+            key: 'nonConformanceFound',
+          },
+        ];
+
+        return (
+          <View>
+            {roadMarkingProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={roadMarkingData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setRoadMarkingData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <View>
+              {/* This section for date, time, and recommendations remains the same */}
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+          </View>
+        );
+      case TASK_TYPES.LAYING_AND_COMPACTION:
+        const layingAndCompactionProperties = [
+          {
+            title: 'All Safety Measures Taken as per Plan',
+            key: 'safetyMeasuresTaken',
+          },
+          {
+            title: 'Approved Methodology Available with Paving-in-Charge',
+            key: 'approvedMethodologyAvailable',
+          },
+          {
+            title: 'Prime Coat Cured and Cleaned Properly',
+            key: 'primeCoatCured',
+          },
+          {
+            title: 'Rate of Spray for Tact Coat Checked & Recorded',
+            key: 'sprayRateChecked',
+          },
+          {
+            title: 'Joint Trimmed & Prepared as per Method Statement',
+            key: 'jointTrimmedPrepared',
+          },
+          {
+            title: 'Program of Laying Conveyed to Plant and QA/QC',
+            key: 'programConveyed',
+          },
+          {
+            title: 'Thermometer Available at Laying Location',
+            key: 'thermometerAvailable',
+          },
+          {
+            title: 'Paver Sensors Set as per Requirement',
+            key: 'paverSensorsSet',
+          },
+          {title: 'Alignment Marked with Lime Powder', key: 'alignmentMarked'},
+          {
+            title: 'Paver Placed & Skeed Cleaned at Laying Area',
+            key: 'paverPlacedCleaned',
+          },
+          {
+            title: 'Mix Transported with Tarpaulin Covering',
+            key: 'mixTransported',
+          },
+          {
+            title: 'Mix Temperature as per Table 500-2',
+            key: 'mixTemperatureFound',
+          },
+          {
+            title: 'Loose Thickness Checked for Required Compactness',
+            key: 'looseThicknessChecked',
+          },
+          {
+            title: 'Rolling Pattern Followed as per Trial Patch',
+            key: 'rollingPatternFollowed',
+          },
+          {
+            title: 'Surface Level Checked within Tolerance',
+            key: 'surfaceLevelChecked',
+          },
+          {
+            title: 'Transverse Joints Prepared as per Method Statement',
+            key: 'transverseJointsPrepared',
+          },
+          {
+            title: 'Non-conformance/Non-compliance Found',
+            key: 'nonConformanceFound',
+          },
+        ];
+return (
+  <View>
+    {layingAndCompactionProperties.map(property => (
+      <View style={{flexDirection: 'column'}} key={property.key}>
+        <DropdownPicker
+          label={property.title}
+          value={layingAndCompactionData[property.key]}
+          items={YES_NO_LIST}
+          onChange={(value: any) =>
+            setLayingAndCompactionData(prevData => ({
+              ...prevData,
+              [property.key]: value,
+            }))
+          }
+          isRequired={true}
+        />
+      </View>
+    ))}
+    <Input
+      label="Thickness of Layer Laid in mm"
+      value={layingAndCompactionData.layerThickness}
+      onChange={(value: any) =>
+        setLayingAndCompactionData(prevData => ({
+          ...prevData,
+          layerThickness: value,
+        }))
+      }
+      isRequired={true}
+    />
+
+    <Input
+      label="Total Material Qty Laid in Tonne"
+      value={layingAndCompactionData.totalMaterialQtyLaid}
+      onChange={(value: any) =>
+        setLayingAndCompactionData(prevData => ({
+          ...prevData,
+          totalMaterialQtyLaid: value,
+        }))
+      }
+      isRequired={true}
+    />
+
+    <Input
+      label="Total Material Qty in Sqm"
+      value={layingAndCompactionData.totalMaterialQtySqm}
+      onChange={(value: any) =>
+        setLayingAndCompactionData(prevData => ({
+          ...prevData,
+          totalMaterialQtySqm: value,
+        }))
+      }
+      isRequired={true}
+    />
+    <View>
+      <CalendarPicker
+        label="Date"
+        value={rfiDate}
+        onChange={date => setRFIDate(date)}
+      />
+      <TimePicker
+        label="Time"
+        value={rfiTime}
+        onChange={time => setRFITime(time)}
+      />
+      <TextInput
+        style={styles.commonInputFiels}
+        placeholder="Recommendations"
+        multiline={true}
+        numberOfLines={4}
+        blurOnSubmit={false}
+        value={comments}
+        onChangeText={text => setComments(text)}
+      />
+    </View>
+  </View>
+);
 
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
@@ -14191,4 +14878,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MyWork;
+export default MyWork;(

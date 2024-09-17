@@ -3417,7 +3417,8 @@ const RFIsRecents = (props: any) => {
             ))}
           </View>
         );
-      case TASK_TYPES.PRIME_COAT_TACK_COAT:
+      case TASK_TYPES.PRIME_COAT:
+      case TASK_TYPES.TACK_COAT:
         const primeCoatProperties = [
           {
             title: 'Previous Layer Approved',

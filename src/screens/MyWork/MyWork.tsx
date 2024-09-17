@@ -2400,7 +2400,8 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             });
           }
           break;
-        case TASK_TYPES.PRIME_COAT_TACK_COAT:
+        case TASK_TYPES.PRIME_COAT:
+case TASK_TYPES.TACK_COAT:
           if (rfiData.metaData.primeCoatData) {
             setPrimeCoatData(rfiData.metaData.primeCoatData);
           } else {
@@ -4285,7 +4286,8 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           roadMarkingData: roadMarkingData,
         };
         break;
-      case TASK_TYPES.PRIME_COAT_TACK_COAT:
+      case TASK_TYPES.PRIME_COAT:
+case TASK_TYPES.TACK_COAT:
         checkList = {
           taskName: selectedTask.name,
           primeCoatData: primeCoatData,
@@ -10594,7 +10596,8 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             </View>
           </View>
         );
-      case TASK_TYPES.PRIME_COAT_TACK_COAT:
+      case TASK_TYPES.PRIME_COAT:
+case TASK_TYPES.TACK_COAT:
         const primeCoatProperties = [
           {
             title: 'Previous Layer Approved',

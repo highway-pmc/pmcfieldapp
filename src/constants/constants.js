@@ -524,11 +524,12 @@ export const TASK_TYPES = {
   COMPACTING_GROUND_SUPPORT_FOR_EMBANKMENT:
     'compacting-ground-support-for-embankment',
   DEWATERING: 'dewatering',
-  STRIPPING_AND_STORING_TOP_SOIL:'stripping-storing-top-soil',
+  STRIPPING_AND_STORING_TOP_SOIL: 'stripping-storing-top-soil',
   SPREADING_AND_COMPACTION: 'spreading-and-compaction',
-  PRIME_COAT_TACK_COAT: 'prime-coat-tack-coat',
-  ROAD_MARKING:'road-marking',
-  LAYING_AND_COMPACTION:'laying-and-compaction'
+  PRIME_COAT: 'applying-prime-coat',
+  TACK_COAT: 'applying-tack-coat',
+  ROAD_MARKING: 'road-marking',
+  LAYING_AND_COMPACTION: 'laying-and-compaction',
 };
 
 export const TEST_MATERIALS_TYPES = {

@@ -466,6 +466,15 @@ const [dumpingData, setDumpingData] = useState([
     probingByStiffwire: string;
   };
   //FormUseStates
+  const [fixingOfMetalBeamData, setFixingOfMetalBeamData] = useState({
+    barrierToEmbankmentDistance: 'Y',
+    barrierToEdgeOfCarriagewayDistance: 'Y',
+    medianWBeamFaceDistance: 'Y',
+    spacersInstalledProperly: 'Y',
+    boltsFixedAndTightened: 'Y',
+    totalLengthOfMetalBeamFixed: 0.0,
+  });
+
   const [pipeLayingAndJointingData, setPipeLayingAndJointingData] = useState({
   materialAsPerGFC: 'Y',
   latestGFCAvailable: 'Y',
@@ -898,6 +907,33 @@ const [dumpingData, setDumpingData] = useState([
     setDumpingData(updatedData);
   }
 };
+
+const validateFixingOfMetalBeamData = (fixingOfMetalBeamData: any): boolean => {
+  const totalLength = parseFloat(fixingOfMetalBeamData.totalLengthOfMetalBeamFixed);
+
+  // Validation for Total Length of Metal Beam Fixed in RM
+  if (
+    isNaN(totalLength) ||
+    totalLength <= 0 ||
+    totalLength > 1000000 ||
+    fixingOfMetalBeamData.totalLengthOfMetalBeamFixed.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Total Length of Metal Beam Fixed (in RM) with max 3 decimal places, value should be > 0 and <= 1,000,000',
+      'error',
+    );
+    return false;
+  }
+
+  // Converting the value back to number after validation
+  fixingOfMetalBeamData.totalLengthOfMetalBeamFixed = Number(
+    fixingOfMetalBeamData.totalLengthOfMetalBeamFixed,
+  );
+
+  return true;
+};
+
+
 const validateDumpingData = (dumpingData: any[]): boolean => {
   for (const item of dumpingData) {
     // Parsing values to float
@@ -2617,7 +2653,21 @@ case TASK_TYPES.TACK_COAT:
             });
           }
           break;
-
+        case TASK_TYPES.FIXING_OF_METAL_BEAM:
+          if (rfiData.metaData.fixingOfMetalBeamData) {
+            setFixingOfMetalBeamData(rfiData.metaData.fixingOfMetalBeamData);
+          } else {
+            setFixingOfMetalBeamData({
+              barrierToEmbankmentDistance: 'Y',
+              barrierToEdgeOfCarriagewayDistance: 'Y',
+              medianWBeamFaceDistance: 'Y',
+              spacersInstalledProperly: 'Y',
+              boltsFixedAndTightened: 'Y',
+              totalLengthOfMetalBeamFixed: 0.0,
+            });
+          }
+          break;
+  
         case TASK_TYPES.LIFTING_LEFT:
         case TASK_TYPES.LIFTING_YARD:
         case TASK_TYPES.LIFTING_RIGHT:
@@ -4480,7 +4530,17 @@ case TASK_TYPES.TACK_COAT:
           pipeLayingAndJointingData: pipeLayingAndJointingData,
         };
         break;
+      case TASK_TYPES.FIXING_OF_METAL_BEAM:
+        if (!validateFixingOfMetalBeamData(fixingOfMetalBeamData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          fixingOfMetalBeamData: fixingOfMetalBeamData,
+        };
+        break;
 
+  
       case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
@@ -11358,7 +11418,83 @@ case TASK_TYPES.TACK_COAT:
           </View>
           </View>
         );
+      case TASK_TYPES.FIXING_OF_METAL_BEAM:
+        const fixingOfMetalBeamProperties = [
+          {
+            title: 'Distance maintained between barrier and start of embankment slope',
+            key: 'barrierToEmbankmentDistance',
+          },
+          {
+            title: 'Distance maintained between barrier and edge of carriageway',
+            key: 'barrierToEdgeOfCarriagewayDistance',
+          },
+          {
+            title: 'At median, W-beam face is 100 mm away from carriageway face of median',
+            key: 'medianWBeamFaceDistance',
+          },
+          {
+            title: 'All spacers installed properly as per approved drawing',
+            key: 'spacersInstalledProperly',
+          },
+          {
+            title: 'All bolts are fixed and tightened properly',
+            key: 'boltsFixedAndTightened',
+          },
+        ];
 
+        return (
+          <View>
+            {fixingOfMetalBeamProperties.map(property => (
+              <View style={{ flexDirection: 'column' }} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={fixingOfMetalBeamData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setFixingOfMetalBeamData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <Input
+              label="Total Length of Metal Beam Fixed in RM"
+              value={fixingOfMetalBeamData.totalLengthOfMetalBeamFixed}
+              onChange={(value: any) =>
+                setFixingOfMetalBeamData(prevData => ({
+                  ...prevData,
+                  totalLengthOfMetalBeamFixed: value,
+                }))
+              }
+              isRequired={true}
+            />
+            <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+          </View>
+        );
+  
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
       case TASK_TYPES.LIFTING_RIGHT:

@@ -531,7 +531,8 @@ export const TASK_TYPES = {
   TACK_COAT: 'applying-tack-coat',
   ROAD_MARKING: 'road-marking',
   LAYING_AND_COMPACTION: 'laying-and-compaction',
-  PIPE_LAYING_AND_JOINTING:'pipe-laying-jointing',
+  PIPE_LAYING_AND_JOINTING: 'pipe-laying-jointing',
+  FIXING_OF_METAL_BEAM:'fixing-of-metal-beam',
 };
 
 export const TEST_MATERIALS_TYPES = {

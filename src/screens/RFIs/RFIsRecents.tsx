@@ -3767,6 +3767,51 @@ const RFIsRecents = (props: any) => {
             ))}
           </View>
         );
+      case TASK_TYPES.FIXING_OF_METAL_BEAM:
+        const fixingOfMetalBeamProperties = [
+          {
+            title:
+              'Distance maintained between barrier and start of embankment slope',
+            key: 'barrierToEmbankmentDistance',
+          },
+          {
+            title:
+              'Distance maintained between barrier and edge of carriageway',
+            key: 'barrierToEdgeOfCarriagewayDistance',
+          },
+          {
+            title:
+              'At median, W-beam face is 100 mm away from carriageway face of median',
+            key: 'medianWBeamFaceDistance',
+          },
+          {
+            title: 'All spacers installed properly as per approved drawing',
+            key: 'spacersInstalledProperly',
+          },
+          {
+            title: 'All bolts are fixed and tightened properly',
+            key: 'boltsFixedAndTightened',
+          },
+          {
+            title: 'Total Length of Metal Beam Fixed in RM',
+            key: 'totalLengthOfMetalBeamFixed',
+          },
+        ];
+
+        return (
+          <View>
+            {fixingOfMetalBeamProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.fixingOfMetalBeamData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
 
       // ReadOnlyRfi
       default:

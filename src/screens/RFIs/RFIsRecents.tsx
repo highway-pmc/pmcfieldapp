@@ -3700,6 +3700,73 @@ const RFIsRecents = (props: any) => {
             ))}
           </View>
         );
+      case TASK_TYPES.PIPE_LAYING_AND_JOINTING:
+        const pipeLayingAndJointingProperties = [
+          {
+            title: 'Material checks and GFC drawings available',
+            key: 'materialChecksGfcDrawingsAvailable',
+          },
+          {
+            title: 'Pipe routing is as per the approved plan',
+            key: 'pipeRoutingApproved',
+          },
+          {
+            title: 'Hangers and supports are installed as per the design',
+            key: 'hangersSupportsInstalled',
+          },
+          {
+            title: 'Fasteners and hanger rods are checked and installed',
+            key: 'fastenersHangerRodsChecked',
+          },
+          {
+            title: 'Joint preparation is completed according to specifications',
+            key: 'jointPreparationCompleted',
+          },
+          {
+            title: 'Visual inspection of welded joints is completed',
+            key: 'weldedJointsVisualInspection',
+          },
+          {
+            title:
+              'Threaded joints are prepared and tightened as per the standards',
+            key: 'threadedJointsPreparedTightened',
+          },
+          {
+            title: 'GI piping is installed and secured properly',
+            key: 'giPipingInstalled',
+          },
+          {
+            title: 'Pipe alignment is checked and verified',
+            key: 'pipeAlignmentChecked',
+          },
+          {
+            title: 'Total pipe length laid in meters',
+            key: 'totalPipeLengthLaid',
+          },
+          {
+            title: 'Total number of pipes laid',
+            key: 'totalNumberPipesLaid',
+          },
+        ];
+
+        return (
+          <View>
+            {pipeLayingAndJointingProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.pipeLayingAndJointingData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
 
       // ReadOnlyRfi
       default:

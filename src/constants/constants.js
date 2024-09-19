@@ -519,7 +519,7 @@ export const TASK_TYPES = {
   PRE_STRESSING: 'pre-stressing',
   PROCUREMENT_OF_SHEET: 'procurement-of-sheet',
   DUMPING_OF_SOIL: 'dumping-of-soil',
-  DUMPING:'dumping',
+  DUMPING: 'dumping',
   BORING_OF_DIAPHRAGM: 'boring-of-diaphragm',
   COPING: 'coping',
   COMPACTING_GROUND_SUPPORT_FOR_EMBANKMENT:
@@ -531,6 +531,7 @@ export const TASK_TYPES = {
   TACK_COAT: 'applying-tack-coat',
   ROAD_MARKING: 'road-marking',
   LAYING_AND_COMPACTION: 'laying-and-compaction',
+  PIPE_LAYING_AND_JOINTING:'pipe-laying-jointing',
 };
 
 export const TEST_MATERIALS_TYPES = {

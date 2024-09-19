@@ -466,6 +466,24 @@ const [dumpingData, setDumpingData] = useState([
     probingByStiffwire: string;
   };
   //FormUseStates
+  const [pipeLayingAndJointingData, setPipeLayingAndJointingData] = useState({
+  materialAsPerGFC: 'Y',
+  latestGFCAvailable: 'Y',
+  locationLevelsPipeSizeAsPerGFC: 'Y',
+  routingCheckedAsPerGFC: 'Y',
+  hangerSupportProperSpacing: 'Y',
+  fastenerHangerRodAsPerGFC: 'Y',
+  jointPreparationFitUp: 'Y',
+  visualInspectionOfWeldedJoints: 'Y',
+  threadCheckForJoints: 'Y',
+  threadedJointsTightened: 'Y',
+  undergroundGIPipingTreatment: 'Y',
+  threadedPipesAlignedStraight: 'Y',
+  installedPipesAlignedProperly: 'Y',
+  totalPipeLength: 0.0,
+  totalNumberOfPipes: 0,
+});
+
   const [layingAndCompactionData, setLayingAndCompactionData] = useState({
     safetyMeasuresTaken: 'Y',
     approvedMethodologyAvailable: 'Y',
@@ -1435,17 +1453,38 @@ const validateDumpingData = (dumpingData: any[]): boolean => {
       }
     }
 
-    setTemporaryPrestressingData(prevData => ({
+    setTemporaryPrestressingData((prevData:any) => ({
       ...prevData,
       [key]: newValue,
     }));
   };
-  const handleInputChangePainting = (key, value) => {
+  const handleInputChangePainting = (key:any, value:any) => {
     setPaintingData(prevState => ({
       ...prevState,
       [key]: value,
     }));
   };
+
+  const validatePipeLayingAndJointingData = (pipeLayingAndJointingData: any): boolean => {
+    const totalPipeLength = parseFloat(pipeLayingAndJointingData.totalPipeLength);
+    const totalNumberOfPipes = parseInt(pipeLayingAndJointingData.totalNumberOfPipes);
+
+    if (isNaN(totalPipeLength) || totalPipeLength <= 0 || totalPipeLength > 1000 || pipeLayingAndJointingData.totalPipeLength.split('.')[1]?.length > 3) {
+      showSnackbar('Please enter a valid Total Pipe Length (in meters) with max 3 decimal places, value should be > 0 and <= 1000', 'error');
+      return false;
+    }
+
+    if (isNaN(totalNumberOfPipes) || totalNumberOfPipes <= 0 || totalNumberOfPipes > 1000) {
+      showSnackbar('Please enter a valid Total Number of Pipes laid (integer), value should be > 0 and <= 1000', 'error');
+      return false;
+    }
+
+    pipeLayingAndJointingData.totalPipeLength = Number(pipeLayingAndJointingData.totalPipeLength);
+    pipeLayingAndJointingData.totalNumberOfPipes = Number(pipeLayingAndJointingData.totalNumberOfPipes);
+
+    return true;
+  };
+
 
   const handleInputChangeGrouting = (
     name: keyof FormStateGrouting,
@@ -2552,6 +2591,29 @@ case TASK_TYPES.TACK_COAT:
               layerThickness: 0.0,
               totalMaterialQtyLaid: 0.0,
               totalMaterialQtySqm: 0.0,
+            });
+          }
+          break;
+        case TASK_TYPES.PIPE_LAYING_AND_JOINTING:
+          if (rfiData.metaData.pipeLayingAndJointingData) {
+            setPipeLayingAndJointingData(rfiData.metaData.pipeLayingAndJointingData);
+          } else {
+            setPipeLayingAndJointingData({
+              materialAsPerGFC: 'Y',
+              latestGFCAvailable: 'Y',
+              locationLevelsPipeSizeAsPerGFC: 'Y',
+              routingCheckedAsPerGFC: 'Y',
+              hangerSupportProperSpacing: 'Y',
+              fastenerHangerRodAsPerGFC: 'Y',
+              jointPreparationFitUp: 'Y',
+              visualInspectionOfWeldedJoints: 'Y',
+              threadCheckForJoints: 'Y',
+              threadedJointsTightened: 'Y',
+              undergroundGIPipingTreatment: 'Y',
+              threadedPipesAlignedStraight: 'Y',
+              installedPipesAlignedProperly: 'Y',
+              totalPipeLength: 0.0,
+              totalNumberOfPipes: 0,
             });
           }
           break;
@@ -4407,6 +4469,15 @@ case TASK_TYPES.TACK_COAT:
         checkList = {
           taskName: selectedTask.name,
           layingAndCompactionData: layingAndCompactionData,
+        };
+        break;
+      case TASK_TYPES.PIPE_LAYING_AND_JOINTING:
+        if (!validatePipeLayingAndJointingData(pipeLayingAndJointingData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          pipeLayingAndJointingData: pipeLayingAndJointingData,
         };
         break;
 
@@ -11131,82 +11202,162 @@ case TASK_TYPES.TACK_COAT:
             key: 'nonConformanceFound',
           },
         ];
-return (
-  <View>
-    {layingAndCompactionProperties.map(property => (
-      <View style={{flexDirection: 'column'}} key={property.key}>
-        <DropdownPicker
-          label={property.title}
-          value={layingAndCompactionData[property.key]}
-          items={YES_NO_LIST}
-          onChange={(value: any) =>
-            setLayingAndCompactionData(prevData => ({
-              ...prevData,
-              [property.key]: value,
-            }))
-          }
-          isRequired={true}
-        />
-      </View>
-    ))}
-    <Input
-      label="Thickness of Layer Laid in mm"
-      value={layingAndCompactionData.layerThickness}
-      onChange={(value: any) =>
-        setLayingAndCompactionData(prevData => ({
-          ...prevData,
-          layerThickness: value,
-        }))
-      }
-      isRequired={true}
-    />
+      return (
+        <View>
+          {layingAndCompactionProperties.map(property => (
+            <View style={{flexDirection: 'column'}} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={layingAndCompactionData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value: any) =>
+                  setLayingAndCompactionData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+          <Input
+            label="Thickness of Layer Laid in mm"
+            value={layingAndCompactionData.layerThickness}
+            onChange={(value: any) =>
+              setLayingAndCompactionData(prevData => ({
+                ...prevData,
+                layerThickness: value,
+              }))
+            }
+            isRequired={true}
+          />
 
-    <Input
-      label="Total Material Qty Laid in Tonne"
-      value={layingAndCompactionData.totalMaterialQtyLaid}
-      onChange={(value: any) =>
-        setLayingAndCompactionData(prevData => ({
-          ...prevData,
-          totalMaterialQtyLaid: value,
-        }))
-      }
-      isRequired={true}
-    />
+          <Input
+            label="Total Material Qty Laid in Tonne"
+            value={layingAndCompactionData.totalMaterialQtyLaid}
+            onChange={(value: any) =>
+              setLayingAndCompactionData(prevData => ({
+                ...prevData,
+                totalMaterialQtyLaid: value,
+              }))
+            }
+            isRequired={true}
+          />
 
-    <Input
-      label="Total Material Qty in Sqm"
-      value={layingAndCompactionData.totalMaterialQtySqm}
-      onChange={(value: any) =>
-        setLayingAndCompactionData(prevData => ({
-          ...prevData,
-          totalMaterialQtySqm: value,
-        }))
-      }
-      isRequired={true}
-    />
-    <View>
-      <CalendarPicker
-        label="Date"
-        value={rfiDate}
-        onChange={date => setRFIDate(date)}
-      />
-      <TimePicker
-        label="Time"
-        value={rfiTime}
-        onChange={time => setRFITime(time)}
-      />
-      <TextInput
-        style={styles.commonInputFiels}
-        placeholder="Recommendations"
-        multiline={true}
-        numberOfLines={4}
-        blurOnSubmit={false}
-        value={comments}
-        onChangeText={text => setComments(text)}
-      />
-    </View>
-  </View>
-);
+          <Input
+            label="Total Material Qty in Sqm"
+            value={layingAndCompactionData.totalMaterialQtySqm}
+            onChange={(value: any) =>
+              setLayingAndCompactionData(prevData => ({
+                ...prevData,
+                totalMaterialQtySqm: value,
+              }))
+            }
+            isRequired={true}
+          />
+          <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
+        </View>
+      );
+      case TASK_TYPES.PIPE_LAYING_AND_JOINTING:
+        const pipeLayingAndJointingProperties = [
+          { title: 'Ensure all material as per GFC drawing', key: 'materialAsPerGFC' },
+          { title: 'Check for availability of the latest GFC drawing', key: 'latestGFCAvailable' },
+          { title: 'Location, levels, pipe size as per GFC', key: 'locationLevelsPipeSizeAsPerGFC' },
+          { title: 'Check routing of pipe as per drawing', key: 'routingCheckedAsPerGFC' },
+          { title: 'Check hanger & support spacing as per drawing', key: 'hangerSupportProperSpacing' },
+          { title: 'Fastener & hanger rod as per drawing', key: 'fastenerHangerRodAsPerGFC' },
+          { title: 'Joint preparation & fit-up proper', key: 'jointPreparationFitUp' },
+          { title: 'Visual inspection of welded joints', key: 'visualInspectionOfWeldedJoints' },
+          { title: 'Thread check for pipe joints', key: 'threadCheckForJoints' },
+          { title: 'Threaded joints properly tightened', key: 'threadedJointsTightened' },
+          { title: 'Bituminous paint & polythene tape applied to underground GI piping', key: 'undergroundGIPipingTreatment' },
+          { title: 'Threaded pipes aligned and straight', key: 'threadedPipesAlignedStraight' },
+          { title: 'Installed pipes aligned properly', key: 'installedPipesAlignedProperly' },
+        ];
+
+        return (
+          <View>
+            {pipeLayingAndJointingProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={pipeLayingAndJointingData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setPipeLayingAndJointingData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <Input
+              label="Total Length of Pipe Laid in Meters"
+              value={pipeLayingAndJointingData.totalPipeLength}
+              onChange={(value: any) =>
+                setPipeLayingAndJointingData(prevData => ({
+                  ...prevData,
+                  totalPipeLength: value,
+                }))
+              }
+              isRequired={true}
+            />
+            <Input
+              label="Total Number of Pipes Laid"
+              value={pipeLayingAndJointingData.totalNumberOfPipes}
+              onChange={(value: any) =>
+                setPipeLayingAndJointingData(prevData => ({
+                  ...prevData,
+                  totalNumberOfPipes: value,
+                }))
+              }
+              isRequired={true}
+            />
+            <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
+          </View>
+        );
 
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:

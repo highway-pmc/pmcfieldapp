@@ -428,6 +428,16 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       [name]: Number(value),
     });
   };
+const [dumpingData, setDumpingData] = useState([
+  {
+    vehicleNo: '', // last 4 digits, number
+    source: 'Y',
+    qtyDumped: 0, // must be > 0, up to 3 decimals, max 100,000
+    approvedSource: '', // "Y" or "N"
+    bouldersPresent: 'Y', // "Y" or "N"
+    key: Guid.create(),
+  },
+]);
 
   // GROUTING
   type FormStateGrouting = {
@@ -829,6 +839,76 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       [key]: value,
     }));
   };
+  const handleTextInputChangeDumping = (
+  index: number,
+  field: string,
+  value: string,
+) => {
+  const updatedData = [...dumpingData];
+  let isValid = true;
+  let errorMessage = '';
+
+  switch (field) {
+    case 'vehicleNo':
+      if (!/^\d{4}$/.test(value)) {
+        isValid = false;
+        errorMessage = 'Vehicle No must be the last 4 digits and contain only numbers.';
+      }
+      break;
+
+    case 'qtyDumped':
+      const qtyDumped = parseFloat(value);
+      if (
+        isNaN(qtyDumped) ||
+        qtyDumped <= 0 ||
+        qtyDumped > 100000 ||
+        value.split('.')[1]?.length > 3
+      ) {
+        isValid = false;
+        errorMessage = 'Quantity dumped must be > 0, up to 3 decimal places, and max 100,000.';
+      }
+      break;
+
+    default:
+      break;
+  }
+
+  if (!isValid) {
+    showSnackbar(errorMessage, 'error');
+  } else {
+    updatedData[index][field] = value;
+    setDumpingData(updatedData);
+  }
+};
+const validateDumpingData = (dumpingData: any[]): boolean => {
+  for (const item of dumpingData) {
+    // Parsing values to float
+    const qtyDumped = parseFloat(item.qtyDumped);
+    const vehicleNo = parseInt(item.vehicleNo); 
+
+    if (isNaN(vehicleNo) || item.vehicleNo.length !== 4 || !/^\d{4}$/.test(item.vehicleNo)) {
+      showSnackbar('Vehicle No must be the last 4 digits and contain only numbers.', 'error');
+      return false;
+    }
+    if (isNaN(qtyDumped) || qtyDumped <= 0 || qtyDumped > 100000 || item.qtyDumped.split('.')[1]?.length > 3) {
+      showSnackbar(
+        'Quantity dumped must be greater than 0, up to 3 decimal places, and less than or equal to 100,000.',
+        'error',
+      );
+      return false;
+    }
+  }
+
+  // Convert the validated values back to numbers
+  dumpingData.forEach((item: any) => {
+    item.qtyDumped = Number(item.qtyDumped);
+    item.vehicleNo = Number(item.vehicleNo);
+  });
+
+  return true;
+};
+
+
 
   const [fixingShutterData, setFixingShutterData] = useState({
     shutterMaterial: 'Y',
@@ -1682,6 +1762,17 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             setConcreteData([]);
           }
           break;
+          case TASK_TYPES.DUMPING:
+          if (rfiData.metaData.dumpingData) {
+            rfiData.metaData.dumpingData.forEach((item: any) => {
+              item.key = Guid.create();
+            });
+            setDumpingData(rfiData.metaData.dumpingData);
+          } else {
+            setDumpingData([]);
+          }
+          break;
+
         case TASK_TYPES.GLUEING:
           if (rfiData.metaData?.glueingData) {
             rfiData.metaData?.glueingData.forEach((item: any) => {
@@ -4032,6 +4123,16 @@ case TASK_TYPES.TACK_COAT:
           concreteData: concreteData,
         };
         break;
+        case TASK_TYPES.DUMPING:
+        if (!validateDumpingData(dumpingData)) {
+          return;
+        }
+
+        checkList = {
+          taskName: selectedTask.name,
+          dumpingData: dumpingData,
+        };
+        break;
       case TASK_TYPES.GLUEING:
         if (!validateGlueingData(glueingData)) {
           return;
@@ -4516,6 +4617,19 @@ case TASK_TYPES.TACK_COAT:
       },
     ]);
   };
+const onAddMoreDumping = () => {
+  setDumpingData([
+    ...dumpingData,
+    {
+      vehicleNo: '',
+      source: 'Y',
+      qtyDumped: 0,
+      approvedSource: '',
+      bouldersPresent: 'Y',
+      key: Guid.create(),
+    },
+  ]);
+};
 
   // const onAddMoreGlueing = () => {
   //   setGlueingData([
@@ -5538,6 +5652,114 @@ case TASK_TYPES.TACK_COAT:
 
     return isValid;
   };
+  const renderDumpingHeadings = () => (
+  <View style={styles.rowContainer}>
+    <View style={styles.cell}>
+      <Text style={styles.cellText}>Tm No.</Text>
+    </View>
+    <View style={styles.cell}>
+      <Text style={styles.cellText}>Vehicle No. (Last 4 digits)</Text>
+    </View>
+    <View style={styles.cell}>
+      <Text style={styles.cellText}>Source (Y/N)</Text>
+    </View>
+    <View style={styles.cell}>
+      <Text style={styles.cellText}>Qty Dumped (cum)</Text>
+    </View>
+    <View style={styles.cell}>
+      <Text style={styles.cellText}>Approved Source (Y/N)</Text>
+    </View>
+    <View style={styles.cell}>
+      <Text style={styles.cellText}>Boulders/ Unwanted Materials (Y/N)</Text>
+    </View>
+    <View style={[styles.cell, {paddingHorizontal: 40}]}>
+      <Text style={styles.cellText}>Actions</Text>
+    </View>
+  </View>
+  );
+
+  const renderItemDumping = (rowData: any) => (
+    <View style={[styles.rowContainer, styles.marginBottom10]}>
+      <View style={styles.cell}>
+        <Text>TM {rowData.index + 1}</Text>
+      </View>
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'vehicleNo'}
+          index={rowData.index}
+          onChange={handleTextInputChangeDumping}
+        />
+      </View>
+
+      <View style={styles.cell}>
+        <DropdownPicker
+          label="Source"
+          value={rowData.item.source}
+          items={YES_NO_LIST}
+          onChange={(value: any) =>
+            handleDropdownChangeDumping(rowData.index, 'source', value)
+          }
+          isRequired={true}
+        />
+      </View>
+
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'qtyDumped'}
+          index={rowData.index}
+          onChange={handleTextInputChangeDumping}
+        />
+      </View>
+
+      <View style={styles.cell}>
+        <DropdownPicker
+          label="Approved Source"
+          value={rowData.item.approvedSource}
+          items={YES_NO_LIST}
+          onChange={(value: any) =>
+            handleDropdownChangeDumping(rowData.index, 'approvedSource', value)
+          }
+          isRequired={true}
+        />
+      </View>
+
+      <View style={styles.cell}>
+        <DropdownPicker
+          label="Boulders Present"
+          value={rowData.item.bouldersPresent}
+          items={YES_NO_LIST}
+          onChange={(value: any) =>
+            handleDropdownChangeDumping(rowData.index, 'bouldersPresent', value)
+          }
+          isRequired={true}
+        />
+      </View>
+
+      <View style={[styles.cell, {paddingHorizontal: 45}]}>
+        <TouchableOpacity
+          style={[styles.deleteButton]}
+          onPress={() => deleteDumpingItem(rowData, rowData.item.key)}>
+          <Image
+            style={[styles.CloseIcon, {tintColor: '#fff'}]}
+            source={require('./../../images/menu/delete.png')}
+          />
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+  const handleDropdownChangeDumping = (index: number, fieldName: string, value: any) => {
+    setDumpingData(prevData => {
+      const newData = [...prevData];
+      newData[index] = {
+        ...newData[index],
+        [fieldName]: value,
+      };
+      return newData;
+    });
+  };
+
 
   const renderItemGlueing = (rowData: any) => (
     <View style={[styles.rowContainer, styles.marginBottom10]}>
@@ -5913,6 +6135,13 @@ case TASK_TYPES.TACK_COAT:
     const prevIndex = torquingData.findIndex(item => item.key === rowKey);
     newData.splice(prevIndex, 1);
     setTorquingData(newData);
+  };
+  const deleteDumpingItem = (rowMap: any, rowKey: any) => {
+    closeRow(rowMap, rowKey);
+    const newData = [...dumpingData];
+    const prevIndex = dumpingData.findIndex(item => item.key === rowKey);
+    newData.splice(prevIndex, 1);
+    setDumpingData(newData);
   };
 
   //Function to delete glueing row
@@ -7512,6 +7741,75 @@ case TASK_TYPES.TACK_COAT:
                 </View>
               </ScrollView>
             </View>
+
+            <View>
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
+                />
+              </View>
+            </View>
+          </View>
+        );
+        case TASK_TYPES.DUMPING:
+        if (!dumpingData || !dumpingData.length) {
+          setDumpingData([
+            {
+              vehicleNo: '',
+              source: 'Y',
+              qtyDumped: 0,
+              approvedSource: '',
+              bouldersPresent: 'Y',
+              key: Guid.create(),
+            },
+          ]);
+        }
+        
+        return (
+          <View>
+            <ScrollView horizontal={true}>
+              <View>
+                {renderDumpingHeadings()}
+                <FlatList
+                  data={dumpingData}
+                  renderItem={renderItemDumping}
+                  keyExtractor={item => item.key?.toString()}
+                  automaticallyAdjustContentInsets={true}
+                  scrollEnabled={false}
+                />
+              </View>
+            </ScrollView>
+            <TouchableOpacity onPress={() => onAddMoreDumping()}>
+              <Text>+ Add More</Text>
+            </TouchableOpacity>
 
             <View>
               <View style={{flexDirection: 'column'}}>

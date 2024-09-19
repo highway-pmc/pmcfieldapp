@@ -418,6 +418,56 @@ const RFIsRecents = (props: any) => {
       </View>
     </View>
   );
+  const renderSectionHeaderDumping = (rowData: any) => (
+    <View>
+      <View>
+        <Text>TM Number</Text>
+      </View>
+      <View>
+        <Text>Vehicle No</Text>
+      </View>
+      <View>
+        <Text>Quantity Dumped</Text>
+      </View>
+      <View>
+        <Text>Source</Text>
+      </View>
+      <View>
+        <Text>Approved Source</Text>
+      </View>
+      <View>
+        <Text>Contains Boulders</Text>
+      </View>
+    </View>
+  );
+
+  const renderItemDumping = (rowData: any) => (
+    <View style={{flexDirection: 'column', gap: 5}}>
+      {rowData.index === 0 && (
+        <View style={styles.headerRow}>
+          <Text style={styles.headerCell}>TM Number</Text>
+          <Text style={styles.headerCell}>Vehicle No</Text>
+          <Text style={styles.headerCell}>Quantity Dumped</Text>
+          <Text style={styles.headerCell}>Source</Text>
+          <Text style={styles.headerCell}>Approved Source</Text>
+          <Text style={styles.headerCell}>Contains Boulders</Text>
+        </View>
+      )}
+      <View style={styles.row}>
+        <Text style={styles.cell}>{rowData.index + 1}</Text> {/* Row Number */}
+        <Text style={styles.cell}>{rowData.item.vehicleNo}</Text>
+        <Text style={styles.cell}>{rowData.item.qtyDumped}</Text>
+        <Text style={styles.cell}>{rowData.item.source}</Text>
+        <Text style={styles.cell}>
+          {rowData.item.isApprovedSource ? 'Yes' : 'No'}
+        </Text>
+        <Text style={styles.cell}>
+          {rowData.item.containsBoulders === 'Y' ? 'Yes' : 'No'}
+        </Text>
+      </View>
+    </View>
+  );
+
   const renderItemGlueing = (rowData: any) => (
     <View style={{flexDirection: 'column', gap: 5}}>
       {rowData.index === 0 && (
@@ -1291,6 +1341,20 @@ const RFIsRecents = (props: any) => {
                   data={selectedRFI?.metaData.torquingData}
                   renderItem={renderItemTorquing}
                   renderSectionHeader={renderSectionHeaderTorquing}
+                />
+              </View>
+            </ScrollView>
+          </View>
+        );
+      case TASK_TYPES.DUMPING:
+        return (
+          <View>
+            <ScrollView horizontal={true}>
+              <View style={{flexDirection: 'column'}}>
+                <SwipeListView
+                  data={selectedRFI?.metaData.dumpingData}
+                  renderItem={renderItemDumping}
+                  renderSectionHeader={renderSectionHeaderDumping}
                 />
               </View>
             </ScrollView>

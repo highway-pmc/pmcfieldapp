@@ -519,6 +519,7 @@ export const TASK_TYPES = {
   PRE_STRESSING: 'pre-stressing',
   PROCUREMENT_OF_SHEET: 'procurement-of-sheet',
   DUMPING_OF_SOIL: 'dumping-of-soil',
+  DUMPING:'dumping',
   BORING_OF_DIAPHRAGM: 'boring-of-diaphragm',
   COPING: 'coping',
   COMPACTING_GROUND_SUPPORT_FOR_EMBANKMENT:

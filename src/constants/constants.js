@@ -535,6 +535,7 @@ export const TASK_TYPES = {
   FIXING_OF_METAL_BEAM:'fixing-of-metal-beam',
   FIXING_VERTICAL_POST:'fixing-of-vertiacal-post',
   CUTTING_OF_JOINTS:'cutting-of-joints',
+  LAYING_OF_PAVER_BLOCK:'laying-of-paver-block',
 };
 
 export const TEST_MATERIALS_TYPES = {

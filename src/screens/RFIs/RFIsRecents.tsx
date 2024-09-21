@@ -3859,18 +3859,101 @@ const RFIsRecents = (props: any) => {
         );
       case TASK_TYPES.CUTTING_OF_JOINTS:
         const cuttingOfJointsProperties = [
-          { title: 'Is joints cut at desired intervals', key: 'jointsCutAtDesiredIntervals' },
-          { title: 'Is joint cut at desired depth', key: 'jointsCutAtDesiredDepth' },
-          { title: 'Is joint cut done properly', key: 'jointCutDoneProperly' },
-          { title: 'Total Length Completed in Km', key: 'totalLengthCompleted' },
+          {
+            title: 'Is joints cut at desired intervals',
+            key: 'jointsCutAtDesiredIntervals',
+          },
+          {
+            title: 'Is joint cut at desired depth',
+            key: 'jointsCutAtDesiredDepth',
+          },
+          {title: 'Is joint cut done properly', key: 'jointCutDoneProperly'},
+          {title: 'Total Length Completed in Km', key: 'totalLengthCompleted'},
         ];
 
         return (
           <View>
             {cuttingOfJointsProperties.map(property => (
-              <View style={{ flexDirection: 'column' }} key={property.key}>
-                <Text style={styles.GenerateRFIFieldLabel}>{property.title}</Text>
-                <Text>{selectedRFI?.metaData.cuttingOfJointsData?.[property.key]}</Text>
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.cuttingOfJointsData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.LAYING_OF_PAVER_BLOCK:
+        const layingOfPaverBlockProperties = [
+          {
+            title:
+              'Top 150mm thick sub base layer spread levelled and compacted to 95% MMD?',
+            key: 'subBaseLayerCompacted',
+          },
+          {
+            title:
+              'Washed sand of appropriate thickness 50 mm as laying course?',
+            key: 'washedSandLayingCourse',
+          },
+          {
+            title: 'Paving blocks are from approved source',
+            key: 'approvedSourcePavingBlocks',
+          },
+          {
+            title:
+              'Paving blocks dimension and finishing as per approved material submitted and shop drawing?',
+            key: 'blocksDimensionsAndFinishing',
+          },
+          {
+            title:
+              'Paving blocks installation/pattern done as per approved drawing?',
+            key: 'installationPatternAsPerDrawing',
+          },
+          {
+            title:
+              'Check Whether the plate compactor has been moved on laid paving blocks with dune sand spread over it?',
+            key: 'plateCompactorOnBlocks',
+          },
+          {
+            title:
+              'Check whether the joints between the paving blocks are as per method statement and joint filler spread on paving blocks and brushed between the blocks',
+            key: 'jointsAsPerMethodStatement',
+          },
+          {
+            title:
+              'Location, Elevation, Level and Alignment of installed paver block are as per approved drawing and tolerances (+/- 6mm)',
+            key: 'locationElevationLevelAlignment',
+          },
+          {
+            title: 'Total length of paver block laid in RM',
+            key: 'totalLengthLaid',
+          },
+          {
+            title: 'Total sqm of paver blocks laid',
+            key: 'totalSqmLaid',
+          },
+          {
+            title: 'Thickness of paver block laid in mm',
+            key: 'thicknessPaverBlockLaid',
+          },
+          {
+            title: 'Grade of concrete of paver block',
+            key: 'gradeOfConcretePaverBlock',
+          },
+        ];
+
+        return (
+          <View>
+            {layingOfPaverBlockProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.layingOfPaverBlockData?.[property.key]}
+                </Text>
               </View>
             ))}
           </View>

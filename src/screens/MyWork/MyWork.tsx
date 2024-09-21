@@ -466,6 +466,21 @@ const [dumpingData, setDumpingData] = useState([
     probingByStiffwire: string;
   };
   //FormUseStates
+  const [layingOfPaverBlockData, setLayingOfPaverBlockData] = useState({
+    subBaseCompacted: 'Y',
+    sandLayingCourse: 'Y',
+    pavingBlocksApprovedSource: 'Y',
+    pavingBlocksDimension: 'Y',
+    pavingBlocksInstallation: 'Y',
+    plateCompactorMoved: 'Y',
+    jointsAsPerMethodStatement: 'Y',
+    locationAlignmentCorrect: 'Y',
+    totalLengthLaid: 0.0,
+    totalSqmLaid: 0.0,
+    thicknessPaverBlock: 0.0,
+    gradeOfConcrete: 'M20',
+  });
+
   const [cuttingOfJointsData, setCuttingOfJointsData] = useState({
     jointsCutAtDesiredIntervals: 'Y',
     jointsCutAtDesiredDepth: 'Y',
@@ -923,6 +938,61 @@ const [dumpingData, setDumpingData] = useState([
     setDumpingData(updatedData);
   }
 };
+const validateLayingOfPaverBlockData = (layingOfPaverBlockData: any): boolean => {
+  const totalLengthLaid = parseFloat(layingOfPaverBlockData.totalLengthLaid);
+  const totalSqmLaid = parseFloat(layingOfPaverBlockData.totalSqmLaid);
+  const thicknessPaverBlock = parseFloat(layingOfPaverBlockData.thicknessPaverBlock);
+
+  // Validation for Total Length of Paver Block Laid
+  if (isNaN(totalLengthLaid) || totalLengthLaid <= 0 || totalLengthLaid > 100000 || layingOfPaverBlockData.totalLengthLaid.split('.')[1]?.length > 3) {
+    showSnackbar('Please enter a valid Total Length of Paver Block Laid with max 3 decimal places, value should be > 0 and <= 100,000', 'error');
+    return false;
+  }
+
+  // Validation for Total SQM of Paver Blocks Laid
+  if (isNaN(totalSqmLaid) || totalSqmLaid <= 0 || totalSqmLaid > 1000000 || layingOfPaverBlockData.totalSqmLaid.split('.')[1]?.length > 3) {
+    showSnackbar('Please enter a valid Total SQM of Paver Blocks Laid with max 3 decimal places, value should be > 0 and <= 1,000,000', 'error');
+    return false;
+  }
+
+  // Validation for Thickness of Paver Block Laid in mm
+  if (isNaN(thicknessPaverBlock) || thicknessPaverBlock <= 0 || thicknessPaverBlock > 150 || layingOfPaverBlockData.thicknessPaverBlock.split('.')[1]?.length > 3) {
+    showSnackbar('Please enter a valid Thickness of Paver Block Laid with max 3 decimal places, value should be > 0 and <= 150', 'error');
+    return false;
+  }
+
+  // Converting values back to numbers after validation
+  layingOfPaverBlockData.totalLengthLaid = Number(layingOfPaverBlockData.totalLengthLaid);
+  layingOfPaverBlockData.totalSqmLaid = Number(layingOfPaverBlockData.totalSqmLaid);
+  layingOfPaverBlockData.thicknessPaverBlock = Number(layingOfPaverBlockData.thicknessPaverBlock);
+
+  return true;
+};
+const validateCuttingOfJointsData = (cuttingOfJointsData: any): boolean => {
+  const totalLengthCompleted = parseFloat(cuttingOfJointsData.totalLengthCompleted);
+
+  // Validation for Total Length Completed in Km
+  if (
+    isNaN(totalLengthCompleted) ||
+    totalLengthCompleted <= 0 ||
+    totalLengthCompleted > 100 ||
+    cuttingOfJointsData.totalLengthCompleted.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Total Length Completed in Km with max 3 decimal places, value should be > 0 and <= 100',
+      'error',
+    );
+    return false;
+  }
+
+  // Converting the values back to numbers after validation
+  cuttingOfJointsData.totalLengthCompleted = Number(
+    cuttingOfJointsData.totalLengthCompleted,
+  );
+
+  return true;
+};
+
 const validateFixingVerticalPostData = (fixingVerticalPostData: any): boolean => {
   const totalPostsInstalled = parseInt(fixingVerticalPostData.totalVerticalPostInstalled);
 
@@ -2722,6 +2792,26 @@ case TASK_TYPES.TACK_COAT:
               jointsCutAtDesiredDepth: 'Y',
               jointCutDoneProperly: 'Y',
               totalLengthCompleted: 0.0,
+            });
+          }
+          break;
+        case TASK_TYPES.LAYING_OF_PAVER_BLOCK:
+          if (rfiData.metaData.layingOfPaverBlockData) {
+            setLayingOfPaverBlockData(rfiData.metaData.layingOfPaverBlockData);
+          } else {
+            setLayingOfPaverBlockData({
+              subBaseCompacted: 'Y',
+              sandLayingCourse: 'Y',
+              pavingBlocksApprovedSource: 'Y',
+              pavingBlocksDimension: 'Y',
+              pavingBlocksInstallation: 'Y',
+              plateCompactorMoved: 'Y',
+              jointsAsPerMethodStatement: 'Y',
+              locationAlignmentCorrect: 'Y',
+              totalLengthLaid: 0.0,
+              totalSqmLaid: 0.0,
+              thicknessPaverBlock: 0.0,
+              gradeOfConcrete: '',
             });
           }
           break;
@@ -4614,6 +4704,15 @@ case TASK_TYPES.TACK_COAT:
         checkList = {
           taskName: selectedTask.name,
           cuttingOfJointsData: cuttingOfJointsData,
+        };
+        break;
+      case TASK_TYPES.LAYING_OF_PAVER_BLOCK:
+        if (!validateLayingOfPaverBlockData(layingOfPaverBlockData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          layingOfPaverBlockData: layingOfPaverBlockData,
         };
         break;
   
@@ -11710,6 +11809,108 @@ case TASK_TYPES.TACK_COAT:
           </View>
         </View>
       );
+      case TASK_TYPES.LAYING_OF_PAVER_BLOCK:
+        const layingOfPaverBlockProperties = [
+          { title: 'Top 150mm thick sub base layer spread levelled and compacted to 95% MMD?', key: 'subBaseCompacted' },
+          { title: 'Washed sand of appropriate thickness 50 mm as laying course?', key: 'sandLayingCourse' },
+          { title: 'Paving Blocks from Approved Source', key: 'pavingBlocksApprovedSource' },
+          { title: 'Paving blocks dimension and finishing as per approved material submitted and shop drawing?', key: 'pavingBlocksDimension' },
+          { title: 'Paving blocks installation/ pattern done as per approved drawing', key: 'pavingBlocksInstallation' },
+          { title: 'Check Whether the plate compactor has been moved on laid paving blocks with dune sand spread over it?', key: 'plateCompactorMoved' },
+          { title: 'Check whether the joints between the paving blocks are as per method statement and joint filler spread on paving blocks and brushed between the blocks', key: 'jointsAsPerMethodStatement' },
+          { title: 'Location, Elevation, Level and Alignment of installed paver block are as per approved drawing and tolerances (+/- 6mm)', key: 'locationAlignmentCorrect' },
+        ];
+
+        return (
+          <View>
+            {layingOfPaverBlockProperties.map(property => (
+              <View style={{ flexDirection: 'column' }} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={layingOfPaverBlockData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setLayingOfPaverBlockData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+
+            <Input
+              label="Total Length of Paver Block Laid (RM)"
+              value={layingOfPaverBlockData.totalLengthLaid}
+              onChange={(value: any) =>
+                setLayingOfPaverBlockData(prevData => ({
+                  ...prevData,
+                  totalLengthLaid: value,
+                }))
+              }
+              isRequired={true}
+            />
+
+            <Input
+              label="Total SQM of Paver Blocks Laid"
+              value={layingOfPaverBlockData.totalSqmLaid}
+              onChange={(value: any) =>
+                setLayingOfPaverBlockData(prevData => ({
+                  ...prevData,
+                  totalSqmLaid: value,
+                }))
+              }
+              isRequired={true}
+            />
+
+            <Input
+              label="Thickness of Paver Block Laid (mm)"
+              value={layingOfPaverBlockData.thicknessPaverBlock}
+              onChange={(value: any) =>
+                setLayingOfPaverBlockData(prevData => ({
+                  ...prevData,
+                  thicknessPaverBlock: value,
+                }))
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Grade of Concrete"
+              value={layingOfPaverBlockData.gradeOfConcrete}
+              items={['M20', 'M25', 'M30', 'M35', 'M40']}
+              onChange={(value: any) =>
+                setLayingOfPaverBlockData(prevData => ({
+                  ...prevData,
+                  gradeOfConcrete: value,
+                }))
+              }
+              isRequired={true}
+            />
+            <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
+          </View>
+        );
 
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:

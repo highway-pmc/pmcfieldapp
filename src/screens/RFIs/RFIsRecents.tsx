@@ -3812,7 +3812,51 @@ const RFIsRecents = (props: any) => {
             ))}
           </View>
         );
+      case TASK_TYPES.FIXING_VERTICAL_POST:
+        const fixingVerticalPostProperties = [
+          {
+            title: 'Pits Dugged/Drilled to Depth Indicated on Plan',
+            key: 'pitsDuggedToPlan',
+          },
+          {
+            title:
+              'Distance Maintained Between Barrier and Start of Embankment Slope',
+            key: 'distanceMaintainedBarrierSlope',
+          },
+          {
+            title:
+              'Distance Maintained Between Barrier and Edge of Carriageway',
+            key: 'distanceMaintainedBarrierCarriageway',
+          },
+          {
+            title:
+              'Posts Aligned Properly & Height Above Ground as per Approved Drawing',
+            key: 'postsAlignedHeightAsPerDrawing',
+          },
+          {
+            title: 'Steel Posts Placed as per Methodology',
+            key: 'steelPostsPlacedMethodology',
+          },
+          {
+            title: 'Total No. of Vertical Post Installed',
+            key: 'totalVerticalPostInstalled',
+          },
+        ];
 
+        return (
+          <View>
+            {fixingVerticalPostProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.fixingVerticalPostData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
       // ReadOnlyRfi
       default:
         return (

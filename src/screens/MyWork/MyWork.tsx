@@ -466,6 +466,15 @@ const [dumpingData, setDumpingData] = useState([
     probingByStiffwire: string;
   };
   //FormUseStates
+  const [fixingVerticalPostData, setFixingVerticalPostData] = useState({
+  pitsDuggedToPlan: 'Y',
+  distanceMaintainedBarrierSlope: 'Y',
+  distanceMaintainedBarrierCarriageway: 'Y',
+  postsAlignedHeightAsPerDrawing: 'Y',
+  steelPostsPlacedMethodology: 'Y',
+  totalVerticalPostInstalled: 0,
+});
+
   const [fixingOfMetalBeamData, setFixingOfMetalBeamData] = useState({
     barrierToEmbankmentDistance: 'Y',
     barrierToEdgeOfCarriagewayDistance: 'Y',
@@ -906,6 +915,21 @@ const [dumpingData, setDumpingData] = useState([
     updatedData[index][field] = value;
     setDumpingData(updatedData);
   }
+};
+const validateFixingVerticalPostData = (fixingVerticalPostData: any): boolean => {
+  const totalPostsInstalled = parseInt(fixingVerticalPostData.totalVerticalPostInstalled);
+
+  if (isNaN(totalPostsInstalled) || totalPostsInstalled <= 0 || totalPostsInstalled > 10000) {
+    showSnackbar(
+      'Please enter a valid number of vertical posts installed (integer, > 0, <= 10000)',
+      'error',
+    );
+    return false;
+  }
+
+  fixingVerticalPostData.totalVerticalPostInstalled = Number(fixingVerticalPostData.totalVerticalPostInstalled);
+  
+  return true;
 };
 
 const validateFixingOfMetalBeamData = (fixingOfMetalBeamData: any): boolean => {
@@ -2667,7 +2691,21 @@ case TASK_TYPES.TACK_COAT:
             });
           }
           break;
-  
+  case TASK_TYPES.FIXING_VERTICAL_POST:
+  if (rfiData.metaData.fixingVerticalPostData) {
+    setFixingVerticalPostData(rfiData.metaData.fixingVerticalPostData);
+  } else {
+    setFixingVerticalPostData({
+      pitsDuggedToPlan: 'Y',
+      distanceMaintainedBarrierSlope: 'Y',
+      distanceMaintainedBarrierCarriageway: 'Y',
+      postsAlignedHeightAsPerDrawing: 'Y',
+      steelPostsPlacedMethodology: 'Y',
+      totalVerticalPostInstalled: 0,
+    });
+  }
+  break;
+
         case TASK_TYPES.LIFTING_LEFT:
         case TASK_TYPES.LIFTING_YARD:
         case TASK_TYPES.LIFTING_RIGHT:
@@ -4539,6 +4577,15 @@ case TASK_TYPES.TACK_COAT:
           fixingOfMetalBeamData: fixingOfMetalBeamData,
         };
         break;
+case TASK_TYPES.FIXING_VERTICAL_POST:
+  if (!validateFixingVerticalPostData(fixingVerticalPostData)) {
+    return;
+  }
+  checkList = {
+    taskName: selectedTask.name,
+    fixingVerticalPostData: fixingVerticalPostData,
+  };
+  break;
 
   
       case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
@@ -11494,7 +11541,87 @@ case TASK_TYPES.TACK_COAT:
             </View>
           </View>
         );
-  
+  case TASK_TYPES.FIXING_VERTICAL_POST:
+  const fixingVerticalPostProperties = [
+    {
+      title: 'Pits Dugged/Drilled to Depth Indicated on Plan',
+      key: 'pitsDuggedToPlan',
+    },
+    {
+      title: 'Distance Maintained Between Barrier and Start of Embankment Slope',
+      key: 'distanceMaintainedBarrierSlope',
+    },
+    {
+      title: 'Distance Maintained Between Barrier and Edge of Carriageway',
+      key: 'distanceMaintainedBarrierCarriageway',
+    },
+    {
+      title: 'Posts Aligned Properly & Height Above Ground as per Approved Drawing',
+      key: 'postsAlignedHeightAsPerDrawing',
+    },
+    {
+      title: 'Steel Posts Placed as per Methodology',
+      key: 'steelPostsPlacedMethodology',
+    },
+    {
+      title: 'Total No. of Vertical Post Installed',
+      key: 'totalVerticalPostInstalled',
+    },
+  ];
+
+  return (
+    <View>
+      {fixingVerticalPostProperties.map(property => (
+        <View style={{flexDirection: 'column'}} key={property.key}>
+          <DropdownPicker
+            label={property.title}
+            value={fixingVerticalPostData[property.key]}
+            items={YES_NO_LIST}
+            onChange={(value: any) =>
+              setFixingVerticalPostData(prevData => ({
+                ...prevData,
+                [property.key]: value,
+              }))
+            }
+            isRequired={true}
+          />
+        </View>
+      ))}
+      <Input
+        label="Total No. of Vertical Post Installed"
+        value={fixingVerticalPostData.totalVerticalPostInstalled}
+        onChange={(value: any) =>
+          setFixingVerticalPostData(prevData => ({
+            ...prevData,
+            totalVerticalPostInstalled: value,
+          }))
+        }
+        isRequired={true}
+      />
+      <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+    </View>
+  );
+
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
       case TASK_TYPES.LIFTING_RIGHT:

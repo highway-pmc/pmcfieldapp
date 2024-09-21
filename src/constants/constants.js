@@ -533,6 +533,7 @@ export const TASK_TYPES = {
   LAYING_AND_COMPACTION: 'laying-and-compaction',
   PIPE_LAYING_AND_JOINTING: 'pipe-laying-jointing',
   FIXING_OF_METAL_BEAM:'fixing-of-metal-beam',
+  FIXING_VERTICAL_POST:'fixing-of-vertiacal-post',
 };
 
 export const TEST_MATERIALS_TYPES = {

@@ -466,6 +466,13 @@ const [dumpingData, setDumpingData] = useState([
     probingByStiffwire: string;
   };
   //FormUseStates
+  const [cuttingOfJointsData, setCuttingOfJointsData] = useState({
+    jointsCutAtDesiredIntervals: 'Y',
+    jointsCutAtDesiredDepth: 'Y',
+    jointCutDoneProperly: 'Y',
+    totalLengthCompleted: 0.0,
+  });
+
   const [fixingVerticalPostData, setFixingVerticalPostData] = useState({
   pitsDuggedToPlan: 'Y',
   distanceMaintainedBarrierSlope: 'Y',
@@ -2691,20 +2698,33 @@ case TASK_TYPES.TACK_COAT:
             });
           }
           break;
-  case TASK_TYPES.FIXING_VERTICAL_POST:
-  if (rfiData.metaData.fixingVerticalPostData) {
-    setFixingVerticalPostData(rfiData.metaData.fixingVerticalPostData);
-  } else {
-    setFixingVerticalPostData({
-      pitsDuggedToPlan: 'Y',
-      distanceMaintainedBarrierSlope: 'Y',
-      distanceMaintainedBarrierCarriageway: 'Y',
-      postsAlignedHeightAsPerDrawing: 'Y',
-      steelPostsPlacedMethodology: 'Y',
-      totalVerticalPostInstalled: 0,
-    });
-  }
-  break;
+          case TASK_TYPES.FIXING_VERTICAL_POST:
+          if (rfiData.metaData.fixingVerticalPostData) {
+            setFixingVerticalPostData(rfiData.metaData.fixingVerticalPostData);
+          } else {
+            setFixingVerticalPostData({
+              pitsDuggedToPlan: 'Y',
+              distanceMaintainedBarrierSlope: 'Y',
+              distanceMaintainedBarrierCarriageway: 'Y',
+              postsAlignedHeightAsPerDrawing: 'Y',
+              steelPostsPlacedMethodology: 'Y',
+              totalVerticalPostInstalled: 0,
+            });
+          }
+          break;
+
+        case TASK_TYPES.CUTTING_OF_JOINTS:
+          if (rfiData.metaData.cuttingOfJointsData) {
+            setCuttingOfJointsData(rfiData.metaData.cuttingOfJointsData);
+          } else {
+            setCuttingOfJointsData({
+              jointsCutAtDesiredIntervals: 'Y',
+              jointsCutAtDesiredDepth: 'Y',
+              jointCutDoneProperly: 'Y',
+              totalLengthCompleted: 0.0,
+            });
+          }
+          break;
 
         case TASK_TYPES.LIFTING_LEFT:
         case TASK_TYPES.LIFTING_YARD:
@@ -4577,16 +4597,25 @@ case TASK_TYPES.TACK_COAT:
           fixingOfMetalBeamData: fixingOfMetalBeamData,
         };
         break;
-case TASK_TYPES.FIXING_VERTICAL_POST:
-  if (!validateFixingVerticalPostData(fixingVerticalPostData)) {
-    return;
-  }
-  checkList = {
-    taskName: selectedTask.name,
-    fixingVerticalPostData: fixingVerticalPostData,
-  };
-  break;
+      case TASK_TYPES.FIXING_VERTICAL_POST:
+        if (!validateFixingVerticalPostData(fixingVerticalPostData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          fixingVerticalPostData: fixingVerticalPostData,
+        };
+        break;
 
+      case TASK_TYPES.CUTTING_OF_JOINTS:
+        if (!validateCuttingOfJointsData(cuttingOfJointsData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          cuttingOfJointsData: cuttingOfJointsData,
+        };
+        break;
   
       case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
       case TASK_TYPES.LIFTING_LEFT:
@@ -11541,86 +11570,146 @@ case TASK_TYPES.TACK_COAT:
             </View>
           </View>
         );
-  case TASK_TYPES.FIXING_VERTICAL_POST:
-  const fixingVerticalPostProperties = [
-    {
-      title: 'Pits Dugged/Drilled to Depth Indicated on Plan',
-      key: 'pitsDuggedToPlan',
-    },
-    {
-      title: 'Distance Maintained Between Barrier and Start of Embankment Slope',
-      key: 'distanceMaintainedBarrierSlope',
-    },
-    {
-      title: 'Distance Maintained Between Barrier and Edge of Carriageway',
-      key: 'distanceMaintainedBarrierCarriageway',
-    },
-    {
-      title: 'Posts Aligned Properly & Height Above Ground as per Approved Drawing',
-      key: 'postsAlignedHeightAsPerDrawing',
-    },
-    {
-      title: 'Steel Posts Placed as per Methodology',
-      key: 'steelPostsPlacedMethodology',
-    },
-    {
-      title: 'Total No. of Vertical Post Installed',
-      key: 'totalVerticalPostInstalled',
-    },
-  ];
+      case TASK_TYPES.FIXING_VERTICAL_POST:
+      const fixingVerticalPostProperties = [
+        {
+          title: 'Pits Dugged/Drilled to Depth Indicated on Plan',
+          key: 'pitsDuggedToPlan',
+        },
+        {
+          title: 'Distance Maintained Between Barrier and Start of Embankment Slope',
+          key: 'distanceMaintainedBarrierSlope',
+        },
+        {
+          title: 'Distance Maintained Between Barrier and Edge of Carriageway',
+          key: 'distanceMaintainedBarrierCarriageway',
+        },
+        {
+          title: 'Posts Aligned Properly & Height Above Ground as per Approved Drawing',
+          key: 'postsAlignedHeightAsPerDrawing',
+        },
+        {
+          title: 'Steel Posts Placed as per Methodology',
+          key: 'steelPostsPlacedMethodology',
+        },
+        {
+          title: 'Total No. of Vertical Post Installed',
+          key: 'totalVerticalPostInstalled',
+        },
+      ];
 
-  return (
-    <View>
-      {fixingVerticalPostProperties.map(property => (
-        <View style={{flexDirection: 'column'}} key={property.key}>
-          <DropdownPicker
-            label={property.title}
-            value={fixingVerticalPostData[property.key]}
-            items={YES_NO_LIST}
+      return (
+        <View>
+          {fixingVerticalPostProperties.map(property => (
+            <View style={{flexDirection: 'column'}} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={fixingVerticalPostData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value: any) =>
+                  setFixingVerticalPostData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+          <Input
+            label="Total No. of Vertical Post Installed"
+            value={fixingVerticalPostData.totalVerticalPostInstalled}
             onChange={(value: any) =>
               setFixingVerticalPostData(prevData => ({
                 ...prevData,
-                [property.key]: value,
+                totalVerticalPostInstalled: value,
               }))
             }
             isRequired={true}
           />
+          <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
         </View>
-      ))}
-      <Input
-        label="Total No. of Vertical Post Installed"
-        value={fixingVerticalPostData.totalVerticalPostInstalled}
-        onChange={(value: any) =>
-          setFixingVerticalPostData(prevData => ({
-            ...prevData,
-            totalVerticalPostInstalled: value,
-          }))
-        }
-        isRequired={true}
-      />
-      <View>
-              <CalendarPicker
-                label="Date"
-                value={rfiDate}
-                onChange={date => setRFIDate(date)}
-              />
-              <TimePicker
-                label="Time"
-                value={rfiTime}
-                onChange={time => setRFITime(time)}
-              />
-              <TextInput
-                style={styles.commonInputFiels}
-                placeholder="Recommendations"
-                multiline={true}
-                numberOfLines={4}
-                blurOnSubmit={false}
-                value={comments}
-                onChangeText={text => setComments(text)}
+      );
+      case TASK_TYPES.CUTTING_OF_JOINTS:
+        const cuttingOfJointsProperties = [
+        { title: 'Is joints cut at desired intervals', key: 'jointsCutAtDesiredIntervals' },
+        { title: 'Is joint cut at desired depth', key: 'jointsCutAtDesiredDepth' },
+        { title: 'Is joint cut done properly', key: 'jointCutDoneProperly' },
+      ];
+
+      return (
+        <View>
+          {cuttingOfJointsProperties.map(property => (
+            <View style={{ flexDirection: 'column' }} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={cuttingOfJointsData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value: any) =>
+                  setCuttingOfJointsData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
               />
             </View>
-    </View>
-  );
+          ))}
+
+          <Input
+            label="Total Length Completed in Km"
+            value={cuttingOfJointsData.totalLengthCompleted}
+            onChange={(value: any) =>
+              setCuttingOfJointsData(prevData => ({
+                ...prevData,
+                totalLengthCompleted: value,
+              }))
+            }
+            isRequired={true}
+          />
+          <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
+        </View>
+      );
 
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:

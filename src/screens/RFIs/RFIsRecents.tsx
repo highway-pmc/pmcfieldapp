@@ -3857,6 +3857,25 @@ const RFIsRecents = (props: any) => {
             ))}
           </View>
         );
+      case TASK_TYPES.CUTTING_OF_JOINTS:
+        const cuttingOfJointsProperties = [
+          { title: 'Is joints cut at desired intervals', key: 'jointsCutAtDesiredIntervals' },
+          { title: 'Is joint cut at desired depth', key: 'jointsCutAtDesiredDepth' },
+          { title: 'Is joint cut done properly', key: 'jointCutDoneProperly' },
+          { title: 'Total Length Completed in Km', key: 'totalLengthCompleted' },
+        ];
+
+        return (
+          <View>
+            {cuttingOfJointsProperties.map(property => (
+              <View style={{ flexDirection: 'column' }} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>{property.title}</Text>
+                <Text>{selectedRFI?.metaData.cuttingOfJointsData?.[property.key]}</Text>
+              </View>
+            ))}
+          </View>
+        );
+
       // ReadOnlyRfi
       default:
         return (

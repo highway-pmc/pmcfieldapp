@@ -534,6 +534,7 @@ export const TASK_TYPES = {
   PIPE_LAYING_AND_JOINTING: 'pipe-laying-jointing',
   FIXING_OF_METAL_BEAM:'fixing-of-metal-beam',
   FIXING_VERTICAL_POST:'fixing-of-vertiacal-post',
+  CUTTING_OF_JOINTS:'cutting-of-joints',
 };
 
 export const TEST_MATERIALS_TYPES = {

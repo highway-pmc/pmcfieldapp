@@ -440,7 +440,46 @@ const RFIsRecents = (props: any) => {
       </View>
     </View>
   );
+  const renderSectionHeaderLayingOfDlc = (rowData: any) => (
+    <View>
+      <View>
+        <Text>Serial No.</Text>
+      </View>
+      <View>
+        <Text>Vehicle No.</Text>
+      </View>
+      <View>
+        <Text>Total Qty of DLC (cum)</Text>
+      </View>
+      <View>
+        <Text>Laying Start Time</Text>
+      </View>
+      <View>
+        <Text>Laying End Time</Text>
+      </View>
+    </View>
+  );
 
+  const renderItemLayingOfDlc = (rowData: any) => (
+    <View style={{flexDirection: 'column', gap: 5}}>
+      {rowData.index === 0 && (
+        <View style={styles.headerRow}>
+          <Text style={styles.headerCell}>Vehicle No</Text>
+          <Text style={styles.headerCell}>Vehicle No</Text>
+          <Text style={styles.headerCell}>Total Qty of DLC (cum)</Text>
+          <Text style={styles.headerCell}>Laying Start Time</Text>
+          <Text style={styles.headerCell}>Laying End Time</Text>
+        </View>
+      )}
+      <View style={styles.row}>
+        <Text style={styles.cell}>{rowData.index + 1}</Text> {/* Row Number */}
+        <Text style={styles.cell}>{rowData.item.vehicleNo}</Text>
+        <Text style={styles.cell}>{rowData.item.totalQtyDlc}</Text>
+        <Text style={styles.cell}>{rowData.item.layingStartTime}</Text>
+        <Text style={styles.cell}>{rowData.item.layingEndTime}</Text>
+      </View>
+    </View>
+  );
   const renderItemDumping = (rowData: any) => (
     <View style={{flexDirection: 'column', gap: 5}}>
       {rowData.index === 0 && (
@@ -3956,6 +3995,93 @@ const RFIsRecents = (props: any) => {
                 </Text>
               </View>
             ))}
+          </View>
+        );
+      case TASK_TYPES.LAYING_OF_DLC:
+        const layingOfDLCProperties = [
+          {
+            title: 'Is the mix design of DLC approved?',
+            key: 'mixDesignApproved',
+          },
+          {
+            title: 'Is the under laying GSB layer approved?',
+            key: 'underLayingGSBApproved',
+          },
+          {
+            title:
+              'Are there adequate grade and survey stakes available for control of placement layers?',
+            key: 'gradeSurveyStakesAvailable',
+          },
+          {
+            title: 'Is the placing of material appropriate?',
+            key: 'materialPlacingAppropriate',
+          },
+          {
+            title: 'Is there paver available for the laying of DLC?',
+            key: 'paverAvailable',
+          },
+          {
+            title: 'Is the arrangement of curing available?',
+            key: 'curingArrangementAvailable',
+          },
+          {
+            title:
+              'Are there adequate number of suitable rollers available for the compaction operation?',
+            key: 'rollersAvailable',
+          },
+          {
+            title: 'Is the layer free from any segregation?',
+            key: 'layerFreeFromSegregation',
+          },
+          {
+            title:
+              'Is there any arrangement for protection of the finished surface?',
+            key: 'protectionForFinishedSurface',
+          },
+          {
+            title: 'Is there adequate arrangement of light for night work?',
+            key: 'adequateLightForNightWork',
+          },
+          {
+            title: 'Is the received batch slip as per approved mix design?',
+            key: 'batchSlipApproved',
+          },
+          {
+            title:
+              'Whether the worker and staff have proper personal protection equipment (PPE)?',
+            key: 'properPPEAvailable',
+          },
+          {
+            title: 'Total length of DLC laid in mtr.',
+            key: 'totalLengthLaidMtr',
+          },
+          {
+            title: 'Total area of DLC laid in sqm.',
+            key: 'totalAreaLaidSqm',
+          },
+        ];
+
+        return (
+          <View>
+            {layingOfDLCProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.layingOfDLCData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+            <ScrollView horizontal={true}>
+              <View style={{flexDirection: 'column'}}>
+                <SwipeListView
+                  data={selectedRFI?.metaData.layingOfDlcTableData}
+                  renderItem={renderItemLayingOfDlc}
+                  renderSectionHeader={renderSectionHeaderLayingOfDlc}
+                />
+              </View>
+            </ScrollView>
           </View>
         );
 

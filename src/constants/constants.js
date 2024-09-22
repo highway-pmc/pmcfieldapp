@@ -536,6 +536,7 @@ export const TASK_TYPES = {
   FIXING_VERTICAL_POST:'fixing-of-vertiacal-post',
   CUTTING_OF_JOINTS:'cutting-of-joints',
   LAYING_OF_PAVER_BLOCK:'laying-of-paver-block',
+  LAYING_OF_DLC:'laying-of-dlc',
 };
 
 export const TEST_MATERIALS_TYPES = {

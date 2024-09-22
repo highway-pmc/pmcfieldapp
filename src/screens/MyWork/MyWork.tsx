@@ -466,6 +466,32 @@ const [dumpingData, setDumpingData] = useState([
     probingByStiffwire: string;
   };
   //FormUseStates
+  const [layingOfDlcTableData, setLayingOfDlcTableData] = useState([
+  {
+    vehicleNo: '', 
+    totalQtyDlc: 0,
+    layingStartTime: '',
+    layingEndTime: '',
+    key: Guid.create(),
+  },
+]);
+  const [layingOfDLCData, setLayingOfDLCData] = useState({
+    mixDesignApproved: 'Y',
+    gsbLayerApproved: 'Y',
+    gradeSurveyStakesAvailable: 'Y',
+    placingMaterialAppropriate: 'Y',
+    paverAvailable: 'Y',
+    curingArrangementAvailable: 'Y',
+    suitableRollersAvailable: 'Y',
+    layersSegregationFree: 'Y',
+    surfaceProtectionArrangement: 'Y',
+    lightArrangementForNightWork: 'Y',
+    batchSlipAsPerMixDesign: 'Y',
+    workerPPE: 'Y',
+    totalLengthDLC: 0.0,
+    totalAreaDLC: 0.0,
+  });
+
   const [layingOfPaverBlockData, setLayingOfPaverBlockData] = useState({
     subBaseCompacted: 'Y',
     sandLayingCourse: 'Y',
@@ -938,6 +964,183 @@ const [dumpingData, setDumpingData] = useState([
     setDumpingData(updatedData);
   }
 };
+const onAddMoreLayingOfDlc = () => {
+  setLayingOfDlcTableData([
+    ...layingOfDlcTableData,
+    {
+      vehicleNo: '',
+      totalQtyDlc: 0,
+      layingStartTime: '',
+      layingEndTime: '',
+      key: Guid.create(),
+    },
+  ]);
+};
+const validateLayingOfDlcData = (data) => {
+  for (const item of data) {
+    const totalQtyDlc = parseFloat(item.totalQtyDlc);
+    const vehicleNo = parseInt(item.vehicleNo);
+
+    if (isNaN(vehicleNo) || item.vehicleNo.length !== 4 || !/^\d{4}$/.test(item.vehicleNo)) {
+      showSnackbar('Vehicle No must be the last 4 digits and contain only numbers.', 'error');
+      return false;
+    }
+    if (isNaN(totalQtyDlc) || totalQtyDlc <= 0 || totalQtyDlc > 20 || item.totalQtyDlc.split('.')[1]?.length > 3) {
+      showSnackbar(
+        'Total qty of DLC must be greater than 0, up to 3 decimal places, and less than or equal to 20.',
+        'error',
+      );
+      return false;
+    }
+  }
+
+  return true;
+};
+const renderLayingOfDlcHeadings = () => (
+  <View style={styles.rowContainer}>
+    <View style={styles.cell}>
+      <Text style={styles.cellText}>Serial No.</Text>
+    </View>
+    <View style={styles.cell}>
+      <Text style={styles.cellText}>Vehicle No.</Text>
+    </View>
+    <View style={styles.cell}>
+      <Text style={styles.cellText}>Total Qty of DLC (cum)</Text>
+    </View>
+    <View style={styles.cell}>
+      <Text style={styles.cellText}>Laying Start Time</Text>
+    </View>
+    <View style={styles.cell}>
+      <Text style={styles.cellText}>Laying End Time</Text>
+    </View>
+    <View style={[styles.cell, {paddingHorizontal: 40}]}>
+      <Text style={styles.cellText}>Actions</Text>
+    </View>
+  </View>
+);
+const deleteLayingOfDlcItem = (rowMap:any, rowKey:any) => {
+  closeRow(rowMap, rowKey);
+  const newData = [...layingOfDlcTableData];
+  const prevIndex = layingOfDlcTableData.findIndex(item => item.key === rowKey);
+  newData.splice(prevIndex, 1);
+  setLayingOfDlcTableData(newData);
+};
+const renderItemLayingOfDlc = (rowData:any) => (
+  <View style={[styles.rowContainer, styles.marginBottom10]}>
+    <View style={styles.cell}>
+      <Text>{rowData.index + 1}</Text>
+    </View>
+    <View style={styles.cell}>
+      <CustomTextInputValue
+        rowItem={rowData.item}
+        fieldName={'vehicleNo'}
+        index={rowData.index}
+        onChange={handleTextInputChangeLayingOfDlc}
+      />
+    </View>
+
+    <View style={styles.cell}>
+      <CustomTextInputValue
+        rowItem={rowData.item}
+        fieldName={'totalQtyDlc'}
+        index={rowData.index}
+        onChange={handleTextInputChangeLayingOfDlc}
+      />
+    </View>
+
+    <View style={styles.cell}>
+      <TimePicker
+        label="Laying Start Time"
+        value={rowData.item.layingStartTime}
+        onChange={(time) => handleTimeChangeLayingOfDlc(rowData.index, 'layingStartTime', time)}
+        styleCont={styles.marginBootomZero}
+        style={styles.disPlayNone}
+      />
+    </View>
+
+    <View style={styles.cell}>
+      <TimePicker
+        label="Laying End Time"
+        value={rowData.item.layingEndTime}
+        onChange={(time) => handleTimeChangeLayingOfDlc(rowData.index, 'layingEndTime', time)}
+        styleCont={styles.marginBootomZero}
+        style={styles.disPlayNone}
+      />
+    </View>
+
+    <View style={[styles.cell, {paddingHorizontal: 45}]}>
+      <TouchableOpacity
+        style={[styles.deleteButton]}
+        onPress={() => deleteLayingOfDlcItem(rowData, rowData.item.key)}>
+        <Image
+          style={[styles.CloseIcon, {tintColor: '#fff'}]}
+          source={require('./../../images/menu/delete.png')}
+        />
+      </TouchableOpacity>
+    </View>
+  </View>
+);
+
+const handleTextInputChangeLayingOfDlc = (index, fieldName, value) => {
+  setLayingOfDlcTableData(prevData => {
+    const newData = [...prevData];
+    newData[index] = {
+      ...newData[index],
+      [fieldName]: value,
+    };
+    return newData;
+  });
+};
+
+const handleTimeChangeLayingOfDlc = (index, fieldName, time) => {
+  setLayingOfDlcTableData(prevData => {
+    const newData = [...prevData];
+    newData[index] = {
+      ...newData[index],
+      [fieldName]: time,
+    };
+    return newData;
+  });
+};
+
+const validateLayingOfDLCData = (layingOfDLCData: any): boolean => {
+  const totalLengthDLC = parseFloat(layingOfDLCData.totalLengthDLC);
+  const totalAreaDLC = parseFloat(layingOfDLCData.totalAreaDLC);
+
+  // Validation for Total Length of DLC laid in mtr.
+  if (
+    isNaN(totalLengthDLC) ||
+    totalLengthDLC <= 0 ||
+    totalLengthDLC > 100000 ||
+    layingOfDLCData.totalLengthDLC.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Total Length of DLC laid (in mtr) with max 3 decimal places, value should be > 0 and <= 100000',
+      'error',
+    );
+    return false;
+  }
+
+  // Validation for Total Area of DLC laid in sqm
+  if (
+    isNaN(totalAreaDLC) ||
+    totalAreaDLC <= 0 ||
+    totalAreaDLC > 1000000 ||
+    layingOfDLCData.totalAreaDLC.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Total Area of DLC laid (in sqm) with max 3 decimal places, value should be > 0 and <= 1000000',
+      'error',
+    );
+    return false;
+  }
+
+  layingOfDLCData.totalLengthDLC = Number(layingOfDLCData.totalLengthDLC);
+  layingOfDLCData.totalAreaDLC = Number(layingOfDLCData.totalAreaDLC);
+
+  return true;
+};
+
 const validateLayingOfPaverBlockData = (layingOfPaverBlockData: any): boolean => {
   const totalLengthLaid = parseFloat(layingOfPaverBlockData.totalLengthLaid);
   const totalSqmLaid = parseFloat(layingOfPaverBlockData.totalSqmLaid);
@@ -2815,6 +3018,36 @@ case TASK_TYPES.TACK_COAT:
             });
           }
           break;
+        case TASK_TYPES.LAYING_OF_DLC:
+          if (rfiData.metaData.layingOfDlcTableData) {
+            rfiData.metaData.layingOfDlcTableData.forEach((item) => {
+              item.key = Guid.create();
+            });
+            setLayingOfDlcTableData(rfiData.metaData.layingOfDlcTableData);
+          } else {
+            setLayingOfDlcTableData([]);
+          }
+          if (rfiData.metaData.layingOfDLCData) {
+            setLayingOfDLCData(rfiData.metaData.layingOfDLCData);
+          } else {
+            setLayingOfDLCData({
+              mixDesignApproved: 'Y',
+              gsbLayerApproved: 'Y',
+              gradeSurveyStakesAvailable: 'Y',
+              placingMaterialAppropriate: 'Y',
+              paverAvailable: 'Y',
+              curingArrangementAvailable: 'Y',
+              suitableRollersAvailable: 'Y',
+              layersSegregationFree: 'Y',
+              surfaceProtectionArrangement: 'Y',
+              lightArrangementForNightWork: 'Y',
+              batchSlipAsPerMixDesign: 'Y',
+              workerPPE: 'Y',
+              totalLengthDLC: 0.0,
+              totalAreaDLC: 0.0,
+            });
+          }
+          break;
 
         case TASK_TYPES.LIFTING_LEFT:
         case TASK_TYPES.LIFTING_YARD:
@@ -4384,15 +4617,15 @@ case TASK_TYPES.TACK_COAT:
         };
         break;
         case TASK_TYPES.DUMPING:
-        if (!validateDumpingData(dumpingData)) {
-          return;
-        }
+          if (!validateDumpingData(dumpingData)) {
+            return;
+          }
 
-        checkList = {
-          taskName: selectedTask.name,
-          dumpingData: dumpingData,
-        };
-        break;
+          checkList = {
+            taskName: selectedTask.name,
+            dumpingData: dumpingData,
+          };
+          break;
       case TASK_TYPES.GLUEING:
         if (!validateGlueingData(glueingData)) {
           return;
@@ -4715,7 +4948,20 @@ case TASK_TYPES.TACK_COAT:
           layingOfPaverBlockData: layingOfPaverBlockData,
         };
         break;
-  
+      case TASK_TYPES.LAYING_OF_DLC:
+        if (!validateLayingOfDlcData(layingOfDlcTableData)) {
+          return;
+        }
+        if (!validateLayingOfDLCData(layingOfDLCData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          layingOfDLCData: layingOfDLCData,
+          layingOfDlcTableData: layingOfDlcTableData,
+        };
+        break;
+
       case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
@@ -11911,6 +12157,112 @@ case TASK_TYPES.TACK_COAT:
           </View>
           </View>
         );
+    case TASK_TYPES.LAYING_OF_DLC:
+      if (!layingOfDlcTableData || !layingOfDlcTableData.length) {
+        setLayingOfDlcTableData([
+          {
+            vehicleNo: '',
+            totalQtyDlc: 0,
+            layingStartTime: '',
+            layingEndTime: '',
+            key: Guid.create(),
+          },
+        ]);
+      }
+      const layingOfDLCProperties = [
+        { title: 'Is the mix design of DLC approved?', key: 'mixDesignApproved' },
+        { title: 'Is the under laying GSB layer approved?', key: 'gsbLayerApproved' },
+        { title: 'Are there adequate grade and survey stakes available for control of placement layers?', key: 'gradeSurveyStakesAvailable' },
+        { title: 'Is the placing of material appropriate?', key: 'placingMaterialAppropriate' },
+        { title: 'Is there paver available for the laying of DLC?', key: 'paverAvailable' },
+        { title: 'Is the arrangement of curing available?', key: 'curingArrangementAvailable' },
+        { title: 'Are there adequate number of suitable rollers available for the compaction operation?', key: 'suitableRollersAvailable' },
+        { title: 'Is the layer free from any segregation?', key: 'layersSegregationFree' },
+        { title: 'Is there any arrangement for protection of the finished surface?', key: 'surfaceProtectionArrangement' },
+        { title: 'Is there adequate arrangement of light for night work?', key: 'lightArrangementForNightWork' },
+        { title: 'Is the received batch slip as per approved mix design?', key: 'batchSlipAsPerMixDesign' },
+        { title: 'Whether the worker and staff have proper personal protection equipment (PPE)?', key: 'workerPPE' },
+      ];
+
+      return (
+        <View>
+          {layingOfDLCProperties.map(property => (
+            <View style={{flexDirection: 'column'}} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={layingOfDLCData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value: any) =>
+                  setLayingOfDLCData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+          <Input
+            label="Total Length of DLC Laid in Mtr"
+            value={layingOfDLCData.totalLengthDLC}
+            onChange={(value: any) =>
+              setLayingOfDLCData(prevData => ({
+                ...prevData,
+                totalLengthDLC: value,
+              }))
+            }
+            isRequired={true}
+          />
+
+          <Input
+            label="Total Area of DLC Laid in Sqm"
+            value={layingOfDLCData.totalAreaDLC}
+            onChange={(value: any) =>
+              setLayingOfDLCData(prevData => ({
+                ...prevData,
+                totalAreaDLC: value,
+              }))
+            }
+            isRequired={true}
+          />
+          <ScrollView horizontal={true}>
+            <View>
+              {renderLayingOfDlcHeadings()}
+              <FlatList
+                data={layingOfDlcTableData}
+                renderItem={renderItemLayingOfDlc}
+                keyExtractor={item => item.key?.toString()}
+                automaticallyAdjustContentInsets={true}
+                scrollEnabled={false}
+              />
+            </View>
+          </ScrollView>
+          <TouchableOpacity onPress={() => onAddMoreLayingOfDlc()}>
+            <Text>+ Add More</Text>
+          </TouchableOpacity>
+          <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
+        </View>
+      );
 
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:

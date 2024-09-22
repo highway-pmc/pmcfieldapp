@@ -519,12 +519,24 @@ export const TASK_TYPES = {
   PRE_STRESSING: 'pre-stressing',
   PROCUREMENT_OF_SHEET: 'procurement-of-sheet',
   DUMPING_OF_SOIL: 'dumping-of-soil',
+  DUMPING: 'dumping',
   BORING_OF_DIAPHRAGM: 'boring-of-diaphragm',
   COPING: 'coping',
   COMPACTING_GROUND_SUPPORT_FOR_EMBANKMENT:
     'compacting-ground-support-for-embankment',
   DEWATERING: 'dewatering',
-  STRIPPING_AND_STORING_TOP_SOIL:'stripping-and-storing-top-soil',
+  STRIPPING_AND_STORING_TOP_SOIL: 'stripping-storing-top-soil',
+  SPREADING_AND_COMPACTION: 'spreading-and-compaction',
+  PRIME_COAT: 'applying-prime-coat',
+  TACK_COAT: 'applying-tack-coat',
+  ROAD_MARKING: 'road-marking',
+  LAYING_AND_COMPACTION: 'laying-and-compaction',
+  PIPE_LAYING_AND_JOINTING: 'pipe-laying-jointing',
+  FIXING_OF_METAL_BEAM:'fixing-of-metal-beam',
+  FIXING_VERTICAL_POST:'fixing-of-vertiacal-post',
+  CUTTING_OF_JOINTS:'cutting-of-joints',
+  LAYING_OF_PAVER_BLOCK:'laying-of-paver-block',
+  LAYING_OF_DLC:'laying-of-dlc',
 };
 
 export const TEST_MATERIALS_TYPES = {

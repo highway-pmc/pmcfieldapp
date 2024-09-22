@@ -428,6 +428,16 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       [name]: Number(value),
     });
   };
+const [dumpingData, setDumpingData] = useState([
+  {
+    vehicleNo: '', // last 4 digits, number
+    source: 'Y',
+    qtyDumped: 0, // must be > 0, up to 3 decimals, max 100,000
+    approvedSource: '', // "Y" or "N"
+    bouldersPresent: 'Y', // "Y" or "N"
+    key: Guid.create(),
+  },
+]);
 
   // GROUTING
   type FormStateGrouting = {
@@ -456,6 +466,157 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     probingByStiffwire: string;
   };
   //FormUseStates
+  const [layingOfDlcTableData, setLayingOfDlcTableData] = useState([
+  {
+    vehicleNo: '', 
+    totalQtyDlc: 0,
+    layingStartTime: '',
+    layingEndTime: '',
+    key: Guid.create(),
+  },
+]);
+  const [layingOfDLCData, setLayingOfDLCData] = useState({
+    mixDesignApproved: 'Y',
+    gsbLayerApproved: 'Y',
+    gradeSurveyStakesAvailable: 'Y',
+    placingMaterialAppropriate: 'Y',
+    paverAvailable: 'Y',
+    curingArrangementAvailable: 'Y',
+    suitableRollersAvailable: 'Y',
+    layersSegregationFree: 'Y',
+    surfaceProtectionArrangement: 'Y',
+    lightArrangementForNightWork: 'Y',
+    batchSlipAsPerMixDesign: 'Y',
+    workerPPE: 'Y',
+    totalLengthDLC: 0.0,
+    totalAreaDLC: 0.0,
+  });
+
+  const [layingOfPaverBlockData, setLayingOfPaverBlockData] = useState({
+    subBaseCompacted: 'Y',
+    sandLayingCourse: 'Y',
+    pavingBlocksApprovedSource: 'Y',
+    pavingBlocksDimension: 'Y',
+    pavingBlocksInstallation: 'Y',
+    plateCompactorMoved: 'Y',
+    jointsAsPerMethodStatement: 'Y',
+    locationAlignmentCorrect: 'Y',
+    totalLengthLaid: 0.0,
+    totalSqmLaid: 0.0,
+    thicknessPaverBlock: 0.0,
+    gradeOfConcrete: 'M20',
+  });
+
+  const [cuttingOfJointsData, setCuttingOfJointsData] = useState({
+    jointsCutAtDesiredIntervals: 'Y',
+    jointsCutAtDesiredDepth: 'Y',
+    jointCutDoneProperly: 'Y',
+    totalLengthCompleted: 0.0,
+  });
+
+  const [fixingVerticalPostData, setFixingVerticalPostData] = useState({
+  pitsDuggedToPlan: 'Y',
+  distanceMaintainedBarrierSlope: 'Y',
+  distanceMaintainedBarrierCarriageway: 'Y',
+  postsAlignedHeightAsPerDrawing: 'Y',
+  steelPostsPlacedMethodology: 'Y',
+  totalVerticalPostInstalled: 0,
+});
+
+  const [fixingOfMetalBeamData, setFixingOfMetalBeamData] = useState({
+    barrierToEmbankmentDistance: 'Y',
+    barrierToEdgeOfCarriagewayDistance: 'Y',
+    medianWBeamFaceDistance: 'Y',
+    spacersInstalledProperly: 'Y',
+    boltsFixedAndTightened: 'Y',
+    totalLengthOfMetalBeamFixed: 0.0,
+  });
+
+  const [pipeLayingAndJointingData, setPipeLayingAndJointingData] = useState({
+  materialAsPerGFC: 'Y',
+  latestGFCAvailable: 'Y',
+  locationLevelsPipeSizeAsPerGFC: 'Y',
+  routingCheckedAsPerGFC: 'Y',
+  hangerSupportProperSpacing: 'Y',
+  fastenerHangerRodAsPerGFC: 'Y',
+  jointPreparationFitUp: 'Y',
+  visualInspectionOfWeldedJoints: 'Y',
+  threadCheckForJoints: 'Y',
+  threadedJointsTightened: 'Y',
+  undergroundGIPipingTreatment: 'Y',
+  threadedPipesAlignedStraight: 'Y',
+  installedPipesAlignedProperly: 'Y',
+  totalPipeLength: 0.0,
+  totalNumberOfPipes: 0,
+});
+
+  const [layingAndCompactionData, setLayingAndCompactionData] = useState({
+    safetyMeasuresTaken: 'Y',
+    approvedMethodologyAvailable: 'Y',
+    primeCoatCured: 'Y',
+    sprayRateChecked: 'Y',
+    jointTrimmedPrepared: 'Y',
+    programConveyed: 'Y',
+    thermometerAvailable: 'Y',
+    paverSensorsSet: 'Y',
+    alignmentMarked: 'Y',
+    paverPlacedCleaned: 'Y',
+    mixTransported: 'Y',
+    mixTemperatureFound: 'Y',
+    looseThicknessChecked: 'Y',
+    rollingPatternFollowed: 'Y',
+    surfaceLevelChecked: 'Y',
+    transverseJointsPrepared: 'Y',
+    nonConformanceFound: 'N',
+    layerThickness: 0.0,
+    totalMaterialQtyLaid: 0.0,
+    totalMaterialQtySqm: 0.0,
+  });
+
+  const [roadMarkingData, setRoadMarkingData] = useState({
+    drawingAndMethodApproved: 'Y',
+    thermoplasticAndGlassBeadApproved: 'Y',
+    heaterConditionChecked: 'Y',
+    thermometerWorking: 'Y',
+    materialHeatedToSpecifiedTemperature: 'Y',
+    surfaceClean: 'Y',
+    markingDoneBeforeLaying: 'Y',
+    glassBeadsApplied: 'Y',
+    paintLaidInMoltenState: 'Y',
+    paintThicknessChecked: 'Y',
+    nonConformanceFound: 'N',
+  });
+  const [primeCoatData, setPrimeCoatData] = useState({
+    previousLayerApproved: 'Y',
+    surfacePreparationSatisfactory: 'Y',
+    materialGradeApproved: 'Y',
+    bituminousEmulsionTemperatureChecked: 'Y',
+    uniformSprayRate: 'Y',
+    nonConformanceFound: 'N',
+  });
+
+  const [spreadingAndCompactionData, setSpreadingAndCompactionData] = useState({
+    sourceOfMaterialApproved: 'Y',
+    groundImprovementDone: 'Y',
+    underLayingLayerApproved: 'Y',
+    gradeSurveyStakesAvailable: 'Y',
+    graderAvailable: 'Y',
+    gradingDoneAsPerRequirement: 'Y',
+    uniformSprinklingDone: 'Y',
+    dumpingPatternFollowed: 'Y',
+    materialFreeFromDeleterious: 'Y',
+    containsOverSizeBoulders: 'Y',
+    looseThicknessChecked: 'Y',
+    omcMaintained: 'Y',
+    suitableRollerAvailable: 'Y',
+    rollingPatternFollowed: 'Y',
+    finishedLayerThicknessSpecified: 'Y',
+    localizedIssuesFound: 'N',
+    layerFreeFromSegregation: 'Y',
+    protectionOfFinishedSurfaceAvailable: 'Y',
+    nonConformanceFound: 'N',
+  });
+
   const [strippingAndStoringTopSoilData, setStrippingAndStoringTopSoilData] =
     useState({
       topSoilCollectedStored: 0, // Default value for top soil collected (cum)
@@ -762,6 +923,350 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       [key]: value,
     }));
   };
+  const handleTextInputChangeDumping = (
+  index: number,
+  field: string,
+  value: string,
+) => {
+  const updatedData = [...dumpingData];
+  let isValid = true;
+  let errorMessage = '';
+
+  switch (field) {
+    case 'vehicleNo':
+      if (!/^\d{4}$/.test(value)) {
+        isValid = false;
+        errorMessage = 'Vehicle No must be the last 4 digits and contain only numbers.';
+      }
+      break;
+
+    case 'qtyDumped':
+      const qtyDumped = parseFloat(value);
+      if (
+        isNaN(qtyDumped) ||
+        qtyDumped <= 0 ||
+        qtyDumped > 100000 ||
+        value.split('.')[1]?.length > 3
+      ) {
+        isValid = false;
+        errorMessage = 'Quantity dumped must be > 0, up to 3 decimal places, and max 100,000.';
+      }
+      break;
+
+    default:
+      break;
+  }
+
+  if (!isValid) {
+    showSnackbar(errorMessage, 'error');
+  } else {
+    updatedData[index][field] = value;
+    setDumpingData(updatedData);
+  }
+};
+const onAddMoreLayingOfDlc = () => {
+  setLayingOfDlcTableData([
+    ...layingOfDlcTableData,
+    {
+      vehicleNo: '',
+      totalQtyDlc: 0,
+      layingStartTime: '',
+      layingEndTime: '',
+      key: Guid.create(),
+    },
+  ]);
+};
+const validateLayingOfDlcData = (data) => {
+  for (const item of data) {
+    const totalQtyDlc = parseFloat(item.totalQtyDlc);
+    const vehicleNo = parseInt(item.vehicleNo);
+
+    if (isNaN(vehicleNo) || item.vehicleNo.length !== 4 || !/^\d{4}$/.test(item.vehicleNo)) {
+      showSnackbar('Vehicle No must be the last 4 digits and contain only numbers.', 'error');
+      return false;
+    }
+    if (isNaN(totalQtyDlc) || totalQtyDlc <= 0 || totalQtyDlc > 20 || item.totalQtyDlc.split('.')[1]?.length > 3) {
+      showSnackbar(
+        'Total qty of DLC must be greater than 0, up to 3 decimal places, and less than or equal to 20.',
+        'error',
+      );
+      return false;
+    }
+  }
+
+  return true;
+};
+const renderLayingOfDlcHeadings = () => (
+  <View style={styles.rowContainer}>
+    <View style={styles.cell}>
+      <Text style={styles.cellText}>Serial No.</Text>
+    </View>
+    <View style={styles.cell}>
+      <Text style={styles.cellText}>Vehicle No.</Text>
+    </View>
+    <View style={styles.cell}>
+      <Text style={styles.cellText}>Total Qty of DLC (cum)</Text>
+    </View>
+    <View style={styles.cell}>
+      <Text style={styles.cellText}>Laying Start Time</Text>
+    </View>
+    <View style={styles.cell}>
+      <Text style={styles.cellText}>Laying End Time</Text>
+    </View>
+    <View style={[styles.cell, {paddingHorizontal: 40}]}>
+      <Text style={styles.cellText}>Actions</Text>
+    </View>
+  </View>
+);
+const deleteLayingOfDlcItem = (rowMap:any, rowKey:any) => {
+  closeRow(rowMap, rowKey);
+  const newData = [...layingOfDlcTableData];
+  const prevIndex = layingOfDlcTableData.findIndex(item => item.key === rowKey);
+  newData.splice(prevIndex, 1);
+  setLayingOfDlcTableData(newData);
+};
+const renderItemLayingOfDlc = (rowData:any) => (
+  <View style={[styles.rowContainer, styles.marginBottom10]}>
+    <View style={styles.cell}>
+      <Text>{rowData.index + 1}</Text>
+    </View>
+    <View style={styles.cell}>
+      <CustomTextInputValue
+        rowItem={rowData.item}
+        fieldName={'vehicleNo'}
+        index={rowData.index}
+        onChange={handleTextInputChangeLayingOfDlc}
+      />
+    </View>
+
+    <View style={styles.cell}>
+      <CustomTextInputValue
+        rowItem={rowData.item}
+        fieldName={'totalQtyDlc'}
+        index={rowData.index}
+        onChange={handleTextInputChangeLayingOfDlc}
+      />
+    </View>
+
+    <View style={styles.cell}>
+      <TimePicker
+        label="Laying Start Time"
+        value={rowData.item.layingStartTime}
+        onChange={(time) => handleTimeChangeLayingOfDlc(rowData.index, 'layingStartTime', time)}
+        styleCont={styles.marginBootomZero}
+        style={styles.disPlayNone}
+      />
+    </View>
+
+    <View style={styles.cell}>
+      <TimePicker
+        label="Laying End Time"
+        value={rowData.item.layingEndTime}
+        onChange={(time) => handleTimeChangeLayingOfDlc(rowData.index, 'layingEndTime', time)}
+        styleCont={styles.marginBootomZero}
+        style={styles.disPlayNone}
+      />
+    </View>
+
+    <View style={[styles.cell, {paddingHorizontal: 45}]}>
+      <TouchableOpacity
+        style={[styles.deleteButton]}
+        onPress={() => deleteLayingOfDlcItem(rowData, rowData.item.key)}>
+        <Image
+          style={[styles.CloseIcon, {tintColor: '#fff'}]}
+          source={require('./../../images/menu/delete.png')}
+        />
+      </TouchableOpacity>
+    </View>
+  </View>
+);
+
+const handleTextInputChangeLayingOfDlc = (index, fieldName, value) => {
+  setLayingOfDlcTableData(prevData => {
+    const newData = [...prevData];
+    newData[index] = {
+      ...newData[index],
+      [fieldName]: value,
+    };
+    return newData;
+  });
+};
+
+const handleTimeChangeLayingOfDlc = (index, fieldName, time) => {
+  setLayingOfDlcTableData(prevData => {
+    const newData = [...prevData];
+    newData[index] = {
+      ...newData[index],
+      [fieldName]: time,
+    };
+    return newData;
+  });
+};
+
+const validateLayingOfDLCData = (layingOfDLCData: any): boolean => {
+  const totalLengthDLC = parseFloat(layingOfDLCData.totalLengthDLC);
+  const totalAreaDLC = parseFloat(layingOfDLCData.totalAreaDLC);
+
+  // Validation for Total Length of DLC laid in mtr.
+  if (
+    isNaN(totalLengthDLC) ||
+    totalLengthDLC <= 0 ||
+    totalLengthDLC > 100000 ||
+    layingOfDLCData.totalLengthDLC.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Total Length of DLC laid (in mtr) with max 3 decimal places, value should be > 0 and <= 100000',
+      'error',
+    );
+    return false;
+  }
+
+  // Validation for Total Area of DLC laid in sqm
+  if (
+    isNaN(totalAreaDLC) ||
+    totalAreaDLC <= 0 ||
+    totalAreaDLC > 1000000 ||
+    layingOfDLCData.totalAreaDLC.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Total Area of DLC laid (in sqm) with max 3 decimal places, value should be > 0 and <= 1000000',
+      'error',
+    );
+    return false;
+  }
+
+  layingOfDLCData.totalLengthDLC = Number(layingOfDLCData.totalLengthDLC);
+  layingOfDLCData.totalAreaDLC = Number(layingOfDLCData.totalAreaDLC);
+
+  return true;
+};
+
+const validateLayingOfPaverBlockData = (layingOfPaverBlockData: any): boolean => {
+  const totalLengthLaid = parseFloat(layingOfPaverBlockData.totalLengthLaid);
+  const totalSqmLaid = parseFloat(layingOfPaverBlockData.totalSqmLaid);
+  const thicknessPaverBlock = parseFloat(layingOfPaverBlockData.thicknessPaverBlock);
+
+  // Validation for Total Length of Paver Block Laid
+  if (isNaN(totalLengthLaid) || totalLengthLaid <= 0 || totalLengthLaid > 100000 || layingOfPaverBlockData.totalLengthLaid.split('.')[1]?.length > 3) {
+    showSnackbar('Please enter a valid Total Length of Paver Block Laid with max 3 decimal places, value should be > 0 and <= 100,000', 'error');
+    return false;
+  }
+
+  // Validation for Total SQM of Paver Blocks Laid
+  if (isNaN(totalSqmLaid) || totalSqmLaid <= 0 || totalSqmLaid > 1000000 || layingOfPaverBlockData.totalSqmLaid.split('.')[1]?.length > 3) {
+    showSnackbar('Please enter a valid Total SQM of Paver Blocks Laid with max 3 decimal places, value should be > 0 and <= 1,000,000', 'error');
+    return false;
+  }
+
+  // Validation for Thickness of Paver Block Laid in mm
+  if (isNaN(thicknessPaverBlock) || thicknessPaverBlock <= 0 || thicknessPaverBlock > 150 || layingOfPaverBlockData.thicknessPaverBlock.split('.')[1]?.length > 3) {
+    showSnackbar('Please enter a valid Thickness of Paver Block Laid with max 3 decimal places, value should be > 0 and <= 150', 'error');
+    return false;
+  }
+
+  // Converting values back to numbers after validation
+  layingOfPaverBlockData.totalLengthLaid = Number(layingOfPaverBlockData.totalLengthLaid);
+  layingOfPaverBlockData.totalSqmLaid = Number(layingOfPaverBlockData.totalSqmLaid);
+  layingOfPaverBlockData.thicknessPaverBlock = Number(layingOfPaverBlockData.thicknessPaverBlock);
+
+  return true;
+};
+const validateCuttingOfJointsData = (cuttingOfJointsData: any): boolean => {
+  const totalLengthCompleted = parseFloat(cuttingOfJointsData.totalLengthCompleted);
+
+  // Validation for Total Length Completed in Km
+  if (
+    isNaN(totalLengthCompleted) ||
+    totalLengthCompleted <= 0 ||
+    totalLengthCompleted > 100 ||
+    cuttingOfJointsData.totalLengthCompleted.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Total Length Completed in Km with max 3 decimal places, value should be > 0 and <= 100',
+      'error',
+    );
+    return false;
+  }
+
+  // Converting the values back to numbers after validation
+  cuttingOfJointsData.totalLengthCompleted = Number(
+    cuttingOfJointsData.totalLengthCompleted,
+  );
+
+  return true;
+};
+
+const validateFixingVerticalPostData = (fixingVerticalPostData: any): boolean => {
+  const totalPostsInstalled = parseInt(fixingVerticalPostData.totalVerticalPostInstalled);
+
+  if (isNaN(totalPostsInstalled) || totalPostsInstalled <= 0 || totalPostsInstalled > 10000) {
+    showSnackbar(
+      'Please enter a valid number of vertical posts installed (integer, > 0, <= 10000)',
+      'error',
+    );
+    return false;
+  }
+
+  fixingVerticalPostData.totalVerticalPostInstalled = Number(fixingVerticalPostData.totalVerticalPostInstalled);
+  
+  return true;
+};
+
+const validateFixingOfMetalBeamData = (fixingOfMetalBeamData: any): boolean => {
+  const totalLength = parseFloat(fixingOfMetalBeamData.totalLengthOfMetalBeamFixed);
+
+  // Validation for Total Length of Metal Beam Fixed in RM
+  if (
+    isNaN(totalLength) ||
+    totalLength <= 0 ||
+    totalLength > 1000000 ||
+    fixingOfMetalBeamData.totalLengthOfMetalBeamFixed.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Total Length of Metal Beam Fixed (in RM) with max 3 decimal places, value should be > 0 and <= 1,000,000',
+      'error',
+    );
+    return false;
+  }
+
+  // Converting the value back to number after validation
+  fixingOfMetalBeamData.totalLengthOfMetalBeamFixed = Number(
+    fixingOfMetalBeamData.totalLengthOfMetalBeamFixed,
+  );
+
+  return true;
+};
+
+
+const validateDumpingData = (dumpingData: any[]): boolean => {
+  for (const item of dumpingData) {
+    // Parsing values to float
+    const qtyDumped = parseFloat(item.qtyDumped);
+    const vehicleNo = parseInt(item.vehicleNo); 
+
+    if (isNaN(vehicleNo) || item.vehicleNo.length !== 4 || !/^\d{4}$/.test(item.vehicleNo)) {
+      showSnackbar('Vehicle No must be the last 4 digits and contain only numbers.', 'error');
+      return false;
+    }
+    if (isNaN(qtyDumped) || qtyDumped <= 0 || qtyDumped > 100000 || item.qtyDumped.split('.')[1]?.length > 3) {
+      showSnackbar(
+        'Quantity dumped must be greater than 0, up to 3 decimal places, and less than or equal to 100,000.',
+        'error',
+      );
+      return false;
+    }
+  }
+
+  // Convert the validated values back to numbers
+  dumpingData.forEach((item: any) => {
+    item.qtyDumped = Number(item.qtyDumped);
+    item.vehicleNo = Number(item.vehicleNo);
+  });
+
+  return true;
+};
+
+
 
   const [fixingShutterData, setFixingShutterData] = useState({
     shutterMaterial: 'Y',
@@ -1288,17 +1793,38 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       }
     }
 
-    setTemporaryPrestressingData(prevData => ({
+    setTemporaryPrestressingData((prevData:any) => ({
       ...prevData,
       [key]: newValue,
     }));
   };
-  const handleInputChangePainting = (key, value) => {
+  const handleInputChangePainting = (key:any, value:any) => {
     setPaintingData(prevState => ({
       ...prevState,
       [key]: value,
     }));
   };
+
+  const validatePipeLayingAndJointingData = (pipeLayingAndJointingData: any): boolean => {
+    const totalPipeLength = parseFloat(pipeLayingAndJointingData.totalPipeLength);
+    const totalNumberOfPipes = parseInt(pipeLayingAndJointingData.totalNumberOfPipes);
+
+    if (isNaN(totalPipeLength) || totalPipeLength <= 0 || totalPipeLength > 1000 || pipeLayingAndJointingData.totalPipeLength.split('.')[1]?.length > 3) {
+      showSnackbar('Please enter a valid Total Pipe Length (in meters) with max 3 decimal places, value should be > 0 and <= 1000', 'error');
+      return false;
+    }
+
+    if (isNaN(totalNumberOfPipes) || totalNumberOfPipes <= 0 || totalNumberOfPipes > 1000) {
+      showSnackbar('Please enter a valid Total Number of Pipes laid (integer), value should be > 0 and <= 1000', 'error');
+      return false;
+    }
+
+    pipeLayingAndJointingData.totalPipeLength = Number(pipeLayingAndJointingData.totalPipeLength);
+    pipeLayingAndJointingData.totalNumberOfPipes = Number(pipeLayingAndJointingData.totalNumberOfPipes);
+
+    return true;
+  };
+
 
   const handleInputChangeGrouting = (
     name: keyof FormStateGrouting,
@@ -1615,6 +2141,17 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             setConcreteData([]);
           }
           break;
+          case TASK_TYPES.DUMPING:
+          if (rfiData.metaData.dumpingData) {
+            rfiData.metaData.dumpingData.forEach((item: any) => {
+              item.key = Guid.create();
+            });
+            setDumpingData(rfiData.metaData.dumpingData);
+          } else {
+            setDumpingData([]);
+          }
+          break;
+
         case TASK_TYPES.GLUEING:
           if (rfiData.metaData?.glueingData) {
             rfiData.metaData?.glueingData.forEach((item: any) => {
@@ -2304,6 +2841,213 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             });
           }
           break;
+        case TASK_TYPES.SPREADING_AND_COMPACTION:
+          if (rfiData.metaData.spreadingAndCompactionData) {
+            setSpreadingAndCompactionData(
+              rfiData.metaData.spreadingAndCompactionData,
+            );
+          } else {
+            setSpreadingAndCompactionData({
+              sourceOfMaterialApproved: 'Y',
+              groundImprovementDone: 'Y',
+              underLayingLayerApproved: 'Y',
+              gradeSurveyStakesAvailable: 'Y',
+              graderAvailable: 'Y',
+              gradingDoneAsPerRequirement: 'Y',
+              uniformSprinklingDone: 'Y',
+              dumpingPatternFollowed: 'Y',
+              materialFreeFromDeleterious: 'Y',
+              containsOverSizeBoulders: 'Y',
+              looseThicknessChecked: 'Y',
+              omcMaintained: 'Y',
+              suitableRollerAvailable: 'Y',
+              rollingPatternFollowed: 'Y',
+              finishedLayerThicknessSpecified: 'Y',
+              localizedIssuesFound: 'N',
+              layerFreeFromSegregation: 'Y',
+              protectionOfFinishedSurfaceAvailable: 'Y',
+              nonConformanceFound: 'N',
+            });
+          }
+          break;
+        case TASK_TYPES.PRIME_COAT:
+case TASK_TYPES.TACK_COAT:
+          if (rfiData.metaData.primeCoatData) {
+            setPrimeCoatData(rfiData.metaData.primeCoatData);
+          } else {
+            setPrimeCoatData({
+              previousLayerApproved: 'Y',
+              surfacePreparationSatisfactory: 'Y',
+              materialGradeApproved: 'Y',
+              bituminousEmulsionTemperatureChecked: 'Y',
+              uniformSprayRate: 'Y',
+              nonConformanceFound: 'N',
+            });
+          }
+          break;
+        case TASK_TYPES.ROAD_MARKING:
+          if (rfiData.metaData.roadMarkingData) {
+            setRoadMarkingData(rfiData.metaData.roadMarkingData);
+          } else {
+            setRoadMarkingData({
+              drawingAndMethodApproved: 'Y',
+              thermoplasticAndGlassBeadApproved: 'Y',
+              heaterConditionChecked: 'Y',
+              thermometerWorking: 'Y',
+              materialHeatedToSpecifiedTemperature: 'Y',
+              surfaceClean: 'Y',
+              markingDoneBeforeLaying: 'Y',
+              glassBeadsApplied: 'Y',
+              paintLaidInMoltenState: 'Y',
+              paintThicknessChecked: 'Y',
+              nonConformanceFound: 'N',
+            });
+          }
+          break;
+        case TASK_TYPES.LAYING_AND_COMPACTION:
+          if (rfiData.metaData.layingAndCompactionData) {
+            setLayingAndCompactionData(
+              rfiData.metaData.layingAndCompactionData,
+            );
+          } else {
+            setLayingAndCompactionData({
+              safetyMeasuresTaken: 'Y',
+              approvedMethodologyAvailable: 'Y',
+              primeCoatCured: 'Y',
+              sprayRateChecked: 'Y',
+              jointTrimmedPrepared: 'Y',
+              programConveyed: 'Y',
+              thermometerAvailable: 'Y',
+              paverSensorsSet: 'Y',
+              alignmentMarked: 'Y',
+              paverPlacedCleaned: 'Y',
+              mixTransported: 'Y',
+              mixTemperatureFound: 'Y',
+              looseThicknessChecked: 'Y',
+              rollingPatternFollowed: 'Y',
+              surfaceLevelChecked: 'Y',
+              transverseJointsPrepared: 'Y',
+              nonConformanceFound: 'N',
+              layerThickness: 0.0,
+              totalMaterialQtyLaid: 0.0,
+              totalMaterialQtySqm: 0.0,
+            });
+          }
+          break;
+        case TASK_TYPES.PIPE_LAYING_AND_JOINTING:
+          if (rfiData.metaData.pipeLayingAndJointingData) {
+            setPipeLayingAndJointingData(rfiData.metaData.pipeLayingAndJointingData);
+          } else {
+            setPipeLayingAndJointingData({
+              materialAsPerGFC: 'Y',
+              latestGFCAvailable: 'Y',
+              locationLevelsPipeSizeAsPerGFC: 'Y',
+              routingCheckedAsPerGFC: 'Y',
+              hangerSupportProperSpacing: 'Y',
+              fastenerHangerRodAsPerGFC: 'Y',
+              jointPreparationFitUp: 'Y',
+              visualInspectionOfWeldedJoints: 'Y',
+              threadCheckForJoints: 'Y',
+              threadedJointsTightened: 'Y',
+              undergroundGIPipingTreatment: 'Y',
+              threadedPipesAlignedStraight: 'Y',
+              installedPipesAlignedProperly: 'Y',
+              totalPipeLength: 0.0,
+              totalNumberOfPipes: 0,
+            });
+          }
+          break;
+        case TASK_TYPES.FIXING_OF_METAL_BEAM:
+          if (rfiData.metaData.fixingOfMetalBeamData) {
+            setFixingOfMetalBeamData(rfiData.metaData.fixingOfMetalBeamData);
+          } else {
+            setFixingOfMetalBeamData({
+              barrierToEmbankmentDistance: 'Y',
+              barrierToEdgeOfCarriagewayDistance: 'Y',
+              medianWBeamFaceDistance: 'Y',
+              spacersInstalledProperly: 'Y',
+              boltsFixedAndTightened: 'Y',
+              totalLengthOfMetalBeamFixed: 0.0,
+            });
+          }
+          break;
+          case TASK_TYPES.FIXING_VERTICAL_POST:
+          if (rfiData.metaData.fixingVerticalPostData) {
+            setFixingVerticalPostData(rfiData.metaData.fixingVerticalPostData);
+          } else {
+            setFixingVerticalPostData({
+              pitsDuggedToPlan: 'Y',
+              distanceMaintainedBarrierSlope: 'Y',
+              distanceMaintainedBarrierCarriageway: 'Y',
+              postsAlignedHeightAsPerDrawing: 'Y',
+              steelPostsPlacedMethodology: 'Y',
+              totalVerticalPostInstalled: 0,
+            });
+          }
+          break;
+
+        case TASK_TYPES.CUTTING_OF_JOINTS:
+          if (rfiData.metaData.cuttingOfJointsData) {
+            setCuttingOfJointsData(rfiData.metaData.cuttingOfJointsData);
+          } else {
+            setCuttingOfJointsData({
+              jointsCutAtDesiredIntervals: 'Y',
+              jointsCutAtDesiredDepth: 'Y',
+              jointCutDoneProperly: 'Y',
+              totalLengthCompleted: 0.0,
+            });
+          }
+          break;
+        case TASK_TYPES.LAYING_OF_PAVER_BLOCK:
+          if (rfiData.metaData.layingOfPaverBlockData) {
+            setLayingOfPaverBlockData(rfiData.metaData.layingOfPaverBlockData);
+          } else {
+            setLayingOfPaverBlockData({
+              subBaseCompacted: 'Y',
+              sandLayingCourse: 'Y',
+              pavingBlocksApprovedSource: 'Y',
+              pavingBlocksDimension: 'Y',
+              pavingBlocksInstallation: 'Y',
+              plateCompactorMoved: 'Y',
+              jointsAsPerMethodStatement: 'Y',
+              locationAlignmentCorrect: 'Y',
+              totalLengthLaid: 0.0,
+              totalSqmLaid: 0.0,
+              thicknessPaverBlock: 0.0,
+              gradeOfConcrete: '',
+            });
+          }
+          break;
+        case TASK_TYPES.LAYING_OF_DLC:
+          if (rfiData.metaData.layingOfDlcTableData) {
+            rfiData.metaData.layingOfDlcTableData.forEach((item) => {
+              item.key = Guid.create();
+            });
+            setLayingOfDlcTableData(rfiData.metaData.layingOfDlcTableData);
+          } else {
+            setLayingOfDlcTableData([]);
+          }
+          if (rfiData.metaData.layingOfDLCData) {
+            setLayingOfDLCData(rfiData.metaData.layingOfDLCData);
+          } else {
+            setLayingOfDLCData({
+              mixDesignApproved: 'Y',
+              gsbLayerApproved: 'Y',
+              gradeSurveyStakesAvailable: 'Y',
+              placingMaterialAppropriate: 'Y',
+              paverAvailable: 'Y',
+              curingArrangementAvailable: 'Y',
+              suitableRollersAvailable: 'Y',
+              layersSegregationFree: 'Y',
+              surfaceProtectionArrangement: 'Y',
+              lightArrangementForNightWork: 'Y',
+              batchSlipAsPerMixDesign: 'Y',
+              workerPPE: 'Y',
+              totalLengthDLC: 0.0,
+              totalAreaDLC: 0.0,
+            });
+          }
+          break;
 
         case TASK_TYPES.LIFTING_LEFT:
         case TASK_TYPES.LIFTING_YARD:
@@ -2908,6 +3652,74 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       }),
     );
   };
+  const validateLayingAndCompactionData = (
+    layingAndCompactionData: any,
+  ): boolean => {
+    // Parsing values to float
+    const thicknessOfLayer = parseFloat(layingAndCompactionData.layerThickness);
+    const totalMaterialQtyTonne = parseFloat(
+      layingAndCompactionData.totalMaterialQtyLaid,
+    );
+    const totalMaterialQtySqm = parseFloat(
+      layingAndCompactionData.totalMaterialQtySqm,
+    );
+
+    // Validation for Thickness of Layer laid in mm
+    if (
+      isNaN(thicknessOfLayer) ||
+      thicknessOfLayer <= 0 ||
+      thicknessOfLayer > 1000 ||
+      layingAndCompactionData.layerThickness.split('.')[1]?.length > 3
+    ) {
+      showSnackbar(
+        'Please enter a valid Thickness of Layer laid (in mm) with max 3 decimal places, value should be > 0 and <= 1000',
+        'error',
+      );
+      return false;
+    }
+
+    // Validation for Total material qty laid in tonne
+    if (
+      isNaN(totalMaterialQtyTonne) ||
+      totalMaterialQtyTonne <= 0 ||
+      totalMaterialQtyTonne > 10000 ||
+      layingAndCompactionData.totalMaterialQtyLaid.split('.')[1]?.length > 3
+    ) {
+      showSnackbar(
+        'Please enter a valid Total material quantity laid (in tonne) with max 3 decimal places, value should be > 0 and <= 10000',
+        'error',
+      );
+      return false;
+    }
+
+    // Validation for Total material qty in Sqm
+    if (
+      isNaN(totalMaterialQtySqm) ||
+      totalMaterialQtySqm <= 0 ||
+      totalMaterialQtySqm > 100000 ||
+      layingAndCompactionData.totalMaterialQtySqm.split('.')[1]?.length > 3
+    ) {
+      showSnackbar(
+        'Please enter a valid Total material quantity in Sqm with max 3 decimal places, value should be > 0 and <= 100000',
+        'error',
+      );
+      return false;
+    }
+
+    // Converting the values back to numbers after validation
+    layingAndCompactionData.layerThickness = Number(
+      layingAndCompactionData.layerThickness,
+    );
+    layingAndCompactionData.totalMaterialQtyLaid = Number(
+      layingAndCompactionData.totalMaterialQtyLaid,
+    );
+    layingAndCompactionData.totalMaterialQtySqm = Number(
+      layingAndCompactionData.totalMaterialQtySqm,
+    );
+
+    return true;
+  };
+
   const validateBoringOfDiaphragmData = (data: any): boolean => {
     const densityOfPolymer = parseFloat(data.densityOfPolymer);
     const viscosityOfPolymer = parseInt(data.viscosityOfPolymer, 10);
@@ -3219,7 +4031,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     curingData.waterConsumptionInKL = Number(curingData.waterConsumptionInKL);
     return true;
   };
-  
+
   const validateStrippingAndStoringTopSoilData = (data: any) => {
     const value = parseFloat(data.topSoilCollectedStored);
     if (isNaN(value)) {
@@ -3804,6 +4616,16 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           concreteData: concreteData,
         };
         break;
+        case TASK_TYPES.DUMPING:
+          if (!validateDumpingData(dumpingData)) {
+            return;
+          }
+
+          checkList = {
+            taskName: selectedTask.name,
+            dumpingData: dumpingData,
+          };
+          break;
       case TASK_TYPES.GLUEING:
         if (!validateGlueingData(glueingData)) {
           return;
@@ -4052,6 +4874,93 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           },
         };
         break;
+      case TASK_TYPES.ROAD_MARKING:
+        checkList = {
+          taskName: selectedTask.name,
+          roadMarkingData: roadMarkingData,
+        };
+        break;
+      case TASK_TYPES.PRIME_COAT:
+case TASK_TYPES.TACK_COAT:
+        checkList = {
+          taskName: selectedTask.name,
+          primeCoatData: primeCoatData,
+        };
+        break;
+      case TASK_TYPES.SPREADING_AND_COMPACTION:
+        checkList = {
+          taskName: selectedTask.name,
+          spreadingAndCompactionData: spreadingAndCompactionData,
+        };
+        break;
+      case TASK_TYPES.LAYING_AND_COMPACTION:
+        if (!validateLayingAndCompactionData(layingAndCompactionData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          layingAndCompactionData: layingAndCompactionData,
+        };
+        break;
+      case TASK_TYPES.PIPE_LAYING_AND_JOINTING:
+        if (!validatePipeLayingAndJointingData(pipeLayingAndJointingData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          pipeLayingAndJointingData: pipeLayingAndJointingData,
+        };
+        break;
+      case TASK_TYPES.FIXING_OF_METAL_BEAM:
+        if (!validateFixingOfMetalBeamData(fixingOfMetalBeamData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          fixingOfMetalBeamData: fixingOfMetalBeamData,
+        };
+        break;
+      case TASK_TYPES.FIXING_VERTICAL_POST:
+        if (!validateFixingVerticalPostData(fixingVerticalPostData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          fixingVerticalPostData: fixingVerticalPostData,
+        };
+        break;
+
+      case TASK_TYPES.CUTTING_OF_JOINTS:
+        if (!validateCuttingOfJointsData(cuttingOfJointsData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          cuttingOfJointsData: cuttingOfJointsData,
+        };
+        break;
+      case TASK_TYPES.LAYING_OF_PAVER_BLOCK:
+        if (!validateLayingOfPaverBlockData(layingOfPaverBlockData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          layingOfPaverBlockData: layingOfPaverBlockData,
+        };
+        break;
+      case TASK_TYPES.LAYING_OF_DLC:
+        if (!validateLayingOfDlcData(layingOfDlcTableData)) {
+          return;
+        }
+        if (!validateLayingOfDLCData(layingOfDLCData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          layingOfDLCData: layingOfDLCData,
+          layingOfDlcTableData: layingOfDlcTableData,
+        };
+        break;
 
       case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
       case TASK_TYPES.LIFTING_LEFT:
@@ -4260,6 +5169,19 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       },
     ]);
   };
+const onAddMoreDumping = () => {
+  setDumpingData([
+    ...dumpingData,
+    {
+      vehicleNo: '',
+      source: 'Y',
+      qtyDumped: 0,
+      approvedSource: '',
+      bouldersPresent: 'Y',
+      key: Guid.create(),
+    },
+  ]);
+};
 
   // const onAddMoreGlueing = () => {
   //   setGlueingData([
@@ -5282,6 +6204,114 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
 
     return isValid;
   };
+  const renderDumpingHeadings = () => (
+  <View style={styles.rowContainer}>
+    <View style={styles.cell}>
+      <Text style={styles.cellText}>Tm No.</Text>
+    </View>
+    <View style={styles.cell}>
+      <Text style={styles.cellText}>Vehicle No. (Last 4 digits)</Text>
+    </View>
+    <View style={styles.cell}>
+      <Text style={styles.cellText}>Source (Y/N)</Text>
+    </View>
+    <View style={styles.cell}>
+      <Text style={styles.cellText}>Qty Dumped (cum)</Text>
+    </View>
+    <View style={styles.cell}>
+      <Text style={styles.cellText}>Approved Source (Y/N)</Text>
+    </View>
+    <View style={styles.cell}>
+      <Text style={styles.cellText}>Boulders/ Unwanted Materials (Y/N)</Text>
+    </View>
+    <View style={[styles.cell, {paddingHorizontal: 40}]}>
+      <Text style={styles.cellText}>Actions</Text>
+    </View>
+  </View>
+  );
+
+  const renderItemDumping = (rowData: any) => (
+    <View style={[styles.rowContainer, styles.marginBottom10]}>
+      <View style={styles.cell}>
+        <Text>TM {rowData.index + 1}</Text>
+      </View>
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'vehicleNo'}
+          index={rowData.index}
+          onChange={handleTextInputChangeDumping}
+        />
+      </View>
+
+      <View style={styles.cell}>
+        <DropdownPicker
+          label="Source"
+          value={rowData.item.source}
+          items={YES_NO_LIST}
+          onChange={(value: any) =>
+            handleDropdownChangeDumping(rowData.index, 'source', value)
+          }
+          isRequired={true}
+        />
+      </View>
+
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'qtyDumped'}
+          index={rowData.index}
+          onChange={handleTextInputChangeDumping}
+        />
+      </View>
+
+      <View style={styles.cell}>
+        <DropdownPicker
+          label="Approved Source"
+          value={rowData.item.approvedSource}
+          items={YES_NO_LIST}
+          onChange={(value: any) =>
+            handleDropdownChangeDumping(rowData.index, 'approvedSource', value)
+          }
+          isRequired={true}
+        />
+      </View>
+
+      <View style={styles.cell}>
+        <DropdownPicker
+          label="Boulders Present"
+          value={rowData.item.bouldersPresent}
+          items={YES_NO_LIST}
+          onChange={(value: any) =>
+            handleDropdownChangeDumping(rowData.index, 'bouldersPresent', value)
+          }
+          isRequired={true}
+        />
+      </View>
+
+      <View style={[styles.cell, {paddingHorizontal: 45}]}>
+        <TouchableOpacity
+          style={[styles.deleteButton]}
+          onPress={() => deleteDumpingItem(rowData, rowData.item.key)}>
+          <Image
+            style={[styles.CloseIcon, {tintColor: '#fff'}]}
+            source={require('./../../images/menu/delete.png')}
+          />
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+  const handleDropdownChangeDumping = (index: number, fieldName: string, value: any) => {
+    setDumpingData(prevData => {
+      const newData = [...prevData];
+      newData[index] = {
+        ...newData[index],
+        [fieldName]: value,
+      };
+      return newData;
+    });
+  };
+
 
   const renderItemGlueing = (rowData: any) => (
     <View style={[styles.rowContainer, styles.marginBottom10]}>
@@ -5657,6 +6687,13 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     const prevIndex = torquingData.findIndex(item => item.key === rowKey);
     newData.splice(prevIndex, 1);
     setTorquingData(newData);
+  };
+  const deleteDumpingItem = (rowMap: any, rowKey: any) => {
+    closeRow(rowMap, rowKey);
+    const newData = [...dumpingData];
+    const prevIndex = dumpingData.findIndex(item => item.key === rowKey);
+    newData.splice(prevIndex, 1);
+    setDumpingData(newData);
   };
 
   //Function to delete glueing row
@@ -7256,6 +8293,75 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                 </View>
               </ScrollView>
             </View>
+
+            <View>
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="#f000"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => {
+                    setComments(text);
+                  }}
+                />
+              </View>
+            </View>
+          </View>
+        );
+        case TASK_TYPES.DUMPING:
+        if (!dumpingData || !dumpingData.length) {
+          setDumpingData([
+            {
+              vehicleNo: '',
+              source: 'Y',
+              qtyDumped: 0,
+              approvedSource: '',
+              bouldersPresent: 'Y',
+              key: Guid.create(),
+            },
+          ]);
+        }
+        
+        return (
+          <View>
+            <ScrollView horizontal={true}>
+              <View>
+                {renderDumpingHeadings()}
+                <FlatList
+                  data={dumpingData}
+                  renderItem={renderItemDumping}
+                  keyExtractor={item => item.key?.toString()}
+                  automaticallyAdjustContentInsets={true}
+                  scrollEnabled={false}
+                />
+              </View>
+            </ScrollView>
+            <TouchableOpacity onPress={() => onAddMoreDumping()}>
+              <Text>+ Add More</Text>
+            </TouchableOpacity>
 
             <View>
               <View style={{flexDirection: 'column'}}>
@@ -10219,6 +11325,944 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             </View>
           </View>
         );
+      case TASK_TYPES.SPREADING_AND_COMPACTION:
+        const spreadingAndCompactionProperties = [
+          {
+            title: 'Source of material is approved',
+            key: 'sourceOfMaterialApproved',
+          },
+          {
+            title: 'Ground improvement is done if required',
+            key: 'groundImprovementDone',
+          },
+          {
+            title: 'Under laying layer is approved',
+            key: 'underLayingLayerApproved',
+          },
+          {
+            title:
+              'Adequate grade and survey stakes available for control of layer placement',
+            key: 'gradeSurveyStakesAvailable',
+          },
+          {
+            title:
+              'Adequate no. of grader available for spreading and levelling of fill',
+            key: 'graderAvailable',
+          },
+          {
+            title: 'Grading is done as per the required gradient and camber',
+            key: 'gradingDoneAsPerRequirement',
+          },
+          {
+            title:
+              'Uniform sprinkling of water done on previous layer if required',
+            key: 'uniformSprinklingDone',
+          },
+          {title: 'Dumping pattern is followed', key: 'dumpingPatternFollowed'},
+          {
+            title: 'Material free from deleterious material',
+            key: 'materialFreeFromDeleterious',
+          },
+          {
+            title: 'Material contains over size boulders/ stones',
+            key: 'containsOverSizeBoulders',
+          },
+          {
+            title: 'Loose thickness of layer checked',
+            key: 'looseThicknessChecked',
+          },
+          {
+            title: 'OMC is maintained before commencement of rolling',
+            key: 'omcMaintained',
+          },
+          {
+            title: 'Suitable roller available for compaction',
+            key: 'suitableRollerAvailable',
+          },
+          {
+            title: 'Number of passes, speed, and rolling pattern followed',
+            key: 'rollingPatternFollowed',
+          },
+          {
+            title: 'Finished compacted layer thickness is as specified',
+            key: 'finishedLayerThicknessSpecified',
+          },
+          {
+            title: 'Any localized wet, soft, and under compacted area found',
+            key: 'localizedIssuesFound',
+          },
+          {
+            title: 'Layer is free from segregation',
+            key: 'layerFreeFromSegregation',
+          },
+          {
+            title: 'Arrangement for protection of finished surface available',
+            key: 'protectionOfFinishedSurfaceAvailable',
+          },
+          {
+            title: 'Any non-conformance/ noncompliance found',
+            key: 'nonConformanceFound',
+          },
+        ];
+
+        return (
+          <View>
+            {spreadingAndCompactionProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={spreadingAndCompactionData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setSpreadingAndCompactionData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+
+            <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+          </View>
+        );
+      case TASK_TYPES.PRIME_COAT:
+case TASK_TYPES.TACK_COAT:
+        const primeCoatProperties = [
+          {
+            title: 'Previous Layer Approved',
+            key: 'previousLayerApproved',
+          },
+          {
+            title: 'Surface Preparation Satisfactory (Surface Condition)',
+            key: 'surfacePreparationSatisfactory',
+          },
+          {
+            title: 'Grade of Material Approved',
+            key: 'materialGradeApproved',
+          },
+          {
+            title: 'Bituminous Emulsion Temperature Checked',
+            key: 'bituminousEmulsionTemperatureChecked',
+          },
+          {
+            title: 'Uniform Rate of Spray',
+            key: 'uniformSprayRate',
+          },
+          {
+            title: 'Non-Conformance/Non-Compliance Found',
+            key: 'nonConformanceFound',
+          },
+        ];
+
+        return (
+          <View>
+            {primeCoatProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={primeCoatData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setPrimeCoatData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <View>
+              {/* Date and Time Pickers */}
+              <View style={{flexDirection: 'column'}}>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+              </View>
+              <View>
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+              </View>
+              <View style={{flexDirection: 'column', paddingBottom: 20}}>
+                <Text style={styles.Lable}>Recommendations</Text>
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  autoCapitalize="none"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => setComments(text)}
+                />
+              </View>
+            </View>
+          </View>
+        );
+      case TASK_TYPES.ROAD_MARKING:
+        const roadMarkingProperties = [
+          {
+            title: 'Drawing & Method Statement Approved by Client',
+            key: 'drawingAndMethodApproved',
+          },
+          {
+            title: 'Thermoplastic Paint & Glass Bead Approved by Client',
+            key: 'thermoplasticAndGlassBeadApproved',
+          },
+          {
+            title: 'Heater Condition and Laying Checked',
+            key: 'heaterConditionChecked',
+          },
+          {
+            title: 'Thermometer of Heater Working Properly',
+            key: 'thermometerWorking',
+          },
+          {
+            title: 'Thermoplastic Material Heated to Specified Temperature',
+            key: 'materialHeatedToSpecifiedTemperature',
+          },
+          {
+            title: 'Surface is Free from Dust, Dirt, Grease, and Oil',
+            key: 'surfaceClean',
+          },
+          {
+            title: 'Marking Done Before Laying Thermoplastic',
+            key: 'markingDoneBeforeLaying',
+          },
+          {
+            title: 'Glass Beads Applied at Rate of 250gms/sqm',
+            key: 'glassBeadsApplied',
+          },
+          {
+            title: 'Thermoplastic Paint Laid in Molten State',
+            key: 'paintLaidInMoltenState',
+          },
+          {
+            title: 'Thermoplastic Paint Thickness Checked',
+            key: 'paintThicknessChecked',
+          },
+          {
+            title: 'Non-conformance/Non-compliance Found',
+            key: 'nonConformanceFound',
+          },
+        ];
+
+        return (
+          <View>
+            {roadMarkingProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={roadMarkingData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setRoadMarkingData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <View>
+              {/* This section for date, time, and recommendations remains the same */}
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+          </View>
+        );
+      case TASK_TYPES.LAYING_AND_COMPACTION:
+        const layingAndCompactionProperties = [
+          {
+            title: 'All Safety Measures Taken as per Plan',
+            key: 'safetyMeasuresTaken',
+          },
+          {
+            title: 'Approved Methodology Available with Paving-in-Charge',
+            key: 'approvedMethodologyAvailable',
+          },
+          {
+            title: 'Prime Coat Cured and Cleaned Properly',
+            key: 'primeCoatCured',
+          },
+          {
+            title: 'Rate of Spray for Tact Coat Checked & Recorded',
+            key: 'sprayRateChecked',
+          },
+          {
+            title: 'Joint Trimmed & Prepared as per Method Statement',
+            key: 'jointTrimmedPrepared',
+          },
+          {
+            title: 'Program of Laying Conveyed to Plant and QA/QC',
+            key: 'programConveyed',
+          },
+          {
+            title: 'Thermometer Available at Laying Location',
+            key: 'thermometerAvailable',
+          },
+          {
+            title: 'Paver Sensors Set as per Requirement',
+            key: 'paverSensorsSet',
+          },
+          {title: 'Alignment Marked with Lime Powder', key: 'alignmentMarked'},
+          {
+            title: 'Paver Placed & Skeed Cleaned at Laying Area',
+            key: 'paverPlacedCleaned',
+          },
+          {
+            title: 'Mix Transported with Tarpaulin Covering',
+            key: 'mixTransported',
+          },
+          {
+            title: 'Mix Temperature as per Table 500-2',
+            key: 'mixTemperatureFound',
+          },
+          {
+            title: 'Loose Thickness Checked for Required Compactness',
+            key: 'looseThicknessChecked',
+          },
+          {
+            title: 'Rolling Pattern Followed as per Trial Patch',
+            key: 'rollingPatternFollowed',
+          },
+          {
+            title: 'Surface Level Checked within Tolerance',
+            key: 'surfaceLevelChecked',
+          },
+          {
+            title: 'Transverse Joints Prepared as per Method Statement',
+            key: 'transverseJointsPrepared',
+          },
+          {
+            title: 'Non-conformance/Non-compliance Found',
+            key: 'nonConformanceFound',
+          },
+        ];
+      return (
+        <View>
+          {layingAndCompactionProperties.map(property => (
+            <View style={{flexDirection: 'column'}} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={layingAndCompactionData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value: any) =>
+                  setLayingAndCompactionData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+          <Input
+            label="Thickness of Layer Laid in mm"
+            value={layingAndCompactionData.layerThickness}
+            onChange={(value: any) =>
+              setLayingAndCompactionData(prevData => ({
+                ...prevData,
+                layerThickness: value,
+              }))
+            }
+            isRequired={true}
+          />
+
+          <Input
+            label="Total Material Qty Laid in Tonne"
+            value={layingAndCompactionData.totalMaterialQtyLaid}
+            onChange={(value: any) =>
+              setLayingAndCompactionData(prevData => ({
+                ...prevData,
+                totalMaterialQtyLaid: value,
+              }))
+            }
+            isRequired={true}
+          />
+
+          <Input
+            label="Total Material Qty in Sqm"
+            value={layingAndCompactionData.totalMaterialQtySqm}
+            onChange={(value: any) =>
+              setLayingAndCompactionData(prevData => ({
+                ...prevData,
+                totalMaterialQtySqm: value,
+              }))
+            }
+            isRequired={true}
+          />
+          <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
+        </View>
+      );
+      case TASK_TYPES.PIPE_LAYING_AND_JOINTING:
+        const pipeLayingAndJointingProperties = [
+          { title: 'Ensure all material as per GFC drawing', key: 'materialAsPerGFC' },
+          { title: 'Check for availability of the latest GFC drawing', key: 'latestGFCAvailable' },
+          { title: 'Location, levels, pipe size as per GFC', key: 'locationLevelsPipeSizeAsPerGFC' },
+          { title: 'Check routing of pipe as per drawing', key: 'routingCheckedAsPerGFC' },
+          { title: 'Check hanger & support spacing as per drawing', key: 'hangerSupportProperSpacing' },
+          { title: 'Fastener & hanger rod as per drawing', key: 'fastenerHangerRodAsPerGFC' },
+          { title: 'Joint preparation & fit-up proper', key: 'jointPreparationFitUp' },
+          { title: 'Visual inspection of welded joints', key: 'visualInspectionOfWeldedJoints' },
+          { title: 'Thread check for pipe joints', key: 'threadCheckForJoints' },
+          { title: 'Threaded joints properly tightened', key: 'threadedJointsTightened' },
+          { title: 'Bituminous paint & polythene tape applied to underground GI piping', key: 'undergroundGIPipingTreatment' },
+          { title: 'Threaded pipes aligned and straight', key: 'threadedPipesAlignedStraight' },
+          { title: 'Installed pipes aligned properly', key: 'installedPipesAlignedProperly' },
+        ];
+
+        return (
+          <View>
+            {pipeLayingAndJointingProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={pipeLayingAndJointingData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setPipeLayingAndJointingData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <Input
+              label="Total Length of Pipe Laid in Meters"
+              value={pipeLayingAndJointingData.totalPipeLength}
+              onChange={(value: any) =>
+                setPipeLayingAndJointingData(prevData => ({
+                  ...prevData,
+                  totalPipeLength: value,
+                }))
+              }
+              isRequired={true}
+            />
+            <Input
+              label="Total Number of Pipes Laid"
+              value={pipeLayingAndJointingData.totalNumberOfPipes}
+              onChange={(value: any) =>
+                setPipeLayingAndJointingData(prevData => ({
+                  ...prevData,
+                  totalNumberOfPipes: value,
+                }))
+              }
+              isRequired={true}
+            />
+            <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
+          </View>
+        );
+      case TASK_TYPES.FIXING_OF_METAL_BEAM:
+        const fixingOfMetalBeamProperties = [
+          {
+            title: 'Distance maintained between barrier and start of embankment slope',
+            key: 'barrierToEmbankmentDistance',
+          },
+          {
+            title: 'Distance maintained between barrier and edge of carriageway',
+            key: 'barrierToEdgeOfCarriagewayDistance',
+          },
+          {
+            title: 'At median, W-beam face is 100 mm away from carriageway face of median',
+            key: 'medianWBeamFaceDistance',
+          },
+          {
+            title: 'All spacers installed properly as per approved drawing',
+            key: 'spacersInstalledProperly',
+          },
+          {
+            title: 'All bolts are fixed and tightened properly',
+            key: 'boltsFixedAndTightened',
+          },
+        ];
+
+        return (
+          <View>
+            {fixingOfMetalBeamProperties.map(property => (
+              <View style={{ flexDirection: 'column' }} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={fixingOfMetalBeamData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setFixingOfMetalBeamData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <Input
+              label="Total Length of Metal Beam Fixed in RM"
+              value={fixingOfMetalBeamData.totalLengthOfMetalBeamFixed}
+              onChange={(value: any) =>
+                setFixingOfMetalBeamData(prevData => ({
+                  ...prevData,
+                  totalLengthOfMetalBeamFixed: value,
+                }))
+              }
+              isRequired={true}
+            />
+            <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+          </View>
+        );
+      case TASK_TYPES.FIXING_VERTICAL_POST:
+      const fixingVerticalPostProperties = [
+        {
+          title: 'Pits Dugged/Drilled to Depth Indicated on Plan',
+          key: 'pitsDuggedToPlan',
+        },
+        {
+          title: 'Distance Maintained Between Barrier and Start of Embankment Slope',
+          key: 'distanceMaintainedBarrierSlope',
+        },
+        {
+          title: 'Distance Maintained Between Barrier and Edge of Carriageway',
+          key: 'distanceMaintainedBarrierCarriageway',
+        },
+        {
+          title: 'Posts Aligned Properly & Height Above Ground as per Approved Drawing',
+          key: 'postsAlignedHeightAsPerDrawing',
+        },
+        {
+          title: 'Steel Posts Placed as per Methodology',
+          key: 'steelPostsPlacedMethodology',
+        },
+        {
+          title: 'Total No. of Vertical Post Installed',
+          key: 'totalVerticalPostInstalled',
+        },
+      ];
+
+      return (
+        <View>
+          {fixingVerticalPostProperties.map(property => (
+            <View style={{flexDirection: 'column'}} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={fixingVerticalPostData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value: any) =>
+                  setFixingVerticalPostData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+          <Input
+            label="Total No. of Vertical Post Installed"
+            value={fixingVerticalPostData.totalVerticalPostInstalled}
+            onChange={(value: any) =>
+              setFixingVerticalPostData(prevData => ({
+                ...prevData,
+                totalVerticalPostInstalled: value,
+              }))
+            }
+            isRequired={true}
+          />
+          <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
+        </View>
+      );
+      case TASK_TYPES.CUTTING_OF_JOINTS:
+        const cuttingOfJointsProperties = [
+        { title: 'Is joints cut at desired intervals', key: 'jointsCutAtDesiredIntervals' },
+        { title: 'Is joint cut at desired depth', key: 'jointsCutAtDesiredDepth' },
+        { title: 'Is joint cut done properly', key: 'jointCutDoneProperly' },
+      ];
+
+      return (
+        <View>
+          {cuttingOfJointsProperties.map(property => (
+            <View style={{ flexDirection: 'column' }} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={cuttingOfJointsData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value: any) =>
+                  setCuttingOfJointsData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+
+          <Input
+            label="Total Length Completed in Km"
+            value={cuttingOfJointsData.totalLengthCompleted}
+            onChange={(value: any) =>
+              setCuttingOfJointsData(prevData => ({
+                ...prevData,
+                totalLengthCompleted: value,
+              }))
+            }
+            isRequired={true}
+          />
+          <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
+        </View>
+      );
+      case TASK_TYPES.LAYING_OF_PAVER_BLOCK:
+        const layingOfPaverBlockProperties = [
+          { title: 'Top 150mm thick sub base layer spread levelled and compacted to 95% MMD?', key: 'subBaseCompacted' },
+          { title: 'Washed sand of appropriate thickness 50 mm as laying course?', key: 'sandLayingCourse' },
+          { title: 'Paving Blocks from Approved Source', key: 'pavingBlocksApprovedSource' },
+          { title: 'Paving blocks dimension and finishing as per approved material submitted and shop drawing?', key: 'pavingBlocksDimension' },
+          { title: 'Paving blocks installation/ pattern done as per approved drawing', key: 'pavingBlocksInstallation' },
+          { title: 'Check Whether the plate compactor has been moved on laid paving blocks with dune sand spread over it?', key: 'plateCompactorMoved' },
+          { title: 'Check whether the joints between the paving blocks are as per method statement and joint filler spread on paving blocks and brushed between the blocks', key: 'jointsAsPerMethodStatement' },
+          { title: 'Location, Elevation, Level and Alignment of installed paver block are as per approved drawing and tolerances (+/- 6mm)', key: 'locationAlignmentCorrect' },
+        ];
+
+        return (
+          <View>
+            {layingOfPaverBlockProperties.map(property => (
+              <View style={{ flexDirection: 'column' }} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={layingOfPaverBlockData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setLayingOfPaverBlockData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+
+            <Input
+              label="Total Length of Paver Block Laid (RM)"
+              value={layingOfPaverBlockData.totalLengthLaid}
+              onChange={(value: any) =>
+                setLayingOfPaverBlockData(prevData => ({
+                  ...prevData,
+                  totalLengthLaid: value,
+                }))
+              }
+              isRequired={true}
+            />
+
+            <Input
+              label="Total SQM of Paver Blocks Laid"
+              value={layingOfPaverBlockData.totalSqmLaid}
+              onChange={(value: any) =>
+                setLayingOfPaverBlockData(prevData => ({
+                  ...prevData,
+                  totalSqmLaid: value,
+                }))
+              }
+              isRequired={true}
+            />
+
+            <Input
+              label="Thickness of Paver Block Laid (mm)"
+              value={layingOfPaverBlockData.thicknessPaverBlock}
+              onChange={(value: any) =>
+                setLayingOfPaverBlockData(prevData => ({
+                  ...prevData,
+                  thicknessPaverBlock: value,
+                }))
+              }
+              isRequired={true}
+            />
+
+            <DropdownPicker
+              label="Grade of Concrete"
+              value={layingOfPaverBlockData.gradeOfConcrete}
+              items={['M20', 'M25', 'M30', 'M35', 'M40']}
+              onChange={(value: any) =>
+                setLayingOfPaverBlockData(prevData => ({
+                  ...prevData,
+                  gradeOfConcrete: value,
+                }))
+              }
+              isRequired={true}
+            />
+            <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
+          </View>
+        );
+    case TASK_TYPES.LAYING_OF_DLC:
+      if (!layingOfDlcTableData || !layingOfDlcTableData.length) {
+        setLayingOfDlcTableData([
+          {
+            vehicleNo: '',
+            totalQtyDlc: 0,
+            layingStartTime: '',
+            layingEndTime: '',
+            key: Guid.create(),
+          },
+        ]);
+      }
+      const layingOfDLCProperties = [
+        { title: 'Is the mix design of DLC approved?', key: 'mixDesignApproved' },
+        { title: 'Is the under laying GSB layer approved?', key: 'gsbLayerApproved' },
+        { title: 'Are there adequate grade and survey stakes available for control of placement layers?', key: 'gradeSurveyStakesAvailable' },
+        { title: 'Is the placing of material appropriate?', key: 'placingMaterialAppropriate' },
+        { title: 'Is there paver available for the laying of DLC?', key: 'paverAvailable' },
+        { title: 'Is the arrangement of curing available?', key: 'curingArrangementAvailable' },
+        { title: 'Are there adequate number of suitable rollers available for the compaction operation?', key: 'suitableRollersAvailable' },
+        { title: 'Is the layer free from any segregation?', key: 'layersSegregationFree' },
+        { title: 'Is there any arrangement for protection of the finished surface?', key: 'surfaceProtectionArrangement' },
+        { title: 'Is there adequate arrangement of light for night work?', key: 'lightArrangementForNightWork' },
+        { title: 'Is the received batch slip as per approved mix design?', key: 'batchSlipAsPerMixDesign' },
+        { title: 'Whether the worker and staff have proper personal protection equipment (PPE)?', key: 'workerPPE' },
+      ];
+
+      return (
+        <View>
+          {layingOfDLCProperties.map(property => (
+            <View style={{flexDirection: 'column'}} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={layingOfDLCData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value: any) =>
+                  setLayingOfDLCData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+          <Input
+            label="Total Length of DLC Laid in Mtr"
+            value={layingOfDLCData.totalLengthDLC}
+            onChange={(value: any) =>
+              setLayingOfDLCData(prevData => ({
+                ...prevData,
+                totalLengthDLC: value,
+              }))
+            }
+            isRequired={true}
+          />
+
+          <Input
+            label="Total Area of DLC Laid in Sqm"
+            value={layingOfDLCData.totalAreaDLC}
+            onChange={(value: any) =>
+              setLayingOfDLCData(prevData => ({
+                ...prevData,
+                totalAreaDLC: value,
+              }))
+            }
+            isRequired={true}
+          />
+          <ScrollView horizontal={true}>
+            <View>
+              {renderLayingOfDlcHeadings()}
+              <FlatList
+                data={layingOfDlcTableData}
+                renderItem={renderItemLayingOfDlc}
+                keyExtractor={item => item.key?.toString()}
+                automaticallyAdjustContentInsets={true}
+                scrollEnabled={false}
+              />
+            </View>
+          </ScrollView>
+          <TouchableOpacity onPress={() => onAddMoreLayingOfDlc()}>
+            <Text>+ Add More</Text>
+          </TouchableOpacity>
+          <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
+        </View>
+      );
 
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
@@ -14191,4 +16235,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MyWork;
+export default MyWork;(

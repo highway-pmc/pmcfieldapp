@@ -418,6 +418,95 @@ const RFIsRecents = (props: any) => {
       </View>
     </View>
   );
+  const renderSectionHeaderDumping = (rowData: any) => (
+    <View>
+      <View>
+        <Text>TM Number</Text>
+      </View>
+      <View>
+        <Text>Vehicle No</Text>
+      </View>
+      <View>
+        <Text>Quantity Dumped</Text>
+      </View>
+      <View>
+        <Text>Source</Text>
+      </View>
+      <View>
+        <Text>Approved Source</Text>
+      </View>
+      <View>
+        <Text>Contains Boulders</Text>
+      </View>
+    </View>
+  );
+  const renderSectionHeaderLayingOfDlc = (rowData: any) => (
+    <View>
+      <View>
+        <Text>Serial No.</Text>
+      </View>
+      <View>
+        <Text>Vehicle No.</Text>
+      </View>
+      <View>
+        <Text>Total Qty of DLC (cum)</Text>
+      </View>
+      <View>
+        <Text>Laying Start Time</Text>
+      </View>
+      <View>
+        <Text>Laying End Time</Text>
+      </View>
+    </View>
+  );
+
+  const renderItemLayingOfDlc = (rowData: any) => (
+    <View style={{flexDirection: 'column', gap: 5}}>
+      {rowData.index === 0 && (
+        <View style={styles.headerRow}>
+          <Text style={styles.headerCell}>Vehicle No</Text>
+          <Text style={styles.headerCell}>Vehicle No</Text>
+          <Text style={styles.headerCell}>Total Qty of DLC (cum)</Text>
+          <Text style={styles.headerCell}>Laying Start Time</Text>
+          <Text style={styles.headerCell}>Laying End Time</Text>
+        </View>
+      )}
+      <View style={styles.row}>
+        <Text style={styles.cell}>{rowData.index + 1}</Text> {/* Row Number */}
+        <Text style={styles.cell}>{rowData.item.vehicleNo}</Text>
+        <Text style={styles.cell}>{rowData.item.totalQtyDlc}</Text>
+        <Text style={styles.cell}>{rowData.item.layingStartTime}</Text>
+        <Text style={styles.cell}>{rowData.item.layingEndTime}</Text>
+      </View>
+    </View>
+  );
+  const renderItemDumping = (rowData: any) => (
+    <View style={{flexDirection: 'column', gap: 5}}>
+      {rowData.index === 0 && (
+        <View style={styles.headerRow}>
+          <Text style={styles.headerCell}>TM Number</Text>
+          <Text style={styles.headerCell}>Vehicle No</Text>
+          <Text style={styles.headerCell}>Quantity Dumped</Text>
+          <Text style={styles.headerCell}>Source</Text>
+          <Text style={styles.headerCell}>Approved Source</Text>
+          <Text style={styles.headerCell}>Contains Boulders</Text>
+        </View>
+      )}
+      <View style={styles.row}>
+        <Text style={styles.cell}>{rowData.index + 1}</Text> {/* Row Number */}
+        <Text style={styles.cell}>{rowData.item.vehicleNo}</Text>
+        <Text style={styles.cell}>{rowData.item.qtyDumped}</Text>
+        <Text style={styles.cell}>{rowData.item.source}</Text>
+        <Text style={styles.cell}>
+          {rowData.item.isApprovedSource ? 'Yes' : 'No'}
+        </Text>
+        <Text style={styles.cell}>
+          {rowData.item.containsBoulders === 'Y' ? 'Yes' : 'No'}
+        </Text>
+      </View>
+    </View>
+  );
+
   const renderItemGlueing = (rowData: any) => (
     <View style={{flexDirection: 'column', gap: 5}}>
       {rowData.index === 0 && (
@@ -1291,6 +1380,20 @@ const RFIsRecents = (props: any) => {
                   data={selectedRFI?.metaData.torquingData}
                   renderItem={renderItemTorquing}
                   renderSectionHeader={renderSectionHeaderTorquing}
+                />
+              </View>
+            </ScrollView>
+          </View>
+        );
+      case TASK_TYPES.DUMPING:
+        return (
+          <View>
+            <ScrollView horizontal={true}>
+              <View style={{flexDirection: 'column'}}>
+                <SwipeListView
+                  data={selectedRFI?.metaData.dumpingData}
+                  renderItem={renderItemDumping}
+                  renderSectionHeader={renderSectionHeaderDumping}
                 />
               </View>
             </ScrollView>
@@ -3317,6 +3420,668 @@ const RFIsRecents = (props: any) => {
                 }
               </Text>
             </View>
+          </View>
+        );
+      case TASK_TYPES.SPREADING_AND_COMPACTION:
+        const spreadingAndCompactionProperties = [
+          {
+            title: 'Source of material is approved',
+            key: 'sourceOfMaterialApproved',
+          },
+          {
+            title: 'Ground improvement is done if required',
+            key: 'groundImprovementDone',
+          },
+          {
+            title: 'Under laying layer is approved',
+            key: 'underLayingLayerApproved',
+          },
+          {
+            title:
+              'Adequate grade and survey stakes available for control of layer placement',
+            key: 'gradeSurveyStakesAvailable',
+          },
+          {
+            title:
+              'Adequate no. of grader available for spreading and levelling of fill',
+            key: 'graderAvailable',
+          },
+          {
+            title: 'Grading is done as per the required gradient and camber',
+            key: 'gradingDoneAsPerRequirement',
+          },
+          {
+            title:
+              'Uniform sprinkling of water done on previous layer if required',
+            key: 'uniformSprinklingDone',
+          },
+          {title: 'Dumping pattern is followed', key: 'dumpingPatternFollowed'},
+          {
+            title: 'Material free from deleterious material',
+            key: 'materialFreeFromDeleterious',
+          },
+          {
+            title: 'Material contains over size boulders/ stones',
+            key: 'containsOverSizeBoulders',
+          },
+          {
+            title: 'Loose thickness of layer checked',
+            key: 'looseThicknessChecked',
+          },
+          {
+            title: 'OMC is maintained before commencement of rolling',
+            key: 'omcMaintained',
+          },
+          {
+            title: 'Suitable roller available for compaction',
+            key: 'suitableRollerAvailable',
+          },
+          {
+            title: 'Number of passes, speed, and rolling pattern followed',
+            key: 'rollingPatternFollowed',
+          },
+          {
+            title: 'Finished compacted layer thickness is as specified',
+            key: 'finishedLayerThicknessSpecified',
+          },
+          {
+            title: 'Any localized wet, soft, and under compacted area found',
+            key: 'localizedIssuesFound',
+          },
+          {
+            title: 'Layer is free from segregation',
+            key: 'layerFreeFromSegregation',
+          },
+          {
+            title: 'Arrangement for protection of finished surface available',
+            key: 'protectionOfFinishedSurfaceAvailable',
+          },
+          {
+            title: 'Any non-conformance/ noncompliance found',
+            key: 'nonConformanceFound',
+          },
+        ];
+
+        return (
+          <View>
+            {spreadingAndCompactionProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.spreadingAndCompactionData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.PRIME_COAT:
+      case TASK_TYPES.TACK_COAT:
+        const primeCoatProperties = [
+          {
+            title: 'Previous Layer Approved',
+            key: 'previousLayerApproved',
+          },
+          {
+            title: 'Surface Preparation Satisfactory (Surface Condition)',
+            key: 'surfacePreparationSatisfactory',
+          },
+          {
+            title: 'Grade of Material Approved',
+            key: 'materialGradeApproved',
+          },
+          {
+            title: 'Bituminous Emulsion Temperature Checked',
+            key: 'bituminousEmulsionTemperatureChecked',
+          },
+          {
+            title: 'Uniform Rate of Spray',
+            key: 'uniformSprayRate',
+          },
+          {
+            title: 'Non-Conformance/Non-Compliance Found',
+            key: 'nonConformanceFound',
+          },
+        ];
+
+        return (
+          <View>
+            {primeCoatProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.primeCoatData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.ROAD_MARKING:
+        const roadMarkingProperties = [
+          {
+            title: 'Drawing & Method Statement Approved by Client',
+            key: 'drawingAndMethodApproved',
+          },
+          {
+            title: 'Thermoplastic Paint & Glass Bead Approved by Client',
+            key: 'thermoplasticAndGlassBeadApproved',
+          },
+          {
+            title: 'Heater Condition and Laying Checked',
+            key: 'heaterConditionChecked',
+          },
+          {
+            title: 'Thermometer of Heater Working Properly',
+            key: 'thermometerWorking',
+          },
+          {
+            title: 'Thermoplastic Material Heated to Specified Temperature',
+            key: 'materialHeatedToSpecifiedTemperature',
+          },
+          {
+            title: 'Surface is Free from Dust, Dirt, Grease, and Oil',
+            key: 'surfaceClean',
+          },
+          {
+            title: 'Marking Done Before Laying Thermoplastic',
+            key: 'markingDoneBeforeLaying',
+          },
+          {
+            title: 'Glass Beads Applied at Rate of 250gms/sqm',
+            key: 'glassBeadsApplied',
+          },
+          {
+            title: 'Thermoplastic Paint Laid in Molten State',
+            key: 'paintLaidInMoltenState',
+          },
+          {
+            title: 'Thermoplastic Paint Thickness Checked',
+            key: 'paintThicknessChecked',
+          },
+          {
+            title: 'Non-conformance/Non-compliance Found',
+            key: 'nonConformanceFound',
+          },
+        ];
+
+        return (
+          <View>
+            {roadMarkingProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.roadMarkingData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.LAYING_AND_COMPACTION:
+        const layingAndCompactionProperties = [
+          {
+            title:
+              'Whether all the safety measures has been taken as per the plan',
+            key: 'safetyMeasuresTaken',
+          },
+          {
+            title:
+              'Approved methodology of work is available with the Paving-in-charge',
+            key: 'approvedMethodologyAvailable',
+          },
+          {
+            title: 'Prime coat is cured and cleaned properly',
+            key: 'primeCoatCured',
+          },
+          {
+            title:
+              'Is the rate of spray for tact coat checked & recorded, if required',
+            key: 'sprayRateChecked',
+          },
+          {
+            title: 'Is the joint trimmed & prepared as per method statement',
+            key: 'jointTrimmedPrepared',
+          },
+          {
+            title:
+              'Whether the program of laying conveyed to plant and machinery and QA/QC in-charges',
+            key: 'programConveyed',
+          },
+          {
+            title: 'Whether the thermometer is available at laying location',
+            key: 'thermometerAvailable',
+          },
+          {
+            title: 'Paver sensors are set as per requirement',
+            key: 'paverSensorsSet',
+          },
+          {
+            title:
+              'Whether alignment of paving has been marked with lime powder and equipment’s positioned accordingly',
+            key: 'alignmentMarked',
+          },
+          {
+            title:
+              'Whether the paver is placed at the laying area well in advance & the skeed of the paver is cleaned',
+            key: 'paverPlacedCleaned',
+          },
+          {
+            title:
+              'Whether mix has been transported to paving location with the tarpaulin covering',
+            key: 'mixTransported',
+          },
+          {
+            title:
+              'Whether mix temperature is found as per table 500-2 before spreading',
+            key: 'mixTemperatureFound',
+          },
+          {
+            title:
+              'Whether loose thickness of layer has been checked to ensure required compacted layer thickness',
+            key: 'looseThicknessChecked',
+          },
+          {
+            title:
+              'Whether rolling pattern is followed as established in the trial patch',
+            key: 'rollingPatternFollowed',
+          },
+          {
+            title:
+              'Whether surface level has been checked and found within specified tolerance limit',
+            key: 'surfaceLevelChecked',
+          },
+          {
+            title:
+              'Whether Transverse joints prepared is as per method statement',
+            key: 'transverseJointsPrepared',
+          },
+          {
+            title: 'Was a Non-conformance/Non-compliance found',
+            key: 'nonConformanceFound',
+          },
+          {
+            title: 'Thickness of Layer laid in mm',
+            key: 'layerThickness',
+          },
+          {
+            title: 'Total material qty laid in tonne',
+            key: 'totalMaterialQtyLaid',
+          },
+          {
+            title: 'Total material qty in Sqm',
+            key: 'totalMaterialQtySqm',
+          },
+        ];
+
+        return (
+          <View>
+            {layingAndCompactionProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.layingAndCompactionData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.PIPE_LAYING_AND_JOINTING:
+        const pipeLayingAndJointingProperties = [
+          {
+            title: 'Material checks and GFC drawings available',
+            key: 'materialChecksGfcDrawingsAvailable',
+          },
+          {
+            title: 'Pipe routing is as per the approved plan',
+            key: 'pipeRoutingApproved',
+          },
+          {
+            title: 'Hangers and supports are installed as per the design',
+            key: 'hangersSupportsInstalled',
+          },
+          {
+            title: 'Fasteners and hanger rods are checked and installed',
+            key: 'fastenersHangerRodsChecked',
+          },
+          {
+            title: 'Joint preparation is completed according to specifications',
+            key: 'jointPreparationCompleted',
+          },
+          {
+            title: 'Visual inspection of welded joints is completed',
+            key: 'weldedJointsVisualInspection',
+          },
+          {
+            title:
+              'Threaded joints are prepared and tightened as per the standards',
+            key: 'threadedJointsPreparedTightened',
+          },
+          {
+            title: 'GI piping is installed and secured properly',
+            key: 'giPipingInstalled',
+          },
+          {
+            title: 'Pipe alignment is checked and verified',
+            key: 'pipeAlignmentChecked',
+          },
+          {
+            title: 'Total pipe length laid in meters',
+            key: 'totalPipeLengthLaid',
+          },
+          {
+            title: 'Total number of pipes laid',
+            key: 'totalNumberPipesLaid',
+          },
+        ];
+
+        return (
+          <View>
+            {pipeLayingAndJointingProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.pipeLayingAndJointingData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.FIXING_OF_METAL_BEAM:
+        const fixingOfMetalBeamProperties = [
+          {
+            title:
+              'Distance maintained between barrier and start of embankment slope',
+            key: 'barrierToEmbankmentDistance',
+          },
+          {
+            title:
+              'Distance maintained between barrier and edge of carriageway',
+            key: 'barrierToEdgeOfCarriagewayDistance',
+          },
+          {
+            title:
+              'At median, W-beam face is 100 mm away from carriageway face of median',
+            key: 'medianWBeamFaceDistance',
+          },
+          {
+            title: 'All spacers installed properly as per approved drawing',
+            key: 'spacersInstalledProperly',
+          },
+          {
+            title: 'All bolts are fixed and tightened properly',
+            key: 'boltsFixedAndTightened',
+          },
+          {
+            title: 'Total Length of Metal Beam Fixed in RM',
+            key: 'totalLengthOfMetalBeamFixed',
+          },
+        ];
+
+        return (
+          <View>
+            {fixingOfMetalBeamProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.fixingOfMetalBeamData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.FIXING_VERTICAL_POST:
+        const fixingVerticalPostProperties = [
+          {
+            title: 'Pits Dugged/Drilled to Depth Indicated on Plan',
+            key: 'pitsDuggedToPlan',
+          },
+          {
+            title:
+              'Distance Maintained Between Barrier and Start of Embankment Slope',
+            key: 'distanceMaintainedBarrierSlope',
+          },
+          {
+            title:
+              'Distance Maintained Between Barrier and Edge of Carriageway',
+            key: 'distanceMaintainedBarrierCarriageway',
+          },
+          {
+            title:
+              'Posts Aligned Properly & Height Above Ground as per Approved Drawing',
+            key: 'postsAlignedHeightAsPerDrawing',
+          },
+          {
+            title: 'Steel Posts Placed as per Methodology',
+            key: 'steelPostsPlacedMethodology',
+          },
+          {
+            title: 'Total No. of Vertical Post Installed',
+            key: 'totalVerticalPostInstalled',
+          },
+        ];
+
+        return (
+          <View>
+            {fixingVerticalPostProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.fixingVerticalPostData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.CUTTING_OF_JOINTS:
+        const cuttingOfJointsProperties = [
+          {
+            title: 'Is joints cut at desired intervals',
+            key: 'jointsCutAtDesiredIntervals',
+          },
+          {
+            title: 'Is joint cut at desired depth',
+            key: 'jointsCutAtDesiredDepth',
+          },
+          {title: 'Is joint cut done properly', key: 'jointCutDoneProperly'},
+          {title: 'Total Length Completed in Km', key: 'totalLengthCompleted'},
+        ];
+
+        return (
+          <View>
+            {cuttingOfJointsProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.cuttingOfJointsData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.LAYING_OF_PAVER_BLOCK:
+        const layingOfPaverBlockProperties = [
+          {
+            title:
+              'Top 150mm thick sub base layer spread levelled and compacted to 95% MMD?',
+            key: 'subBaseLayerCompacted',
+          },
+          {
+            title:
+              'Washed sand of appropriate thickness 50 mm as laying course?',
+            key: 'washedSandLayingCourse',
+          },
+          {
+            title: 'Paving blocks are from approved source',
+            key: 'approvedSourcePavingBlocks',
+          },
+          {
+            title:
+              'Paving blocks dimension and finishing as per approved material submitted and shop drawing?',
+            key: 'blocksDimensionsAndFinishing',
+          },
+          {
+            title:
+              'Paving blocks installation/pattern done as per approved drawing?',
+            key: 'installationPatternAsPerDrawing',
+          },
+          {
+            title:
+              'Check Whether the plate compactor has been moved on laid paving blocks with dune sand spread over it?',
+            key: 'plateCompactorOnBlocks',
+          },
+          {
+            title:
+              'Check whether the joints between the paving blocks are as per method statement and joint filler spread on paving blocks and brushed between the blocks',
+            key: 'jointsAsPerMethodStatement',
+          },
+          {
+            title:
+              'Location, Elevation, Level and Alignment of installed paver block are as per approved drawing and tolerances (+/- 6mm)',
+            key: 'locationElevationLevelAlignment',
+          },
+          {
+            title: 'Total length of paver block laid in RM',
+            key: 'totalLengthLaid',
+          },
+          {
+            title: 'Total sqm of paver blocks laid',
+            key: 'totalSqmLaid',
+          },
+          {
+            title: 'Thickness of paver block laid in mm',
+            key: 'thicknessPaverBlockLaid',
+          },
+          {
+            title: 'Grade of concrete of paver block',
+            key: 'gradeOfConcretePaverBlock',
+          },
+        ];
+
+        return (
+          <View>
+            {layingOfPaverBlockProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.layingOfPaverBlockData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.LAYING_OF_DLC:
+        const layingOfDLCProperties = [
+          {
+            title: 'Is the mix design of DLC approved?',
+            key: 'mixDesignApproved',
+          },
+          {
+            title: 'Is the under laying GSB layer approved?',
+            key: 'underLayingGSBApproved',
+          },
+          {
+            title:
+              'Are there adequate grade and survey stakes available for control of placement layers?',
+            key: 'gradeSurveyStakesAvailable',
+          },
+          {
+            title: 'Is the placing of material appropriate?',
+            key: 'materialPlacingAppropriate',
+          },
+          {
+            title: 'Is there paver available for the laying of DLC?',
+            key: 'paverAvailable',
+          },
+          {
+            title: 'Is the arrangement of curing available?',
+            key: 'curingArrangementAvailable',
+          },
+          {
+            title:
+              'Are there adequate number of suitable rollers available for the compaction operation?',
+            key: 'rollersAvailable',
+          },
+          {
+            title: 'Is the layer free from any segregation?',
+            key: 'layerFreeFromSegregation',
+          },
+          {
+            title:
+              'Is there any arrangement for protection of the finished surface?',
+            key: 'protectionForFinishedSurface',
+          },
+          {
+            title: 'Is there adequate arrangement of light for night work?',
+            key: 'adequateLightForNightWork',
+          },
+          {
+            title: 'Is the received batch slip as per approved mix design?',
+            key: 'batchSlipApproved',
+          },
+          {
+            title:
+              'Whether the worker and staff have proper personal protection equipment (PPE)?',
+            key: 'properPPEAvailable',
+          },
+          {
+            title: 'Total length of DLC laid in mtr.',
+            key: 'totalLengthLaidMtr',
+          },
+          {
+            title: 'Total area of DLC laid in sqm.',
+            key: 'totalAreaLaidSqm',
+          },
+        ];
+
+        return (
+          <View>
+            {layingOfDLCProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.layingOfDLCData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+            <ScrollView horizontal={true}>
+              <View style={{flexDirection: 'column'}}>
+                <SwipeListView
+                  data={selectedRFI?.metaData.layingOfDlcTableData}
+                  renderItem={renderItemLayingOfDlc}
+                  renderSectionHeader={renderSectionHeaderLayingOfDlc}
+                />
+              </View>
+            </ScrollView>
           </View>
         );
 

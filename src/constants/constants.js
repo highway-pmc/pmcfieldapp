@@ -532,11 +532,13 @@ export const TASK_TYPES = {
   ROAD_MARKING: 'road-marking',
   LAYING_AND_COMPACTION: 'laying-and-compaction',
   PIPE_LAYING_AND_JOINTING: 'pipe-laying-jointing',
-  FIXING_OF_METAL_BEAM:'fixing-of-metal-beam',
-  FIXING_VERTICAL_POST:'fixing-of-vertiacal-post',
-  CUTTING_OF_JOINTS:'cutting-of-joints',
-  LAYING_OF_PAVER_BLOCK:'laying-of-paver-block',
-  LAYING_OF_DLC:'laying-of-dlc',
+  FIXING_OF_METAL_BEAM: 'fixing-of-metal-beam',
+  FIXING_VERTICAL_POST: 'fixing-of-vertiacal-post',
+  CUTTING_OF_JOINTS: 'cutting-of-joints',
+  LAYING_OF_PAVER_BLOCK: 'laying-of-paver-block',
+  LAYING_OF_DLC: 'laying-of-dlc',
+  MACHINE_CUTTING_OF_JOINTS:'machine-cutting-of-joints',
+  PLACING_OF_TIE_BAR:'placing-of-tie-bar',
 };
 
 export const TEST_MATERIALS_TYPES = {

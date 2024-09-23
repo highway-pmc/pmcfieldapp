@@ -4084,6 +4084,82 @@ const RFIsRecents = (props: any) => {
             </ScrollView>
           </View>
         );
+      case TASK_TYPES.MACHINE_CUTTING_OF_JOINTS:
+        const machineCuttingOfJointsProperties = [
+          {
+            title: 'Is adequate no. of the cutting saws are available at site',
+            key: 'cuttingSawsAvailable',
+          },
+          {
+            title:
+              'Is the adequate no. of diamond-edge saw blades available at site',
+            key: 'diamondEdgeBladesAvailable',
+          },
+          {
+            title:
+              'Is water tank with proper flexible hose and pump available at site',
+            key: 'waterTankAvailable',
+          },
+          {
+            title:
+              'Is machine cut started after 4-8 hr of initial setting time',
+            key: 'machineCutStartedAfterSetting',
+          },
+          {
+            title: 'Is cutting done as per approved drawing',
+            key: 'cuttingDoneAsPerDrawing',
+          },
+        ];
+
+        return (
+          <View>
+            {machineCuttingOfJointsProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.machineCuttingOfJointsData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.PLACING_OF_TIE_BAR:
+        const placingOfTieBarProperties = [
+          {title: 'Whether the drawing approved', key: 'drawingApproved'},
+          {
+            title: 'Whether the placing is done as per drawings',
+            key: 'placingDoneAsPerDrawings',
+          },
+          {
+            title: 'Whether the alignment done properly',
+            key: 'alignmentDoneProperly',
+          },
+          {
+            title: 'Was a Non-conformance/Non-compliance found',
+            key: 'nonConformanceFound',
+          },
+        ];
+
+        return (
+          <View>
+            {placingOfTieBarProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.placingOfTieBarData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
 
       // ReadOnlyRfi
       default:

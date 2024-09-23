@@ -466,6 +466,21 @@ const [dumpingData, setDumpingData] = useState([
     probingByStiffwire: string;
   };
   //FormUseStates
+  const [placingOfTieBarData, setPlacingOfTieBarData] = useState({
+    drawingApproved: 'Y',
+    placingDoneAsPerDrawings: 'Y',
+    alignmentDoneProperly: 'Y',
+    nonConformanceFound: 'Y',
+  });
+
+  const [machineCuttingData, setMachineCuttingData] = useState({
+    cuttingSawsAvailable: 'Y',
+    diamondSawBladesAvailable: 'Y',
+    waterTankAvailable: 'Y',
+    machineCutStartTimeCorrect: 'Y',
+    cuttingAsPerApprovedDrawing: 'Y',
+  });
+
   const [layingOfDlcTableData, setLayingOfDlcTableData] = useState([
   {
     vehicleNo: '', 
@@ -3048,6 +3063,31 @@ case TASK_TYPES.TACK_COAT:
             });
           }
           break;
+        case TASK_TYPES.MACHINE_CUTTING_OF_JOINTS:
+          if (rfiData.metaData.machineCuttingData) {
+            setMachineCuttingData(rfiData.metaData.machineCuttingData);
+          } else {
+            setMachineCuttingData({
+              cuttingSawsAvailable: 'Y',
+              diamondSawBladesAvailable: 'Y',
+              waterTankAvailable: 'Y',
+              machineCutStartTimeCorrect: 'Y',
+              cuttingAsPerApprovedDrawing: 'Y',
+            });
+          }
+          break;
+        case TASK_TYPES.PLACING_OF_TIE_BAR:
+          if (rfiData.metaData.placingOfTieBarData) {
+            setPlacingOfTieBarData(rfiData.metaData.placingOfTieBarData);
+          } else {
+            setPlacingOfTieBarData({
+              drawingApproved: 'Y',
+              placingDoneAsPerDrawings: 'Y',
+              alignmentDoneProperly: 'Y',
+              nonConformanceFound: 'N',
+            });
+          }
+          break;
 
         case TASK_TYPES.LIFTING_LEFT:
         case TASK_TYPES.LIFTING_YARD:
@@ -4961,7 +5001,18 @@ case TASK_TYPES.TACK_COAT:
           layingOfDlcTableData: layingOfDlcTableData,
         };
         break;
-
+      case TASK_TYPES.MACHINE_CUTTING_OF_JOINTS:
+        checkList = {
+          taskName: selectedTask.name,
+          machineCuttingData: machineCuttingData,
+        };
+        break;
+      case TASK_TYPES.PLACING_OF_TIE_BAR:
+        checkList = {
+          taskName: selectedTask.name,
+          placingOfTieBarData: placingOfTieBarData,
+        };
+        break;
       case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
@@ -12240,6 +12291,105 @@ case TASK_TYPES.TACK_COAT:
           <TouchableOpacity onPress={() => onAddMoreLayingOfDlc()}>
             <Text>+ Add More</Text>
           </TouchableOpacity>
+          <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
+        </View>
+      );
+      case TASK_TYPES.MACHINE_CUTTING_OF_JOINTS:
+        const machineCuttingProperties = [
+          { title: 'Is adequate no. of cutting saws available at site?', key: 'cuttingSawsAvailable' },
+          { title: 'Is adequate no. of diamond-edge saw blades available at site?', key: 'diamondSawBladesAvailable' },
+          { title: 'Is water tank with proper flexible hose and pump available at site?', key: 'waterTankAvailable' },
+          { title: 'Is machine cut started after 4-8 hr of initial setting time?', key: 'machineCutStartTimeCorrect' },
+          { title: 'Is cutting done as per approved drawing?', key: 'cuttingAsPerApprovedDrawing' },
+        ];
+
+        return (
+          <View>
+            {machineCuttingProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={machineCuttingData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setMachineCuttingData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
+          </View>
+        );
+    case TASK_TYPES.PLACING_OF_TIE_BAR:
+      const placingOfTieBarProperties = [
+        { title: 'Whether the drawing approved', key: 'drawingApproved' },
+        { title: 'Whether the placing is done as per drawings', key: 'placingDoneAsPerDrawings' },
+        { title: 'Whether the alignment done properly', key: 'alignmentDoneProperly' },
+        { title: 'Was a Non-conformance/Non-compliance found', key: 'nonConformanceFound' },
+      ];
+      
+      return (
+        <View>
+          {placingOfTieBarProperties.map(property => (
+            <View style={{ flexDirection: 'column' }} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={placingOfTieBarData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value:any) =>
+                  setPlacingOfTieBarData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
           <View>
             <CalendarPicker
               label="Date"

@@ -466,6 +466,15 @@ const [dumpingData, setDumpingData] = useState([
     probingByStiffwire: string;
   };
   //FormUseStates
+  const [fixingOfWireRopeData, setFixingOfWireRopeData] = useState({
+    strandsFromApprovedSource: 'Y',
+    endAttachmentsCondition: 'Y',
+    heatDamageEvidence: 'Y',
+    ropeDamageRectification: 'Y',
+    alignedProperlyAsPerDrawing: 'Y',
+    strandTensionedAtEnds: 'Y',
+  });
+
   const [placingOfTieBarData, setPlacingOfTieBarData] = useState({
     drawingApproved: 'Y',
     placingDoneAsPerDrawings: 'Y',
@@ -3088,6 +3097,20 @@ case TASK_TYPES.TACK_COAT:
             });
           }
           break;
+        case TASK_TYPES.FIXING_OF_WIRE_ROPE:
+          if (rfiData.metaData.fixingOfWireRopeData) {
+            setFixingOfWireRopeData(rfiData.metaData.fixingOfWireRopeData);
+          } else {
+            setFixingOfWireRopeData({
+              strandsFromApprovedSource: 'Y',
+              endAttachmentsCondition: 'Y',
+              heatDamageEvidence: 'Y',
+              ropeDamageRectification: 'Y',
+              alignedProperlyAsPerDrawing: 'Y',
+              strandTensionedAtEnds: 'Y',
+            });
+          }
+          break;
 
         case TASK_TYPES.LIFTING_LEFT:
         case TASK_TYPES.LIFTING_YARD:
@@ -5013,6 +5036,13 @@ case TASK_TYPES.TACK_COAT:
           placingOfTieBarData: placingOfTieBarData,
         };
         break;
+      case TASK_TYPES.FIXING_OF_WIRE_ROPE:
+        checkList = {
+          taskName: selectedTask.name,
+          fixingOfWireRopeData: fixingOfWireRopeData,
+        };
+        break;
+
       case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
@@ -12382,6 +12412,75 @@ case TASK_TYPES.TACK_COAT:
                 items={YES_NO_LIST}
                 onChange={(value:any) =>
                   setPlacingOfTieBarData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+          <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
+        </View>
+      );
+    case TASK_TYPES.FIXING_OF_WIRE_ROPE:
+      const fixingOfWireRopeProperties = [
+        {
+          title: 'Strands are from Approved Source',
+          key: 'strandsFromApprovedSource',
+        },
+        {
+          title: 'End Attachments Cracked/Deformed/Worn',
+          key: 'endAttachmentsCondition',
+        },
+        {
+          title: 'Evidence of Heat Damage',
+          key: 'heatDamageEvidence',
+        },
+        {
+          title: 'Kinking, Crushing, Bird Caging, or Other Damage Rectification',
+          key: 'ropeDamageRectification',
+        },
+        {
+          title: 'Proper Alignment as per Drawing',
+          key: 'alignedProperlyAsPerDrawing',
+        },
+        {
+          title: 'Strand Tensioned Tightly at Ends',
+          key: 'strandTensionedAtEnds',
+        },
+      ];
+
+      return (
+        <View>
+          {fixingOfWireRopeProperties.map(property => (
+            <View style={{ flexDirection: 'column' }} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={fixingOfWireRopeData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value: any) =>
+                  setFixingOfWireRopeData(prevData => ({
                     ...prevData,
                     [property.key]: value,
                   }))

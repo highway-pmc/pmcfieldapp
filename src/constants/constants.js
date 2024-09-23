@@ -539,6 +539,7 @@ export const TASK_TYPES = {
   LAYING_OF_DLC: 'laying-of-dlc',
   MACHINE_CUTTING_OF_JOINTS:'machine-cutting-of-joints',
   PLACING_OF_TIE_BAR:'placing-of-tie-bar',
+  FIXING_OF_WIRE_ROPE:'fixing-of-wire-rope',
 };
 
 export const TEST_MATERIALS_TYPES = {

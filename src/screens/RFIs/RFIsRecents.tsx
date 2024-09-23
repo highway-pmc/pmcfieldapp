@@ -4160,6 +4160,48 @@ const RFIsRecents = (props: any) => {
             ))}
           </View>
         );
+      case TASK_TYPES.FIXING_OF_WIRE_ROPE:
+        const fixingOfWireRopeProperties = [
+          {
+            title: 'Is the strands are from approved source',
+            key: 'strandsFromApprovedSource',
+          },
+          {
+            title: 'Are the end attachments cracked, deformed/ worn',
+            key: 'endAttachmentsCondition',
+          },
+          {
+            title: 'Is there evidence to heat damage',
+            key: 'heatDamageEvidence',
+          },
+          {
+            title: 'Is there kinking, crushing, bird caging or other damage',
+            key: 'ropeDamageRectification',
+          },
+          {
+            title: 'Are they aligned properly as per drawing',
+            key: 'alignedProperlyAsPerDrawing',
+          },
+          {
+            title: 'Is the strand tensioned tightly at ends',
+            key: 'strandTensionedAtEnds',
+          },
+        ];
+
+        return (
+          <View>
+            {fixingOfWireRopeProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.fixingOfWireRopeData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
 
       // ReadOnlyRfi
       default:

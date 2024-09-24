@@ -984,10 +984,72 @@ const RFIsRecents = (props: any) => {
             </View>
           </View>
         );
+      case TASK_TYPES.COMPACTION:
+        const compactionProperties = [
+          {
+            title: 'Uniform Sprinkling of Water Done if Required',
+            key: 'uniformSprinkling',
+          },
+          {
+            title: 'Loose Thickness of Layer Checked',
+            key: 'looseThicknessChecked',
+          },
+          {
+            title: 'OMC is Maintained Before Commencement of Rolling',
+            key: 'omcMaintained',
+          },
+          {
+            title: 'Suitable Roller Available for Compaction',
+            key: 'suitableRollerAvailable',
+          },
+          {
+            title: 'Number of Passes, Speed, and Rolling Pattern Followed',
+            key: 'passesSpeedPatternFollowed',
+          },
+          {
+            title: 'Finished Compacted Layer Thickness as Specified',
+            key: 'compactedLayerThicknessSpecified',
+          },
+          {
+            title: 'Any Localized Wet, Soft, or Under Compacted Area Found',
+            key: 'localizedWetSoftAreaFound',
+          },
+          {
+            title: 'Layer is Free from Segregation',
+            key: 'layerFreeFromSegregation',
+          },
+          {
+            title: 'Arrangement for Protection of Finished Surface Available',
+            key: 'protectionForFinishedSurface',
+          },
+          {
+            title: 'Any Non-conformance/Non-compliance Found',
+            key: 'nonConformanceFound',
+          },
+          {
+            title: 'Finished Compacted Layer Thickness in mm',
+            key: 'compactedLayerThickness',
+          },
+        ];
+
+        return (
+          <View>
+            {compactionProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.compactionData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+
       case TASK_TYPES.COMPACTING_GROUND_SUPPORT_FOR_EMBANKMENT:
       case TASK_TYPES.DEWATERING:
       case TASK_TYPES.PLACING_OF_COVER:
-      case TASK_TYPES.COMPACTION:
       case TASK_TYPES.FIXING_OF_SHEET:
       case TASK_TYPES.GRADING:
       case TASK_TYPES.THREADING_OF_PRE_STRESSING_STRANDS:
@@ -4197,6 +4259,168 @@ const RFIsRecents = (props: any) => {
                 </Text>
                 <Text>
                   {selectedRFI?.metaData.fixingOfWireRopeData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.PLACING_OF_DOWEL:
+        const placingOfDowelProperties = [
+          {
+            title: 'Whether the PQC drawing approved',
+            key: 'pqcDrawingApproved',
+          },
+          {
+            title: 'Whether the dowel bars placed at the proper depth',
+            key: 'barsProperDepth',
+          },
+          {
+            title: 'Whether the bars are aligned properly',
+            key: 'barsAlignedProperly',
+          },
+          {
+            title: 'Is the dowel bar covered with plastic sheath',
+            key: 'barCoveredWithSheath',
+          },
+          {
+            title: 'Dia of the sheath in mm',
+            key: 'sheathDia',
+          },
+          {
+            title: 'Is sheath mouth closed properly',
+            key: 'sheathMouthClosed',
+          },
+          {
+            title: 'Is the Length of each dowel bar as per approved drawing',
+            key: 'dowelBarLength',
+          },
+          {
+            title: 'Total number of dowel bars',
+            key: 'totalDowelBars',
+          },
+        ];
+
+        return (
+          <View>
+            {placingOfDowelProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.placingOfDowelData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.TEXTURING:
+        const texturingProperties = [
+          {
+            title:
+              'Is a beam or bridge mounted with steel Tines/brush operate with automatic sensing and control devices from main paver',
+            key: 'beamBridgeMounted',
+          },
+          {
+            title:
+              'Is Texturing not exceeded 120 min for temp. below 25 degrees and 90 min for temp. between 25-30 degrees',
+            key: 'texturingTimeLimit',
+          },
+          {
+            title:
+              'Is the tining unit adjusted to the download pressure to produce the desired finish surface',
+            key: 'tiningUnitAdjusted',
+          },
+          {
+            title: 'Is the tining rakers cleaned properly',
+            key: 'tiningRakersCleaned',
+          },
+          {
+            title: 'Are the tines bent or damaged',
+            key: 'tinesBentDamaged',
+          },
+          {
+            title: 'Are the tined grooves 3mm wide and 3-4mm deep',
+            key: 'tinedGroovesDimension',
+          },
+          {
+            title: 'Is the bleeding done on the surface',
+            key: 'bleedingDone',
+          },
+          {
+            title: 'Is the brush applied in one direction',
+            key: 'brushAppliedDirection',
+          },
+          {
+            title: 'Is the brush for texturing as per Morth Specification',
+            key: 'brushAsPerMorth',
+          },
+          {
+            title: 'Total Texturing Done in Sqm',
+            key: 'totalTexturingSqm',
+          },
+        ];
+
+        return (
+          <View>
+            {texturingProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.texturingData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.PLACING_OF_FILLER_BOARD:
+        const placingOfFillerBoardProperties = [
+          {
+            title: 'Is the source of filler board material approved',
+            key: 'sourceOfFillerBoardApproved',
+          },
+          {
+            title:
+              'Is the joint surface free from dust, flakes, or other particles',
+            key: 'jointSurfaceFreeFromParticles',
+          },
+          {
+            title: 'Is filler board cut in proper shape and size',
+            key: 'fillerBoardProperShapeAndSize',
+          },
+          {
+            title: 'Is placing of filler board done properly',
+            key: 'fillerBoardPlacedProperly',
+          },
+          {
+            title: 'Is the filler board compressed to the desired level',
+            key: 'fillerBoardCompressed',
+          },
+          {
+            title: 'Thickness of filler board in mm',
+            key: 'fillerBoardThickness',
+          },
+          {
+            title: 'Total qty of filler board laid in Sqmm',
+            key: 'totalQtyFillerBoardLaid',
+          },
+        ];
+
+        return (
+          <View>
+            {placingOfFillerBoardProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.placingOfFillerBoardData?.[
+                      property.key
+                    ]
+                  }
                 </Text>
               </View>
             ))}

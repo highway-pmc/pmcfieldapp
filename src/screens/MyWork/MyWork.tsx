@@ -466,6 +466,54 @@ const [dumpingData, setDumpingData] = useState([
     probingByStiffwire: string;
   };
   //FormUseStates
+  const [placingOfFillerBoardData, setPlacingOfFillerBoardData] = useState({
+    sourceApproved: 'Y',
+    surfaceFreeFromDust: 'Y',
+    fillerBoardCutProperly: 'Y',
+    fillerBoardPlacedProperly: 'Y',
+    fillerBoardCompressed: 'Y',
+    fillerBoardThickness: 0.0,
+    totalFillerBoardQty: 0.0,
+  });
+
+  const [compactionData, setCompactionData] = useState({
+    uniformSprinkling: 'Y',
+    looseThicknessChecked: 'Y',
+    omcMaintained: 'Y',
+    suitableRollerAvailable: 'Y',
+    passesSpeedPatternFollowed: 'Y',
+    compactedLayerThicknessSpecified: 'Y',
+    compactedLayerThickness: 0.0,
+    localizedWetSoftAreaFound: 'N',
+    layerFreeFromSegregation: 'Y',
+    protectionForFinishedSurface: 'Y',
+    nonConformanceFound: 'N',
+  });
+
+  const [placingOfDowelData, setPlacingOfDowelData] = useState({
+    pqcDrawingApproved: 'Y',
+    dowelBarsPlacedProperDepth: 'Y',
+    barsAlignedProperly: 'Y',
+    dowelBarCoveredWithPlasticSheath: 'Y',
+    sheathDia: 0.0,
+    sheathMouthClosed: 'Y',
+    dowelBarLengthAsPerDrawing: 'Y',
+    totalDowelBars: 0,
+  });
+
+  const [texturingData, setTexturingData] = useState({
+    steelTinesBrushAutomatic: 'Y',
+    texturingWithinTimeLimits: 'Y',
+    tiningUnitPressureAdjusted: 'Y',
+    tiningRakersCleaned: 'Y',
+    tinesBentOrDamaged: 'Y',
+    tinedGrooveDimensionsCorrect: 'Y',
+    surfaceBleedingDone: 'Y',
+    brushAppliedOneDirection: 'Y',
+    brushAsPerMorthSpecification: 'Y',
+    totalTexturingDone: 0.0,
+  });
+
   const [fixingOfWireRopeData, setFixingOfWireRopeData] = useState({
     strandsFromApprovedSource: 'Y',
     endAttachmentsCondition: 'Y',
@@ -1000,7 +1048,89 @@ const onAddMoreLayingOfDlc = () => {
     },
   ]);
 };
-const validateLayingOfDlcData = (data) => {
+const validatePlacingOfFillerBoardData = (placingOfFillerBoardData: any): boolean => {
+  const fillerBoardThickness = parseFloat(placingOfFillerBoardData.fillerBoardThickness);
+  const totalFillerBoardQty = parseFloat(placingOfFillerBoardData.totalFillerBoardQty);
+
+  // Validation for Thickness of Filler Board in mm
+  if (
+    isNaN(fillerBoardThickness) ||
+    fillerBoardThickness <= 0 ||
+    fillerBoardThickness > 1000 ||
+    placingOfFillerBoardData.fillerBoardThickness.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Thickness of Filler Board (in mm) with max 3 decimal places, value should be > 0 and <= 1000',
+      'error',
+    );
+    return false;
+  }
+
+  // Validation for Total Filler Board qty in Sqmm
+  if (
+    isNaN(totalFillerBoardQty) ||
+    totalFillerBoardQty <= 0 ||
+    totalFillerBoardQty > 100000 ||
+    placingOfFillerBoardData.totalFillerBoardQty.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Total Filler Board quantity in Sqmm with max 3 decimal places, value should be > 0 and <= 100000',
+      'error',
+    );
+    return false;
+  }
+
+  // Convert to numbers after validation
+  placingOfFillerBoardData.fillerBoardThickness = Number(placingOfFillerBoardData.fillerBoardThickness);
+  placingOfFillerBoardData.totalFillerBoardQty = Number(placingOfFillerBoardData.totalFillerBoardQty);
+
+  return true;
+};
+
+const validateCompactionData = (compactionData) => {
+  const compactedLayerThickness = parseFloat(compactionData.compactedLayerThickness);
+
+  if (isNaN(compactedLayerThickness) || compactedLayerThickness <= 0 || compactedLayerThickness > 1000 || compactionData.compactedLayerThickness.split('.')[1]?.length > 3) {
+    showSnackbar('Please enter a valid Finished Compacted Layer Thickness (in mm) with max 3 decimal places, value should be > 0 and <= 1000', 'error');
+    return false;
+  }
+
+  compactionData.compactedLayerThickness = Number(compactionData.compactedLayerThickness);
+
+  return true;
+};
+
+const validatePlacingOfDowelData = (placingOfDowelData:any) => {
+  const sheathDia = parseFloat(placingOfDowelData.sheathDia);
+  const totalDowelBars = parseInt(placingOfDowelData.totalDowelBars);
+
+  // Validation for Dia of Sheath in mm
+  if (
+    isNaN(sheathDia) ||
+    sheathDia <= 0 ||
+    sheathDia > 1000 ||
+    placingOfDowelData.sheathDia.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Dia of Sheath in mm (max 3 decimal places, value should be > 0 and <= 1000)',
+      'error',
+    );
+    return false;
+  }
+
+  // Validation for Total number of dowel bars
+  if (isNaN(totalDowelBars) || totalDowelBars <= 0 || totalDowelBars > 100000) {
+    showSnackbar(
+      'Please enter a valid Total number of dowel bars (value should be > 0 and <= 100000)',
+      'error',
+    );
+    return false;
+  }
+
+  return true;
+};
+
+const validateLayingOfDlcData = (data:any) => {
   for (const item of data) {
     const totalQtyDlc = parseFloat(item.totalQtyDlc);
     const vehicleNo = parseInt(item.vehicleNo);
@@ -1126,12 +1256,28 @@ const handleTimeChangeLayingOfDlc = (index, fieldName, time) => {
     return newData;
   });
 };
+const validateTexturingData = (texturingData: any): boolean => {
+  const totalTexturingDone = parseFloat(texturingData.totalTexturingDone);
+  if (
+    isNaN(totalTexturingDone) ||
+    totalTexturingDone <= 0 ||
+    totalTexturingDone > 100000 ||
+    texturingData.totalTexturingDone.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Total Texturing Done (in sqmtr) with max 3 decimal places, value should be > 0 and <= 100000',
+      'error',
+    );
+    return false;
+  }
+  texturingData.totalTexturingDone = Number(texturingData.totalTexturingDone);
+
+  return true;
+};
 
 const validateLayingOfDLCData = (layingOfDLCData: any): boolean => {
   const totalLengthDLC = parseFloat(layingOfDLCData.totalLengthDLC);
   const totalAreaDLC = parseFloat(layingOfDLCData.totalAreaDLC);
-
-  // Validation for Total Length of DLC laid in mtr.
   if (
     isNaN(totalLengthDLC) ||
     totalLengthDLC <= 0 ||
@@ -1144,8 +1290,6 @@ const validateLayingOfDLCData = (layingOfDLCData: any): boolean => {
     );
     return false;
   }
-
-  // Validation for Total Area of DLC laid in sqm
   if (
     isNaN(totalAreaDLC) ||
     totalAreaDLC <= 0 ||
@@ -1170,19 +1314,16 @@ const validateLayingOfPaverBlockData = (layingOfPaverBlockData: any): boolean =>
   const totalSqmLaid = parseFloat(layingOfPaverBlockData.totalSqmLaid);
   const thicknessPaverBlock = parseFloat(layingOfPaverBlockData.thicknessPaverBlock);
 
-  // Validation for Total Length of Paver Block Laid
   if (isNaN(totalLengthLaid) || totalLengthLaid <= 0 || totalLengthLaid > 100000 || layingOfPaverBlockData.totalLengthLaid.split('.')[1]?.length > 3) {
     showSnackbar('Please enter a valid Total Length of Paver Block Laid with max 3 decimal places, value should be > 0 and <= 100,000', 'error');
     return false;
   }
 
-  // Validation for Total SQM of Paver Blocks Laid
   if (isNaN(totalSqmLaid) || totalSqmLaid <= 0 || totalSqmLaid > 1000000 || layingOfPaverBlockData.totalSqmLaid.split('.')[1]?.length > 3) {
     showSnackbar('Please enter a valid Total SQM of Paver Blocks Laid with max 3 decimal places, value should be > 0 and <= 1,000,000', 'error');
     return false;
   }
 
-  // Validation for Thickness of Paver Block Laid in mm
   if (isNaN(thicknessPaverBlock) || thicknessPaverBlock <= 0 || thicknessPaverBlock > 150 || layingOfPaverBlockData.thicknessPaverBlock.split('.')[1]?.length > 3) {
     showSnackbar('Please enter a valid Thickness of Paver Block Laid with max 3 decimal places, value should be > 0 and <= 150', 'error');
     return false;
@@ -3111,7 +3252,77 @@ case TASK_TYPES.TACK_COAT:
             });
           }
           break;
-
+        case TASK_TYPES.TEXTURING:
+          if (rfiData.metaData.texturingData) {
+            setTexturingData(rfiData.metaData.texturingData);
+          } else {
+            setTexturingData({
+              steelTinesBrushAutomatic: 'Y',
+              texturingWithinTimeLimits: 'Y',
+              tiningUnitPressureAdjusted: 'Y',
+              tiningRakersCleaned: 'Y',
+              tinesBentOrDamaged: 'Y',
+              tinedGrooveDimensionsCorrect: 'Y',
+              surfaceBleedingDone: 'Y',
+              brushAppliedOneDirection: 'Y',
+              brushAsPerMorthSpecification: 'Y',
+              totalTexturingDone: 0.0,
+            });
+          }
+          break;
+        case TASK_TYPES.PLACING_OF_DOWEL:
+          if (rfiData.metaData.placingOfDowelData) {
+            setPlacingOfDowelData(rfiData.metaData.placingOfDowelData);
+          } else {
+            setPlacingOfDowelData({
+              pqcDrawingApproved: 'Y',
+              dowelBarsPlacedProperDepth: 'Y',
+              barsAlignedProperly: 'Y',
+              dowelBarCoveredWithPlasticSheath: 'Y',
+              sheathDia: 0.0,
+              sheathMouthClosed: 'Y',
+              dowelBarLengthAsPerDrawing: 'Y',
+              totalDowelBars: 0,
+            });
+          }
+          break;
+        case TASK_TYPES.COMPACTION:
+          if (rfiData.metaData.compactionData) {
+            setCompactionData(rfiData.metaData.compactionData);
+          } else {
+            setCompactionData({
+              uniformSprinkling: 'Y',
+              looseThicknessChecked: 'Y',
+              omcMaintained: 'Y',
+              suitableRollerAvailable: 'Y',
+              passesSpeedPatternFollowed: 'Y',
+              compactedLayerThicknessSpecified: 'Y',
+              compactedLayerThickness: 0.0,
+              localizedWetSoftAreaFound: 'N',
+              layerFreeFromSegregation: 'Y',
+              protectionForFinishedSurface: 'Y',
+              nonConformanceFound: 'N',
+            });
+          }
+          break;
+        case TASK_TYPES.PLACING_OF_FILLER_BOARD:
+        if (rfiData.metaData.placingOfFillerBoardData) {
+          setPlacingOfFillerBoardData(
+            rfiData.metaData.placingOfFillerBoardData,
+          );
+        } else {
+          setPlacingOfFillerBoardData({
+            sourceApproved: 'Y',
+            surfaceFreeFromDust: 'Y',
+            fillerBoardCutProperly: 'Y',
+            fillerBoardPlacedProperly: 'Y',
+            fillerBoardCompressed: 'Y',
+            fillerBoardThickness: 0.0,
+            totalFillerBoardQty: 0.0,
+          });
+        }
+        break;
+  
         case TASK_TYPES.LIFTING_LEFT:
         case TASK_TYPES.LIFTING_YARD:
         case TASK_TYPES.LIFTING_RIGHT:
@@ -4570,7 +4781,6 @@ case TASK_TYPES.TACK_COAT:
       case TASK_TYPES.COMPACTING_GROUND_SUPPORT_FOR_EMBANKMENT:
       case TASK_TYPES.DEWATERING:
       case TASK_TYPES.PLACING_OF_COVER:
-      case TASK_TYPES.COMPACTION:
       case TASK_TYPES.FIXING_OF_SHEET:
       case TASK_TYPES.GRADING:
       case TASK_TYPES.THREADING_OF_PRE_STRESSING_STRANDS:
@@ -5042,7 +5252,43 @@ case TASK_TYPES.TACK_COAT:
           fixingOfWireRopeData: fixingOfWireRopeData,
         };
         break;
-
+      case TASK_TYPES.TEXTURING:
+        if (!validateTexturingData(texturingData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          texturingData: texturingData,
+        };
+        break;
+      case TASK_TYPES.PLACING_OF_DOWEL:
+        if (!validatePlacingOfDowelData(placingOfDowelData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          placingOfDowelData: placingOfDowelData,
+        };
+        break;
+      case TASK_TYPES.COMPACTION:
+        if (!validateCompactionData(compactionData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          compactionData: compactionData,
+        };
+        break;
+      case TASK_TYPES.PLACING_OF_FILLER_BOARD:
+        if (!validatePlacingOfFillerBoardData(placingOfFillerBoardData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          placingOfFillerBoardData: placingOfFillerBoardData,
+        };
+        break;
+        
       case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
@@ -7528,10 +7774,77 @@ const onAddMoreDumping = () => {
             </View>
           </View>
         );
+      case TASK_TYPES.COMPACTION:
+      const compactionProperties = [
+        { title: 'Uniform Sprinkling of Water Done if Required', key: 'uniformSprinkling' },
+        { title: 'Loose Thickness of Layer Checked', key: 'looseThicknessChecked' },
+        { title: 'OMC is Maintained Before Commencement of Rolling', key: 'omcMaintained' },
+        { title: 'Suitable Roller Available for Compaction', key: 'suitableRollerAvailable' },
+        { title: 'Number of Passes, Speed, and Rolling Pattern Followed', key: 'passesSpeedPatternFollowed' },
+        { title: 'Any Localized Wet, Soft, or Under Compacted Area Found', key: 'localizedWetSoftAreaFound' },
+        { title: 'Layer is Free from Segregation', key: 'layerFreeFromSegregation' },
+        { title: 'Arrangement for Protection of Finished Surface Available', key: 'protectionForFinishedSurface' },
+        { title: 'Any Non-conformance/Non-compliance Found', key: 'nonConformanceFound' },
+        { title: 'Finished Compacted Layer Thickness as Specified', key: 'compactedLayerThicknessSpecified' },
+      ];
+
+      return (
+        <View>
+          {compactionProperties.map(property => (
+            <View style={{ flexDirection: 'column' }} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={compactionData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value:any) =>
+                  setCompactionData((prevData) => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+
+          <Input
+            label="Finished Compacted Layer Thickness in mm"
+            value={compactionData.compactedLayerThickness}
+            onChange={(value:any) =>
+              setCompactionData((prevData) => ({
+                ...prevData,
+                compactedLayerThickness: value,
+              }))
+            }
+            isRequired={true}
+          />
+          <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
+        </View>
+      );
+  
       case TASK_TYPES.COMPACTING_GROUND_SUPPORT_FOR_EMBANKMENT:
       case TASK_TYPES.DEWATERING:
       case TASK_TYPES.PLACING_OF_COVER:
-      case TASK_TYPES.COMPACTION:
       case TASK_TYPES.FIXING_OF_SHEET:
       case TASK_TYPES.GRADING:
       case TASK_TYPES.THREADING_OF_PRE_STRESSING_STRANDS:
@@ -12489,6 +12802,218 @@ case TASK_TYPES.TACK_COAT:
               />
             </View>
           ))}
+          <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
+        </View>
+      );
+    case TASK_TYPES.TEXTURING:
+      const texturingProperties = [
+        { title: 'Steel Tines/Brush Automatic Sensing & Control Devices', key: 'steelTinesBrushAutomatic' },
+        { title: 'Texturing Time Limits for Temperature Conditions', key: 'texturingWithinTimeLimits' },
+        { title: 'Tining Unit Pressure Adjusted', key: 'tiningUnitPressureAdjusted' },
+        { title: 'Tining Rakers Cleaned Properly', key: 'tiningRakersCleaned' },
+        { title: 'Tines Bent or Damaged', key: 'tinesBentOrDamaged' },
+        { title: 'Tined Groove Dimensions (3mm Wide, 3-4mm Deep)', key: 'tinedGrooveDimensionsCorrect' },
+        { title: 'Surface Bleeding Done', key: 'surfaceBleedingDone' },
+        { title: 'Brush Applied in One Direction', key: 'brushAppliedOneDirection' },
+        { title: 'Brush for Texturing as per Morth Specification', key: 'brushAsPerMorthSpecification' },
+      ];
+
+      return (
+        <View>
+          {texturingProperties.map(property => (
+            <View style={{flexDirection: 'column'}} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={texturingData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value: any) =>
+                  setTexturingData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+          <Input
+            label="Total Texturing Done (sqmtr)"
+            value={texturingData.totalTexturingDone}
+            onChange={(value: any) =>
+              setTexturingData(prevData => ({
+                ...prevData,
+                totalTexturingDone: value,
+              }))
+            }
+            isRequired={true}
+          />
+          <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
+        </View>
+      );
+    case TASK_TYPES.PLACING_OF_DOWEL:
+      const placingOfDowelProperties = [
+        { title: 'Whether the PQC drawing approved', key: 'pqcDrawingApproved' },
+        { title: 'Whether the dowel bars placed at the proper depth', key: 'dowelBarsPlacedProperDepth' },
+        { title: 'Whether the bars are aligned properly', key: 'barsAlignedProperly' },
+        { title: 'Is the dowel bar covered with plastic sheath', key: 'dowelBarCoveredWithPlasticSheath' },
+        { title: 'Dia of the sheath in mm', key: 'sheathDia' },
+        { title: 'Is sheath mouth closed properly', key: 'sheathMouthClosed' },
+        { title: 'Is the Length of each dowel bar as per approved drawing', key: 'dowelBarLengthAsPerDrawing' },
+        { title: 'Total number of dowel bars', key: 'totalDowelBars' },
+      ];
+
+      return (
+        <View>
+          {placingOfDowelProperties.map(property => (
+            <View style={{ flexDirection: 'column' }} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={placingOfDowelData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value:any) =>
+                  setPlacingOfDowelData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+          <Input
+            label="Dia of Sheath (in mm)"
+            value={placingOfDowelData.sheathDia}
+            onChange={(value:any) =>
+              setPlacingOfDowelData(prevData => ({
+                ...prevData,
+                sheathDia: value,
+              }))
+            }
+            isRequired={true}
+          />
+          <Input
+            label="Total number of dowel bars"
+            value={placingOfDowelData.totalDowelBars}
+            onChange={(value:any) =>
+              setPlacingOfDowelData(prevData => ({
+                ...prevData,
+                totalDowelBars: value,
+              }))
+            }
+            isRequired={true}
+          />
+          <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>          
+        </View>
+      );
+    case TASK_TYPES.PLACING_OF_FILLER_BOARD:
+      const placingOfFillerBoardProperties = [
+        { title: 'Is the source of filler board material approved', key: 'sourceApproved' },
+        { title: 'Is the joint surface free from dusts, flakes or other particles', key: 'surfaceFreeFromDust' },
+        { title: 'Is filler board cut in proper shape and size', key: 'fillerBoardCutProperly' },
+        { title: 'Is placing of filler board done properly', key: 'fillerBoardPlacedProperly' },
+        { title: 'Is the filler board compressed to the desired level', key: 'fillerBoardCompressed' },
+      ];
+
+      return (
+        <View>
+          {placingOfFillerBoardProperties.map(property => (
+            <View style={{ flexDirection: 'column' }} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={placingOfFillerBoardData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value: any) =>
+                  setPlacingOfFillerBoardData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+          <Input
+            label="Thickness of Filler Board in mm"
+            value={placingOfFillerBoardData.fillerBoardThickness}
+            onChange={(value: any) =>
+              setPlacingOfFillerBoardData(prevData => ({
+                ...prevData,
+                fillerBoardThickness: value,
+              }))
+            }
+            isRequired={true}
+          />
+          <Input
+            label="Total Filler Board Qty in Sqmm"
+            value={placingOfFillerBoardData.totalFillerBoardQty}
+            onChange={(value: any) =>
+              setPlacingOfFillerBoardData(prevData => ({
+                ...prevData,
+                totalFillerBoardQty: value,
+              }))
+            }
+            isRequired={true}
+          />
           <View>
             <CalendarPicker
               label="Date"

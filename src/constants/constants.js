@@ -537,9 +537,12 @@ export const TASK_TYPES = {
   CUTTING_OF_JOINTS: 'cutting-of-joints',
   LAYING_OF_PAVER_BLOCK: 'laying-of-paver-block',
   LAYING_OF_DLC: 'laying-of-dlc',
-  MACHINE_CUTTING_OF_JOINTS:'machine-cutting-of-joints',
-  PLACING_OF_TIE_BAR:'placing-of-tie-bar',
-  FIXING_OF_WIRE_ROPE:'fixing-of-wire-rope',
+  MACHINE_CUTTING_OF_JOINTS: 'machine-cutting-of-joints',
+  PLACING_OF_TIE_BAR: 'placing-of-tie-bar',
+  FIXING_OF_WIRE_ROPE: 'fixing-of-wire-rope',
+  TEXTURING: 'texturing',
+  PLACING_OF_DOWEL: 'placing-of-dowel',
+  PLACING_OF_FILLER_BOARD: 'placing-of-filler-board',
 };
 
 export const TEST_MATERIALS_TYPES = {

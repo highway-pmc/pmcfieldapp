@@ -4426,6 +4426,266 @@ const RFIsRecents = (props: any) => {
             ))}
           </View>
         );
+      case TASK_TYPES.SEALANT_FILLING:
+        const sealantFilingProperties = [
+          {
+            title: 'Is the sealant source approved?',
+            key: 'sealantSourceApproved',
+          },
+          {
+            title:
+              'Is the joint face clean properly with wire brush to remove dust and oil using xylene or toluene?',
+            key: 'jointFaceCleaned',
+          },
+          {
+            title: 'Is the sealant placed at the proper depth?',
+            key: 'sealantProperDepth',
+          },
+          {
+            title: 'Is the two-coat primer done?',
+            key: 'twoCoatPrimerDone',
+          },
+          {
+            title: 'Is the tapping done at the edges of the joint face?',
+            key: 'tappingDoneAtEdges',
+          },
+          {
+            title: 'Is the sealant poured properly?',
+            key: 'sealantPouredProperly',
+          },
+          {
+            title: 'Is the tape removed after the tooling of the sealant?',
+            key: 'tapeRemovedAfterTooling',
+          },
+          {
+            title: 'Is the arrangement made for curing?',
+            key: 'arrangementForCuring',
+          },
+          {
+            title: 'Quantity of sealant utilized at site (in liters)',
+            key: 'sealantQuantity',
+          },
+        ];
+
+        return (
+          <View>
+            {sealantFilingProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.sealantFilingData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.MILLING_OF_FLEXIBLE_PAVEMENT:
+        const millingFlexiblePavementProperties = [
+          {
+            title: 'Whether the milled surface is uniform in texture',
+            key: 'milledSurfaceUniform',
+          },
+          {
+            title:
+              'Whether the finished milled surface is within 6-8 mm in both longitudinal and transverse directions',
+            key: 'milledSurfaceWithinLimit',
+          },
+          {
+            title: 'Is the texture surface safe for motorist',
+            key: 'textureSafeForMotorist',
+          },
+          {
+            title: 'Depth of milling in mm',
+            key: 'depthOfMilling',
+          },
+          {
+            title: 'Total qty of milled material obtained in cm',
+            key: 'totalQtyMilledMaterial',
+          },
+          {
+            title: 'Total surface area where milling is done in Sqmm',
+            key: 'totalSurfaceAreaMilled',
+          },
+        ];
+
+        return (
+          <View>
+            {millingFlexiblePavementProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>{selectedRFI?.metaData.millingData?.[property.key]}</Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.LAYING_OF_SEPARATION_MEMBRANE:
+        const layingOfSeparationMembraneProperties = [
+          {
+            title:
+              'The subbase / DLC layer swept clean of extraneous materials using air compressor and sprinkled with water to bring down the temperature of the PQC',
+            key: 'subbaseSweptClean',
+          },
+          {
+            title:
+              'If any undulations visible after cleaning & sprinkling of water, it should be leveled with Mix of 10mm down aggregate to avoid restraint of Panel movement',
+            key: 'undulationsLeveled',
+          },
+          {
+            title:
+              'Separation membrane shall be tight, straight, wrinkle free & anchored on Sub-base',
+            key: 'membraneTightStraight',
+          },
+          {title: 'Colour of Separation Membrane', key: 'colourOfMembrane'},
+          {
+            title: 'Thickness of Separation Membrane',
+            key: 'thicknessOfMembrane',
+          },
+          {
+            title:
+              'Proper overlapping provided in case of membrane is laid in part width',
+            key: 'properOverlappingProvided',
+          },
+          {
+            title: 'Finished Compacted Layer Thickness in mm',
+            key: 'finishedCompactedLayerThickness',
+          },
+          {
+            title: 'Any non-conformance/non-compliance found',
+            key: 'nonConformanceFound',
+          },
+        ];
+
+        return (
+          <View>
+            {layingOfSeparationMembraneProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.layingOfSeparationMembraneData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.LAYING_OF_PQC:
+        const layingOfPQCProperties = [
+          {
+            title:
+              'Is the trail patch done and approved by the Engineer In Charge?',
+            key: 'trailPatchApproved',
+          },
+          {
+            title: 'Is the mix design of PQC approved?',
+            key: 'mixDesignApproved',
+          },
+          {
+            title: 'Is the under laying DLC layer approved?',
+            key: 'dlcLayerApproved',
+          },
+          {
+            title:
+              'Are there adequate grade and survey stakes available for control of placement layers?',
+            key: 'adequateGradeSurveyStakes',
+          },
+          {
+            title:
+              'The PQC material is being transported by covering the tippers with tarpaulin to protect from the weather?',
+            key: 'pqcTransportedWithTarpaulin',
+          },
+          {
+            title: 'Is sufficient number of labours available at laying site?',
+            key: 'sufficientLaboursAvailable',
+          },
+          {
+            title:
+              'Is the separation membrane tight, straight, wrinkle-free & anchored on Sub Base?',
+            key: 'separationMembraneTight',
+          },
+          {
+            title:
+              'Are the dowel bars in the contraction and construction joints tightly covered by thin plastic sheath?',
+            key: 'dowelBarsCoveredWithSheath',
+          },
+          {
+            title:
+              'Is a backhoe bucket available for spreading of PQC mix to protect damaging of separation membrane?',
+            key: 'backhoeBucketAvailable',
+          },
+          {
+            title: 'Is the paver available for the laying of DLC?',
+            key: 'paverAvailableForDLC',
+          },
+          {
+            title: 'Is the functioning of the paver checked and verified?',
+            key: 'paverFunctioningChecked',
+          },
+          {
+            title: 'Is the material placed appropriately and uniformly?',
+            key: 'materialPlacedAppropriately',
+          },
+          {
+            title: 'Is the curing arrangement available?',
+            key: 'curingArrangementAvailable',
+          },
+          {
+            title: 'Is the segregation of layers free?',
+            key: 'layersSegregationFree',
+          },
+          {
+            title: 'Is the surface protection arranged?',
+            key: 'surfaceProtectionArranged',
+          },
+          {
+            title: 'Is the light arrangement for night work available?',
+            key: 'lightArrangementForNightWork',
+          },
+          {
+            title:
+              'Is personal protective equipment (PPE) available for the workers?',
+            key: 'ppeAvailable',
+          },
+          {
+            title: 'Total PQC laid length in meters',
+            key: 'totalPQCLaidLength',
+          },
+          {
+            title: 'Total PQC laid area in sqm',
+            key: 'totalPQCLaidArea',
+          },
+          {
+            title: 'Thickness of PQC laid in mm',
+            key: 'pqcThicknessLaid',
+          },
+          {
+            title: 'Lead distance of PQC material in Km',
+            key: 'pqcLeadDistance',
+          },
+        ];
+
+        return (
+          <View>
+            {layingOfPQCProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.layingOfPQCData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
 
       // ReadOnlyRfi
       default:

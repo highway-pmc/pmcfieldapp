@@ -543,6 +543,10 @@ export const TASK_TYPES = {
   TEXTURING: 'texturing',
   PLACING_OF_DOWEL: 'placing-of-dowel',
   PLACING_OF_FILLER_BOARD: 'placing-of-filler-board',
+  SEALANT_FILING:'sealant-filing',
+  MILLING_OF_FLEXIBLE_PAVEMENT:'milling-of-flexible-pavement',
+  LAYING_OF_SEPARATION_MEMBRANE:'laying-of-separation-membrane',
+  LAYING_OF_PAVEMENT_QUALITY_CONCRETE:'laying-of-pavement-quality-concrete',
 };
 
 export const TEST_MATERIALS_TYPES = {

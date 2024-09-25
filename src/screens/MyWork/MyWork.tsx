@@ -466,6 +466,63 @@ const [dumpingData, setDumpingData] = useState([
     probingByStiffwire: string;
   };
   //FormUseStates
+  const [layingOfPQCData, setLayingOfPQCData] = useState({
+    trailPatchApproved: 'Y',
+    mixDesignApproved: 'Y',
+    dlcLayerApproved: 'Y',
+    adequateGradeSurveyStakes: 'Y',
+    pqcTransportedWithTarpaulin: 'Y',
+    sufficientLaboursAvailable: 'Y',
+    separationMembraneTight: 'Y',
+    dowelBarsCoveredWithSheath: 'Y',
+    backhoeBucketAvailable: 'Y',
+    pqcLeadDistance: 0.0,
+    paverAvailableForDLC: 'Y',
+    paverFunctioningChecked: 'Y',
+    materialPlacedAppropriately: 'Y',
+    curingArrangementAvailable: 'Y',
+    layersSegregationFree: 'Y',
+    surfaceProtectionArranged: 'Y',
+    lightArrangementForNightWork: 'Y',
+    ppeAvailable: 'Y',
+    totalPQCLaidLength: 0.0,
+    totalPQCLaidArea: 0.0,
+    pqcThicknessLaid: 0.0,
+  });
+
+  const [layingOfSeparationMembraneData, setLayingOfSeparationMembraneData] = useState({
+    subbaseSweptClean: 'Y',
+    undulationsLeveled: 'Y',
+    membraneTightStraight: 'Y',
+    colourOfMembrane: 'Y',
+    thicknessOfMembrane: 'Y',
+    properOverlappingProvided: 'Y',
+    finishedCompactedLayerThickness: 0.0,
+    nonConformanceFound: 'Y',
+  });
+
+
+  const [millingData, setMillingData] = useState({
+    milledSurfaceUniform: 'Y',
+    finishedSurfaceWithinTolerance: 'Y',
+    textureSafeForMotorist: 'Y',
+    depthOfMilling: 0.0,
+    totalQtyMilledMaterial: 0.0,
+    totalSurfaceAreaMilled: 0.0,
+  });
+
+  const [sealantFilingData, setSealantFilingData] = useState({
+    sealantSourceApproved: 'Y',
+    jointFaceCleaned: 'Y',
+    sealantPlacedProperDepth: 'Y',
+    twoCoatPrimerDone: 'Y',
+    tappingDoneEdges: 'Y',
+    sealantPouredProperly: 'Y',
+    tapeRemovedAfterTooling: 'Y',
+    arrangementForCuring: 'Y',
+    sealantQtyUtilized: 0.0,
+  });
+
   const [placingOfFillerBoardData, setPlacingOfFillerBoardData] = useState({
     sourceApproved: 'Y',
     surfaceFreeFromDust: 'Y',
@@ -1048,6 +1105,175 @@ const onAddMoreLayingOfDlc = () => {
     },
   ]);
 };
+const validateLayingOfPQCData = (
+  layingOfPQCData: any,
+): boolean => {
+  // Parsing values to float
+  const pqcLeadDistance = parseFloat(layingOfPQCData.pqcLeadDistance);
+  const totalPQCLaidLength = parseFloat(layingOfPQCData.totalPQCLaidLength);
+  const totalPQCLaidArea = parseFloat(layingOfPQCData.totalPQCLaidArea);
+  const pqcThicknessLaid = parseFloat(layingOfPQCData.pqcThicknessLaid);
+
+  if (
+    isNaN(pqcLeadDistance) ||
+    pqcLeadDistance <= 0 ||
+    pqcLeadDistance > 100 ||
+    layingOfPQCData.pqcLeadDistance.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Lead distance of PQC material in Km with max 3 decimal places, value should be > 0 and <= 100',
+      'error',
+    );
+    return false;
+  }
+
+  if (
+    isNaN(totalPQCLaidLength) ||
+    totalPQCLaidLength <= 0 ||
+    totalPQCLaidLength > 100000 ||
+    layingOfPQCData.totalPQCLaidLength.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Total length of PQC laid in meters with max 3 decimal places, value should be > 0 and <= 100000',
+      'error',
+    );
+    return false;
+  }
+
+  if (
+    isNaN(totalPQCLaidArea) ||
+    totalPQCLaidArea <= 0 ||
+    totalPQCLaidArea > 1000000 ||
+    layingOfPQCData.totalPQCLaidArea.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Total area of PQC laid in sqm with max 3 decimal places, value should be > 0 and <= 1000000',
+      'error',
+    );
+    return false;
+  }
+
+  if (
+    isNaN(pqcThicknessLaid) ||
+    pqcThicknessLaid <= 0 ||
+    pqcThicknessLaid > 1000 ||
+    layingOfPQCData.pqcThicknessLaid.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Thickness of PQC laid in mm with max 3 decimal places, value should be > 0 and <= 1000',
+      'error',
+    );
+    return false;
+  }
+
+  layingOfPQCData.pqcLeadDistance = Number(layingOfPQCData.pqcLeadDistance);
+  layingOfPQCData.totalPQCLaidLength = Number(
+    layingOfPQCData.totalPQCLaidLength,
+  );
+  layingOfPQCData.totalPQCLaidArea = Number(
+    layingOfPQCData.totalPQCLaidArea,
+  );
+  layingOfPQCData.pqcThicknessLaid = Number(
+    layingOfPQCData.pqcThicknessLaid,
+  );
+
+  return true;
+};
+
+const validateLayingOfSeparationMembraneData = (layingOfSeparationMembraneData: any): boolean => {
+    const finishedCompactedLayerThickness = parseFloat(layingOfSeparationMembraneData.finishedCompactedLayerThickness);
+    if (
+        isNaN(finishedCompactedLayerThickness) ||
+        finishedCompactedLayerThickness <= 0 ||
+        finishedCompactedLayerThickness > 1000 ||
+        layingOfSeparationMembraneData.finishedCompactedLayerThickness.split('.')[1]?.length > 3
+    ) {
+        showSnackbar(
+            'Please enter a valid Finished Compacted Layer Thickness (in mm) with max 3 decimal places, value should be > 0 and <= 1000',
+            'error',
+        );
+        return false;
+    }
+    layingOfSeparationMembraneData.finishedCompactedLayerThickness = Number(
+        layingOfSeparationMembraneData.finishedCompactedLayerThickness,
+    );
+
+    return true;
+};
+
+const validateMillingData = (millingData:any) => {
+  const depthOfMilling = parseFloat(millingData.depthOfMilling);
+  const totalQtyMilledMaterial = parseFloat(millingData.totalQtyMilledMaterial);
+  const totalSurfaceAreaMilled = parseFloat(millingData.totalSurfaceAreaMilled);
+
+  if (
+    isNaN(depthOfMilling) ||
+    depthOfMilling <= 0 ||
+    depthOfMilling > 100 ||
+    millingData.depthOfMilling.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Depth of Milling (in mm) with max 3 decimal places, value should be > 0 and <= 100',
+      'error',
+    );
+    return false;
+  }
+
+  if (
+    isNaN(totalQtyMilledMaterial) ||
+    totalQtyMilledMaterial <= 0 ||
+    totalQtyMilledMaterial > 1000000 ||
+    millingData.totalQtyMilledMaterial.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Total Quantity of Milled Material (in cm) with max 3 decimal places, value should be > 0 and <= 1000000',
+      'error',
+    );
+    return false;
+  }
+
+  if (
+    isNaN(totalSurfaceAreaMilled) ||
+    totalSurfaceAreaMilled <= 0 ||
+    totalSurfaceAreaMilled > 100000 ||
+    millingData.totalSurfaceAreaMilled.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Total Surface Area Milled (in Sqmm) with max 3 decimal places, value should be > 0 and <= 100000',
+      'error',
+    );
+    return false;
+  }
+
+  millingData.depthOfMilling = Number(millingData.depthOfMilling);
+  millingData.totalQtyMilledMaterial = Number(millingData.totalQtyMilledMaterial);
+  millingData.totalSurfaceAreaMilled = Number(millingData.totalSurfaceAreaMilled);
+
+  return true;
+};
+
+const validateSealantFilingData = (sealantFilingData: any): boolean => {
+  const sealantQtyUtilized = parseFloat(sealantFilingData.sealantQtyUtilized);
+
+  // Validation for Sealant Quantity Utilized
+  if (
+    isNaN(sealantQtyUtilized) ||
+    sealantQtyUtilized <= 0 ||
+    sealantQtyUtilized > 100000 ||
+    sealantFilingData.sealantQtyUtilized.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid quantity of sealant utilized (in liters) with max 3 decimal places, value should be > 0 and <= 100000',
+      'error',
+    );
+    return false;
+  }
+
+  sealantFilingData.sealantQtyUtilized = Number(sealantFilingData.sealantQtyUtilized);
+
+  return true;
+};
+
 const validatePlacingOfFillerBoardData = (placingOfFillerBoardData: any): boolean => {
   const fillerBoardThickness = parseFloat(placingOfFillerBoardData.fillerBoardThickness);
   const totalFillerBoardQty = parseFloat(placingOfFillerBoardData.totalFillerBoardQty);
@@ -3234,7 +3460,7 @@ case TASK_TYPES.TACK_COAT:
               drawingApproved: 'Y',
               placingDoneAsPerDrawings: 'Y',
               alignmentDoneProperly: 'Y',
-              nonConformanceFound: 'N',
+              nonConformanceFound: 'Y',
             });
           }
           break;
@@ -3298,10 +3524,10 @@ case TASK_TYPES.TACK_COAT:
               passesSpeedPatternFollowed: 'Y',
               compactedLayerThicknessSpecified: 'Y',
               compactedLayerThickness: 0.0,
-              localizedWetSoftAreaFound: 'N',
+              localizedWetSoftAreaFound: 'Y',
               layerFreeFromSegregation: 'Y',
               protectionForFinishedSurface: 'Y',
-              nonConformanceFound: 'N',
+              nonConformanceFound: 'Y',
             });
           }
           break;
@@ -3322,7 +3548,84 @@ case TASK_TYPES.TACK_COAT:
           });
         }
         break;
-  
+        case TASK_TYPES.SEALANT_FILING:
+          if (rfiData.metaData.sealantFilingData) {
+            setSealantFilingData(rfiData.metaData.sealantFilingData);
+          } else {
+            setSealantFilingData({
+              sealantSourceApproved: 'Y',
+              jointFaceCleaned: 'Y',
+              sealantPlacedProperDepth: 'Y',
+              twoCoatPrimerDone: 'Y',
+              tappingDoneEdges: 'Y',
+              sealantPouredProperly: 'Y',
+              tapeRemovedAfterTooling: 'Y',
+              arrangementForCuring: 'Y',
+              sealantQtyUtilized: 0.0,
+            });
+          }
+          break;
+        case TASK_TYPES.MILLING_OF_FLEXIBLE_PAVEMENT:
+          if (rfiData.metaData.millingData) {
+            setMillingData(rfiData.metaData.millingData);
+          } else {
+            setMillingData({
+              milledSurfaceUniform: 'Y',
+              finishedSurfaceWithinTolerance: 'Y',
+              textureSafeForMotorist: 'Y',
+              depthOfMilling: 0.0,
+              totalQtyMilledMaterial: 0.0,
+              totalSurfaceAreaMilled: 0.0,
+            });
+          }
+          break;
+          case TASK_TYPES.LAYING_OF_SEPARATION_MEMBRANE:
+          if (rfiData.metaData.layingOfSeparationMembraneData) {
+              setLayingOfSeparationMembraneData(rfiData.metaData.layingOfSeparationMembraneData);
+          } else {
+              setLayingOfSeparationMembraneData({
+                  subbaseSweptClean: 'Y',
+                  undulationsLeveled: 'Y',
+                  membraneTightStraight: 'Y',
+                  colourOfMembrane: 'Y',
+                  thicknessOfMembrane: 'Y',
+                  properOverlappingProvided: 'Y',
+                  finishedCompactedLayerThickness: 0.0,
+                  nonConformanceFound: 'Y',
+              });
+          }
+          break;
+
+        case TASK_TYPES.LAYING_OF_PQC:
+          if (rfiData.metaData.layingOfPQCData) {
+            setLayingOfPQCData(rfiData.metaData.layingOfPQCData);
+          } else {
+            setLayingOfPQCData({
+              trailPatchApproved: 'Y',
+              mixDesignApproved: 'Y',
+              dlcLayerApproved: 'Y',
+              adequateGradeSurveyStakes: 'Y',
+              pqcTransportedWithTarpaulin: 'Y',
+              sufficientLaboursAvailable: 'Y',
+              separationMembraneTight: 'Y',
+              dowelBarsCoveredWithSheath: 'Y',
+              backhoeBucketAvailable: 'Y',
+              pqcLeadDistance: 0.0,
+              paverAvailableForDLC: 'Y',
+              paverFunctioningChecked: 'Y',
+              materialPlacedAppropriately: 'Y',
+              curingArrangementAvailable: 'Y',
+              layersSegregationFree: 'Y',
+              surfaceProtectionArranged: 'Y',
+              lightArrangementForNightWork: 'Y',
+              ppeAvailable: 'Y',
+              totalPQCLaidLength: 0.0,
+              totalPQCLaidArea: 0.0,
+              pqcThicknessLaid: 0.0,
+            });
+          }
+          break;
+
         case TASK_TYPES.LIFTING_LEFT:
         case TASK_TYPES.LIFTING_YARD:
         case TASK_TYPES.LIFTING_RIGHT:
@@ -5288,7 +5591,42 @@ case TASK_TYPES.TACK_COAT:
           placingOfFillerBoardData: placingOfFillerBoardData,
         };
         break;
-        
+      case TASK_TYPES.SEALANT_FILING:
+      if (!validateSealantFilingData(sealantFilingData)) {
+        return;
+      }
+      checkList = {
+        taskName: selectedTask.name,
+        sealantFilingData: sealantFilingData,
+      };
+      break;
+      case TASK_TYPES.MILLING_OF_FLEXIBLE_PAVEMENT:
+        if (!validateMillingData(millingData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          millingData: millingData,
+        };
+        break;
+      case TASK_TYPES.LAYING_OF_SEPARATION_MEMBRANE:
+        if (!validateLayingOfSeparationMembraneData(layingOfSeparationMembraneData)) {
+            return;
+        }
+        checkList = {
+            taskName: selectedTask.name,
+            layingOfSeparationMembraneData: layingOfSeparationMembraneData,
+        };
+        break;
+      case TASK_TYPES.LAYING_OF_PQC:
+        if (!validateLayingOfPQCData(layingOfPQCData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          layingOfPQCData: layingOfPQCData,
+        };
+        break;
       case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
@@ -13037,7 +13375,285 @@ case TASK_TYPES.TACK_COAT:
           </View>
         </View>
       );
+    case TASK_TYPES.SEALANT_FILING:
+      const sealantFilingProperties = [
+        { title: 'Is the sealant source approved', key: 'sealantSourceApproved' },
+        { title: 'Is the joint face cleaned properly', key: 'jointFaceCleaned' },
+        { title: 'Is the sealant placed at the proper depth', key: 'sealantPlacedProperDepth' },
+        { title: 'Is the two-coat primer done', key: 'twoCoatPrimerDone' },
+        { title: 'Is the tapping done at the edges of joint face', key: 'tappingDoneEdges' },
+        { title: 'Is the sealant poured properly', key: 'sealantPouredProperly' },
+        { title: 'Is the tape removed after tooling of sealant', key: 'tapeRemovedAfterTooling' },
+        { title: 'Is the arrangement made for curing', key: 'arrangementForCuring' },
+      ];
 
+      return (
+        <View>
+          {sealantFilingProperties.map(property => (
+            <View style={{ flexDirection: 'column' }} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={sealantFilingData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value: any) =>
+                  setSealantFilingData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+          <Input
+            label="Quantity of Sealant Utilized (in liters)"
+            value={sealantFilingData.sealantQtyUtilized}
+            onChange={(value: any) =>
+              setSealantFilingData(prevData => ({
+                ...prevData,
+                sealantQtyUtilized: value,
+              }))
+            }
+            isRequired={true}
+          />
+          <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
+        </View>
+      );
+    case TASK_TYPES.MILLING_OF_FLEXIBLE_PAVEMENT:
+      const millingProperties = [
+        {
+          title: 'Is the milled surface uniform in texture?',
+          key: 'milledSurfaceUniform',
+        },
+        {
+          title: 'Is the finished milled surface within 6-8 mm in both longitudinal and transverse directions?',
+          key: 'finishedSurfaceWithinTolerance',
+        },
+        {
+          title: 'Is the texture surface safe for motorists?',
+          key: 'textureSafeForMotorist',
+        },
+        {
+          title: 'Depth of Milling in mm',
+          key: 'depthOfMilling',
+        },
+        {
+          title: 'Total Quantity of Milled Material (cm)',
+          key: 'totalQtyMilledMaterial',
+        },
+        {
+          title: 'Total Surface Area Milled (Sqmm)',
+          key: 'totalSurfaceAreaMilled',
+        },
+      ];
+
+      return (
+        <View>
+          {millingProperties.map(property => (
+            <View style={{ flexDirection: 'column' }} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={millingData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value:any) =>
+                  setMillingData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+
+          <Input
+            label="Depth of Milling (mm)"
+            value={millingData.depthOfMilling}
+            onChange={(value:any) =>
+              setMillingData(prevData => ({
+                ...prevData,
+                depthOfMilling: value,
+              }))
+            }
+            isRequired={true}
+          />
+
+          <Input
+            label="Total Quantity of Milled Material (cm)"
+            value={millingData.totalQtyMilledMaterial}
+            onChange={(value:any) =>
+              setMillingData(prevData => ({
+                ...prevData,
+                totalQtyMilledMaterial: value,
+              }))
+            }
+            isRequired={true}
+          />
+
+          <Input
+            label="Total Surface Area Milled (Sqmm)"
+            value={millingData.totalSurfaceAreaMilled}
+            onChange={(value:any) =>
+              setMillingData(prevData => ({
+                ...prevData,
+                totalSurfaceAreaMilled: value,
+              }))
+            }
+            isRequired={true}
+          />
+        </View>
+      );
+      case TASK_TYPES.LAYING_OF_SEPARATION_MEMBRANE:
+          const layingOfSeparationMembraneProperties = [
+              { title: 'The subbase / DLC layer swept clean of extraneous materials using air compressor and sprinkled with water to bring down the temperature of the PQC', key: 'subbaseSweptClean' },
+              { title: 'If any undulations visible after cleaning & sprinkling of water, it should be leveled with Mix of 10mm down aggregate to avoid restraint of Panel movement', key: 'undulationsLeveled' },
+              { title: 'Separation membrane shall be tight, straight, wrinkle free & anchored on Sub-base', key: 'membraneTightStraight' },
+              { title: 'Colour of Separation Membrane', key: 'colourOfMembrane' },
+              { title: 'Thickness of Separation Membrane', key: 'thicknessOfMembrane' },
+              { title: 'Proper overlapping provided in case of membrane is laid in part width', key: 'properOverlappingProvided' },
+              { title: 'Finished Compacted Layer Thickness in mm', key: 'finishedCompactedLayerThickness' },
+              { title: 'Any non-conformance/non-compliance found', key: 'nonConformanceFound' },
+          ];
+
+          return (
+              <View>
+                  {layingOfSeparationMembraneProperties.map(property => (
+                      <View style={{flexDirection: 'column'}} key={property.key}>
+                          <DropdownPicker
+                              label={property.title}
+                              value={layingOfSeparationMembraneData[property.key]}
+                              items={YES_NO_LIST}
+                              onChange={(value: any) =>
+                                  setLayingOfSeparationMembraneData(prevData => ({
+                                      ...prevData,
+                                      [property.key]: value,
+                                  }))
+                              }
+                              isRequired={true}
+                          />
+                      </View>
+                  ))}
+                  <Input
+                      label="Finished Compacted Layer Thickness in mm"
+                      value={layingOfSeparationMembraneData.finishedCompactedLayerThickness}
+                      onChange={(value: any) =>
+                          setLayingOfSeparationMembraneData(prevData => ({
+                              ...prevData,
+                              finishedCompactedLayerThickness: value,
+                          }))
+                      }
+                      isRequired={true}
+                  />
+              </View>
+          );
+      case TASK_TYPES.LAYING_OF_PQC:
+        const layingOfPQCProperties = [
+          { title: 'Is the trail patch done and approved by the Engineer In Charge', key: 'trailPatchApproved' },
+          { title: 'Is the mix design of PQC approved?', key: 'mixDesignApproved' },
+          { title: 'Is the under laying DLC layer approved?', key: 'dlcLayerApproved' },
+          { title: 'Are there adequate grade and survey stakes available for control of placement layers?', key: 'adequateGradeSurveyStakes' },
+          { title: 'The PQC material is being transported by covering the tippers with tarpaulin to protect from the weather', key: 'pqcTransportedWithTarpaulin' },
+          { title: 'Is the sufficient no. of labours available at laying site', key: 'sufficientLaboursAvailable' },
+          { title: 'Separation membrane shall be tight, straight, wrinkle free & anchored on Sub Base', key: 'separationMembraneTight' },
+          { title: 'Dowel bars in the joints covered by thin plastic sheath', key: 'dowelBarsCoveredWithSheath' },
+          { title: 'Backhoe bucket of JCB available to protect damaging of separation membrane', key: 'backhoeBucketAvailable' },
+          { title: 'Is paver available for the laying of DLC?', key: 'paverAvailableForDLC' },
+          { title: 'Is the functioning of Paver checked?', key: 'paverFunctioningChecked' },
+          { title: 'Is the placing of material appropriate?', key: 'materialPlacedAppropriately' },
+          { title: 'Is the arrangement of curing available?', key: 'curingArrangementAvailable' },
+          { title: 'Is the layers free from any segregation?', key: 'layersSegregationFree' },
+          { title: 'Is there any arrangement for protection of the finished surface?', key: 'surfaceProtectionArranged' },
+          { title: 'Is there adequate arrangement of light for night work?', key: 'lightArrangementForNightWork' },
+          { title: 'Whether the worker and staff have proper PPE?', key: 'ppeAvailable' },
+        ];
+
+        return (
+          <View>
+            {layingOfPQCProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={layingOfPQCData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setLayingOfPQCData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <Input
+              label="Lead of PQC Material (in Km)"
+              value={layingOfPQCData.pqcLeadDistance}
+              onChange={(value: any) =>
+                setLayingOfPQCData(prevData => ({
+                  ...prevData,
+                  pqcLeadDistance: value,
+                }))
+              }
+              isRequired={true}
+            />
+
+            <Input
+              label="Total Length of PQC Laid (in meters)"
+              value={layingOfPQCData.totalPQCLaidLength}
+              onChange={(value: any) =>
+                setLayingOfPQCData(prevData => ({
+                  ...prevData,
+                  totalPQCLaidLength: value,
+                }))
+              }
+              isRequired={true}
+            />
+
+            <Input
+              label="Total Area of PQC Laid (in sqm)"
+              value={layingOfPQCData.totalPQCLaidArea}
+              onChange={(value: any) =>
+                setLayingOfPQCData(prevData => ({
+                  ...prevData,
+                  totalPQCLaidArea: value,
+                }))
+              }
+              isRequired={true}
+            />
+
+            <Input
+              label="Thickness of PQC Laid (in mm)"
+              value={layingOfPQCData.pqcThicknessLaid}
+              onChange={(value: any) =>
+                setLayingOfPQCData(prevData => ({
+                  ...prevData,
+                  pqcThicknessLaid: value,
+                }))
+              }
+              isRequired={true}
+            />
+          </View>
+        );
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
       case TASK_TYPES.LIFTING_RIGHT:

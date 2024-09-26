@@ -4577,7 +4577,7 @@ const RFIsRecents = (props: any) => {
             ))}
           </View>
         );
-      case TASK_TYPES.LAYING_OF_PQC:
+      case TASK_TYPES.LAYING_OF_PAVEMENT_QUALITY_CONCRETE:
         const layingOfPQCProperties = [
           {
             title:
@@ -4681,6 +4681,283 @@ const RFIsRecents = (props: any) => {
                 </Text>
                 <Text>
                   {selectedRFI?.metaData.layingOfPQCData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.BACKFILLING:
+        const backfillingProperties = [
+          {
+            title: 'Verify area is clear of debris and formwork materials',
+            key: 'areaClearOfDebris',
+          },
+          {
+            title:
+              'Ensure backfilling starts after 7 days or 60% strength of concrete',
+            key: 'backfillingTimingAppropriate',
+          },
+          {
+            title:
+              'Confirm fill materials are approved and comply with specifications',
+            key: 'approvedFillMaterials',
+          },
+          {
+            title: 'Check layer thickness does not exceed 200mm',
+            key: 'layerThicknessCheck',
+          },
+          {
+            title: 'Check compaction degree (95% according to Proctor test)',
+            key: 'compactionDegreeCheck',
+          },
+          {
+            title: 'Check required tests for each 200mm compacted layer',
+            key: 'layerTestsDone',
+          },
+          {
+            title: 'Verify level and elevation are correct',
+            key: 'levelAndElevationVerified',
+          },
+          {
+            title:
+              'Ensure bedding material is compacted in trenches for services',
+            key: 'beddingMaterialCompacted',
+          },
+          {
+            title: 'Ensure waterproofing membrane, if any, is undamaged',
+            key: 'waterproofingMembraneProtected',
+          },
+          {
+            title: 'Ensure backfilling is complete and area is clean and tidy',
+            key: 'backfillingCompleteAndClean',
+          },
+          {title: 'Total Quantity of Soil Used (cum)', key: 'totalSoilQtyUsed'},
+        ];
+
+        return (
+          <View>
+            {backfillingProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.backfillingData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.BRICKS_WORK:
+        const bricksWorkProperties = [
+          {
+            title: 'Are the latest "Good for Construction" drawings available',
+            key: 'drawingsAvailable',
+          },
+          {
+            title: 'Are the size and Class of bricks as per approved drawing',
+            key: 'bricksSizeClassAsPerDrawing',
+          },
+          {
+            title: 'Are the required number of blocks available',
+            key: 'requiredBlocksAvailable',
+          },
+          {
+            title:
+              'Has the hacking at contact surfaces of columns and beams been done',
+            key: 'hackingDone',
+          },
+          {
+            title:
+              'Has cement mortar slurry been applied over the hacked surface',
+            key: 'cementMortarApplied',
+          },
+          {
+            title:
+              'Have aluminium templates been used for door/window openings',
+            key: 'aluminiumTemplatesUsed',
+          },
+          {
+            title: 'Are the required tools available',
+            key: 'requiredToolsAvailable',
+          },
+          {
+            title: 'Are there any specific requirements from the client',
+            key: 'clientSpecificRequirements',
+          },
+          {
+            title: 'Is Cement of the approved grade and less than 1 month old',
+            key: 'cementApprovedGrade',
+          },
+          {
+            title: 'Is sand medium gritty, clean, and silt-free',
+            key: 'sandCleanGritty',
+          },
+          {
+            title:
+              'Is the finished floor level button marked on the structural slab',
+            key: 'floorLevelMarked',
+          },
+          {
+            title: 'Are the markings for reference lines on the pillar done',
+            key: 'pillarMarkingsDone',
+          },
+          {
+            title:
+              'Is the brickwork checked in vertical and horizontal directions',
+            key: 'brickworkChecked',
+          },
+          {
+            title: 'Total Area where Brick Work is to be done in Sqm',
+            key: 'totalBrickWorkArea',
+          },
+          {title: 'Total Brick Work in Cum', key: 'totalBrickWorkCum'},
+        ];
+
+        return (
+          <View>
+            {bricksWorkProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.bricksWorkData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.CUTTING_OF_SOIL:
+        const cuttingOfSoilProperties = [
+          {
+            title:
+              'Whether the proper safety measure taken at the site for cutting of soil?',
+            key: 'safetyMeasuresTaken',
+          },
+          {
+            title:
+              'Whether all the equipment and tools are available at site at time of cutting of soil?',
+            key: 'equipmentAvailable',
+          },
+          {
+            title: 'Whether the excavation done at required depth?',
+            key: 'excavationDone',
+          },
+          {
+            title: 'Total qty of soil cut in cum',
+            key: 'totalSoilCutQty',
+          },
+        ];
+
+        return (
+          <View>
+            {cuttingOfSoilProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.cuttingOfSoilData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      // Displaying Fixing Geo Cell form data in a read-only view
+      case TASK_TYPES.FIXING_GEO_CELL:
+        const fixingGeoCellProperties = [
+          {
+            title: 'Whether the source is approved',
+            key: 'sourceApproved',
+          },
+          {
+            title: 'Whether the method statement approved',
+            key: 'methodStatementApproved',
+          },
+          {
+            title: 'Whether the slope properly maintained',
+            key: 'slopeMaintained',
+          },
+          {
+            title: 'Whether the slope is properly compacted',
+            key: 'slopeCompacted',
+          },
+          {
+            title: 'Whether the Geo cell laid as per approved drawing',
+            key: 'geoCellLaidAsPerDrawing',
+          },
+          {
+            title: 'Whether joints of geo cell fixed properly',
+            key: 'geoCellJointsFixedProperly',
+          },
+          {
+            title: 'Whether the Geo cell size is same as per approved drawing',
+            key: 'geoCellSizeAsPerDrawing',
+          },
+          {
+            title: 'Total area where Geo cell placed in Sqm',
+            key: 'totalGeoCellArea',
+          },
+          {
+            title: 'Total consumption of Geo cell in Sqm',
+            key: 'totalGeoCellConsumption',
+          },
+        ];
+
+        return (
+          <View>
+            {fixingGeoCellProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.fixingGeoCellData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.FIXING_OF_MESH:
+        const fixingOfMeshProperties = [
+          {
+            title: 'Whether the source of approved',
+            key: 'sourceApproved',
+          },
+          {
+            title: 'Whether the size of mesh as per approved drawing',
+            key: 'sizeMeshApproved',
+          },
+          {
+            title:
+              'Check for the damage of the wire mesh or not after the opening',
+            key: 'damageWireMeshChecked',
+          },
+          {
+            title:
+              'Whether the Unit shall be stretched for removal of fold/bend after opening done or not',
+            key: 'unitStretchedAfterOpening',
+          },
+          {
+            title: 'Total area of the slope in Sqm',
+            key: 'totalAreaSlopeSqm',
+          },
+          {
+            title: 'Total qty of mesh in kg',
+            key: 'totalQtyMeshKg',
+          },
+        ];
+
+        return (
+          <View>
+            {fixingOfMeshProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.fixingOfMeshData?.[property.key]}
                 </Text>
               </View>
             ))}

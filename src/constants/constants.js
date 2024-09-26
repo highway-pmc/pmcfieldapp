@@ -547,6 +547,12 @@ export const TASK_TYPES = {
   MILLING_OF_FLEXIBLE_PAVEMENT:'milling-of-flexible-pavement',
   LAYING_OF_SEPARATION_MEMBRANE:'laying-of-separation-membrane',
   LAYING_OF_PAVEMENT_QUALITY_CONCRETE:'laying-of-pavement-quality-concrete',
+  //new forms
+  BACKFILLING:'backfilling',
+  BRICKS_WORK:'bricks-work',
+  CUTTING_OF_SOIL:'cutting-of-soil',
+  FIXING_GEO_CELL:'fixing-geo-cell',
+  FIXING_OF_MESH:'fixing-of-mesh',
 };
 
 export const TEST_MATERIALS_TYPES = {

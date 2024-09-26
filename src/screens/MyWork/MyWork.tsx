@@ -466,6 +466,64 @@ const [dumpingData, setDumpingData] = useState([
     probingByStiffwire: string;
   };
   //FormUseStates
+  const [fixingOfMeshData, setFixingOfMeshData] = useState({
+    sourceApproved: 'Y',
+    sizeAsPerDrawing: 'Y',
+    wireMeshDamageChecked: 'Y',
+    unitStretchedForFoldsRemoved: 'Y',
+    totalAreaSlope: 0.0,
+    totalQtyMesh: 0.0,
+  });
+
+  const [fixingGeoCellData, setFixingGeoCellData] = useState({
+    sourceApproved: 'Y',
+    methodStatementApproved: 'Y',
+    slopeMaintained: 'Y',
+    slopeCompacted: 'Y',
+    geoCellLaidAsPerDrawing: 'Y',
+    geoCellJointsFixedProperly: 'Y',
+    geoCellSizeAsPerDrawing: 'Y',
+    totalGeoCellArea: 0.0,
+    totalGeoCellConsumption: 0.0,
+  });
+  const [cuttingOfSoilData, setCuttingOfSoilData] = useState({
+    safetyMeasuresTaken: 'Y',
+    equipmentAvailable: 'Y',
+    excavationDone: 'Y',
+    totalSoilCutQty: 0.0,
+  });
+  const [bricksWorkData, setBricksWorkData] = useState({
+    drawingsAvailable: 'Y',
+    bricksSizeClassAsPerDrawing: 'Y',
+    requiredBlocksAvailable: 'Y',
+    hackingDone: 'Y',
+    cementMortarApplied: 'Y',
+    aluminiumTemplatesUsed: 'Y',
+    requiredToolsAvailable: 'Y',
+    clientSpecificRequirements: 'N',
+    cementApprovedGrade: 'Y',
+    sandCleanGritty: 'Y',
+    floorLevelMarked: 'Y',
+    pillarMarkingsDone: 'Y',
+    brickworkChecked: 'Y',
+    totalBrickWorkArea: 0.0,
+    totalBrickWorkCum: 0.0,
+  });
+
+  const [backfillingData, setBackfillingData] = useState({
+    areaClearOfDebris: 'Y',
+    backfillingTimingAppropriate: 'Y',
+    approvedFillMaterials: 'Y',
+    layerThicknessCheck: 'Y',
+    compactionDegreeCheck: 'Y',
+    layerTestsDone: 'Y',
+    levelAndElevationVerified: 'Y',
+    beddingMaterialCompacted: 'Y',
+    waterproofingMembraneProtected: 'Y',
+    backfillingCompleteAndClean: 'Y',
+    totalSoilQtyUsed: 0.0,
+});
+
   const [layingOfPQCData, setLayingOfPQCData] = useState({
     trailPatchApproved: 'Y',
     mixDesignApproved: 'Y',
@@ -1105,6 +1163,166 @@ const onAddMoreLayingOfDlc = () => {
     },
   ]);
 };
+const validateFixingOfMeshData = (fixingOfMeshData: any): boolean => {
+  const totalAreaSlope = parseFloat(fixingOfMeshData.totalAreaSlope);
+  const totalQtyMesh = parseFloat(fixingOfMeshData.totalQtyMesh);
+
+  // Validation for Total Area of the Slope in Sqm
+  if (
+    isNaN(totalAreaSlope) ||
+    totalAreaSlope <= 0 ||
+    totalAreaSlope > 100000 ||
+    fixingOfMeshData.totalAreaSlope.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Total Area of the Slope (in Sqm) with max 3 decimal places, value should be > 0 and <= 100000',
+      'error',
+    );
+    return false;
+  }
+
+  // Validation for Total Qty of Mesh in kg
+  if (
+    isNaN(totalQtyMesh) ||
+    totalQtyMesh <= 0 ||
+    totalQtyMesh > 100000 ||
+    fixingOfMeshData.totalQtyMesh.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Total Qty of Mesh (in kg) with max 3 decimal places, value should be > 0 and <= 100000',
+      'error',
+    );
+    return false;
+  }
+
+  // Converting values back after validation
+  fixingOfMeshData.totalAreaSlope = Number(fixingOfMeshData.totalAreaSlope);
+  fixingOfMeshData.totalQtyMesh = Number(fixingOfMeshData.totalQtyMesh);
+
+  return true;
+};
+
+const validateFixingGeoCellData = (fixingGeoCellData: any): boolean => {
+    // Parsing values to float
+    const totalAreaGeoCell = parseFloat(fixingGeoCellData.totalGeoCellArea);
+    const totalConsumptionGeoCell = parseFloat(fixingGeoCellData.totalGeoCellConsumption);
+
+    // Validation for Total Area where Geo cell is placed in Sqm
+    if (
+        isNaN(totalAreaGeoCell) ||
+        totalAreaGeoCell <= 0 ||
+        totalAreaGeoCell > 1000000 ||
+        fixingGeoCellData.totalGeoCellArea.split('.')[1]?.length > 3
+    ) {
+        showSnackbar(
+            'Please enter a valid Total Area where Geo cell is placed (Sqm) with max 3 decimal places, value should be > 0 and <= 1000000',
+            'error',
+        );
+        return false;
+    }
+
+    // Validation for Total Consumption of Geo cell in Sqm
+    if (
+        isNaN(totalConsumptionGeoCell) ||
+        totalConsumptionGeoCell <= 0 ||
+        totalConsumptionGeoCell > 1000000 ||
+        fixingGeoCellData.totalGeoCellConsumption.split('.')[1]?.length > 3
+    ) {
+        showSnackbar(
+            'Please enter a valid Total Consumption of Geo cell in Sqm with max 3 decimal places, value should be > 0 and <= 1000000',
+            'error',
+        );
+        return false;
+    }
+
+    // Convert the values back to numbers after validation
+    fixingGeoCellData.totalGeoCellArea = Number(fixingGeoCellData.totalGeoCellArea);
+    fixingGeoCellData.totalGeoCellConsumption = Number(fixingGeoCellData.totalGeoCellConsumption);
+
+    return true;
+};
+
+
+const validateCuttingOfSoilData = (cuttingOfSoilData: any): boolean => {
+  const totalSoilCutQty = parseFloat(cuttingOfSoilData.totalSoilCutQty);
+
+  // Validation for Total qty of soil cut in cum
+  if (
+    isNaN(totalSoilCutQty) ||
+    totalSoilCutQty <= 0 ||
+    totalSoilCutQty > 1000000 ||
+    cuttingOfSoilData.totalSoilCutQty.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Total qty of soil cut (in cum) with max 3 decimal places, value should be > 0 and <= 1000000',
+      'error',
+    );
+    return false;
+  }
+
+  cuttingOfSoilData.totalSoilCutQty = Number(cuttingOfSoilData.totalSoilCutQty);
+  return true;
+};
+
+const validateBricksWorkData = (bricksWorkData: any): boolean => {
+  const totalArea = parseFloat(bricksWorkData.totalBrickWorkArea);
+  const totalCum = parseFloat(bricksWorkData.totalBrickWorkCum);
+
+  if (
+    isNaN(totalArea) ||
+    totalArea <= 0 ||
+    totalArea > 100000 ||
+    bricksWorkData.totalBrickWorkArea.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Total Area (in Sqm) with max 3 decimal places, value should be > 0 and <= 100000',
+      'error',
+    );
+    return false;
+  }
+
+  if (
+    isNaN(totalCum) ||
+    totalCum <= 0 ||
+    totalCum > 100000 ||
+    bricksWorkData.totalBrickWorkCum.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Total Brick Work in Cum with max 3 decimal places, value should be > 0 and <= 100000',
+      'error',
+    );
+    return false;
+  }
+
+  bricksWorkData.totalBrickWorkArea = Number(bricksWorkData.totalBrickWorkArea);
+  bricksWorkData.totalBrickWorkCum = Number(bricksWorkData.totalBrickWorkCum);
+
+  return true;
+};
+
+const validateBackfillingData = (backfillingData: any): boolean => {
+    const totalSoilQty = parseFloat(backfillingData.totalSoilQtyUsed);
+
+    // Validation for Total Quantity of Soil Used
+    if (
+        isNaN(totalSoilQty) ||
+        totalSoilQty <= 0 ||
+        totalSoilQty > 100000 ||
+        backfillingData.totalSoilQtyUsed.split('.')[1]?.length > 3
+    ) {
+        showSnackbar(
+            'Please enter a valid Total Quantity of Soil (in cum) with max 3 decimal places, value should be > 0 and <= 100000',
+            'error',
+        );
+        return false;
+    }
+
+    // Converting the value back to a number after validation
+    backfillingData.totalSoilQtyUsed = Number(backfillingData.totalSoilQtyUsed);
+
+    return true;
+};
+
 const validateLayingOfPQCData = (
   layingOfPQCData: any,
 ): boolean => {
@@ -3595,8 +3813,19 @@ case TASK_TYPES.TACK_COAT:
               });
           }
           break;
-
-        case TASK_TYPES.LAYING_OF_PQC:
+        case TASK_TYPES.CUTTING_OF_SOIL:
+          if (rfiData.metaData.cuttingOfSoilData) {
+            setCuttingOfSoilData(rfiData.metaData.cuttingOfSoilData);
+          } else {
+            setCuttingOfSoilData({
+              safetyMeasuresTaken: 'Y',
+              equipmentAvailable: 'Y',
+              excavationDone: 'Y',
+              totalSoilCutQty: 0.0,
+            });
+          }
+          break;
+        case TASK_TYPES.LAYING_OF_PAVEMENT_QUALITY_CONCRETE::
           if (rfiData.metaData.layingOfPQCData) {
             setLayingOfPQCData(rfiData.metaData.layingOfPQCData);
           } else {
@@ -3625,7 +3854,79 @@ case TASK_TYPES.TACK_COAT:
             });
           }
           break;
-
+        case TASK_TYPES.BACKFILLING:
+            if (rfiData.metaData.backfillingData) {
+                setBackfillingData(rfiData.metaData.backfillingData);
+            } else {
+                setBackfillingData({
+                    areaClearOfDebris: 'Y',
+                    backfillingTimingAppropriate: 'Y',
+                    approvedFillMaterials: 'Y',
+                    layerThicknessCheck: 'Y',
+                    compactionDegreeCheck: 'Y',
+                    layerTestsDone: 'Y',
+                    levelAndElevationVerified: 'Y',
+                    beddingMaterialCompacted: 'Y',
+                    waterproofingMembraneProtected: 'Y',
+                    backfillingCompleteAndClean: 'Y',
+                    totalSoilQtyUsed: 0.0,
+                });
+            }
+            break;
+      case TASK_TYPES.BRICKS_WORK:
+        if (rfiData.metaData.bricksWorkData) {
+          setBricksWorkData(rfiData.metaData.bricksWorkData);
+        } else {
+          setBricksWorkData({
+            drawingsAvailable: 'Y',
+            bricksSizeClassAsPerDrawing: 'Y',
+            requiredBlocksAvailable: 'Y',
+            hackingDone: 'Y',
+            cementMortarApplied: 'Y',
+            aluminiumTemplatesUsed: 'Y',
+            requiredToolsAvailable: 'Y',
+            clientSpecificRequirements: 'N',
+            cementApprovedGrade: 'Y',
+            sandCleanGritty: 'Y',
+            floorLevelMarked: 'Y',
+            pillarMarkingsDone: 'Y',
+            brickworkChecked: 'Y',
+            totalBrickWorkArea: 0.0,
+            totalBrickWorkCum: 0.0,
+          });
+        }
+        break;
+        case TASK_TYPES.FIXING_GEO_CELL:
+          if (rfiData.metaData.fixingGeoCellData) {
+            setFixingGeoCellData(rfiData.metaData.fixingGeoCellData);
+          } else {
+            setFixingGeoCellData({
+              sourceApproved: 'Y',
+              methodStatementApproved: 'Y',
+              slopeMaintained: 'Y',
+              slopeCompacted: 'Y',
+              geoCellLaidAsPerDrawing: 'Y',
+              geoCellJointsFixedProperly: 'Y',
+              geoCellSizeAsPerDrawing: 'Y',
+              totalGeoCellArea: 0.0,
+              totalGeoCellConsumption: 0.0,
+            });
+          }
+          break;
+        case TASK_TYPES.FIXING_OF_MESH:
+          if (rfiData.metaData.fixingOfMeshData) {
+            setFixingOfMeshData(rfiData.metaData.fixingOfMeshData);
+          } else {
+            setFixingOfMeshData({
+              sourceApproved: 'Y',
+              sizeAsPerDrawing: 'Y',
+              wireMeshDamageChecked: 'Y',
+              unitStretchedForFoldsRemoved: 'Y',
+              totalAreaSlope: 0.0,
+              totalQtyMesh: 0.0,
+            });
+          }
+          break;
         case TASK_TYPES.LIFTING_LEFT:
         case TASK_TYPES.LIFTING_YARD:
         case TASK_TYPES.LIFTING_RIGHT:
@@ -5618,13 +5919,58 @@ case TASK_TYPES.TACK_COAT:
             layingOfSeparationMembraneData: layingOfSeparationMembraneData,
         };
         break;
-      case TASK_TYPES.LAYING_OF_PQC:
+      case TASK_TYPES.LAYING_OF_PAVEMENT_QUALITY_CONCRETE:
         if (!validateLayingOfPQCData(layingOfPQCData)) {
           return;
         }
         checkList = {
           taskName: selectedTask.name,
           layingOfPQCData: layingOfPQCData,
+        };
+        break;
+      case TASK_TYPES.BACKFILLING:
+        if (!validateBackfillingData(backfillingData)) {
+            return;
+        }
+        checkList = {
+            taskName: selectedTask.name,
+            backfillingData: backfillingData,
+        };
+        break;
+      case TASK_TYPES.BRICKS_WORK:
+        if (!validateBricksWorkData(bricksWorkData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          bricksWorkData: bricksWorkData,
+        };
+        break;
+      case TASK_TYPES.CUTTING_OF_SOIL:
+        if (!validateCuttingOfSoilData(cuttingOfSoilData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          cuttingOfSoilData: cuttingOfSoilData,
+        };
+        break;
+      case TASK_TYPES.FIXING_GEO_CELL:
+        if (!validateFixingGeoCellData(fixingGeoCellData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          fixingGeoCellData: fixingGeoCellData,
+        };
+        break;
+      case TASK_TYPES.FIXING_OF_MESH:
+        if (!validateFixingOfMeshData(fixingOfMeshData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          fixingOfMeshData: fixingOfMeshData,
         };
         break;
       case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
@@ -13521,6 +13867,27 @@ case TASK_TYPES.TACK_COAT:
             }
             isRequired={true}
           />
+          <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
         </View>
       );
       case TASK_TYPES.LAYING_OF_SEPARATION_MEMBRANE:
@@ -13564,6 +13931,27 @@ case TASK_TYPES.TACK_COAT:
                       }
                       isRequired={true}
                   />
+                  <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
               </View>
           );
       case TASK_TYPES.LAYING_OF_PQC:
@@ -13652,8 +14040,405 @@ case TASK_TYPES.TACK_COAT:
               }
               isRequired={true}
             />
+            <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
           </View>
         );
+      case TASK_TYPES.BACKFILLING: 
+    const backfillingProperties = [
+        { title: 'Verify area is clear of debris and formwork materials', key: 'areaClearOfDebris' },
+        { title: 'Ensure backfilling starts after 7 days or 60% strength of concrete', key: 'backfillingTimingAppropriate' },
+        { title: 'Confirm fill materials are approved and comply with specifications', key: 'approvedFillMaterials' },
+        { title: 'Check layer thickness does not exceed 200mm', key: 'layerThicknessCheck' },
+        { title: 'Check compaction degree (95% according to Proctor test)', key: 'compactionDegreeCheck' },
+        { title: 'Check required tests for each 200mm compacted layer', key: 'layerTestsDone' },
+        { title: 'Verify level and elevation are correct', key: 'levelAndElevationVerified' },
+        { title: 'Ensure bedding material is compacted in trenches for services', key: 'beddingMaterialCompacted' },
+        { title: 'Ensure waterproofing membrane, if any, is undamaged', key: 'waterproofingMembraneProtected' },
+        { title: 'Ensure backfilling is complete and area is clean and tidy', key: 'backfillingCompleteAndClean' },
+    ];
+
+    return (
+        <View>
+            {backfillingProperties.map(property => (
+                <View style={{ flexDirection: 'column' }} key={property.key}>
+                    <DropdownPicker
+                        label={property.title}
+                        value={backfillingData[property.key]}
+                        items={YES_NO_LIST}
+                        onChange={(value: any) =>
+                            setBackfillingData(prevData => ({
+                                ...prevData,
+                                [property.key]: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                </View>
+            ))}
+            <Input
+                label="Total Quantity of Soil Used in cum"
+                value={backfillingData.totalSoilQtyUsed}
+                onChange={(value: any) =>
+                    setBackfillingData(prevData => ({
+                        ...prevData,
+                        totalSoilQtyUsed: value,
+                    }))
+                }
+                isRequired={true}
+            />
+        <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
+        </View>
+    );
+    case TASK_TYPES.BRICKS_WORK:
+      const bricksWorkProperties = [
+        { title: 'Are the latest "Good for Construction" drawings available', key: 'drawingsAvailable' },
+        { title: 'Are the size and Class of bricks as per approved drawing', key: 'bricksSizeClassAsPerDrawing' },
+        { title: 'Are the required number of blocks available', key: 'requiredBlocksAvailable' },
+        { title: 'Has the hacking at contact surfaces of columns and beams been done', key: 'hackingDone' },
+        { title: 'Has cement mortar slurry been applied over the hacked surface', key: 'cementMortarApplied' },
+        { title: 'Have aluminium templates been used for door/window openings', key: 'aluminiumTemplatesUsed' },
+        { title: 'Are the required tools available', key: 'requiredToolsAvailable' },
+        { title: 'Are there any specific requirements from the client', key: 'clientSpecificRequirements' },
+        { title: 'Is Cement of the approved grade and less than 1 month old', key: 'cementApprovedGrade' },
+        { title: 'Is sand medium gritty, clean, and silt-free', key: 'sandCleanGritty' },
+        { title: 'Is the finished floor level button marked on the structural slab', key: 'floorLevelMarked' },
+        { title: 'Are the markings for reference lines on the pillar done', key: 'pillarMarkingsDone' },
+        { title: 'Is the brickwork checked in vertical and horizontal directions', key: 'brickworkChecked' },
+      ];
+
+      return (
+        <View>
+          {bricksWorkProperties.map(property => (
+            <View style={{ flexDirection: 'column' }} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={bricksWorkData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value:any) =>
+                  setBricksWorkData((prevData) => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+          <Input
+            label="Total Area where Brick Work is to be done in Sqm"
+            value={bricksWorkData.totalBrickWorkArea}
+            onChange={(value:any) =>
+              setBricksWorkData((prevData) => ({
+                ...prevData,
+                totalBrickWorkArea: value,
+              }))
+            }
+            isRequired={true}
+          />
+
+          <Input
+            label="Total Brick Work in Cum"
+            value={bricksWorkData.totalBrickWorkCum}
+            onChange={(value:any) =>
+              setBricksWorkData((prevData) => ({
+                ...prevData,
+                totalBrickWorkCum: value,
+              }))
+            }
+            isRequired={true}
+          />
+          <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
+        </View>
+      );
+      case TASK_TYPES.CUTTING_OF_SOIL:
+      const cuttingOfSoilProperties = [
+        {
+          title: 'Whether the proper safety measure taken at the site for cutting of soil?',
+          key: 'safetyMeasuresTaken',
+        },
+        {
+          title: 'Whether all the equipment and tools are available at site at time of cutting of soil?',
+          key: 'equipmentAvailable',
+        },
+        {
+          title: 'Whether the excavation done at required depth?',
+          key: 'excavationDone',
+        },
+      ];
+
+      return (
+        <View>
+          {cuttingOfSoilProperties.map(property => (
+            <View style={{flexDirection: 'column'}} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={cuttingOfSoilData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value: any) =>
+                  setCuttingOfSoilData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+          <Input
+            label="Total qty of soil cut in cum"
+            value={cuttingOfSoilData.totalSoilCutQty}
+            onChange={(value: any) =>
+              setCuttingOfSoilData(prevData => ({
+                ...prevData,
+                totalSoilCutQty: value,
+              }))
+            }
+            isRequired={true}
+          />
+          <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
+        </View>
+      );
+      case TASK_TYPES.FIXING_GEO_CELL:
+      const fixingGeoCellProperties = [
+          { title: 'Whether the source is approved', key: 'sourceApproved' },
+          { title: 'Whether the method statement is approved', key: 'methodStatementApproved' },
+          { title: 'Whether the slope is properly maintained', key: 'slopeMaintained' },
+          { title: 'Whether the slope is properly compacted', key: 'slopeCompacted' },
+          { title: 'Whether the Geo cell is laid as per approved drawing', key: 'geoCellLaidAsPerDrawing' },
+          { title: 'Whether joints of geo cell are fixed properly', key: 'geoCellJointsFixedProperly' },
+          { title: 'Whether the Geo cell size is as per approved drawing', key: 'geoCellSizeAsPerDrawing' },
+      ];
+
+      return (
+          <View>
+              {fixingGeoCellProperties.map(property => (
+                  <View style={{ flexDirection: 'column' }} key={property.key}>
+                      <DropdownPicker
+                          label={property.title}
+                          value={fixingGeoCellData[property.key]}
+                          items={YES_NO_LIST}
+                          onChange={(value: any) =>
+                              setFixingGeoCellData(prevData => ({
+                                  ...prevData,
+                                  [property.key]: value,
+                              }))
+                          }
+                          isRequired={true}
+                      />
+                  </View>
+              ))}
+              <Input
+                  label="Total Area where Geo cell placed (Sqm)"
+                  value={fixingGeoCellData.totalGeoCellArea}
+                  onChange={(value: any) =>
+                      setFixingGeoCellData(prevData => ({
+                          ...prevData,
+                          totalGeoCellArea: value,
+                      }))
+                  }
+                  isRequired={true}
+              />
+
+              <Input
+                  label="Total consumption of Geo cell in Sqm"
+                  value={fixingGeoCellData.totalGeoCellConsumption}
+                  onChange={(value: any) =>
+                      setFixingGeoCellData(prevData => ({
+                          ...prevData,
+                          totalGeoCellConsumption: value,
+                      }))
+                  }
+                  isRequired={true}
+              />
+              <View>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => setComments(text)}
+                />
+              </View>
+          </View>
+      );
+      case TASK_TYPES.FIXING_OF_MESH:
+        const fixingOfMeshProperties = [
+          {
+            title: 'Whether the source of approved',
+            key: 'sourceApproved',
+          },
+          {
+            title: 'Whether the size of mesh as per approved drawing',
+            key: 'sizeAsPerDrawing',
+          },
+          {
+            title: 'Check for the damage of the wire mesh after the opening',
+            key: 'wireMeshDamageChecked',
+          },
+          {
+            title: 'Whether the unit shall be stretched for removal of fold/bend after opening',
+            key: 'unitStretchedForFoldsRemoved',
+          },
+        ];
+
+        return (
+          <View>
+            {fixingOfMeshProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={fixingOfMeshData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setFixingOfMeshData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+
+            <Input
+              label="Total Area of the Slope in Sqm"
+              value={fixingOfMeshData.totalAreaSlope}
+              onChange={(value: any) =>
+                setFixingOfMeshData(prevData => ({
+                  ...prevData,
+                  totalAreaSlope: value,
+                }))
+              }
+              isRequired={true}
+            />
+
+            <Input
+              label="Total Qty of Mesh in kg"
+              value={fixingOfMeshData.totalQtyMesh}
+              onChange={(value: any) =>
+                setFixingOfMeshData(prevData => ({
+                  ...prevData,
+                  totalQtyMesh: value,
+                }))
+              }
+              isRequired={true}
+            />
+            <View>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => setComments(text)}
+                />
+              </View>
+          </View>
+        );
+
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
       case TASK_TYPES.LIFTING_RIGHT:

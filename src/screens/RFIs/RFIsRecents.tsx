@@ -4963,6 +4963,236 @@ const RFIsRecents = (props: any) => {
             ))}
           </View>
         );
+      case TASK_TYPES.LAYING_OF_GRASS_TURF:
+        const layingOfGrassTurfProperties = [
+          {
+            title: 'Ensure turfs are cut and will be planted within 24 hours',
+            key: 'turfsCutPlantedWithin24hrs',
+          },
+          {
+            title: 'Check that the base area is well prepared',
+            key: 'baseAreaPrepared',
+          },
+          {
+            title: 'Verify correct topsoil thickness',
+            key: 'topsoilThicknessVerified',
+          },
+          {
+            title:
+              'Check suitable material to be used for top dressing (no gaps)',
+            key: 'suitableTopDressingMaterial',
+          },
+          {
+            title:
+              'Check the turfing level; fill any sunken or depressed areas',
+            key: 'turfingLevelChecked',
+          },
+          {
+            title: 'Ensure water is sprayed upon completion of turfing work',
+            key: 'waterSprayedCompletion',
+          },
+          {
+            title:
+              'Check that wood nailing is used to hold the turves in position',
+            key: 'woodNailingUsed',
+          },
+          {
+            title: 'Check the turfing arrangement and nailing pattern',
+            key: 'turfingArrangementChecked',
+          },
+          {
+            title: 'Check that the overall turfing work is visually acceptable',
+            key: 'overallTurfingWorkAccepted',
+          },
+          {
+            title: 'Ensure no vehicles enter or trespass the turfed area',
+            key: 'noVehiclesTrespass',
+          },
+          {
+            title:
+              'Ensure hydroseeding is carried out properly with the correct method',
+            key: 'hydroseedingMethodVerified',
+          },
+          {
+            title: 'Fibromat installation properly done and secured',
+            key: 'fibromatInstalled',
+          },
+          {
+            title: 'Total Area Covered with Grass (sqm)',
+            key: 'totalAreaCovered',
+          },
+        ];
+
+        return (
+          <View>
+            {layingOfGrassTurfProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.layingOfGrassTurfData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.LAYING_OF_TOP_SOIL:
+        const layingOfTopSoilProperties = [
+          {
+            title: 'Whether the soil is from approved source',
+            key: 'soilFromApprovedSource',
+          },
+          {
+            title:
+              'Is the proper arrangement for the movement of vehicle in the area',
+            key: 'vehicleMovementArrangement',
+          },
+          {
+            title: 'Is the proper machinery and equipment available at site',
+            key: 'machineryAvailableAtSite',
+          },
+          {
+            title: 'Is the marking done at which level laying is to be done',
+            key: 'markingDoneAtRequiredLevel',
+          },
+          {
+            title: 'Total area where laying is done in Sqm',
+            key: 'totalAreaSqm',
+          },
+          {
+            title: 'Total quantity of soil in cum',
+            key: 'totalQtyOfSoilCum',
+          },
+        ];
+
+        return (
+          <View>
+            {layingOfTopSoilProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.layingOfTopSoilData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.PLACING_AND_JOINTING_OF_CHUTE_MEMBERS:
+        const placingAndJointingOfChuteMembersProperties = [
+          {
+            title: 'Whether the bottom soil layer compacted properly',
+            key: 'bottomSoilCompacted',
+          },
+          {
+            title: 'Whether the slope properly maintained',
+            key: 'slopeMaintained',
+          },
+          {
+            title: 'Whether chute lining done properly',
+            key: 'chuteLiningDone',
+          },
+          {
+            title: 'Whether the support for chute shuttering done properly',
+            key: 'supportForChuteShuttering',
+          },
+          {
+            title: 'Whether the joint done in line and level',
+            key: 'jointInLineAndLevel',
+          },
+          {
+            title: 'Whether the concrete placing arrangement done',
+            key: 'concretePlacingArrangement',
+          },
+          {
+            title: 'Total length of chute in meters',
+            key: 'totalChuteLength',
+          },
+        ];
+
+        return (
+          <View>
+            {placingAndJointingOfChuteMembersProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData
+                      .placingAndJointingOfChuteMembersData?.[property.key]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.PIT_EXCAVATION:
+        const pitExcavationProperties = [
+          {
+            title:
+              'Are there any underground utilities like sewers, water pipelines, cables',
+            key: 'undergroundUtilities',
+          },
+          {
+            title:
+              'Check whether the excavated pits are adequately shored/ timbered',
+            key: 'pitsShoredTimbered',
+          },
+          {
+            title: 'Are the excavated areas provided with fences/ barricades',
+            key: 'fencesBarricadesProvided',
+          },
+          {
+            title:
+              'Are the excavated material kept from the edge of the pit/ trench by at least 1m',
+            key: 'excavatedMaterialKeptAway',
+          },
+          {
+            title:
+              'Are the heavy equipment such as cranes, shovels, back toe loaders etc. kept away at least 6m from the edge of excavated pit',
+            key: 'heavyEquipmentKeptAway',
+          },
+          {
+            title: 'Are danger signs provided near the excavated area',
+            key: 'dangerSignsProvided',
+          },
+          {
+            title: 'Means of access and exit from the work area provided',
+            key: 'accessExitProvided',
+          },
+          {title: 'Check Set out', key: 'setOutChecked'},
+          {
+            title: 'Check Excavation Size with Tolerance (offset)',
+            key: 'excavationSizeChecked',
+          },
+          {
+            title: 'Check for Loose materials / Loose soil',
+            key: 'looseMaterialsChecked',
+          },
+          {
+            title:
+              'Check bottom of excavation (indicate proposed GL/Basement level with respect to existing road level)',
+            key: 'bottomOfExcavationChecked',
+          },
+        ];
+
+        return (
+          <View>
+            {pitExcavationProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.pitExcavationData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
 
       // ReadOnlyRfi
       default:

@@ -466,6 +466,54 @@ const [dumpingData, setDumpingData] = useState([
     probingByStiffwire: string;
   };
   //FormUseStates
+  const [pitExcavationData, setPitExcavationData] = useState({
+    undergroundUtilities: 'Y',
+    pitsShoredTimbered: 'Y',
+    fencesBarricadesProvided: 'Y',
+    excavatedMaterialKeptAway: 'Y',
+    heavyEquipmentKeptAway: 'Y',
+    dangerSignsProvided: 'Y',
+    accessExitProvided: 'Y',
+    setOutChecked: 'Y',
+    excavationSizeChecked: 'Y',
+    looseMaterialsChecked: 'Y',
+    bottomOfExcavationChecked: 'Y',
+  });
+  const [chuteMembersData, setChuteMembersData] = useState({
+    bottomSoilCompacted: 'Y',
+    slopeMaintained: 'Y',
+    chuteLiningDone: 'Y',
+    supportForShutteringDone: 'Y',
+    jointInLineAndLevel: 'Y',
+    concretePlacingArrangement: 'Y',
+    totalChuteLength: 0.0,
+  });
+  const [layingOfTopSoilData, setLayingOfTopSoilData] = useState({
+    approvedSource: 'Y',
+    vehicleMovementArrangement: 'Y',
+    machineryAvailable: 'Y',
+    markingDone: 'Y',
+    totalAreaLaying: 0.0,
+    totalQtyOfSoil: 0.0,
+  });
+
+  const [layingOfGrassTurfData, setLayingOfGrassTurfData] = useState({
+    turfsCutPlantedWithin24hrs: 'Y',
+    baseAreaPrepared: 'Y',
+    topsoilThicknessVerified: 'Y',
+    suitableTopDressingMaterial: 'Y',
+    turfingLevelChecked: 'Y',
+    waterSprayedCompletion: 'Y',
+    woodNailingUsed: 'Y',
+    turfingArrangementChecked: 'Y',
+    overallTurfingWorkAccepted: 'Y',
+    noVehiclesTrespass: 'Y',
+    hydroseedingMethodVerified: 'Y',
+    fibromatInstalled: 'Y',
+    totalAreaCovered: 0.0,
+  });
+
+
   const [fixingOfMeshData, setFixingOfMeshData] = useState({
     sourceApproved: 'Y',
     sizeAsPerDrawing: 'Y',
@@ -1163,6 +1211,81 @@ const onAddMoreLayingOfDlc = () => {
     },
   ]);
 };
+const validateChuteMembersData = (chuteMembersData: any): boolean => {
+  const totalChuteLength = parseFloat(chuteMembersData.totalChuteLength);
+  if (
+    isNaN(totalChuteLength) ||
+    totalChuteLength <= 0 ||
+    totalChuteLength > 100000 ||
+    chuteMembersData.totalChuteLength.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Total Length of Chute (in meters) with max 3 decimal places, value should be > 0 and <= 100000',
+      'error',
+    );
+    return false;
+  }
+
+  chuteMembersData.totalChuteLength = Number(chuteMembersData.totalChuteLength);
+
+  return true;
+};
+
+const validateLayingOfTopSoilData = (layingOfTopSoilData: any): boolean => {
+  const totalAreaLaying = parseFloat(layingOfTopSoilData.totalAreaLaying);
+  const totalQtyOfSoil = parseFloat(layingOfTopSoilData.totalQtyOfSoil);
+  if (
+    isNaN(totalAreaLaying) ||
+    totalAreaLaying <= 0 ||
+    totalAreaLaying > 100000 ||
+    layingOfTopSoilData.totalAreaLaying.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Total Area (Sqm) with max 3 decimal places, value should be > 0 and <= 100000',
+      'error',
+    );
+    return false;
+  }
+  if (
+    isNaN(totalQtyOfSoil) ||
+    totalQtyOfSoil <= 0 ||
+    totalQtyOfSoil > 100000 ||
+    layingOfTopSoilData.totalQtyOfSoil.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Total Quantity of Soil (cum) with max 3 decimal places, value should be > 0 and <= 100000',
+      'error',
+    );
+    return false;
+  }
+
+  layingOfTopSoilData.totalAreaLaying = Number(layingOfTopSoilData.totalAreaLaying);
+  layingOfTopSoilData.totalQtyOfSoil = Number(layingOfTopSoilData.totalQtyOfSoil);
+
+  return true;
+};
+
+const validateLayingOfGrassTurfData = (layingOfGrassTurfData: any): boolean => {
+  const totalAreaCovered = parseFloat(layingOfGrassTurfData.totalAreaCovered);
+  if (
+    isNaN(totalAreaCovered) ||
+    totalAreaCovered <= 0 ||
+    totalAreaCovered > 100000 ||
+    layingOfGrassTurfData.totalAreaCovered.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Total Area Covered (in sqm) with max 3 decimal places, value should be > 0 and <= 100000',
+      'error',
+    );
+    return false;
+  }
+  layingOfGrassTurfData.totalAreaCovered = Number(
+    layingOfGrassTurfData.totalAreaCovered,
+  );
+
+  return true;
+};
+
 const validateFixingOfMeshData = (fixingOfMeshData: any): boolean => {
   const totalAreaSlope = parseFloat(fixingOfMeshData.totalAreaSlope);
   const totalQtyMesh = parseFloat(fixingOfMeshData.totalQtyMesh);
@@ -3927,6 +4050,75 @@ case TASK_TYPES.TACK_COAT:
             });
           }
           break;
+        case TASK_TYPES.LAYING_OF_GRASS_TURF:
+          if (rfiData.metaData.layingOfGrassTurfData) {
+            setLayingOfGrassTurfData(rfiData.metaData.layingOfGrassTurfData);
+          } else {
+            setLayingOfGrassTurfData({
+              turfsCutPlantedWithin24hrs: 'Y',
+              baseAreaPrepared: 'Y',
+              topsoilThicknessVerified: 'Y',
+              suitableTopDressingMaterial: 'Y',
+              turfingLevelChecked: 'Y',
+              waterSprayedCompletion: 'Y',
+              woodNailingUsed: 'Y',
+              turfingArrangementChecked: 'Y',
+              overallTurfingWorkAccepted: 'Y',
+              noVehiclesTrespass: 'Y',
+              hydroseedingMethodVerified: 'Y',
+              fibromatInstalled: 'Y',
+              totalAreaCovered: 0.0,
+            });
+          }
+          break;
+        case TASK_TYPES.LAYING_OF_TOP_SOIL:
+          if (rfiData.metaData.layingOfTopSoilData) {
+            setLayingOfTopSoilData(rfiData.metaData.layingOfTopSoilData);
+          } else {
+            setLayingOfTopSoilData({
+              approvedSource: 'Y',
+              vehicleMovementArrangement: 'Y',
+              machineryAvailable: 'Y',
+              markingDone: 'Y',
+              totalAreaLaying: 0.0,
+              totalQtyOfSoil: 0.0,
+            });
+          }
+          break;
+        case TASK_TYPES.PLACING_AND_JOINTING_OF_CHUTE_MEMBERS:
+          if (rfiData.metaData.chuteMembersData) {
+            setChuteMembersData(rfiData.metaData.chuteMembersData);
+          } else {
+            setChuteMembersData({
+              bottomSoilCompacted: 'Y',
+              slopeMaintained: 'Y',
+              chuteLiningDone: 'Y',
+              supportForShutteringDone: 'Y',
+              jointInLineAndLevel: 'Y',
+              concretePlacingArrangement: 'Y',
+              totalChuteLength: 0.0,
+            });
+          }
+          break;
+        case TASK_TYPES.PIT_EXCAVATION:
+          if (rfiData.metaData.pitExcavationData) {
+            setPitExcavationData(rfiData.metaData.pitExcavationData);
+          } else {
+            setPitExcavationData({
+              undergroundUtilities: 'Y',
+              pitsShoredTimbered: 'Y',
+              fencesBarricadesProvided: 'Y',
+              excavatedMaterialKeptAway: 'Y',
+              heavyEquipmentKeptAway: 'Y',
+              dangerSignsProvided: 'Y',
+              accessExitProvided: 'Y',
+              setOutChecked: 'Y',
+              excavationSizeChecked: 'Y',
+              looseMaterialsChecked: 'Y',
+              bottomOfExcavationChecked: 'Y',
+            });
+          }
+          break;
         case TASK_TYPES.LIFTING_LEFT:
         case TASK_TYPES.LIFTING_YARD:
         case TASK_TYPES.LIFTING_RIGHT:
@@ -5973,6 +6165,39 @@ case TASK_TYPES.TACK_COAT:
           fixingOfMeshData: fixingOfMeshData,
         };
         break;
+      case TASK_TYPES.LAYING_OF_GRASS_TURF:
+        if (!validateLayingOfGrassTurfData(layingOfGrassTurfData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          layingOfGrassTurfData: layingOfGrassTurfData,
+        };
+        break;
+      case TASK_TYPES.LAYING_OF_TOP_SOIL:
+        if (!validateLayingOfTopSoilData(layingOfTopSoilData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          layingOfTopSoilData: layingOfTopSoilData,
+        };
+        break;  
+      case TASK_TYPES.PLACING_AND_JOINTING_OF_CHUTE_MEMBERS:
+        if (!validateChuteMembersData(chuteMembersData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          chuteMembersData: chuteMembersData,
+        };
+        break;
+      case TASK_TYPES.PIT_EXCAVATION:
+        checkList = {
+          taskName: selectedTask.name,
+          pitExcavationData: pitExcavationData,
+        };
+        break;  
       case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
@@ -14438,6 +14663,352 @@ case TASK_TYPES.TACK_COAT:
               </View>
           </View>
         );
+    case TASK_TYPES.LAYING_OF_GRASS_TURF:
+      const layingOfGrassTurfProperties = [
+        {
+          title: 'Ensure turfs are cut and will be planted within 24 hours',
+          key: 'turfsCutPlantedWithin24hrs',
+        },
+        {
+          title: 'Check that the base area is well prepared',
+          key: 'baseAreaPrepared',
+        },
+        {
+          title: 'Verify correct topsoil thickness',
+          key: 'topsoilThicknessVerified',
+        },
+        {
+          title: 'Check suitable material to be used for top dressing (no gaps)',
+          key: 'suitableTopDressingMaterial',
+        },
+        {
+          title: 'Check the turfing level; fill any sunken or depressed areas',
+          key: 'turfingLevelChecked',
+        },
+        {
+          title: 'Ensure water is sprayed upon completion of turfing work',
+          key: 'waterSprayedCompletion',
+        },
+        {
+          title: 'Check that wood nailing is used to hold the turves in position',
+          key: 'woodNailingUsed',
+        },
+        {
+          title: 'Check the turfing arrangement and nailing pattern',
+          key: 'turfingArrangementChecked',
+        },
+        {
+          title: 'Check that the overall turfing work is visually acceptable',
+          key: 'overallTurfingWorkAccepted',
+        },
+        {
+          title: 'Ensure no vehicles enter or trespass the turfed area',
+          key: 'noVehiclesTrespass',
+        },
+        {
+          title: 'Ensure hydroseeding is carried out properly with the correct method',
+          key: 'hydroseedingMethodVerified',
+        },
+        {
+          title: 'Fibromat installation properly done and secured',
+          key: 'fibromatInstalled',
+        },
+      ];
+      
+      return (
+        <View>
+          {layingOfGrassTurfProperties.map(property => (
+            <View style={{flexDirection: 'column'}} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={layingOfGrassTurfData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value: any) =>
+                  setLayingOfGrassTurfData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+          <Input
+            label="Total Area Covered with Grass (sqm)"
+            value={layingOfGrassTurfData.totalAreaCovered}
+            onChange={(value: any) =>
+              setLayingOfGrassTurfData(prevData => ({
+                ...prevData,
+                totalAreaCovered: value,
+              }))
+            }
+            isRequired={true}
+          />
+          <View>
+                <CalendarPicker
+                  label="Date"
+                  value={rfiDate}
+                  onChange={date => setRFIDate(date)}
+                />
+                <TimePicker
+                  label="Time"
+                  value={rfiTime}
+                  onChange={time => setRFITime(time)}
+                />
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => setComments(text)}
+                />
+              </View>
+        </View>
+      );
+      case TASK_TYPES.LAYING_OF_TOP_SOIL:
+      const layingOfTopSoilProperties = [
+        { title: 'Whether the soil is from approved source', key: 'approvedSource' },
+        { title: 'Proper arrangement for vehicle movement', key: 'vehicleMovementArrangement' },
+        { title: 'Proper machinery and equipment available', key: 'machineryAvailable' },
+        { title: 'Marking done for the level of laying', key: 'markingDone' },
+      ];
+      
+      return (
+        <View>
+          {layingOfTopSoilProperties.map(property => (
+            <View style={{ flexDirection: 'column' }} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={layingOfTopSoilData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value: any) =>
+                  setLayingOfTopSoilData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+
+          <Input
+            label="Total Area where Laying is Done (Sqm)"
+            value={layingOfTopSoilData.totalAreaLaying}
+            onChange={(value: any) =>
+              setLayingOfTopSoilData(prevData => ({
+                ...prevData,
+                totalAreaLaying: value,
+              }))
+            }
+            isRequired={true}
+          />
+
+          <Input
+            label="Total Quantity of Soil (cum)"
+            value={layingOfTopSoilData.totalQtyOfSoil}
+            onChange={(value: any) =>
+              setLayingOfTopSoilData(prevData => ({
+                ...prevData,
+                totalQtyOfSoil: value,
+              }))
+            }
+            isRequired={true}
+          />
+          <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
+        </View>
+      );
+case TASK_TYPES.PLACING_AND_JOINTING_CHUTE_MEMBERS:
+  const chuteMembersProperties = [
+    {
+      title: 'Whether the bottom soil layer compacted properly',
+      key: 'bottomSoilCompacted',
+    },
+    {
+      title: 'Whether the slope properly maintained',
+      key: 'slopeMaintained',
+    },
+    {
+      title: 'Whether chute lining done properly',
+      key: 'chuteLiningDone',
+    },
+    {
+      title: 'Whether the support for chute shuttering done properly',
+      key: 'supportForShutteringDone',
+    },
+    {
+      title: 'Whether the joint done in line and level',
+      key: 'jointInLineAndLevel',
+    },
+    {
+      title: 'Whether the concrete placing arrangement done',
+      key: 'concretePlacingArrangement',
+    },
+  ];
+
+  return (
+    <View>
+      {chuteMembersProperties.map(property => (
+        <View style={{flexDirection: 'column'}} key={property.key}>
+          <DropdownPicker
+            label={property.title}
+            value={chuteMembersData[property.key]}
+            items={YES_NO_LIST}
+            onChange={(value: any) =>
+              setChuteMembersData(prevData => ({
+                ...prevData,
+                [property.key]: value,
+              }))
+            }
+            isRequired={true}
+          />
+        </View>
+      ))}
+      <Input
+        label="Total Length of Chute in mtr"
+        value={chuteMembersData.totalChuteLength}
+        onChange={(value: any) =>
+          setChuteMembersData(prevData => ({
+            ...prevData,
+            totalChuteLength: value,
+          }))
+        }
+        isRequired={true}
+      />
+      <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
+    </View>
+  );
+case TASK_TYPES.PIT_EXCAVATION:
+  const pitExcavationProperties = [
+    {
+      title: 'Are there any underground utilities like sewers, water pipelines, cables',
+      key: 'undergroundUtilities',
+    },
+    {
+      title: 'Check whether the excavated pits are adequately shored/ timbered',
+      key: 'pitsShoredTimbered',
+    },
+    {
+      title: 'Are the excavated areas provided with fences/ barricades',
+      key: 'fencesBarricadesProvided',
+    },
+    {
+      title: 'Are the excavated material kept from the edge of the pit/ trench by at least 1m',
+      key: 'excavatedMaterialKeptAway',
+    },
+    {
+      title: 'Are the heavy equipment such as cranes, shovels, back toe loaders etc. kept away at least 6m from the edge of excavated pit',
+      key: 'heavyEquipmentKeptAway',
+    },
+    {
+      title: 'Are danger signs provided near the excavated area',
+      key: 'dangerSignsProvided',
+    },
+    {
+      title: 'Means of access and exit from the work area provided',
+      key: 'accessExitProvided',
+    },
+    {
+      title: 'Check Set out',
+      key: 'setOutChecked',
+    },
+    {
+      title: 'Check Excavation Size with Tolerance (offset)',
+      key: 'excavationSizeChecked',
+    },
+    {
+      title: 'Check for Loose materials / Loose soil',
+      key: 'looseMaterialsChecked',
+    },
+    {
+      title: 'Check bottom of excavation (indicate proposed GL/Basement level with respect to existing road level)',
+      key: 'bottomOfExcavationChecked',
+    },
+  ];
+
+  return (
+    <View>
+      {pitExcavationProperties.map(property => (
+        <View style={{ flexDirection: 'column' }} key={property.key}>
+          <DropdownPicker
+            label={property.title}
+            value={pitExcavationData[property.key]}
+            items={YES_NO_LIST}
+            onChange={(value: any) =>
+              setPitExcavationData(prevData => ({
+                ...prevData,
+                [property.key]: value,
+              }))
+            }
+            isRequired={true}
+          />
+        </View>
+      ))}
+      <View>
+        <CalendarPicker
+          label="Date"
+          value={rfiDate}
+          onChange={date => setRFIDate(date)}
+        />
+        <TimePicker
+          label="Time"
+          value={rfiTime}
+          onChange={time => setRFITime(time)}
+        />
+        <TextInput
+          style={styles.commonInputFiels}
+          placeholder="Recommendations"
+          multiline={true}
+          numberOfLines={4}
+          blurOnSubmit={false}
+          value={comments}
+          onChangeText={text => setComments(text)}
+        />
+      </View>
+    </View>
+  );
 
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:

@@ -553,6 +553,10 @@ export const TASK_TYPES = {
   CUTTING_OF_SOIL:'cutting-of-soil',
   FIXING_GEO_CELL:'fixing-geo-cell',
   FIXING_OF_MESH:'fixing-of-mesh',
+  LAYING_OF_GRASS_TURF:'laying-of-grass-turf',
+  LAYING_OF_TOP_SOIL:'laying-of-top-soil',
+  PLACING_AND_JOINTING_OF_CHUTE_MEMBERS:'placing-and-jointing-of-chute-members',
+  PIT_EXCAVATION:'pit-exacavtion',
 };
 
 export const TEST_MATERIALS_TYPES = {

@@ -557,6 +557,11 @@ export const TASK_TYPES = {
   LAYING_OF_TOP_SOIL:'laying-of-top-soil',
   PLACING_AND_JOINTING_OF_CHUTE_MEMBERS:'placing-and-jointing-of-chute-members',
   PIT_EXCAVATION:'pit-exacavtion',
+  PLANTING_GRASS:'planting-grass',
+  PLANTING_TREES:'planting-trees',
+  PREPARATION_OF_SOIL:'preparation-of-soil',
+  SPREADING_OF_GRASS_SEEDS:'spreading-of-grass-seeds',
+  WATERING:'watering',
 };
 
 export const TEST_MATERIALS_TYPES = {

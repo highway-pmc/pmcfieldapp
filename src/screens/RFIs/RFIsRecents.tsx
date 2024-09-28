@@ -5193,6 +5193,199 @@ const RFIsRecents = (props: any) => {
             ))}
           </View>
         );
+      case TASK_TYPES.PLANTING_GRASS:
+        const plantingGrassPropertiesView = [
+          {
+            title: 'Is grass seeding handled gently',
+            key: 'grassSeedingHandledGently',
+          },
+          {
+            title: 'Is grass seeding done after handling',
+            key: 'grassSeedingDoneAfterHandling',
+          },
+          {
+            title: 'Is the grass seeding protected from the sun and wind',
+            key: 'grassSeedingProtectedFromSunWind',
+          },
+          {
+            title: 'The grass seed kept moist',
+            key: 'grassSeedKeptMoist',
+          },
+          {
+            title: 'Is grass transport during cooler period',
+            key: 'grassTransportDuringCoolerPeriod',
+          },
+          {
+            title: 'Is seeding done as per approved drawing?',
+            key: 'seedingDoneAsPerApprovedDrawing',
+          },
+          {
+            title: 'Is the seeding watered properly for the growth',
+            key: 'seedingWateredProperly',
+          },
+          {
+            title: 'Control weeds near plantation',
+            key: 'controlWeedsNearPlantation',
+          },
+          {
+            title: 'Total Area Covered with Grass (sqm)',
+            key: 'totalAreaCoveredWithGrass',
+          },
+        ];
+
+        return (
+          <View>
+            {plantingGrassPropertiesView.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.plantingGrassData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.PLANTING_TREES:
+        const plantingTreesProperties = [
+          {title: 'Is Plant Handle Gently?', key: 'handleGently'},
+          {title: 'Is the Plant Root Kept in Moist?', key: 'rootKeptMoist'},
+          {
+            title: 'Is Planting Done as per Approved Drawing?',
+            key: 'plantingDoneAsPerDrawing',
+          },
+          {
+            title: 'Is the Watering Done Properly for Growth?',
+            key: 'wateringDoneProperly',
+          },
+          {
+            title: 'Control Weeds Near Plantation?',
+            key: 'controlWeedsNearPlantation',
+          },
+          {title: 'Is Proper Barricading Done?', key: 'barricadingDone'},
+          {
+            title: 'Is the Height of the Plant as per Drawings?',
+            key: 'heightAsPerDrawings',
+          },
+          {
+            title: 'Is the Type of Plant as per Approved Drawings?',
+            key: 'typeOfPlantAsPerDrawing',
+          },
+          {title: 'Total No. of Trees Planted', key: 'totalNoOfTreesPlanted'},
+        ];
+
+        return (
+          <View>
+            {plantingTreesProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.plantingTreesData[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.PREPARATION_OF_SOIL:
+        const preparationOfSoilDisplayProperties = [
+          {
+            title: 'Whether the soil dumped in 200mm layer',
+            key: 'soilDumpedInLayer',
+          },
+          {
+            title:
+              'Whether the soil spread in proper length mentioned in drawing',
+            key: 'soilSpreadProperLength',
+          },
+          {
+            title: 'Whether the soil compacted properly',
+            key: 'soilCompactedProperly',
+          },
+          {
+            title: 'Total qty of soil prepared in cum',
+            key: 'totalQtySoil',
+          },
+          {
+            title: 'Total surface area of soil laid in sqm',
+            key: 'totalSurfaceArea',
+          },
+        ];
+
+        return (
+          <View>
+            {preparationOfSoilDisplayProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.preparationOfSoilData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.SPREADING_OF_GRASS_SEEDS:
+        const spreadingOfGrassSeedsProperties = [
+          {
+            title: 'Is the seed from an approved source?',
+            key: 'seedApprovedSource',
+          },
+          {
+            title: 'Is the surface free from garbage and plastic material?',
+            key: 'surfaceFreeFromGarbage',
+          },
+          {title: 'Is the surface well prepared?', key: 'surfaceWellPrepared'},
+        ];
+
+        return (
+          <View>
+            {spreadingOfGrassSeedsProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.spreadingOfGrassSeedsData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.WATERING:
+        const wateringProperties = [
+          {title: 'Whether the water is clean?', key: 'waterClean'},
+          {
+            title: 'Whether the watering is done three times a day?',
+            key: 'wateringThreeTimesADay',
+          },
+          {
+            title: 'Total Quantity of Water Used (in Litres)',
+            key: 'totalQtyWaterUsed',
+          },
+        ];
+
+        return (
+          <View>
+            {wateringProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.wateringData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
 
       // ReadOnlyRfi
       default:

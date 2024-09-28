@@ -466,6 +466,49 @@ const [dumpingData, setDumpingData] = useState([
     probingByStiffwire: string;
   };
   //FormUseStates
+  const [wateringData, setWateringData] = useState({
+    waterClean: 'Y',
+    wateringThreeTimesADay: 'Y',
+    totalQtyWaterUsed: 0.0,
+  });
+
+  const [spreadingOfGrassSeedsData, setSpreadingOfGrassSeedsData] = useState({
+    seedApprovedSource: 'Y',
+    surfaceFreeFromGarbage: 'Y',
+    surfaceWellPrepared: 'Y',
+  });
+
+  const [preparationOfSoilData, setPreparationOfSoilData] = useState({
+    soilDumpedInLayer: 'Y',
+    soilSpreadProperLength: 'Y',
+    soilCompactedProperly: 'Y',
+    totalQtySoil: 0.0,
+    totalSurfaceArea: 0.0,
+  });
+
+  const [plantingTreesData, setPlantingTreesData] = useState({
+    handleGently: 'Y',
+    rootKeptMoist: 'Y',
+    plantingDoneAsPerDrawing: 'Y',
+    wateringDoneProperly: 'Y',
+    controlWeedsNearPlantation: 'Y',
+    barricadingDone: 'Y',
+    heightAsPerDrawings: 'Y',
+    typeOfPlantAsPerDrawing: 'Y',
+    totalNoOfTreesPlanted: 0,
+  });
+
+  const [plantingGrassData, setPlantingGrassData] = useState({
+    grassSeedingHandledGently: 'Y',
+    grassSeedingDoneAfterHandling: 'Y',
+    grassSeedingProtectedFromSunWind: 'Y',
+    grassSeedKeptMoist: 'Y',
+    grassTransportDuringCoolerPeriod: 'Y',
+    seedingDoneAsPerApprovedDrawing: 'Y',
+    seedingWateredProperly: 'Y',
+    controlWeedsNearPlantation: 'Y',
+    totalAreaCoveredWithGrass: 0.0,
+  });
   const [pitExcavationData, setPitExcavationData] = useState({
     undergroundUtilities: 'Y',
     pitsShoredTimbered: 'Y',
@@ -1211,6 +1254,99 @@ const onAddMoreLayingOfDlc = () => {
     },
   ]);
 };
+const validateWateringData = (wateringData: any): boolean => {
+  const totalQtyWaterUsed = parseFloat(wateringData.totalQtyWaterUsed);
+
+  // Validation for Total Quantity of Water Used
+  if (
+    isNaN(totalQtyWaterUsed) ||
+    totalQtyWaterUsed <= 0 ||
+    totalQtyWaterUsed > 100000 ||
+    wateringData.totalQtyWaterUsed.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Total Quantity of Water Used (in litres) with max 3 decimal places, value should be > 0 and <= 100000',
+      'error',
+    );
+    return false;
+  }
+
+  wateringData.totalQtyWaterUsed = Number(wateringData.totalQtyWaterUsed);
+  return true;
+};
+
+const validatePreparationOfSoilData = (preparationOfSoilData: any): boolean => {
+    const totalQtySoil = parseFloat(preparationOfSoilData.totalQtySoil);
+    const totalSurfaceArea = parseFloat(preparationOfSoilData.totalSurfaceArea);
+
+    if (
+        isNaN(totalQtySoil) ||
+        totalQtySoil <= 0 ||
+        totalQtySoil > 1000000 ||
+        preparationOfSoilData.totalQtySoil.split('.')[1]?.length > 3
+    ) {
+        showSnackbar(
+            'Please enter a valid Total qty of soil prepared (in cum) with max 3 decimal places, value should be > 0 and <= 1000000',
+            'error',
+        );
+        return false;
+    }
+
+    if (
+        isNaN(totalSurfaceArea) ||
+        totalSurfaceArea <= 0 ||
+        totalSurfaceArea > 1000000 ||
+        preparationOfSoilData.totalSurfaceArea.split('.')[1]?.length > 3
+    ) {
+        showSnackbar(
+            'Please enter a valid Total surface area laid (in sqm) with max 3 decimal places, value should be > 0 and <= 1000000',
+            'error',
+        );
+        return false;
+    }
+
+    preparationOfSoilData.totalQtySoil = Number(preparationOfSoilData.totalQtySoil);
+    preparationOfSoilData.totalSurfaceArea = Number(preparationOfSoilData.totalSurfaceArea);
+
+    return true;
+};
+
+const validatePlantingTreesData = (plantingTreesData:any) => {
+    const totalNoOfTreesPlanted = parseInt(plantingTreesData.totalNoOfTreesPlanted, 10);
+
+    // Validation for Total No. of Trees Planted
+    if (isNaN(totalNoOfTreesPlanted) || totalNoOfTreesPlanted <= 0 || totalNoOfTreesPlanted > 100000) {
+        showSnackbar('Please enter a valid Total No. of Trees Planted (> 0 and <= 100000)', 'error');
+        return false;
+    }
+
+    // Converting the value back to a number after validation
+    plantingTreesData.totalNoOfTreesPlanted = totalNoOfTreesPlanted;
+
+    return true;
+};
+
+const validatePlantingGrassData = (plantingGrassData: any): boolean => {
+  const totalAreaCovered = parseFloat(plantingGrassData.totalAreaCoveredWithGrass);
+  if (
+    isNaN(totalAreaCovered) ||
+    totalAreaCovered <= 0 ||
+    totalAreaCovered > 100000 ||
+    plantingGrassData.totalAreaCoveredWithGrass.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Total Area Covered with Grass (sqm) with max 3 decimal places, value should be > 0 and <= 100000',
+      'error',
+    );
+    return false;
+  }
+  plantingGrassData.totalAreaCoveredWithGrass = Number(
+    plantingGrassData.totalAreaCoveredWithGrass,
+  );
+
+  return true;
+};
+
 const validateChuteMembersData = (chuteMembersData: any): boolean => {
   const totalChuteLength = parseFloat(chuteMembersData.totalChuteLength);
   if (
@@ -4119,6 +4255,76 @@ case TASK_TYPES.TACK_COAT:
             });
           }
           break;
+          case TASK_TYPES.PLANTING_GRASS:
+            if (rfiData.metaData.plantingGrassData) {
+              setPlantingGrassData(rfiData.metaData.plantingGrassData);
+            } else {
+              setPlantingGrassData({
+                grassSeedingHandledGently: 'Y',
+                grassSeedingDoneAfterHandling: 'Y',
+                grassSeedingProtectedFromSunWind: 'Y',
+                grassSeedKeptMoist: 'Y',
+                grassTransportDuringCoolerPeriod: 'Y',
+                seedingDoneAsPerApprovedDrawing: 'Y',
+                seedingWateredProperly: 'Y',
+                controlWeedsNearPlantation: 'Y',
+                totalAreaCoveredWithGrass: 0.0,
+              });
+            }
+            break;
+        case TASK_TYPES.PLANTING_TREES:
+          if (rfiData.metaData.plantingTreesData) {
+              setPlantingTreesData(rfiData.metaData.plantingTreesData);
+          } else {
+              setPlantingTreesData({
+                  handleGently: 'Y',
+                  rootKeptMoist: 'Y',
+                  plantingDoneAsPerDrawing: 'Y',
+                  wateringDoneProperly: 'Y',
+                  controlWeedsNearPlantation: 'Y',
+                  barricadingDone: 'Y',
+                  heightAsPerDrawings: 'Y',
+                  typeOfPlantAsPerDrawing: 'Y',
+                  totalNoOfTreesPlanted: 0,
+              });
+          }
+          break;
+        case TASK_TYPES.PREPARATION_OF_SOIL:
+            if (rfiData.metaData.preparationOfSoilData) {
+                setPreparationOfSoilData(rfiData.metaData.preparationOfSoilData);
+            } else {
+                setPreparationOfSoilData({
+                    soilDumpedInLayer: 'Y',
+                    soilSpreadProperLength: 'Y',
+                    soilCompactedProperly: 'Y',
+                    totalQtySoil: 0.0,
+                    totalSurfaceArea: 0.0,
+                });
+            }
+            break;
+        case TASK_TYPES.SPREADING_OF_GRASS_SEEDS:
+          if (rfiData.metaData.spreadingOfGrassSeedsData) {
+            setSpreadingOfGrassSeedsData(rfiData.metaData.spreadingOfGrassSeedsData);
+          } else {
+            setSpreadingOfGrassSeedsData({
+              seedApprovedSource: 'Y',
+              surfaceFreeFromGarbage: 'Y',
+              surfaceWellPrepared: 'Y',
+            });
+          }
+          break;
+        case TASK_TYPES.WATERING:
+          if (rfiData.metaData.wateringData) {
+            setWateringData(rfiData.metaData.wateringData);
+          } else {
+            setWateringData({
+              waterClean: 'Y',
+              wateringThreeTimesADay: 'Y',
+              totalQtyWaterUsed: 0.0,
+            });
+          }
+          break;
+    
         case TASK_TYPES.LIFTING_LEFT:
         case TASK_TYPES.LIFTING_YARD:
         case TASK_TYPES.LIFTING_RIGHT:
@@ -6198,6 +6404,49 @@ case TASK_TYPES.TACK_COAT:
           pitExcavationData: pitExcavationData,
         };
         break;  
+      case TASK_TYPES.PLANTING_GRASS:
+        if (!validatePlantingGrassData(plantingGrassData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          plantingGrassData: plantingGrassData,
+        };
+        break;
+      case TASK_TYPES.PLANTING_TREES:
+          if (!validatePlantingTreesData(plantingTreesData)) {
+              return;
+          }
+          checkList = {
+              taskName: selectedTask.name,
+              plantingTreesData: plantingTreesData,
+          };
+          break;
+      case TASK_TYPES.PREPARATION_OF_SOIL:
+          if (!validatePreparationOfSoilData(preparationOfSoilData)) {
+              return;
+          }
+          checkList = {
+              taskName: selectedTask.name,
+              preparationOfSoilData: preparationOfSoilData,
+          };
+          break;
+      case TASK_TYPES.SPREADING_OF_GRASS_SEEDS:
+        checkList = {
+          taskName: selectedTask.name,
+          spreadingOfGrassSeedsData: spreadingOfGrassSeedsData,
+        };
+        break;
+      case TASK_TYPES.WATERING:
+        if (!validateWateringData(wateringData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          wateringData: wateringData,
+        };
+        break;
+
       case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
@@ -15009,6 +15258,345 @@ case TASK_TYPES.PIT_EXCAVATION:
       </View>
     </View>
   );
+    case TASK_TYPES.PLANTING_GRASS:
+      const plantingGrassProperties = [
+        {
+          title: 'Is grass seeding handled gently',
+          key: 'grassSeedingHandledGently',
+        },
+        {
+          title: 'Is grass seeding done after handling',
+          key: 'grassSeedingDoneAfterHandling',
+        },
+        {
+          title: 'Is the grass seeding protected from the sun and wind',
+          key: 'grassSeedingProtectedFromSunWind',
+        },
+        {
+          title: 'The grass seed kept moist',
+          key: 'grassSeedKeptMoist',
+        },
+        {
+          title: 'Is grass transport during cooler period',
+          key: 'grassTransportDuringCoolerPeriod',
+        },
+        {
+          title: 'Is seeding done as per approved drawing?',
+          key: 'seedingDoneAsPerApprovedDrawing',
+        },
+        {
+          title: 'Is the seeding watered properly for the growth',
+          key: 'seedingWateredProperly',
+        },
+        {
+          title: 'Control weeds near plantation',
+          key: 'controlWeedsNearPlantation',
+        },
+      ];
+
+      return (
+        <View>
+          {plantingGrassProperties.map(property => (
+            <View style={{ flexDirection: 'column' }} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={plantingGrassData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value: any) =>
+                  setPlantingGrassData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+
+          <Input
+            label="Total Area Covered with Grass (sqm)"
+            value={plantingGrassData.totalAreaCoveredWithGrass}
+            onChange={(value: any) =>
+              setPlantingGrassData(prevData => ({
+                ...prevData,
+                totalAreaCoveredWithGrass: value,
+              }))
+            }
+            isRequired={true}
+          />
+          <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
+        </View>
+      );
+      case TASK_TYPES.PLANTING_TREES:
+          const plantingTreesProperties = [
+              { title: 'Is Plant Handle Gently?', key: 'handleGently' },
+              { title: 'Is the Plant Root Kept in Moist?', key: 'rootKeptMoist' },
+              { title: 'Is Planting Done as per Approved Drawing?', key: 'plantingDoneAsPerDrawing' },
+              { title: 'Is the Watering Done Properly for Growth?', key: 'wateringDoneProperly' },
+              { title: 'Control Weeds Near Plantation?', key: 'controlWeedsNearPlantation' },
+              { title: 'Is Proper Barricading Done?', key: 'barricadingDone' },
+              { title: 'Is the Height of the Plant as per Drawings?', key: 'heightAsPerDrawings' },
+              { title: 'Is the Type of Plant as per Approved Drawings?', key: 'typeOfPlantAsPerDrawing' },
+          ];
+          return (
+              <View>
+                  {plantingTreesProperties.map(property => (
+                      <View style={{ flexDirection: 'column' }} key={property.key}>
+                          <DropdownPicker
+                              label={property.title}
+                              value={plantingTreesData[property.key]}
+                              items={YES_NO_LIST}
+                              onChange={(value:any) =>
+                                  setPlantingTreesData(prevData => ({
+                                      ...prevData,
+                                      [property.key]: value,
+                                  }))
+                              }
+                              isRequired={true}
+                          />
+                      </View>
+                  ))}
+                  <Input
+                      label="Total No. of Trees Planted"
+                      value={plantingTreesData.totalNoOfTreesPlanted}
+                      onChange={(value:any) =>
+                          setPlantingTreesData(prevData => ({
+                              ...prevData,
+                              totalNoOfTreesPlanted: value,
+                          }))
+                      }
+                      isRequired={true}
+                  />
+                 <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View> 
+              </View>
+          );
+  case TASK_TYPES.PREPARATION_OF_SOIL:
+      const preparationOfSoilProperties = [
+          {
+              title: 'Is the soil dumped in a 200mm layer?',
+              key: 'soilDumpedInLayer',
+          },
+          {
+              title: 'Is the soil spread in the proper length as mentioned in drawing?',
+              key: 'soilSpreadProperLength',
+          },
+          {
+              title: 'Is the soil compacted properly?',
+              key: 'soilCompactedProperly',
+          },
+      ];
+
+      return (
+          <View>
+              {preparationOfSoilProperties.map(property => (
+                  <View style={{flexDirection: 'column'}} key={property.key}>
+                      <DropdownPicker
+                          label={property.title}
+                          value={preparationOfSoilData[property.key]}
+                          items={YES_NO_LIST}
+                          onChange={(value: any) =>
+                              setPreparationOfSoilData(prevData => ({
+                                  ...prevData,
+                                  [property.key]: value,
+                              }))
+                          }
+                          isRequired={true}
+                      />
+                  </View>
+              ))}
+              <Input
+                  label="Total qty of soil prepared in cum"
+                  value={preparationOfSoilData.totalQtySoil}
+                  onChange={(value: any) =>
+                      setPreparationOfSoilData(prevData => ({
+                          ...prevData,
+                          totalQtySoil: value,
+                      }))
+                  }
+                  isRequired={true}
+              />
+
+              <Input
+                  label="Total surface area of soil laid in sqm"
+                  value={preparationOfSoilData.totalSurfaceArea}
+                  onChange={(value: any) =>
+                      setPreparationOfSoilData(prevData => ({
+                          ...prevData,
+                          totalSurfaceArea: value,
+                      }))
+                  }
+                  isRequired={true}
+              />
+          <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View> 
+        </View>
+      );
+    case TASK_TYPES.SPREADING_OF_GRASS_SEEDS:
+      const spreadingOfGrassSeedsProperties = [
+        { title: 'Is the seed from an approved source?', key: 'seedApprovedSource' },
+        { title: 'Is the surface free from garbage and plastic material?', key: 'surfaceFreeFromGarbage' },
+        { title: 'Is the surface well prepared?', key: 'surfaceWellPrepared' },
+      ];
+
+      return (
+        <View>
+          {spreadingOfGrassSeedsProperties.map(property => (
+            <View style={{ flexDirection: 'column' }} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={spreadingOfGrassSeedsData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value) =>
+                  setSpreadingOfGrassSeedsData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+           <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View> 
+        </View>
+      );
+      case TASK_TYPES.WATERING:
+        const wateringProperties = [
+          { title: 'Whether the water is clean?', key: 'waterClean' },
+          { title: 'Whether the watering is done three times a day?', key: 'wateringThreeTimesADay' },
+        ];
+
+        return (
+          <View>
+            {wateringProperties.map(property => (
+              <View style={{ flexDirection: 'column' }} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={wateringData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setWateringData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+
+            <Input
+              label="Total Quantity of Water Used (in Litres)"
+              value={wateringData.totalQtyWaterUsed}
+              onChange={(value: any) =>
+                setWateringData(prevData => ({
+                  ...prevData,
+                  totalQtyWaterUsed: value,
+                }))
+              }
+              isRequired={true}
+            />
+            <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View> 
+          </View>
+        );
 
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:

@@ -562,6 +562,8 @@ export const TASK_TYPES = {
   PREPARATION_OF_SOIL:'preparation-of-soil',
   SPREADING_OF_GRASS_SEEDS:'spreading-of-grass-seeds',
   WATERING:'watering',
+  PLANTATION:'plantation',
+  STONE_PITCHING:'stone-pitching'
 };
 
 export const TEST_MATERIALS_TYPES = {

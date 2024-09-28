@@ -466,6 +466,31 @@ const [dumpingData, setDumpingData] = useState([
     probingByStiffwire: string;
   };
   //FormUseStates
+  const [stonePitchingData, setStonePitchingData] = useState({
+    constructionDocsApproved: 'Y',
+    workOfOtherTradesCompleted: 'Y',
+    layerCompacted: 'Y',
+    stoneShapeAndSizeAsPerSpec: 'Y',
+    mortarReady: 'Y',
+    mortarBondingDone: 'Y',
+    totalSurfaceArea: 0.0,
+    totalMaterialLaid: 0.0,
+  });
+
+  const [plantationData, setPlantationData] = useState({
+    seedingHandledGently: 'Y',
+    seedingDoneAfterHandling: 'Y',
+    protectedFromSunWind: 'Y',
+    seedKeptMoist: 'Y',
+    transportDuringCoolerPeriod: 'Y',
+    seedingAsPerDrawing: 'Y',
+    waterDoneForGrowth: 'Y',
+    controlWeeds: 'Y',
+    barricadingDone: 'Y',
+    totalPlantsPlanted: 0,
+    totalAreaCovered: 0.0,
+  });
+
   const [wateringData, setWateringData] = useState({
     waterClean: 'Y',
     wateringThreeTimesADay: 'Y',
@@ -1254,6 +1279,72 @@ const onAddMoreLayingOfDlc = () => {
     },
   ]);
 };
+const validateStonePitchingData = (stonePitchingData:any) => {
+  const totalSurfaceArea = parseFloat(stonePitchingData.totalSurfaceArea);
+  const totalMaterialLaid = parseFloat(stonePitchingData.totalMaterialLaid);
+
+  // Validation for Total Surface Area of Stone Pitching (sqm)
+  if (
+    isNaN(totalSurfaceArea) ||
+    totalSurfaceArea <= 0 ||
+    totalSurfaceArea > 100000 ||
+    stonePitchingData.totalSurfaceArea.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Total Surface Area (sqm) with max 3 decimal places, value should be > 0 and <= 100,000',
+      'error',
+    );
+    return false;
+  }
+
+  // Validation for Total Material Laid (tonne)
+  if (
+    isNaN(totalMaterialLaid) ||
+    totalMaterialLaid <= 0 ||
+    totalMaterialLaid > 100000 ||
+    stonePitchingData.totalMaterialLaid.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Total Material Laid (tonne) with max 3 decimal places, value should be > 0 and <= 100,000',
+      'error',
+    );
+    return false;
+  }
+
+  return true;
+};
+
+const validatePlantationData = (plantationData: any): boolean => {
+  const totalPlants = parseInt(plantationData.totalPlantsPlanted);
+  const totalArea = parseFloat(plantationData.totalAreaCovered);
+
+  if (isNaN(totalPlants) || totalPlants <= 0 || totalPlants > 100000) {
+    showSnackbar(
+      'Please enter a valid Total Number of Plants Planted (value > 0, max 100000)',
+      'error'
+    );
+    return false;
+  }
+
+  if (
+    isNaN(totalArea) ||
+    totalArea <= 0 ||
+    totalArea > 100000 ||
+    plantationData.totalAreaCovered.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Total Area Covered (in Sqm) with max 3 decimal places, value should be > 0 and <= 100000',
+      'error'
+    );
+    return false;
+  }
+
+  plantationData.totalPlantsPlanted = Number(plantationData.totalPlantsPlanted);
+  plantationData.totalAreaCovered = Number(plantationData.totalAreaCovered);
+
+  return true;
+};
+
 const validateWateringData = (wateringData: any): boolean => {
   const totalQtyWaterUsed = parseFloat(wateringData.totalQtyWaterUsed);
 
@@ -4324,7 +4415,41 @@ case TASK_TYPES.TACK_COAT:
             });
           }
           break;
-    
+        case TASK_TYPES.PLANTATION:
+          if (rfiData.metaData.plantationData) {
+            setPlantationData(rfiData.metaData.plantationData);
+          } else {
+            setPlantationData({
+              seedingHandledGently: 'Y',
+              seedingDoneAfterHandling: 'Y',
+              protectedFromSunWind: 'Y',
+              seedKeptMoist: 'Y',
+              transportDuringCoolerPeriod: 'Y',
+              seedingAsPerDrawing: 'Y',
+              waterDoneForGrowth: 'Y',
+              controlWeeds: 'Y',
+              barricadingDone: 'Y',
+              totalPlantsPlanted: 0,
+              totalAreaCovered: 0.0,
+            });
+          }
+          break;
+        case TASK_TYPES.STONE_PITCHING:
+          if (rfiData.metaData.stonePitchingData) {
+            setStonePitchingData(rfiData.metaData.stonePitchingData);
+          } else {
+            setStonePitchingData({
+              constructionDocsApproved: 'Y',
+              workOfOtherTradesCompleted: 'Y',
+              layerCompacted: 'Y',
+              stoneShapeAndSizeAsPerSpec: 'Y',
+              mortarReady: 'Y',
+              mortarBondingDone: 'Y',
+              totalSurfaceArea: 0.0,
+              totalMaterialLaid: 0.0,
+            });
+          }
+          break;
         case TASK_TYPES.LIFTING_LEFT:
         case TASK_TYPES.LIFTING_YARD:
         case TASK_TYPES.LIFTING_RIGHT:
@@ -6446,7 +6571,24 @@ case TASK_TYPES.TACK_COAT:
           wateringData: wateringData,
         };
         break;
-
+      case TASK_TYPES.PLANTATION:
+        if (!validatePlantationData(plantationData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          plantationData: plantationData,
+        };
+        break;
+      case TASK_TYPES.STONE_PITCHING:
+        if (!validateStonePitchingData(stonePitchingData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          stonePitchingData: stonePitchingData,
+        };
+        break;
       case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
@@ -15595,6 +15737,147 @@ case TASK_TYPES.PIT_EXCAVATION:
               onChangeText={text => setComments(text)}
             />
           </View> 
+          </View>
+        );
+    case TASK_TYPES.PLANTATION:
+      const plantationProperties = [
+        { title: 'Is seeding handled gently', key: 'seedingHandledGently' },
+        { title: 'Is plant seeding done after handling', key: 'seedingDoneAfterHandling' },
+        { title: 'Is the plant seeding protected from the sun and wind', key: 'protectedFromSunWind' },
+        { title: 'The plant seed kept in moist', key: 'seedKeptMoist' },
+        { title: 'Is seeding transport during cooler period', key: 'transportDuringCoolerPeriod' },
+        { title: 'Is seeding done as per approved drawing?', key: 'seedingAsPerDrawing' },
+        { title: 'Is the seeding water done properly for the growth', key: 'waterDoneForGrowth' },
+        { title: 'Control weeds near plantation', key: 'controlWeeds' },
+        { title: 'Is proper barricading done around the plant to avoid animal damage', key: 'barricadingDone' },
+      ];
+
+      return (
+        <View>
+          {plantationProperties.map(property => (
+            <View style={{flexDirection: 'column'}} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={plantationData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value: any) =>
+                  setPlantationData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+
+          <Input
+            label="Total Number of Plants Planted"
+            value={plantationData.totalPlantsPlanted}
+            onChange={(value: any) =>
+              setPlantationData(prevData => ({
+                ...prevData,
+                totalPlantsPlanted: value,
+              }))
+            }
+            isRequired={true}
+          />
+
+          <Input
+            label="Total Area Covered in Sqm"
+            value={plantationData.totalAreaCovered}
+            onChange={(value: any) =>
+              setPlantationData(prevData => ({
+                ...prevData,
+                totalAreaCovered: value,
+              }))
+            }
+            isRequired={true}
+          />
+          <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
+        </View>
+      );
+      case TASK_TYPES.STONE_PITCHING:
+        const stonePitchingProperties = [
+          { title: 'All Construction Docs, Approvals, and Drawings are in Place', key: 'constructionDocsApproved' },
+          { title: 'Work of Other Trades Completed and Accepted', key: 'workOfOtherTradesCompleted' },
+          { title: 'Layer Compacted', key: 'layerCompacted' },
+          { title: 'Stone Shape and Size as per Specification', key: 'stoneShapeAndSizeAsPerSpec' },
+          { title: 'Mortar Bonding Material Ready at Work Area', key: 'mortarReady' },
+          { title: 'Mortar Bonding with Stone Done Properly', key: 'mortarBondingDone' },
+        ];
+        return (
+          <View>
+            {stonePitchingProperties.map(property => (
+              <View style={{ flexDirection: 'column' }} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={stonePitchingData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value:any) =>
+                    setStonePitchingData(prevData => ({ ...prevData, [property.key]: value }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <Input
+              label="Total Surface Area of Stone Pitching (sqm)"
+              value={stonePitchingData.totalSurfaceArea}
+              onChange={(value:any) =>
+                setStonePitchingData(prevData => ({ ...prevData, totalSurfaceArea: value }))
+              }
+              isRequired={true}
+            />
+            <Input
+              label="Total Material Laid (tonne)"
+              value={stonePitchingData.totalMaterialLaid}
+              onChange={(value:any) =>
+                setStonePitchingData(prevData => ({ ...prevData, totalMaterialLaid: value }))
+              }
+              isRequired={true}
+            />
+            <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
           </View>
         );
 

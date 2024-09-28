@@ -5386,6 +5386,164 @@ const RFIsRecents = (props: any) => {
             ))}
           </View>
         );
+      case TASK_TYPES.PLANTATION:
+        const plantationProperties = [
+          {title: 'Is seeding handled gently', key: 'seedingHandledGently'},
+          {
+            title: 'Is plant seedings done after handling',
+            key: 'seedingDoneAfterHandling',
+          },
+          {
+            title: 'Is the plant seeding protected from the sun and wind',
+            key: 'protectedFromSunWind',
+          },
+          {title: 'The plant seed kept in moist', key: 'seedKeptInMoist'},
+          {
+            title: 'Is seeding transport during cooler period',
+            key: 'transportDuringCoolerPeriod',
+          },
+          {
+            title: 'Is seeding done as per approved drawing?',
+            key: 'seedingDoneAsPerDrawing',
+          },
+          {
+            title: 'Is the seeding watered properly for the growth',
+            key: 'seedingWateredProperly',
+          },
+          {
+            title: 'Control weeds near plantation',
+            key: 'controlWeedsNearPlantation',
+          },
+          {
+            title:
+              'Is proper barricading done around the plant to avoid animal damage',
+            key: 'barricadingDone',
+          },
+          {
+            title: 'Total number of plants planted',
+            key: 'totalNoOfPlantsPlanted',
+          },
+          {title: 'Total area covered in sqm', key: 'totalAreaCovered'},
+        ];
+
+        return (
+          <View>
+            {plantationProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.plantationData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.STONE_PITCHING:
+        const stonePitchingProperties = [
+          {
+            title:
+              'All related construction documents, material approvals, and shop drawings are in place and approved',
+            key: 'documentsApprovalsInPlace',
+          },
+          {
+            title: 'Work of other trades is completed and accepted',
+            key: 'workOfOtherTradesCompleted',
+          },
+          {
+            title: 'Whether the below layer is compacted',
+            key: 'belowLayerCompacted',
+          },
+          {
+            title: 'Whether the stone shape and size as per specification',
+            key: 'stoneShapeSizeSpecification',
+          },
+          {
+            title:
+              'Whether the mortar bonding material is ready at the work area',
+            key: 'mortarMaterialReady',
+          },
+          {
+            title: 'Whether the mortar bonding with stone done properly',
+            key: 'mortarBondingProper',
+          },
+          {
+            title: 'Total surface area of stone pitching done in sqm',
+            key: 'totalSurfaceArea',
+          },
+          {
+            title: 'Total material laid in tonne',
+            key: 'totalMaterialLaid',
+          },
+        ];
+
+        return (
+          <View>
+            {stonePitchingProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={stonePitchingData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setStonePitchingData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+
+            <Input
+              label="Total Surface Area of Stone Pitching Done in sqm"
+              value={stonePitchingData.totalSurfaceArea}
+              onChange={(value: any) =>
+                setStonePitchingData(prevData => ({
+                  ...prevData,
+                  totalSurfaceArea: value,
+                }))
+              }
+              isRequired={true}
+            />
+
+            <Input
+              label="Total Material Laid in Tonne"
+              value={stonePitchingData.totalMaterialLaid}
+              onChange={(value: any) =>
+                setStonePitchingData(prevData => ({
+                  ...prevData,
+                  totalMaterialLaid: value,
+                }))
+              }
+              isRequired={true}
+            />
+
+            <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFields}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+          </View>
+        );
 
       // ReadOnlyRfi
       default:

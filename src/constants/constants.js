@@ -563,7 +563,11 @@ export const TASK_TYPES = {
   SPREADING_OF_GRASS_SEEDS:'spreading-of-grass-seeds',
   WATERING:'watering',
   PLANTATION:'plantation',
-  STONE_PITCHING:'stone-pitching'
+  STONE_PITCHING:'stone-pitching',
+  FIXING_INVERTER_INSTALLATION:'fixing-inverter-installation',
+  ERECTION_OF_DOUBLE_POLE_STRUCTURE:'erection-of-double-pole-structure',
+  FIXING_OF_MC4_Y_CONNECTOR:'fixing-of-mc4-y-connector',
+  FIXING_OF_MMS:'fixing-of-mms'
 };
 
 export const TEST_MATERIALS_TYPES = {

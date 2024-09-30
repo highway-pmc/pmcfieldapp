@@ -466,6 +466,52 @@ const [dumpingData, setDumpingData] = useState([
     probingByStiffwire: string;
   };
   //FormUseStates
+  const [fixingOfMMSData, setFixingOfMMSData] = useState({
+    drawingsApproved: 'Y',
+    materialInspectedAndCleared: 'Y',
+    materialReachedUndamaged: 'Y',
+    foundationCompleted: 'Y',
+    concreteAchievedStrength: 'Y',
+    alignmentAsPerDrawings: 'Y',
+    lineLevelChecked: 'Y',
+    structureAngleChecked: 'Y',
+    nutBoltsTorquedProperly: 'Y',
+    visualFitCheck: 'Y',
+    totalNoOfMMSTablesErected: 0,
+    totalLengthOfMMSCompleted: 0.0,
+  });
+
+  const [fixingOfMC4Data, setFixingOfMC4Data] = useState({
+    cablesConnected: 'Y',
+    connectionsChecked: 'Y',
+    totalYConnectorsUsed: 0,
+  });
+
+  const [erectionOfDoublePoleStructureData, setErectionOfDoublePoleStructureData] = useState({
+    drawingsApproved: 'Y',
+    structureAtSiteReady: 'Y',
+    foundationWorkCompleted: 'Y',
+    concreteStrengthAchieved: 'Y',
+    installationMethodologyApproved: 'Y',
+    safetyArrangementsInPlace: 'Y',
+    machineryManpowerAvailable: 'Y',
+    erectionCompletedAsPerMethodology: 'Y',
+    totalStructuresErected: 0,
+  });
+  const [inverterInstallationData, setInverterInstallationData] = useState({
+    drawingsApproved: 'Y',
+    equipmentInspected: 'Y',
+    equipmentDamagedInformed: 'Y',
+    foundationWorkCompleted: 'Y',
+    concreteStrengthAchieved: 'Y',
+    installationMethodologyApproved: 'Y',
+    safetyArrangementsInPlace: 'Y',
+    machineryAndManpowerAvailable: 'Y',
+    installationCompletedAsPerMethodology: 'Y',
+    manufacturerInstructionsComplied: 'Y',
+    totalEquipmentInstalled: 0,
+  });
+
   const [stonePitchingData, setStonePitchingData] = useState({
     constructionDocsApproved: 'Y',
     workOfOtherTradesCompleted: 'Y',
@@ -1279,6 +1325,37 @@ const onAddMoreLayingOfDlc = () => {
     },
   ]);
 };
+const validateInverterInstallationData = (inverterInstallationData: any): boolean => {
+  // Validation for total number of equipment installed
+  const totalEquipmentInstalled = parseInt(inverterInstallationData.totalEquipmentInstalled);
+
+  if (isNaN(totalEquipmentInstalled) || totalEquipmentInstalled <= 0 || totalEquipmentInstalled > 1000) {
+    showSnackbar(
+      'Please enter a valid number of equipment installed (should be > 0 and <= 1000)',
+      'error',
+    );
+    return false;
+  }
+
+  return true;
+};
+const validateErectionOfDoublePoleStructureData = (erectionOfDoublePoleStructureData: any): boolean => {
+  // Validate total number of structures erected
+  const totalStructuresErected = parseInt(erectionOfDoublePoleStructureData.totalStructuresErected, 10);
+  if (isNaN(totalStructuresErected) || totalStructuresErected <= 0 || totalStructuresErected > 1000) {
+    showSnackbar(
+      'Please enter a valid Total number of Double Pole Structures erected (should be > 0 and <= 1000)',
+      'error',
+    );
+    return false;
+  }
+
+  // Converting the values back to numbers after validation
+  erectionOfDoublePoleStructureData.totalStructuresErected = Number(erectionOfDoublePoleStructureData.totalStructuresErected);
+  
+  return true;
+};
+
 const validateStonePitchingData = (stonePitchingData:any) => {
   const totalSurfaceArea = parseFloat(stonePitchingData.totalSurfaceArea);
   const totalMaterialLaid = parseFloat(stonePitchingData.totalMaterialLaid);
@@ -4450,6 +4527,87 @@ case TASK_TYPES.TACK_COAT:
             });
           }
           break;
+      case TASK_TYPES.FIXING_INVERTER_INSTALLATION:
+        if (rfiData.metaData.inverterInstallationData) {
+          setInverterInstallationData(rfiData.metaData.inverterInstallationData);
+        } else {
+          setInverterInstallationData({
+            drawingsApproved: 'Y',
+            equipmentInspected: 'Y',
+            equipmentDamagedInformed: 'Y',
+            foundationWorkCompleted: 'Y',
+            concreteStrengthAchieved: 'Y',
+            installationMethodologyApproved: 'Y',
+            safetyArrangementsInPlace: 'Y',
+            machineryAndManpowerAvailable: 'Y',
+            installationCompletedAsPerMethodology: 'Y',
+            manufacturerInstructionsComplied: 'Y',
+            totalEquipmentInstalled: 0,
+          });
+        }
+        break;
+        case TASK_TYPES.ERECTION_OF_DOUBLE_POLE_STRUCTURE:
+          if (rfiData.metaData.erectionOfDoublePoleStructureData) {
+            setErectionOfDoublePoleStructureData(
+              rfiData.metaData.erectionOfDoublePoleStructureData,
+            );
+          } else {
+            setErectionOfDoublePoleStructureData({
+              drawingsApproved: 'Y',
+              structureAtSiteReady: 'Y',
+              foundationWorkCompleted: 'Y',
+              concreteStrengthAchieved: 'Y',
+              installationMethodologyApproved: 'Y',
+              safetyArrangementsInPlace: 'Y',
+              machineryManpowerAvailable: 'Y',
+              erectionCompletedAsPerMethodology: 'Y',
+              totalStructuresErected: 0,
+            });
+          }
+          break;
+        case TASK_TYPES.FIXING_OF_MC4_Y_CONNECTOR:
+          if (rfiData.metaData.fixingOfMC4Data) {
+            setFixingOfMC4Data(rfiData.metaData.fixingOfMC4Data);
+          } else {
+            setFixingOfMC4Data({
+              cablesConnected: 'Y',
+              connectionsChecked: 'Y',
+              totalYConnectorsUsed: 0,
+            });
+          }
+          break;
+        case TASK_TYPES.FIXING_OF_MC4_Y_CONNECTOR:
+          if (rfiData.metaData.fixingOfMC4Data) {
+            setFixingOfMC4Data(rfiData.metaData.fixingOfMC4Data);
+          } else {
+            setFixingOfMC4Data({
+              cablesConnected: 'Y',
+              connectionsChecked: 'Y',
+              totalYConnectorsUsed: 0,
+            });
+          }
+          break;
+        case TASK_TYPES.FIXING_OF_MMS:
+          if (rfiData.metaData.fixingOfMMSData) {
+            setFixingOfMMSData(rfiData.metaData.fixingOfMMSData);
+          } else {
+            setFixingOfMMSData({
+              drawingsApproved: 'Y',
+              materialInspectedAndCleared: 'Y',
+              materialReachedUndamaged: 'Y',
+              foundationCompleted: 'Y',
+              concreteAchievedStrength: 'Y',
+              alignmentAsPerDrawings: 'Y',
+              lineLevelChecked: 'Y',
+              structureAngleChecked: 'Y',
+              nutBoltsTorquedProperly: 'Y',
+              visualFitCheck: 'Y',
+              totalNoOfMMSTablesErected: 0,
+              totalLengthOfMMSCompleted: 0.0,
+            });
+          }
+          break;
+
         case TASK_TYPES.LIFTING_LEFT:
         case TASK_TYPES.LIFTING_YARD:
         case TASK_TYPES.LIFTING_RIGHT:
@@ -6589,6 +6747,42 @@ case TASK_TYPES.TACK_COAT:
           stonePitchingData: stonePitchingData,
         };
         break;
+      case TASK_TYPES.FIXING_INVERTER_INSTALLATION:
+        if (!validateInverterInstallationData(inverterInstallationData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          inverterInstallationData: inverterInstallationData,
+        };
+        break;
+      case TASK_TYPES.ERECTION_OF_DOUBLE_POLE_STRUCTURE:
+        if (!validateErectionOfDoublePoleStructureData(erectionOfDoublePoleStructureData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          erectionOfDoublePoleStructureData: erectionOfDoublePoleStructureData,
+        };
+        break;
+      case TASK_TYPES.FIXING_OF_MC4_Y_CONNECTOR:
+        if (!validateFixingOfMC4Data(fixingOfMC4Data)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          fixingOfMC4Data: fixingOfMC4Data,
+        };
+        break;
+      case TASK_TYPES.FIXING_OF_MMS:
+        if (!validateFixingOfMMSData(fixingOfMMSData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          fixingOfMMSData: fixingOfMMSData,
+        };
+        break;
       case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
@@ -7371,6 +7565,51 @@ const onAddMoreDumping = () => {
 
     return true;
   };
+const validateFixingOfMC4Data = (fixingOfMC4Data: any): boolean => {
+  const totalYConnectorsUsed = parseInt(fixingOfMC4Data.totalYConnectorsUsed, 10);
+
+  // Validation for totalYConnectorsUsed
+  if (isNaN(totalYConnectorsUsed) || totalYConnectorsUsed <= 0 || totalYConnectorsUsed > 100000) {
+    showSnackbar(
+      'Please enter a valid Total no. of Y connectors used. It should be a positive integer and <= 100000',
+      'error'
+    );
+    return false;
+  }
+
+  fixingOfMC4Data.totalYConnectorsUsed = totalYConnectorsUsed;
+  return true;
+};
+const validateFixingOfMMSData = (fixingOfMMSData) => {
+  const totalMMSTables = parseInt(fixingOfMMSData.totalNoOfMMSTablesErected);
+  const totalLengthMMS = parseFloat(fixingOfMMSData.totalLengthOfMMSCompleted);
+
+  // Validation for Total No. of MMS Tables Erected
+  if (isNaN(totalMMSTables) || totalMMSTables <= 0 || totalMMSTables > 100000) {
+    showSnackbar(
+      'Please enter a valid Total No. of MMS Tables Erected, value should be > 0 and <= 100000',
+      'error',
+    );
+    return false;
+  }
+
+  // Validation for Total Length of MMS Structure Completed in RM
+  if (
+    isNaN(totalLengthMMS) ||
+    totalLengthMMS <= 0 ||
+    totalLengthMMS > 100000 ||
+    fixingOfMMSData.totalLengthOfMMSCompleted.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Total Length of MMS Structure in RM with max 3 decimal places, value should be > 0 and <= 100000',
+      'error',
+    );
+    return false;
+  }
+
+  return true;
+};
+
 
   const validateTemporaryPrestressingData = (
     temporaryPrestressingData: any[],
@@ -15880,6 +16119,304 @@ case TASK_TYPES.PIT_EXCAVATION:
           </View>
           </View>
         );
+case TASK_TYPES.FIXING_INVERTER_INSTALLATION:
+  const inverterInstallationProperties = [
+    { title: 'Whether the Drawings approved or not', key: 'drawingsApproved' },
+    { title: 'Whether equipment inspected at site and factory dispatch clearance obtained', key: 'equipmentInspected' },
+    { title: 'Is there any damage to the equipment, if yes, informed to vendor', key: 'equipmentDamagedInformed' },
+    { title: 'Whether foundation work is completed for installation', key: 'foundationWorkCompleted' },
+    { title: 'Whether concrete components achieved desired strength', key: 'concreteStrengthAchieved' },
+    { title: 'Installation methodology approved', key: 'installationMethodologyApproved' },
+    { title: 'Whether safety arrangements are in place', key: 'safetyArrangementsInPlace' },
+    { title: 'Whether sufficient machinery and manpower available', key: 'machineryAndManpowerAvailable' },
+    { title: 'Installation completed as per approved methodology', key: 'installationCompletedAsPerMethodology' },
+    { title: 'All instructions from the manufacturer complied during installation', key: 'manufacturerInstructionsComplied' },
+  ];
+
+  return (
+    <View>
+      {inverterInstallationProperties.map(property => (
+        <View style={{ flexDirection: 'column' }} key={property.key}>
+          <DropdownPicker
+            label={property.title}
+            value={inverterInstallationData[property.key]}
+            items={YES_NO_LIST}
+            onChange={(value: any) =>
+              setInverterInstallationData(prevData => ({
+                ...prevData,
+                [property.key]: value,
+              }))
+            }
+            isRequired={true}
+          />
+        </View>
+      ))}
+      <Input
+        label="Total Number of Equipment Installed"
+        value={inverterInstallationData.totalEquipmentInstalled}
+        onChange={(value: any) =>
+          setInverterInstallationData(prevData => ({
+            ...prevData,
+            totalEquipmentInstalled: value,
+          }))
+        }
+        isRequired={true}
+      />
+      <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
+    </View>
+  );
+case TASK_TYPES.ERECTION_OF_DOUBLE_POLE_STRUCTURE:
+  const erectionOfDoublePoleStructureProperties = [
+    { title: 'Drawings Approved', key: 'drawingsApproved' },
+    { title: 'Structure Reached Site and Ready for Erection', key: 'structureAtSiteReady' },
+    { title: 'Foundation Work Completed and Ready for Installation', key: 'foundationWorkCompleted' },
+    { title: 'Concrete Components Achieved Desired Strength', key: 'concreteStrengthAchieved' },
+    { title: 'Installation Methodology Approved', key: 'installationMethodologyApproved' },
+    { title: 'Safety Arrangements in Place', key: 'safetyArrangementsInPlace' },
+    { title: 'Sufficient Machinery and Manpower Available', key: 'machineryManpowerAvailable' },
+    { title: 'Erection Completed as per Approved Methodology', key: 'erectionCompletedAsPerMethodology' },
+  ];
+
+  return (
+    <View>
+      {erectionOfDoublePoleStructureProperties.map(property => (
+        <View style={{ flexDirection: 'column' }} key={property.key}>
+          <DropdownPicker
+            label={property.title}
+            value={erectionOfDoublePoleStructureData[property.key]}
+            items={YES_NO_LIST}
+            onChange={(value: any) =>
+              setErectionOfDoublePoleStructureData(prevData => ({
+                ...prevData,
+                [property.key]: value,
+              }))
+            }
+            isRequired={true}
+          />
+        </View>
+      ))}
+
+      <Input
+        label="Total No. of Double Pole Structures Erected"
+        value={erectionOfDoublePoleStructureData.totalStructuresErected}
+        onChange={(value: any) =>
+          setErectionOfDoublePoleStructureData(prevData => ({
+            ...prevData,
+            totalStructuresErected: value,
+          }))
+        }
+        isRequired={true}
+      />
+      <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
+    </View>
+  );
+  case TASK_TYPES.FIXING_OF_MC4_Y_CONNECTOR:
+      const fixingOfMC4Properties = [
+        { title: 'Whether all the cables are connected using the MC 4/ Y connectors', key: 'cablesConnected' },
+        { title: 'All connection checked physical and found OK', key: 'connectionsChecked' },
+      ];
+
+      return (
+        <View>
+          {fixingOfMC4Properties.map(property => (
+            <View style={{ flexDirection: 'column' }} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={fixingOfMC4Data[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value: any) =>
+                  setFixingOfMC4Data(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+          <Input
+            label="Total no. of Y connectors used"
+            value={fixingOfMC4Data.totalYConnectorsUsed}
+            onChange={(value: any) =>
+              setFixingOfMC4Data(prevData => ({
+                ...prevData,
+                totalYConnectorsUsed: value,
+              }))
+            }
+            isRequired={true}
+          />
+          <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
+        </View>
+      );
+case TASK_TYPES.FIXING_OF_MMS:
+  const fixingOfMMSProperties = [
+    {
+      title: 'Whether the Drawings approved or not',
+      key: 'drawingsApproved',
+    },
+    {
+      title: 'Whether the material has been inspected at factory and dispatch clearance obtained',
+      key: 'materialInspectedAndCleared',
+    },
+    {
+      title: 'Whether the material reached at site all ok and none of the part is damaged, damaged part informed to the contractor or not',
+      key: 'materialReachedUndamaged',
+    },
+    {
+      title: 'Whether the foundation has been completed in all respect including the casting of column post in its alignment properly',
+      key: 'foundationCompleted',
+    },
+    {
+      title: 'Whether the concrete has achieved the desired strength',
+      key: 'concreteAchievedStrength',
+    },
+    {
+      title: 'The alignment of the MMS is as per the drawings or not',
+      key: 'alignmentAsPerDrawings',
+    },
+    {
+      title: 'Whether line / level checked or not',
+      key: 'lineLevelChecked',
+    },
+    {
+      title: 'Whether the angle of the structure checked and found as per the drawings',
+      key: 'structureAngleChecked',
+    },
+    {
+      title: 'Whether all the nut bolts are torqued properly and tested as per the specification',
+      key: 'nutBoltsTorquedProperly',
+    },
+    {
+      title: 'Whether MMS installed appears to be fit in all respect visually',
+      key: 'visualFitCheck',
+    },
+  ];
+
+  return (
+    <View>
+      {fixingOfMMSProperties.map(property => (
+        <View style={{ flexDirection: 'column' }} key={property.key}>
+          <DropdownPicker
+            label={property.title}
+            value={fixingOfMMSData[property.key]}
+            items={YES_NO_LIST}
+            onChange={(value:any) =>
+              setFixingOfMMSData(prevData => ({
+                ...prevData,
+                [property.key]: value,
+              }))
+            }
+            isRequired={true}
+          />
+        </View>
+      ))}
+
+      <Input
+        label="Total No. of MMS Tables Erected"
+        value={fixingOfMMSData.totalNoOfMMSTablesErected}
+        onChange={(value:any) =>
+          setFixingOfMMSData(prevData => ({
+            ...prevData,
+            totalNoOfMMSTablesErected: value,
+          }))
+        }
+        isRequired={true}
+      />
+
+      <Input
+        label="Total Length of MMS Structure Completed in RM"
+        value={fixingOfMMSData.totalLengthOfMMSCompleted}
+        onChange={(value:any) =>
+          setFixingOfMMSData(prevData => ({
+            ...prevData,
+            totalLengthOfMMSCompleted: value,
+          }))
+        }
+        isRequired={true}
+      />
+      <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
+    </View>
+  );
 
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:

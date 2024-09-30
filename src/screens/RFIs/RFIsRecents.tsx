@@ -5482,12 +5482,239 @@ const RFIsRecents = (props: any) => {
           <View>
             {stonePitchingProperties.map(property => (
               <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.stonePitchingData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.FIXING_INVERTER_INSTALLATION:
+        const inverterInstallationProperties = [
+          {
+            title: 'Whether the Drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {
+            title:
+              'Whether equipment inspected at site and factory dispatch clearance obtained',
+            key: 'equipmentInspected',
+          },
+          {
+            title:
+              'Is there any damage to the equipment, if yes, informed to vendor',
+            key: 'equipmentDamagedInformed',
+          },
+          {
+            title: 'Whether foundation work is completed for installation',
+            key: 'foundationWorkCompleted',
+          },
+          {
+            title: 'Whether concrete components achieved desired strength',
+            key: 'concreteStrengthAchieved',
+          },
+          {
+            title: 'Installation methodology approved',
+            key: 'installationMethodologyApproved',
+          },
+          {
+            title: 'Whether safety arrangements are in place',
+            key: 'safetyArrangementsInPlace',
+          },
+          {
+            title: 'Whether sufficient machinery and manpower available',
+            key: 'machineryAndManpowerAvailable',
+          },
+          {
+            title: 'Installation completed as per approved methodology',
+            key: 'installationCompletedAsPerMethodology',
+          },
+          {
+            title:
+              'All instructions from the manufacturer complied during installation',
+            key: 'manufacturerInstructionsComplied',
+          },
+          {
+            title: 'Total Number of Equipment Installed',
+            key: 'totalEquipmentInstalled',
+          },
+        ];
+
+        return (
+          <View>
+            {inverterInstallationProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.inverterInstallationData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.ERECTION_OF_DOUBLE_POLE_STRUCTURE:
+        const erectionOfDoublePoleStructureProperties = [
+          {title: 'Drawings Approved', key: 'drawingsApproved'},
+          {
+            title: 'Structure Reached Site and Ready for Erection',
+            key: 'structureAtSiteReady',
+          },
+          {
+            title: 'Foundation Work Completed and Ready for Installation',
+            key: 'foundationWorkCompleted',
+          },
+          {
+            title: 'Concrete Components Achieved Desired Strength',
+            key: 'concreteStrengthAchieved',
+          },
+          {
+            title: 'Installation Methodology Approved',
+            key: 'installationMethodologyApproved',
+          },
+          {
+            title: 'Safety Arrangements in Place',
+            key: 'safetyArrangementsInPlace',
+          },
+          {
+            title: 'Sufficient Machinery and Manpower Available',
+            key: 'machineryManpowerAvailable',
+          },
+          {
+            title: 'Erection Completed as per Approved Methodology',
+            key: 'erectionCompletedAsPerMethodology',
+          },
+          {
+            title: 'Total No. of Double Pole Structures Erected',
+            key: 'totalStructuresErected',
+          },
+        ];
+        return (
+          <View>
+            {erectionOfDoublePoleStructureProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.erectionOfDoublePoleStructureData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.FIXING_OF_MC4_Y_CONNECTOR:
+        const fixingOfMC4Properties = [
+          {
+            title:
+              'Whether all the cables are connected using the MC 4/ Y connectors',
+            key: 'cablesConnected',
+          },
+          {
+            title: 'All connection checked physical and found OK',
+            key: 'connectionsChecked',
+          },
+          {
+            title: 'Total no. of Y connectors used',
+            key: 'totalYConnectorsUsed',
+          },
+        ];
+
+        return (
+          <View>
+            {fixingOfMC4Properties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.fixingOfMC4Data?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.FIXING_OF_MMS:
+        const fixingOfMMSProperties = [
+          {
+            title: 'Whether the Drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {
+            title:
+              'Whether the material has been inspected at factory and dispatch clearance obtained',
+            key: 'materialInspectedAtFactory',
+          },
+          {
+            title:
+              'Whether the material reached at site all ok and none of the part is damaged, damaged part informed to the contractor or not',
+            key: 'materialReachedAtSite',
+          },
+          {
+            title:
+              'Whether the foundation has been completed in all respect including the casting of column post in its alignment properly',
+            key: 'foundationCompleted',
+          },
+          {
+            title: 'Whether the concrete has achieved the desired strength',
+            key: 'concreteStrengthAchieved',
+          },
+          {
+            title: 'The alignment of the MMS is as per the drawings or not',
+            key: 'alignmentAsPerDrawings',
+          },
+          {
+            title: 'Whether line / level checked or not',
+            key: 'lineLevelChecked',
+          },
+          {
+            title:
+              'Whether the angle of the structure checked and found as per the drawings',
+            key: 'angleOfStructureChecked',
+          },
+          {
+            title:
+              'Whether all the nut bolts are torqued properly and tested as per the specification',
+            key: 'nutBoltsTorqued',
+          },
+          {
+            title:
+              'Whether MMS installed appears to be fit in all respect visually',
+            key: 'mmsVisuallyFit',
+          },
+          {
+            title:
+              'Total no. of MMS structures in terms of no. of tables erected',
+            key: 'totalNoOfTables',
+          },
+          {
+            title: 'Total length of MMS structure completed in RM',
+            key: 'totalLengthOfStructure',
+          },
+        ];
+
+        return (
+          <View>
+            {fixingOfMMSProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
                 <DropdownPicker
                   label={property.title}
-                  value={stonePitchingData[property.key]}
+                  value={fixingOfMMSData[property.key]}
                   items={YES_NO_LIST}
                   onChange={(value: any) =>
-                    setStonePitchingData(prevData => ({
+                    setFixingOfMMSData(prevData => ({
                       ...prevData,
                       [property.key]: value,
                     }))
@@ -5498,50 +5725,28 @@ const RFIsRecents = (props: any) => {
             ))}
 
             <Input
-              label="Total Surface Area of Stone Pitching Done in sqm"
-              value={stonePitchingData.totalSurfaceArea}
+              label="Total no. of MMS structures in terms of no. of tables erected"
+              value={fixingOfMMSData.totalNoOfTables}
               onChange={(value: any) =>
-                setStonePitchingData(prevData => ({
+                setFixingOfMMSData(prevData => ({
                   ...prevData,
-                  totalSurfaceArea: value,
+                  totalNoOfTables: value,
                 }))
               }
               isRequired={true}
             />
 
             <Input
-              label="Total Material Laid in Tonne"
-              value={stonePitchingData.totalMaterialLaid}
+              label="Total length of MMS structure completed in RM"
+              value={fixingOfMMSData.totalLengthOfStructure}
               onChange={(value: any) =>
-                setStonePitchingData(prevData => ({
+                setFixingOfMMSData(prevData => ({
                   ...prevData,
-                  totalMaterialLaid: value,
+                  totalLengthOfStructure: value,
                 }))
               }
               isRequired={true}
             />
-
-            <View>
-              <CalendarPicker
-                label="Date"
-                value={rfiDate}
-                onChange={date => setRFIDate(date)}
-              />
-              <TimePicker
-                label="Time"
-                value={rfiTime}
-                onChange={time => setRFITime(time)}
-              />
-              <TextInput
-                style={styles.commonInputFields}
-                placeholder="Recommendations"
-                multiline={true}
-                numberOfLines={4}
-                blurOnSubmit={false}
-                value={comments}
-                onChangeText={text => setComments(text)}
-              />
-            </View>
           </View>
         );
 

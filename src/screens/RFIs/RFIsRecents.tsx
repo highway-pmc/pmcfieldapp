@@ -5709,44 +5709,205 @@ const RFIsRecents = (props: any) => {
           <View>
             {fixingOfMMSProperties.map(property => (
               <View style={{flexDirection: 'column'}} key={property.key}>
-                <DropdownPicker
-                  label={property.title}
-                  value={fixingOfMMSData[property.key]}
-                  items={YES_NO_LIST}
-                  onChange={(value: any) =>
-                    setFixingOfMMSData(prevData => ({
-                      ...prevData,
-                      [property.key]: value,
-                    }))
-                  }
-                  isRequired={true}
-                />
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.fixingOfMMSData?.[property.key]}
+                </Text>
               </View>
             ))}
+          </View>
+        );
+      case TASK_TYPES.FIXING_OF_MODULES:
+        const fixingOfModulesProperties = [
+          {
+            title: 'Whether the drawings are approved',
+            key: 'drawingsApproved',
+          },
+          {
+            title: 'Material inspected at the factory',
+            key: 'materialInspectedFactory',
+          },
+          {
+            title: 'Material has reached the site and is in OK condition',
+            key: 'materialReachedSiteOk',
+          },
+          {
+            title: 'MMS installation is completed',
+            key: 'mmsInstallationCompleted',
+          },
+          {
+            title: 'Alignment is as per drawings',
+            key: 'alignmentAsPerDrawings',
+          },
+          {
+            title: 'Line and level have been checked',
+            key: 'lineLevelChecked',
+          },
+          {
+            title: 'Module angle has been checked',
+            key: 'moduleAngleChecked',
+          },
+          {
+            title: 'Nut bolts have been torqued',
+            key: 'nutBoltsTorqued',
+          },
+          {
+            title: 'Modules fit visually',
+            key: 'modulesFitVisually',
+          },
+          {
+            title: 'Total number of modules mounted',
+            key: 'totalModulesMounted',
+          },
+          {
+            title: 'Total length of modules mounted (in meters)',
+            key: 'totalLengthMounted',
+          },
+        ];
 
-            <Input
-              label="Total no. of MMS structures in terms of no. of tables erected"
-              value={fixingOfMMSData.totalNoOfTables}
-              onChange={(value: any) =>
-                setFixingOfMMSData(prevData => ({
-                  ...prevData,
-                  totalNoOfTables: value,
-                }))
-              }
-              isRequired={true}
-            />
+        return (
+          <View>
+            {fixingOfModulesProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.fixingOfModulesData[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.LAYING_OF_CAUTION_TAPE:
+        const layingCautionTapeProperties = [
+          {
+            title: 'Whether the Drawings Approved or Not',
+            key: 'drawingsApproved',
+          },
+          {
+            title:
+              'Are the size, shape and thickness of the caution tape as per the approved drawings/specifications',
+            key: 'sizeShapeThicknessAsPerDrawings',
+          },
+          {
+            title: 'Whether source of the material approved or not',
+            key: 'sourceMaterialApproved',
+          },
+          {
+            title: 'Whether the caution tape laid properly',
+            key: 'cautionTapeLaidProperly',
+          },
+          {
+            title:
+              'Whether caution tape has been laid at desired depth and desired clearance above the cables',
+            key: 'cautionTapeLaidAtDesiredDepth',
+          },
+          {
+            title: 'Total length of caution tape laid in RM',
+            key: 'totalCautionTapeLength',
+          },
+        ];
 
-            <Input
-              label="Total length of MMS structure completed in RM"
-              value={fixingOfMMSData.totalLengthOfStructure}
-              onChange={(value: any) =>
-                setFixingOfMMSData(prevData => ({
-                  ...prevData,
-                  totalLengthOfStructure: value,
-                }))
-              }
-              isRequired={true}
-            />
+        return (
+          <View>
+            {layingCautionTapeProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.layingCautionTapeData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.ROUTE_MARKING:
+        const routeMarkingProperties = [
+          {
+            title: 'Whether the Drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {
+            title:
+              'Are the size and shape of the markers as per the approved drawings/specifications',
+            key: 'markersSizeShapeAsPerApproved',
+          },
+          {
+            title: 'Whether source of the material approved or not',
+            key: 'materialSourceApproved',
+          },
+          {
+            title: 'Whether the layout marked at site or not',
+            key: 'layoutMarkedAtSite',
+          },
+          {
+            title: 'Whether route markers are fixed properly',
+            key: 'routeMarkersFixedProperly',
+          },
+          {
+            title: 'Whether spacing is as per the specifications',
+            key: 'spacingAsPerSpecifications',
+          },
+          {
+            title: 'Total no. of route markers installed at site in no.',
+            key: 'totalRouteMarkersInstalled',
+          },
+          {title: 'Total length covered in RM', key: 'totalLengthCoveredRM'},
+        ];
+        return (
+          <View>
+            {routeMarkingProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.routeMarkingData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.BRICKS_LAYERING:
+        const bricksLayeringDisplayProperties = [
+          {
+            title: 'Whether the Drawings Approved or Not',
+            key: 'drawingsApproved',
+          },
+          {
+            title: 'Are the Size and Class of Bricks as per Approved Drawing',
+            key: 'bricksSizeClassApproved',
+          },
+          {
+            title: 'Total Area of Brick Layering Completed (sqm)',
+            key: 'totalAreaCompleted',
+          },
+          {
+            title: 'Total No. of Bricks Laid (No)',
+            key: 'totalBricksLaid',
+          },
+          {
+            title: 'Total Length of Trench Completed (RM)',
+            key: 'totalLengthTrenchCompleted',
+          },
+        ];
+
+        return (
+          <View>
+            {bricksLayeringDisplayProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.bricksLayeringData?.[property.key]}
+                </Text>
+              </View>
+            ))}
           </View>
         );
 

@@ -466,6 +466,47 @@ const [dumpingData, setDumpingData] = useState([
     probingByStiffwire: string;
   };
   //FormUseStates
+  const [bricksLayeringData, setBricksLayeringData] = useState({
+    drawingsApproved: 'Y',
+    bricksSizeClassApproved: 'Y',
+    totalAreaCompleted: 0.0,
+    totalBricksLaid: 0,
+    totalLengthTrenchCompleted: 0.0,
+  });
+  const [routeMarkingData, setRouteMarkingData] = useState({
+    drawingsApproved: 'Y',
+    markersSizeShapeAsPerApproved: 'Y',
+    materialSourceApproved: 'Y',
+    layoutMarkedAtSite: 'Y',
+    routeMarkersFixedProperly: 'Y',
+    spacingAsPerSpecifications: 'Y',
+    totalRouteMarkersInstalled: 0,
+    totalLengthCoveredRM: 0.0,
+  });
+
+  const [layingCautionTapeData, setLayingCautionTapeData] = useState({
+    drawingsApproved: 'Y',
+    sizeShapeThicknessAsPerDrawings: 'Y',
+    sourceMaterialApproved: 'Y',
+    cautionTapeLaidProperly: 'Y',
+    cautionTapeLaidAtDesiredDepth: 'Y',
+    totalCautionTapeLength: 0.0,
+  });
+
+  const [fixingOfModulesData, setFixingOfModulesData] = useState({
+    drawingsApproved: 'Y',
+    materialInspectedFactory: 'Y',
+    materialReachedSiteOk: 'Y',
+    mmsInstallationCompleted: 'Y',
+    alignmentAsPerDrawings: 'Y',
+    lineLevelChecked: 'Y',
+    moduleAngleChecked: 'Y',
+    nutBoltsTorqued: 'Y',
+    modulesFitVisually: 'Y',
+    totalModulesMounted: 0,
+    totalLengthMounted: 0.0,
+  });
+
   const [fixingOfMMSData, setFixingOfMMSData] = useState({
     drawingsApproved: 'Y',
     materialInspectedAndCleared: 'Y',
@@ -4607,7 +4648,68 @@ case TASK_TYPES.TACK_COAT:
             });
           }
           break;
-
+        case TASK_TYPES.FIXING_OF_MODULES:
+          if (rfiData.metaData.fixingOfModulesData) {
+            setFixingOfModulesData(rfiData.metaData.fixingOfModulesData);
+          } else {
+            setFixingOfModulesData({
+              drawingsApproved: 'Y',
+              materialInspectedFactory: 'Y',
+              materialReachedSiteOk: 'Y',
+              mmsInstallationCompleted: 'Y',
+              alignmentAsPerDrawings: 'Y',
+              lineLevelChecked: 'Y',
+              moduleAngleChecked: 'Y',
+              nutBoltsTorqued: 'Y',
+              modulesFitVisually: 'Y',
+              totalModulesMounted: 0,
+              totalLengthMounted: 0.0,
+            });
+          }
+          break;
+        case TASK_TYPES.LAYING_OF_CAUTION_TAPE:
+          if (rfiData.metaData.layingCautionTapeData) {
+              setLayingCautionTapeData(rfiData.metaData.layingCautionTapeData);
+          } else {
+              setLayingCautionTapeData({
+                  drawingsApproved: 'Y',
+                  sizeShapeThicknessAsPerDrawings: 'Y',
+                  sourceMaterialApproved: 'Y',
+                  cautionTapeLaidProperly: 'Y',
+                  cautionTapeLaidAtDesiredDepth: 'Y',
+                  totalCautionTapeLength: 0.0,
+              });
+          }
+          break;
+        case TASK_TYPES.ROUTE_MARKING:
+          if (rfiData.metaData.routeMarkingData) {
+            setRouteMarkingData(rfiData.metaData.routeMarkingData);
+          } else {
+            setRouteMarkingData({
+              drawingsApproved: 'Y',
+              markersSizeShapeAsPerApproved: 'Y',
+              materialSourceApproved: 'Y',
+              layoutMarkedAtSite: 'Y',
+              routeMarkersFixedProperly: 'Y',
+              spacingAsPerSpecifications: 'Y',
+              totalRouteMarkersInstalled: 0,
+              totalLengthCoveredRM: 0.0,
+            });
+          }
+          break;
+        case TASK_TYPES.BRICKS_LAYERING:
+          if (rfiData.metaData.bricksLayeringData) {
+            setBricksLayeringData(rfiData.metaData.bricksLayeringData);
+          } else {
+            setBricksLayeringData({
+              drawingsApproved: 'Y',
+              bricksSizeClassApproved: 'Y',
+              totalAreaCompleted: 0.0,
+              totalBricksLaid: 0,
+              totalLengthTrenchCompleted: 0.0,
+            });
+          }
+          break;
         case TASK_TYPES.LIFTING_LEFT:
         case TASK_TYPES.LIFTING_YARD:
         case TASK_TYPES.LIFTING_RIGHT:
@@ -6783,6 +6885,42 @@ case TASK_TYPES.TACK_COAT:
           fixingOfMMSData: fixingOfMMSData,
         };
         break;
+      case TASK_TYPES.FIXING_OF_MODULES:
+        if (!validateFixingOfModulesData(fixingOfModulesData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          fixingOfModulesData: fixingOfModulesData,
+        };
+        break;
+      case TASK_TYPES.LAYING_OF_CAUTION_TAPE:
+        if (!validateLayingCautionTapeData(layingCautionTapeData)) {
+            return;
+        }
+        checkList = {
+            taskName: selectedTask.name,
+            layingCautionTapeData: layingCautionTapeData,
+        };
+        break;  
+      case TASK_TYPES.ROUTE_MARKING:
+        if (!validateRouteMarkingData(routeMarkingData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          routeMarkingData: routeMarkingData,
+        };
+        break;  
+      case TASK_TYPES.BRICKS_LAYERING:
+        if (!validateBricksLayeringData(bricksLayeringData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          bricksLayeringData: bricksLayeringData,
+        };
+        break;  
       case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
@@ -7580,6 +7718,118 @@ const validateFixingOfMC4Data = (fixingOfMC4Data: any): boolean => {
   fixingOfMC4Data.totalYConnectorsUsed = totalYConnectorsUsed;
   return true;
 };
+const validateBricksLayeringData = (bricksLayeringData: any): boolean => {
+  const totalAreaCompleted = parseFloat(bricksLayeringData.totalAreaCompleted);
+  const totalBricksLaid = parseInt(bricksLayeringData.totalBricksLaid);
+  const totalLengthTrenchCompleted = parseFloat(bricksLayeringData.totalLengthTrenchCompleted);
+
+  // Validation for Total Area of Brick Layering Completed (sqm)
+  if (
+    isNaN(totalAreaCompleted) ||
+    totalAreaCompleted <= 0 ||
+    totalAreaCompleted > 100000 ||
+    bricksLayeringData.totalAreaCompleted.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Total Area of Brick Layering Completed (sqm) with max 3 decimal places, value should be > 0 and <= 100000',
+      'error',
+    );
+    return false;
+  }
+
+  // Validation for Total No. of Bricks Laid (No)
+  if (
+    isNaN(totalBricksLaid) ||
+    totalBricksLaid <= 0 ||
+    totalBricksLaid > 100000
+  ) {
+    showSnackbar(
+      'Please enter a valid Total No. of Bricks Laid (No) with value > 0 and <= 100000',
+      'error',
+    );
+    return false;
+  }
+
+  // Validation for Total Length of Trench Completed (RM)
+  if (
+    isNaN(totalLengthTrenchCompleted) ||
+    totalLengthTrenchCompleted <= 0 ||
+    totalLengthTrenchCompleted > 100000 ||
+    bricksLayeringData.totalLengthTrenchCompleted.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Total Length of Trench Completed (RM) with max 3 decimal places, value should be > 0 and <= 100000',
+      'error',
+    );
+    return false;
+  }
+    bricksLayeringData.totalAreaCompleted =  Number(bricksLayeringData.totalAreaCompleted);
+    bricksLayeringData.totalBricksLaid =  Number(bricksLayeringData.totalBricksLaid);
+    bricksLayeringData.totalLengthTrenchCompleted =  Number(bricksLayeringData.totalLengthTrenchCompleted);
+  return true;
+};
+
+const validateRouteMarkingData = (routeMarkingData:any) => {
+ 
+  const totalLength = parseFloat(routeMarkingData.totalLengthCoveredRM);
+  const numberOfMaker =parseInt(routeMarkingData.totalLengthCoveredRM);
+
+  if (isNaN(numberOfMaker) || numberOfMaker <= 0) {
+    showSnackbar('Please enter a valid number for Route Markers Installed, value should be > 0', 'error');
+    return false;
+  }
+
+  if (isNaN(totalLength) || totalLength <= 0 || totalLength > 100000 || routeMarkingData.totalLengthCoveredRM.split('.')[1]?.length > 3) {
+    showSnackbar('Please enter a valid Total Length Covered in RM with max 3 decimal places, value should be > 0 and <= 100000', 'error');
+    return false;
+  }
+
+  routeMarkingData.totalRouteMarkersInstalled = Number(routeMarkingData.totalRouteMarkersInstalled);
+  routeMarkingData.totalLengthCoveredRM = Number(routeMarkingData.totalLengthCoveredRM);
+
+  return true;
+};
+
+const validateLayingCautionTapeData = (layingCautionTapeData:any) => {
+    const totalCautionTapeLength = parseFloat(layingCautionTapeData.totalCautionTapeLength);
+
+    if (
+        isNaN(totalCautionTapeLength) ||
+        totalCautionTapeLength <= 0 ||
+        totalCautionTapeLength > 10000 ||
+        layingCautionTapeData.totalCautionTapeLength.split('.')[1]?.length > 3
+    ) {
+        showSnackbar(
+            'Please enter a valid Total Length of Caution Tape Laid (RM) with max 3 decimal places, value should be > 0 and <= 10000',
+            'error',
+        );
+        return false;
+    }
+
+    layingCautionTapeData.totalCautionTapeLength = Number(layingCautionTapeData.totalCautionTapeLength);
+    return true;
+};
+
+const validateFixingOfModulesData = (fixingOfModulesData: any): boolean => {
+  const totalModulesMounted = parseInt(fixingOfModulesData.totalModulesMounted);
+  const totalLengthMounted = parseFloat(fixingOfModulesData.totalLengthMounted);
+
+  if (isNaN(totalModulesMounted) || totalModulesMounted <= 0 || totalModulesMounted > 100000) {
+    showSnackbar('Please enter a valid Total No. of Modules Mounted (integer > 0, max 100000)', 'error');
+    return false;
+  }
+
+  if (isNaN(totalLengthMounted) || totalLengthMounted <= 0 || totalLengthMounted > 100000 || fixingOfModulesData.totalLengthMounted.split('.')[1]?.length > 3) {
+    showSnackbar('Please enter a valid Total Length of Modules Mounting (max 3 decimal places, value should be > 0 and <= 100000)', 'error');
+    return false;
+  }
+
+  fixingOfModulesData.totalModulesMounted = Number(fixingOfModulesData.totalModulesMounted);
+  fixingOfModulesData.totalLengthMounted = Number(fixingOfModulesData.totalLengthMounted);
+
+  return true;
+};
+
 const validateFixingOfMMSData = (fixingOfMMSData) => {
   const totalMMSTables = parseInt(fixingOfMMSData.totalNoOfMMSTablesErected);
   const totalLengthMMS = parseFloat(fixingOfMMSData.totalLengthOfMMSCompleted);
@@ -16390,6 +16640,303 @@ case TASK_TYPES.FIXING_OF_MMS:
           setFixingOfMMSData(prevData => ({
             ...prevData,
             totalLengthOfMMSCompleted: value,
+          }))
+        }
+        isRequired={true}
+      />
+      <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
+    </View>
+  );
+case TASK_TYPES.FIXING_OF_MODULES:
+  const fixingOfModulesProperties = [
+    { title: 'Whether the Drawings approved or not', key: 'drawingsApproved' },
+    { title: 'Whether the material has been inspected at factory and dispatch clearance obtained', key: 'materialInspectedFactory' },
+    { title: 'Whether the material reached at site all ok and none of the part is damaged, damaged part informed to the vendor and insurance company', key: 'materialReachedSiteOk' },
+    { title: 'Whether the installation of MMS has been completed in all respect including its alignment properly', key: 'mmsInstallationCompleted' },
+    { title: 'The alignment of the Modules is as per the drawings or not', key: 'alignmentAsPerDrawings' },
+    { title: 'Whether line / level checked or not', key: 'lineLevelChecked' },
+    { title: 'Whether the angle of the Modules checked and found as per the drawings', key: 'moduleAngleChecked' },
+    { title: 'Whether all the nut bolts are torqued properly and tested as per the specification', key: 'nutBoltsTorqued' },
+    { title: 'Whether Modules installed appears to be fit in all respect visually', key: 'modulesFitVisually' },
+  ];
+
+  return (
+    <View>
+      {fixingOfModulesProperties.map(property => (
+        <View style={{ flexDirection: 'column' }} key={property.key}>
+          <DropdownPicker
+            label={property.title}
+            value={fixingOfModulesData[property.key]}
+            items={YES_NO_LIST}
+            onChange={(value: any) =>
+              setFixingOfModulesData(prevData => ({
+                ...prevData,
+                [property.key]: value,
+              }))
+            }
+            isRequired={true}
+          />
+        </View>
+      ))}
+      <Input
+        label="Total No. of Modules Mounted"
+        value={fixingOfModulesData.totalModulesMounted}
+        onChange={(value: any) =>
+          setFixingOfModulesData(prevData => ({
+            ...prevData,
+            totalModulesMounted: value,
+          }))
+        }
+        isRequired={true}
+      />
+
+      <Input
+        label="Total Length of Modules Mounting Completed in RM"
+        value={fixingOfModulesData.totalLengthMounted}
+        onChange={(value: any) =>
+          setFixingOfModulesData(prevData => ({
+            ...prevData,
+            totalLengthMounted: value,
+          }))
+        }
+        isRequired={true}
+      />
+      <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
+    </View>
+  );
+  case TASK_TYPES.LAYING_OF_CAUTION_TAPE:
+      const layingCautionTapeProperties = [
+          { title: 'Whether the Drawings Approved or Not', key: 'drawingsApproved' },
+          { title: 'Size, Shape and Thickness as per Drawings', key: 'sizeShapeThicknessAsPerDrawings' },
+          { title: 'Source of Material Approved', key: 'sourceMaterialApproved' },
+          { title: 'Caution Tape Laid Properly', key: 'cautionTapeLaidProperly' },
+          { title: 'Caution Tape Laid at Desired Depth/Clearance', key: 'cautionTapeLaidAtDesiredDepth' },
+      ];
+      return (
+        <View>
+          {layingCautionTapeProperties.map(property => (
+            <View style={{flexDirection: 'column'}} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={layingCautionTapeData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value:any) =>
+                  setLayingCautionTapeData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+          <Input
+            label="Total Length of Caution Tape Laid (RM)"
+            value={layingCautionTapeData.totalCautionTapeLength}
+            onChange={(value:any) =>
+              setLayingCautionTapeData(prevData => ({
+                ...prevData,
+                totalCautionTapeLength: value,
+              }))
+            }
+            isRequired={true}
+          />
+          <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
+        </View>
+      );
+      case TASK_TYPES.ROUTE_MARKING:      
+      const routeMarkingProperties = [
+        { title: 'Whether the Drawings approved or not', key: 'drawingsApproved' },
+        { title: 'Are the size and shape of the markers as per the approved drawings/specifications', key: 'markersSizeShapeAsPerApproved' },
+        { title: 'Whether source of the material approved or not', key: 'materialSourceApproved' },
+        { title: 'Whether the layout marked at site or not', key: 'layoutMarkedAtSite' },
+        { title: 'Whether route markers are fixed properly', key: 'routeMarkersFixedProperly' },
+        { title: 'Whether spacing is as per the specifications', key: 'spacingAsPerSpecifications' },
+      ];
+
+      return (
+        <View>
+          {routeMarkingProperties.map(property => (
+            <View style={{ flexDirection: 'column' }} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={routeMarkingData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value:any) =>
+                  setRouteMarkingData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+          <Input
+            label="Total No. of Route Markers Installed at Site"
+            value={routeMarkingData.totalRouteMarkersInstalled}
+            onChange={(value:any) =>
+              setRouteMarkingData(prevData => ({
+                ...prevData,
+                totalRouteMarkersInstalled: value,
+              }))
+            }
+            isRequired={true}
+          />
+
+          <Input
+            label="Total Length Covered in RM"
+            value={routeMarkingData.totalLengthCoveredRM}
+            onChange={(value:any) =>
+              setRouteMarkingData(prevData => ({
+                ...prevData,
+                totalLengthCoveredRM: value,
+              }))
+            }
+            isRequired={true}
+          />
+          <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
+        </View>
+      );
+      case TASK_TYPES.BRICKS_LAYERING:
+  const bricksLayeringProperties = [
+    {
+      title: 'Whether the Drawings Approved or Not',
+      key: 'drawingsApproved',
+    },
+    {
+      title: 'Are the Size and Class of Bricks as per Approved Drawing',
+      key: 'bricksSizeClassApproved',
+    }
+  ];
+
+  return (
+    <View>
+      {bricksLayeringProperties.map(property => (
+        <View style={{flexDirection: 'column'}} key={property.key}>
+          <DropdownPicker
+            label={property.title}
+            value={bricksLayeringData[property.key]}
+            items={YES_NO_LIST}
+            onChange={(value: any) =>
+              setBricksLayeringData(prevData => ({
+                ...prevData,
+                [property.key]: value,
+              }))
+            }
+            isRequired={true}
+          />
+        </View>
+      ))}
+      <Input
+        label="Total Area of Brick Layering Completed (sqm)"
+        value={bricksLayeringData.totalAreaCompleted}
+        onChange={(value: any) =>
+          setBricksLayeringData(prevData => ({
+            ...prevData,
+            totalAreaCompleted: value,
+          }))
+        }
+        isRequired={true}
+      />
+      <Input
+        label="Total No. of Bricks Laid (No)"
+        value={bricksLayeringData.totalBricksLaid}
+        onChange={(value: any) =>
+          setBricksLayeringData(prevData => ({
+            ...prevData,
+            totalBricksLaid: value,
+          }))
+        }
+        isRequired={true}
+      />
+      <Input
+        label="Total Length of Trench Completed (RM)"
+        value={bricksLayeringData.totalLengthTrenchCompleted}
+        onChange={(value: any) =>
+          setBricksLayeringData(prevData => ({
+            ...prevData,
+            totalLengthTrenchCompleted: value,
           }))
         }
         isRequired={true}

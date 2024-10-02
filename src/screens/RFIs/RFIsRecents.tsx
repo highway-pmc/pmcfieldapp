@@ -5910,7 +5910,170 @@ const RFIsRecents = (props: any) => {
             ))}
           </View>
         );
+      case TASK_TYPES.CABLE_DRESSING:
+        const cableDressingDisplayProperties = [
+          {
+            title:
+              'Whether all the cables are tied properly to the MMS structure and no cables are hanging',
+            key: 'cablesTiedProperly',
+          },
+          {
+            title: 'No cable has been damaged found during the dressing',
+            key: 'noCableDamaged',
+          },
+        ];
 
+        return (
+          <View>
+            {cableDressingDisplayProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.cableDressingData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.CABLE_TRENCH_DRESSING:
+        const cableTrenchDressingProperties = [
+          {
+            title: 'Whether the proper safety measure taken at the site',
+            key: 'safetyMeasuresTaken',
+          },
+          {
+            title: 'Sufficient manpower available at site',
+            key: 'manpowerAvailable',
+          },
+          {
+            title: 'Line levels are checked properly',
+            key: 'lineLevelsChecked',
+          },
+          {
+            title: 'Trench has been made free from undesirable material',
+            key: 'trenchClearedUndesirableMaterial',
+          },
+          {
+            title: 'Bottom of trench well compacted as per specifications',
+            key: 'trenchCompacted',
+          },
+          {
+            title: 'Total trench dressed in RM',
+            key: 'totalTrenchDressed',
+          },
+        ];
+        return (
+          <View>
+            {cableTrenchDressingProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.cableTrenchDressingData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.CONDUIT_LAYING:
+        const conduitLayingProperties = [
+          {
+            title: 'Whether the Drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {
+            title:
+              'Are the size and shape of the conduit as per the approved drawings/specifications',
+            key: 'conduitSizeShapeAsPerSpecs',
+          },
+          {
+            title: 'Whether source of the material approved or not',
+            key: 'materialSourceApproved',
+          },
+          {
+            title: 'Whether the conduit pipe laid properly',
+            key: 'conduitPipeLaidProperly',
+          },
+          {
+            title: 'Whether jointing has been done properly',
+            key: 'jointingDoneProperly',
+          },
+          {
+            title: 'Total Length of Conduit Laid in RM',
+            key: 'totalConduitLength',
+          },
+        ];
+        return (
+          <View>
+            {conduitLayingProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.conduitLayingData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.CABLE_TRENCH_EXCAVATION:
+        const cableTrenchExcavationProperties = [
+          {
+            title:
+              'Whether the proper safety measure taken at the site before excavation of trench',
+            key: 'safetyMeasuresTaken',
+          },
+          {title: 'Drawings approved', key: 'drawingsApproved'},
+          {title: 'Alignment of trench marked at site', key: 'alignmentMarked'},
+          {
+            title:
+              'Whether any utility infringing the alignment has been shifted',
+            key: 'utilitiesShifted',
+          },
+          {
+            title: 'Whether the excavation done at required depth and width',
+            key: 'excavationDepthWidth',
+          },
+          {
+            title: 'Total qty of soil excavated in Cum',
+            key: 'totalSoilQtyExcavated',
+          },
+          {title: 'Total trench excavated in RM', key: 'totalTrenchExcavated'},
+        ];
+        return (
+          <View>
+            {cableTrenchExcavationProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.cableTrenchExcavationData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
       // ReadOnlyRfi
       default:
         return (

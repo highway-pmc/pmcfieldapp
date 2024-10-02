@@ -466,6 +466,35 @@ const [dumpingData, setDumpingData] = useState([
     probingByStiffwire: string;
   };
   //FormUseStates
+  const [cableTrenchExcavationData, setCableTrenchExcavationData] = useState({
+    safetyMeasuresTaken: 'Y',
+    drawingsApproved: 'Y',
+    alignmentMarked: 'Y',
+    utilitiesShifted: 'Y',
+    excavationDepthWidth: 'Y',
+    totalSoilQtyExcavated: 0.0,
+    totalTrenchExcavated: 0.0,
+  });
+  const [conduitLayingData, setConduitLayingData] = useState({
+    drawingsApproved: 'Y',
+    conduitSizeShapeAsPerSpecs: 'Y',
+    materialSourceApproved: 'Y',
+    conduitPipeLaidProperly: 'Y',
+    jointingDoneProperly: 'Y',
+    totalConduitLength: 0.0,
+  });
+  const [cableTrenchDressingData, setCableTrenchDressingData] = useState({
+    safetyMeasuresTaken: 'Y',
+    manpowerAvailable: 'Y',
+    lineLevelsChecked: 'Y',
+    trenchClearedUndesirableMaterial: 'Y',
+    trenchCompacted: 'Y',
+    totalTrenchDressed: 0.0,
+  });
+  const [cableDressingData, setCableDressingData] = useState({
+    cablesTiedProperly: 'Y',
+    noCableDamaged: 'Y',
+  });
   const [bricksLayeringData, setBricksLayeringData] = useState({
     drawingsApproved: 'Y',
     bricksSizeClassApproved: 'Y',
@@ -4710,6 +4739,63 @@ case TASK_TYPES.TACK_COAT:
             });
           }
           break;
+        case TASK_TYPES.CABLE_DRESSING:
+          if (rfiData.metaData.cableDressingData) {
+            setCableDressingData(rfiData.metaData.cableDressingData);
+          } else {
+            setCableDressingData({
+              cablesTiedProperly: 'Y',
+              noCableDamaged: 'Y',
+            });
+          }
+          break;
+        case TASK_TYPES.CABLE_TRENCH_DRESSING:
+          if (rfiData.metaData.cableTrenchDressingData) {
+            setCableTrenchDressingData(
+              rfiData.metaData.cableTrenchDressingData,
+            );
+          } else {
+            setCableTrenchDressingData({
+              safetyMeasuresTaken: 'Y',
+              manpowerAvailable: 'Y',
+              lineLevelsChecked: 'Y',
+              trenchClearedUndesirableMaterial: 'Y',
+              trenchCompacted: 'Y',
+              totalTrenchDressed: 0.0,
+            });
+          }
+          break;
+        case TASK_TYPES.CONDUIT_LAYING:
+          if (rfiData.metaData.conduitLayingData) {
+            setConduitLayingData(rfiData.metaData.conduitLayingData);
+          } else {
+            setConduitLayingData({
+              drawingsApproved: 'Y',
+              conduitSizeShapeAsPerSpecs: 'Y',
+              materialSourceApproved: 'Y',
+              conduitPipeLaidProperly: 'Y',
+              jointingDoneProperly: 'Y',
+              totalConduitLength: 0.0,
+            });
+          }
+          break;  
+        case TASK_TYPES.CABLE_TRENCH_EXCAVATION:
+          if (rfiData.metaData.cableTrenchExcavationData) {
+            setCableTrenchExcavationData(
+              rfiData.metaData.cableTrenchExcavationData
+            );
+          } else {
+            setCableTrenchExcavationData({
+              safetyMeasuresTaken: 'Y',
+              drawingsApproved: 'Y',
+              alignmentMarked: 'Y',
+              utilitiesShifted: 'Y',
+              excavationDepthWidth: 'Y',
+              totalSoilQtyExcavated: 0.0,
+              totalTrenchExcavated: 0.0,
+            });
+          }
+          break;  
         case TASK_TYPES.LIFTING_LEFT:
         case TASK_TYPES.LIFTING_YARD:
         case TASK_TYPES.LIFTING_RIGHT:
@@ -6921,6 +7007,40 @@ case TASK_TYPES.TACK_COAT:
           bricksLayeringData: bricksLayeringData,
         };
         break;  
+      case TASK_TYPES.CABLE_DRESSING:
+        checkList = {
+          taskName: selectedTask.name,
+          cableDressingData: cableDressingData,
+        };
+        break;  
+      case TASK_TYPES.CABLE_TRENCH_DRESSING:
+        if (!validateCableTrenchDressingData(cableTrenchDressingData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          cableTrenchDressingData: cableTrenchDressingData,
+        };
+        break; 
+      case TASK_TYPES.CONDUIT_LAYING:
+        if (!validateConduitLayingData(conduitLayingData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          conduitLayingData: conduitLayingData,
+        };
+        break;   
+      case TASK_TYPES.CABLE_TRENCH_EXCAVATION:
+        if (!validateCableTrenchExcavationData(cableTrenchExcavationData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          cableTrenchExcavationData: cableTrenchExcavationData,
+        };
+        break;
+
       case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
@@ -7716,6 +7836,89 @@ const validateFixingOfMC4Data = (fixingOfMC4Data: any): boolean => {
   }
 
   fixingOfMC4Data.totalYConnectorsUsed = totalYConnectorsUsed;
+  return true;
+};
+const validateCableTrenchExcavationData = (cableTrenchExcavationData: any): boolean => {
+  const totalSoilQty = parseFloat(cableTrenchExcavationData.totalSoilQtyExcavated);
+  const totalTrenchQty = parseFloat(cableTrenchExcavationData.totalTrenchExcavated);
+
+  // Validation for total qty of soil excavated
+  if (
+    isNaN(totalSoilQty) ||
+    totalSoilQty <= 0 ||
+    totalSoilQty > 1000000 ||
+    cableTrenchExcavationData.totalSoilQtyExcavated.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Total Qty of Soil Excavated (in Cum) with max 3 decimal places, value should be > 0 and <= 1,000,000',
+      'error'
+    );
+    return false;
+  }
+
+  // Validation for total trench qty excavated
+  if (
+    isNaN(totalTrenchQty) ||
+    totalTrenchQty <= 0 ||
+    totalTrenchQty > 100000 ||
+    cableTrenchExcavationData.totalTrenchExcavated.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Total Trench Excavated (in RM) with max 3 decimal places, value should be > 0 and <= 100,000',
+      'error'
+    );
+    return false;
+  }
+
+  // Convert to numbers
+  cableTrenchExcavationData.totalSoilQtyExcavated = Number(
+    cableTrenchExcavationData.totalSoilQtyExcavated
+  );
+  cableTrenchExcavationData.totalTrenchExcavated = Number(
+    cableTrenchExcavationData.totalTrenchExcavated
+  );
+
+  return true;
+};
+
+const validateConduitLayingData = (conduitLayingData:any) => {
+  const totalConduitLength = parseFloat(conduitLayingData.totalConduitLength);
+
+  if (isNaN(totalConduitLength) || totalConduitLength <= 0 || totalConduitLength > 10000 || conduitLayingData.totalConduitLength.split('.')[1]?.length > 3) {
+    showSnackbar(
+      'Please enter a valid Total Length of Conduit laid (in RM) with max 3 decimal places, value should be > 0 and <= 10000',
+      'error',
+    );
+    return false;
+  }
+
+  conduitLayingData.totalConduitLength = Number(conduitLayingData.totalConduitLength);
+
+  return true;
+};
+
+const validateCableTrenchDressingData = (
+  cableTrenchDressingData: any,
+): boolean => {
+  const totalTrenchDressed = parseFloat(cableTrenchDressingData.totalTrenchDressed);
+
+  if (
+    isNaN(totalTrenchDressed) ||
+    totalTrenchDressed <= 0 ||
+    totalTrenchDressed > 1000000 ||
+    cableTrenchDressingData.totalTrenchDressed.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Total Trench Dressed (in RM) with max 3 decimal places, value should be > 0 and <= 1000000',
+      'error',
+    );
+    return false;
+  }
+
+  cableTrenchDressingData.totalTrenchDressed = Number(
+    cableTrenchDressingData.totalTrenchDressed,
+  );
+
   return true;
 };
 const validateBricksLayeringData = (bricksLayeringData: any): boolean => {
@@ -16964,7 +17167,257 @@ case TASK_TYPES.FIXING_OF_MODULES:
           </View>
     </View>
   );
+    case TASK_TYPES.CABLE_DRESSING:
+      const cableDressingProperties = [
+        { title: 'Whether all the cables are tied properly to the MMS structure and no cables are hanging', key: 'cablesTiedProperly' },
+        { title: 'No cable has been damaged found during the dressing', key: 'noCableDamaged' },
+      ];
 
+      return (
+        <View>
+          {cableDressingProperties.map(property => (
+            <View style={{ flexDirection: 'column', marginBottom: 10 }} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={cableDressingData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value:any) =>
+                  setCableDressingData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+          <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
+        </View>
+      );
+      case TASK_TYPES.CABLE_TRENCH_DRESSING:
+        const cableTrenchExcavationProperties = [
+          {
+            title: 'Whether the proper safety measure taken at the site',
+            key: 'safetyMeasuresTaken',
+          },
+          {
+            title: 'Sufficient manpower available at site',
+            key: 'manpowerAvailable',
+          },
+          {
+            title: 'Line levels are checked properly',
+            key: 'lineLevelsChecked',
+          },
+          {
+            title: 'Trench has been made free from undesirable material',
+            key: 'trenchClearedUndesirableMaterial',
+          },
+          {
+            title: 'Bottom of trench well compacted as per specifications',
+            key: 'trenchCompacted',
+          },
+        ];
+      return (
+        <View>
+          {cableTrenchExcavationProperties.map(property => (
+            <View style={{flexDirection: 'column'}} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={cableTrenchDressingData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value: any) =>
+                  setCableTrenchDressingData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+          <Input
+            label="Total Trench Dressed in RM"
+            value={cableTrenchDressingData.totalTrenchDressed}
+            onChange={(value: any) =>
+              setCableTrenchDressingData(prevData => ({
+                ...prevData,
+                totalTrenchDressed: value,
+              }))
+            }
+            isRequired={true}
+          />
+          <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
+        </View>
+      );
+      case TASK_TYPES.CONDUIT_LAYING:
+        const conduitLayingProperties = [
+          { title: 'Whether the Drawings approved or not', key: 'drawingsApproved' },
+          { title: 'Are the size and shape of the conduit as per the approved drawings/ specifications', key: 'conduitSizeShapeAsPerSpecs' },
+          { title: 'Whether source of the material approved or not', key: 'materialSourceApproved' },
+          { title: 'Whether the conduit pipe laid properly', key: 'conduitPipeLaidProperly' },
+          { title: 'Whether jointing has been done properly', key: 'jointingDoneProperly' },
+        ];
+
+        return (
+          <View>
+            {conduitLayingProperties.map(property => (
+              <View style={{ flexDirection: 'column' }} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={conduitLayingData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value:any) =>
+                    setConduitLayingData(prevData => ({ ...prevData, [property.key]: value }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <Input
+              label="Total Length of Conduit Laid in RM"
+              value={conduitLayingData.totalConduitLength}
+              onChange={(value:any) =>
+                setConduitLayingData(prevData => ({ ...prevData, totalConduitLength: value }))
+              }
+              isRequired={true}
+            />
+            <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
+          </View>
+        );
+      case TASK_TYPES.CABLE_TRENCH_EXCAVATION:
+      const cableTrenchExcavationProperties = [
+        { title: 'Proper Safety Measures Taken Before Excavation', key: 'safetyMeasuresTaken' },
+        { title: 'Drawings Approved', key: 'drawingsApproved' },
+        { title: 'Alignment of Trench Marked at Site', key: 'alignmentMarked' },
+        { title: 'Utility Infringement Shifted', key: 'utilitiesShifted' },
+        { title: 'Excavation Done to Required Depth and Width', key: 'excavationDepthWidth' },
+      ];
+
+      return (
+        <View>
+          {cableTrenchExcavationProperties.map(property => (
+            <View style={{ flexDirection: 'column' }} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={cableTrenchExcavationData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value: any) =>
+                  setCableTrenchExcavationData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+
+          <Input
+            label="Total Qty of Soil Excavated (in Cum)"
+            value={cableTrenchExcavationData.totalSoilQtyExcavated}
+            onChange={(value: any) =>
+              setCableTrenchExcavationData(prevData => ({
+                ...prevData,
+                totalSoilQtyExcavated: value,
+              }))
+            }
+            isRequired={true}
+          />
+
+          <Input
+            label="Total Trench Excavated (in RM)"
+            value={cableTrenchExcavationData.totalTrenchExcavated}
+            onChange={(value: any) =>
+              setCableTrenchExcavationData(prevData => ({
+                ...prevData,
+                totalTrenchExcavated: value,
+              }))
+            }
+            isRequired={true}
+          />
+          <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
+        </View>
+      );  
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
       case TASK_TYPES.LIFTING_RIGHT:

@@ -577,6 +577,10 @@ export const TASK_TYPES = {
   CABLE_TRENCH_DRESSING: 'cable-trench-dressing',
   CONDUIT_LAYING: 'conduit-laying',
   CABLE_TRENCH_EXCAVATION: 'cable-trench-excavation',
+  FIXING_AND_INSTALLATION_OF_TRANSFORMER: 'fixing-and-installation-of-transformer',
+  FIXING_AND_INSTALLATION_OF_LT_PANEL: 'fixing-and-installation-of-lt-panel',
+  HT_PANEL_INSTALLATION: 'fixing-and-installation-of-ht-panel',
+  ERECTION_OF_STRUCTURE:'erection-of-structure',
 };
 
 export const TEST_MATERIALS_TYPES = {

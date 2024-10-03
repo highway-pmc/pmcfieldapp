@@ -466,6 +466,52 @@ const [dumpingData, setDumpingData] = useState([
     probingByStiffwire: string;
   };
   //FormUseStates
+   const [erectionOfStructureData, setErectionOfStructureData] = useState({
+    positionChecked: 'Y',
+    weldingDoneAsPerDrawing: 'Y',
+    structureAsPerDrawing: 'Y',
+    necessarySupportProvided: 'Y',
+  });
+  const [htPanelInstallationData, setHtPanelInstallationData] = useState({
+    drawingsApproved: 'Y',
+    equipmentInspected: 'Y',
+    equipmentDamageReported: 'Y',
+    foundationWorkCompleted: 'Y',
+    concreteStrengthAchieved: 'Y',
+    installationMethodologyApproved: 'Y',
+    safetyArrangementsInPlace: 'Y',
+    machineryAndManpowerAvailable: 'Y',
+    installationCompleted: 'Y',
+    manufacturerInstructionsFollowed: 'Y',
+    totalEquipmentsInstalled: 0,
+  });
+
+  const [fixingAndInstallationLTPanelData, setFixingAndInstallationLTPanelData] = useState({
+    drawingsApproved: 'Y',
+    equipmentInspected: 'Y',
+    equipmentDamageInformed: 'Y',
+    foundationReady: 'Y',
+    concreteStrengthAchieved: 'Y',
+    installationMethodologyApproved: 'Y',
+    safetyArrangementsInPlace: 'Y',
+    machineryManpowerAvailable: 'Y',
+    installationCompleted: 'Y',
+    manufacturerInstructionsComplied: 'Y',
+    totalEquipmentInstalled: 0,
+  });
+  const [fixingAndInstallationData, setFixingAndInstallationData] = useState({
+    drawingsApproved: 'Y',
+    equipmentInspected: 'Y',
+    equipmentDamageInformed: 'Y',
+    foundationReady: 'Y',
+    concreteStrengthAchieved: 'Y',
+    installationMethodologyApproved: 'Y',
+    safetyArrangementsInPlace: 'Y',
+    machineryManpowerAvailable: 'Y',
+    installationCompleted: 'Y',
+    manufacturerInstructionsComplied: 'Y',
+    totalEquipmentInstalled: 0,
+  });
   const [cableTrenchExcavationData, setCableTrenchExcavationData] = useState({
     safetyMeasuresTaken: 'Y',
     drawingsApproved: 'Y',
@@ -4796,6 +4842,79 @@ case TASK_TYPES.TACK_COAT:
             });
           }
           break;  
+        case TASK_TYPES.FIXING_AND_INSTALLATION_OF_TRANSFORMER:
+          if (rfiData.metaData.fixingAndInstallationData) {
+            setFixingAndInstallationData(rfiData.metaData.fixingAndInstallationData);
+          } else {
+            setFixingAndInstallationData({
+              drawingsApproved: 'Y',
+              equipmentInspected: 'Y',
+              equipmentDamageInformed: 'Y',
+              foundationReady: 'Y',
+              concreteStrengthAchieved: 'Y',
+              installationMethodologyApproved: 'Y',
+              safetyArrangementsInPlace: 'Y',
+              machineryManpowerAvailable: 'Y',
+              installationCompleted: 'Y',
+              manufacturerInstructionsComplied: 'Y',
+              totalEquipmentInstalled: 0,
+            });
+          }
+          break;
+        case TASK_TYPES.FIXING_AND_INSTALLATION_OF_LT_PANEL:
+          if (rfiData.metaData.fixingAndInstallationLTPanelData) {
+            setFixingAndInstallationLTPanelData(
+              rfiData.metaData.fixingAndInstallationLTPanelData
+            );
+          } else {
+            setFixingAndInstallationLTPanelData({
+              drawingsApproved: 'Y',
+              equipmentInspected: 'Y',
+              equipmentDamageInformed: 'Y',
+              foundationReady: 'Y',
+              concreteStrengthAchieved: 'Y',
+              installationMethodologyApproved: 'Y',
+              safetyArrangementsInPlace: 'Y',
+              machineryManpowerAvailable: 'Y',
+              installationCompleted: 'Y',
+              manufacturerInstructionsComplied: 'Y',
+              totalEquipmentInstalled: 0,
+            });
+          }
+          break;  
+        case TASK_TYPES.HT_PANEL_INSTALLATION:
+          if (rfiData.metaData.htPanelInstallationData) {
+            setHtPanelInstallationData(
+              rfiData.metaData.htPanelInstallationData,
+            );
+          } else {
+            setHtPanelInstallationData({
+              drawingsApproved: 'Y',
+              equipmentInspected: 'Y',
+              equipmentDamageReported: 'Y',
+              foundationWorkCompleted: 'Y',
+              concreteStrengthAchieved: 'Y',
+              installationMethodologyApproved: 'Y',
+              safetyArrangementsInPlace: 'Y',
+              machineryAndManpowerAvailable: 'Y',
+              installationCompleted: 'Y',
+              manufacturerInstructionsFollowed: 'Y',
+              totalEquipmentsInstalled: 0,
+            });
+          }
+          break;  
+        case TASK_TYPES.ERECTION_OF_STRUCTURE:
+          if (rfiData.metaData.erectionOfStructureData) {
+            setErectionOfStructureData(rfiData.metaData.erectionOfStructureData);
+          } else {
+            setErectionOfStructureData({
+              positionChecked: 'Y',
+              weldingDoneAsPerDrawing: 'Y',
+              structureAsPerDrawing: 'Y',
+              necessarySupportProvided: 'Y',
+            });
+          }
+          break;  
         case TASK_TYPES.LIFTING_LEFT:
         case TASK_TYPES.LIFTING_YARD:
         case TASK_TYPES.LIFTING_RIGHT:
@@ -7040,7 +7159,39 @@ case TASK_TYPES.TACK_COAT:
           cableTrenchExcavationData: cableTrenchExcavationData,
         };
         break;
-
+      case TASK_TYPES.FIXING_AND_INSTALLATION_OF_TRANSFORMER:
+        if (!validateFixingAndInstallationData(fixingAndInstallationData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          fixingAndInstallationData: fixingAndInstallationData,
+        };
+        break;
+      case TASK_TYPES.FIXING_AND_INSTALLATION_OF_LT_PANEL:
+        if (!validateFixingAndInstallationLTPanelData(fixingAndInstallationLTPanelData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          fixingAndInstallationLTPanelData: fixingAndInstallationLTPanelData,
+        };
+        break;  
+      case TASK_TYPES.HT_PANEL_INSTALLATION:
+        if (!validateHtPanelInstallationData(htPanelInstallationData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          htPanelInstallationData: htPanelInstallationData,
+        };
+        break;
+      case TASK_TYPES.ERECTION_OF_STRUCTURE:
+        checkList = {
+          taskName: selectedTask.name,
+          erectionOfStructureData: erectionOfStructureData,
+        };
+        break;  
       case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
@@ -7838,11 +7989,59 @@ const validateFixingOfMC4Data = (fixingOfMC4Data: any): boolean => {
   fixingOfMC4Data.totalYConnectorsUsed = totalYConnectorsUsed;
   return true;
 };
+const validateHtPanelInstallationData = (htPanelInstallationData: any): boolean => {
+  const totalEquipmentsInstalled = parseInt(htPanelInstallationData.totalEquipmentsInstalled, 10);
+
+  // Validation for total no. of equipment installed
+  if (isNaN(totalEquipmentsInstalled) || totalEquipmentsInstalled <= 0 || totalEquipmentsInstalled > 1000) {
+    showSnackbar('Please enter a valid Total No. of Equipment Installed, value should be > 0 and <= 1000', 'error');
+    return false;
+  }
+
+  // Converting back to number after validation
+  htPanelInstallationData.totalEquipmentsInstalled = Number(htPanelInstallationData.totalEquipmentsInstalled);
+
+  return true;
+};
+
+const validateFixingAndInstallationLTPanelData = (fixingAndInstallationLTPanelData:any) => {
+  const totalEquipment = parseInt(fixingAndInstallationLTPanelData.totalEquipmentInstalled, 10);
+
+  if (isNaN(totalEquipment) || totalEquipment <= 0 || totalEquipment > 1000) {
+    showSnackbar(
+      'Please enter a valid number of equipment installed, value should be > 0 and <= 1000',
+      'error'
+    );
+    return false;
+  }
+
+  fixingAndInstallationLTPanelData.totalEquipmentInstalled = Number(
+    fixingAndInstallationLTPanelData.totalEquipmentInstalled
+  );
+
+  return true;
+};
+
+const validateFixingAndInstallationData = (fixingAndInstallationData: any): boolean => {
+  const totalEquipment = parseInt(fixingAndInstallationData.totalEquipmentInstalled, 10);
+
+  if (isNaN(totalEquipment) || totalEquipment <= 0 || totalEquipment > 1000) {
+    showSnackbar(
+      'Please enter a valid number of equipment installed, value should be > 0 and <= 1000',
+      'error'
+    );
+    return false;
+  }
+
+  fixingAndInstallationData.totalEquipmentInstalled = Number(fixingAndInstallationData.totalEquipmentInstalled);
+
+  return true;
+};
+
 const validateCableTrenchExcavationData = (cableTrenchExcavationData: any): boolean => {
   const totalSoilQty = parseFloat(cableTrenchExcavationData.totalSoilQtyExcavated);
   const totalTrenchQty = parseFloat(cableTrenchExcavationData.totalTrenchExcavated);
 
-  // Validation for total qty of soil excavated
   if (
     isNaN(totalSoilQty) ||
     totalSoilQty <= 0 ||
@@ -7856,7 +8055,6 @@ const validateCableTrenchExcavationData = (cableTrenchExcavationData: any): bool
     return false;
   }
 
-  // Validation for total trench qty excavated
   if (
     isNaN(totalTrenchQty) ||
     totalTrenchQty <= 0 ||
@@ -17418,6 +17616,261 @@ case TASK_TYPES.FIXING_OF_MODULES:
           </View>
         </View>
       );  
+      case TASK_TYPES.FIXING_AND_INSTALLATION_OF_TRANSFORMER:
+        const fixingAndInstallationProperties = [
+          { title: 'Drawings Approved', key: 'drawingsApproved' },
+          { title: 'Equipment Inspected at Factory Dispatch', key: 'equipmentInspected' },
+          { title: 'Damage to Equipment Informed to Vendor', key: 'equipmentDamageInformed' },
+          { title: 'Foundation Work Completed and Ready', key: 'foundationReady' },
+          { title: 'Concrete Strength Achieved', key: 'concreteStrengthAchieved' },
+          { title: 'Installation Methodology Approved', key: 'installationMethodologyApproved' },
+          { title: 'Safety Arrangements in Place', key: 'safetyArrangementsInPlace' },
+          { title: 'Sufficient Machinery and Manpower Available', key: 'machineryManpowerAvailable' },
+          { title: 'Installation Completed per Approved Methodology', key: 'installationCompleted' },
+          { title: 'Manufacturer Instructions Complied with', key: 'manufacturerInstructionsComplied' },
+        ];
+
+        return (
+          <View>
+            {fixingAndInstallationProperties.map(property => (
+              <View style={{ flexDirection: 'column' }} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={fixingAndInstallationData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setFixingAndInstallationData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+
+            <Input
+              label="Total No. of Equipment Installed"
+              value={fixingAndInstallationData.totalEquipmentInstalled}
+              onChange={(value: any) =>
+                setFixingAndInstallationData(prevData => ({
+                  ...prevData,
+                  totalEquipmentInstalled: value,
+                }))
+              }
+              isRequired={true}
+            />
+            <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
+          </View>
+        );
+      case TASK_TYPES.FIXING_AND_INSTALLATION_OF_LT_PANEL:
+      const fixingAndInstallationLTPanelProperties = [
+        { title: 'Whether the Drawings approved or not', key: 'drawingsApproved' },
+        {
+          title: 'Whether the equipment reached at site has been inspected in factory dispatch clearance obtained',
+          key: 'equipmentInspected',
+        },
+        {
+          title: 'Is there any damage to the equipment or not, if yes whether informed to the vendor',
+          key: 'equipmentDamageInformed',
+        },
+        {
+          title: 'Whether the equipment foundation work completed in all respect and ready for installation of equipment',
+          key: 'foundationReady',
+        },
+        {
+          title: 'Whether the concrete components of the foundations achieved desired strength',
+          key: 'concreteStrengthAchieved',
+        },
+        { title: 'Installation methodology approved', key: 'installationMethodologyApproved' },
+        {
+          title: 'Whether all safety arrangements are in place prior to the installation',
+          key: 'safetyArrangementsInPlace',
+        },
+        {
+          title: 'Whether sufficient machinery and manpower available at site',
+          key: 'machineryManpowerAvailable',
+        },
+        {
+          title: 'Installation completed as per the approved methodology',
+          key: 'installationCompleted',
+        },
+        {
+          title: 'All instructions as informed by the manufacturer have been complied with during installation',
+          key: 'manufacturerInstructionsComplied',
+        },
+      ];
+
+      return (
+        <View>
+          {fixingAndInstallationLTPanelProperties.map(property => (
+            <View style={{ flexDirection: 'column', marginBottom: 10 }} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={fixingAndInstallationLTPanelData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value:any) =>
+                  setFixingAndInstallationLTPanelData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+
+          <Input
+            label="Total No. of Equipment Installed"
+            value={fixingAndInstallationLTPanelData.totalEquipmentInstalled}
+            onChange={(value:any) =>
+              setFixingAndInstallationLTPanelData(prevData => ({
+                ...prevData,
+                totalEquipmentInstalled: value,
+              }))
+            }
+            isRequired={true}
+            keyboardType="numeric"
+          />
+
+          <View>
+            <CalendarPicker
+              label="Date"
+              value={rfiDate}
+              onChange={date => setRFIDate(date)}
+            />
+            <TimePicker
+              label="Time"
+              value={rfiTime}
+              onChange={time => setRFITime(time)}
+            />
+            <TextInput
+              style={styles.commonInputFiels}
+              placeholder="Recommendations"
+              multiline={true}
+              numberOfLines={4}
+              blurOnSubmit={false}
+              value={comments}
+              onChangeText={text => setComments(text)}
+            />
+          </View>
+        </View>
+      );
+      case TASK_TYPES.HT_PANEL_INSTALLATION:  
+      const htPanelInstallationProperties = [
+        { title: 'Whether the Drawings Approved', key: 'drawingsApproved' },
+        { title: 'Equipment Inspected & Factory Dispatch Clearance Obtained', key: 'equipmentInspected' },
+        { title: 'Equipment Damage Reported to Vendor', key: 'equipmentDamageReported' },
+        { title: 'Foundation Work Completed and Ready for Installation', key: 'foundationWorkCompleted' },
+        { title: 'Concrete Components Achieved Desired Strength', key: 'concreteStrengthAchieved' },
+        { title: 'Installation Methodology Approved', key: 'installationMethodologyApproved' },
+        { title: 'All Safety Arrangements in Place', key: 'safetyArrangementsInPlace' },
+        { title: 'Sufficient Machinery and Manpower Available', key: 'machineryAndManpowerAvailable' },
+        { title: 'Installation Completed as per Approved Methodology', key: 'installationCompleted' },
+        { title: 'Manufacturer Instructions Followed during Installation', key: 'manufacturerInstructionsFollowed' },
+      ];
+
+      return (
+        <View>
+          {htPanelInstallationProperties.map(property => (
+            <View style={{ flexDirection: 'column' }} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={htPanelInstallationData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value: any) =>
+                  setHtPanelInstallationData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+          <Input
+            label="Total No. of Equipment Installed"
+            value={htPanelInstallationData.totalEquipmentsInstalled}
+            onChange={(value: any) =>
+              setHtPanelInstallationData(prevData => ({
+                ...prevData,
+                totalEquipmentsInstalled: value,
+              }))
+            }
+            isRequired={true}
+          />
+        </View>
+      );
+      case TASK_TYPES.ERECTION_OF_STRUCTURE:
+        const erectionOfStructureProperties = [
+          { title: 'Whether the Position checked', key: 'positionChecked' },
+          { title: 'Whether the Welding done as per the approved drawing', key: 'weldingDoneAsPerDrawing' },
+          { title: 'Whether the Structure is as per approved drawing', key: 'structureAsPerDrawing' },
+          { title: 'Whether the Necessary support provided', key: 'necessarySupportProvided' },
+        ];
+
+        return (
+          <View>
+            {erectionOfStructureProperties.map(property => (
+              <View style={{ flexDirection: 'column', marginBottom: 10 }} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={erectionOfStructureData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value:any) =>
+                    setErectionOfStructureData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+          </View>
+        );
+
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
       case TASK_TYPES.LIFTING_RIGHT:

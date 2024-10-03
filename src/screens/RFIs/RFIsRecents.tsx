@@ -6074,6 +6074,251 @@ const RFIsRecents = (props: any) => {
             ))}
           </View>
         );
+      case TASK_TYPES.FIXING_AND_INSTALLATION_OF_TRANSFORMER:
+        const fixingAndInstallationProperties = [
+          {
+            title: 'Whether the Drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {
+            title:
+              'Whether the equipment inspected at site and factory dispatch clearance obtained',
+            key: 'equipmentInspected',
+          },
+          {
+            title:
+              'Is there any damage to the equipment, if yes informed to vendor',
+            key: 'equipmentDamageInformed',
+          },
+          {
+            title: 'Whether the equipment foundation work completed and ready',
+            key: 'foundationReady',
+          },
+          {
+            title:
+              'Whether the concrete components of the foundations achieved desired strength',
+            key: 'concreteStrengthAchieved',
+          },
+          {
+            title: 'Installation methodology approved',
+            key: 'installationMethodologyApproved',
+          },
+          {
+            title: 'Whether safety arrangements in place prior to installation',
+            key: 'safetyArrangementsInPlace',
+          },
+          {
+            title: 'Sufficient machinery and manpower available',
+            key: 'machineryManpowerAvailable',
+          },
+          {
+            title: 'Installation completed as per approved methodology',
+            key: 'installationCompleted',
+          },
+          {
+            title: 'All manufacturer instructions complied during installation',
+            key: 'manufacturerInstructionsComplied',
+          },
+          {
+            title: 'Total no. of equipment installed',
+            key: 'totalEquipmentInstalled',
+          },
+        ];
+        return (
+          <View>
+            {fixingAndInstallationProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.fixingAndInstallationData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      // Code Snippet 5: Displaying Data
+      case TASK_TYPES.FIXING_AND_INSTALLATION_OF_LT_PANEL:
+        const fixingAndInstallationLTPanelDisplayProperties = [
+          {
+            title: 'Whether the Drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {
+            title:
+              'Whether the equipment reached at site has been inspected in factory dispatch clearance obtained',
+            key: 'equipmentInspected',
+          },
+          {
+            title:
+              'Is there any damage to the equipment or not, if yes whether informed to the vendor',
+            key: 'equipmentDamageInformed',
+          },
+          {
+            title:
+              'Whether the equipment foundation work completed in all respect and ready for installation of equipment',
+            key: 'foundationReady',
+          },
+          {
+            title:
+              'Whether the concrete components of the foundations achieved desired strength',
+            key: 'concreteStrengthAchieved',
+          },
+          {
+            title: 'Installation methodology approved',
+            key: 'installationMethodologyApproved',
+          },
+          {
+            title:
+              'Whether all safety arrangements are in place prior to the installation',
+            key: 'safetyArrangementsInPlace',
+          },
+          {
+            title:
+              'Whether sufficient machinery and manpower available at site',
+            key: 'machineryManpowerAvailable',
+          },
+          {
+            title: 'Installation completed as per the approved methodology',
+            key: 'installationCompleted',
+          },
+          {
+            title:
+              'All instructions as informed by the manufacturer have been complied with during installation',
+            key: 'manufacturerInstructionsComplied',
+          },
+          {
+            title: 'Total No. of Equipment Installed',
+            key: 'totalEquipmentInstalled',
+          },
+        ];
+        return (
+          <View>
+            {fixingAndInstallationLTPanelDisplayProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.fixingAndInstallationLTPanelData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.HT_PANEL_INSTALLATION:
+        const htPanelInstallationProperties = [
+          {title: 'Whether the Drawings Approved', key: 'drawingsApproved'},
+          {
+            title: 'Equipment Inspected & Factory Dispatch Clearance Obtained',
+            key: 'equipmentInspected',
+          },
+          {
+            title: 'Equipment Damage Reported to Vendor',
+            key: 'equipmentDamageReported',
+          },
+          {
+            title: 'Foundation Work Completed and Ready for Installation',
+            key: 'foundationWorkCompleted',
+          },
+          {
+            title: 'Concrete Components Achieved Desired Strength',
+            key: 'concreteStrengthAchieved',
+          },
+          {
+            title: 'Installation Methodology Approved',
+            key: 'installationMethodologyApproved',
+          },
+          {
+            title: 'All Safety Arrangements in Place',
+            key: 'safetyArrangementsInPlace',
+          },
+          {
+            title: 'Sufficient Machinery and Manpower Available',
+            key: 'machineryAndManpowerAvailable',
+          },
+          {
+            title: 'Installation Completed as per Approved Methodology',
+            key: 'installationCompleted',
+          },
+          {
+            title: 'Manufacturer Instructions Followed during Installation',
+            key: 'manufacturerInstructionsFollowed',
+          },
+          {
+            title: 'Total No. of Equipment Installed',
+            key: 'totalEquipmentsInstalled',
+          },
+        ];
+        return (
+          <View>
+            {htPanelInstallationProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.htPanelInstallationData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.ERECTION_OF_STRUCTURE:
+        const erectionOfStructureDisplayProperties = [
+          {title: 'Whether the Position checked', key: 'positionChecked'},
+          {
+            title: 'Whether the Welding done as per the approved drawing',
+            key: 'weldingDoneAsPerDrawing',
+          },
+          {
+            title: 'Whether the Structure is as per approved drawing',
+            key: 'structureAsPerDrawing',
+          },
+          {
+            title: 'Whether the Necessary support provided',
+            key: 'necessarySupportProvided',
+          },
+        ];
+
+        return (
+          <View>
+            {erectionOfStructureDisplayProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.erectionOfStructureData?.[
+                    property.key
+                  ] ?? 'N/A'}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+
       // ReadOnlyRfi
       default:
         return (

@@ -466,6 +466,44 @@ const [dumpingData, setDumpingData] = useState([
     probingByStiffwire: string;
   };
   //FormUseStates
+  const [erectionPreCastColumnData, setErectionPreCastColumnData] = useState({
+    drawingApproved: 'Y',
+    columnsFromApprovedSource: 'Y',
+    columnDamaged: 'Y',
+    erectionAsPerDrawing: 'Y',
+    lineLevelChecked: 'Y',
+    dimensionsAsPerDrawing: 'Y',
+    totalNoOfColumnsErected: 0,
+    columnSpacingAsPerDrawing: 'Y',
+    totalLengthOfBwallCovered: 0.0,
+  });
+  const [fixingOfPanelsData, setFixingOfPanelsData] = useState({
+    drawingApproved: 'Y',
+    materialSourceApproved: 'Y',
+    panelShapeSizeAsDrawing: 'Y',
+    boltsAligned: 'Y',
+    panelsFixedInLine: 'Y',
+    boltsFullyTorqued: 'Y',
+    totalPanelsInstalled: 0,
+    totalBusShelterCompleted: 0,
+  });
+  const [fabricationOfStructureData, setFabricationOfStructureData] = useState({
+    steelInspection: 'Y',
+    sectionChecked: 'Y',
+    materialSpecificationChecked: 'Y',
+    connectionChecked: 'Y',
+    boltHolesClean: 'Y',
+    approvedWeldersUsed: 'Y',
+    weldsIdentified: 'Y',
+    weldsInspected: 'Y',
+    weldsRepaired: 'Y',
+    shapeEdgeBurnsRemoved: 'Y',
+    oilGreaseRemoved: 'Y',
+    steelCleanedAndPainted: 'Y',
+    finalShopCoatApplied: 'Y',
+    structureMarkedForErection: 'Y',
+    structureApprovedPriorShipment: 'Y',
+  });
    const [erectionOfStructureData, setErectionOfStructureData] = useState({
     positionChecked: 'Y',
     weldingDoneAsPerDrawing: 'Y',
@@ -4914,7 +4952,63 @@ case TASK_TYPES.TACK_COAT:
               necessarySupportProvided: 'Y',
             });
           }
-          break;  
+          break;
+        case TASK_TYPES.FABRICATION_OF_STRUCTURE:
+          if (rfiData.metaData.fabricationOfStructureData) {
+            setFabricationOfStructureData(rfiData.metaData.fabricationOfStructureData);
+          } else {
+            setFabricationOfStructureData({
+              steelInspection: 'Y',
+              sectionChecked: 'Y',
+              materialSpecificationChecked: 'Y',
+              connectionChecked: 'Y',
+              boltHolesClean: 'Y',
+              approvedWeldersUsed: 'Y',
+              weldsIdentified: 'Y',
+              weldsInspected: 'Y',
+              weldsRepaired: 'Y',
+              shapeEdgeBurnsRemoved: 'Y',
+              oilGreaseRemoved: 'Y',
+              steelCleanedAndPainted: 'Y',
+              finalShopCoatApplied: 'Y',
+              structureMarkedForErection: 'Y',
+              structureApprovedPriorShipment: 'Y',
+            });
+          }
+          break; 
+        case TASK_TYPES.FIXING_OF_PANELS:
+          if (rfiData.metaData.fixingOfPanelsData) {
+            setFixingOfPanelsData(rfiData.metaData.fixingOfPanelsData);
+          } else {
+            setFixingOfPanelsData({
+              drawingApproved: 'Y',
+              materialSourceApproved: 'Y',
+              panelShapeSizeAsDrawing: 'Y',
+              boltsAligned: 'Y',
+              panelsFixedInLine: 'Y',
+              boltsFullyTorqued: 'Y',
+              totalPanelsInstalled: 0,
+              totalBusShelterCompleted: 0,
+            });
+          }
+          break;   
+        case TASK_TYPES.ERECTION_OF_PRECAST_COLUMN:
+          if (rfiData.metaData.erectionPreCastColumnData) {
+            setErectionPreCastColumnData(rfiData.metaData.erectionPreCastColumnData);
+          } else {
+            setErectionPreCastColumnData({
+              drawingApproved: 'Y',
+              columnsFromApprovedSource: 'Y',
+              columnDamaged: 'Y',
+              erectionAsPerDrawing: 'Y',
+              lineLevelChecked: 'Y',
+              dimensionsAsPerDrawing: 'Y',
+              totalNoOfColumnsErected: 0,
+              columnSpacingAsPerDrawing: 'Y',
+              totalLengthOfBwallCovered: 0.0,
+            });
+          }
+          break;    
         case TASK_TYPES.LIFTING_LEFT:
         case TASK_TYPES.LIFTING_YARD:
         case TASK_TYPES.LIFTING_RIGHT:
@@ -7192,6 +7286,30 @@ case TASK_TYPES.TACK_COAT:
           erectionOfStructureData: erectionOfStructureData,
         };
         break;  
+      case TASK_TYPES.FABRICATION_OF_STRUCTURE:
+        checkList = {
+          taskName: selectedTask.name,
+          fabricationOfStructureData: fabricationOfStructureData,
+        };
+        break;  
+      case TASK_TYPES.FIXING_OF_PANELS:
+        if (!validateFixingOfPanelsData(fixingOfPanelsData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          fixingOfPanelsData: fixingOfPanelsData,
+        };
+        break;  
+      case TASK_TYPES.ERECTION_OF_PRECAST_COLUMN:
+        if (!validateErectionPreCastColumnData(erectionPreCastColumnData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          erectionPreCastColumnData: erectionPreCastColumnData,
+        };
+        break;  
       case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
@@ -7989,10 +8107,69 @@ const validateFixingOfMC4Data = (fixingOfMC4Data: any): boolean => {
   fixingOfMC4Data.totalYConnectorsUsed = totalYConnectorsUsed;
   return true;
 };
+const validateErectionPreCastColumnData = (
+  erectionPreCastColumnData: any,
+): boolean => {
+  const totalNoOfColumns = parseInt(erectionPreCastColumnData.totalNoOfColumnsErected, 10);
+  const totalLengthBwall = parseFloat(erectionPreCastColumnData.totalLengthOfBwallCovered);
+
+  if (isNaN(totalNoOfColumns) || totalNoOfColumns <= 0 || totalNoOfColumns > 10000) {
+    showSnackbar(
+      'Please enter a valid Total No. of Columns Erected (integer, > 0 and <= 10000)',
+      'error',
+    );
+    return false;
+  }
+
+  if (isNaN(totalLengthBwall) || totalLengthBwall <= 0 || totalLengthBwall > 100000 || erectionPreCastColumnData.totalLengthOfBwallCovered.split('.')[1]?.length > 3) {
+    showSnackbar(
+      'Please enter a valid Total Length of B/Wall Covered (in RM, max 3 decimal places, > 0 and <= 100000)',
+      'error',
+    );
+    return false;
+  }
+
+  erectionPreCastColumnData.totalNoOfColumnsErected = Number(erectionPreCastColumnData.totalNoOfColumnsErected);
+  erectionPreCastColumnData.totalLengthOfBwallCovered = Number(erectionPreCastColumnData.totalLengthOfBwallCovered);
+
+  return true;
+};
+
+const validateFixingOfPanelsData = (fixingOfPanelsData:any) => {
+  const totalPanelsInstalled = parseInt(fixingOfPanelsData.totalPanelsInstalled);
+  const totalBusShelterCompleted = parseInt(fixingOfPanelsData.totalBusShelterCompleted);
+
+  if (
+    isNaN(totalPanelsInstalled) ||
+    totalPanelsInstalled <= 0 ||
+    totalPanelsInstalled > 10000
+  ) {
+    showSnackbar(
+      'Please enter a valid number for Total Panels Installed (value should be > 0 and <= 10000)',
+      'error'
+    );
+    return false;
+  }
+
+  if (
+    isNaN(totalBusShelterCompleted) ||
+    totalBusShelterCompleted <= 0 ||
+    totalBusShelterCompleted > 10000
+  ) {
+    showSnackbar(
+      'Please enter a valid number for Total Bus Shelter Completed (value should be > 0 and <= 10000)',
+      'error'
+    );
+    return false;
+  }
+  fixingOfPanelsData.totalPanelsInstalled=Number(fixingOfPanelsData.totalPanelsInstalled);
+  fixingOfPanelsData.totalBusShelterCompleted=Number(fixingOfPanelsData.totalBusShelterCompleted);
+  return true;
+};
+
 const validateHtPanelInstallationData = (htPanelInstallationData: any): boolean => {
   const totalEquipmentsInstalled = parseInt(htPanelInstallationData.totalEquipmentsInstalled, 10);
 
-  // Validation for total no. of equipment installed
   if (isNaN(totalEquipmentsInstalled) || totalEquipmentsInstalled <= 0 || totalEquipmentsInstalled > 1000) {
     showSnackbar('Please enter a valid Total No. of Equipment Installed, value should be > 0 and <= 1000', 'error');
     return false;
@@ -17870,7 +18047,215 @@ case TASK_TYPES.FIXING_OF_MODULES:
             </View>
           </View>
         );
+      case TASK_TYPES.FABRICATION_OF_STRUCTURE:  
+      const fabricationOfStructureProperties = [
+        { title: 'Steel Inspection for Surface Condition', key: 'steelInspection' },
+        { title: 'Section Checked for Dimension and GFC Compliance', key: 'sectionChecked' },
+        { title: 'Material Specification Checked as per GFC', key: 'materialSpecificationChecked' },
+        { title: 'Connection Checked as per GFC', key: 'connectionChecked' },
+        { title: 'Bolt Holes Clean and to Size', key: 'boltHolesClean' },
+        { title: 'Only Approved Welders Used', key: 'approvedWeldersUsed' },
+        { title: 'Welds Identified with Welder ID', key: 'weldsIdentified' },
+        { title: 'Welds Inspected for Dimension, Shape, Location', key: 'weldsInspected' },
+        { title: 'Welds Repaired as Required', key: 'weldsRepaired' },
+        { title: 'Shape Edge Burns/Weld Spatter Removed', key: 'shapeEdgeBurnsRemoved' },
+        { title: 'Oil and Grease Removed before Final Cleaning', key: 'oilGreaseRemoved' },
+        { title: 'Steel Cleaned and Painted as per Specification', key: 'steelCleanedAndPainted' },
+        { title: 'Final Shop Coat Applied as per Approved Color', key: 'finalShopCoatApplied' },
+        { title: 'Each Structure Marked for Erection as per Scope', key: 'structureMarkedForErection' },
+        { title: 'Structure Approved by Inspector Before Shipment', key: 'structureApprovedPriorShipment' },
+      ];
 
+      return (
+        <View>
+          {fabricationOfStructureProperties.map(property => (
+            <View style={{ flexDirection: 'column' }} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={fabricationOfStructureData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value: any) =>
+                  setFabricationOfStructureData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+          <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+        </View>
+      );  
+      case TASK_TYPES.FIXING_OF_PANELS:
+        const fixingOfPanelsProperties = [
+          { title: 'Is the bus shelter drawing approved', key: 'drawingApproved' },
+          { title: 'Is the material source approved', key: 'materialSourceApproved' },
+          { title: 'Is the shape and size of panel same as mentioned in drawing', key: 'panelShapeSizeAsDrawing' },
+          { title: 'Are bolts and holes aligned', key: 'boltsAligned' },
+          { title: 'Are the panels fixed in line', key: 'panelsFixedInLine' },
+          { title: 'Are the all bolts fully torqued', key: 'boltsFullyTorqued' },
+        ];
+
+        return (
+          <View>
+            {fixingOfPanelsProperties.map(property => (
+              <View style={{ flexDirection: 'column' }} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={fixingOfPanelsData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value:any) =>
+                    setFixingOfPanelsData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <Input
+              label="Total No. of Panels Installed"
+              value={fixingOfPanelsData.totalPanelsInstalled}
+              onChange={(value:any) =>
+                setFixingOfPanelsData(prevData => ({
+                  ...prevData,
+                  totalPanelsInstalled: value,
+                }))
+              }
+              isRequired={true}
+            />
+            <Input
+              label="Total No. of Bus Shelter Completed"
+              value={fixingOfPanelsData.totalBusShelterCompleted}
+              onChange={(value:any) =>
+                setFixingOfPanelsData(prevData => ({
+                  ...prevData,
+                  totalBusShelterCompleted: value,
+                }))
+              }
+              isRequired={true}
+            />
+            <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+          </View>
+        );
+      case TASK_TYPES.ERECTION_OF_PRECAST_COLUMN:  
+        const erectionPreCastColumnProperties = [
+        { title: 'Is the Drawing Approved', key: 'drawingApproved' },
+        { title: 'Pre-Cast Columns from Approved Source', key: 'columnsFromApprovedSource' },
+        { title: 'Is Any Column Damaged', key: 'columnDamaged' },
+        { title: 'Erection is as per the Drawing', key: 'erectionAsPerDrawing' },
+        { title: 'Line and Level Checked Properly', key: 'lineLevelChecked' },
+        { title: 'Dimensions of the Column are as per Drawing', key: 'dimensionsAsPerDrawing' },
+        { title: 'Spacing of Columns is as per Approved Drawing', key: 'columnSpacingAsPerDrawing' },
+      ];
+
+      return (
+        <View>
+          {erectionPreCastColumnProperties.map(property => (
+            <View style={{ flexDirection: 'column' }} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={erectionPreCastColumnData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value: any) =>
+                  setErectionPreCastColumnData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+          <Input
+            label="Total No. of Columns Erected"
+            value={erectionPreCastColumnData.totalNoOfColumnsErected}
+            onChange={(value: any) =>
+              setErectionPreCastColumnData(prevData => ({
+                ...prevData,
+                totalNoOfColumnsErected: value,
+              }))
+            }
+            isRequired={true}
+          />
+
+          <Input
+            label="Total Length of B/Wall Covered (RM)"
+            value={erectionPreCastColumnData.totalLengthOfBwallCovered}
+            onChange={(value: any) =>
+              setErectionPreCastColumnData(prevData => ({
+                ...prevData,
+                totalLengthOfBwallCovered: value,
+              }))
+            }
+            isRequired={true}
+          />
+          <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+        </View>
+      );
+  
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
       case TASK_TYPES.LIFTING_RIGHT:

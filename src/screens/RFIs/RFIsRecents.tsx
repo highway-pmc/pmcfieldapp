@@ -6318,7 +6318,164 @@ const RFIsRecents = (props: any) => {
             ))}
           </View>
         );
-
+      case TASK_TYPES.FABRICATION_OF_STRUCTURE:
+        const fabricationOfStructureProperties = [
+          {
+            title: 'Is Steel Inspection for Surface Condition',
+            key: 'steelInspection',
+          },
+          {
+            title: 'Is Section Checked for Dimension and as per GFC',
+            key: 'sectionChecked',
+          },
+          {
+            title: 'Is Material Specification Checked as per GFC',
+            key: 'materialSpecificationChecked',
+          },
+          {title: 'Is Connection Checked as per GFC', key: 'connectionChecked'},
+          {title: 'Are Bolt Holes Clean and to Size', key: 'boltHolesClean'},
+          {title: 'Only Approved Welders Used', key: 'approvedWeldersUsed'},
+          {title: 'Welds Identified as per Welder ID', key: 'weldsIdentified'},
+          {
+            title: 'Welds Inspected for Dimension, Shape, Location',
+            key: 'weldsInspected',
+          },
+          {title: 'Welds Repaired as Required', key: 'weldsRepaired'},
+          {
+            title: 'Shape Edge Burns and Weld Spatter Removed',
+            key: 'shapeEdgeBurnsRemoved',
+          },
+          {
+            title: 'Oil/Grease Removed Before Final Cleaning',
+            key: 'oilGreaseRemoved',
+          },
+          {
+            title: 'Steel Cleaned and Painted as per Specification',
+            key: 'steelCleanedAndPainted',
+          },
+          {
+            title: 'Final Shop Coat Applied as per Approved Color',
+            key: 'finalShopCoatApplied',
+          },
+          {
+            title: 'Each Structure Marked for Erection as per Scope',
+            key: 'structureMarkedForErection',
+          },
+          {
+            title: 'Structure Approved by Inspector Prior to Shipment',
+            key: 'structureApprovedPriorShipment',
+          },
+        ];
+        return (
+          <View>
+            {fabricationOfStructureProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.fabricationOfStructureData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.FIXING_OF_PANELS:
+        const fixingOfPanelsProperties = [
+          {
+            title: 'Is the bus shelter drawing approved',
+            key: 'drawingApproved',
+          },
+          {
+            title: 'Is the material source approved',
+            key: 'materialSourceApproved',
+          },
+          {
+            title:
+              'Is the shape and size of panel same as mentioned in drawing',
+            key: 'panelShapeSizeAsDrawing',
+          },
+          {title: 'Are bolts and holes aligned', key: 'boltsAligned'},
+          {title: 'Are the panels fixed in line', key: 'panelsFixedInLine'},
+          {title: 'Are the all bolts fully torqued', key: 'boltsFullyTorqued'},
+          {title: 'Total no. of Panels Installed', key: 'totalPanelsInstalled'},
+          {
+            title: 'Total no. of Bus Shelter Completed',
+            key: 'totalBusShelterCompleted',
+          },
+        ];
+        return (
+          <View>
+            {fixingOfPanelsProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.fixingOfPanelsData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.ERECTION_OF_PRECAST_COLUMN:
+        const erectionPreCastColumnProperties = [
+          {title: 'Is the Drawing Approved', key: 'drawingApproved'},
+          {
+            title: 'Pre-Cast Columns from Approved Source',
+            key: 'columnsFromApprovedSource',
+          },
+          {title: 'Is Any Column Damaged', key: 'columnDamaged'},
+          {
+            title: 'Erection is as per the Drawing',
+            key: 'erectionAsPerDrawing',
+          },
+          {title: 'Line and Level Checked Properly', key: 'lineLevelChecked'},
+          {
+            title: 'Dimensions of the Column are as per Drawing',
+            key: 'dimensionsAsPerDrawing',
+          },
+          {
+            title: 'Spacing of Columns is as per Approved Drawing',
+            key: 'columnSpacingAsPerDrawing',
+          },
+          {
+            title: 'Total No. of Columns Erected in No.',
+            key: 'totalNoOfColumnsErected',
+          },
+          {
+            title: 'Total Length of B/Wall Covered in RM',
+            key: 'totalLengthOfBwallCovered',
+          },
+        ];
+         return (
+           <View>
+             {erectionPreCastColumnProperties.map(property => (
+               <View
+                 style={{flexDirection: 'column', marginBottom: 10}}
+                 key={property.key}>
+                 <Text style={styles.GenerateRFIFieldLabel}>
+                   {property.title}
+                 </Text>
+                 <Text>
+                   {
+                     selectedRFI?.metaData.erectionPreCastColumnData?.[
+                       property.key
+                     ]
+                   }
+                 </Text>
+               </View>
+             ))}
+           </View>
+         );
       // ReadOnlyRfi
       default:
         return (

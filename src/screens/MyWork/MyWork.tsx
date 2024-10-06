@@ -466,6 +466,47 @@ const [dumpingData, setDumpingData] = useState([
     probingByStiffwire: string;
   };
   //FormUseStates
+  const [placingChainLinkData, setPlacingChainLinkData] = useState({
+    drawingApproved: 'Y',
+    fencingInstalledAsPerPlotPlan: 'Y',
+    fittingsCapsTensionBarsHingesHardwareInstalled: 'Y',
+    cornerEndPostsAnchoredSupported: 'Y',
+    fenceComponentsDefectFree: 'Y',
+    fenceInstalledAtCorrectHeight: 'Y',
+    fenceEndsWithTerminalPost: 'Y',
+    appropriateFastenersUsed: 'Y',
+    damagedMeshInformedSupplier: 'Y',
+    missingDamagedComponents: 'Y',
+    tooMuchMovementTopRail: 'Y',
+    rightFencingMaterialUsed: 'Y',
+    requiredFenceGapPresent: 'Y',
+    meshTensionWireLoose: 'Y',
+    totalSqmFenceInstalled: 0.0,
+  });
+  const [preCastRccPanelData, setPreCastRccPanelData] = useState({
+    drawingApproved: 'Y',
+    panelsFromApprovedSource: 'Y',
+    damagedPanelFound: 'Y',
+    alignmentPlumbFixingSupport: 'Y',
+    totalPanelsInstalled: 0,
+    totalAreaInstalled: 0.0,
+  });
+  const [erectionOfAngleSectionData, setErectionOfAngleSectionData] = useState({
+    anglesFromApprovedSource: 'Y',
+    materialInspectionClearance: 'Y',
+    materialDamagedInformed: 'Y',
+    erectionAsPerDrawing: 'Y',
+    alignmentSupportOk: 'Y',
+    totalAnglesErected: 0,
+  });
+  const [erectionOfBusShelterData, setErectionOfBusShelterData] = useState({
+    materialSourceApproved: 'Y',
+    drawingsApproved: 'Y',
+    supportingSurfaceChecked: 'Y',
+    safetyArrangementsInPlace: 'Y',
+    totalPanelsInstalled: 0,
+    totalBusStandsCompleted: 0,
+  });
   const [erectionPreCastColumnData, setErectionPreCastColumnData] = useState({
     drawingApproved: 'Y',
     columnsFromApprovedSource: 'Y',
@@ -5009,6 +5050,73 @@ case TASK_TYPES.TACK_COAT:
             });
           }
           break;    
+        case TASK_TYPES.ERECTION_OF_BUS_SHELTER:
+          if (rfiData.metaData.erectionOfBusShelterData) {
+            setErectionOfBusShelterData(rfiData.metaData.erectionOfBusShelterData);
+          } else {
+            setErectionOfBusShelterData({
+              materialSourceApproved: 'Y',
+              drawingsApproved: 'Y',
+              supportingSurfaceChecked: 'Y',
+              safetyArrangementsInPlace: 'Y',
+              totalPanelsInstalled: 0,
+              totalBusStandsCompleted: 0,
+            });
+          }
+          break; 
+        case TASK_TYPES.ERECTION_OF_ANGLE_SECTION:
+          if (rfiData.metaData.erectionOfAngleSectionData) {
+            setErectionOfAngleSectionData(
+              rfiData.metaData.erectionOfAngleSectionData,
+            );
+          } else {
+            setErectionOfAngleSectionData({
+              anglesFromApprovedSource: 'Y',
+              materialInspectionClearance: 'Y',
+              materialDamagedInformed: 'Y',
+              erectionAsPerDrawing: 'Y',
+              alignmentSupportOk: 'Y',
+              totalAnglesErected: 0,
+            });
+          }
+          break; 
+        case TASK_TYPES.PLACING_OF_PRE_CAST_RCC_PANELS:
+          if (rfiData.metaData.preCastRccPanelData) {
+              setPreCastRccPanelData(rfiData.metaData.preCastRccPanelData);
+          } else {
+              setPreCastRccPanelData({
+                  drawingApproved: 'Y',
+                  panelsFromApprovedSource: 'Y',
+                  damagedPanelFound: 'Y',
+                  alignmentPlumbFixingSupport: 'Y',
+                  totalPanelsInstalled: 0,
+                  totalAreaInstalled: 0.0,
+              });
+          }
+          break;    
+        case TASK_TYPES.PLACING_OF_CHAIN_LINK:
+          if (rfiData.metaData.placingChainLinkData) {
+            setPlacingChainLinkData(rfiData.metaData.placingChainLinkData);
+          } else {
+            setPlacingChainLinkData({
+              drawingApproved: 'Y',
+              fencingInstalledAsPerPlotPlan: 'Y',
+              fittingsCapsTensionBarsHingesHardwareInstalled: 'Y',
+              cornerEndPostsAnchoredSupported: 'Y',
+              fenceComponentsDefectFree: 'Y',
+              fenceInstalledAtCorrectHeight: 'Y',
+              fenceEndsWithTerminalPost: 'Y',
+              appropriateFastenersUsed: 'Y',
+              damagedMeshInformedSupplier: 'Y',
+              missingDamagedComponents: 'Y',
+              tooMuchMovementTopRail: 'Y',
+              rightFencingMaterialUsed: 'Y',
+              requiredFenceGapPresent: 'Y',
+              meshTensionWireLoose: 'Y',
+              totalSqmFenceInstalled: 0.0,
+            });
+          }
+          break;  
         case TASK_TYPES.LIFTING_LEFT:
         case TASK_TYPES.LIFTING_YARD:
         case TASK_TYPES.LIFTING_RIGHT:
@@ -7310,6 +7418,42 @@ case TASK_TYPES.TACK_COAT:
           erectionPreCastColumnData: erectionPreCastColumnData,
         };
         break;  
+      case TASK_TYPES.ERECTION_OF_BUS_SHELTER:
+        if (!validateErectionOfBusShelterData(erectionOfBusShelterData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          erectionOfBusShelterData: erectionOfBusShelterData,
+        };
+        break;  
+      case TASK_TYPES.ERECTION_OF_ANGLE_SECTION:
+        if (!validateErectionOfAngleSectionData(erectionOfAngleSectionData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          erectionOfAngleSectionData: erectionOfAngleSectionData,
+        };
+        break;  
+      case TASK_TYPES.PLACING_OF_PRE_CAST_RCC_PANELS:
+        if (!validatePreCastRccPanelData(preCastRccPanelData)) {
+            return;
+        }
+        checkList = {
+            taskName: selectedTask.name,
+            preCastRccPanelData: preCastRccPanelData,
+        };
+        break;  
+      case TASK_TYPES.PLACING_OF_CHAIN_LINK:
+        if (!validatePlacingChainLinkData(placingChainLinkData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          placingChainLinkData: placingChainLinkData,
+        };
+        break;  
       case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
@@ -8107,6 +8251,90 @@ const validateFixingOfMC4Data = (fixingOfMC4Data: any): boolean => {
   fixingOfMC4Data.totalYConnectorsUsed = totalYConnectorsUsed;
   return true;
 };
+const validatePlacingChainLinkData = (placingChainLinkData:any) => {
+  const totalSqm = parseFloat(placingChainLinkData.totalSqmFenceInstalled);
+
+  if (
+    isNaN(totalSqm) ||
+    totalSqm <= 0 ||
+    totalSqm > 1000000 ||
+    placingChainLinkData.totalSqmFenceInstalled.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Total Sqm of Fence Installed with up to 3 decimal places, value should be > 0 and <= 1,000,000',
+      'error',
+    );
+    placingChainLinkData.totalSqmFenceInstalled=Number(placingChainLinkData.totalSqmFenceInstalled);
+    return false;
+  }
+
+  return true;
+};
+const validatePreCastRccPanelData = (preCastRccPanelData:any) => {
+    const totalPanels = parseInt(preCastRccPanelData.totalPanelsInstalled);
+    const totalArea = parseFloat(preCastRccPanelData.totalAreaInstalled);
+
+    if (isNaN(totalPanels) || totalPanels <= 0 || totalPanels > 100000) {
+        showSnackbar(
+            'Please enter a valid total number of panels installed (in nos.), value should be > 0 and <= 100000',
+            'error',
+        );
+        return false;
+    }
+
+    if (isNaN(totalArea) || totalArea <= 0 || totalArea > 1000000 || preCastRccPanelData.totalAreaInstalled.split('.')[1]?.length > 3) {
+        showSnackbar(
+            'Please enter a valid total area of panels installed (in sqm) with max 3 decimal places, value should be > 0 and <= 1000000',
+            'error',
+        );
+        return false;
+    }
+
+    preCastRccPanelData.totalPanelsInstalled = Number(preCastRccPanelData.totalPanelsInstalled);
+    preCastRccPanelData.totalAreaInstalled = Number(preCastRccPanelData.totalAreaInstalled);
+
+    return true;
+};
+
+const validateErectionOfAngleSectionData = (
+  erectionOfAngleSectionData: any,
+): boolean => {
+  const totalAngles = parseInt(erectionOfAngleSectionData.totalAnglesErected);
+
+  // Validation for total column/angles erected
+  if (isNaN(totalAngles) || totalAngles <= 0 || totalAngles > 10000) {
+    showSnackbar(
+      'Please enter a valid number of angles erected (should be > 0 and <= 10000)',
+      'error',
+    );
+    return false;
+  }
+
+  erectionOfAngleSectionData.totalAnglesErected = Number(
+    erectionOfAngleSectionData.totalAnglesErected,
+  );
+
+  return true;
+};
+
+const validateErectionOfBusShelterData = (erectionOfBusShelterData:any) => {
+  const totalPanels = parseInt(erectionOfBusShelterData.totalPanelsInstalled);
+  const totalBusStands = parseInt(erectionOfBusShelterData.totalBusStandsCompleted);
+
+  if (isNaN(totalPanels) || totalPanels <= 0 || totalPanels > 100) {
+    showSnackbar('Please enter a valid number of Panels Installed (value should be > 0 and <= 100)', 'error');
+    return false;
+  }
+
+  if (isNaN(totalBusStands) || totalBusStands <= 0 || totalBusStands > 100) {
+    showSnackbar('Please enter a valid number of Bus Stands Completed (value should be > 0 and <= 100)', 'error');
+    return false;
+  }
+  erectionOfBusShelterData.totalPanelsInstalled=Number(erectionOfBusShelterData.totalPanelsInstalled);
+  erectionOfBusShelterData.totalBusStandsCompleted=Number(erectionOfBusShelterData.totalBusStandsCompleted);
+  return true;
+};
+
 const validateErectionPreCastColumnData = (
   erectionPreCastColumnData: any,
 ): boolean => {
@@ -18255,7 +18483,290 @@ case TASK_TYPES.FIXING_OF_MODULES:
             </View>
         </View>
       );
-  
+      case TASK_TYPES.ERECTION_OF_BUS_SHELTER:
+      const erectionOfBusShelterProperties = [
+        {
+          title: 'Whether source of material approved or not',
+          key: 'materialSourceApproved',
+        },
+        {
+          title: 'Whether the drawings approved',
+          key: 'drawingsApproved',
+        },
+        {
+          title: 'Is the supporting surface checked and found OK',
+          key: 'supportingSurfaceChecked',
+        },
+        {
+          title: 'Are sufficient safety arrangements in place at site',
+          key: 'safetyArrangementsInPlace',
+        },
+      ];
+
+      return (
+        <View>
+          {erectionOfBusShelterProperties.map(property => (
+            <View style={{ flexDirection: 'column' }} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={erectionOfBusShelterData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value:any) =>
+                  setErectionOfBusShelterData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+
+          <Input
+            label="Total No. of Panels Installed"
+            value={erectionOfBusShelterData.totalPanelsInstalled}
+            onChange={(value:any) =>
+              setErectionOfBusShelterData(prevData => ({
+                ...prevData,
+                totalPanelsInstalled: value,
+              }))
+            }
+            isRequired={true}
+          />
+
+          <Input
+            label="Total No. of Bus Stands Completed"
+            value={erectionOfBusShelterData.totalBusStandsCompleted}
+            onChange={(value:any) =>
+              setErectionOfBusShelterData(prevData => ({
+                ...prevData,
+                totalBusStandsCompleted: value,
+              }))
+            }
+            isRequired={true}
+          />
+          <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+              value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+        </View>
+      );
+      case TASK_TYPES.ERECTION_OF_ANGLE_SECTION:
+        const erectionOfAngleSectionProperties = [
+          { title: 'Check all the angles are from approved source', key: 'anglesFromApprovedSource' },
+          { title: 'Material inspection at factory done and clearance for dispatch obtained', key: 'materialInspectionClearance' },
+          { title: 'Whether any material reached at site is damaged, if yes, informed to supplier', key: 'materialDamagedInformed' },
+          { title: 'Erection done as per approved drawing', key: 'erectionAsPerDrawing' },
+          { title: 'Alignment, plumb, fixing, and temporary support all ok', key: 'alignmentSupportOk' },
+          { title: 'Total column/angles erected', key: 'totalAnglesErected' },
+        ];
+
+        return (
+          <View>
+            {erectionOfAngleSectionProperties.map(property => (
+              <View style={{ flexDirection: 'column' }} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={erectionOfAngleSectionData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setErectionOfAngleSectionData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <Input
+              label="Total column/angles erected"
+              value={erectionOfAngleSectionData.totalAnglesErected}
+              onChange={(value: any) =>
+                setErectionOfAngleSectionData(prevData => ({
+                  ...prevData,
+                  totalAnglesErected: value,
+                }))
+              }
+              isRequired={true}
+            />
+            <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+              value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+          </View>
+        );
+      case TASK_TYPES.PLACING_OF_PRE_CAST_RCC_PANELS:
+          const preCastRccPanelProperties = [
+              { title: 'Whether drawing approved', key: 'drawingApproved' },
+              { title: 'Check all the pre cast panels are from approved source', key: 'panelsFromApprovedSource' },
+              { title: 'Whether any panel found damaged, especially at the male-female joint', key: 'damagedPanelFound' },
+              { title: 'Alignment, plumb, fixing, and temporary support', key: 'alignmentPlumbFixingSupport' },
+          ];
+
+      return (
+          <View>
+              {preCastRccPanelProperties.map(property => (
+                  <View style={{ flexDirection: 'column' }} key={property.key}>
+                      <DropdownPicker
+                          label={property.title}
+                          value={preCastRccPanelData[property.key]}
+                          items={YES_NO_LIST}
+                          onChange={(value:any) => setPreCastRccPanelData(prevData => ({
+                              ...prevData,
+                              [property.key]: value,
+                          }))}
+                          isRequired={true}
+                      />
+                  </View>
+              ))}
+              <Input
+                  label="Total No. of Panels Installed in Nos."
+                  value={preCastRccPanelData.totalPanelsInstalled}
+                  onChange={(value:any) => setPreCastRccPanelData(prevData => ({
+                      ...prevData,
+                      totalPanelsInstalled: value,
+                  }))}
+                  isRequired={true}
+              />
+              <Input
+                  label="Total Area of Panels Installed in Sqm"
+                  value={preCastRccPanelData.totalAreaInstalled}
+                  onChange={(value:any) => setPreCastRccPanelData(prevData => ({
+                      ...prevData,
+                      totalAreaInstalled: value,
+                  }))}
+                  isRequired={true}
+              />
+              <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+              value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+          </View>
+      );
+      case TASK_TYPES.PLACING_OF_CHAIN_LINK:
+        const placingChainLinkProperties = [
+          { title: 'Is the drawing approved', key: 'drawingApproved' },
+          { title: 'Is fencing installed in accordance with the plot plan?', key: 'fencingInstalledAsPerPlotPlan' },
+          { title: 'Are all fittings, caps, tension bars, hinges, and hardware installed properly?', key: 'fittingsCapsTensionBarsHingesHardwareInstalled' },
+          { title: 'Are corner and end posts firmly anchored and supported?', key: 'cornerEndPostsAnchoredSupported' },
+          { title: 'Are all fence components free from defects in workmanship?', key: 'fenceComponentsDefectFree' },
+          { title: 'Has the fence been installed at the correct height requirement?', key: 'fenceInstalledAtCorrectHeight' },
+          { title: 'Does the fence end with a terminal post?', key: 'fenceEndsWithTerminalPost' },
+          { title: 'Are appropriate fasteners used?', key: 'appropriateFastenersUsed' },
+          { title: 'Is there damaged mesh, if yes informed to the supplier?', key: 'damagedMeshInformedSupplier' },
+          { title: 'Are there missing or damaged components such as the tension wire, tension bar, tension band, or ties?', key: 'missingDamagedComponents' },
+          { title: 'Is there too much movement on the top rail between end post, line post, and terminal post?', key: 'tooMuchMovementTopRail' },
+          { title: 'Has the right fencing material been used according to the detail?', key: 'rightFencingMaterialUsed' },
+          { title: 'Is the required fence gap present (from soil to the fence mesh)?', key: 'requiredFenceGapPresent' },
+          { title: 'Is the mesh and tension wire/band too loose?', key: 'meshTensionWireLoose' },
+        ];
+
+        return (
+          <View>
+            {placingChainLinkProperties.map(property => (
+              <View style={{ flexDirection: 'column', marginBottom: 10 }} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={placingChainLinkData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value:any) =>
+                    setPlacingChainLinkData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+
+            <Input
+              label="Total Sqm of Fence Installed"
+              value={placingChainLinkData.totalSqmFenceInstalled}
+              onChange={(value:any) =>
+                setPlacingChainLinkData(prevData => ({
+                  ...prevData,
+                  totalSqmFenceInstalled: value,
+                }))
+              }
+              isRequired={true}
+              keyboardType="numeric"
+            />
+            <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+              value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+          </View>
+        );
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
       case TASK_TYPES.LIFTING_RIGHT:

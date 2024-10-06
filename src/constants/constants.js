@@ -585,6 +585,10 @@ export const TASK_TYPES = {
   FABRICATION_OF_STRUCTURE: 'fabrication-of-structure',
   FIXING_OF_PANELS: 'fixing-of-panels',
   ERECTION_OF_PRECAST_COLUMN: 'erection-of-precast-column',
+  ERECTION_OF_BUS_SHELTER: 'ereaction-of-bus-shelter',
+  ERECTION_OF_ANGLE_SECTION: 'erection-of-angle-section',
+  PLACING_OF_PRE_CAST_RCC_PANELS: 'placing-of-pre-cast-rcc-panels',
+  PLACING_OF_CHAIN_LINK: 'placing-of-chain-link',
 };
 
 export const TEST_MATERIALS_TYPES = {

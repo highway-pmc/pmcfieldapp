@@ -6456,26 +6456,241 @@ const RFIsRecents = (props: any) => {
             key: 'totalLengthOfBwallCovered',
           },
         ];
-         return (
-           <View>
-             {erectionPreCastColumnProperties.map(property => (
-               <View
-                 style={{flexDirection: 'column', marginBottom: 10}}
-                 key={property.key}>
-                 <Text style={styles.GenerateRFIFieldLabel}>
-                   {property.title}
-                 </Text>
-                 <Text>
-                   {
-                     selectedRFI?.metaData.erectionPreCastColumnData?.[
-                       property.key
-                     ]
-                   }
-                 </Text>
-               </View>
-             ))}
-           </View>
-         );
+        return (
+          <View>
+            {erectionPreCastColumnProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.fixingOfPanelsData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.ERECTION_OF_BUS_SHELTER:
+        const erectionOfBusShelterProperties = [
+          {
+            title: 'Whether source of material approved or not',
+            key: 'materialSourceApproved',
+          },
+          {
+            title: 'Whether the drawings approved',
+            key: 'drawingsApproved',
+          },
+          {
+            title: 'Is the supporting surface checked and found OK',
+            key: 'supportingSurfaceChecked',
+          },
+          {
+            title: 'Are sufficient safety arrangements in place at site',
+            key: 'safetyArrangementsInPlace',
+          },
+          {
+            title: 'Total No. of Panels Installed',
+            key: 'totalPanelsInstalled',
+          },
+          {
+            title: 'Total No. of Bus Stands Completed',
+            key: 'totalBusStandsCompleted',
+          },
+        ];
+        return (
+          <View>
+            {erectionOfBusShelterProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.erectionOfBusShelterData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.ERECTION_OF_ANGLE_SECTION:
+        const erectionOfAngleSectionProperties = [
+          {
+            title: 'Check all the angles are from approved source',
+            key: 'anglesFromApprovedSource',
+          },
+          {
+            title:
+              'Material inspection at factory done and clearance for dispatch obtained',
+            key: 'materialInspectionClearance',
+          },
+          {
+            title:
+              'Whether any material reached at site is damaged, if yes, whether informed to supplier',
+            key: 'materialDamagedInformed',
+          },
+          {
+            title: 'Erection done as per approved drawing',
+            key: 'erectionAsPerDrawing',
+          },
+          {
+            title: 'Alignment, plumb, fixing, and temporary support all ok',
+            key: 'alignmentSupportOk',
+          },
+          {title: 'Total column/angles erected', key: 'totalAnglesErected'},
+        ];
+        return (
+          <View>
+            {erectionOfAngleSectionProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.erectionOfAngleSectionData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.PLACING_OF_PRE_CAST_RCC_PANELS:
+        const preCastRccPanelProperties = [
+          {title: 'Whether drawing approved', key: 'drawingApproved'},
+          {
+            title: 'Check all the pre cast panels are from approved source',
+            key: 'panelsFromApprovedSource',
+          },
+          {
+            title:
+              'Whether any panel found damaged, especially at the male-female joint',
+            key: 'damagedPanelFound',
+          },
+          {
+            title: 'Alignment, plumb, fixing, and temporary support',
+            key: 'alignmentPlumbFixingSupport',
+          },
+          {
+            title: 'Total no. of panels installed in nos.',
+            key: 'totalPanelsInstalled',
+          },
+          {
+            title: 'Total area of panels installed in sqm',
+            key: 'totalAreaInstalled',
+          },
+        ];
+        return (
+          <View>
+            {preCastRccPanelProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.preCastRccPanelData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.PLACING_OF_CHAIN_LINK:
+        const placingChainLinkDisplayProperties = [
+          {title: 'Is the drawing approved', key: 'drawingApproved'},
+          {
+            title: 'Is fencing installed in accordance with the plot plan?',
+            key: 'fencingInstalledAsPerPlotPlan',
+          },
+          {
+            title:
+              'Are all fittings, caps, tension bars, hinges, and hardware installed properly?',
+            key: 'fittingsCapsTensionBarsHingesHardwareInstalled',
+          },
+          {
+            title: 'Are corner and end posts firmly anchored and supported?',
+            key: 'cornerEndPostsAnchoredSupported',
+          },
+          {
+            title: 'Are all fence components free from defects in workmanship?',
+            key: 'fenceComponentsDefectFree',
+          },
+          {
+            title:
+              'Has the fence been installed at the correct height requirement?',
+            key: 'fenceInstalledAtCorrectHeight',
+          },
+          {
+            title: 'Does the fence end with a terminal post?',
+            key: 'fenceEndsWithTerminalPost',
+          },
+          {
+            title: 'Are appropriate fasteners used?',
+            key: 'appropriateFastenersUsed',
+          },
+          {
+            title: 'Is there damaged mesh, if yes informed to the supplier?',
+            key: 'damagedMeshInformedSupplier',
+          },
+          {
+            title:
+              'Are there missing or damaged components such as the tension wire, tension bar, tension band, or ties?',
+            key: 'missingDamagedComponents',
+          },
+          {
+            title:
+              'Is there too much movement on the top rail between end post, line post, and terminal post?',
+            key: 'tooMuchMovementTopRail',
+          },
+          {
+            title:
+              'Has the right fencing material been used according to the detail?',
+            key: 'rightFencingMaterialUsed',
+          },
+          {
+            title:
+              'Is the required fence gap present (from soil to the fence mesh)?',
+            key: 'requiredFenceGapPresent',
+          },
+          {
+            title: 'Is the mesh and tension wire/band too loose?',
+            key: 'meshTensionWireLoose',
+          },
+          {
+            title: 'Total Sqm of Fence Installed',
+            key: 'totalSqmFenceInstalled',
+          },
+        ];
+
+        return (
+          <View>
+            {placingChainLinkDisplayProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.placingChainLinkData?.[property.key] ||
+                    'N/A'}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+
       // ReadOnlyRfi
       default:
         return (

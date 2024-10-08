@@ -466,6 +466,31 @@ const [dumpingData, setDumpingData] = useState([
     probingByStiffwire: string;
   };
   //FormUseStates
+  const [signageLocationData, setSignageLocationData] = useState({
+    drawingApproved: 'Y',
+    locationMarked: 'Y',
+    locationCheckedByEngineer: 'Y',
+    noHindranceInInstallation: 'Y',
+  });
+  const [flooringData, setFlooringData] = useState({
+    flooringMaterialSourceApproved: 'Y',
+    tilesCrackFree: 'Y',
+    cracksHolesUnevenSurface: 'Y',
+    jointsAtTransitionSmooth: 'Y',
+    flooringDoneAtRamps: 'Y',
+    totalSurfaceArea: 0.0,
+    totalTilesUsed: 0,
+  });
+  const [mortarChecklistData, setMortarChecklistData] = useState({
+    mortarMixUniform: 'Y',
+    sufficientMortarQuantity: 'Y',
+    blockAlignmentPlumb: 'Y',
+    jointsStaggered: 'Y',
+    mortarBetweenBlockAndColumn: 'Y',
+    totalCementBagsConsumed: 0,
+    totalSurfaceAreaToBePlastered: 0.000,
+    totalMortarUsed: 0.000,
+  });
   const [placingChainLinkData, setPlacingChainLinkData] = useState({
     drawingApproved: 'Y',
     fencingInstalledAsPerPlotPlan: 'Y',
@@ -563,20 +588,6 @@ const [dumpingData, setDumpingData] = useState([
     installationCompleted: 'Y',
     manufacturerInstructionsFollowed: 'Y',
     totalEquipmentsInstalled: 0,
-  });
-
-  const [fixingAndInstallationLTPanelData, setFixingAndInstallationLTPanelData] = useState({
-    drawingsApproved: 'Y',
-    equipmentInspected: 'Y',
-    equipmentDamageInformed: 'Y',
-    foundationReady: 'Y',
-    concreteStrengthAchieved: 'Y',
-    installationMethodologyApproved: 'Y',
-    safetyArrangementsInPlace: 'Y',
-    machineryManpowerAvailable: 'Y',
-    installationCompleted: 'Y',
-    manufacturerInstructionsComplied: 'Y',
-    totalEquipmentInstalled: 0,
   });
   const [fixingAndInstallationData, setFixingAndInstallationData] = useState({
     drawingsApproved: 'Y',
@@ -4920,7 +4931,12 @@ case TASK_TYPES.TACK_COAT:
               totalTrenchExcavated: 0.0,
             });
           }
-          break;  
+          break; 
+        case TASK_TYPES.FIXING_AND_INSTALLATION_OF_LT_PANEL:
+        case TASK_TYPES.FIXING_AND_INSTALLATION_OF_SERVO:
+        case TASK_TYPES.FIXING_AND_INSTALLATION_OF_MCB:
+        case TASK_TYPES.FIXING_AND_INSTALLATION_OF_INVERTOR: 
+        case TASK_TYPES.FIXING_AND_INSTALLATION_OF_HT_PANEL:   
         case TASK_TYPES.FIXING_AND_INSTALLATION_OF_TRANSFORMER:
           if (rfiData.metaData.fixingAndInstallationData) {
             setFixingAndInstallationData(rfiData.metaData.fixingAndInstallationData);
@@ -4939,28 +4955,7 @@ case TASK_TYPES.TACK_COAT:
               totalEquipmentInstalled: 0,
             });
           }
-          break;
-        case TASK_TYPES.FIXING_AND_INSTALLATION_OF_LT_PANEL:
-          if (rfiData.metaData.fixingAndInstallationLTPanelData) {
-            setFixingAndInstallationLTPanelData(
-              rfiData.metaData.fixingAndInstallationLTPanelData
-            );
-          } else {
-            setFixingAndInstallationLTPanelData({
-              drawingsApproved: 'Y',
-              equipmentInspected: 'Y',
-              equipmentDamageInformed: 'Y',
-              foundationReady: 'Y',
-              concreteStrengthAchieved: 'Y',
-              installationMethodologyApproved: 'Y',
-              safetyArrangementsInPlace: 'Y',
-              machineryManpowerAvailable: 'Y',
-              installationCompleted: 'Y',
-              manufacturerInstructionsComplied: 'Y',
-              totalEquipmentInstalled: 0,
-            });
-          }
-          break;  
+          break; 
         case TASK_TYPES.HT_PANEL_INSTALLATION:
           if (rfiData.metaData.htPanelInstallationData) {
             setHtPanelInstallationData(
@@ -5114,6 +5109,49 @@ case TASK_TYPES.TACK_COAT:
               requiredFenceGapPresent: 'Y',
               meshTensionWireLoose: 'Y',
               totalSqmFenceInstalled: 0.0,
+            });
+          }
+          break; 
+        case TASK_TYPES.MORTAR_CHECKLIST:
+          if (rfiData.metaData.mortarChecklistData) {
+            setMortarChecklistData(rfiData.metaData.mortarChecklistData);
+          } else {
+            setMortarChecklistData({
+              mortarMixUniform: 'Y',
+              sufficientMortarQuantity: 'Y',
+              blockAlignmentPlumb: 'Y',
+              jointsStaggered: 'Y',
+              mortarBetweenBlockAndColumn: 'Y',
+              totalCementBagsConsumed: 0,
+              totalSurfaceAreaToBePlastered: 0.000,
+              totalMortarUsed: 0.000,
+            });
+          }
+          break;   
+        case TASK_TYPES.FLOORING:
+          if (rfiData.metaData.flooringData) {
+            setFlooringData(rfiData.metaData.flooringData);
+          } else {
+            setFlooringData({
+              flooringMaterialSourceApproved: 'Y',
+              tilesCrackFree: 'Y',
+              cracksHolesUnevenSurface: 'Y',
+              jointsAtTransitionSmooth: 'Y',
+              flooringDoneAtRamps: 'Y',
+              totalSurfaceArea: 0.0,
+              totalTilesUsed: 0,
+            });
+          }
+          break;  
+        case TASK_TYPES.SIGNAGE_LOCATION_IDENTIFICATION:
+          if (rfiData.metaData.signageLocationData) {
+            setSignageLocationData(rfiData.metaData.signageLocationData);
+          } else {
+            setSignageLocationData({
+              drawingApproved: 'Y',
+              locationMarked: 'Y',
+              locationCheckedByEngineer: 'Y',
+              noHindranceInInstallation: 'Y',
             });
           }
           break;  
@@ -7361,6 +7399,11 @@ case TASK_TYPES.TACK_COAT:
           cableTrenchExcavationData: cableTrenchExcavationData,
         };
         break;
+      case TASK_TYPES.FIXING_AND_INSTALLATION_OF_LT_PANEL:
+      case TASK_TYPES.FIXING_AND_INSTALLATION_OF_SERVO:
+      case TASK_TYPES.FIXING_AND_INSTALLATION_OF_MCB:
+      case TASK_TYPES.FIXING_AND_INSTALLATION_OF_INVERTOR: 
+      case TASK_TYPES.FIXING_AND_INSTALLATION_OF_HT_PANEL:  
       case TASK_TYPES.FIXING_AND_INSTALLATION_OF_TRANSFORMER:
         if (!validateFixingAndInstallationData(fixingAndInstallationData)) {
           return;
@@ -7368,15 +7411,6 @@ case TASK_TYPES.TACK_COAT:
         checkList = {
           taskName: selectedTask.name,
           fixingAndInstallationData: fixingAndInstallationData,
-        };
-        break;
-      case TASK_TYPES.FIXING_AND_INSTALLATION_OF_LT_PANEL:
-        if (!validateFixingAndInstallationLTPanelData(fixingAndInstallationLTPanelData)) {
-          return;
-        }
-        checkList = {
-          taskName: selectedTask.name,
-          fixingAndInstallationLTPanelData: fixingAndInstallationLTPanelData,
         };
         break;  
       case TASK_TYPES.HT_PANEL_INSTALLATION:
@@ -7452,6 +7486,30 @@ case TASK_TYPES.TACK_COAT:
         checkList = {
           taskName: selectedTask.name,
           placingChainLinkData: placingChainLinkData,
+        };
+        break;  
+      case TASK_TYPES.MORTAR_CHECKLIST:
+        if (!validateMortarChecklistData(mortarChecklistData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          mortarChecklistData: mortarChecklistData,
+        };
+        break;  
+      case TASK_TYPES.FLOORING:
+        if (!validateFlooringData(flooringData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          flooringData: flooringData,
+        };
+        break;  
+      case TASK_TYPES.SIGNAGE_LOCATION_IDENTIFICATION:
+        checkList = {
+          taskName: selectedTask.name,
+          signageLocationData: signageLocationData,
         };
         break;  
       case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
@@ -8251,6 +8309,86 @@ const validateFixingOfMC4Data = (fixingOfMC4Data: any): boolean => {
   fixingOfMC4Data.totalYConnectorsUsed = totalYConnectorsUsed;
   return true;
 };
+const validateFlooringData = (flooringData: any): boolean => {
+  const totalSurfaceArea = parseFloat(flooringData.totalSurfaceArea);
+  const totalTilesUsed = parseInt(flooringData.totalTilesUsed);
+
+  if (
+    isNaN(totalSurfaceArea) ||
+    totalSurfaceArea <= 0 ||
+    totalSurfaceArea > 1000000 ||
+    flooringData.totalSurfaceArea.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Total Surface Area (in Sqm) with max 3 decimal places, value should be > 0 and <= 1000000',
+      'error',
+    );
+    return false;
+  }
+
+  if (
+    isNaN(totalTilesUsed) ||
+    totalTilesUsed <= 0 ||
+    totalTilesUsed > 1000000
+  ) {
+    showSnackbar(
+      'Please enter a valid Total Number of Tiles Used (integer value), value should be > 0 and <= 1000000',
+      'error',
+    );
+    return false;
+  }
+
+  flooringData.totalSurfaceArea = Number(flooringData.totalSurfaceArea);
+  flooringData.totalTilesUsed = Number(flooringData.totalTilesUsed);
+
+  return true;
+};
+const validateMortarChecklistData = (mortarChecklistData: any): boolean => {
+  const totalCementBags = parseInt(mortarChecklistData.totalCementBagsConsumed);
+  const totalSurfaceArea = parseFloat(mortarChecklistData.totalSurfaceAreaToBePlastered);
+  const totalMortarUsed = parseFloat(mortarChecklistData.totalMortarUsed);
+
+  // Validate total cement bags consumed
+  if (isNaN(totalCementBags) || totalCementBags <= 0 || totalCementBags > 10000) {
+    showSnackbar(
+      'Please enter a valid number of cement bags consumed (integer > 0 and <= 10000)',
+      'error',
+    );
+    return false;
+  }
+
+  // Validate total surface area to be plastered
+  if (
+    isNaN(totalSurfaceArea) ||
+    totalSurfaceArea <= 0 ||
+    totalSurfaceArea > 1000000 ||
+    mortarChecklistData.totalSurfaceAreaToBePlastered.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid total surface area to be plastered (in sqm, > 0 and <= 1,000,000 with max 3 decimal places)',
+      'error',
+    );
+    return false;
+  }
+
+  // Validate total mortar used
+  if (
+    isNaN(totalMortarUsed) ||
+    totalMortarUsed <= 0 ||
+    totalMortarUsed > 1000000 ||
+    mortarChecklistData.totalMortarUsed.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid total quantity of mortar used (in cum, > 0 and <= 1,000,000 with max 3 decimal places)',
+      'error',
+    );
+    return false;
+  }
+  mortarChecklistData.totalCementBagsConsumed=Number(mortarChecklistData.totalCementBagsConsumed);
+  mortarChecklistData.totalSurfaceAreaToBePlastered=Number(mortarChecklistData.totalSurfaceAreaToBePlastered);
+  mortarChecklistData.totalMortarUsed=Number(mortarChecklistData.totalMortarUsed);
+  return true;
+};
 const validatePlacingChainLinkData = (placingChainLinkData:any) => {
   const totalSqm = parseFloat(placingChainLinkData.totalSqmFenceInstalled);
 
@@ -8405,24 +8543,6 @@ const validateHtPanelInstallationData = (htPanelInstallationData: any): boolean 
 
   // Converting back to number after validation
   htPanelInstallationData.totalEquipmentsInstalled = Number(htPanelInstallationData.totalEquipmentsInstalled);
-
-  return true;
-};
-
-const validateFixingAndInstallationLTPanelData = (fixingAndInstallationLTPanelData:any) => {
-  const totalEquipment = parseInt(fixingAndInstallationLTPanelData.totalEquipmentInstalled, 10);
-
-  if (isNaN(totalEquipment) || totalEquipment <= 0 || totalEquipment > 1000) {
-    showSnackbar(
-      'Please enter a valid number of equipment installed, value should be > 0 and <= 1000',
-      'error'
-    );
-    return false;
-  }
-
-  fixingAndInstallationLTPanelData.totalEquipmentInstalled = Number(
-    fixingAndInstallationLTPanelData.totalEquipmentInstalled
-  );
 
   return true;
 };
@@ -18021,6 +18141,11 @@ case TASK_TYPES.FIXING_OF_MODULES:
           </View>
         </View>
       );  
+      case TASK_TYPES.FIXING_AND_INSTALLATION_OF_LT_PANEL:
+      case TASK_TYPES.FIXING_AND_INSTALLATION_OF_SERVO:
+      case TASK_TYPES.FIXING_AND_INSTALLATION_OF_MCB:
+      case TASK_TYPES.FIXING_AND_INSTALLATION_OF_INVERTOR: 
+      case TASK_TYPES.FIXING_AND_INSTALLATION_OF_HT_PANEL:
       case TASK_TYPES.FIXING_AND_INSTALLATION_OF_TRANSFORMER:
         const fixingAndInstallationProperties = [
           { title: 'Drawings Approved', key: 'drawingsApproved' },
@@ -18767,6 +18892,225 @@ case TASK_TYPES.FIXING_OF_MODULES:
             </View>
           </View>
         );
+      case TASK_TYPES.MORTAR_CHECKLIST:
+      const mortarChecklistProperties = [
+        {
+          title: 'Is the mortar mix uniform and of optimal workability?',
+          key: 'mortarMixUniform',
+        },
+        {
+          title: 'Is there a sufficient quantity of mortar mixed for the next 30 minutes?',
+          key: 'sufficientMortarQuantity',
+        },
+        {
+          title: 'Is the block work in proper alignment and plumb?',
+          key: 'blockAlignmentPlumb',
+        },
+        {
+          title: 'Have all the joints been staggered and raked properly?',
+          key: 'jointsStaggered',
+        },
+        {
+          title: 'Is mortar placed between the edge of the block and the column?',
+          key: 'mortarBetweenBlockAndColumn',
+        },
+      ];
+
+      return (
+        <View>
+          {mortarChecklistProperties.map(property => (
+            <View style={{ flexDirection: 'column' }} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={mortarChecklistData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value: any) =>
+                  setMortarChecklistData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+          <Input
+            label="Total Cement Bag Consumed (in no.)"
+            value={mortarChecklistData.totalCementBagsConsumed}
+            onChange={(value: any) =>
+              setMortarChecklistData(prevData => ({
+                ...prevData,
+                totalCementBagsConsumed: value,
+              }))
+            }
+            isRequired={true}
+          />
+          <Input
+            label="Total Surface Area to be Plastered (in sqm)"
+            value={mortarChecklistData.totalSurfaceAreaToBePlastered}
+            onChange={(value: any) =>
+              setMortarChecklistData(prevData => ({
+                ...prevData,
+                totalSurfaceAreaToBePlastered: value,
+              }))
+            }
+            isRequired={true}
+          />
+          <Input
+            label="Total Quantity of Mortar Used (in cum)"
+            value={mortarChecklistData.totalMortarUsed}
+            onChange={(value: any) =>
+              setMortarChecklistData(prevData => ({
+                ...prevData,
+                totalMortarUsed: value,
+              }))
+            }
+            isRequired={true}
+          />
+          <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+              value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+        </View>
+      );  
+      case TASK_TYPES.FLOORING:
+      const flooringProperties = [
+        { title: 'Flooring Material Source Approved', key: 'flooringMaterialSourceApproved' },
+        { title: 'Tiles/Other Material Free from Cracks', key: 'tilesCrackFree' },
+        { title: 'Cracks, Holes or Uneven Surface Present', key: 'cracksHolesUnevenSurface' },
+        { title: 'Joints at Transition Area are Smooth', key: 'jointsAtTransitionSmooth' },
+        { title: 'Flooring Done at Entry/Exit Ramps', key: 'flooringDoneAtRamps' },
+      ];
+
+      return (
+        <View>
+          {flooringProperties.map(property => (
+            <View style={{ flexDirection: 'column' }} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={flooringData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value: any) =>
+                  setFlooringData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+          <Input
+            label="Total Surface Area Flooring Done (Sqm)"
+            value={flooringData.totalSurfaceArea}
+            onChange={(value: any) =>
+              setFlooringData(prevData => ({
+                ...prevData,
+                totalSurfaceArea: value,
+              }))
+            }
+            isRequired={true}
+          />
+          <Input
+            label="Total Number of Tiles Used"
+            value={flooringData.totalTilesUsed}
+            onChange={(value: any) =>
+              setFlooringData(prevData => ({
+                ...prevData,
+                totalTilesUsed: value,
+              }))
+            }
+            isRequired={true}
+          />
+          <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+              value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+        </View>
+      );
+      case TASK_TYPES.SIGNAGE_LOCATION_IDENTIFICATION:
+      const signageLocationProperties = [
+        { title: 'Whether the drawing is approved', key: 'drawingApproved' },
+        { title: 'Whether the location is marked using temporary arrangement', key: 'locationMarked' },
+        { title: 'Whether the marked location is checked by engineer', key: 'locationCheckedByEngineer' },
+        { title: 'Whether the location has no hindrance in installation', key: 'noHindranceInInstallation' },
+      ];
+
+      return (
+        <View>
+          {signageLocationProperties.map(property => (
+            <View style={{ flexDirection: 'column' }} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={signageLocationData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value:any) =>
+                  setSignageLocationData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+          <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+              value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+        </View>
+      );
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
       case TASK_TYPES.LIFTING_RIGHT:

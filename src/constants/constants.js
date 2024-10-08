@@ -580,6 +580,10 @@ export const TASK_TYPES = {
   FIXING_AND_INSTALLATION_OF_TRANSFORMER:
     'fixing-and-installation-of-transformer',
   FIXING_AND_INSTALLATION_OF_LT_PANEL: 'fixing-and-installation-of-lt-panel',
+  FIXING_AND_INSTALLATION_OF_SERVO: 'fixing-and-installation-of-servo',
+  FIXING_AND_INSTALLATION_OF_MCB: 'fixing-and-installation-of-mcb',
+  FIXING_AND_INSTALLATION_OF_INVERTOR: 'fixing-and-installation-of-invertor',
+  FIXING_AND_INSTALLATION_OF_HT_PANEL: 'fixing-and-installation-of-ht-panel',
   HT_PANEL_INSTALLATION: 'fixing-and-installation-of-ht-panel',
   ERECTION_OF_STRUCTURE: 'erection-of-structure',
   FABRICATION_OF_STRUCTURE: 'fabrication-of-structure',
@@ -589,6 +593,9 @@ export const TASK_TYPES = {
   ERECTION_OF_ANGLE_SECTION: 'erection-of-angle-section',
   PLACING_OF_PRE_CAST_RCC_PANELS: 'placing-of-pre-cast-rcc-panels',
   PLACING_OF_CHAIN_LINK: 'placing-of-chain-link',
+  MORTAR_CHECKLIST: 'mortar-checklist',
+  FLOORING: 'flooring',
+  SIGNAGE_LOCATION_IDENTIFICATION: 'signage-location-identification',
 };
 
 export const TEST_MATERIALS_TYPES = {

@@ -466,6 +466,44 @@ const [dumpingData, setDumpingData] = useState([
     probingByStiffwire: string;
   };
   //FormUseStates
+  const [fixingOfSpringPostData, setFixingOfSpringPostData] = useState({
+    sourceMaterialApproved: 'Y',
+    drawingApproved: 'Y',
+    shapeAndSizeAsPerDrawing: 'Y',
+    postsFixedProperly: 'Y',
+    lineAndLevelChecked: 'Y',
+    spacingAsPerSpecification: 'Y',
+    itemsCleanedAndVisible: 'Y',
+    springPostInstalled: 0,
+    totalRoadLengthCovered: 0.0,
+  });
+  const [trafficImpactAttenuatorsData, setTrafficImpactAttenuatorsData] = useState({
+    sourceMaterialApproved: 'Y',
+    drawingApproved: 'Y',
+    shapeSizeAsPerDrawing: 'Y',
+    fixingMethodologyApproved: 'Y',
+    attenuatorsFixedProperly: 'Y',
+    itemsCleanedVisible: 'Y',
+    totalNoOfAttenuatorsInstalled: 0,
+    totalLengthOfRoadCovered: 0.0,
+  });
+  const [placementOfSignageSheetData, setPlacementOfSignageSheetData] = useState({
+    materialSourceApproved: 'Y',
+    drawingsApproved: 'Y',
+    letterSizeAsPerDrawing: 'Y',
+    rivetedProperlyInFrame: 'Y',
+    placedAsPerDrawing: 'Y',
+    totalSheetFixed: 0.0,
+    totalRoadLengthCovered: 0.0,
+  });
+  const [backfillData, setBackfillData] = useState({
+    areaClearOfDebris: 'Y',
+    fillMaterialsApproved: 'Y',
+    noDamageToCables: 'Y',
+    backfillingComplete: 'Y',
+    totalQtySoilUsed: 0.0,
+    totalLengthTrenchBackfilled: 0.0,
+  });
   const [signageLocationData, setSignageLocationData] = useState({
     drawingApproved: 'Y',
     locationMarked: 'Y',
@@ -5154,6 +5192,70 @@ case TASK_TYPES.TACK_COAT:
               noHindranceInInstallation: 'Y',
             });
           }
+          break; 
+        case TASK_TYPES.BACKFILL:
+          if (rfiData.metaData.backfillData) {
+            setBackfillData(rfiData.metaData.backfillData);
+          } else {
+            setBackfillData({
+              areaClearOfDebris: 'Y',
+              fillMaterialsApproved: 'Y',
+              noDamageToCables: 'Y',
+              backfillingComplete: 'Y',
+              totalQtySoilUsed: 0.0,
+              totalLengthTrenchBackfilled: 0.0,
+            });
+          }
+          break;   
+        case TASK_TYPES.PLACEMENT_OF_SIGNAGE_SHEET:
+          if (rfiData.metaData.placementOfSignageSheetData) {
+            setPlacementOfSignageSheetData(
+              rfiData.metaData.placementOfSignageSheetData,
+            );
+          } else {
+            setPlacementOfSignageSheetData({
+              materialSourceApproved: 'Y',
+              drawingsApproved: 'Y',
+              letterSizeAsPerDrawing: 'Y',
+              rivetedProperlyInFrame: 'Y',
+              placedAsPerDrawing: 'Y',
+              totalSheetFixed: 0.0,
+              totalRoadLengthCovered: 0.0,
+            });
+          }
+          break;
+        case TASK_TYPES.FIXING_OF_TRAFFIC_IMPACT_ATTENUATORS:
+          if (rfiData.metaData.trafficImpactAttenuatorsData) {
+            setTrafficImpactAttenuatorsData(rfiData.metaData.trafficImpactAttenuatorsData);
+          } else {
+            setTrafficImpactAttenuatorsData({
+              sourceMaterialApproved: 'Y',
+              drawingApproved: 'Y',
+              shapeSizeAsPerDrawing: 'Y',
+              fixingMethodologyApproved: 'Y',
+              attenuatorsFixedProperly: 'Y',
+              itemsCleanedVisible: 'Y',
+              totalNoOfAttenuatorsInstalled: 0,
+              totalLengthOfRoadCovered: 0.0,
+            });
+          }
+          break;  
+        case TASK_TYPES.FIXING_OF_SPRING_POST:
+          if (rfiData.metaData.fixingOfSpringPostData) {
+            setFixingOfSpringPostData(rfiData.metaData.fixingOfSpringPostData);
+          } else {
+            setFixingOfSpringPostData({
+              sourceMaterialApproved: 'Y',
+              drawingApproved: 'Y',
+              shapeAndSizeAsPerDrawing: 'Y',
+              postsFixedProperly: 'Y',
+              lineAndLevelChecked: 'Y',
+              spacingAsPerSpecification: 'Y',
+              itemsCleanedAndVisible: 'Y',
+              springPostInstalled: 0,
+              totalRoadLengthCovered: 0.0,
+            });
+          }
           break;  
         case TASK_TYPES.LIFTING_LEFT:
         case TASK_TYPES.LIFTING_YARD:
@@ -7512,6 +7614,42 @@ case TASK_TYPES.TACK_COAT:
           signageLocationData: signageLocationData,
         };
         break;  
+      case TASK_TYPES.BACKFILL:
+        if (!validateBackfillData(backfillData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          backfillData: backfillData,
+        };
+        break;  
+      case TASK_TYPES.PLACEMENT_OF_SIGNAGE_SHEET:
+        if (!validatePlacementOfSignageSheetData(placementOfSignageSheetData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          placementOfSignageSheetData: placementOfSignageSheetData,
+        };
+        break;  
+      case TASK_TYPES.FIXING_OF_TRAFFIC_IMPACT_ATTENUATORS:
+        if (!validateTrafficImpactAttenuatorsData(trafficImpactAttenuatorsData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          trafficImpactAttenuatorsData: trafficImpactAttenuatorsData,
+        };
+        break;
+      case TASK_TYPES.FIXING_OF_SPRING_POST:
+        if (!validateFixingOfSpringPostData(fixingOfSpringPostData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          fixingOfSpringPostData: fixingOfSpringPostData,
+        };
+        break;    
       case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
@@ -8309,6 +8447,122 @@ const validateFixingOfMC4Data = (fixingOfMC4Data: any): boolean => {
   fixingOfMC4Data.totalYConnectorsUsed = totalYConnectorsUsed;
   return true;
 };
+const validateFixingOfSpringPostData = (fixingOfSpringPostData: any): boolean => {
+  const springPostInstalled = parseInt(fixingOfSpringPostData.springPostInstalled, 10);
+  const totalRoadLengthCovered = parseFloat(fixingOfSpringPostData.totalRoadLengthCovered);
+
+  if (isNaN(springPostInstalled) || springPostInstalled <= 0 || springPostInstalled > 1000000) {
+    showSnackbar(
+      'Please enter a valid number of Spring Posts installed (value should be > 0 and <= 1000000)',
+      'error',
+    );
+    return false;
+  }
+
+  if (isNaN(totalRoadLengthCovered) || totalRoadLengthCovered <= 0 || totalRoadLengthCovered > 100) {
+    showSnackbar(
+      'Please enter a valid total length of road covered (in km) with max 3 decimal places, value should be > 0 and <= 100',
+      'error',
+    );
+    return false;
+  }
+
+  // Converting the values back to numbers after validation
+  fixingOfSpringPostData.springPostInstalled = Number(fixingOfSpringPostData.springPostInstalled);
+  fixingOfSpringPostData.totalRoadLengthCovered = Number(fixingOfSpringPostData.totalRoadLengthCovered);
+
+  return true;
+};
+const validateTrafficImpactAttenuatorsData = (trafficImpactAttenuatorsData: any): boolean => {
+  const totalNoOfAttenuatorsInstalled = parseInt(trafficImpactAttenuatorsData.totalNoOfAttenuatorsInstalled);
+  const totalLengthOfRoadCovered = parseFloat(trafficImpactAttenuatorsData.totalLengthOfRoadCovered);
+
+  if (isNaN(totalNoOfAttenuatorsInstalled) || totalNoOfAttenuatorsInstalled <= 0 || totalNoOfAttenuatorsInstalled > 100000) {
+    showSnackbar('Please enter a valid number of attenuators installed (value should be > 0 and <= 100000)', 'error');
+    return false;
+  }
+
+  if (isNaN(totalLengthOfRoadCovered) || totalLengthOfRoadCovered <= 0 || totalLengthOfRoadCovered > 100 || trafficImpactAttenuatorsData.totalLengthOfRoadCovered.split('.')[1]?.length > 3) {
+    showSnackbar('Please enter a valid total length of road covered in Km (max 3 decimal places, value should be > 0 and <= 100)', 'error');
+    return false;
+  }
+  trafficImpactAttenuatorsData.totalNoOfAttenuatorsInstalled=Number(trafficImpactAttenuatorsData.totalNoOfAttenuatorsInstalled);
+  trafficImpactAttenuatorsData.totalLengthOfRoadCovered=Number(trafficImpactAttenuatorsData.totalLengthOfRoadCovered);
+  return true;
+};
+
+const validatePlacementOfSignageSheetData = (
+  placementOfSignageSheetData: any,
+): boolean => {
+  const totalSheetFixed = parseFloat(placementOfSignageSheetData.totalSheetFixed);
+  const totalRoadLengthCovered = parseFloat(placementOfSignageSheetData.totalRoadLengthCovered);
+
+  if (
+    isNaN(totalSheetFixed) ||
+    totalSheetFixed <= 0 ||
+    totalSheetFixed > 100000 ||
+    placementOfSignageSheetData.totalSheetFixed.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Total Sheet Fixed in Sqm with max 3 decimal places, value should be > 0 and <= 100000',
+      'error',
+    );
+    return false;
+  }
+
+  if (
+    isNaN(totalRoadLengthCovered) ||
+    totalRoadLengthCovered <= 0 ||
+    totalRoadLengthCovered > 100 ||
+    placementOfSignageSheetData.totalRoadLengthCovered.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Total Road Length Covered in Km with max 3 decimal places, value should be > 0 and <= 100',
+      'error',
+    );
+    return false;
+  }
+  placementOfSignageSheetData.totalSheetFixed=Number(placementOfSignageSheetData.totalSheetFixed);
+  placementOfSignageSheetData.totalRoadLengthCovered=Number(placementOfSignageSheetData.totalRoadLengthCovered);
+  return true;
+};
+
+const validateBackfillData = (backfillData: any): boolean => {
+  const totalQtySoil = parseFloat(backfillData.totalQtySoilUsed);
+  const totalLengthTrench = parseFloat(backfillData.totalLengthTrenchBackfilled);
+
+  if (
+    isNaN(totalQtySoil) ||
+    totalQtySoil <= 0 ||
+    totalQtySoil > 100000 ||
+    backfillData.totalQtySoilUsed.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Total Qty of Soil Used (in cum) with max 3 decimal places, value should be > 0 and <= 100000',
+      'error',
+    );
+    return false;
+  }
+
+  if (
+    isNaN(totalLengthTrench) ||
+    totalLengthTrench <= 0 ||
+    totalLengthTrench > 100000 ||
+    backfillData.totalLengthTrenchBackfilled.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid Total Length of Trench Backfilled (in RM) with max 3 decimal places, value should be > 0 and <= 100000',
+      'error',
+    );
+    return false;
+  }
+
+  backfillData.totalQtySoilUsed = Number(backfillData.totalQtySoilUsed);
+  backfillData.totalLengthTrenchBackfilled = Number(backfillData.totalLengthTrenchBackfilled);
+
+  return true;
+};
+
 const validateFlooringData = (flooringData: any): boolean => {
   const totalSurfaceArea = parseFloat(flooringData.totalSurfaceArea);
   const totalTilesUsed = parseInt(flooringData.totalTilesUsed);
@@ -19088,6 +19342,300 @@ case TASK_TYPES.FIXING_OF_MODULES:
               />
             </View>
           ))}
+          <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+              value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+        </View>
+      );
+      case TASK_TYPES.BACKFILL:
+        const backfillProperties = [
+          {
+            title: 'Verify that the excavated area to be backfilled is clear of debris and formwork materials',
+            key: 'areaClearOfDebris',
+          },
+          {
+            title: 'Confirm that the fill materials are approved and test results comply with the specifications',
+            key: 'fillMaterialsApproved',
+          },
+          {
+            title: 'Ensure avoidance of damage to the cables, caution tapes, or other things laid in the trench',
+            key: 'noDamageToCables',
+          },
+          {
+            title: 'Ensure the backfilling is complete and the area is clean and tidy',
+            key: 'backfillingComplete',
+          },
+        ];
+
+      return (
+        <View>
+          {backfillProperties.map(property => (
+            <View style={{ flexDirection: 'column' }} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={backfillData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value:any) =>
+                  setBackfillData(prevData => ({ ...prevData, [property.key]: value }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+          <Input
+            label="Total Qty of Soil Used in cum"
+            value={backfillData.totalQtySoilUsed}
+            onChange={(value:any) =>
+              setBackfillData(prevData => ({ ...prevData, totalQtySoilUsed: value }))
+            }
+            isRequired={true}
+          />
+          <Input
+            label="Total Length of Trench Backfilled in RM"
+            value={backfillData.totalLengthTrenchBackfilled}
+            onChange={(value:any) =>
+              setBackfillData(prevData => ({ ...prevData, totalLengthTrenchBackfilled: value }))
+            }
+            isRequired={true}
+          />
+          <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+              value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+        </View>
+      );
+      case TASK_TYPES.PLACEMENT_OF_SIGNAGE_SHEET:
+      const placementOfSignageSheetProperties = [
+        { title: 'Whether the material source is approved', key: 'materialSourceApproved' },
+        { title: 'Whether the drawings approved', key: 'drawingsApproved' },
+        { title: 'Whether the letter size is as per approved drawing', key: 'letterSizeAsPerDrawing' },
+        { title: 'Whether riveted properly in the frame', key: 'rivetedProperlyInFrame' },
+        { title: 'Whether placed as per approved drawing', key: 'placedAsPerDrawing' },
+      ];
+      return (
+        <View>
+          {placementOfSignageSheetProperties.map(property => (
+            <View style={{ flexDirection: 'column' }} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={placementOfSignageSheetData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value: any) =>
+                  setPlacementOfSignageSheetData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+          <Input
+            label="Total Sheet Fixed in Sqm"
+            value={placementOfSignageSheetData.totalSheetFixed}
+            onChange={(value: any) =>
+              setPlacementOfSignageSheetData(prevData => ({
+                ...prevData,
+                totalSheetFixed: value,
+              }))
+            }
+            isRequired={true}
+          />
+
+          <Input
+            label="Total Length of Road Covered in Km"
+            value={placementOfSignageSheetData.totalRoadLengthCovered}
+            onChange={(value: any) =>
+              setPlacementOfSignageSheetData(prevData => ({
+                ...prevData,
+                totalRoadLengthCovered: value,
+              }))
+            }
+            isRequired={true}
+          />
+          <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+              value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+        </View>
+      );
+      case TASK_TYPES.FIXING_OF_TRAFFIC_IMPACT_ATTENUATORS:
+        const trafficImpactAttenuatorsProperties = [
+          { title: 'Whether the source material approved', key: 'sourceMaterialApproved' },
+          { title: 'Whether the drawing approved', key: 'drawingApproved' },
+          { title: 'Whether the shape and size as per approved drawing', key: 'shapeSizeAsPerDrawing' },
+          { title: 'Whether the fixing methodology approved', key: 'fixingMethodologyApproved' },
+          { title: 'Whether attenuators fixed properly as per the approved method and drawings', key: 'attenuatorsFixedProperly' },
+          { title: 'Whether items are cleaned and visible properly', key: 'itemsCleanedVisible' },
+        ];
+
+      return (
+        <View>
+          {trafficImpactAttenuatorsProperties.map(property => (
+            <View style={{ flexDirection: 'column' }} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={trafficImpactAttenuatorsData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value: any) =>
+                  setTrafficImpactAttenuatorsData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+          <Input
+            label="Total No. of Attenuators Installed"
+            value={trafficImpactAttenuatorsData.totalNoOfAttenuatorsInstalled}
+            onChange={(value: any) =>
+              setTrafficImpactAttenuatorsData(prevData => ({
+                ...prevData,
+                totalNoOfAttenuatorsInstalled: value,
+              }))
+            }
+            isRequired={true}
+          />
+
+          <Input
+            label="Total Length of Road Covered in Km"
+            value={trafficImpactAttenuatorsData.totalLengthOfRoadCovered}
+            onChange={(value: any) =>
+              setTrafficImpactAttenuatorsData(prevData => ({
+                ...prevData,
+                totalLengthOfRoadCovered: value,
+              }))
+            }
+            isRequired={true}
+          />
+          <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+              value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+        </View>
+      );
+      case TASK_TYPES.FIXING_OF_SPRING_POST:
+      const fixingOfSpringPostProperties = [
+        { title: 'Whether the source material approved', key: 'sourceMaterialApproved' },
+        { title: 'Whether the drawing approved', key: 'drawingApproved' },
+        { title: 'Whether the shape and size as per approved drawing', key: 'shapeAndSizeAsPerDrawing' },
+        { title: 'Whether posts are fixed properly', key: 'postsFixedProperly' },
+        { title: 'Whether line and level checked properly', key: 'lineAndLevelChecked' },
+        { title: 'Whether the spacing between them are as per specifications', key: 'spacingAsPerSpecification' },
+        { title: 'Whether items are properly cleaned and visible', key: 'itemsCleanedAndVisible' },
+      ];
+
+      return (
+        <View>
+          {fixingOfSpringPostProperties.map(property => (
+            <View style={{flexDirection: 'column'}} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={fixingOfSpringPostData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value: any) =>
+                  setFixingOfSpringPostData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+          <Input
+            label="Nos of Spring Post Installed"
+            value={fixingOfSpringPostData.springPostInstalled}
+            onChange={(value: any) =>
+              setFixingOfSpringPostData(prevData => ({
+                ...prevData,
+                springPostInstalled: value,
+              }))
+            }
+            isRequired={true}
+          />
+          <Input
+            label="Total Length of Road Covered in km"
+            value={fixingOfSpringPostData.totalRoadLengthCovered}
+            onChange={(value: any) =>
+              setFixingOfSpringPostData(prevData => ({
+                ...prevData,
+                totalRoadLengthCovered: value,
+              }))
+            }
+            isRequired={true}
+          />
           <View>
               <CalendarPicker
                 label="Date"

@@ -565,6 +565,7 @@ export const TASK_TYPES = {
   WATERING: 'watering',
   PLANTATION: 'plantation',
   STONE_PITCHING: 'stone-pitching',
+  //other work form
   FIXING_INVERTER_INSTALLATION: 'fixing-inverter-installation',
   ERECTION_OF_DOUBLE_POLE_STRUCTURE: 'erection-of-double-pole-structure',
   FIXING_OF_MC4_Y_CONNECTOR: 'fixing-of-mc4-y-connector',
@@ -584,7 +585,7 @@ export const TASK_TYPES = {
   FIXING_AND_INSTALLATION_OF_MCB: 'fixing-and-installation-of-mcb',
   FIXING_AND_INSTALLATION_OF_INVERTOR: 'fixing-and-installation-of-invertor',
   FIXING_AND_INSTALLATION_OF_HT_PANEL: 'fixing-and-installation-of-ht-panel',
-  HT_PANEL_INSTALLATION: 'fixing-and-installation-of-ht-panel',
+  HT_PANEL_INSTALLATION: 'fixing-and-installation-of-ht-panel',//to-be-updated
   ERECTION_OF_STRUCTURE: 'erection-of-structure',
   FABRICATION_OF_STRUCTURE: 'fabrication-of-structure',
   FIXING_OF_PANELS: 'fixing-of-panels',
@@ -596,6 +597,10 @@ export const TASK_TYPES = {
   MORTAR_CHECKLIST: 'mortar-checklist',
   FLOORING: 'flooring',
   SIGNAGE_LOCATION_IDENTIFICATION: 'signage-location-identification',
+  BACKFILL: 'backfill',
+  PLACEMENT_OF_SIGNAGE_SHEET: 'placement-of-signage-sheet',
+  FIXING_OF_TRAFFIC_IMPACT_ATTENUATORS: 'fixing-of-traffic-impact-attenuators',
+  FIXING_OF_SPRING_POST: 'fixing-of-spring-post',
 };
 
 export const TEST_MATERIALS_TYPES = {

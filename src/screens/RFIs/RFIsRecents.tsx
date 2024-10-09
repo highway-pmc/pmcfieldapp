@@ -1582,7 +1582,6 @@ const RFIsRecents = (props: any) => {
             key: 'memberApprovedByInspector',
           },
         ];
-
         return (
           <View>
             {fabricationProperties.map(property => (
@@ -6736,6 +6735,207 @@ const RFIsRecents = (props: any) => {
                 </Text>
                 <Text>
                   {selectedRFI?.metaData.signageLocationData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.BACKFILL:
+        const backfillProperties = [
+          {
+            title:
+              'Verify that the excavated area to be backfilled is clear of debris and formwork materials',
+            key: 'areaClearOfDebris',
+          },
+          {
+            title:
+              'Confirm that the fill materials are approved and test results comply with the specifications',
+            key: 'fillMaterialsApproved',
+          },
+          {
+            title:
+              'Ensure avoidance of damage to the cables, caution tapes, or other things laid in the trench',
+            key: 'noDamageToCables',
+          },
+          {
+            title:
+              'Ensure the backfilling is complete and the area is clean and tidy',
+            key: 'backfillingComplete',
+          },
+          {
+            title: 'Total Qty of Soil Used in cum',
+            key: 'totalQtySoilUsed',
+          },
+          {
+            title: 'Total Length of Trench Backfilled in RM',
+            key: 'totalLengthTrenchBackfilled',
+          },
+        ];
+        return (
+          <View>
+            {backfillProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.backfillData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.PLACEMENT_OF_SIGNAGE_SHEET:
+        const placementOfSignageSheetProperties = [
+          {
+            title: 'Whether the material source is approved',
+            key: 'materialSourceApproved',
+          },
+          {title: 'Whether the drawings approved', key: 'drawingsApproved'},
+          {
+            title: 'Whether the letter size is as per approved drawing',
+            key: 'letterSizeAsPerDrawing',
+          },
+          {
+            title: 'Whether riveted properly in the frame',
+            key: 'rivetedProperlyInFrame',
+          },
+          {
+            title: 'Whether placed as per approved drawing',
+            key: 'placedAsPerDrawing',
+          },
+          {title: 'Total Sheet Fixed in Sqm', key: 'totalSheetFixed'},
+          {
+            title: 'Total Length of Road Covered in Km',
+            key: 'totalRoadLengthCovered',
+          },
+        ];
+        return (
+          <View>
+            {placementOfSignageSheetProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.placementOfSignageSheetData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.FIXING_OF_TRAFFIC_IMPACT_ATTENUATORS:
+        const trafficImpactAttenuatorsProperties = [
+          {
+            title: 'Whether the source material approved',
+            key: 'sourceMaterialApproved',
+          },
+          {title: 'Whether the drawing approved', key: 'drawingApproved'},
+          {
+            title: 'Whether the shape and size as per approved drawing',
+            key: 'shapeSizeAsPerDrawing',
+          },
+          {
+            title: 'Whether the fixing methodology approved',
+            key: 'fixingMethodologyApproved',
+          },
+          {
+            title:
+              'Whether attenuators fixed properly as per the approved method and drawings',
+            key: 'attenuatorsFixedProperly',
+          },
+          {
+            title: 'Whether items are cleaned and visible properly',
+            key: 'itemsCleanedVisible',
+          },
+          {
+            title: 'Total No. of Attenuators Installed',
+            key: 'totalNoOfAttenuatorsInstalled',
+          },
+          {
+            title: 'Total Length of Road Covered in Km',
+            key: 'totalLengthOfRoadCovered',
+          },
+        ];
+        return (
+          <View>
+            {trafficImpactAttenuatorsProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.trafficImpactAttenuatorsData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.FIXING_OF_SPRING_POST:
+        const fixingOfSpringPostProperties = [
+          {
+            title: 'Whether the source material approved',
+            key: 'sourceMaterialApproved',
+          },
+          {title: 'Whether the drawing approved', key: 'drawingApproved'},
+          {
+            title: 'Whether the shape and size as per approved drawing',
+            key: 'shapeAndSizeAsPerDrawing',
+          },
+          {
+            title: 'Whether posts are fixed properly',
+            key: 'postsFixedProperly',
+          },
+          {
+            title: 'Whether line and level checked properly',
+            key: 'lineAndLevelChecked',
+          },
+          {
+            title: 'Whether the spacing between them are as per specifications',
+            key: 'spacingAsPerSpecification',
+          },
+          {
+            title: 'Whether items are properly cleaned and visible',
+            key: 'itemsCleanedAndVisible',
+          },
+          {
+            title: 'Nos of Spring Post Installed',
+            key: 'springPostInstalled',
+          },
+          {
+            title: 'Total Length of Road Covered in km',
+            key: 'totalRoadLengthCovered',
+          },
+        ];
+        return (
+          <View>
+            {trafficImpactAttenuatorsProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.trafficImpactAttenuatorsData?.[
+                      property.key
+                    ]
+                  }
                 </Text>
               </View>
             ))}

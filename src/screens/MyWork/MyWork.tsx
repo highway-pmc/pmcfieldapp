@@ -466,6 +466,61 @@ const [dumpingData, setDumpingData] = useState([
     probingByStiffwire: string;
   };
   //FormUseStates
+  const [fixingOfObjectMarkersData, setFixingOfObjectMarkersData] = useState({
+    sourceMaterialApproved: 'Y',
+    drawingApproved: 'Y',
+    shapeSizeApproved: 'Y',
+    markersFixedProperly: 'Y',
+    lineLevelsChecked: 'Y',
+    itemsCleanedVisible: 'Y',
+    totalMarkersInstalled: 0,
+    totalLengthCoveredKm: 0.0,
+  });
+  const [fixingOfRoadDelineatorsData, setFixingOfRoadDelineatorsData] = useState({
+    sourceMaterialApproved: 'Y',
+    drawingApproved: 'Y',
+    shapeSizeAsPerDrawing: 'Y',
+    delineatorsFixedProperly: 'Y',
+    lineLevelChecked: 'Y',
+    spacingBetweenDelineators: 'Y',
+    nosOfDelineatorsInstalled: 0,
+    totalLengthRoadCovered: 0.0,
+  });
+  const [fixingOfRoadStudsData, setFixingOfRoadStudsData] = useState({
+    sourceMaterialApproved: 'Y',
+    drawingApproved: 'Y',
+    shapeAndSizeAsPerDrawing: 'Y',
+    colorCodeAndLocationAsPerSpecification: 'Y',
+    studsFixedProperly: 'Y',
+    lineAndLevelChecked: 'Y',
+    spacingAsPerSpecification: 'Y',
+    itemsCleanedVisible: 'Y',
+    roadStudsInstalled: 0,
+    totalLengthCovered: 0.0,
+  });
+  const [fixingOfSolarBlinkersData, setFixingOfSolarBlinkersData] = useState({
+    sourceMaterialApproved: 'Y',
+    drawingApproved: 'Y',
+    shapeAndSizeAsPerDrawing: 'Y',
+    blinkersWorkingCondition: 'Y',
+    blinkersFixedProperly: 'Y',
+    lineLevelChecked: 'Y',
+    itemsCleanedAndVisible: 'Y',
+    totalBlinkersInstalled: 0,
+    totalRoadLengthCovered: 0.0,
+  });
+  const [fixingOfSolarRoadStudsData, setFixingOfSolarRoadStudsData] = useState({
+    sourceMaterialApproved: 'Y',
+    drawingApproved: 'Y',
+    shapeSizeAsPerDrawing: 'Y',
+    colorCodeAndLocationAsPerSpec: 'Y',
+    studsFixedProperly: 'Y',
+    lineCheckedProperly: 'Y',
+    spacingAsPerSpecs: 'Y',
+    itemsCleanVisible: 'Y',
+    noOfRoadStuds: 0,
+    totalLengthCovered: 0.0,
+  });
   const [fixingOfSpringPostData, setFixingOfSpringPostData] = useState({
     sourceMaterialApproved: 'Y',
     drawingApproved: 'Y',
@@ -5257,6 +5312,95 @@ case TASK_TYPES.TACK_COAT:
             });
           }
           break;  
+        case TASK_TYPES.FIXING_OF_SOLAR_ROAD_STUDS:
+          if (rfiData.metaData.fixingOfSolarRoadStudsData) {
+            setFixingOfSolarRoadStudsData(
+              rfiData.metaData.fixingOfSolarRoadStudsData,
+            );
+          } else {
+            setFixingOfSolarRoadStudsData({
+              sourceMaterialApproved: 'Y',
+              drawingApproved: 'Y',
+              shapeSizeAsPerDrawing: 'Y',
+              colorCodeAndLocationAsPerSpec: 'Y',
+              studsFixedProperly: 'Y',
+              lineCheckedProperly: 'Y',
+              spacingAsPerSpecs: 'Y',
+              itemsCleanVisible: 'Y',
+              noOfRoadStuds: 0,
+              totalLengthCovered: 0.0,
+            });
+          }
+          break; 
+        case TASK_TYPES.FIXING_OF_SOLAR_BLINKERS:
+          if (rfiData.metaData.fixingOfSolarBlinkersData) {
+            setFixingOfSolarBlinkersData(rfiData.metaData.fixingOfSolarBlinkersData);
+          } else {
+            setFixingOfSolarBlinkersData({
+              sourceMaterialApproved: 'Y',
+              drawingApproved: 'Y',
+              shapeAndSizeAsPerDrawing: 'Y',
+              blinkersWorkingCondition: 'Y',
+              blinkersFixedProperly: 'Y',
+              lineLevelChecked: 'Y',
+              itemsCleanedAndVisible: 'Y',
+              totalBlinkersInstalled: 0,
+              totalRoadLengthCovered: 0.0,
+            });
+          }
+          break;  
+        case TASK_TYPES.FIXING_OF_ROAD_STUDS:
+          if (rfiData.metaData.fixingOfRoadStudsData) {
+            setFixingOfRoadStudsData(rfiData.metaData.fixingOfRoadStudsData);
+          } else {
+            setFixingOfRoadStudsData({
+              sourceMaterialApproved: 'Y',
+              drawingApproved: 'Y',
+              shapeAndSizeAsPerDrawing: 'Y',
+              colorCodeAndLocationAsPerSpecification: 'Y',
+              studsFixedProperly: 'Y',
+              lineAndLevelChecked: 'Y',
+              spacingAsPerSpecification: 'Y',
+              itemsCleanedVisible: 'Y',
+              roadStudsInstalled: 0,
+              totalLengthCovered: 0.0,
+            });
+          }
+          break;  
+        case TASK_TYPES.FIXING_OF_ROAD_DELINEATORS:
+          if (rfiData.metaData.fixingOfRoadDelineatorsData) {
+            setFixingOfRoadDelineatorsData(
+              rfiData.metaData.fixingOfRoadDelineatorsData,
+            );
+          } else {
+            setFixingOfRoadDelineatorsData({
+              sourceMaterialApproved: 'Y',
+              drawingApproved: 'Y',
+              shapeSizeAsPerDrawing: 'Y',
+              delineatorsFixedProperly: 'Y',
+              lineLevelChecked: 'Y',
+              spacingBetweenDelineators: 'Y',
+              nosOfDelineatorsInstalled: 0,
+              totalLengthRoadCovered: 0.0,
+            });
+          }
+          break;   
+        case TASK_TYPES.FIXING_OF_OBJECT_MARKERS:
+          if (rfiData.metaData.fixingOfObjectMarkersData) {
+            setFixingOfObjectMarkersData(rfiData.metaData.fixingOfObjectMarkersData);
+          } else {
+            setFixingOfObjectMarkersData({
+              sourceMaterialApproved: 'Y',
+              drawingApproved: 'Y',
+              shapeSizeApproved: 'Y',
+              markersFixedProperly: 'Y',
+              lineLevelsChecked: 'Y',
+              itemsCleanedVisible: 'Y',
+              totalMarkersInstalled: 0,
+              totalLengthCoveredKm: 0.0,
+            });
+          }
+          break;  
         case TASK_TYPES.LIFTING_LEFT:
         case TASK_TYPES.LIFTING_YARD:
         case TASK_TYPES.LIFTING_RIGHT:
@@ -7649,7 +7793,52 @@ case TASK_TYPES.TACK_COAT:
           taskName: selectedTask.name,
           fixingOfSpringPostData: fixingOfSpringPostData,
         };
-        break;    
+        break;  
+      case TASK_TYPES.FIXING_OF_SOLAR_ROAD_STUDS:
+        if (!validateFixingOfSolarRoadStudsData(fixingOfSolarRoadStudsData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          fixingOfSolarRoadStudsData: fixingOfSolarRoadStudsData,
+        };
+        break;   
+      case TASK_TYPES.FIXING_OF_SOLAR_BLINKERS:
+        if (!validateFixingOfSolarBlinkersData(fixingOfSolarBlinkersData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          fixingOfSolarBlinkersData: fixingOfSolarBlinkersData,
+        };
+        break;   
+      case TASK_TYPES.FIXING_OF_ROAD_STUDS:
+        if (!validateFixingOfRoadStudsData(fixingOfRoadStudsData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          fixingOfRoadStudsData: fixingOfRoadStudsData,
+        };
+        break;  
+      case TASK_TYPES.FIXING_OF_ROAD_DELINEATORS:
+        if (!validateFixingOfRoadDelineatorsData(fixingOfRoadDelineatorsData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          fixingOfRoadDelineatorsData: fixingOfRoadDelineatorsData,
+        };
+        break;  
+      case TASK_TYPES.FIXING_OF_OBJECT_MARKERS:
+        if (!validateFixingOfObjectMarkersData(fixingOfObjectMarkersData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          fixingOfObjectMarkersData: fixingOfObjectMarkersData,
+        };
+        break;  
       case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
@@ -8445,6 +8634,126 @@ const validateFixingOfMC4Data = (fixingOfMC4Data: any): boolean => {
   }
 
   fixingOfMC4Data.totalYConnectorsUsed = totalYConnectorsUsed;
+  return true;
+};
+const validateFixingOfObjectMarkersData = (fixingOfObjectMarkersData: any): boolean => {
+  const totalMarkersInstalled = parseInt(fixingOfObjectMarkersData.totalMarkersInstalled);
+  const totalLengthCoveredKm = parseFloat(fixingOfObjectMarkersData.totalLengthCoveredKm);
+
+  if (isNaN(totalMarkersInstalled) || totalMarkersInstalled <= 0 || totalMarkersInstalled > 1000000) {
+    showSnackbar('Please enter a valid number of markers installed (integer, > 0 and <= 1000000)', 'error');
+    return false;
+  }
+
+  if (isNaN(totalLengthCoveredKm) || totalLengthCoveredKm <= 0 || totalLengthCoveredKm > 100 || 
+      fixingOfObjectMarkersData.totalLengthCoveredKm.split('.')[1]?.length > 3) {
+    showSnackbar('Please enter a valid total length covered (Km, max 3 decimal places, > 0 and <= 100)', 'error');
+    return false;
+  }
+  fixingOfObjectMarkersData.totalMarkersInstalled = Number(fixingOfObjectMarkersData.totalMarkersInstalled);
+  fixingOfObjectMarkersData.totalLengthCoveredKm = Number(fixingOfObjectMarkersData.totalLengthCoveredKm);
+
+  return true;
+};
+
+const validateFixingOfRoadDelineatorsData = (fixingOfRoadDelineatorsData:any) => {
+  const nosOfDelineators = parseInt(fixingOfRoadDelineatorsData.nosOfDelineatorsInstalled, 10);
+  const totalLengthRoad = parseFloat(fixingOfRoadDelineatorsData.totalLengthRoadCovered);
+
+  if (isNaN(nosOfDelineators) || nosOfDelineators <= 0 || nosOfDelineators > 1000000) {
+    showSnackbar('Please enter a valid number of Delineators installed (value should be > 0 and <= 1,000,000)', 'error');
+    return false;
+  }
+
+  if (isNaN(totalLengthRoad) || totalLengthRoad <= 0 || totalLengthRoad > 100) {
+    showSnackbar('Please enter a valid Total Length of Road Covered in Km (value should be > 0 and <= 100)', 'error');
+    return false;
+  }
+
+  fixingOfRoadDelineatorsData.nosOfDelineatorsInstalled = nosOfDelineators;
+  fixingOfRoadDelineatorsData.totalLengthRoadCovered = totalLengthRoad;
+
+  return true;
+};
+const validateFixingOfRoadStudsData = (fixingOfRoadStudsData: any): boolean => {
+  const roadStudsInstalled = parseInt(fixingOfRoadStudsData.roadStudsInstalled);
+  const totalLengthCovered = parseFloat(fixingOfRoadStudsData.totalLengthCovered);
+
+  if (isNaN(roadStudsInstalled) || roadStudsInstalled <= 0 || roadStudsInstalled > 1000000) {
+    showSnackbar(
+      'Please enter a valid number of road studs installed (must be > 0 and <= 1000000)',
+      'error',
+    );
+    return false;
+  }
+
+  if (isNaN(totalLengthCovered) || totalLengthCovered <= 0 || totalLengthCovered > 100 || fixingOfRoadStudsData.totalLengthCovered.split('.')[1]?.length > 3) {
+    showSnackbar(
+      'Please enter a valid total length of road covered (in Km, with max 3 decimal places, must be > 0 and <= 100)',
+      'error',
+    );
+    return false;
+  }
+
+  fixingOfRoadStudsData.roadStudsInstalled = Number(fixingOfRoadStudsData.roadStudsInstalled);
+  fixingOfRoadStudsData.totalLengthCovered = Number(fixingOfRoadStudsData.totalLengthCovered);
+
+  return true;
+};
+const validateFixingOfSolarBlinkersData = (fixingOfSolarBlinkersData: any): boolean => {
+  const totalBlinkersInstalled = parseInt(fixingOfSolarBlinkersData.totalBlinkersInstalled, 10);
+  const totalRoadLengthCovered = parseFloat(fixingOfSolarBlinkersData.totalRoadLengthCovered);
+
+  if (isNaN(totalBlinkersInstalled) || totalBlinkersInstalled <= 0 || totalBlinkersInstalled > 100000) {
+    showSnackbar(
+      'Please enter a valid Total No. of Blinkers Installed (value should be > 0 and <= 100000)',
+      'error',
+    );
+    return false;
+  }
+
+  if (isNaN(totalRoadLengthCovered) || totalRoadLengthCovered <= 0 || totalRoadLengthCovered > 100) {
+    showSnackbar(
+      'Please enter a valid Total Length of Road Covered in Km (value should be > 0 and <= 100, with max 3 decimal places)',
+      'error',
+    );
+    return false;
+  }
+
+  fixingOfSolarBlinkersData.totalBlinkersInstalled = Number(fixingOfSolarBlinkersData.totalBlinkersInstalled);
+  fixingOfSolarBlinkersData.totalRoadLengthCovered = Number(fixingOfSolarBlinkersData.totalRoadLengthCovered);
+
+  return true;
+};
+
+const validateFixingOfSolarRoadStudsData = (fixingOfSolarRoadStudsData: any): boolean => {
+  const noOfRoadStuds = parseInt(fixingOfSolarRoadStudsData.noOfRoadStuds);
+  const totalLengthCovered = parseFloat(fixingOfSolarRoadStudsData.totalLengthCovered);
+
+  if (isNaN(noOfRoadStuds) || noOfRoadStuds <= 0 || noOfRoadStuds > 1000000) {
+    showSnackbar(
+      'Please enter a valid number of road studs installed (value should be > 0 and <= 1000000)',
+      'error',
+    );
+    return false;
+  }
+
+  if (
+    isNaN(totalLengthCovered) ||
+    totalLengthCovered <= 0 ||
+    totalLengthCovered > 100 ||
+    fixingOfSolarRoadStudsData.totalLengthCovered.split('.')[1]?.length > 3
+  ) {
+    showSnackbar(
+      'Please enter a valid total length of road covered (in Km) with max 3 decimal places, value should be > 0 and <= 100',
+      'error',
+    );
+    return false;
+  }
+
+  fixingOfSolarRoadStudsData.noOfRoadStuds = Number(fixingOfSolarRoadStudsData.noOfRoadStuds);
+  fixingOfSolarRoadStudsData.totalLengthCovered = Number(fixingOfSolarRoadStudsData.totalLengthCovered);
+
   return true;
 };
 const validateFixingOfSpringPostData = (fixingOfSpringPostData: any): boolean => {
@@ -19632,6 +19941,377 @@ case TASK_TYPES.FIXING_OF_MODULES:
               setFixingOfSpringPostData(prevData => ({
                 ...prevData,
                 totalRoadLengthCovered: value,
+              }))
+            }
+            isRequired={true}
+          />
+          <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+              value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+        </View>
+      );
+      case TASK_TYPES.FIXING_OF_SOLAR_ROAD_STUDS:
+        const fixingOfSolarRoadStudsProperties = [
+          { title: 'Whether the source material approved', key: 'sourceMaterialApproved' },
+          { title: 'Whether the drawing approved', key: 'drawingApproved' },
+          { title: 'Whether the shape and size as per approved drawing', key: 'shapeSizeAsPerDrawing' },
+          { title: 'Whether the color code and locations are as per specification', key: 'colorCodeAndLocationAsPerSpec' },
+          { title: 'Whether studs are fixed properly', key: 'studsFixedProperly' },
+          { title: 'Whether line checked properly', key: 'lineCheckedProperly' },
+          { title: 'Whether the spacing is as per specifications', key: 'spacingAsPerSpecs' },
+          { title: 'Whether items are clean and visible properly', key: 'itemsCleanVisible' },
+        ];
+
+      return (
+        <View>
+          {fixingOfSolarRoadStudsProperties.map(property => (
+            <View style={{flexDirection: 'column'}} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={fixingOfSolarRoadStudsData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value: any) =>
+                  setFixingOfSolarRoadStudsData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+          <Input
+            label="Nos of Road Studs Installed"
+            value={fixingOfSolarRoadStudsData.noOfRoadStuds}
+            onChange={(value: any) =>
+              setFixingOfSolarRoadStudsData(prevData => ({
+                ...prevData,
+                noOfRoadStuds: value,
+              }))
+            }
+            isRequired={true}
+          />
+          <Input
+            label="Total Length of Road Covered in Km"
+            value={fixingOfSolarRoadStudsData.totalLengthCovered}
+            onChange={(value: any) =>
+              setFixingOfSolarRoadStudsData(prevData => ({
+                ...prevData,
+                totalLengthCovered: value,
+              }))
+            }
+            isRequired={true}
+          />
+          <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+              value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+        </View>
+      );
+      case TASK_TYPES.FIXING_OF_SOLAR_BLINKERS:
+        const fixingOfSolarBlinkersProperties = [
+          { title: 'Whether the source material approved', key: 'sourceMaterialApproved' },
+          { title: 'Whether the drawing approved', key: 'drawingApproved' },
+          { title: 'Whether the shape and size as per approved drawing', key: 'shapeAndSizeAsPerDrawing' },
+          { title: 'Whether blinkers are in working condition', key: 'blinkersWorkingCondition' },
+          { title: 'Whether blinkers are fixed properly?', key: 'blinkersFixedProperly' },
+          { title: 'Whether line and level checked properly', key: 'lineLevelChecked' },
+          { title: 'Whether items are properly cleaned and visible', key: 'itemsCleanedAndVisible' },
+        ];
+
+        return (
+          <View>
+            {fixingOfSolarBlinkersProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={fixingOfSolarBlinkersData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setFixingOfSolarBlinkersData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <Input
+              label="Total No. of Blinkers Installed"
+              value={fixingOfSolarBlinkersData.totalBlinkersInstalled}
+              onChange={(value: any) =>
+                setFixingOfSolarBlinkersData(prevData => ({
+                  ...prevData,
+                  totalBlinkersInstalled: value,
+                }))
+              }
+              isRequired={true}
+            />
+
+            <Input
+              label="Total Length of Road Covered in Km"
+              value={fixingOfSolarBlinkersData.totalRoadLengthCovered}
+              onChange={(value: any) =>
+                setFixingOfSolarBlinkersData(prevData => ({
+                  ...prevData,
+                  totalRoadLengthCovered: value,
+                }))
+              }
+              isRequired={true}
+            />
+            <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+              value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+          </View>
+        );
+      case TASK_TYPES.FIXING_OF_ROAD_STUDS:
+        const fixingOfRoadStudsProperties = [
+          { title: 'Whether the source material approved', key: 'sourceMaterialApproved' },
+          { title: 'Whether the drawing approved', key: 'drawingApproved' },
+          { title: 'Whether the shape and size are as per approved drawing', key: 'shapeAndSizeAsPerDrawing' },
+          { title: 'Whether the color code and locations are as per specification and approved drawings', key: 'colorCodeAndLocationAsPerSpecification' },
+          { title: 'Whether studs are fixed properly', key: 'studsFixedProperly' },
+          { title: 'Whether line and level checked properly', key: 'lineAndLevelChecked' },
+          { title: 'Whether the spacing is as per the specification', key: 'spacingAsPerSpecification' },
+          { title: 'Whether items are cleaned and visible properly', key: 'itemsCleanedVisible' },
+        ];
+        
+        return (
+          <View>
+            {fixingOfRoadStudsProperties.map(property => (
+              <View style={{ flexDirection: 'column' }} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={fixingOfRoadStudsData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setFixingOfRoadStudsData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <Input
+              label="Number of Road Studs Installed"
+              value={fixingOfRoadStudsData.roadStudsInstalled}
+              onChange={(value: any) =>
+                setFixingOfRoadStudsData(prevData => ({
+                  ...prevData,
+                  roadStudsInstalled: value,
+                }))
+              }
+              isRequired={true}
+            />
+            <Input
+              label="Total Length of Road Covered (in Km)"
+              value={fixingOfRoadStudsData.totalLengthCovered}
+              onChange={(value: any) =>
+                setFixingOfRoadStudsData(prevData => ({
+                  ...prevData,
+                  totalLengthCovered: value,
+                }))
+              }
+              isRequired={true}
+            />
+            <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+              value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+          </View>
+        );  
+      case TASK_TYPES.FIXING_OF_ROAD_DELINEATORS:
+        const fixingOfRoadDelineatorsProperties = [
+          { title: 'Source Material Approved', key: 'sourceMaterialApproved' },
+          { title: 'Drawing Approved', key: 'drawingApproved' },
+          { title: 'Shape and Size as per Approved Drawing', key: 'shapeSizeAsPerDrawing' },
+          { title: 'Delineators Fixed Properly', key: 'delineatorsFixedProperly' },
+          { title: 'Line and Level Checked Properly', key: 'lineLevelChecked' },
+          { title: 'Spacing Between Delineators as per Specifications', key: 'spacingBetweenDelineators' },
+        ];
+      return (
+        <View>
+          {fixingOfRoadDelineatorsProperties.map(property => (
+            <View style={{ flexDirection: 'column' }} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={fixingOfRoadDelineatorsData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value:any) =>
+                  setFixingOfRoadDelineatorsData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+          <Input
+            label="Nos of Delineators Installed"
+            value={fixingOfRoadDelineatorsData.nosOfDelineatorsInstalled}
+            onChange={(value:any) =>
+              setFixingOfRoadDelineatorsData(prevData => ({
+                ...prevData,
+                nosOfDelineatorsInstalled: value,
+              }))
+            }
+            isRequired={true}
+          />
+          <Input
+            label="Total Length the Road Covered in Km"
+            value={fixingOfRoadDelineatorsData.totalLengthRoadCovered}
+            onChange={(value:any) =>
+              setFixingOfRoadDelineatorsData(prevData => ({
+                ...prevData,
+                totalLengthRoadCovered: value,
+              }))
+            }
+            isRequired={true}
+          />
+          <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+              value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+        </View>
+      );  
+      case TASK_TYPES.FIXING_OF_OBJECT_MARKERS:
+      const fixingOfObjectMarkersProperties = [
+        { title: 'Whether the source material approved', key: 'sourceMaterialApproved' },
+        { title: 'Whether the drawing approved', key: 'drawingApproved' },
+        { title: 'Whether the shape and size as per approved drawing', key: 'shapeSizeApproved' },
+        { title: 'Whether the markers fixed properly?', key: 'markersFixedProperly' },
+        { title: 'Whether line and levels checked properly', key: 'lineLevelsChecked' },
+        { title: 'Whether items are cleaned and visible properly', key: 'itemsCleanedVisible' },
+      ];
+
+      return (
+        <View>
+          {fixingOfObjectMarkersProperties.map(property => (
+            <View style={{flexDirection: 'column'}} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={fixingOfObjectMarkersData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value: any) =>
+                  setFixingOfObjectMarkersData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+          <Input
+            label="Total no. of markers installed"
+            value={fixingOfObjectMarkersData.totalMarkersInstalled}
+            onChange={(value: any) =>
+              setFixingOfObjectMarkersData(prevData => ({
+                ...prevData,
+                totalMarkersInstalled: value,
+              }))
+            }
+            isRequired={true}
+          />
+
+          <Input
+            label="Total length of highway covered in Km"
+            value={fixingOfObjectMarkersData.totalLengthCoveredKm}
+            onChange={(value: any) =>
+              setFixingOfObjectMarkersData(prevData => ({
+                ...prevData,
+                totalLengthCoveredKm: value,
               }))
             }
             isRequired={true}

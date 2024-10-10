@@ -585,7 +585,7 @@ export const TASK_TYPES = {
   FIXING_AND_INSTALLATION_OF_MCB: 'fixing-and-installation-of-mcb',
   FIXING_AND_INSTALLATION_OF_INVERTOR: 'fixing-and-installation-of-invertor',
   FIXING_AND_INSTALLATION_OF_HT_PANEL: 'fixing-and-installation-of-ht-panel',
-  HT_PANEL_INSTALLATION: 'fixing-and-installation-of-ht-panel',//to-be-updated
+  HT_PANEL_INSTALLATION: 'fixing-and-installation-of-ht-panel', //to-be-updated
   ERECTION_OF_STRUCTURE: 'erection-of-structure',
   FABRICATION_OF_STRUCTURE: 'fabrication-of-structure',
   FIXING_OF_PANELS: 'fixing-of-panels',
@@ -601,6 +601,11 @@ export const TASK_TYPES = {
   PLACEMENT_OF_SIGNAGE_SHEET: 'placement-of-signage-sheet',
   FIXING_OF_TRAFFIC_IMPACT_ATTENUATORS: 'fixing-of-traffic-impact-attenuators',
   FIXING_OF_SPRING_POST: 'fixing-of-spring-post',
+  FIXING_OF_SOLAR_ROAD_STUDS: 'fixing-of-solar-road-studs',
+  FIXING_OF_SOLAR_BLINKERS: 'fixing-of-solar-blinkers',
+  FIXING_OF_ROAD_STUDS: 'fixing-of-road-studs',
+  FIXING_OF_ROAD_DELINEATORS: 'fixing-of-road-delineators',
+  FIXING_OF_OBJECT_MARKERS:'fixing-of-object-markers'
 };
 
 export const TEST_MATERIALS_TYPES = {

@@ -6923,7 +6923,61 @@ const RFIsRecents = (props: any) => {
         ];
         return (
           <View>
-            {trafficImpactAttenuatorsProperties.map(property => (
+            {fixingOfSpringPostProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.fixingOfSpringPostData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.FIXING_OF_SOLAR_ROAD_STUDS:
+        const fixingOfSolarRoadStudsProperties = [
+          {
+            title: 'Whether the source material approved',
+            key: 'sourceMaterialApproved',
+          },
+          {title: 'Whether the drawing approved', key: 'drawingApproved'},
+          {
+            title: 'Whether the shape and size as per approved drawing',
+            key: 'shapeSizeAsPerDrawing',
+          },
+          {
+            title:
+              'Whether the color code and locations are as per specification',
+            key: 'colorCodeAndLocationAsPerSpec',
+          },
+          {
+            title: 'Whether studs are fixed properly',
+            key: 'studsFixedProperly',
+          },
+          {title: 'Whether line checked properly', key: 'lineCheckedProperly'},
+          {
+            title: 'Whether the spacing is as per specifications',
+            key: 'spacingAsPerSpecs',
+          },
+          {
+            title: 'Whether items are clean and visible properly',
+            key: 'itemsCleanVisible',
+          },
+          {
+            title: 'Nos of Road Studs Installed',
+            key: 'noOfRoadStuds',
+          },
+          {
+            title: 'Total Length of Road Covered in Km',
+            key: 'totalLengthCovered',
+          },
+        ];
+        return (
+          <View>
+            {fixingOfSolarRoadStudsProperties.map(property => (
               <View
                 style={{flexDirection: 'column', marginBottom: 10}}
                 key={property.key}>
@@ -6932,7 +6986,225 @@ const RFIsRecents = (props: any) => {
                 </Text>
                 <Text>
                   {
-                    selectedRFI?.metaData.trafficImpactAttenuatorsData?.[
+                    selectedRFI?.metaData.fixingOfSolarRoadStudsData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.FIXING_OF_SOLAR_BLINKERS:
+        const fixingOfSolarBlinkersProperties = [
+          {
+            title: 'Whether the source material approved',
+            key: 'sourceMaterialApproved',
+          },
+          {title: 'Whether the drawing approved', key: 'drawingApproved'},
+          {
+            title: 'Whether the shape and size as per approved drawing',
+            key: 'shapeAndSizeAsPerDrawing',
+          },
+          {
+            title: 'Whether blinkers are in working condition',
+            key: 'blinkersWorkingCondition',
+          },
+          {
+            title: 'Whether blinkers are fixed properly?',
+            key: 'blinkersFixedProperly',
+          },
+          {
+            title: 'Whether line and level checked properly',
+            key: 'lineLevelChecked',
+          },
+          {
+            title: 'Whether items are properly cleaned and visible',
+            key: 'itemsCleanedAndVisible',
+          },
+          {
+            title: 'Total No. of Blinkers Installed',
+            key: 'totalBlinkersInstalled',
+          },
+          {
+            title: 'Total Length of Road Covered in Km',
+            key: 'totalRoadLengthCovered',
+          },
+        ];
+        return (
+          <View>
+            {fixingOfSolarBlinkersProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.fixingOfSolarBlinkersData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.FIXING_OF_ROAD_STUDS:
+        const fixingOfRoadStudsProperties = [
+          {
+            title: 'Whether the source material approved',
+            key: 'sourceMaterialApproved',
+          },
+          {title: 'Whether the drawing approved', key: 'drawingApproved'},
+          {
+            title: 'Whether the shape and size are as per approved drawing',
+            key: 'shapeAndSizeAsPerDrawing',
+          },
+          {
+            title:
+              'Whether the color code and locations are as per specification and approved drawings',
+            key: 'colorCodeAndLocationAsPerSpecification',
+          },
+          {
+            title: 'Whether studs are fixed properly',
+            key: 'studsFixedProperly',
+          },
+          {
+            title: 'Whether line and level checked properly',
+            key: 'lineAndLevelChecked',
+          },
+          {
+            title: 'Whether the spacing is as per the specification',
+            key: 'spacingAsPerSpecification',
+          },
+          {
+            title: 'Whether items are cleaned and visible properly',
+            key: 'itemsCleanedVisible',
+          },
+          {
+            title: 'Nos of Road Studs Installed (in nos.)',
+            key: 'roadStudsInstalled',
+          },
+          {
+            title: 'Total Length of Road Covered (in Km)',
+            key: 'totalLengthCovered',
+          },
+        ];
+        return (
+          <View>
+            {fixingOfRoadStudsProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.fixingOfRoadStudsData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.FIXING_OF_ROAD_DELINEATORS:
+        const fixingOfRoadDelineatorsProperties = [
+          {
+            title: 'Whether the source material approved',
+            key: 'sourceMaterialApproved',
+          },
+          {title: 'Whether the drawing approved', key: 'drawingApproved'},
+          {
+            title: 'Whether the shape and size as per approved drawing',
+            key: 'shapeSizeAsPerDrawing',
+          },
+          {
+            title: 'Whether the delineators fixed properly',
+            key: 'delineatorsFixedProperly',
+          },
+          {
+            title: 'Whether line and level checked properly',
+            key: 'lineLevelChecked',
+          },
+          {
+            title:
+              'Whether the spacing between delineator is as per specifications',
+            key: 'spacingBetweenDelineators',
+          },
+          {
+            title: 'Nos of Delineators Installed',
+            key: 'nosOfDelineatorsInstalled',
+          },
+          {
+            title: 'Total Length the Road Covered in Km',
+            key: 'totalLengthRoadCovered',
+          },
+        ];
+        return (
+          <View>
+            {fixingOfRoadDelineatorsProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.fixingOfRoadDelineatorsData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.FIXING_OF_OBJECT_MARKERS:
+        const fixingOfObjectMarkersProperties = [
+          {
+            title: 'Whether the source material approved',
+            key: 'sourceMaterialApproved',
+          },
+          {title: 'Whether the drawing approved', key: 'drawingApproved'},
+          {
+            title: 'Whether the shape and size as per approved drawing',
+            key: 'shapeSizeApproved',
+          },
+          {
+            title: 'Whether the markers fixed properly?',
+            key: 'markersFixedProperly',
+          },
+          {
+            title: 'Whether line and levels checked properly',
+            key: 'lineLevelsChecked',
+          },
+          {
+            title: 'Whether items are cleaned and visible properly',
+            key: 'itemsCleanedVisible',
+          },
+          {
+            title: 'Total no. of markers installed',
+            key: 'totalMarkersInstalled',
+          },
+          {
+            title: 'Total length of highway covered in Km',
+            key: 'totalLengthCoveredKm',
+          },
+        ];
+        return (
+          <View>
+            {fixingOfObjectMarkersProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.fixingOfObjectMarkersData?.[
                       property.key
                     ]
                   }

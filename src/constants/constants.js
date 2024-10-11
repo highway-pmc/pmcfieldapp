@@ -605,7 +605,12 @@ export const TASK_TYPES = {
   FIXING_OF_SOLAR_BLINKERS: 'fixing-of-solar-blinkers',
   FIXING_OF_ROAD_STUDS: 'fixing-of-road-studs',
   FIXING_OF_ROAD_DELINEATORS: 'fixing-of-road-delineators',
-  FIXING_OF_OBJECT_MARKERS:'fixing-of-object-markers'
+  FIXING_OF_OBJECT_MARKERS: 'fixing-of-object-markers',
+  FIXING_OF_NOISE_BARRIER: 'fixing-of-noise-barrier',
+  FIXING_OF_LED_TRAFFIC_BLINKERS: 'fixing-of-led-traffic-blinkers',
+  FIXING_OF_HAZARD_MARKERS: 'fixing-of-hazard-markers',
+  FIXING_OF_FLEXIBLE_MEDIAN_MARKERS: 'fixing-of-flexible-median-markers',
+  FIXING_OF_CONVEX_MIRRORS: 'fixing-of-convex-mirrors',
 };
 
 export const TEST_MATERIALS_TYPES = {

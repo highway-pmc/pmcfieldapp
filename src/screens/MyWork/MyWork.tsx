@@ -466,6 +466,60 @@ const [dumpingData, setDumpingData] = useState([
     probingByStiffwire: string;
   };
   //FormUseStates
+  const [fixingOfConvexMirrorsData, setFixingOfConvexMirrorsData] = useState({
+    sourceMaterialApproved: 'Y',
+    drawingApproved: 'Y',
+    shapeSizeApproved: 'Y',
+    workingCondition: 'Y',
+    mirrorsFixedProperly: 'Y',
+    lineLevelAngleChecked: 'Y',
+    itemsCleanVisible: 'Y',
+    totalMirrorsInstalled: 0,
+    totalLengthCoveredKm: 0.0,
+  });
+  const [fixingOfFlexibleMedianMarkersData, setFixingOfFlexibleMedianMarkersData] = useState({
+    sourceMaterialApproved: 'Y',
+    drawingApproved: 'Y',
+    shapeSizeApproved: 'Y',
+    markersFixedProperly: 'Y',
+    lineLevelsChecked: 'Y',
+    spacingAsPerSpecifications: 'Y',
+    itemsCleanedVisible: 'Y',
+    totalMarkersInstalled: 0,
+    totalLengthCoveredKm: 0.0,
+  });
+  const [fixingOfHazardMarkersData, setFixingOfHazardMarkersData] = useState({
+    sourceMaterialApproved: 'Y',
+    drawingApproved: 'Y',
+    shapeSizeApproved: 'Y',
+    markersFixedProperly: 'Y',
+    lineLevelsChecked: 'Y',
+    itemsCleanedVisible: 'Y',
+    totalMarkersInstalled: 0,
+    totalLengthCoveredKm: 0.0,
+  });
+  const [fixingOfLEDTrafficBlinkersData, setFixingOfLEDTrafficBlinkersData] = useState({
+    sourceMaterialApproved: 'Y',
+    drawingApproved: 'Y',
+    shapeSizeApproved: 'Y',
+    workingCondition: 'Y',
+    itemsFixedProperly: 'Y',
+    lineLevelChecked: 'Y',
+    itemsCleanedVisible: 'Y',
+    totalBlinkersInstalled: 0,
+    totalHighwayLengthCovered: 0.0,
+  });
+  const [fixingOfNoiseBarrierData, setFixingOfNoiseBarrierData] = useState({
+    sourceMaterialApproved: 'Y',
+    drawingApproved: 'Y',
+    shapeSizeApproved: 'Y',
+    postsFixedProperly: 'Y',
+    postsLineLevelChecked: 'Y',
+    gapBetweenCrashAndNoiseBarrier: 'Y',
+    frameFixedTightly: 'Y',
+    totalNoiseBarrierPanelsInstalled: 0,
+    totalLengthNoiseBarrierFixedRM: 0.0,
+  });
   const [fixingOfObjectMarkersData, setFixingOfObjectMarkersData] = useState({
     sourceMaterialApproved: 'Y',
     drawingApproved: 'Y',
@@ -5400,6 +5454,90 @@ case TASK_TYPES.TACK_COAT:
               totalLengthCoveredKm: 0.0,
             });
           }
+          break; 
+        case TASK_TYPES.FIXING_OF_NOISE_BARRIER:
+          if (rfiData.metaData.fixingOfNoiseBarrierData) {
+            setFixingOfNoiseBarrierData(rfiData.metaData.fixingOfNoiseBarrierData);
+          } else {
+            setFixingOfNoiseBarrierData({
+              sourceMaterialApproved: 'Y',
+              drawingApproved: 'Y',
+              shapeSizeApproved: 'Y',
+              postsFixedProperly: 'Y',
+              postsLineLevelChecked: 'Y',
+              gapBetweenCrashAndNoiseBarrier: 'Y',
+              frameFixedTightly: 'Y',
+              totalNoiseBarrierPanelsInstalled: 0,
+              totalLengthNoiseBarrierFixedRM: 0.0,
+            });
+          }
+          break;  
+        case TASK_TYPES.FIXING_OF_LED_TRAFFIC_BLINKERS:
+          if (rfiData.metaData.fixingOfLEDTrafficBlinkersData) {
+            setFixingOfLEDTrafficBlinkersData(rfiData.metaData.fixingOfLEDTrafficBlinkersData);
+          } else {
+            setFixingOfLEDTrafficBlinkersData({
+              sourceMaterialApproved: 'Y',
+              drawingApproved: 'Y',
+              shapeSizeApproved: 'Y',
+              workingCondition: 'Y',
+              itemsFixedProperly: 'Y',
+              lineLevelChecked: 'Y',
+              itemsCleanedVisible: 'Y',
+              totalBlinkersInstalled: 0,
+              totalHighwayLengthCovered: 0.0,
+            });
+          }
+          break;   
+        case TASK_TYPES.FIXING_OF_HAZARD_MARKERS:
+          if (rfiData.metaData.fixingOfHazardMarkersData) {
+            setFixingOfHazardMarkersData(rfiData.metaData.fixingOfHazardMarkersData);
+          } else {
+            setFixingOfHazardMarkersData({
+              sourceMaterialApproved: 'Y',
+              drawingApproved: 'Y',
+              shapeSizeApproved: 'Y',
+              markersFixedProperly: 'Y',
+              lineLevelsChecked: 'Y',
+              itemsCleanedVisible: 'Y',
+              totalMarkersInstalled: 0,
+              totalLengthCoveredKm: 0.0,
+            });
+          }
+          break;  
+        case TASK_TYPES.FIXING_OF_FLEXIBLE_MEDIAN_MARKERS:
+          if (rfiData.metaData.fixingOfFlexibleMedianMarkersData) {
+            setFixingOfFlexibleMedianMarkersData(rfiData.metaData.fixingOfFlexibleMedianMarkersData);
+          } else {
+            setFixingOfFlexibleMedianMarkersData({
+              sourceMaterialApproved: 'Y',
+              drawingApproved: 'Y',
+              shapeSizeApproved: 'Y',
+              markersFixedProperly: 'Y',
+              lineLevelsChecked: 'Y',
+              spacingAsPerSpecifications: 'Y',
+              itemsCleanedVisible: 'Y',
+              totalMarkersInstalled: 0,
+              totalLengthCoveredKm: 0.0,
+            });
+          }
+          break;  
+        case TASK_TYPES.FIXING_OF_CONVEX_MIRRORS:
+          if (rfiData.metaData.fixingOfConvexMirrorsData) {
+            setFixingOfConvexMirrorsData(rfiData.metaData.fixingOfConvexMirrorsData);
+          } else {
+            setFixingOfConvexMirrorsData({
+              sourceMaterialApproved: 'Y',
+              drawingApproved: 'Y',
+              shapeSizeApproved: 'Y',
+              workingCondition: 'Y',
+              mirrorsFixedProperly: 'Y',
+              lineLevelAngleChecked: 'Y',
+              itemsCleanVisible: 'Y',
+              totalMirrorsInstalled: 0,
+              totalLengthCoveredKm: 0.0,
+            });
+          }
           break;  
         case TASK_TYPES.LIFTING_LEFT:
         case TASK_TYPES.LIFTING_YARD:
@@ -7839,6 +7977,51 @@ case TASK_TYPES.TACK_COAT:
           fixingOfObjectMarkersData: fixingOfObjectMarkersData,
         };
         break;  
+      case TASK_TYPES.FIXING_OF_NOISE_BARRIER:
+        if (!validateFixingOfNoiseBarrierData(fixingOfNoiseBarrierData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          fixingOfNoiseBarrierData: fixingOfNoiseBarrierData,
+        };
+        break;  
+      case TASK_TYPES.FIXING_OF_LED_TRAFFIC_BLINKERS:
+        if (!validateFixingOfLEDTrafficBlinkersData(fixingOfLEDTrafficBlinkersData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          fixingOfLEDTrafficBlinkersData: fixingOfLEDTrafficBlinkersData,
+        };
+        break;  
+      case TASK_TYPES.FIXING_OF_HAZARD_MARKERS:
+        if (!validateFixingOfHazardMarkersData(fixingOfHazardMarkersData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          fixingOfHazardMarkersData: fixingOfHazardMarkersData,
+        };
+        break;  
+      case TASK_TYPES.FIXING_OF_FLEXIBLE_MEDIAN_MARKERS:
+        if (!validateFixingOfFlexibleMedianMarkersData(fixingOfFlexibleMedianMarkersData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          fixingOfFlexibleMedianMarkersData: fixingOfFlexibleMedianMarkersData,
+        };
+        break;  
+      case TASK_TYPES.FIXING_OF_CONVEX_MIRRORS:
+        if (!validateFixingOfConvexMirrorsData(fixingOfConvexMirrorsData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          fixingOfConvexMirrorsData: fixingOfConvexMirrorsData,
+        };
+        break;  
       case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
@@ -8634,6 +8817,124 @@ const validateFixingOfMC4Data = (fixingOfMC4Data: any): boolean => {
   }
 
   fixingOfMC4Data.totalYConnectorsUsed = totalYConnectorsUsed;
+  return true;
+};
+const validateFixingOfConvexMirrorsData = (fixingOfConvexMirrorsData: any): boolean => {
+  const totalMirrorsInstalled = parseInt(fixingOfConvexMirrorsData.totalMirrorsInstalled);
+  const totalLengthCoveredKm = parseFloat(fixingOfConvexMirrorsData.totalLengthCoveredKm);
+
+  // Validation for totalMirrorsInstalled
+  if (isNaN(totalMirrorsInstalled) || totalMirrorsInstalled <= 0 || totalMirrorsInstalled > 100) {
+    showSnackbar('Please enter a valid number of mirrors installed (integer, > 0 and <= 100)', 'error');
+    return false;
+  }
+
+  // Validation for totalLengthCoveredKm
+  if (isNaN(totalLengthCoveredKm) || totalLengthCoveredKm <= 0 || totalLengthCoveredKm > 100 || 
+      fixingOfConvexMirrorsData.totalLengthCoveredKm.split('.')[1]?.length > 3) {
+    showSnackbar('Please enter a valid total length covered (Km, max 3 decimal places, > 0 and <= 100)', 'error');
+    return false;
+  }
+
+  // Converting values back to numbers after validation
+  fixingOfConvexMirrorsData.totalMirrorsInstalled = Number(fixingOfConvexMirrorsData.totalMirrorsInstalled);
+  fixingOfConvexMirrorsData.totalLengthCoveredKm = Number(fixingOfConvexMirrorsData.totalLengthCoveredKm);
+
+  return true;
+};
+
+const validateFixingOfFlexibleMedianMarkersData = (fixingOfFlexibleMedianMarkersData: any): boolean => {
+  const totalMarkersInstalled = parseInt(fixingOfFlexibleMedianMarkersData.totalMarkersInstalled);
+  const totalLengthCoveredKm = parseFloat(fixingOfFlexibleMedianMarkersData.totalLengthCoveredKm);
+
+  // Validation for totalMarkersInstalled
+  if (isNaN(totalMarkersInstalled) || totalMarkersInstalled <= 0 || totalMarkersInstalled > 1000000) {
+    showSnackbar('Please enter a valid number of markers installed (integer, > 0 and <= 1000000)', 'error');
+    return false;
+  }
+
+  // Validation for totalLengthCoveredKm
+  if (isNaN(totalLengthCoveredKm) || totalLengthCoveredKm <= 0 || totalLengthCoveredKm > 100 || 
+      fixingOfFlexibleMedianMarkersData.totalLengthCoveredKm.split('.')[1]?.length > 3) {
+    showSnackbar('Please enter a valid total length covered (Km, max 3 decimal places, > 0 and <= 100)', 'error');
+    return false;
+  }
+
+  // Converting values back to numbers after validation
+  fixingOfFlexibleMedianMarkersData.totalMarkersInstalled = Number(fixingOfFlexibleMedianMarkersData.totalMarkersInstalled);
+  fixingOfFlexibleMedianMarkersData.totalLengthCoveredKm = Number(fixingOfFlexibleMedianMarkersData.totalLengthCoveredKm);
+
+  return true;
+};
+
+const validateFixingOfHazardMarkersData = (fixingOfHazardMarkersData: any): boolean => {
+  const totalMarkersInstalled = parseInt(fixingOfHazardMarkersData.totalMarkersInstalled);
+  const totalLengthCoveredKm = parseFloat(fixingOfHazardMarkersData.totalLengthCoveredKm);
+
+  // Validation for totalMarkersInstalled
+  if (isNaN(totalMarkersInstalled) || totalMarkersInstalled <= 0 || totalMarkersInstalled > 100000) {
+    showSnackbar('Please enter a valid number of hazard markers installed (integer, > 0 and <= 100000)', 'error');
+    return false;
+  }
+
+  // Validation for totalLengthCoveredKm
+  if (isNaN(totalLengthCoveredKm) || totalLengthCoveredKm <= 0 || totalLengthCoveredKm > 100 || 
+      fixingOfHazardMarkersData.totalLengthCoveredKm.split('.')[1]?.length > 3) {
+    showSnackbar('Please enter a valid total length covered (Km, max 3 decimal places, > 0 and <= 100)', 'error');
+    return false;
+  }
+
+  // Converting values back to numbers after validation
+  fixingOfHazardMarkersData.totalMarkersInstalled = Number(fixingOfHazardMarkersData.totalMarkersInstalled);
+  fixingOfHazardMarkersData.totalLengthCoveredKm = Number(fixingOfHazardMarkersData.totalLengthCoveredKm);
+
+  return true;
+};
+
+const validateFixingOfLEDTrafficBlinkersData = (fixingOfLEDTrafficBlinkersData: any): boolean => {
+  const totalBlinkersInstalled = parseInt(fixingOfLEDTrafficBlinkersData.totalBlinkersInstalled);
+  const totalHighwayLengthCovered = parseFloat(fixingOfLEDTrafficBlinkersData.totalHighwayLengthCovered);
+
+  // Validation for totalBlinkersInstalled
+  if (isNaN(totalBlinkersInstalled) || totalBlinkersInstalled <= 0 || totalBlinkersInstalled > 10000) {
+    showSnackbar('Please enter a valid number of blinkers installed (integer, > 0 and <= 10000)', 'error');
+    return false;
+  }
+
+  // Validation for totalHighwayLengthCovered
+  if (isNaN(totalHighwayLengthCovered) || totalHighwayLengthCovered <= 0 || totalHighwayLengthCovered > 100 || 
+      fixingOfLEDTrafficBlinkersData.totalHighwayLengthCovered.split('.')[1]?.length > 3) {
+    showSnackbar('Please enter a valid total length covered (Km, max 3 decimal places, > 0 and <= 100)', 'error');
+    return false;
+  }
+
+  // Converting values back to numbers after validation
+  fixingOfLEDTrafficBlinkersData.totalBlinkersInstalled = Number(fixingOfLEDTrafficBlinkersData.totalBlinkersInstalled);
+  fixingOfLEDTrafficBlinkersData.totalHighwayLengthCovered = Number(fixingOfLEDTrafficBlinkersData.totalHighwayLengthCovered);
+
+  return true;
+};
+const validateFixingOfNoiseBarrierData = (fixingOfNoiseBarrierData: any): boolean => {
+  const totalNoiseBarrierPanelsInstalled = parseInt(fixingOfNoiseBarrierData.totalNoiseBarrierPanelsInstalled);
+  const totalLengthNoiseBarrierFixedRM = parseFloat(fixingOfNoiseBarrierData.totalLengthNoiseBarrierFixedRM);
+
+  // Validation for totalNoiseBarrierPanelsInstalled
+  if (isNaN(totalNoiseBarrierPanelsInstalled) || totalNoiseBarrierPanelsInstalled <= 0 || totalNoiseBarrierPanelsInstalled > 1000000) {
+    showSnackbar('Please enter a valid number of noise barrier panels installed (integer, > 0 and <= 1000000)', 'error');
+    return false;
+  }
+
+  // Validation for totalLengthNoiseBarrierFixedRM
+  if (isNaN(totalLengthNoiseBarrierFixedRM) || totalLengthNoiseBarrierFixedRM <= 0 || totalLengthNoiseBarrierFixedRM > 100000 || 
+      fixingOfNoiseBarrierData.totalLengthNoiseBarrierFixedRM.split('.')[1]?.length > 3) {
+    showSnackbar('Please enter a valid total length fixed (RM, max 3 decimal places, > 0 and <= 100000)', 'error');
+    return false;
+  }
+
+  // Converting values back to numbers after validation
+  fixingOfNoiseBarrierData.totalNoiseBarrierPanelsInstalled = Number(fixingOfNoiseBarrierData.totalNoiseBarrierPanelsInstalled);
+  fixingOfNoiseBarrierData.totalLengthNoiseBarrierFixedRM = Number(fixingOfNoiseBarrierData.totalLengthNoiseBarrierFixedRM);
+
   return true;
 };
 const validateFixingOfObjectMarkersData = (fixingOfObjectMarkersData: any): boolean => {
@@ -20339,6 +20640,379 @@ case TASK_TYPES.FIXING_OF_MODULES:
             </View>
         </View>
       );
+      case TASK_TYPES.FIXING_OF_NOISE_BARRIER:
+        const fixingOfNoiseBarrierProperties = [
+          { title: 'Whether the source material approved', key: 'sourceMaterialApproved' },
+          { title: 'Whether the drawing approved', key: 'drawingApproved' },
+          { title: 'Whether the shape and size as per approved drawing', key: 'shapeSizeApproved' },
+          { title: 'Whether the posts fixed at crash barrier properly', key: 'postsFixedProperly' },
+          { title: 'Whether posts are in proper line and level', key: 'postsLineLevelChecked' },
+          { title: 'Whether there is gap left between crash barrier and noise barrier', key: 'gapBetweenCrashAndNoiseBarrier' },
+          { title: 'Whether the frame fixed tightly with posts', key: 'frameFixedTightly' },
+        ];
+
+        return (
+          <View>
+            {fixingOfNoiseBarrierProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={fixingOfNoiseBarrierData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setFixingOfNoiseBarrierData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <Input
+              label="Nos of noise barrier panels installed"
+              value={fixingOfNoiseBarrierData.totalNoiseBarrierPanelsInstalled}
+              onChange={(value: any) =>
+                setFixingOfNoiseBarrierData(prevData => ({
+                  ...prevData,
+                  totalNoiseBarrierPanelsInstalled: value,
+                }))
+              }
+              isRequired={true}
+            />
+
+            <Input
+              label="Total length of noise barrier fixed at crash barrier in RM"
+              value={fixingOfNoiseBarrierData.totalLengthNoiseBarrierFixedRM}
+              onChange={(value: any) =>
+                setFixingOfNoiseBarrierData(prevData => ({
+                  ...prevData,
+                  totalLengthNoiseBarrierFixedRM: value,
+                }))
+              }
+              isRequired={true}
+            />
+            <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+              value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+          </View>
+        );
+      case TASK_TYPES.FIXING_OF_LED_TRAFFIC_BLINKERS:
+        const fixingOfLEDTrafficBlinkersProperties = [
+          { title: 'Whether the source material approved', key: 'sourceMaterialApproved' },
+          { title: 'Whether the drawing approved', key: 'drawingApproved' },
+          { title: 'Whether the shape and size as per approved drawing', key: 'shapeSizeApproved' },
+          { title: 'Whether the items are in working condition', key: 'workingCondition' },
+          { title: 'Whether items are fixed properly', key: 'itemsFixedProperly' },
+          { title: 'Whether line and level checked properly', key: 'lineLevelChecked' },
+          { title: 'Whether items are cleaned and visible properly', key: 'itemsCleanedVisible' },
+        ];
+
+        return (
+          <View>
+            {fixingOfLEDTrafficBlinkersProperties.map(property => (
+              <View style={{ flexDirection: 'column' }} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={fixingOfLEDTrafficBlinkersData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setFixingOfLEDTrafficBlinkersData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <Input
+              label="Total no. of blinkers installed"
+              value={fixingOfLEDTrafficBlinkersData.totalBlinkersInstalled}
+              onChange={(value: any) =>
+                setFixingOfLEDTrafficBlinkersData(prevData => ({
+                  ...prevData,
+                  totalBlinkersInstalled: value,
+                }))
+              }
+              isRequired={true}
+            />
+
+            <Input
+              label="Total length of highway covered in Km"
+              value={fixingOfLEDTrafficBlinkersData.totalHighwayLengthCovered}
+              onChange={(value: any) =>
+                setFixingOfLEDTrafficBlinkersData(prevData => ({
+                  ...prevData,
+                  totalHighwayLengthCovered: value,
+                }))
+              }
+              isRequired={true}
+            />
+            <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+          </View>
+          </View>
+        );  
+      case TASK_TYPES.FIXING_OF_HAZARD_MARKERS:
+      const fixingOfHazardMarkersProperties = [
+        { title: 'Whether the source material approved', key: 'sourceMaterialApproved' },
+        { title: 'Whether the drawing approved', key: 'drawingApproved' },
+        { title: 'Whether the shape and size as per approved drawings', key: 'shapeSizeApproved' },
+        { title: 'Whether the markers fixed properly?', key: 'markersFixedProperly' },
+        { title: 'Whether line and level checked', key: 'lineLevelsChecked' },
+        { title: 'Whether items are cleaned and visible properly', key: 'itemsCleanedVisible' },
+      ];
+
+      return (
+        <View>
+          {fixingOfHazardMarkersProperties.map(property => (
+            <View style={{flexDirection: 'column'}} key={property.key}>
+              <DropdownPicker
+                label={property.title}
+                value={fixingOfHazardMarkersData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value: any) =>
+                  setFixingOfHazardMarkersData(prevData => ({
+                    ...prevData,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            </View>
+          ))}
+          <Input
+            label="Total no. of hazard markers installed"
+            value={fixingOfHazardMarkersData.totalMarkersInstalled}
+            onChange={(value: any) =>
+              setFixingOfHazardMarkersData(prevData => ({
+                ...prevData,
+                totalMarkersInstalled: value,
+              }))
+            }
+            isRequired={true}
+          />
+
+          <Input
+            label="Total length of highway covered in Km"
+            value={fixingOfHazardMarkersData.totalLengthCoveredKm}
+            onChange={(value: any) =>
+              setFixingOfHazardMarkersData(prevData => ({
+                ...prevData,
+                totalLengthCoveredKm: value,
+              }))
+            }
+            isRequired={true}
+          />
+          <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+          </View>
+        </View>
+      );  
+      case TASK_TYPES.FIXING_OF_FLEXIBLE_MEDIAN_MARKERS:
+        const fixingOfFlexibleMedianMarkersProperties = [
+          { title: 'Whether the source material approved', key: 'sourceMaterialApproved' },
+          { title: 'Whether the drawing approved', key: 'drawingApproved' },
+          { title: 'Whether the shape and size as per approved drawing', key: 'shapeSizeApproved' },
+          { title: 'Whether the flexible median marker fixed properly', key: 'markersFixedProperly' },
+          { title: 'Whether line and level checked properly', key: 'lineLevelsChecked' },
+          { title: 'Whether the spacing is as per specifications', key: 'spacingAsPerSpecifications' },
+          { title: 'Whether items are cleaned and visible properly', key: 'itemsCleanedVisible' },
+        ];
+
+        return (
+          <View>
+            {fixingOfFlexibleMedianMarkersProperties.map(property => (
+              <View style={{ flexDirection: 'column' }} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={fixingOfFlexibleMedianMarkersData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setFixingOfFlexibleMedianMarkersData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <Input
+              label="Nos of flexible median marker installed"
+              value={fixingOfFlexibleMedianMarkersData.totalMarkersInstalled}
+              onChange={(value: any) =>
+                setFixingOfFlexibleMedianMarkersData(prevData => ({
+                  ...prevData,
+                  totalMarkersInstalled: value,
+                }))
+              }
+              isRequired={true}
+            />
+
+            <Input
+              label="Total length of the road covered in Km"
+              value={fixingOfFlexibleMedianMarkersData.totalLengthCoveredKm}
+              onChange={(value: any) =>
+                setFixingOfFlexibleMedianMarkersData(prevData => ({
+                  ...prevData,
+                  totalLengthCoveredKm: value,
+                }))
+              }
+              isRequired={true}
+            />
+            <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+          </View>
+          </View>
+        );
+        case TASK_TYPES.FIXING_OF_CONVEX_MIRRORS:
+          const fixingOfConvexMirrorsProperties = [
+            { title: 'Whether the source material approved', key: 'sourceMaterialApproved' },
+            { title: 'Whether the drawing approved', key: 'drawingApproved' },
+            { title: 'Whether the shape and size as per approved drawing', key: 'shapeSizeApproved' },
+            { title: 'Whether items are in working condition', key: 'workingCondition' },
+            { title: 'Whether mirrors fixed properly at proper location', key: 'mirrorsFixedProperly' },
+            { title: 'Whether line, level and angle checked properly', key: 'lineLevelAngleChecked' },
+            { title: 'Whether items are clean and visible properly', key: 'itemsCleanVisible' },
+          ];
+
+          return (
+            <View>
+              {fixingOfConvexMirrorsProperties.map(property => (
+                <View style={{ flexDirection: 'column' }} key={property.key}>
+                  <DropdownPicker
+                    label={property.title}
+                    value={fixingOfConvexMirrorsData[property.key]}
+                    items={YES_NO_LIST}
+                    onChange={(value: any) =>
+                      setFixingOfConvexMirrorsData(prevData => ({
+                        ...prevData,
+                        [property.key]: value,
+                      }))
+                    }
+                    isRequired={true}
+                  />
+                </View>
+              ))}
+              <Input
+                label="Total no. of mirrors installed"
+                value={fixingOfConvexMirrorsData.totalMirrorsInstalled}
+                onChange={(value: any) =>
+                  setFixingOfConvexMirrorsData(prevData => ({
+                    ...prevData,
+                    totalMirrorsInstalled: value,
+                  }))
+                }
+                isRequired={true}
+              />
+
+              <Input
+                label="Total length of highway covered in Km"
+                value={fixingOfConvexMirrorsData.totalLengthCoveredKm}
+                onChange={(value: any) =>
+                  setFixingOfConvexMirrorsData(prevData => ({
+                    ...prevData,
+                    totalLengthCoveredKm: value,
+                  }))
+                }
+                isRequired={true}
+              />
+
+              <View>
+                <CalendarPicker 
+                  label="Date" 
+                  value={rfiDate} 
+                  onChange={date => setRFIDate(date)} />
+                <TimePicker 
+                  label="Time" 
+                  value={rfiTime} 
+                  onChange={time => setRFITime(time)} />
+                <TextInput
+                  style={styles.commonInputFiels}
+                  placeholder="Recommendations"
+                  multiline={true}
+                  numberOfLines={4}
+                  blurOnSubmit={false}
+                  value={comments}
+                  onChangeText={text => setComments(text)}
+                />
+              </View>
+            </View>
+          );
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
       case TASK_TYPES.LIFTING_RIGHT:

@@ -7213,6 +7213,288 @@ const RFIsRecents = (props: any) => {
             ))}
           </View>
         );
+      case TASK_TYPES.FIXING_OF_NOISE_BARRIER:
+        const fixingOfNoiseBarrierProperties = [
+          {
+            title: 'Whether the source material approved',
+            key: 'sourceMaterialApproved',
+          },
+          {title: 'Whether the drawing approved', key: 'drawingApproved'},
+          {
+            title: 'Whether the shape and size as per approved drawing',
+            key: 'shapeSizeApproved',
+          },
+          {
+            title: 'Whether the posts fixed at crash barrier properly',
+            key: 'postsFixedProperly',
+          },
+          {
+            title: 'Whether posts are in proper line and level',
+            key: 'postsLineLevelChecked',
+          },
+          {
+            title:
+              'Whether there is gap left between crash barrier and noise barrier',
+            key: 'gapBetweenCrashAndNoiseBarrier',
+          },
+          {
+            title: 'Whether the frame fixed tightly with posts',
+            key: 'frameFixedTightly',
+          },
+          {
+            title: 'Nos of noise barrier panels installed',
+            key: 'totalNoiseBarrierPanelsInstalled',
+          },
+          {
+            title: 'Total length of noise barrier fixed at crash barrier in RM',
+            key: 'totalLengthNoiseBarrierFixedRM',
+          },
+        ];
+
+        return (
+          <View>
+            {fixingOfNoiseBarrierProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.fixingOfNoiseBarrierData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.FIXING_OF_LED_TRAFFIC_BLINKERS:
+        const fixingOfLEDTrafficBlinkersProperties = [
+          {
+            title: 'Whether the source material approved',
+            key: 'sourceMaterialApproved',
+          },
+          {title: 'Whether the drawing approved', key: 'drawingApproved'},
+          {
+            title: 'Whether the shape and size as per approved drawing',
+            key: 'shapeSizeApproved',
+          },
+          {
+            title: 'Whether the items are in working condition',
+            key: 'workingCondition',
+          },
+          {
+            title: 'Whether items are fixed properly',
+            key: 'itemsFixedProperly',
+          },
+          {
+            title: 'Whether line and level checked properly',
+            key: 'lineLevelChecked',
+          },
+          {
+            title: 'Whether items are cleaned and visible properly',
+            key: 'itemsCleanedVisible',
+          },
+          {
+            title: 'Total no. of blinkers installed',
+            key: 'totalBlinkersInstalled',
+          },
+          {
+            title: 'Total length of highway covered in Km',
+            key: 'totalHighwayLengthCovered',
+          },
+        ];
+
+        return (
+          <View>
+            {fixingOfLEDTrafficBlinkersProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.fixingOfLEDTrafficBlinkersData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.FIXING_OF_HAZARD_MARKERS:
+        const fixingOfHazardMarkersProperties = [
+          {
+            title: 'Whether the source material approved',
+            key: 'sourceMaterialApproved',
+          },
+          {title: 'Whether the drawing approved', key: 'drawingApproved'},
+          {
+            title: 'Whether the shape and size as per approved drawings',
+            key: 'shapeSizeApproved',
+          },
+          {
+            title: 'Whether the markers fixed properly?',
+            key: 'markersFixedProperly',
+          },
+          {
+            title: 'Whether line and level checked',
+            key: 'lineLevelsChecked',
+          },
+          {
+            title: 'Whether items are cleaned and visible properly',
+            key: 'itemsCleanedVisible',
+          },
+          {
+            title: 'Total no. of hazard markers installed',
+            key: 'totalMarkersInstalled',
+          },
+          {
+            title: 'Total length of highway covered in Km',
+            key: 'totalLengthCoveredKm',
+          },
+        ];
+        return (
+          <View>
+            {fixingOfHazardMarkersProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.fixingOfHazardMarkersData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.FIXING_OF_FLEXIBLE_MEDIAN_MARKERS:
+        const fixingOfFlexibleMedianMarkersProperties = [
+          {
+            title: 'Whether the source material approved',
+            key: 'sourceMaterialApproved',
+          },
+          {title: 'Whether the drawing approved', key: 'drawingApproved'},
+          {
+            title: 'Whether the shape and size as per approved drawing',
+            key: 'shapeSizeApproved',
+          },
+          {
+            title: 'Whether the flexible median marker fixed properly',
+            key: 'markersFixedProperly',
+          },
+          {
+            title: 'Whether line and level checked properly',
+            key: 'lineLevelsChecked',
+          },
+          {
+            title: 'Whether the spacing is as per specifications',
+            key: 'spacingAsPerSpecifications',
+          },
+          {
+            title: 'Whether items are cleaned and visible properly',
+            key: 'itemsCleanedVisible',
+          },
+          {
+            title: 'Nos of flexible median marker installed',
+            key: 'totalMarkersInstalled',
+          },
+          {
+            title: 'Total length of the road covered in Km',
+            key: 'totalLengthCoveredKm',
+          },
+        ];
+
+        return (
+          <View>
+            {fixingOfFlexibleMedianMarkersProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.fixingOfFlexibleMedianMarkersData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.FIXING_OF_CONVEX_MIRRORS:
+        const fixingOfConvexMirrorsProperties = [
+          {
+            title: 'Whether the source material approved',
+            key: 'sourceMaterialApproved',
+          },
+          {title: 'Whether the drawing approved', key: 'drawingApproved'},
+          {
+            title: 'Whether the shape and size as per approved drawing',
+            key: 'shapeSizeApproved',
+          },
+          {
+            title: 'Whether items are in working condition',
+            key: 'workingCondition',
+          },
+          {
+            title: 'Whether mirrors fixed properly at proper location',
+            key: 'mirrorsFixedProperly',
+          },
+          {
+            title: 'Whether line, level and angle checked properly',
+            key: 'lineLevelAngleChecked',
+          },
+          {
+            title: 'Whether items are clean and visible properly',
+            key: 'itemsCleanVisible',
+          },
+          {
+            title: 'Total no. of mirrors installed',
+            key: 'totalMirrorsInstalled',
+          },
+          {
+            title: 'Total length of highway covered in Km',
+            key: 'totalLengthCoveredKm',
+          },
+        ];
+
+        return (
+          <View>
+            {fixingOfConvexMirrorsProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.fixingOfConvexMirrorsData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+
       // ReadOnlyRfi
       default:
         return (

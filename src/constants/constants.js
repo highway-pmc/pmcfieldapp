@@ -611,6 +611,14 @@ export const TASK_TYPES = {
   FIXING_OF_HAZARD_MARKERS: 'fixing-of-hazard-markers',
   FIXING_OF_FLEXIBLE_MEDIAN_MARKERS: 'fixing-of-flexible-median-markers',
   FIXING_OF_CONVEX_MIRRORS: 'fixing-of-convex-mirrors',
+  FIXING_OF_ANTIGLARES:'fixing-of-antiglares',
+  FABRICATION_OF_BUS_SHELTER:'fabrication-of-bus-shelter',
+  ERECTION_OF_POLES:'erection-of-poles',
+  FIXING_OF_ARMS:'fixing-of-arms',
+  INSTALLATION_OF_LED_LIGHTS:'installation-of-led-lights',
+  LAYING_OF_FLEXIBLE_CABLE:'laying-of-flexible-cable',
+  LAYING_OF_LT_CABLE:'laying-of-lt-cable',
+  FIXING_OF_STONE:'fixing-of-stone',
 };
 
 export const TEST_MATERIALS_TYPES = {

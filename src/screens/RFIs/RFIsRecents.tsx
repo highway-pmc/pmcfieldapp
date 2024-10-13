@@ -7494,6 +7494,407 @@ const RFIsRecents = (props: any) => {
             ))}
           </View>
         );
+      case TASK_TYPES.FIXING_OF_ANTIGLARES:
+        const fixingOfAntiglaresProperties = [
+          {
+            title: 'Whether the source material approved',
+            key: 'sourceMaterialApproved',
+          },
+          {title: 'Whether the drawing approved', key: 'drawingApproved'},
+          {
+            title: 'Whether the shape and size as per approved drawing',
+            key: 'shapeSizeApproved',
+          },
+          {
+            title: 'Whether items are fixed properly',
+            key: 'itemsFixedProperly',
+          },
+          {title: 'Whether line and level checked', key: 'lineLevelsChecked'},
+          {
+            title: 'Whether the spacing are as per specifications',
+            key: 'spacingAsPerSpecifications',
+          },
+          {
+            title: 'Whether items are clean and visible properly',
+            key: 'itemsCleanVisible',
+          },
+          {
+            title: 'Total Nos of Antiglares installed',
+            key: 'totalAntiglaresInstalled',
+          },
+          {
+            title: 'Total length of the road covered in Km',
+            key: 'totalLengthCoveredKm',
+          },
+        ];
+
+        return (
+          <View>
+            {fixingOfAntiglaresProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.fixingOfAntiglaresData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.ERECTION_OF_POLES:
+        const erectionOfPolesProperties = [
+          {
+            title: 'Whether the drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {title: 'Whether the source approved or not', key: 'sourceApproved'},
+          {
+            title:
+              'Whether the factory inspection done and dispatch clearance obtained',
+            key: 'factoryInspectionDone',
+          },
+          {
+            title:
+              'Whether foundations are ready and concrete has achieved the desired strength',
+            key: 'foundationsReady',
+          },
+          {
+            title:
+              'All the poles are erected properly with alignment as per drawings',
+            key: 'polesAlignedProperly',
+          },
+          {
+            title: 'All the nut bolts are tightened and checked properly',
+            key: 'nutBoltsTightened',
+          },
+          {title: 'Total qty of poles erected', key: 'totalPolesErected'},
+          {
+            title: 'Total length of highway covered in Km',
+            key: 'totalHighwayLengthCovered',
+          },
+        ];
+
+        return (
+          <View>
+            {erectionOfPolesProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.erectionOfPolesData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.FIXING_OF_ARMS:
+        const fixingOfArmsProperties = [
+          {
+            title: 'Whether the drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {title: 'Whether the source approved or not', key: 'sourceApproved'},
+          {
+            title:
+              'Whether the factory inspection done and dispatch clearance obtained',
+            key: 'factoryInspectionDone',
+          },
+          {
+            title:
+              'All the arms are fixed properly with alignment as per drawings',
+            key: 'armsFixedProperly',
+          },
+          {
+            title: 'All the nut bolts are tightened and checked properly',
+            key: 'nutsBoltsTightened',
+          },
+          {
+            title: 'Total qty of arms erected in no.',
+            key: 'totalQtyArmsErected',
+          },
+          {
+            title: 'Total length of highway covered in Km',
+            key: 'totalHighwayLengthCoveredKm',
+          },
+        ];
+
+        return (
+          <View>
+            {fixingOfArmsProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.fixingOfArmsData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.FIXING_OF_ARMS:
+        const fixingOfArmsProperties = [
+          {
+            title: 'Whether the drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {title: 'Whether the source approved or not', key: 'sourceApproved'},
+          {
+            title:
+              'Whether the factory inspection done and dispatch clearance obtained',
+            key: 'factoryInspectionDone',
+          },
+          {
+            title:
+              'All the arms are fixed properly with alignment as per drawings',
+            key: 'armsFixedProperly',
+          },
+          {
+            title: 'All the nut bolts are tightened and checked properly',
+            key: 'nutsBoltsTightened',
+          },
+          {
+            title: 'Total qty of arms erected in no.',
+            key: 'totalQtyArmsErected',
+          },
+          {
+            title: 'Total length of highway covered in Km',
+            key: 'totalHighwayLengthCoveredKm',
+          },
+        ];
+
+        return (
+          <View>
+            {fixingOfArmsProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.fixingOfArmsData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.INSTALLATION_OF_LED_LIGHTS:
+        const installationOfLEDLightsProperties = [
+          {
+            title: 'Whether the drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {title: 'Whether the source approved or not', key: 'sourceApproved'},
+          {
+            title:
+              'Whether the factory inspection done and dispatch clearance obtained',
+            key: 'factoryInspectionDone',
+          },
+          {
+            title: 'All the lights are tested before installation',
+            key: 'lightsTestedBeforeInstallation',
+          },
+          {title: 'All the installed properly', key: 'lightsInstalledProperly'},
+          {
+            title: 'Total qty of lights installed',
+            key: 'totalQtyOfLightsInstalled',
+          },
+          {
+            title: 'Total length of highway covered in Km',
+            key: 'totalLengthOfHighwayCoveredKm',
+          },
+        ];
+
+        return (
+          <View>
+            {installationOfLEDLightsProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.installationOfLEDLightsData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.LAYING_OF_FLEXIBLE_CABLE:
+        const layingOfFlexibleCableProperties = [
+          {
+            title: 'Whether the drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {title: 'Whether the source approved or not', key: 'sourceApproved'},
+          {
+            title:
+              'Whether the factory inspection done and dispatch clearance obtained',
+            key: 'factoryInspectionDone',
+          },
+          {
+            title: 'Whether the cable have been laid properly',
+            key: 'cableLaidProperly',
+          },
+          {
+            title:
+              'Whether all the joints are made properly and junction boxes are as per specifications',
+            key: 'jointsMadeProperly',
+          },
+          {
+            title: 'Whether the end points are terminated properly',
+            key: 'endpointsTerminatedProperly',
+          },
+          {
+            title: 'Whether proper testing done and successful',
+            key: 'testingSuccessful',
+          },
+          {
+            title: 'Total length of cable laid in RM',
+            key: 'totalCableLengthRM',
+          },
+          {
+            title: 'Total length of highway covered in Km',
+            key: 'totalHighwayLengthKm',
+          },
+        ];
+
+        return (
+          <View>
+            {layingOfFlexibleCableProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.layingOfFlexibleCableData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.LAYING_OF_LT_CABLE:
+        const layingOfLTCableProperties = [
+          {
+            title: 'Whether the drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {title: 'Whether the source approved or not', key: 'sourceApproved'},
+          {
+            title:
+              'Whether the factory inspection done and dispatch clearance obtained',
+            key: 'factoryInspectionDone',
+          },
+          {
+            title: 'Whether the cable have been laid properly',
+            key: 'cableLaidProperly',
+          },
+          {
+            title:
+              'Whether all the joints are made properly as per the specifications or not',
+            key: 'jointsMadeProperly',
+          },
+          {
+            title: 'Whether the end points are terminated properly',
+            key: 'endPointsTerminated',
+          },
+          {
+            title: 'Whether proper testing done and successful',
+            key: 'properTestingDone',
+          },
+          {
+            title: 'Total length of cable laid in RM',
+            key: 'totalCableLengthRM',
+          },
+          {
+            title: 'Total length of highway covered in Km',
+            key: 'totalHighwayLengthKm',
+          },
+        ];
+
+        return (
+          <View>
+            {layingOfLTCableProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.layingOfLTCableData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.FIXING_OF_STONE:
+        const fixingOfStoneProperties = [
+          {
+            title: 'Whether the source material approved',
+            key: 'sourceMaterialApproved',
+          },
+          {title: 'Whether the drawing approved', key: 'drawingApproved'},
+          {
+            title: 'Whether the shape and size as per approved drawing',
+            key: 'shapeSizeApproved',
+          },
+          {
+            title: 'Whether the stones are fixed properly',
+            key: 'stonesFixedProperly',
+          },
+          {
+            title:
+              'Whether the project number, Terminal station & kilometrage etc. are mentioned',
+            key: 'projectDetailsCorrect',
+          },
+          {
+            title: 'Whether the items are properly cleaned and visible',
+            key: 'itemsCleanedVisible',
+          },
+          {title: 'Total no. of stones installed', key: 'totalStonesInstalled'},
+          {
+            title: 'Total length of road covered in Km',
+            key: 'totalLengthCoveredKm',
+          },
+        ];
+
+        return (
+          <View>
+            {fixingOfStoneProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.fixingOfStoneData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
 
       // ReadOnlyRfi
       default:

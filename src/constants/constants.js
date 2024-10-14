@@ -619,6 +619,14 @@ export const TASK_TYPES = {
   LAYING_OF_FLEXIBLE_CABLE:'laying-of-flexible-cable',
   LAYING_OF_LT_CABLE:'laying-of-lt-cable',
   FIXING_OF_STONE:'fixing-of-stone',
+  PLASTERING:'plastering',
+  PUTTY:'putty',
+  HVAC_WORK:'hvac-work',
+  CEILING_WORK:'ceiling-work',
+  FURNITURE_WORK:'furniture-work',
+  DOOR_WORKS:'door-works',
+  WINDOW_WORKS:'window-works',
+  GLASS_WORKS:'glass-works',
 };
 
 export const TEST_MATERIALS_TYPES = {

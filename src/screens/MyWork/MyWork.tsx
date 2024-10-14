@@ -466,6 +466,85 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     probingByStiffwire: string;
   };
   //FormUseStates
+  const [glassWorksData, setGlassWorksData] = useState({
+    drawingsApproved: 'Y',
+    materialSourceApproved: 'Y',
+    materialReceivedAsPerSpecs: 'Y',
+    glassQualityAndThicknessApproved: 'Y',
+    siteReadyForGlassWork: 'Y',
+    finishingWorkProper: 'Y',
+    workCompletedToSiteInChargeSatisfaction: 'Y',
+    totalGlassWorkCompletedSqft: 0.0,
+  });
+
+  const [windowWorksData, setWindowWorksData] = useState({
+    drawingsApproved: 'Y',
+    materialSourceApproved: 'Y',
+    materialReceivedAsPerSpecs: 'Y',
+    siteReadyForWindowWork: 'Y',
+    finishingWorkProper: 'Y',
+    workCompletedToSatisfaction: 'Y',
+  });
+
+  const [doorWorksData, setDoorWorksData] = useState({
+    drawingsApproved: 'Y',
+    materialSourceApproved: 'Y',
+    materialReceivedAsPerSpec: 'Y',
+    siteReadyForDoorWork: 'Y',
+    finishingWorkProper: 'Y',
+    workSatisfactionAchieved: 'Y',
+  });
+
+  const [furnitureWorkData, setFurnitureWorkData] = useState({
+    drawingsApproved: 'Y',
+    materialSourceApproved: 'Y',
+    materialReceivedAsPerSpecs: 'Y',
+    siteReadyForFurnitureWork: 'Y',
+    finishingFurnitureProper: 'Y',
+    workSatisfactoryToSiteInCharge: 'Y',
+  });
+
+  const [ceilingWorkData, setCeilingWorkData] = useState({
+    drawingsApproved: 'Y',
+    materialSourceApproved: 'Y',
+    materialReceivedAsPerSpecifications: 'Y',
+    siteReadyForCeilingWork: 'Y',
+    finishingWorkUniform: 'Y',
+    ceilingWorkCompletedToSatisfaction: 'Y',
+    totalSqftAreaCompleted: 0.0,
+  });
+
+  const [hvacWorkData, setHvacWorkData] = useState({
+    drawingsApproved: 'Y',
+    materialSourceApproved: 'Y',
+    inspectionAndDispatchCleared: 'Y',
+    siteReadyForHVAC: 'Y',
+    ductingAsPerDrawings: 'Y',
+    connectionPointsAsPerDrawings: 'Y',
+    acFittingsAsPerDrawings: 'Y',
+    systemTestedAndCertified: 'Y',
+    totalSqftAreaCovered: 0.0,
+  });
+
+  const [puttyData, setPuttyData] = useState({
+    drawingsApproved: 'Y',
+    materialSourceApproved: 'Y',
+    surfaceDriedReadyForPutty: 'Y',
+    thicknessAsPerDrawing: 'Y',
+    surfaceFinishUniform: 'Y',
+    totalPuttyWorkSqft: 0.0,
+  });
+
+  const [plasteringData, setPlasteringData] = useState({
+    drawingsApproved: 'Y',
+    cementSourceApproved: 'Y',
+    otherMaterialsSourceApproved: 'Y',
+    proportionsAsPerSpecs: 'Y',
+    thicknessAsPerDrawings: 'Y',
+    surfaceFinishProper: 'Y',
+    totalPlasteringWorkSqft: 0.0,
+  });
+
   const [fixingOfStoneData, setFixingOfStoneData] = useState({
     sourceMaterialApproved: 'Y',
     drawingApproved: 'Y',
@@ -5972,6 +6051,125 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             });
           }
           break;
+        case TASK_TYPES.PLASTERING:
+          if (rfiData.metaData.plasteringData) {
+            setPlasteringData(rfiData.metaData.plasteringData);
+          } else {
+            setPlasteringData({
+              drawingsApproved: 'Y',
+              cementSourceApproved: 'Y',
+              otherMaterialsSourceApproved: 'Y',
+              proportionsAsPerSpecs: 'Y',
+              thicknessAsPerDrawings: 'Y',
+              surfaceFinishProper: 'Y',
+              totalPlasteringWorkSqft: 0.0,
+            });
+          }
+          break;
+        case TASK_TYPES.PUTTY:
+          if (rfiData.metaData.puttyData) {
+            setPuttyData(rfiData.metaData.puttyData);
+          } else {
+            setPuttyData({
+              drawingsApproved: 'Y',
+              materialSourceApproved: 'Y',
+              surfaceDriedReadyForPutty: 'Y',
+              thicknessAsPerDrawing: 'Y',
+              surfaceFinishUniform: 'Y',
+              totalPuttyWorkSqft: 0.0,
+            });
+          }
+          break;
+        case TASK_TYPES.HVAC_WORK:
+          if (rfiData.metaData.hvacWorkData) {
+            setHvacWorkData(rfiData.metaData.hvacWorkData);
+          } else {
+            setHvacWorkData({
+              drawingsApproved: 'Y',
+              materialSourceApproved: 'Y',
+              inspectionAndDispatchCleared: 'Y',
+              siteReadyForHVAC: 'Y',
+              ductingAsPerDrawings: 'Y',
+              connectionPointsAsPerDrawings: 'Y',
+              acFittingsAsPerDrawings: 'Y',
+              systemTestedAndCertified: 'Y',
+              totalSqftAreaCovered: 0.0,
+            });
+          }
+          break;
+        case TASK_TYPES.CEILING_WORK:
+          if (rfiData.metaData.ceilingWorkData) {
+            setCeilingWorkData(rfiData.metaData.ceilingWorkData);
+          } else {
+            setCeilingWorkData({
+              drawingsApproved: 'Y',
+              materialSourceApproved: 'Y',
+              materialReceivedAsPerSpecifications: 'Y',
+              siteReadyForCeilingWork: 'Y',
+              finishingWorkUniform: 'Y',
+              ceilingWorkCompletedToSatisfaction: 'Y',
+              totalSqftAreaCompleted: 0.0,
+            });
+          }
+          break;
+        case TASK_TYPES.FURNITURE_WORK:
+          if (rfiData.metaData.furnitureWorkData) {
+            setFurnitureWorkData(rfiData.metaData.furnitureWorkData);
+          } else {
+            setFurnitureWorkData({
+              drawingsApproved: 'Y',
+              materialSourceApproved: 'Y',
+              materialReceivedAsPerSpecs: 'Y',
+              siteReadyForFurnitureWork: 'Y',
+              finishingFurnitureProper: 'Y',
+              workSatisfactoryToSiteInCharge: 'Y',
+            });
+          }
+          break;
+        case TASK_TYPES.DOOR_WORKS:
+          if (rfiData.metaData.doorWorksData) {
+            setDoorWorksData(rfiData.metaData.doorWorksData);
+          } else {
+            setDoorWorksData({
+              drawingsApproved: 'Y',
+              materialSourceApproved: 'Y',
+              materialReceivedAsPerSpec: 'Y',
+              siteReadyForDoorWork: 'Y',
+              finishingWorkProper: 'Y',
+              workSatisfactionAchieved: 'Y',
+            });
+          }
+          break;
+        case TASK_TYPES.WINDOW_WORKS:
+          if (rfiData.metaData.windowWorksData) {
+            setWindowWorksData(rfiData.metaData.windowWorksData);
+          } else {
+            setWindowWorksData({
+              drawingsApproved: 'Y',
+              materialSourceApproved: 'Y',
+              materialReceivedAsPerSpecs: 'Y',
+              siteReadyForWindowWork: 'Y',
+              finishingWorkProper: 'Y',
+              workCompletedToSatisfaction: 'Y',
+            });
+          }
+          break;
+        case TASK_TYPES.GLASS_WORKS:
+          if (rfiData.metaData.glassWorksData) {
+            setGlassWorksData(rfiData.metaData.glassWorksData);
+          } else {
+            setGlassWorksData({
+              drawingsApproved: 'Y',
+              materialSourceApproved: 'Y',
+              materialReceivedAsPerSpecs: 'Y',
+              glassQualityAndThicknessApproved: 'Y',
+              siteReadyForGlassWork: 'Y',
+              finishingWorkProper: 'Y',
+              workCompletedToSiteInChargeSatisfaction: 'Y',
+              totalGlassWorkCompletedSqft: 0.0,
+            });
+          }
+          break;
 
         case TASK_TYPES.LIFTING_LEFT:
         case TASK_TYPES.LIFTING_YARD:
@@ -8537,6 +8735,69 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           fixingOfStoneData: fixingOfStoneData,
         };
         break;
+      case TASK_TYPES.PLASTERING:
+        if (!validatePlasteringData(plasteringData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          plasteringData: plasteringData,
+        };
+        break;
+      case TASK_TYPES.PUTTY:
+        if (!validatePuttyData(puttyData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          puttyData: puttyData,
+        };
+        break;
+      case TASK_TYPES.HVAC_WORK:
+        if (!validateHvacWorkData(hvacWorkData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          hvacWorkData: hvacWorkData,
+        };
+        break;
+      case TASK_TYPES.CEILING_WORK:
+        if (!validateCeilingWorkData(ceilingWorkData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          ceilingWorkData: ceilingWorkData,
+        };
+        break;
+      case TASK_TYPES.FURNITURE_WORK:
+        checkList = {
+          taskName: selectedTask.name,
+          furnitureWorkData: furnitureWorkData,
+        };
+        break;
+      case TASK_TYPES.DOOR_WORKS:
+        checkList = {
+          taskName: selectedTask.name,
+          doorWorksData: doorWorksData,
+        };
+        break;
+      case TASK_TYPES.WINDOW_WORKS:
+        checkList = {
+          taskName: selectedTask.name,
+          windowWorksData: windowWorksData,
+        };
+        break;
+      case TASK_TYPES.GLASS_WORKS:
+        if (!validateGlassWorksData(glassWorksData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          glassWorksData: glassWorksData,
+        };
+        break;
 
       case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
       case TASK_TYPES.LIFTING_LEFT:
@@ -9321,7 +9582,136 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
 
     return true;
   };
-  const validateFixingOfStoneData =( fixingOfStoneData:any) => {
+  const validateGlassWorksData = (glassWorksData: any): boolean => {
+    const totalGlassWorkCompletedSqft = parseFloat(
+      glassWorksData.totalGlassWorkCompletedSqft,
+    );
+
+    // Validation for totalGlassWorkCompletedSqft
+    if (
+      isNaN(totalGlassWorkCompletedSqft) ||
+      totalGlassWorkCompletedSqft <= 0 ||
+      totalGlassWorkCompletedSqft > 10000 ||
+      glassWorksData.totalGlassWorkCompletedSqft.split('.')[1]?.length > 3
+    ) {
+      showSnackbar(
+        'Please enter a valid total glass work completed (sqft, > 0, max 3 decimal places, and <= 10000)',
+        'error',
+      );
+      return false;
+    }
+
+    // Convert value back to a number after validation
+    glassWorksData.totalGlassWorkCompletedSqft = Number(
+      glassWorksData.totalGlassWorkCompletedSqft,
+    );
+
+    return true;
+  };
+
+  const validateCeilingWorkData = (ceilingWorkData: any): boolean => {
+    const totalSqftAreaCompleted = parseFloat(
+      ceilingWorkData.totalSqftAreaCompleted,
+    );
+
+    // Validation for totalSqftAreaCompleted
+    if (
+      isNaN(totalSqftAreaCompleted) ||
+      totalSqftAreaCompleted <= 0 ||
+      totalSqftAreaCompleted > 100000 ||
+      ceilingWorkData.totalSqftAreaCompleted.split('.')[1]?.length > 3
+    ) {
+      showSnackbar(
+        'Please enter a valid total sqft area (max 3 decimal places, > 0 and <= 100000)',
+        'error',
+      );
+      return false;
+    }
+
+    // Converting value back to number after validation
+    ceilingWorkData.totalSqftAreaCompleted = Number(
+      ceilingWorkData.totalSqftAreaCompleted,
+    );
+
+    return true;
+  };
+
+  const validateHvacWorkData = (hvacWorkData: any): boolean => {
+    const totalSqftAreaCovered = parseFloat(hvacWorkData.totalSqftAreaCovered);
+
+    // Validation for totalSqftAreaCovered
+    if (
+      isNaN(totalSqftAreaCovered) ||
+      totalSqftAreaCovered <= 0 ||
+      totalSqftAreaCovered > 100000 ||
+      hvacWorkData.totalSqftAreaCovered.split('.')[1]?.length > 3
+    ) {
+      showSnackbar(
+        'Please enter a valid total area covered (max 3 decimal places, > 0 and <= 100000)',
+        'error',
+      );
+      return false;
+    }
+
+    // Converting values back to numbers after validation
+    hvacWorkData.totalSqftAreaCovered = Number(
+      hvacWorkData.totalSqftAreaCovered,
+    );
+
+    return true;
+  };
+
+  const validatePuttyData = (puttyData: any) => {
+    const totalPuttyWorkSqft = parseFloat(puttyData.totalPuttyWorkSqft);
+
+    // Validation for totalPuttyWorkSqft
+    if (
+      isNaN(totalPuttyWorkSqft) ||
+      totalPuttyWorkSqft <= 0 ||
+      totalPuttyWorkSqft > 100000 ||
+      puttyData.totalPuttyWorkSqft.split('.')[1]?.length > 3
+    ) {
+      showSnackbar(
+        'Please enter a valid total putty work in sqft (max 3 decimal places, > 0 and <= 100000)',
+        'error',
+      );
+      return false;
+    }
+
+    // Convert value back to number after validation
+    puttyData.totalPuttyWorkSqft = Number(puttyData.totalPuttyWorkSqft);
+
+    return true;
+  };
+
+  const validatePlasteringData = (plasteringData: any): boolean => {
+    const totalPlasteringWorkSqft = parseFloat(
+      plasteringData.totalPlasteringWorkSqft,
+    );
+
+    // Validation for totalPlasteringWorkSqft
+    if (
+      isNaN(totalPlasteringWorkSqft) ||
+      totalPlasteringWorkSqft <= 0 ||
+      totalPlasteringWorkSqft > 100000 ||
+      plasteringData.totalPlasteringWorkSqft.split('.')[1]?.length > 3
+    ) {
+      showSnackbar(
+        'Please enter a valid total plastering work (sqft, max 3 decimal places, > 0 and <= 100000)',
+        'error',
+      );
+      return false;
+    }
+
+    // Convert the value back to a number after validation
+    plasteringData.totalPlasteringWorkSqft = Number(
+      plasteringData.totalPlasteringWorkSqft,
+    );
+
+    return true;
+  };
+
+  const validateFixingOfStoneData = (fixingOfStoneData: any) => {
     const totalStonesInstalled = parseInt(
       fixingOfStoneData.totalStonesInstalled,
     );
@@ -9389,7 +9779,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     fixingOfMC4Data.totalYConnectorsUsed = totalYConnectorsUsed;
     return true;
   };
-  const validateLayingOfLTCableData = (layingOfLTCableData:any) => {
+  const validateLayingOfLTCableData = (layingOfLTCableData: any) => {
     const totalCableLengthRM = parseFloat(
       layingOfLTCableData.totalCableLengthRM,
     );
@@ -9429,7 +9819,9 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     return true;
   };
 
-  const validateLayingOfFlexibleCableData = (layingOfFlexibleCableData:any) => {
+  const validateLayingOfFlexibleCableData = (
+    layingOfFlexibleCableData: any,
+  ) => {
     const totalCableLengthRM = parseFloat(
       layingOfFlexibleCableData.totalCableLengthRM,
     );
@@ -9514,7 +9906,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     return true;
   };
 
-  const validateFixingOfArmsData = (fixingOfArmsData:any) => {
+  const validateFixingOfArmsData = (fixingOfArmsData: any) => {
     const totalQtyArmsErected = parseInt(fixingOfArmsData.totalQtyArmsErected);
     const totalHighwayLengthCoveredKm = parseFloat(
       fixingOfArmsData.totalHighwayLengthCoveredKm,
@@ -9556,7 +9948,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     return true;
   };
 
-  const validateErectionOfPolesData = (erectionOfPolesData:any) => {
+  const validateErectionOfPolesData = (erectionOfPolesData: any) => {
     const totalPolesErected = parseInt(erectionOfPolesData.totalPolesErected);
     const totalHighwayLengthCovered = parseFloat(
       erectionOfPolesData.totalHighwayLengthCovered,
@@ -24021,6 +24413,640 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                 setFixingOfStoneData(prevData => ({
                   ...prevData,
                   totalLengthCoveredKm: value,
+                }))
+              }
+              isRequired={true}
+            />
+            <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+          </View>
+        );
+      case TASK_TYPES.PLASTERING:
+        const plasteringProperties = [
+          {
+            title: 'Whether the drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {
+            title: 'Whether the cement source approved or not',
+            key: 'cementSourceApproved',
+          },
+          {
+            title:
+              'Whether the source of other materials such as sand, water etc.',
+            key: 'otherMaterialsSourceApproved',
+          },
+          {
+            title:
+              'Whether the plaster has been made in the proportions as per the specifications',
+            key: 'proportionsAsPerSpecs',
+          },
+          {
+            title:
+              'Whether the thickness of plaster has been done as per the approved drawings',
+            key: 'thicknessAsPerDrawings',
+          },
+          {
+            title: 'Whether the surface finish is proper and uniform',
+            key: 'surfaceFinishProper',
+          },
+        ];
+
+        return (
+          <View>
+            {plasteringProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={plasteringData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setPlasteringData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <Input
+              label="Total plastering work done in sqft"
+              value={plasteringData.totalPlasteringWorkSqft}
+              onChange={(value: any) =>
+                setPlasteringData(prevData => ({
+                  ...prevData,
+                  totalPlasteringWorkSqft: value,
+                }))
+              }
+              isRequired={true}
+            />
+            <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+          </View>
+        );
+      case TASK_TYPES.PUTTY:
+        const puttyProperties = [
+          {
+            title: 'Whether the drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {
+            title: 'Whether the material source approved or not',
+            key: 'materialSourceApproved',
+          },
+          {
+            title:
+              'Whether the plastered surface is dried properly and ready for putty',
+            key: 'surfaceDriedReadyForPutty',
+          },
+          {
+            title:
+              'Whether the thickness of putty has been done as per the approved drawings',
+            key: 'thicknessAsPerDrawing',
+          },
+          {
+            title: 'Whether the surface finish is proper and uniform',
+            key: 'surfaceFinishUniform',
+          },
+        ];
+
+        return (
+          <View>
+            {puttyProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={puttyData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setPuttyData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <Input
+              label="Total putty work done in sqft"
+              value={puttyData.totalPuttyWorkSqft}
+              onChange={(value: any) =>
+                setPuttyData(prevData => ({
+                  ...prevData,
+                  totalPuttyWorkSqft: value,
+                }))
+              }
+              isRequired={true}
+            />
+            <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+          </View>
+        );
+      case TASK_TYPES.HVAC_WORK:
+        const hvacWorkProperties = [
+          {
+            title: 'Whether the drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {
+            title: 'Whether the material source approved or not',
+            key: 'materialSourceApproved',
+          },
+          {
+            title: 'Whether inspection done and dispatch clearance obtained',
+            key: 'inspectionAndDispatchCleared',
+          },
+          {
+            title: 'Whether the site is ready prior to HVAC work',
+            key: 'siteReadyForHVAC',
+          },
+          {
+            title: 'Whether ducting is done as per the approved drawings',
+            key: 'ductingAsPerDrawings',
+          },
+          {
+            title:
+              'Whether all the connection points are as per the approved drawings',
+            key: 'connectionPointsAsPerDrawings',
+          },
+          {
+            title: 'Whether AC fittings etc done as per the approved drawings',
+            key: 'acFittingsAsPerDrawings',
+          },
+          {
+            title:
+              'Whether the entire system is tested properly and electrical certificate obtained',
+            key: 'systemTestedAndCertified',
+          },
+        ];
+
+        return (
+          <View>
+            {hvacWorkProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={hvacWorkData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setHvacWorkData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <Input
+              label="Total sqft area covered under HVAC work"
+              value={hvacWorkData.totalSqftAreaCovered}
+              onChange={(value: any) =>
+                setHvacWorkData(prevData => ({
+                  ...prevData,
+                  totalSqftAreaCovered: value,
+                }))
+              }
+              isRequired={true}
+            />
+            <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+          </View>
+        );
+      case TASK_TYPES.CEILING_WORK:
+        const ceilingWorkProperties = [
+          {
+            title: 'Whether the drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {
+            title: 'Whether the material source approved or not',
+            key: 'materialSourceApproved',
+          },
+          {
+            title:
+              'Whether material received at site is as per the specifications and not damaged',
+            key: 'materialReceivedAsPerSpecifications',
+          },
+          {
+            title: 'Whether the site is ready for ceiling work',
+            key: 'siteReadyForCeilingWork',
+          },
+          {
+            title:
+              'Whether the finishing work of ceiling is proper and uniform',
+            key: 'finishingWorkUniform',
+          },
+          {
+            title:
+              'Whether the ceiling work completed to the satisfaction of the site in charge',
+            key: 'ceilingWorkCompletedToSatisfaction',
+          },
+        ];
+
+        return (
+          <View>
+            {ceilingWorkProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={ceilingWorkData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setCeilingWorkData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <Input
+              label="Total sqft area of ceiling work completed"
+              value={ceilingWorkData.totalSqftAreaCompleted}
+              onChange={(value: any) =>
+                setCeilingWorkData(prevData => ({
+                  ...prevData,
+                  totalSqftAreaCompleted: value,
+                }))
+              }
+              isRequired={true}
+            />
+            <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+          </View>
+        );
+      case TASK_TYPES.FURNITURE_WORK:
+        const furnitureWorkProperties = [
+          {
+            title: 'Whether the drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {
+            title: 'Whether the material source approved or not',
+            key: 'materialSourceApproved',
+          },
+          {
+            title:
+              'Whether material received at site is as per the specifications and not damaged',
+            key: 'materialReceivedAsPerSpecs',
+          },
+          {
+            title: 'Whether the site is ready for Furniture work',
+            key: 'siteReadyForFurnitureWork',
+          },
+          {
+            title: 'Whether the finishing furniture work is proper and uniform',
+            key: 'finishingFurnitureProper',
+          },
+          {
+            title:
+              'Whether the furniture work completed to the satisfaction of the site in charge',
+            key: 'workSatisfactoryToSiteInCharge',
+          },
+        ];
+
+        return (
+          <View>
+            {furnitureWorkProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={furnitureWorkData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setFurnitureWorkData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+          </View>
+        );
+      case TASK_TYPES.DOOR_WORKS:
+        const doorWorksProperties = [
+          {
+            title: 'Whether the drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {
+            title: 'Whether the material source approved or not',
+            key: 'materialSourceApproved',
+          },
+          {
+            title:
+              'Whether material received at site is as per the specifications and not damaged',
+            key: 'materialReceivedAsPerSpec',
+          },
+          {
+            title: 'Whether the site is ready for Door work',
+            key: 'siteReadyForDoorWork',
+          },
+          {
+            title: 'Whether the finishing work is proper and uniform',
+            key: 'finishingWorkProper',
+          },
+          {
+            title:
+              'Whether the work completed to the satisfaction of the site in charge',
+            key: 'workSatisfactionAchieved',
+          },
+        ];
+
+        return (
+          <View>
+            {doorWorksProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={doorWorksData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setDoorWorksData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+          </View>
+        );
+      case TASK_TYPES.WINDOW_WORKS:
+        const windowWorksProperties = [
+          {
+            title: 'Whether the drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {
+            title: 'Whether the material source approved or not',
+            key: 'materialSourceApproved',
+          },
+          {
+            title:
+              'Whether material received at site is as per the specifications and not damaged',
+            key: 'materialReceivedAsPerSpecs',
+          },
+          {
+            title: 'Whether the site is ready for Window work',
+            key: 'siteReadyForWindowWork',
+          },
+          {
+            title: 'Whether the finishing work is proper and uniform',
+            key: 'finishingWorkProper',
+          },
+          {
+            title:
+              'Whether the work completed to the satisfaction of the site in charge',
+            key: 'workCompletedToSatisfaction',
+          },
+        ];
+
+        return (
+          <View>
+            {windowWorksProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={windowWorksData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setWindowWorksData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+          </View>
+        );
+      case TASK_TYPES.GLASS_WORKS:
+        const glassWorksProperties = [
+          {
+            title: 'Whether the drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {
+            title: 'Whether the material source approved or not',
+            key: 'materialSourceApproved',
+          },
+          {
+            title:
+              'Whether material received at site is as per the specifications and not damaged',
+            key: 'materialReceivedAsPerSpecs',
+          },
+          {
+            title:
+              'Whether the quality and thickness of the glass is as per the desired specifications',
+            key: 'glassQualityAndThicknessApproved',
+          },
+          {
+            title: 'Whether the site is ready for Glass work',
+            key: 'siteReadyForGlassWork',
+          },
+          {
+            title: 'Whether the finishing work is proper and uniform',
+            key: 'finishingWorkProper',
+          },
+          {
+            title:
+              'Whether the work completed to the satisfaction of the site in charge',
+            key: 'workCompletedToSiteInChargeSatisfaction',
+          },
+        ];
+
+        return (
+          <View>
+            {glassWorksProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={glassWorksData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setGlassWorksData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <Input
+              label="Total glass work completed in sqft"
+              value={glassWorksData.totalGlassWorkCompletedSqft}
+              onChange={(value: any) =>
+                setGlassWorksData(prevData => ({
+                  ...prevData,
+                  totalGlassWorkCompletedSqft: value,
                 }))
               }
               isRequired={true}

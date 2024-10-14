@@ -1596,6 +1596,107 @@ const RFIsRecents = (props: any) => {
             ))}
           </View>
         );
+      case TASK_TYPES.WINDOW_WORKS:
+        const windowWorksProperties = [
+          {
+            title: 'Whether the drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {
+            title: 'Whether the material source approved or not',
+            key: 'materialSourceApproved',
+          },
+          {
+            title:
+              'Whether material received at site is as per the specifications and not damaged',
+            key: 'materialReceivedAsPerSpecs',
+          },
+          {
+            title: 'Whether the site is ready for Window work',
+            key: 'siteReadyForWindowWork',
+          },
+          {
+            title: 'Whether the finishing work is proper and uniform',
+            key: 'finishingWorkProper',
+          },
+          {
+            title:
+              'Whether the work completed to the satisfaction of the site in charge',
+            key: 'workCompletedToSatisfaction',
+          },
+        ];
+
+        return (
+          <View>
+            {windowWorksProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.windowWorksData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.GLASS_WORKS:
+        const glassWorksProperties = [
+          {
+            title: 'Whether the drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {
+            title: 'Whether the material source approved or not',
+            key: 'materialSourceApproved',
+          },
+          {
+            title:
+              'Whether material received at site is as per the specifications and not damaged',
+            key: 'materialReceivedAsPerSpecs',
+          },
+          {
+            title:
+              'Whether the quality and thickness of the glass is as per the desired specifications',
+            key: 'glassQualityAndThicknessApproved',
+          },
+          {
+            title: 'Whether the site is ready for Glass work',
+            key: 'siteReadyForGlassWork',
+          },
+          {
+            title: 'Whether the finishing work is proper and uniform',
+            key: 'finishingWorkProper',
+          },
+          {
+            title:
+              'Whether the work completed to the satisfaction of the site in charge',
+            key: 'workCompletedToSiteInChargeSatisfaction',
+          },
+          {
+            title: 'Total glass work completed in sqft',
+            key: 'totalGlassWorkCompletedSqft',
+          },
+        ];
+
+        return (
+          <View>
+            {glassWorksProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.glassWorksData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
 
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
@@ -7890,6 +7991,299 @@ const RFIsRecents = (props: any) => {
                 </Text>
                 <Text>
                   {selectedRFI?.metaData.fixingOfStoneData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.PLASTERING:
+        const plasteringProperties = [
+          {
+            title: 'Whether the drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {
+            title: 'Whether the cement source approved or not',
+            key: 'cementSourceApproved',
+          },
+          {
+            title:
+              'Whether the source of other materials such as sand, water etc.',
+            key: 'otherMaterialsSourceApproved',
+          },
+          {
+            title:
+              'Whether the plaster has been made in the proportions as per the specifications',
+            key: 'proportionsAsPerSpecs',
+          },
+          {
+            title:
+              'Whether the thickness of plaster has been done as per the approved drawings',
+            key: 'thicknessAsPerDrawings',
+          },
+          {
+            title: 'Whether the surface finish is proper and uniform',
+            key: 'surfaceFinishProper',
+          },
+          {
+            title: 'Total plastering work done in sqft',
+            key: 'totalPlasteringWorkSqft',
+          },
+        ];
+
+        return (
+          <View>
+            {plasteringProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.plasteringData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.PUTTY:
+        const puttyPropertiesList = [
+          {
+            title: 'Whether the drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {
+            title: 'Whether the material source approved or not',
+            key: 'materialSourceApproved',
+          },
+          {
+            title:
+              'Whether the plastered surface is dried properly and ready for putty',
+            key: 'surfaceDriedReadyForPutty',
+          },
+          {
+            title:
+              'Whether the thickness of putty has been done as per the approved drawings',
+            key: 'thicknessAsPerDrawing',
+          },
+          {
+            title: 'Whether the surface finish is proper and uniform',
+            key: 'surfaceFinishUniform',
+          },
+          {title: 'Total putty work done in sqft', key: 'totalPuttyWorkSqft'},
+        ];
+
+        return (
+          <View>
+            {puttyPropertiesList.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>{selectedRFI?.metaData.puttyData?.[property.key]}</Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.HVAC_WORK:
+        const hvacWorkPropertiesForDisplay = [
+          {
+            title: 'Whether the drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {
+            title: 'Whether the material source approved or not',
+            key: 'materialSourceApproved',
+          },
+          {
+            title: 'Whether inspection done and dispatch clearance obtained',
+            key: 'inspectionAndDispatchCleared',
+          },
+          {
+            title: 'Whether the site is ready prior to HVAC work',
+            key: 'siteReadyForHVAC',
+          },
+          {
+            title: 'Whether ducting is done as per the approved drawings',
+            key: 'ductingAsPerDrawings',
+          },
+          {
+            title:
+              'Whether all the connection points are as per the approved drawings',
+            key: 'connectionPointsAsPerDrawings',
+          },
+          {
+            title: 'Whether AC fittings etc done as per the approved drawings',
+            key: 'acFittingsAsPerDrawings',
+          },
+          {
+            title:
+              'Whether the entire system is tested properly and electrical certificate obtained',
+            key: 'systemTestedAndCertified',
+          },
+          {
+            title: 'Total sqft area covered under HVAC work',
+            key: 'totalSqftAreaCovered',
+          },
+        ];
+
+        return (
+          <View>
+            {hvacWorkPropertiesForDisplay.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.hvacWorkData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.CEILING_WORK:
+        const ceilingWorkProperties = [
+          {
+            title: 'Whether the drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {
+            title: 'Whether the material source approved or not',
+            key: 'materialSourceApproved',
+          },
+          {
+            title:
+              'Whether material received at site is as per the specifications and not damaged',
+            key: 'materialReceivedAsPerSpecifications',
+          },
+          {
+            title: 'Whether the site is ready for ceiling work',
+            key: 'siteReadyForCeilingWork',
+          },
+          {
+            title:
+              'Whether the finishing work of ceiling is proper and uniform',
+            key: 'finishingWorkUniform',
+          },
+          {
+            title:
+              'Whether the ceiling work completed to the satisfaction of the site in charge',
+            key: 'ceilingWorkCompletedToSatisfaction',
+          },
+          {
+            title: 'Total sqft area of ceiling work completed',
+            key: 'totalSqftAreaCompleted',
+          },
+        ];
+
+        return (
+          <View>
+            {ceilingWorkProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.ceilingWorkData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.FURNITURE_WORK:
+        const furnitureWorkProperties = [
+          {
+            title: 'Whether the drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {
+            title: 'Whether the material source approved or not',
+            key: 'materialSourceApproved',
+          },
+          {
+            title:
+              'Whether material received at site is as per the specifications and not damaged',
+            key: 'materialReceivedAsPerSpecs',
+          },
+          {
+            title: 'Whether the site is ready for Furniture work',
+            key: 'siteReadyForFurnitureWork',
+          },
+          {
+            title: 'Whether the finishing furniture work is proper and uniform',
+            key: 'finishingFurnitureProper',
+          },
+          {
+            title:
+              'Whether the furniture work completed to the satisfaction of the site in charge',
+            key: 'workSatisfactoryToSiteInCharge',
+          },
+        ];
+
+        return (
+          <View>
+            {furnitureWorkProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.furnitureWorkData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.DOOR_WORKS:
+        const doorWorksPropertiesDisplay = [
+          {
+            title: 'Whether the drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {
+            title: 'Whether the material source approved or not',
+            key: 'materialSourceApproved',
+          },
+          {
+            title:
+              'Whether material received at site is as per the specifications and not damaged',
+            key: 'materialReceivedAsPerSpec',
+          },
+          {
+            title: 'Whether the site is ready for Door work',
+            key: 'siteReadyForDoorWork',
+          },
+          {
+            title: 'Whether the finishing work is proper and uniform',
+            key: 'finishingWorkProper',
+          },
+          {
+            title:
+              'Whether the work completed to the satisfaction of the site in charge',
+            key: 'workSatisfactionAchieved',
+          },
+        ];
+
+        return (
+          <View>
+            {doorWorksPropertiesDisplay.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.doorWorksData?.[property.key]}
                 </Text>
               </View>
             ))}

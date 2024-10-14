@@ -7741,53 +7741,6 @@ const RFIsRecents = (props: any) => {
             ))}
           </View>
         );
-      case TASK_TYPES.FIXING_OF_ARMS:
-        const fixingOfArmsProperties = [
-          {
-            title: 'Whether the drawings approved or not',
-            key: 'drawingsApproved',
-          },
-          {title: 'Whether the source approved or not', key: 'sourceApproved'},
-          {
-            title:
-              'Whether the factory inspection done and dispatch clearance obtained',
-            key: 'factoryInspectionDone',
-          },
-          {
-            title:
-              'All the arms are fixed properly with alignment as per drawings',
-            key: 'armsFixedProperly',
-          },
-          {
-            title: 'All the nut bolts are tightened and checked properly',
-            key: 'nutsBoltsTightened',
-          },
-          {
-            title: 'Total qty of arms erected in no.',
-            key: 'totalQtyArmsErected',
-          },
-          {
-            title: 'Total length of highway covered in Km',
-            key: 'totalHighwayLengthCoveredKm',
-          },
-        ];
-
-        return (
-          <View>
-            {fixingOfArmsProperties.map(property => (
-              <View
-                style={{flexDirection: 'column', marginBottom: 10}}
-                key={property.key}>
-                <Text style={styles.GenerateRFIFieldLabel}>
-                  {property.title}
-                </Text>
-                <Text>
-                  {selectedRFI?.metaData.fixingOfArmsData?.[property.key]}
-                </Text>
-              </View>
-            ))}
-          </View>
-        );
       case TASK_TYPES.INSTALLATION_OF_LED_LIGHTS:
         const installationOfLEDLightsProperties = [
           {

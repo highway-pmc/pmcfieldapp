@@ -466,6 +466,108 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     probingByStiffwire: string;
   };
   //FormUseStates
+  const [installationOfEquipmentData, setInstallationOfEquipmentData] =
+    useState({
+      drawingsApproved: 'Y',
+      equipmentInspected: 'Y',
+      damageReportedToVendor: 'Y',
+      factoryInspectionCleared: 'Y',
+      foundationWorkReady: 'Y',
+      foundationStrengthAchieved: 'Y',
+      installationMethodologyApproved: 'Y',
+      safetyArrangementsInPlace: 'Y',
+      sufficientMachineryManpower: 'Y',
+      installationCompletedAsPlanned: 'Y',
+      manufacturerInstructionsComplied: 'Y',
+      totalEquipmentInstalled: 0,
+    });
+
+  const [constructionOfChamberData, setConstructionOfChamberData] = useState({
+    drawingsAvailable: 'Y',
+    sizeClassOfBricksApproved: 'Y',
+    requiredBlocksAvailable: 'Y',
+    hackingDone: 'Y',
+    cementSlurryCured: 'Y',
+    aluminiumTemplatesUsed: 'Y',
+    requiredToolsAvailable: 'Y',
+    specificClientRequirements: 'Y',
+    cementApprovedAndFresh: 'Y',
+    sandGrittyAndSiltFree: 'Y',
+    floorLevelMarked: 'Y',
+    referenceLinesMarked: 'Y',
+    brickworkChecked: 'Y',
+    totalBrickworkAreaSqm: 0.0,
+    totalBrickworkVolumeCum: 0.0,
+  });
+  const [hddCrossingData, setHddCrossingData] = useState({
+    drawingsApproved: 'Y',
+    safetyArrangementsInPlace: 'Y',
+    layoutMarkedAtSite: 'Y',
+    routeMarkingDeviceAvailable: 'Y',
+    depthAlignmentAsPerDrawings: 'Y',
+    excavatedAreaCoveredProperly: 'Y',
+    ductPipePulledSuccessfully: 'Y',
+    totalLengthOfHddCrossing: 0.0,
+  });
+
+  const [layingOfDuctData, setLayingOfDuctData] = useState({
+    drawingsApproved: 'Y',
+    safetyArrangementsInPlace: 'Y',
+    sourceMaterialObtained: 'Y',
+    materialNotDamaged: 'Y',
+    ductsLaidProperly: 'Y',
+    jointsCompletedProperly: 'Y',
+    totalLengthOfDuctLaid: 0.0,
+  });
+
+  const [excavationOfTrenchData, setExcavationOfTrenchData] = useState({
+    drawingsApproved: 'Y',
+    safetyArrangementsInPlace: 'Y',
+    layoutMarked: 'Y',
+    noUtilityInAlignment: 'Y',
+    depthWidthAsPerDrawing: 'Y',
+    areaCoveredProperly: 'Y',
+    totalLengthExcavated: 0.0,
+    totalQtyEarthExcavated: 0.0,
+  });
+
+  const [flooringWorkData, setFlooringWorkData] = useState({
+    drawingsApproved: 'Y',
+    materialSourceApproved: 'Y',
+    materialReceivedAsPerSpecs: 'Y',
+    siteReadyForFlooring: 'Y',
+    finishingWorkProper: 'Y',
+    slopeCheckedAsRequired: 'Y',
+    workCompletedToSatisfaction: 'Y',
+    totalSqftAreaCompleted: 0.0,
+  });
+
+  const [plumbingWorkData, setPlumbingWorkData] = useState({
+    drawingsApproved: 'Y',
+    materialSourceApproved: 'Y',
+    materialReceived: 'Y',
+    siteReady: 'Y',
+    safetyArrangementsInPlace: 'Y',
+    inputOutputPointsGiven: 'Y',
+    workCompletedSatisfactorily: 'Y',
+    workTestedProperly: 'Y',
+    approvedLayoutInBuilding: 'Y',
+    totalSqftAreaCompleted: 0.0,
+  });
+
+  const [electricalWorkData, setElectricalWorkData] = useState({
+    drawingsApproved: 'Y',
+    materialSourceApproved: 'Y',
+    materialReceived: 'Y',
+    siteReadyForWork: 'Y',
+    safetyArrangementsInPlace: 'Y',
+    inputOutputPointsCorrect: 'Y',
+    workCompletedSatisfactorily: 'Y',
+    workTestedAndCertified: 'Y',
+    layoutDrawingsPlacedForReference: 'Y',
+    totalSqftCompleted: 0.0,
+  });
+
   const [glassWorksData, setGlassWorksData] = useState({
     drawingsApproved: 'Y',
     materialSourceApproved: 'Y',
@@ -6170,6 +6272,152 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             });
           }
           break;
+        case TASK_TYPES.ELECTRICAL_WORK:
+          if (rfiData.metaData.electricalWorkData) {
+            setElectricalWorkData(rfiData.metaData.electricalWorkData);
+          } else {
+            setElectricalWorkData({
+              drawingsApproved: 'Y',
+              materialSourceApproved: 'Y',
+              materialReceived: 'Y',
+              siteReadyForWork: 'Y',
+              safetyArrangementsInPlace: 'Y',
+              inputOutputPointsCorrect: 'Y',
+              workCompletedSatisfactorily: 'Y',
+              workTestedAndCertified: 'Y',
+              layoutDrawingsPlacedForReference: 'Y',
+              totalSqftCompleted: 0.0,
+            });
+          }
+          break;
+        case TASK_TYPES.PLUMBING_WORK:
+          if (rfiData.metaData.plumbingWorkData) {
+            setPlumbingWorkData(rfiData.metaData.plumbingWorkData);
+          } else {
+            setPlumbingWorkData({
+              drawingsApproved: 'Y',
+              materialSourceApproved: 'Y',
+              materialReceived: 'Y',
+              siteReady: 'Y',
+              safetyArrangementsInPlace: 'Y',
+              inputOutputPointsGiven: 'Y',
+              workCompletedSatisfactorily: 'Y',
+              workTestedProperly: 'Y',
+              approvedLayoutInBuilding: 'Y',
+              totalSqftAreaCompleted: 0.0,
+            });
+          }
+          break;
+        case TASK_TYPES.FLOORING_WORK:
+          if (rfiData.metaData.flooringWorkData) {
+            setFlooringWorkData(rfiData.metaData.flooringWorkData);
+          } else {
+            setFlooringWorkData({
+              drawingsApproved: 'Y',
+              materialSourceApproved: 'Y',
+              materialReceivedAsPerSpecs: 'Y',
+              siteReadyForFlooring: 'Y',
+              finishingWorkProper: 'Y',
+              slopeCheckedAsRequired: 'Y',
+              workCompletedToSatisfaction: 'Y',
+              totalSqftAreaCompleted: 0.0,
+            });
+          }
+          break;
+        case TASK_TYPES.EXCAVATION_OF_TRENCH:
+          if (rfiData.metaData.excavationOfTrenchData) {
+            setExcavationOfTrenchData(rfiData.metaData.excavationOfTrenchData);
+          } else {
+            setExcavationOfTrenchData({
+              drawingsApproved: 'Y',
+              safetyArrangementsInPlace: 'Y',
+              layoutMarked: 'Y',
+              noUtilityInAlignment: 'Y',
+              depthWidthAsPerDrawing: 'Y',
+              areaCoveredProperly: 'Y',
+              totalLengthExcavated: 0.0,
+              totalQtyEarthExcavated: 0.0,
+            });
+          }
+          break;
+        case TASK_TYPES.LAYING_OF_DUCT:
+          if (rfiData.metaData.layingOfDuctData) {
+            setLayingOfDuctData(rfiData.metaData.layingOfDuctData);
+          } else {
+            setLayingOfDuctData({
+              drawingsApproved: 'Y',
+              safetyArrangementsInPlace: 'Y',
+              sourceMaterialObtained: 'Y',
+              materialNotDamaged: 'Y',
+              ductsLaidProperly: 'Y',
+              jointsCompletedProperly: 'Y',
+              totalLengthOfDuctLaid: 0.0,
+            });
+          }
+          break;
+        case TASK_TYPES.HDD_CROSSING:
+          if (rfiData.metaData.hddCrossingData) {
+            setHddCrossingData(rfiData.metaData.hddCrossingData);
+          } else {
+            setHddCrossingData({
+              drawingsApproved: 'Y',
+              safetyArrangementsInPlace: 'Y',
+              layoutMarkedAtSite: 'Y',
+              routeMarkingDeviceAvailable: 'Y',
+              depthAlignmentAsPerDrawings: 'Y',
+              excavatedAreaCoveredProperly: 'Y',
+              ductPipePulledSuccessfully: 'Y',
+              totalLengthOfHddCrossing: 0.0,
+            });
+          }
+          break;
+        case TASK_TYPES.CONSTRUCTION_OF_CHAMBER:
+          if (rfiData.metaData.constructionOfChamberData) {
+            setConstructionOfChamberData(
+              rfiData.metaData.constructionOfChamberData,
+            );
+          } else {
+            setConstructionOfChamberData({
+              drawingsAvailable: 'Y',
+              sizeClassOfBricksApproved: 'Y',
+              requiredBlocksAvailable: 'Y',
+              hackingDone: 'Y',
+              cementSlurryCured: 'Y',
+              aluminiumTemplatesUsed: 'Y',
+              requiredToolsAvailable: 'Y',
+              specificClientRequirements: 'Y',
+              cementApprovedAndFresh: 'Y',
+              sandGrittyAndSiltFree: 'Y',
+              floorLevelMarked: 'Y',
+              referenceLinesMarked: 'Y',
+              brickworkChecked: 'Y',
+              totalBrickworkAreaSqm: 0.0,
+              totalBrickworkVolumeCum: 0.0,
+            });
+          }
+          break;
+        case TASK_TYPES.INSTALLATION_OF_EQUIPMENT:
+          if (rfiData.metaData.installationOfEquipmentData) {
+            setInstallationOfEquipmentData(
+              rfiData.metaData.installationOfEquipmentData,
+            );
+          } else {
+            setInstallationOfEquipmentData({
+              drawingsApproved: 'Y',
+              equipmentInspected: 'Y',
+              damageReportedToVendor: 'Y',
+              factoryInspectionCleared: 'Y',
+              foundationWorkReady: 'Y',
+              foundationStrengthAchieved: 'Y',
+              installationMethodologyApproved: 'Y',
+              safetyArrangementsInPlace: 'Y',
+              sufficientMachineryManpower: 'Y',
+              installationCompletedAsPlanned: 'Y',
+              manufacturerInstructionsComplied: 'Y',
+              totalEquipmentInstalled: 0,
+            });
+          }
+          break;
 
         case TASK_TYPES.LIFTING_LEFT:
         case TASK_TYPES.LIFTING_YARD:
@@ -8798,6 +9046,78 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           glassWorksData: glassWorksData,
         };
         break;
+      case TASK_TYPES.ELECTRICAL_WORK:
+        if (!validateElectricalWorkData(electricalWorkData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          electricalWorkData: electricalWorkData,
+        };
+        break;
+      case TASK_TYPES.PLUMBING_WORK:
+        if (!validatePlumbingWorkData(plumbingWorkData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          plumbingWorkData: plumbingWorkData,
+        };
+        break;
+      case TASK_TYPES.FLOORING_WORK:
+        if (!validateFlooringWorkData(flooringWorkData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          flooringWorkData: flooringWorkData,
+        };
+        break;
+      case TASK_TYPES.EXCAVATION_OF_TRENCH:
+        if (!validateExcavationOfTrenchData(excavationOfTrenchData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          excavationOfTrenchData: excavationOfTrenchData,
+        };
+        break;
+      case TASK_TYPES.LAYING_OF_DUCT:
+        if (!validateLayingOfDuctData(layingOfDuctData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          layingOfDuctData: layingOfDuctData,
+        };
+        break;
+      case TASK_TYPES.HDD_CROSSING:
+        if (!validateHddCrossingData(hddCrossingData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          hddCrossingData: hddCrossingData,
+        };
+        break;
+      case TASK_TYPES.CONSTRUCTION_OF_CHAMBER:
+        if (!validateConstructionOfChamberData(constructionOfChamberData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          constructionOfChamberData: constructionOfChamberData,
+        };
+        break;
+      case TASK_TYPES.INSTALLATION_OF_EQUIPMENT:
+        if (!validateInstallationOfEquipmentData(installationOfEquipmentData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          installationOfEquipmentData: installationOfEquipmentData,
+        };
+        break;
 
       case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
       case TASK_TYPES.LIFTING_LEFT:
@@ -9582,6 +9902,223 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
 
     return true;
   };
+  const validateInstallationOfEquipmentData = (
+    installationOfEquipmentData: any,
+  ): boolean => {
+    const totalEquipmentInstalled = parseInt(
+      installationOfEquipmentData.totalEquipmentInstalled,
+    );
+
+    // Validation for totalEquipmentInstalled
+    if (
+      isNaN(totalEquipmentInstalled) ||
+      totalEquipmentInstalled <= 0 ||
+      totalEquipmentInstalled > 1000
+    ) {
+      showSnackbar(
+        'Please enter a valid number of equipment installed (integer, > 0 and <= 1000)',
+        'error',
+      );
+      return false;
+    }
+
+    // Convert value back to number after validation
+    installationOfEquipmentData.totalEquipmentInstalled = Number(
+      totalEquipmentInstalled,
+    );
+
+    return true;
+  };
+
+  const validateConstructionOfChamberData = (data: any) => {
+    const areaSqm = parseFloat(data.totalBrickworkAreaSqm);
+    const volumeCum = parseFloat(data.totalBrickworkVolumeCum);
+
+    // Validation for area in Sqm
+    if (
+      isNaN(areaSqm) ||
+      areaSqm <= 0 ||
+      areaSqm > 100000 ||
+      data.totalBrickworkAreaSqm.split('.')[1]?.length > 3
+    ) {
+      showSnackbar(
+        'Please enter a valid brickwork area (Sqm, > 0 and <= 100000, max 3 decimal places)',
+        'error',
+      );
+      return false;
+    }
+
+    // Validation for volume in Cum
+    if (
+      isNaN(volumeCum) ||
+      volumeCum <= 0 ||
+      volumeCum > 100000 ||
+      data.totalBrickworkVolumeCum.split('.')[1]?.length > 3
+    ) {
+      showSnackbar(
+        'Please enter a valid brickwork volume (Cum, > 0 and <= 100000, max 3 decimal places)',
+        'error',
+      );
+      return false;
+    }
+    data.totalBrickworkAreaSqm = Number(data.totalBrickworkAreaSqm);
+    data.totalBrickworkVolumeCum = Number(data.totalBrickworkVolumeCum);
+
+    return true;
+  };
+
+  const validateHddCrossingData = (hddCrossingData: any) => {
+    const totalLength = parseFloat(hddCrossingData.totalLengthOfHddCrossing);
+
+    // Validation for totalLengthOfHddCrossing
+    if (
+      isNaN(totalLength) ||
+      totalLength <= 0 ||
+      totalLength > 10000 ||
+      hddCrossingData.totalLengthOfHddCrossing.split('.')[1]?.length > 3
+    ) {
+      showSnackbar(
+        'Please enter a valid total length (max 3 decimal places, > 0 and <= 10000)',
+        'error',
+      );
+      return false;
+    }
+
+    hddCrossingData.totalLengthOfHddCrossing = Number(totalLength);
+    return true;
+  };
+
+  const validateLayingOfDuctData = (layingOfDuctData: any) => {
+    const totalLength = parseFloat(layingOfDuctData.totalLengthOfDuctLaid);
+
+    if (
+      isNaN(totalLength) ||
+      totalLength <= 0 ||
+      totalLength > 10000 ||
+      layingOfDuctData.totalLengthOfDuctLaid.split('.')[1]?.length > 3
+    ) {
+      showSnackbar(
+        'Please enter a valid total length of duct laid (RM, max 3 decimal places, > 0 and <= 10000)',
+        'error',
+      );
+      return false;
+    }
+
+    layingOfDuctData.totalLengthOfDuctLaid = Number(
+      layingOfDuctData.totalLengthOfDuctLaid,
+    );
+    return true;
+  };
+
+  const validateExcavationOfTrenchData = (data: any) => {
+    const totalLength = parseFloat(data.totalLengthExcavated);
+    const totalQty = parseFloat(data.totalQtyEarthExcavated);
+
+    if (
+      isNaN(totalLength) ||
+      totalLength <= 0 ||
+      totalLength > 10000 ||
+      data.totalLengthExcavated.split('.')[1]?.length > 3
+    ) {
+      showSnackbar(
+        'Invalid trench length (max 3 decimals, > 0, <= 10000)',
+        'error',
+      );
+      return false;
+    }
+
+    if (
+      isNaN(totalQty) ||
+      totalQty <= 0 ||
+      totalQty > 10000 ||
+      data.totalQtyEarthExcavated.split('.')[1]?.length > 3
+    ) {
+      showSnackbar(
+        'Invalid earth quantity (max 3 decimals, > 0, <= 10000)',
+        'error',
+      );
+      return false;
+    }
+    data.totalLengthExcavated = Number(data.totalLengthExcavated);
+    data.totalQtyEarthExcavated = Number(data.totalQtyEarthExcavated);
+    return true;
+  };
+
+  const validateFlooringWorkData = (flooringWorkData: any) => {
+    const totalSqftAreaCompleted = parseFloat(
+      flooringWorkData.totalSqftAreaCompleted,
+    );
+
+    // Validation for totalSqftAreaCompleted
+    if (
+      isNaN(totalSqftAreaCompleted) ||
+      totalSqftAreaCompleted <= 0 ||
+      totalSqftAreaCompleted > 100000 ||
+      flooringWorkData.totalSqftAreaCompleted.split('.')[1]?.length > 3
+    ) {
+      showSnackbar(
+        'Please enter a valid total area (sqft, max 3 decimal places, > 0 and <= 100000)',
+        'error',
+      );
+      return false;
+    }
+
+    flooringWorkData.totalSqftAreaCompleted = Number(totalSqftAreaCompleted);
+    return true;
+  };
+
+  const validatePlumbingWorkData = (plumbingWorkData: any): boolean => {
+    const totalSqftAreaCompleted = parseFloat(
+      plumbingWorkData.totalSqftAreaCompleted,
+    );
+
+    // Validation for totalSqftAreaCompleted
+    if (
+      isNaN(totalSqftAreaCompleted) ||
+      totalSqftAreaCompleted <= 0 ||
+      totalSqftAreaCompleted > 10000 ||
+      plumbingWorkData.totalSqftAreaCompleted.split('.')[1]?.length > 3
+    ) {
+      showSnackbar(
+        'Please enter a valid total sqft area (max 3 decimal places, > 0 and <= 10000)',
+        'error',
+      );
+      return false;
+    }
+
+    // Convert values to numbers after validation
+    plumbingWorkData.totalSqftAreaCompleted = Number(
+      plumbingWorkData.totalSqftAreaCompleted,
+    );
+
+    return true;
+  };
+
+  const validateElectricalWorkData = (electricalWorkData: any): boolean => {
+    const totalSqftCompleted = parseFloat(
+      electricalWorkData.totalSqftCompleted,
+    );
+
+    // Validation for totalSqftCompleted
+    if (
+      isNaN(totalSqftCompleted) ||
+      totalSqftCompleted <= 0 ||
+      totalSqftCompleted > 10000 ||
+      electricalWorkData.totalSqftCompleted.split('.')[1]?.length > 3
+    ) {
+      showSnackbar(
+        'Please enter a valid sqft area (max 3 decimal places, > 0 and <= 10000)',
+        'error',
+      );
+      return false;
+    }
+
+    electricalWorkData.totalSqftCompleted = Number(
+      electricalWorkData.totalSqftCompleted,
+    );
+    return true;
+  };
+
   const validateGlassWorksData = (glassWorksData: any): boolean => {
     const totalGlassWorkCompletedSqft = parseFloat(
       glassWorksData.totalGlassWorkCompletedSqft,
@@ -25047,6 +25584,752 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                 setGlassWorksData(prevData => ({
                   ...prevData,
                   totalGlassWorkCompletedSqft: value,
+                }))
+              }
+              isRequired={true}
+            />
+            <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+          </View>
+        );
+      case TASK_TYPES.ELECTRICAL_WORK:
+        const electricalWorkProperties = [
+          {
+            title: 'Whether the drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {
+            title: 'Whether the material source approved or not',
+            key: 'materialSourceApproved',
+          },
+          {
+            title:
+              'Whether material received at site is as per the specifications and not damaged',
+            key: 'materialReceived',
+          },
+          {
+            title: 'Whether the site is ready for electrical work',
+            key: 'siteReadyForWork',
+          },
+          {
+            title: 'All safety arrangements are in place during the work',
+            key: 'safetyArrangementsInPlace',
+          },
+          {
+            title:
+              'Whether the total no. of input/output points are given as per the drawings and Engineer’s decision',
+            key: 'inputOutputPointsCorrect',
+          },
+          {
+            title:
+              'Whether the work completed to the satisfaction of the site in charge',
+            key: 'workCompletedSatisfactorily',
+          },
+          {
+            title:
+              'Whether the work has been tested properly and certified by an authorized contractor',
+            key: 'workTestedAndCertified',
+          },
+          {
+            title:
+              'Whether the copy of approved layout drawings placed in the building for future reference',
+            key: 'layoutDrawingsPlacedForReference',
+          },
+        ];
+
+        return (
+          <View>
+            {electricalWorkProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={electricalWorkData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setElectricalWorkData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+
+            <Input
+              label="Total sqft area of the building completed"
+              value={electricalWorkData.totalSqftCompleted}
+              onChange={(value: any) =>
+                setElectricalWorkData(prevData => ({
+                  ...prevData,
+                  totalSqftCompleted: value,
+                }))
+              }
+              isRequired={true}
+            />
+            <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+          </View>
+        );
+      case TASK_TYPES.PLUMBING_WORK:
+        const plumbingWorkProperties = [
+          {
+            title: 'Whether the drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {
+            title: 'Whether the material source approved or not',
+            key: 'materialSourceApproved',
+          },
+          {
+            title:
+              'Whether material received at site is as per the specifications and not damaged',
+            key: 'materialReceived',
+          },
+          {
+            title: 'Whether the site is ready for Plumbing work',
+            key: 'siteReady',
+          },
+          {
+            title: 'All safety arrangements are in place during the work',
+            key: 'safetyArrangementsInPlace',
+          },
+          {
+            title:
+              'Whether the total no. of input/ output points are given as per the drawings approved',
+            key: 'inputOutputPointsGiven',
+          },
+          {
+            title:
+              'Whether the work completed to the satisfaction of the site in charge',
+            key: 'workCompletedSatisfactorily',
+          },
+          {
+            title: 'Whether the work has been tested properly',
+            key: 'workTestedProperly',
+          },
+          {
+            title:
+              'Whether the copy of approved layout drawings placed in the building for future reference',
+            key: 'approvedLayoutInBuilding',
+          },
+        ];
+
+        return (
+          <View>
+            {plumbingWorkProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={plumbingWorkData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setPlumbingWorkData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <Input
+              label="Total sqft area of the building completed"
+              value={plumbingWorkData.totalSqftAreaCompleted}
+              onChange={(value: any) =>
+                setPlumbingWorkData(prevData => ({
+                  ...prevData,
+                  totalSqftAreaCompleted: value,
+                }))
+              }
+              isRequired={true}
+            />
+            <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+          </View>
+        );
+      case TASK_TYPES.FLOORING_WORK:
+        const flooringWorkProperties = [
+          {
+            title: 'Whether the drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {
+            title: 'Whether the material source approved or not',
+            key: 'materialSourceApproved',
+          },
+          {
+            title:
+              'Whether material received at site is as per the specifications and not damaged',
+            key: 'materialReceivedAsPerSpecs',
+          },
+          {
+            title: 'Whether the site is ready for flooring work',
+            key: 'siteReadyForFlooring',
+          },
+          {
+            title:
+              'Whether the finishing work of flooring work is proper and uniform',
+            key: 'finishingWorkProper',
+          },
+          {
+            title:
+              'Whether slope is properly checked and is as per the requirement',
+            key: 'slopeCheckedAsRequired',
+          },
+          {
+            title:
+              'Whether the flooring work completed to the satisfaction of the site in charge',
+            key: 'workCompletedToSatisfaction',
+          },
+        ];
+
+        return (
+          <View>
+            {flooringWorkProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={flooringWorkData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setFlooringWorkData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <Input
+              label="Total sqft area of flooring work completed"
+              value={flooringWorkData.totalSqftAreaCompleted}
+              onChange={(value: any) =>
+                setFlooringWorkData(prevData => ({
+                  ...prevData,
+                  totalSqftAreaCompleted: value,
+                }))
+              }
+              isRequired={true}
+            />
+            <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+          </View>
+        );
+      case TASK_TYPES.EXCAVATION_OF_TRENCH:
+        const excavationProperties = [
+          {
+            title: 'Whether the drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {
+            title: 'Whether the safety arrangements are in place',
+            key: 'safetyArrangementsInPlace',
+          },
+          {
+            title:
+              'Whether the layout marked at site for ensuring the alignment',
+            key: 'layoutMarked',
+          },
+          {
+            title:
+              'It has been ensured that there is no utility in the alignment',
+            key: 'noUtilityInAlignment',
+          },
+          {
+            title: 'Whether the depth and width are as per drawings',
+            key: 'depthWidthAsPerDrawing',
+          },
+          {
+            title: 'Whether the excavated area has been covered properly',
+            key: 'areaCoveredProperly',
+          },
+        ];
+
+        return (
+          <View>
+            {excavationProperties.map(property => (
+              <DropdownPicker
+                label={property.title}
+                value={excavationOfTrenchData[property.key]}
+                items={YES_NO_LIST}
+                onChange={(value: any) =>
+                  setExcavationOfTrenchData(prev => ({
+                    ...prev,
+                    [property.key]: value,
+                  }))
+                }
+                isRequired={true}
+              />
+            ))}
+            <Input
+              label="Total length of trench excavated properly"
+              value={excavationOfTrenchData.totalLengthExcavated}
+              onChange={(value: any) =>
+                setExcavationOfTrenchData(prev => ({
+                  ...prev,
+                  totalLengthExcavated: value,
+                }))
+              }
+              isRequired={true}
+            />
+            <Input
+              label="Total quantity of earth excavated"
+              value={excavationOfTrenchData.totalQtyEarthExcavated}
+              onChange={(value: any) =>
+                setExcavationOfTrenchData(prev => ({
+                  ...prev,
+                  totalQtyEarthExcavated: value,
+                }))
+              }
+              isRequired={true}
+            />
+            <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+          </View>
+        );
+      case TASK_TYPES.LAYING_OF_DUCT:
+        const layingOfDuctProperties = [
+          {
+            title: 'Whether the drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {
+            title: 'Whether the safety arrangements are in place',
+            key: 'safetyArrangementsInPlace',
+          },
+          {
+            title: 'Whether the source of material obtained',
+            key: 'sourceMaterialObtained',
+          },
+          {
+            title:
+              'Whether material reached at site is not damaged and as per the design specifications',
+            key: 'materialNotDamaged',
+          },
+          {
+            title:
+              'Whether the ducts laid properly in the trench with all the safety precautions',
+            key: 'ductsLaidProperly',
+          },
+          {
+            title: 'Whether all joints are completed properly',
+            key: 'jointsCompletedProperly',
+          },
+        ];
+
+        return (
+          <View>
+            {layingOfDuctProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={layingOfDuctData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setLayingOfDuctData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <Input
+              label="Total length of duct laid in RM"
+              value={layingOfDuctData.totalLengthOfDuctLaid}
+              onChange={(value: any) =>
+                setLayingOfDuctData(prevData => ({
+                  ...prevData,
+                  totalLengthOfDuctLaid: value,
+                }))
+              }
+              isRequired={true}
+            />
+            <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+          </View>
+        );
+      case TASK_TYPES.HDD_CROSSING:
+        const hddCrossingProperties = [
+          {
+            title: 'Whether the drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {
+            title: 'Whether the safety arrangements are in place',
+            key: 'safetyArrangementsInPlace',
+          },
+          {
+            title:
+              'Whether the layout marked at site for ensuring the alignment of the HDD crossing',
+            key: 'layoutMarkedAtSite',
+          },
+          {
+            title: 'Whether the route marking device available at site',
+            key: 'routeMarkingDeviceAvailable',
+          },
+          {
+            title:
+              'Whether the depth and alignment is as per the approved drawings',
+            key: 'depthAlignmentAsPerDrawings',
+          },
+          {
+            title: 'Whether the excavated area has been covered properly',
+            key: 'excavatedAreaCoveredProperly',
+          },
+          {
+            title: 'Whether the duct/pipe pulled successfully',
+            key: 'ductPipePulledSuccessfully',
+          },
+        ];
+
+        return (
+          <View>
+            {hddCrossingProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={hddCrossingData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setHddCrossingData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <Input
+              label="Total length of HDD crossing"
+              value={hddCrossingData.totalLengthOfHddCrossing}
+              onChange={(value: any) =>
+                setHddCrossingData(prevData => ({
+                  ...prevData,
+                  totalLengthOfHddCrossing: value,
+                }))
+              }
+              isRequired={true}
+            />
+            <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+          </View>
+        );
+      case TASK_TYPES.CONSTRUCTION_OF_CHAMBER:
+        const constructionOfChamberProperties = [
+          {
+            title: 'Are the latest "Good for Construction" drawings available',
+            key: 'drawingsAvailable',
+          },
+          {
+            title: 'Are the size and Class of bricks as per approved drawing',
+            key: 'sizeClassOfBricksApproved',
+          },
+          {
+            title: 'Are the required number of blocks available',
+            key: 'requiredBlocksAvailable',
+          },
+          {
+            title:
+              'Has the hacking at contact surfaces of columns and beams been done',
+            key: 'hackingDone',
+          },
+          {
+            title: 'Has cement mortar slurry been applied and cured for 3 days',
+            key: 'cementSlurryCured',
+          },
+          {
+            title:
+              'Have aluminium templates been used for door/window openings',
+            key: 'aluminiumTemplatesUsed',
+          },
+          {
+            title: 'Are the required tools available',
+            key: 'requiredToolsAvailable',
+          },
+          {
+            title: 'Are there any specific requirements from the client',
+            key: 'specificClientRequirements',
+          },
+        ];
+
+        return (
+          <View>
+            {constructionOfChamberProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={constructionOfChamberData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setConstructionOfChamberData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+
+            <Input
+              label="Total area where brick work is to be done (Sqm)"
+              value={constructionOfChamberData.totalBrickworkAreaSqm}
+              onChange={(value: any) =>
+                setConstructionOfChamberData(prevData => ({
+                  ...prevData,
+                  totalBrickworkAreaSqm: value,
+                }))
+              }
+              isRequired={true}
+            />
+
+            <Input
+              label="Total brick work in cum"
+              value={constructionOfChamberData.totalBrickworkVolumeCum}
+              onChange={(value: any) =>
+                setConstructionOfChamberData(prevData => ({
+                  ...prevData,
+                  totalBrickworkVolumeCum: value,
+                }))
+              }
+              isRequired={true}
+            />
+            <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+          </View>
+        );
+      case TASK_TYPES.INSTALLATION_OF_EQUIPMENT:
+        const installationOfEquipmentProperties = [
+          {
+            title: 'Whether the Drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {
+            title:
+              'Whether the equipment inspected at site with factory clearance',
+            key: 'equipmentInspected',
+          },
+          {
+            title:
+              'Is there any damage to the equipment? If yes, informed to the vendor',
+            key: 'damageReportedToVendor',
+          },
+          {
+            title: 'Whether factory inspection done and clearance obtained',
+            key: 'factoryInspectionCleared',
+          },
+          {
+            title: 'Is the foundation work ready for installation?',
+            key: 'foundationWorkReady',
+          },
+          {
+            title: 'Have concrete components achieved required strength?',
+            key: 'foundationStrengthAchieved',
+          },
+          {
+            title: 'Installation methodology approved?',
+            key: 'installationMethodologyApproved',
+          },
+          {
+            title: 'Are all safety arrangements in place?',
+            key: 'safetyArrangementsInPlace',
+          },
+          {
+            title: 'Is there sufficient machinery and manpower available?',
+            key: 'sufficientMachineryManpower',
+          },
+          {
+            title: 'Installation completed as planned?',
+            key: 'installationCompletedAsPlanned',
+          },
+          {
+            title: 'All manufacturer instructions followed?',
+            key: 'manufacturerInstructionsComplied',
+          },
+        ];
+
+        return (
+          <View>
+            {installationOfEquipmentProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={installationOfEquipmentData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setInstallationOfEquipmentData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <Input
+              label="Total no. of equipment installed"
+              value={installationOfEquipmentData.totalEquipmentInstalled}
+              onChange={(value: any) =>
+                setInstallationOfEquipmentData(prevData => ({
+                  ...prevData,
+                  totalEquipmentInstalled: value,
                 }))
               }
               isRequired={true}

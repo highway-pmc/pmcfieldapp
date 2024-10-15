@@ -627,6 +627,14 @@ export const TASK_TYPES = {
   DOOR_WORKS:'door-works',
   WINDOW_WORKS:'window-works',
   GLASS_WORKS:'glass-works',
+  ELECTRICAL_WORK:'electrical-works',
+  PLUMBING_WORK:'plumbing-work',
+  FLOORING_WORK:'flooring-work',
+  EXCAVATION_OF_TRENCH:'excavation-of-trench',
+  LAYING_OF_DUCT:'laying-of-duct',
+  HDD_CROSSING:'hdd-crossing',
+  CONSTRUCTION_OF_CHAMBER:'construction-of-chamber',
+  INSTALLATION_OF_EQUIPMENT:'installation-of-equipment',
 };
 
 export const TEST_MATERIALS_TYPES = {

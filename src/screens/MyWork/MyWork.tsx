@@ -234,24 +234,24 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
   ]);
   //GLUEING
   const [glueingData, setGlueingData]: any = useState([
-    // {
-    //   jointNumbers: '',
-    //   ambientTemperature: 0,
-    //   batchNoResin: 0,
-    //   batchNoHardener: 0,
-    //   mixingStartTime: '',
-    //   mixingFinishTime: '',
-    //   applicationStartTime: '',
-    //   applicationFinishTime: '',
-    //   segmentJoiningTimeClosure: '',
-    //   segmentJoiningTimeTemporaryFinish: '',
-    //   segmentSurfaceArea: 0,
-    //   epoxyConsumptionTheoreticalResin: 0,
-    //   epoxyConsumptionTheoreticalHardener: 0,
-    //   epoxyConsumptionActualResin: 0,
-    //   epoxyConsumptionActualHardener: 0,
-    //   key: Guid.create(),
-    // },
+    {
+      jointNumbers: '',
+      ambientTemperature: 0,
+      batchNoResin: 0,
+      batchNoHardener: 0,
+      mixingStartTime: '',
+      mixingFinishTime: '',
+      applicationStartTime: '',
+      applicationFinishTime: '',
+      segmentJoiningTimeClosure: '',
+      segmentJoiningTimeTemporaryFinish: '',
+      segmentSurfaceArea: 0,
+      epoxyConsumptionTheoreticalResin: 0,
+      epoxyConsumptionTheoreticalHardener: 0,
+      epoxyConsumptionActualResin: 0,
+      epoxyConsumptionActualHardener: 0,
+      key: Guid.create(),
+    },
   ]);
 
   // BORING_OF_PILE
@@ -466,6 +466,74 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     probingByStiffwire: string;
   };
   //FormUseStates
+  const [castingOfBallastData, setCastingOfBallastData] = useState({
+    drawingsApproved: 'Y',
+    mouldsReady: 'Y',
+    reinforcementTiedProperly: 'Y',
+    totalReinforcementWeightKg: 0.0,
+  });
+  const [ballastData, setBallastData] = useState([
+    {
+      gradeOfConcrete: '',
+      slumpValue: 0,
+      concreteStartTime: '',
+      concretePoured: 0,
+      concreteFinishTime: '',
+      totalBallastCasted: 0,
+      key: Guid.create(),
+    },
+  ]);
+
+  const [foundationData, setFoundationData] = useState([
+    {
+      gradeOfConcrete: '',
+      slumpValue: 0,
+      concreteStartTime: '',
+      concretePoured: 0,
+      concreteFinishTime: '',
+      totalFoundationCasted: 0,
+      key: Guid.create(),
+    },
+  ]);
+  const [constructionOfFoundationData, setConstructionOfFoundationData] =
+    useState({
+      drawingsApproved: 'Y',
+      pitExcavatedAtApprovedLocation: 'Y',
+      pitsExcavatedAsPerDrawings: 'Y',
+      reinforcementPlacedProperly: 'Y',
+      formworkCheckedProperly: 'Y',
+      totalWeightReinforcementKg: 0.0,
+    });
+
+  const [
+    installationOfNetworkDevicesData,
+    setInstallationOfNetworkDevicesData,
+  ] = useState({
+    drawingsApproved: 'Y',
+    devicesInspected: 'Y',
+    damageReported: 'Y',
+    methodologyApproved: 'Y',
+    safetyArrangementsInPlace: 'Y',
+    machineryAndManpowerAvailable: 'Y',
+    installationCompleted: 'Y',
+    instructionsComplied: 'Y',
+    devicesInstalled: 0,
+  });
+
+  const [installationOfSolarSystemData, setInstallationOfSolarSystemData] =
+    useState({
+      drawingsApproved: 'Y',
+      equipmentInspectedAtFactory: 'Y',
+      damageReportedToVendor: 'Y',
+      factoryInspectionAndDispatchClearance: 'Y',
+      installationMethodologyApproved: 'Y',
+      safetyArrangementsInPlace: 'Y',
+      machineryAndManpowerAvailable: 'Y',
+      installationCompleted: 'Y',
+      manufacturerInstructionsComplied: 'Y',
+      totalSolarSystemsInstalled: 0,
+    });
+
   const [installationOfEquipmentData, setInstallationOfEquipmentData] =
     useState({
       drawingsApproved: 'Y',
@@ -1109,15 +1177,14 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     setErectionOfDoublePoleStructureData,
   ] = useState({
     drawingsApproved: 'Y',
-    structureAtSiteReady: 'Y',
-    foundationWorkCompleted: 'Y',
-    concreteStrengthAchieved: 'Y',
-    installationMethodologyApproved: 'Y',
-    safetyArrangementsInPlace: 'Y',
-    machineryManpowerAvailable: 'Y',
-    erectionCompletedAsPerMethodology: 'Y',
+    sourceApproved: 'Y',
+    foundationCompleted: 'Y',
+    areaBarricaded: 'Y',
+    structureErectedProperly: 'Y',
     totalStructuresErected: 0,
+    totalHighwayLengthCovered: 0.0,
   });
+
   const [inverterInstallationData, setInverterInstallationData] = useState({
     drawingsApproved: 'Y',
     equipmentInspected: 'Y',
@@ -1946,6 +2013,20 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       },
     ]);
   };
+  const onAddComstructionOfFoundation=()=>{
+    setFoundationData([
+      ...foundationData,
+      {
+        gradeOfConcrete: '',
+        slumpValue: 0,
+        concreteStartTime: '',
+        concretePoured: 0,
+        concreteFinishTime: '',
+        totalFoundationCasted: 0,
+        key: Guid.create(),
+      },
+    ]);
+  };
   const validateInverterInstallationData = (
     inverterInstallationData: any,
   ): boolean => {
@@ -1969,28 +2050,48 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     return true;
   };
   const validateErectionOfDoublePoleStructureData = (
-    erectionOfDoublePoleStructureData: any,
+    erectionData: any,
   ): boolean => {
-    // Validate total number of structures erected
     const totalStructuresErected = parseInt(
-      erectionOfDoublePoleStructureData.totalStructuresErected,
-      10,
+      erectionData.totalStructuresErected,
     );
+    const totalHighwayLengthCovered = parseFloat(
+      erectionData.totalHighwayLengthCovered,
+    );
+
+    // Validation for totalStructuresErected
     if (
       isNaN(totalStructuresErected) ||
       totalStructuresErected <= 0 ||
-      totalStructuresErected > 1000
+      totalStructuresErected > 100
     ) {
       showSnackbar(
-        'Please enter a valid Total number of Double Pole Structures erected (should be > 0 and <= 1000)',
+        'Please enter a valid number of structures erected (integer, > 0 and <= 100)',
         'error',
       );
       return false;
     }
 
-    // Converting the values back to numbers after validation
-    erectionOfDoublePoleStructureData.totalStructuresErected = Number(
-      erectionOfDoublePoleStructureData.totalStructuresErected,
+    // Validation for totalHighwayLengthCovered
+    if (
+      isNaN(totalHighwayLengthCovered) ||
+      totalHighwayLengthCovered <= 0 ||
+      totalHighwayLengthCovered > 100 ||
+      erectionData.totalHighwayLengthCovered.split('.')[1]?.length > 3
+    ) {
+      showSnackbar(
+        'Please enter a valid total length covered (Km, max 3 decimal places, > 0 and <= 100)',
+        'error',
+      );
+      return false;
+    }
+
+    // Converting values back to numbers after validation
+    erectionData.totalStructuresErected = Number(
+      erectionData.totalStructuresErected,
+    );
+    erectionData.totalHighwayLengthCovered = Number(
+      erectionData.totalHighwayLengthCovered,
     );
 
     return true;
@@ -2746,6 +2847,306 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
 
     return true;
   };
+  const handleTimeChangeBallast = (index, field, value) => {
+    const newData = [...ballastData]; // Assuming ballastData state
+    newData[index][field] = value;
+    setBallastData(newData); // Update state
+  };
+  const handleTextInputChangeBallast = (index, field, value) => {
+    const updatedData = [...ballastData]; // Assuming ballastData state
+    let isValid = true;
+    let errorMessage = '';
+
+    switch (field) {
+      case 'slumpValue':
+        const slump = parseInt(value, 10);
+        if (isNaN(slump) || slump <= 0 || slump > 300) {
+          isValid = false;
+          errorMessage = 'Enter a valid slump value between 1 and 300 mm';
+        }
+        break;
+
+      case 'concretePoured':
+        const poured = parseFloat(value);
+        if (
+          isNaN(poured) ||
+          poured <= 0 ||
+          poured > 100 ||
+          value.split('.')[1]?.length > 3
+        ) {
+          isValid = false;
+          errorMessage =
+            'Enter a valid value (0-100 cum) with up to 3 decimals';
+        }
+        break;
+
+      case 'totalBallastCasted':
+        const total = parseInt(value, 10);
+        if (isNaN(total) || total <= 0 || total > 10000) {
+          isValid = false;
+          errorMessage = 'Enter a valid number between 1 and 10,000';
+        }
+        break;
+
+      default:
+        break;
+    }
+
+    if (isValid) {
+      updatedData[index][field] = value;
+      setBallastData(updatedData); // Update state
+    } else {
+      showSnackbar(errorMessage, 'error'); // Display error
+    }
+  };
+
+  const handleTimeChangeFoundation = (index: any, field: any, value: any) => {
+    const newData = [...foundationData];
+    newData[index][field] = value;
+    setFoundationData(newData);
+  };
+  const handleTextInputChangeFoundation = (index, field, value) => {
+    const updatedData = [...foundationData];
+    let isValid = true;
+    let errorMessage = '';
+
+    switch (field) {
+      case 'slumpValue':
+        const slump = parseInt(value);
+        if (isNaN(slump) || slump <= 0 || slump > 300) {
+          isValid = false;
+          errorMessage = 'Enter a valid slump value between 1 and 300 mm';
+        }
+        break;
+
+      case 'concretePoured':
+        const poured = parseFloat(value);
+        if (
+          isNaN(poured) ||
+          poured <= 0 ||
+          poured > 100 ||
+          value.split('.')[1]?.length > 3
+        ) {
+          isValid = false;
+          errorMessage =
+            'Enter a valid value (0-100 cum) with up to 3 decimals';
+        }
+        break;
+
+      case 'totalFoundationCasted':
+        const total = parseInt(value);
+        if (isNaN(total) || total <= 0 || total > 10000) {
+          isValid = false;
+          errorMessage = 'Enter a valid number between 1 and 10,000';
+        }
+        break;
+
+      default:
+        break;
+    }
+
+    if (isValid) {
+      updatedData[index][field] = value;
+      setFoundationData(updatedData);
+    } else {
+      showSnackbar(errorMessage, 'error');
+    }
+  };
+  const renderItemFoundation = (rowData: any) => (
+    <View style={[styles.rowContainer, styles.marginBottom10]}>
+      <View style={styles.cell}>
+        <Text>{rowData.index + 1}</Text>
+      </View>
+      <View style={styles.cell}>
+        <DropdownPicker
+          label="Source"
+          items={CONCRETE_GRADE_LIST}
+          value={rowData.item.gradeOfConcrete}
+          onChange={(item: any) =>
+            handleTextInputChangeFoundation(
+              rowData.index,
+              'gradeOfConcrete',
+              item.value,
+            )
+          }
+        />
+      </View>
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'slumpValue'}
+          index={rowData.index}
+          onChange={handleTextInputChangeFoundation}
+        />
+      </View>
+      <View style={styles.cell}>
+        <TimePicker
+          label=""
+          value={rowData.item.concreteStartTime}
+          onChange={time =>
+            handleTimeChangeFoundation(rowData.index, 'concreteStartTime', time)
+          }
+        />
+      </View>
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'concretePoured'}
+          index={rowData.index}
+          onChange={handleTextInputChangeFoundation}
+        />
+      </View>
+      <View style={styles.cell}>
+        <TimePicker
+          label=""
+          value={rowData.item.concreteFinishTime}
+          onChange={time =>
+            handleTimeChangeFoundation(
+              rowData.index,
+              'concreteFinishTime',
+              time,
+            )
+          }
+        />
+      </View>
+      <View style={styles.cell}>
+        <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'totalFoundationCasted'}
+          index={rowData.index}
+          onChange={handleTextInputChangeFoundation}
+        />
+      </View>
+      <View style={[styles.cell, {paddingHorizontal: 45}]}>
+        <TouchableOpacity
+          style={[styles.deleteButton]}
+          onPress={() => deleteConstructionOfFoundationItem(rowData, rowData.item.key)}>
+          <Image
+            style={[styles.CloseIcon, {tintColor: '#fff'}]}
+            source={require('./../../images/menu/delete.png')}
+          />
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+
+  const renderFoundationHeadings = () => (
+    <View style={styles.rowContainer}>
+      <Text style={styles.cellText}>Grade of Concrete</Text>
+      <Text style={styles.cellText}>Slump Value (mm)</Text>
+      <Text style={styles.cellText}>Concrete Start Time</Text>
+      <Text style={styles.cellText}>Concrete Poured (cum)</Text>
+      <Text style={styles.cellText}>Concrete Finish Time</Text>
+      <Text style={styles.cellText}>Total Foundation Casted</Text>
+    </View>
+  );
+const renderItemBallast = (rowData: any) => (
+  <View style={[styles.rowContainer, styles.marginBottom10]}>
+    <View style={styles.cell}>
+      <Text>{rowData.index + 1}</Text>
+    </View>
+    <View style={styles.cell}>
+      <DropdownPicker
+        label="Source"
+        items={CONCRETE_GRADE_LIST}
+        value={rowData.item.gradeOfConcrete}
+        onChange={(item: any) =>
+          handleTextInputChangeBallast(
+            rowData.index,
+            'gradeOfConcrete',
+            item.value,
+          )
+        }
+      />
+    </View>
+    <View style={styles.cell}>
+      <CustomTextInputValue
+        rowItem={rowData.item}
+        fieldName={'slumpValue'}
+        index={rowData.index}
+        onChange={handleTextInputChangeBallast}
+      />
+    </View>
+    <View style={styles.cell}>
+      <TimePicker
+        label=""
+        value={rowData.item.concreteStartTime}
+        onChange={time =>
+          handleTimeChangeBallast(rowData.index, 'concreteStartTime', time)
+        }
+      />
+    </View>
+    <View style={styles.cell}>
+      <CustomTextInputValue
+        rowItem={rowData.item}
+        fieldName={'concretePoured'}
+        index={rowData.index}
+        onChange={handleTextInputChangeBallast}
+      />
+    </View>
+    <View style={styles.cell}>
+      <TimePicker
+        label=""
+        value={rowData.item.concreteFinishTime}
+        onChange={time =>
+          handleTimeChangeBallast(rowData.index, 'concreteFinishTime', time)
+        }
+      />
+    </View>
+    <View style={styles.cell}>
+      <CustomTextInputValue
+        rowItem={rowData.item}
+        fieldName={'totalBallastCasted'}
+        index={rowData.index}
+        onChange={handleTextInputChangeBallast}
+      />
+    </View>
+    <View style={[styles.cell, {paddingHorizontal: 45}]}>
+      <TouchableOpacity
+        style={[styles.deleteButton]}
+        onPress={() => deleteBallastItem(rowData, rowData.item.key)}>
+        <Image
+          style={[styles.CloseIcon, {tintColor: '#fff'}]}
+          source={require('./../../images/menu/delete.png')}
+        />
+      </TouchableOpacity>
+    </View>
+  </View>
+);
+const deleteBallastItem = (rowMap: any, rowKey: any) => {
+  closeRow(rowMap, rowKey);
+  const newData = [...ballastData];
+  const prevIndex = ballastData.findIndex(item => item.key === rowKey);
+  newData.splice(prevIndex, 1);
+  setBallastData(newData);
+};
+
+const onAddBallastItem = () => {
+  setBallastData([
+    ...ballastData,
+    {
+      gradeOfConcrete: '',
+      slumpValue: 0,
+      concreteStartTime: '',
+      concretePoured: 0,
+      concreteFinishTime: '',
+      totalBallastCasted: 0,
+      key: Guid.create(),
+    },
+  ]);
+};
+
+const renderBallastHeadings = () => (
+  <View style={styles.rowContainer}>
+    <Text style={styles.cellText}>Grade of Concrete</Text>
+    <Text style={styles.cellText}>Slump Value (mm)</Text>
+    <Text style={styles.cellText}>Concrete Start Time</Text>
+    <Text style={styles.cellText}>Concrete Poured (cum)</Text>
+    <Text style={styles.cellText}>Concrete Finish Time</Text>
+    <Text style={styles.cellText}>Total Ballast Casted</Text>
+  </View>
+);
+
   const renderLayingOfDlcHeadings = () => (
     <View style={styles.rowContainer}>
       <View style={styles.cell}>
@@ -2776,6 +3177,13 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     );
     newData.splice(prevIndex, 1);
     setLayingOfDlcTableData(newData);
+  };
+  const deleteConstructionOfFoundationItem = (rowMap: any, rowKey: any) => {
+    closeRow(rowMap, rowKey);
+    const newData = [...foundationData];
+    const prevIndex = foundationData.findIndex(item => item.key === rowKey);
+    newData.splice(prevIndex, 1);
+    setFoundationData(newData);
   };
   const renderItemLayingOfDlc = (rowData: any) => (
     <View style={[styles.rowContainer, styles.marginBottom10]}>
@@ -4874,7 +5282,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           break;
         case TASK_TYPES.LAYING_OF_DLC:
           if (rfiData.metaData.layingOfDlcTableData) {
-            rfiData.metaData.layingOfDlcTableData.forEach(item => {
+            rfiData.metaData.layingOfDlcTableData.forEach((item:any) => {
               item.key = Guid.create();
             });
             setLayingOfDlcTableData(rfiData.metaData.layingOfDlcTableData);
@@ -5378,17 +5786,16 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           } else {
             setErectionOfDoublePoleStructureData({
               drawingsApproved: 'Y',
-              structureAtSiteReady: 'Y',
-              foundationWorkCompleted: 'Y',
-              concreteStrengthAchieved: 'Y',
-              installationMethodologyApproved: 'Y',
-              safetyArrangementsInPlace: 'Y',
-              machineryManpowerAvailable: 'Y',
-              erectionCompletedAsPerMethodology: 'Y',
+              sourceApproved: 'Y',
+              foundationCompleted: 'Y',
+              areaBarricaded: 'Y',
+              structureErectedProperly: 'Y',
               totalStructuresErected: 0,
+              totalHighwayLengthCovered: 0.0,
             });
           }
           break;
+
         case TASK_TYPES.FIXING_OF_MC4_Y_CONNECTOR:
           if (rfiData.metaData.fixingOfMC4Data) {
             setFixingOfMC4Data(rfiData.metaData.fixingOfMC4Data);
@@ -6417,6 +6824,91 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
               totalEquipmentInstalled: 0,
             });
           }
+          break;
+        case TASK_TYPES.INSTALLATION_OF_SOLAR_SYSTEM:
+          if (rfiData.metaData.installationOfSolarSystemData) {
+            setInstallationOfSolarSystemData(
+              rfiData.metaData.installationOfSolarSystemData,
+            );
+          } else {
+            setInstallationOfSolarSystemData({
+              drawingsApproved: 'Y',
+              equipmentInspectedAtFactory: 'Y',
+              damageReportedToVendor: 'Y',
+              factoryInspectionAndDispatchClearance: 'Y',
+              installationMethodologyApproved: 'Y',
+              safetyArrangementsInPlace: 'Y',
+              machineryAndManpowerAvailable: 'Y',
+              installationCompleted: 'Y',
+              manufacturerInstructionsComplied: 'Y',
+              totalSolarSystemsInstalled: 0,
+            });
+          }
+          break;
+        case TASK_TYPES.INSTALLATION_OF_NETWORK_DEVICES:
+          if (rfiData.metaData.installationOfNetworkDevicesData) {
+            setInstallationOfNetworkDevicesData(
+              rfiData.metaData.installationOfNetworkDevicesData,
+            );
+          } else {
+            setInstallationOfNetworkDevicesData({
+              drawingsApproved: 'Y',
+              devicesInspected: 'Y',
+              damageReported: 'Y',
+              methodologyApproved: 'Y',
+              safetyArrangementsInPlace: 'Y',
+              machineryAndManpowerAvailable: 'Y',
+              installationCompleted: 'Y',
+              instructionsComplied: 'Y',
+              devicesInstalled: 0,
+            });
+          }
+          break;
+        case TASK_TYPES.CONSTRUCTION_OF_FOUNDATION:
+          if (rfiData.metaData.constructionOfFoundationData) {
+            setConstructionOfFoundationData(
+              rfiData.metaData.constructionOfFoundationData,
+            );
+          } else {
+            setConstructionOfFoundationData({
+              drawingsApproved: 'Y',
+              pitExcavatedAtApprovedLocation: 'Y',
+              pitsExcavatedAsPerDrawings: 'Y',
+              reinforcementPlacedProperly: 'Y',
+              formworkCheckedProperly: 'Y',
+              totalWeightReinforcementKg: 0.0,
+            });
+          }
+          if (rfiData.metaData?.foundationData) {
+            rfiData.metaData.foundationData.forEach((item: any) => {
+              item.key = Guid.create();
+            });
+            setFoundationData(rfiData.metaData.foundationData);
+          } else {
+            setFoundationData([]);
+          }
+          break;
+        case TASK_TYPES.CASTING_OF_BALLAST:
+          if (rfiData.metaData.castingOfBallastData) {
+            setCastingOfBallastData(rfiData.metaData.castingOfBallastData);
+          } else {
+            setCastingOfBallastData({
+              drawingsApproved: 'Y',
+              mouldsReady: 'Y',
+              reinforcementTiedProperly: 'Y',
+              totalReinforcementWeightKg: 0.0,
+            });
+          }
+          if (rfiData.metaData?.ballastData) {
+            rfiData.metaData.ballastData.forEach((item: any) => {
+              item.key = Guid.create();
+            });
+            setBallastData(rfiData.metaData.ballastData);
+          } else {
+            setBallastData([]);
+          }
+          break;
+
           break;
 
         case TASK_TYPES.LIFTING_LEFT:
@@ -7569,6 +8061,59 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
 
     return true;
   };
+  const validateFoundationData = (foundationData: any): boolean => {
+    for (const item of foundationData) {
+      // Parsing values to float/integer
+      const slumpValue = parseInt(item.slumpValue, 10);
+      const concretePoured = parseFloat(item.concretePoured);
+      const totalFoundationCasted = parseInt(item.totalFoundationCasted, 10);
+
+      // Validation checks
+      if (isNaN(slumpValue) || slumpValue <= 0 || slumpValue > 300) {
+        showSnackbar(
+          'Slump Value must be an integer greater than 0 and up to 300.',
+          'error',
+        );
+        return false;
+      }
+
+      if (
+        isNaN(concretePoured) ||
+        concretePoured <= 0 ||
+        concretePoured > 100 ||
+        !/^\d+(\.\d{1,3})?$/.test(item.concretePoured)
+      ) {
+        showSnackbar(
+          'Concrete Poured must be greater than 0 and up to 100, with up to 3 decimal places.',
+          'error',
+        );
+        return false;
+      }
+
+      if (
+        isNaN(totalFoundationCasted) ||
+        !Number.isInteger(totalFoundationCasted) ||
+        totalFoundationCasted <= 0 ||
+        totalFoundationCasted > 10000
+      ) {
+        showSnackbar(
+          'Total Foundation Casted must be an integer greater than 0 and up to 10,000.',
+          'error',
+        );
+        return false;
+      }
+    }
+
+    // Convert the values back to numbers after validation
+    foundationData.forEach((item: any) => {
+      item.slumpValue = Number(item.slumpValue);
+      item.concretePoured = Number(item.concretePoured);
+      item.totalFoundationCasted = Number(item.totalFoundationCasted);
+    });
+
+    return true;
+  };
+
   const validatePrestressingData = (prestressingData: any): boolean => {
     for (const item of prestressingData) {
       // Parsing values to float
@@ -7874,6 +8419,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           minimumTimeHasBeenAttained: minimumTimeHasBeenAttained,
         };
         break;
+      case TASK_TYPES.CONSTRUCTION_OF_CONTROL_ROOM:
       case TASK_TYPES.COMPACTING_GROUND_SUPPORT_FOR_EMBANKMENT:
       case TASK_TYPES.DEWATERING:
       case TASK_TYPES.PLACING_OF_COVER:
@@ -9118,6 +9664,58 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           installationOfEquipmentData: installationOfEquipmentData,
         };
         break;
+      case TASK_TYPES.INSTALLATION_OF_SOLAR_SYSTEM:
+        if (
+          !validateInstallationOfSolarSystemData(installationOfSolarSystemData)
+        ) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          installationOfSolarSystemData: installationOfSolarSystemData,
+        };
+        break;
+      case TASK_TYPES.INSTALLATION_OF_NETWORK_DEVICES:
+        if (
+          !validateInstallationOfNetworkDevicesData(
+            installationOfNetworkDevicesData,
+          )
+        ) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          installationOfNetworkDevicesData: installationOfNetworkDevicesData,
+        };
+        break;
+      case TASK_TYPES.CONSTRUCTION_OF_FOUNDATION:
+        if (
+          !validateConstructionOfFoundationData(constructionOfFoundationData)
+        ) {
+          return;
+        }
+        if (!validateFoundationData(foundationData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          constructionOfFoundationData: constructionOfFoundationData,
+          foundationData: foundationData,
+        };
+        break;
+      case TASK_TYPES.CASTING_OF_BALLAST:
+        if (!validateCastingOfBallastData(castingOfBallastData)) {
+          return;
+        }
+        if (!validateBallastData(ballastData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          castingOfBallastData: castingOfBallastData,
+          ballastData:ballastData,
+        };
+        break;
 
       case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
       case TASK_TYPES.LIFTING_LEFT:
@@ -9902,6 +10500,145 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
 
     return true;
   };
+  const validateBallastData = (ballastData: any): boolean => {
+    for (const item of ballastData) {
+      const slumpValue = parseInt(item.slumpValue, 10);
+      const concretePoured = parseFloat(item.concretePoured);
+      const totalBallastCasted = parseInt(item.totalBallastCasted, 10);
+
+      // Validation checks
+      if (isNaN(slumpValue) || slumpValue <= 0 || slumpValue > 300) {
+        showSnackbar(
+          'Slump Value must be an integer greater than 0 and up to 300.',
+          'error',
+        );
+        return false;
+      }
+
+      if (
+        isNaN(concretePoured) ||
+        concretePoured <= 0 ||
+        concretePoured > 100 ||
+        !/^\d+(\.\d{1,3})?$/.test(item.concretePoured)
+      ) {
+        showSnackbar(
+          'Concrete Poured must be greater than 0 and up to 100, with up to 3 decimal places.',
+          'error',
+        );
+        return false;
+      }
+
+      if (
+        isNaN(totalBallastCasted) ||
+        !Number.isInteger(totalBallastCasted) ||
+        totalBallastCasted <= 0 ||
+        totalBallastCasted > 10000
+      ) {
+        showSnackbar(
+          'Total Ballast Casted must be an integer greater than 0 and up to 10,000.',
+          'error',
+        );
+        return false;
+      }
+    }
+
+    ballastData.forEach((item: any) => {
+      item.slumpValue = Number(item.slumpValue);
+      item.concretePoured = Number(item.concretePoured);
+      item.totalBallastCasted = Number(item.totalBallastCasted);
+    });
+
+    return true;
+  };
+
+  const validateCastingOfBallastData = (castingOfBallastData: any): boolean => {
+    const totalReinforcementWeight = parseFloat(
+      castingOfBallastData.totalReinforcementWeightKg,
+    );
+
+    // Validation for totalReinforcementWeightKg
+    if (
+      isNaN(totalReinforcementWeight) ||
+      totalReinforcementWeight <= 0 ||
+      totalReinforcementWeight > 1000 ||
+      castingOfBallastData.totalReinforcementWeightKg.split('.')[1]?.length > 3
+    ) {
+      showSnackbar(
+        'Please enter a valid reinforcement weight (Kg, > 0, <= 1000, max 3 decimal places)',
+        'error',
+      );
+      return false;
+    }
+
+    // Convert the value back to a number after validation
+    castingOfBallastData.totalReinforcementWeightKg = Number(
+      totalReinforcementWeight,
+    );
+
+    return true;
+  };
+
+  const validateConstructionOfFoundationData = (data: any): boolean => {
+    const totalWeight = parseFloat(data.totalWeightReinforcementKg);
+
+    if (
+      isNaN(totalWeight) ||
+      totalWeight <= 0 ||
+      totalWeight > 1000 ||
+      data.totalWeightReinforcementKg.split('.')[1]?.length > 3
+    ) {
+      showSnackbar(
+        'Please enter a valid total weight (Kg, max 3 decimal places, > 0 and <= 1000)',
+        'error',
+      );
+      return false;
+    }
+
+    data.totalWeightReinforcementKg = Number(data.totalWeightReinforcementKg);
+    return true;
+  };
+
+  const validateInstallationOfNetworkDevicesData = (data: any) => {
+    const devicesInstalled = parseInt(data.devicesInstalled);
+
+    if (
+      isNaN(devicesInstalled) ||
+      devicesInstalled <= 0 ||
+      devicesInstalled > 1000
+    ) {
+      showSnackbar(
+        'Please enter a valid number of devices installed (integer, > 0 and <= 1000)',
+        'error',
+      );
+      return false;
+    }
+
+    data.devicesInstalled = Number(data.devicesInstalled);
+    return true;
+  };
+
+  const validateInstallationOfSolarSystemData = (data: any): boolean => {
+    const totalSystemsInstalled = parseInt(data.totalSolarSystemsInstalled);
+
+    // Validation for totalSystemsInstalled
+    if (
+      isNaN(totalSystemsInstalled) ||
+      totalSystemsInstalled <= 0 ||
+      totalSystemsInstalled > 1000
+    ) {
+      showSnackbar(
+        'Please enter a valid number of Solar Systems installed (integer, > 0 and <= 1000)',
+        'error',
+      );
+      return false;
+    }
+
+    // Convert to number after validation
+    data.totalSolarSystemsInstalled = Number(data.totalSolarSystemsInstalled);
+
+    return true;
+  };
+
   const validateInstallationOfEquipmentData = (
     installationOfEquipmentData: any,
   ): boolean => {
@@ -13637,7 +14374,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             </View>
           </View>
         );
-
+      case TASK_TYPES.CONSTRUCTION_OF_CONTROL_ROOM:
       case TASK_TYPES.COMPACTING_GROUND_SUPPORT_FOR_EMBANKMENT:
       case TASK_TYPES.DEWATERING:
       case TASK_TYPES.PLACING_OF_COVER:
@@ -20965,41 +21702,31 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           </View>
         );
       case TASK_TYPES.ERECTION_OF_DOUBLE_POLE_STRUCTURE:
-        const erectionOfDoublePoleStructureProperties = [
-          {title: 'Drawings Approved', key: 'drawingsApproved'},
+        const erectionOfDoublePoleProperties = [
           {
-            title: 'Structure Reached Site and Ready for Erection',
-            key: 'structureAtSiteReady',
+            title: 'Whether the drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {title: 'Whether the source approved or not', key: 'sourceApproved'},
+          {
+            title:
+              'Whether the foundation has been completed as per drawings and concrete has attained desired strength',
+            key: 'foundationCompleted',
           },
           {
-            title: 'Foundation Work Completed and Ready for Installation',
-            key: 'foundationWorkCompleted',
+            title:
+              'Whether the entire area is barricaded and all the safety arrangements are in place',
+            key: 'areaBarricaded',
           },
           {
-            title: 'Concrete Components Achieved Desired Strength',
-            key: 'concreteStrengthAchieved',
-          },
-          {
-            title: 'Installation Methodology Approved',
-            key: 'installationMethodologyApproved',
-          },
-          {
-            title: 'Safety Arrangements in Place',
-            key: 'safetyArrangementsInPlace',
-          },
-          {
-            title: 'Sufficient Machinery and Manpower Available',
-            key: 'machineryManpowerAvailable',
-          },
-          {
-            title: 'Erection Completed as per Approved Methodology',
-            key: 'erectionCompletedAsPerMethodology',
+            title: 'Whether erection of double pole structure done properly',
+            key: 'structureErectedProperly',
           },
         ];
 
         return (
           <View>
-            {erectionOfDoublePoleStructureProperties.map(property => (
+            {erectionOfDoublePoleProperties.map(property => (
               <View style={{flexDirection: 'column'}} key={property.key}>
                 <DropdownPicker
                   label={property.title}
@@ -21015,14 +21742,27 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                 />
               </View>
             ))}
-
             <Input
-              label="Total No. of Double Pole Structures Erected"
+              label="Total no. of double pole structures erected"
               value={erectionOfDoublePoleStructureData.totalStructuresErected}
               onChange={(value: any) =>
                 setErectionOfDoublePoleStructureData(prevData => ({
                   ...prevData,
                   totalStructuresErected: value,
+                }))
+              }
+              isRequired={true}
+            />
+
+            <Input
+              label="Total length of highway covered in Km"
+              value={
+                erectionOfDoublePoleStructureData.totalHighwayLengthCovered
+              }
+              onChange={(value: any) =>
+                setErectionOfDoublePoleStructureData(prevData => ({
+                  ...prevData,
+                  totalHighwayLengthCovered: value,
                 }))
               }
               isRequired={true}
@@ -21050,6 +21790,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             </View>
           </View>
         );
+
       case TASK_TYPES.FIXING_OF_MC4_Y_CONNECTOR:
         const fixingOfMC4Properties = [
           {
@@ -26334,6 +27075,397 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
               }
               isRequired={true}
             />
+            <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+          </View>
+        );
+      case TASK_TYPES.INSTALLATION_OF_SOLAR_SYSTEM:
+        const installationOfSolarSystemProperties = [
+          {
+            title: 'Whether the Drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {
+            title: 'Whether all equipment inspected at the factory',
+            key: 'equipmentInspectedAtFactory',
+          },
+          {
+            title: 'Any damage to equipment, informed to vendor',
+            key: 'damageReportedToVendor',
+          },
+          {
+            title: 'Factory inspection done, dispatch clearance obtained',
+            key: 'factoryInspectionAndDispatchClearance',
+          },
+          {
+            title: 'Installation methodology approved',
+            key: 'installationMethodologyApproved',
+          },
+          {
+            title: 'All safety arrangements in place prior to installation',
+            key: 'safetyArrangementsInPlace',
+          },
+          {
+            title: 'Sufficient machinery and manpower available',
+            key: 'machineryAndManpowerAvailable',
+          },
+          {
+            title: 'Installation completed as per methodology',
+            key: 'installationCompleted',
+          },
+          {
+            title: 'Manufacturer instructions complied during installation',
+            key: 'manufacturerInstructionsComplied',
+          },
+        ];
+
+        return (
+          <View>
+            {installationOfSolarSystemProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={installationOfSolarSystemData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setInstallationOfSolarSystemData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <Input
+              label="Number of Solar Systems Installed"
+              value={installationOfSolarSystemData.totalSolarSystemsInstalled}
+              onChange={(value: any) =>
+                setInstallationOfSolarSystemData(prevData => ({
+                  ...prevData,
+                  totalSolarSystemsInstalled: value,
+                }))
+              }
+              isRequired={true}
+            />
+            <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+          </View>
+        );
+      case TASK_TYPES.INSTALLATION_OF_NETWORK_DEVICES:
+        const installationProperties = [
+          {
+            title: 'Whether the Drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {
+            title: 'Whether the devices inspected at the factory',
+            key: 'devicesInspected',
+          },
+          {
+            title:
+              'Is there any damage to any device? If yes, informed vendor?',
+            key: 'damageReported',
+          },
+          {
+            title: 'Installation methodology approved',
+            key: 'methodologyApproved',
+          },
+          {
+            title: 'All safety arrangements in place before installation?',
+            key: 'safetyArrangementsInPlace',
+          },
+          {
+            title: 'Sufficient machinery and manpower available at site?',
+            key: 'machineryAndManpowerAvailable',
+          },
+          {
+            title: 'Installation completed as per the approved methodology',
+            key: 'installationCompleted',
+          },
+          {
+            title: 'Manufacturer’s instructions complied during installation',
+            key: 'instructionsComplied',
+          },
+        ];
+
+        return (
+          <View>
+            {installationProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={installationOfNetworkDevicesData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setInstallationOfNetworkDevicesData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <Input
+              label="Number of Devices Installed"
+              value={installationOfNetworkDevicesData.devicesInstalled}
+              onChange={(value: any) =>
+                setInstallationOfNetworkDevicesData(prevData => ({
+                  ...prevData,
+                  devicesInstalled: value,
+                }))
+              }
+              isRequired={true}
+            />
+            <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+          </View>
+        );
+      case TASK_TYPES.CONSTRUCTION_OF_FOUNDATION:
+        if (!foundationData || !foundationData.length) {
+          setFoundationData([
+            {
+              gradeOfConcrete: '',
+              slumpValue: 0,
+              concreteStartTime: '',
+              concretePoured: 0,
+              concreteFinishTime: '',
+              totalFoundationCasted: 0,
+              key: Guid.create(),
+            },
+          ]);
+        }
+        const constructionOfFoundationProperties = [
+          {
+            title: 'Whether the Drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {
+            title: 'Whether the pit excavated at the approved location',
+            key: 'pitExcavatedAtApprovedLocation',
+          },
+          {
+            title:
+              'Whether the pits have been excavated as per the approved drawings',
+            key: 'pitsExcavatedAsPerDrawings',
+          },
+          {
+            title:
+              'Whether the reinforcement has been placed properly as per the approved BBS',
+            key: 'reinforcementPlacedProperly',
+          },
+          {
+            title: 'Whether the formwork/shuttering checked properly',
+            key: 'formworkCheckedProperly',
+          },
+        ];
+
+        return (
+          <View>
+            {constructionOfFoundationProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={constructionOfFoundationData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setConstructionOfFoundationData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <Input
+              label="Total weight of reinforcement in Kg per foundation"
+              value={constructionOfFoundationData.totalWeightReinforcementKg}
+              onChange={(value: any) =>
+                setConstructionOfFoundationData(prevData => ({
+                  ...prevData,
+                  totalWeightReinforcementKg: value,
+                }))
+              }
+              isRequired={true}
+            />
+            <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}>
+              <View>
+                {renderFoundationHeadings()}
+                <FlatList
+                  data={foundationData}
+                  renderItem={renderItemFoundation}
+                  keyExtractor={item => item.key.toString()}
+                  style={{zIndex: 10}}
+                  automaticallyAdjustContentInsets={true}
+                  scrollEnabled={false}
+                />
+              </View>
+            </ScrollView>
+            <TouchableOpacity onPress={() => onAddComstructionOfFoundation()}>
+              <Text>+ Add More</Text>
+            </TouchableOpacity>
+            <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+          </View>
+        );
+      case TASK_TYPES.CASTING_OF_BALLAST:
+        if (!ballastData || !ballastData.length) {
+          setBallastData([
+            {
+              gradeOfConcrete: '',
+              slumpValue: 0,
+              concreteStartTime: '',
+              concretePoured: 0,
+              concreteFinishTime: '',
+              totalBallastCasted: 0,
+              key: Guid.create(),
+            },
+          ]);
+        }
+
+        const castingOfBallastProperties = [
+          {
+            title: 'Whether the Drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {
+            title: 'Whether the moulds are finished and ready for concreting',
+            key: 'mouldsReady',
+          },
+          {
+            title:
+              'In case of reinforcement or mess in the ballast, the same has been tied in the mould properly',
+            key: 'reinforcementTiedProperly',
+          },
+        ];
+
+        return (
+          <View>
+            {castingOfBallastProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={castingOfBallastData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setCastingOfBallastData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <Input
+              label="Total weight of reinforcement/mess in Kg per ballast"
+              value={castingOfBallastData.totalReinforcementWeightKg}
+              onChange={(value: any) =>
+                setCastingOfBallastData(prevData => ({
+                  ...prevData,
+                  totalReinforcementWeightKg: value,
+                }))
+              }
+              isRequired={true}
+            />
+            <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}>
+              <View>
+                {renderBallastHeadings()}
+                <FlatList
+                  data={foundationData}
+                  renderItem={renderItemBallast}
+                  keyExtractor={item => item.key.toString()}
+                  style={{zIndex: 10}}
+                  automaticallyAdjustContentInsets={true}
+                  scrollEnabled={false}
+                />
+              </View>
+            </ScrollView>
+            <TouchableOpacity onPress={() => onAddBallastItem()}>
+              <Text>+ Add More</Text>
+            </TouchableOpacity>
             <View>
               <CalendarPicker
                 label="Date"

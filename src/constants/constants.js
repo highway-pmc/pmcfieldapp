@@ -635,6 +635,11 @@ export const TASK_TYPES = {
   HDD_CROSSING:'hdd-crossing',
   CONSTRUCTION_OF_CHAMBER:'construction-of-chamber',
   INSTALLATION_OF_EQUIPMENT:'installation-of-equipment',
+  INSTALLATION_OF_SOLAR_SYSTEM:'installation-of-solar-system',
+  INSTALLATION_OF_NETWORK_DEVICES:'installation-of-network-devices',
+  CONSTRUCTION_OF_CONTROL_ROOM:'construction-of-control-room',
+  CONSTRUCTION_OF_FOUNDATION:'construction-of-foundation',
+  CASTING_OF_BALLAST:'casting-of-ballast',
 };
 
 export const TEST_MATERIALS_TYPES = {

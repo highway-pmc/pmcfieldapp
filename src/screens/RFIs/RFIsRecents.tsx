@@ -459,6 +459,97 @@ const RFIsRecents = (props: any) => {
       </View>
     </View>
   );
+  const renderItemConstructionOfFoundation = (rowData: any) => (
+    <View style={{flexDirection: 'column', gap: 5}}>
+      {rowData.index === 0 && (
+        <View style={styles.headerRow}>
+          <Text style={styles.headerCell}>Foundation Type</Text>
+          <Text style={styles.headerCell}>Concrete Quantity (cum)</Text>
+          <Text style={styles.headerCell}>Reinforcement Qty (kg)</Text>
+          <Text style={styles.headerCell}>Construction Start Time</Text>
+          <Text style={styles.headerCell}>Construction End Time</Text>
+        </View>
+      )}
+      <View style={styles.row}>
+        <Text style={styles.cell}>{rowData.index + 1}</Text> {/* Row Number */}
+        <Text style={styles.cell}>{rowData.item.foundationType}</Text>
+        <Text style={styles.cell}>{rowData.item.concreteQuantity}</Text>
+        <Text style={styles.cell}>{rowData.item.reinforcementQty}</Text>
+        <Text style={styles.cell}>{rowData.item.constructionStartTime}</Text>
+        <Text style={styles.cell}>{rowData.item.constructionEndTime}</Text>
+      </View>
+    </View>
+  );
+  const renderSectionHeaderConstructionOfFoundation = (rowData: any) => (
+    <View>
+      <View>
+        <Text>Serial No.</Text>
+      </View>
+      <View>
+        <Text>Foundation Type</Text>
+      </View>
+      <View>
+        <Text>Concrete Quantity (cum)</Text>
+      </View>
+      <View>
+        <Text>Reinforcement Qty (kg)</Text>
+      </View>
+      <View>
+        <Text>Construction Start Time</Text>
+      </View>
+      <View>
+        <Text>Construction End Time</Text>
+      </View>
+    </View>
+  );
+  const renderSectionHeaderCastingOfBallast = (rowData: any) => (
+    <View>
+      <View>
+        <Text>Serial No.</Text>
+      </View>
+      <View>
+        <Text>Grade of Concrete</Text>
+      </View>
+      <View>
+        <Text>Slump Value (mm)</Text>
+      </View>
+      <View>
+        <Text>Concrete Poured (cum)</Text>
+      </View>
+      <View>
+        <Text>Casting Start Time</Text>
+      </View>
+      <View>
+        <Text>Casting End Time</Text>
+      </View>
+      <View>
+        <Text>Total Ballast Casted</Text>
+      </View>
+    </View>
+  );
+  const renderItemCastingOfBallast = (rowData: any) => (
+    <View style={{flexDirection: 'column', gap: 5}}>
+      {rowData.index === 0 && (
+        <View style={styles.headerRow}>
+          <Text style={styles.headerCell}>Grade of Concrete</Text>
+          <Text style={styles.headerCell}>Slump Value (mm)</Text>
+          <Text style={styles.headerCell}>Concrete Poured (cum)</Text>
+          <Text style={styles.headerCell}>Casting Start Time</Text>
+          <Text style={styles.headerCell}>Casting End Time</Text>
+          <Text style={styles.headerCell}>Total Ballast Casted</Text>
+        </View>
+      )}
+      <View style={styles.row}>
+        <Text style={styles.cell}>{rowData.index + 1}</Text> {/* Row Number */}
+        <Text style={styles.cell}>{rowData.item.gradeOfConcrete}</Text>
+        <Text style={styles.cell}>{rowData.item.slumpValue}</Text>
+        <Text style={styles.cell}>{rowData.item.concretePoured}</Text>
+        <Text style={styles.cell}>{rowData.item.concreteStartTime}</Text>
+        <Text style={styles.cell}>{rowData.item.concreteFinishTime}</Text>
+        <Text style={styles.cell}>{rowData.item.totalBallastCasted}</Text>
+      </View>
+    </View>
+  );
 
   const renderItemLayingOfDlc = (rowData: any) => (
     <View style={{flexDirection: 'column', gap: 5}}>
@@ -1046,7 +1137,7 @@ const RFIsRecents = (props: any) => {
             ))}
           </View>
         );
-
+      case TASK_TYPES.CONSTRUCTION_OF_CONTROL_ROOM:
       case TASK_TYPES.COMPACTING_GROUND_SUPPORT_FOR_EMBANKMENT:
       case TASK_TYPES.DEWATERING:
       case TASK_TYPES.PLACING_OF_COVER:
@@ -1980,6 +2071,128 @@ const RFIsRecents = (props: any) => {
                 </Text>
                 <Text>
                   {selectedRFI?.metaData.excavationOfTrenchData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.INSTALLATION_OF_SOLAR_SYSTEM:
+        const installationOfSolarSystemProperties = [
+          {
+            title: 'Whether the Drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {
+            title: 'Whether all equipment inspected at the factory',
+            key: 'equipmentInspectedAtFactory',
+          },
+          {
+            title: 'Any damage to equipment, informed to vendor',
+            key: 'damageReportedToVendor',
+          },
+          {
+            title: 'Factory inspection done, dispatch clearance obtained',
+            key: 'factoryInspectionAndDispatchClearance',
+          },
+          {
+            title: 'Installation methodology approved',
+            key: 'installationMethodologyApproved',
+          },
+          {
+            title: 'All safety arrangements in place prior to installation',
+            key: 'safetyArrangementsInPlace',
+          },
+          {
+            title: 'Sufficient machinery and manpower available',
+            key: 'machineryAndManpowerAvailable',
+          },
+          {
+            title: 'Installation completed as per methodology',
+            key: 'installationCompleted',
+          },
+          {
+            title: 'Manufacturer instructions complied during installation',
+            key: 'manufacturerInstructionsComplied',
+          },
+          {
+            title: 'Number of Solar Systems Installed',
+            key: 'totalSolarSystemsInstalled',
+          },
+        ];
+
+        return (
+          <View>
+            {installationOfSolarSystemProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.installationOfSolarSystemData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
+      case TASK_TYPES.INSTALLATION_OF_NETWORK_DEVICES:
+        const installationProperties = [
+          {
+            title: 'Whether the Drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {
+            title: 'Whether the devices inspected at the factory',
+            key: 'devicesInspected',
+          },
+          {
+            title:
+              'Is there any damage to any device? If yes, informed vendor?',
+            key: 'damageReported',
+          },
+          {
+            title: 'Installation methodology approved',
+            key: 'methodologyApproved',
+          },
+          {
+            title: 'All safety arrangements in place before installation?',
+            key: 'safetyArrangementsInPlace',
+          },
+          {
+            title: 'Sufficient machinery and manpower available at site?',
+            key: 'machineryAndManpowerAvailable',
+          },
+          {
+            title: 'Installation completed as per the approved methodology',
+            key: 'installationCompleted',
+          },
+          {
+            title: 'Manufacturer’s instructions complied during installation',
+            key: 'instructionsComplied',
+          },
+          {title: 'Number of Devices Installed', key: 'devicesInstalled'},
+        ];
+
+        return (
+          <View>
+            {installationProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.installationOfNetworkDevicesData?.[
+                      property.key
+                    ]
+                  }
                 </Text>
               </View>
             ))}
@@ -5950,45 +6163,42 @@ const RFIsRecents = (props: any) => {
           </View>
         );
       case TASK_TYPES.ERECTION_OF_DOUBLE_POLE_STRUCTURE:
-        const erectionOfDoublePoleStructureProperties = [
-          {title: 'Drawings Approved', key: 'drawingsApproved'},
+        const erectionPropertiesDisplay = [
           {
-            title: 'Structure Reached Site and Ready for Erection',
-            key: 'structureAtSiteReady',
+            title: 'Whether the drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {title: 'Whether the source approved or not', key: 'sourceApproved'},
+          {
+            title:
+              'Whether the foundation has been completed as per drawings and concrete has attained desired strength',
+            key: 'foundationCompleted',
           },
           {
-            title: 'Foundation Work Completed and Ready for Installation',
-            key: 'foundationWorkCompleted',
+            title:
+              'Whether the entire area is barricaded and all the safety arrangements are in place',
+            key: 'areaBarricaded',
           },
           {
-            title: 'Concrete Components Achieved Desired Strength',
-            key: 'concreteStrengthAchieved',
+            title: 'Whether erection of double pole structure done properly',
+            key: 'structureErectedProperly',
           },
           {
-            title: 'Installation Methodology Approved',
-            key: 'installationMethodologyApproved',
-          },
-          {
-            title: 'Safety Arrangements in Place',
-            key: 'safetyArrangementsInPlace',
-          },
-          {
-            title: 'Sufficient Machinery and Manpower Available',
-            key: 'machineryManpowerAvailable',
-          },
-          {
-            title: 'Erection Completed as per Approved Methodology',
-            key: 'erectionCompletedAsPerMethodology',
-          },
-          {
-            title: 'Total No. of Double Pole Structures Erected',
+            title: 'Total no. of double pole structures erected',
             key: 'totalStructuresErected',
           },
+          {
+            title: 'Total length of highway covered in Km',
+            key: 'totalHighwayLengthCovered',
+          },
         ];
+
         return (
           <View>
-            {erectionOfDoublePoleStructureProperties.map(property => (
-              <View style={{flexDirection: 'column'}} key={property.key}>
+            {erectionPropertiesDisplay.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
                 <Text style={styles.GenerateRFIFieldLabel}>
                   {property.title}
                 </Text>
@@ -6003,6 +6213,7 @@ const RFIsRecents = (props: any) => {
             ))}
           </View>
         );
+
       case TASK_TYPES.FIXING_OF_MC4_Y_CONNECTOR:
         const fixingOfMC4Properties = [
           {
@@ -8744,6 +8955,113 @@ const RFIsRecents = (props: any) => {
                 </Text>
               </View>
             ))}
+          </View>
+        );
+      case TASK_TYPES.CONSTRUCTION_OF_FOUNDATION:
+        const constructionOfFoundationProperties = [
+          {
+            title: 'Whether the Drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {
+            title: 'Whether the pit excavated at the approved location',
+            key: 'pitExcavatedAtApprovedLocation',
+          },
+          {
+            title:
+              'Whether the pits have been excavated as per the approved drawings',
+            key: 'pitsExcavatedAsPerDrawings',
+          },
+          {
+            title:
+              'Whether the reinforcement has been placed properly as per the approved BBS',
+            key: 'reinforcementPlacedProperly',
+          },
+          {
+            title: 'Whether the formwork/shuttering checked properly',
+            key: 'formworkCheckedProperly',
+          },
+          {
+            title: 'Total weight of reinforcement in Kg per foundation',
+            key: 'totalWeightReinforcementKg',
+          },
+        ];
+
+        return (
+          <View>
+            {constructionOfFoundationProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {
+                    selectedRFI?.metaData.constructionOfFoundationData?.[
+                      property.key
+                    ]
+                  }
+                </Text>
+              </View>
+            ))}
+            <ScrollView horizontal={true}>
+              <View style={{flexDirection: 'column'}}>
+                <SwipeListView
+                  data={selectedRFI?.metaData.foundationData}
+                  renderItem={renderItemConstructionOfFoundation}
+                  renderSectionHeader={
+                    renderSectionHeaderConstructionOfFoundation
+                  }
+                />
+              </View>
+            </ScrollView>
+          </View>
+        );
+      case TASK_TYPES.CASTING_OF_BALLAST:
+        const castingOfBallastProperties = [
+          {
+            title: 'Whether the Drawings approved or not',
+            key: 'drawingsApproved',
+          },
+          {
+            title: 'Whether the moulds are finished and ready for concreting',
+            key: 'mouldsReady',
+          },
+          {
+            title:
+              'In case of reinforcement or mess in the ballast, the same has been tied in the mould properly',
+            key: 'reinforcementTiedProperly',
+          },
+          {
+            title: 'Total weight of reinforcement/mess in Kg per ballast',
+            key: 'totalReinforcementWeightKg',
+          },
+        ];
+
+        return (
+          <View>
+            {castingOfBallastProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.castingOfBallastData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+            <ScrollView horizontal={true}>
+              <View style={{flexDirection: 'column'}}>
+                <SwipeListView
+                  data={selectedRFI?.metaData.ballastData} // Assuming ballastData in metaData
+                  renderItem={renderItemCastingOfBallast}
+                  renderSectionHeader={renderSectionHeaderCastingOfBallast}
+                />
+              </View>
+            </ScrollView>
           </View>
         );
 

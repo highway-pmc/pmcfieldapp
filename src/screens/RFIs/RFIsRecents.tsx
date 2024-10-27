@@ -6163,39 +6163,53 @@ const RFIsRecents = (props: any) => {
           </View>
         );
       case TASK_TYPES.ERECTION_OF_DOUBLE_POLE_STRUCTURE:
-        const erectionPropertiesDisplay = [
+        const erectionOfDoublePoleStructureProperties = [
           {
-            title: 'Whether the drawings approved or not',
+            title: 'Whether the Drawings approved or not',
             key: 'drawingsApproved',
           },
-          {title: 'Whether the source approved or not', key: 'sourceApproved'},
           {
             title:
-              'Whether the foundation has been completed as per drawings and concrete has attained desired strength',
-            key: 'foundationCompleted',
+              'Whether the double pole structure is reached at site and ready for erection',
+            key: 'doublePoleReadyForErection',
           },
           {
             title:
-              'Whether the entire area is barricaded and all the safety arrangements are in place',
-            key: 'areaBarricaded',
+              'Whether the foundation work completed in all respect and ready for installation of double pole',
+            key: 'foundationWorkCompleted',
           },
           {
-            title: 'Whether erection of double pole structure done properly',
-            key: 'structureErectedProperly',
+            title:
+              'Whether the concrete components of the foundations achieved desired strength',
+            key: 'concreteStrengthAchieved',
+          },
+          {
+            title: 'Installation methodology approved',
+            key: 'installationMethodologyApproved',
+          },
+          {
+            title:
+              'Whether all safety arrangements are in place prior to the installation',
+            key: 'safetyArrangementsInPlace',
+          },
+          {
+            title:
+              'Whether sufficient machinery and manpower available at site',
+            key: 'machineryAndManpowerAvailable',
+          },
+          {
+            title: 'Erection completed as per the approved methodology',
+            key: 'erectionCompleted',
           },
           {
             title: 'Total no. of double pole structures erected',
-            key: 'totalStructuresErected',
-          },
-          {
-            title: 'Total length of highway covered in Km',
-            key: 'totalHighwayLengthCovered',
+            key: 'totalDoublePolesErected',
           },
         ];
 
         return (
           <View>
-            {erectionPropertiesDisplay.map(property => (
+            {erectionOfDoublePoleStructureProperties.map(property => (
               <View
                 style={{flexDirection: 'column', marginBottom: 10}}
                 key={property.key}>
@@ -6748,70 +6762,70 @@ const RFIsRecents = (props: any) => {
             ))}
           </View>
         );
-      case TASK_TYPES.HT_PANEL_INSTALLATION:
-        const htPanelInstallationProperties = [
-          {title: 'Whether the Drawings Approved', key: 'drawingsApproved'},
-          {
-            title: 'Equipment Inspected & Factory Dispatch Clearance Obtained',
-            key: 'equipmentInspected',
-          },
-          {
-            title: 'Equipment Damage Reported to Vendor',
-            key: 'equipmentDamageReported',
-          },
-          {
-            title: 'Foundation Work Completed and Ready for Installation',
-            key: 'foundationWorkCompleted',
-          },
-          {
-            title: 'Concrete Components Achieved Desired Strength',
-            key: 'concreteStrengthAchieved',
-          },
-          {
-            title: 'Installation Methodology Approved',
-            key: 'installationMethodologyApproved',
-          },
-          {
-            title: 'All Safety Arrangements in Place',
-            key: 'safetyArrangementsInPlace',
-          },
-          {
-            title: 'Sufficient Machinery and Manpower Available',
-            key: 'machineryAndManpowerAvailable',
-          },
-          {
-            title: 'Installation Completed as per Approved Methodology',
-            key: 'installationCompleted',
-          },
-          {
-            title: 'Manufacturer Instructions Followed during Installation',
-            key: 'manufacturerInstructionsFollowed',
-          },
-          {
-            title: 'Total No. of Equipment Installed',
-            key: 'totalEquipmentsInstalled',
-          },
-        ];
-        return (
-          <View>
-            {htPanelInstallationProperties.map(property => (
-              <View
-                style={{flexDirection: 'column', marginBottom: 10}}
-                key={property.key}>
-                <Text style={styles.GenerateRFIFieldLabel}>
-                  {property.title}
-                </Text>
-                <Text>
-                  {
-                    selectedRFI?.metaData.htPanelInstallationData?.[
-                      property.key
-                    ]
-                  }
-                </Text>
-              </View>
-            ))}
-          </View>
-        );
+      // case TASK_TYPES.HT_PANEL_INSTALLATION:
+      //   const htPanelInstallationProperties = [
+      //     {title: 'Whether the Drawings Approved', key: 'drawingsApproved'},
+      //     {
+      //       title: 'Equipment Inspected & Factory Dispatch Clearance Obtained',
+      //       key: 'equipmentInspected',
+      //     },
+      //     {
+      //       title: 'Equipment Damage Reported to Vendor',
+      //       key: 'equipmentDamageReported',
+      //     },
+      //     {
+      //       title: 'Foundation Work Completed and Ready for Installation',
+      //       key: 'foundationWorkCompleted',
+      //     },
+      //     {
+      //       title: 'Concrete Components Achieved Desired Strength',
+      //       key: 'concreteStrengthAchieved',
+      //     },
+      //     {
+      //       title: 'Installation Methodology Approved',
+      //       key: 'installationMethodologyApproved',
+      //     },
+      //     {
+      //       title: 'All Safety Arrangements in Place',
+      //       key: 'safetyArrangementsInPlace',
+      //     },
+      //     {
+      //       title: 'Sufficient Machinery and Manpower Available',
+      //       key: 'machineryAndManpowerAvailable',
+      //     },
+      //     {
+      //       title: 'Installation Completed as per Approved Methodology',
+      //       key: 'installationCompleted',
+      //     },
+      //     {
+      //       title: 'Manufacturer Instructions Followed during Installation',
+      //       key: 'manufacturerInstructionsFollowed',
+      //     },
+      //     {
+      //       title: 'Total No. of Equipment Installed',
+      //       key: 'totalEquipmentsInstalled',
+      //     },
+      //   ];
+      //   return (
+      //     <View>
+      //       {htPanelInstallationProperties.map(property => (
+      //         <View
+      //           style={{flexDirection: 'column', marginBottom: 10}}
+      //           key={property.key}>
+      //           <Text style={styles.GenerateRFIFieldLabel}>
+      //             {property.title}
+      //           </Text>
+      //           <Text>
+      //             {
+      //               selectedRFI?.metaData.htPanelInstallationData?.[
+      //                 property.key
+      //               ]
+      //             }
+      //           </Text>
+      //         </View>
+      //       ))}
+      //     </View>
+      //   );
       case TASK_TYPES.ERECTION_OF_STRUCTURE:
         const erectionOfStructureDisplayProperties = [
           {title: 'Whether the Position checked', key: 'positionChecked'},

@@ -1172,18 +1172,21 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     totalYConnectorsUsed: 0,
   });
 
-  const [
-    erectionOfDoublePoleStructureData,
-    setErectionOfDoublePoleStructureData,
-  ] = useState({
-    drawingsApproved: 'Y',
-    sourceApproved: 'Y',
-    foundationCompleted: 'Y',
-    areaBarricaded: 'Y',
-    structureErectedProperly: 'Y',
-    totalStructuresErected: 0,
-    totalHighwayLengthCovered: 0.0,
-  });
+ const [
+   erectionOfDoublePoleStructureData,
+   setErectionOfDoublePoleStructureData,
+ ] = useState({
+   drawingsApproved: 'Y',
+   doublePoleReadyForErection: 'Y',
+   foundationWorkCompleted: 'Y',
+   concreteStrengthAchieved: 'Y',
+   installationMethodologyApproved: 'Y',
+   safetyArrangementsInPlace: 'Y',
+   machineryAndManpowerAvailable: 'Y',
+   erectionCompleted: 'Y',
+   totalDoublePolesErected: 0,
+ });
+
 
   const [inverterInstallationData, setInverterInstallationData] = useState({
     drawingsApproved: 'Y',
@@ -2050,52 +2053,31 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     return true;
   };
   const validateErectionOfDoublePoleStructureData = (
-    erectionData: any,
+    erectionOfDoublePoleStructureData: any,
   ): boolean => {
-    const totalStructuresErected = parseInt(
-      erectionData.totalStructuresErected,
-    );
-    const totalHighwayLengthCovered = parseFloat(
-      erectionData.totalHighwayLengthCovered,
+    const totalDoublePolesErected = parseInt(
+      erectionOfDoublePoleStructureData.totalDoublePolesErected,
     );
 
-    // Validation for totalStructuresErected
+    // Validation for totalDoublePolesErected
     if (
-      isNaN(totalStructuresErected) ||
-      totalStructuresErected <= 0 ||
-      totalStructuresErected > 100
+      isNaN(totalDoublePolesErected) ||
+      totalDoublePolesErected <= 0 ||
+      totalDoublePolesErected > 1000
     ) {
       showSnackbar(
-        'Please enter a valid number of structures erected (integer, > 0 and <= 100)',
+        'Please enter a valid number of double pole structures erected (integer, > 0 and <= 1000)',
         'error',
       );
       return false;
     }
 
-    // Validation for totalHighwayLengthCovered
-    if (
-      isNaN(totalHighwayLengthCovered) ||
-      totalHighwayLengthCovered <= 0 ||
-      totalHighwayLengthCovered > 100 ||
-      erectionData.totalHighwayLengthCovered.split('.')[1]?.length > 3
-    ) {
-      showSnackbar(
-        'Please enter a valid total length covered (Km, max 3 decimal places, > 0 and <= 100)',
-        'error',
-      );
-      return false;
-    }
-
-    // Converting values back to numbers after validation
-    erectionData.totalStructuresErected = Number(
-      erectionData.totalStructuresErected,
+    erectionOfDoublePoleStructureData.totalDoublePolesErected = Number(
+      erectionOfDoublePoleStructureData.totalDoublePolesErected,
     );
-    erectionData.totalHighwayLengthCovered = Number(
-      erectionData.totalHighwayLengthCovered,
-    );
-
     return true;
   };
+
 
   const validateStonePitchingData = (stonePitchingData: any) => {
     const totalSurfaceArea = parseFloat(stonePitchingData.totalSurfaceArea);
@@ -5282,7 +5264,7 @@ const renderBallastHeadings = () => (
           break;
         case TASK_TYPES.LAYING_OF_DLC:
           if (rfiData.metaData.layingOfDlcTableData) {
-            rfiData.metaData.layingOfDlcTableData.forEach((item:any) => {
+            rfiData.metaData.layingOfDlcTableData.forEach((item: any) => {
               item.key = Guid.create();
             });
             setLayingOfDlcTableData(rfiData.metaData.layingOfDlcTableData);
@@ -5786,12 +5768,14 @@ const renderBallastHeadings = () => (
           } else {
             setErectionOfDoublePoleStructureData({
               drawingsApproved: 'Y',
-              sourceApproved: 'Y',
-              foundationCompleted: 'Y',
-              areaBarricaded: 'Y',
-              structureErectedProperly: 'Y',
-              totalStructuresErected: 0,
-              totalHighwayLengthCovered: 0.0,
+              doublePoleReadyForErection: 'Y',
+              foundationWorkCompleted: 'Y',
+              concreteStrengthAchieved: 'Y',
+              installationMethodologyApproved: 'Y',
+              safetyArrangementsInPlace: 'Y',
+              machineryAndManpowerAvailable: 'Y',
+              erectionCompleted: 'Y',
+              totalDoublePolesErected: 0,
             });
           }
           break;
@@ -5983,27 +5967,27 @@ const renderBallastHeadings = () => (
             });
           }
           break;
-        case TASK_TYPES.HT_PANEL_INSTALLATION:
-          if (rfiData.metaData.htPanelInstallationData) {
-            setHtPanelInstallationData(
-              rfiData.metaData.htPanelInstallationData,
-            );
-          } else {
-            setHtPanelInstallationData({
-              drawingsApproved: 'Y',
-              equipmentInspected: 'Y',
-              equipmentDamageReported: 'Y',
-              foundationWorkCompleted: 'Y',
-              concreteStrengthAchieved: 'Y',
-              installationMethodologyApproved: 'Y',
-              safetyArrangementsInPlace: 'Y',
-              machineryAndManpowerAvailable: 'Y',
-              installationCompleted: 'Y',
-              manufacturerInstructionsFollowed: 'Y',
-              totalEquipmentsInstalled: 0,
-            });
-          }
-          break;
+        // case TASK_TYPES.HT_PANEL_INSTALLATION:
+        //   if (rfiData.metaData.htPanelInstallationData) {
+        //     setHtPanelInstallationData(
+        //       rfiData.metaData.htPanelInstallationData,
+        //     );
+        //   } else {
+        //     setHtPanelInstallationData({
+        //       drawingsApproved: 'Y',
+        //       equipmentInspected: 'Y',
+        //       equipmentDamageReported: 'Y',
+        //       foundationWorkCompleted: 'Y',
+        //       concreteStrengthAchieved: 'Y',
+        //       installationMethodologyApproved: 'Y',
+        //       safetyArrangementsInPlace: 'Y',
+        //       machineryAndManpowerAvailable: 'Y',
+        //       installationCompleted: 'Y',
+        //       manufacturerInstructionsFollowed: 'Y',
+        //       totalEquipmentsInstalled: 0,
+        //     });
+        //   }
+        //   break;
         case TASK_TYPES.ERECTION_OF_STRUCTURE:
           if (rfiData.metaData.erectionOfStructureData) {
             setErectionOfStructureData(
@@ -9231,15 +9215,15 @@ const renderBallastHeadings = () => (
           fixingAndInstallationData: fixingAndInstallationData,
         };
         break;
-      case TASK_TYPES.HT_PANEL_INSTALLATION:
-        if (!validateHtPanelInstallationData(htPanelInstallationData)) {
-          return;
-        }
-        checkList = {
-          taskName: selectedTask.name,
-          htPanelInstallationData: htPanelInstallationData,
-        };
-        break;
+      // case TASK_TYPES.HT_PANEL_INSTALLATION:
+      //   if (!validateHtPanelInstallationData(htPanelInstallationData)) {
+      //     return;
+      //   }
+      //   checkList = {
+      //     taskName: selectedTask.name,
+      //     htPanelInstallationData: htPanelInstallationData,
+      //   };
+      //   break;
       case TASK_TYPES.ERECTION_OF_STRUCTURE:
         checkList = {
           taskName: selectedTask.name,
@@ -21702,31 +21686,49 @@ const renderBallastHeadings = () => (
           </View>
         );
       case TASK_TYPES.ERECTION_OF_DOUBLE_POLE_STRUCTURE:
-        const erectionOfDoublePoleProperties = [
+        const erectionOfDoublePoleStructureProperties = [
           {
-            title: 'Whether the drawings approved or not',
+            title: 'Whether the Drawings approved or not',
             key: 'drawingsApproved',
           },
-          {title: 'Whether the source approved or not', key: 'sourceApproved'},
           {
             title:
-              'Whether the foundation has been completed as per drawings and concrete has attained desired strength',
-            key: 'foundationCompleted',
+              'Whether the double pole structure is reached at site and ready for erection',
+            key: 'doublePoleReadyForErection',
           },
           {
             title:
-              'Whether the entire area is barricaded and all the safety arrangements are in place',
-            key: 'areaBarricaded',
+              'Whether the foundation work completed in all respect and ready for installation of double pole',
+            key: 'foundationWorkCompleted',
           },
           {
-            title: 'Whether erection of double pole structure done properly',
-            key: 'structureErectedProperly',
+            title:
+              'Whether the concrete components of the foundations achieved desired strength',
+            key: 'concreteStrengthAchieved',
+          },
+          {
+            title: 'Installation methodology approved',
+            key: 'installationMethodologyApproved',
+          },
+          {
+            title:
+              'Whether all safety arrangements are in place prior to the installation',
+            key: 'safetyArrangementsInPlace',
+          },
+          {
+            title:
+              'Whether sufficient machinery and manpower available at site',
+            key: 'machineryAndManpowerAvailable',
+          },
+          {
+            title: 'Erection completed as per the approved methodology',
+            key: 'erectionCompleted',
           },
         ];
 
         return (
           <View>
-            {erectionOfDoublePoleProperties.map(property => (
+            {erectionOfDoublePoleStructureProperties.map(property => (
               <View style={{flexDirection: 'column'}} key={property.key}>
                 <DropdownPicker
                   label={property.title}
@@ -21744,25 +21746,11 @@ const renderBallastHeadings = () => (
             ))}
             <Input
               label="Total no. of double pole structures erected"
-              value={erectionOfDoublePoleStructureData.totalStructuresErected}
+              value={erectionOfDoublePoleStructureData.totalDoublePolesErected}
               onChange={(value: any) =>
                 setErectionOfDoublePoleStructureData(prevData => ({
                   ...prevData,
-                  totalStructuresErected: value,
-                }))
-              }
-              isRequired={true}
-            />
-
-            <Input
-              label="Total length of highway covered in Km"
-              value={
-                erectionOfDoublePoleStructureData.totalHighwayLengthCovered
-              }
-              onChange={(value: any) =>
-                setErectionOfDoublePoleStructureData(prevData => ({
-                  ...prevData,
-                  totalHighwayLengthCovered: value,
+                  totalDoublePolesErected: value,
                 }))
               }
               isRequired={true}
@@ -22824,78 +22812,78 @@ const renderBallastHeadings = () => (
             </View>
           </View>
         );
-      case TASK_TYPES.HT_PANEL_INSTALLATION:
-        const htPanelInstallationProperties = [
-          {title: 'Whether the Drawings Approved', key: 'drawingsApproved'},
-          {
-            title: 'Equipment Inspected & Factory Dispatch Clearance Obtained',
-            key: 'equipmentInspected',
-          },
-          {
-            title: 'Equipment Damage Reported to Vendor',
-            key: 'equipmentDamageReported',
-          },
-          {
-            title: 'Foundation Work Completed and Ready for Installation',
-            key: 'foundationWorkCompleted',
-          },
-          {
-            title: 'Concrete Components Achieved Desired Strength',
-            key: 'concreteStrengthAchieved',
-          },
-          {
-            title: 'Installation Methodology Approved',
-            key: 'installationMethodologyApproved',
-          },
-          {
-            title: 'All Safety Arrangements in Place',
-            key: 'safetyArrangementsInPlace',
-          },
-          {
-            title: 'Sufficient Machinery and Manpower Available',
-            key: 'machineryAndManpowerAvailable',
-          },
-          {
-            title: 'Installation Completed as per Approved Methodology',
-            key: 'installationCompleted',
-          },
-          {
-            title: 'Manufacturer Instructions Followed during Installation',
-            key: 'manufacturerInstructionsFollowed',
-          },
-        ];
+      // case TASK_TYPES.HT_PANEL_INSTALLATION:
+      //   const htPanelInstallationProperties = [
+      //     {title: 'Whether the Drawings Approved', key: 'drawingsApproved'},
+      //     {
+      //       title: 'Equipment Inspected & Factory Dispatch Clearance Obtained',
+      //       key: 'equipmentInspected',
+      //     },
+      //     {
+      //       title: 'Equipment Damage Reported to Vendor',
+      //       key: 'equipmentDamageReported',
+      //     },
+      //     {
+      //       title: 'Foundation Work Completed and Ready for Installation',
+      //       key: 'foundationWorkCompleted',
+      //     },
+      //     {
+      //       title: 'Concrete Components Achieved Desired Strength',
+      //       key: 'concreteStrengthAchieved',
+      //     },
+      //     {
+      //       title: 'Installation Methodology Approved',
+      //       key: 'installationMethodologyApproved',
+      //     },
+      //     {
+      //       title: 'All Safety Arrangements in Place',
+      //       key: 'safetyArrangementsInPlace',
+      //     },
+      //     {
+      //       title: 'Sufficient Machinery and Manpower Available',
+      //       key: 'machineryAndManpowerAvailable',
+      //     },
+      //     {
+      //       title: 'Installation Completed as per Approved Methodology',
+      //       key: 'installationCompleted',
+      //     },
+      //     {
+      //       title: 'Manufacturer Instructions Followed during Installation',
+      //       key: 'manufacturerInstructionsFollowed',
+      //     },
+      //   ];
 
-        return (
-          <View>
-            {htPanelInstallationProperties.map(property => (
-              <View style={{flexDirection: 'column'}} key={property.key}>
-                <DropdownPicker
-                  label={property.title}
-                  value={htPanelInstallationData[property.key]}
-                  items={YES_NO_LIST}
-                  onChange={(value: any) =>
-                    setHtPanelInstallationData(prevData => ({
-                      ...prevData,
-                      [property.key]: value,
-                    }))
-                  }
-                  isRequired={true}
-                />
-              </View>
-            ))}
-            <Input
-              label="Total No. of Equipment Installed"
-              value={htPanelInstallationData.totalEquipmentsInstalled}
-              onChange={(value: any) =>
-                setHtPanelInstallationData(prevData => ({
-                  ...prevData,
-                  totalEquipmentsInstalled: value,
-                }))
-              }
-              isRequired={true}
-            />
-          </View>
-        );
+      //   return (
+      //     <View>
+      //       {htPanelInstallationProperties.map(property => (
+      //         <View style={{flexDirection: 'column'}} key={property.key}>
+      //           <DropdownPicker
+      //             label={property.title}
+      //             value={htPanelInstallationData[property.key]}
+      //             items={YES_NO_LIST}
+      //             onChange={(value: any) =>
+      //               setHtPanelInstallationData(prevData => ({
+      //                 ...prevData,
+      //                 [property.key]: value,
+      //               }))
+      //             }
+      //             isRequired={true}
+      //           />
+      //         </View>
+      //       ))}
+      //       <Input
+      //         label="Total No. of Equipment Installed"
+      //         value={htPanelInstallationData.totalEquipmentsInstalled}
+      //         onChange={(value: any) =>
+      //           setHtPanelInstallationData(prevData => ({
+      //             ...prevData,
+      //             totalEquipmentsInstalled: value,
+      //           }))
+      //         }
+      //         isRequired={true}
+      //       />
+      //     </View>
+      //   );
       case TASK_TYPES.ERECTION_OF_STRUCTURE:
         const erectionOfStructureProperties = [
           {title: 'Whether the Position checked', key: 'positionChecked'},

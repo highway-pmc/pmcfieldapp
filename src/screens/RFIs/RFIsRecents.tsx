@@ -2198,6 +2198,51 @@ const RFIsRecents = (props: any) => {
             ))}
           </View>
         );
+      case TASK_TYPES.SAND_LAYER:
+        const sandLayerProperties = [
+          {title: 'Whether the drawings approved', key: 'drawingsApproved'},
+          {
+            title: 'Whether the safety arrangements are in place',
+            key: 'safetyArrangementsInPlace',
+          },
+          {
+            title: 'Whether the source of sand approved',
+            key: 'sourceOfSandApproved',
+          },
+          {
+            title:
+              'Whether the thickness of sand layer laid is as per the approved drawings',
+            key: 'thicknessAsPerDrawings',
+          },
+          {
+            title: 'Whether the excavated area has been covered properly',
+            key: 'excavatedAreaCovered',
+          },
+          {
+            title: 'Total length of trench covered by sand layer',
+            key: 'totalLengthTrenchCovered',
+          },
+          {
+            title: 'Total quantity of sand filled in cum',
+            key: 'totalQtySandFilled',
+          },
+        ];
+        return (
+          <View>
+            {sandLayerProperties.map(property => (
+              <View
+                style={{flexDirection: 'column', marginBottom: 10}}
+                key={property.key}>
+                <Text style={styles.GenerateRFIFieldLabel}>
+                  {property.title}
+                </Text>
+                <Text>
+                  {selectedRFI?.metaData.sandLayerData?.[property.key]}
+                </Text>
+              </View>
+            ))}
+          </View>
+        );
 
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:

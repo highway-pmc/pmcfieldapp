@@ -526,7 +526,7 @@ export const TASK_TYPES = {
     'compacting-ground-support-for-embankment',
   DEWATERING: 'dewatering',
   STRIPPING_AND_STORING_TOP_SOIL: 'stripping-storing-top-soil',
-  SPREADING_AND_COMPACTION: 'spreading-and-compaction',
+  SPREADING_AND_COMPACTION: 'spreading-and-compaction',//start here
   PRIME_COAT: 'applying-prime-coat',
   TACK_COAT: 'applying-tack-coat',
   ROAD_MARKING: 'road-marking',
@@ -639,6 +639,7 @@ export const TASK_TYPES = {
   CONSTRUCTION_OF_CONTROL_ROOM: 'construction-of-control-room',
   CONSTRUCTION_OF_FOUNDATION: 'construction-of-foundation',
   CASTING_OF_BALLAST: 'casting-of-ballast',
+  SAND_LAYER:'sand-layer'
 };
 
 export const TEST_MATERIALS_TYPES = {

@@ -432,7 +432,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     {
       vehicleNo: '', // last 4 digits, number
       source: 'Y',
-      qtyDumped: 0, // must be > 0, up to 3 decimals, max 100,000
+      qtyDumped: 0, 
       approvedSource: '', // "Y" or "N"
       bouldersPresent: 'Y', // "Y" or "N"
       key: Guid.create(),
@@ -1373,6 +1373,15 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     waterproofingMembraneProtected: 'Y',
     backfillingCompleteAndClean: 'Y',
     totalSoilQtyUsed: 0.0,
+  });
+  const [sandLayerData, setSandLayerData] = useState({
+    drawingsApproved: 'Y',
+    safetyArrangementsInPlace: 'Y',
+    sourceOfSandApproved: 'Y',
+    thicknessAsPerDrawings: 'Y',
+    excavatedAreaCovered: 'Y',
+    totalLengthTrenchCovered: 0.0,
+    totalQtySandFilled: 0.0,
   });
 
   const [layingOfPQCData, setLayingOfPQCData] = useState({
@@ -6892,7 +6901,20 @@ const renderBallastHeadings = () => (
             setBallastData([]);
           }
           break;
-
+        case TASK_TYPES.SAND_LAYER:
+          if (rfiData.metaData.sandLayerData) {
+            setSandLayerData(rfiData.metaData.sandLayerData);
+          } else {
+            setSandLayerData({
+              drawingsApproved: 'Y',
+              safetyArrangementsInPlace: 'Y',
+              sourceOfSandApproved: 'Y',
+              thicknessAsPerDrawings: 'Y',
+              excavatedAreaCovered: 'Y',
+              totalLengthTrenchCovered: 0.0,
+              totalQtySandFilled: 0.0,
+            });
+          }
           break;
 
         case TASK_TYPES.LIFTING_LEFT:
@@ -9697,10 +9719,18 @@ const renderBallastHeadings = () => (
         checkList = {
           taskName: selectedTask.name,
           castingOfBallastData: castingOfBallastData,
-          ballastData:ballastData,
+          ballastData: ballastData,
         };
         break;
-
+      case TASK_TYPES.SAND_LAYER:
+        if (!validateSandLayerData(sandLayerData)) {
+          return;
+        }
+        checkList = {
+          taskName: selectedTask.name,
+          sandLayerData: sandLayerData,
+        };
+        break;
       case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
       case TASK_TYPES.LIFTING_LEFT:
       case TASK_TYPES.LIFTING_YARD:
@@ -10484,6 +10514,48 @@ const renderBallastHeadings = () => (
 
     return true;
   };
+  const validateSandLayerData = (sandLayerData: any): boolean => {
+    const totalLengthTrenchCovered = parseFloat(
+      sandLayerData.totalLengthTrenchCovered,
+    );
+    const totalQtySandFilled = parseFloat(sandLayerData.totalQtySandFilled);
+
+    // Validation for totalLengthTrenchCovered
+    if (
+      isNaN(totalLengthTrenchCovered) ||
+      totalLengthTrenchCovered <= 0 ||
+      totalLengthTrenchCovered > 10000 ||
+      sandLayerData.totalLengthTrenchCovered.split('.')[1]?.length > 3
+    ) {
+      showSnackbar(
+        'Please enter a valid trench length covered by sand layer (max 3 decimal places, > 0 and <= 10000)',
+        'error',
+      );
+      return false;
+    }
+
+    // Validation for totalQtySandFilled
+    if (
+      isNaN(totalQtySandFilled) ||
+      totalQtySandFilled <= 0 ||
+      totalQtySandFilled > 10000 ||
+      sandLayerData.totalQtySandFilled.split('.')[1]?.length > 3
+    ) {
+      showSnackbar(
+        'Please enter a valid quantity of sand filled (cum, max 3 decimal places, > 0 and <= 10000)',
+        'error',
+      );
+      return false;
+    }
+
+    sandLayerData.totalLengthTrenchCovered = Number(
+      sandLayerData.totalLengthTrenchCovered,
+    );
+    sandLayerData.totalQtySandFilled = Number(sandLayerData.totalQtySandFilled);
+
+    return true;
+  };
+
   const validateBallastData = (ballastData: any): boolean => {
     for (const item of ballastData) {
       const slumpValue = parseInt(item.slumpValue, 10);
@@ -27454,6 +27526,92 @@ const renderBallastHeadings = () => (
             <TouchableOpacity onPress={() => onAddBallastItem()}>
               <Text>+ Add More</Text>
             </TouchableOpacity>
+            <View>
+              <CalendarPicker
+                label="Date"
+                value={rfiDate}
+                onChange={date => setRFIDate(date)}
+              />
+              <TimePicker
+                label="Time"
+                value={rfiTime}
+                onChange={time => setRFITime(time)}
+              />
+              <TextInput
+                style={styles.commonInputFiels}
+                placeholder="Recommendations"
+                multiline={true}
+                numberOfLines={4}
+                blurOnSubmit={false}
+                value={comments}
+                onChangeText={text => setComments(text)}
+              />
+            </View>
+          </View>
+        );
+      case TASK_TYPES.SAND_LAYER:
+        const sandLayerProperties = [
+          {title: 'Whether the drawings approved', key: 'drawingsApproved'},
+          {
+            title: 'Whether the safety arrangements are in place',
+            key: 'safetyArrangementsInPlace',
+          },
+          {
+            title: 'Whether the source of sand approved',
+            key: 'sourceOfSandApproved',
+          },
+          {
+            title:
+              'Whether the thickness of sand layer laid is as per the approved drawings',
+            key: 'thicknessAsPerDrawings',
+          },
+          {
+            title: 'Whether the excavated area has been covered properly',
+            key: 'excavatedAreaCovered',
+          },
+        ];
+
+        return (
+          <View>
+            {sandLayerProperties.map(property => (
+              <View style={{flexDirection: 'column'}} key={property.key}>
+                <DropdownPicker
+                  label={property.title}
+                  value={sandLayerData[property.key]}
+                  items={YES_NO_LIST}
+                  onChange={(value: any) =>
+                    setSandLayerData(prevData => ({
+                      ...prevData,
+                      [property.key]: value,
+                    }))
+                  }
+                  isRequired={true}
+                />
+              </View>
+            ))}
+            <Input
+              label="Total length of trench covered by sand layer"
+              value={sandLayerData.totalLengthTrenchCovered}
+              onChange={(value: any) =>
+                setSandLayerData(prevData => ({
+                  ...prevData,
+                  totalLengthTrenchCovered: value,
+                }))
+              }
+              isRequired={true}
+            />
+
+            <Input
+              label="Total quantity of sand filled in cum"
+              value={sandLayerData.totalQtySandFilled}
+              onChange={(value: any) =>
+                setSandLayerData(prevData => ({
+                  ...prevData,
+                  totalQtySandFilled: value,
+                }))
+              }
+              isRequired={true}
+            />
             <View>
               <CalendarPicker
                 label="Date"

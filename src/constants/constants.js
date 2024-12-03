@@ -679,6 +679,19 @@ export const TEST_TYPES = {
   STRIPPING_VALUE_TEST: 'stripping-value-test',
   FINENESS_CONSISTENCY_INITIAL_AND_FINAL_SETTING_TIME:
     'fineness-consistency-initial-and-final-setting-time',
+  //Bituminous work
+  AIV:'aiv',
+  BINDER_CONTENT:'binder-content',
+  DENSITY_AFTER_COMPACTION:'density-after-compaction',
+  STABILITY_AND_VOID_ANALYSIS:'stability-and-void-analysis',
+  BC_MIX_GRADE_1: 'bc-mix-grade_1',
+  BC_MIX_GRADE_2: 'bc-mix-grade_2',
+  DBM_MIX_GRADING_1: 'dbm-mix-grading-1',
+  DBM_MIX_GRADING_2: 'dbm-mix-grading-2',
+  SOFTENING_POINT: 'softening-point',
+  FLASH_FIRE_POINTS: 'flash-fire-points',
+  DUCTILITY_TEST: 'ductility-test',
+  BITUMINOUS_PENETRATION_TEST: 'bituminous-penetration-test',
 };
 
 export const YES_NO_LIST = [

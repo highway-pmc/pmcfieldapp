@@ -489,7 +489,6 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
       //   Alert.alert('Error', `Testing of this sample will be started by ${item.startTestingByDate}`);
       //   return;
       // }
-
       testObservations.push(getTestSampleConcreteObject(1));
       if (item.testCategory === TEST_SAMPLE_CONCRETE_CATEGORY.C_28TH_DAYS) {
         testObservations.push(getTestSampleConcreteObject(2));

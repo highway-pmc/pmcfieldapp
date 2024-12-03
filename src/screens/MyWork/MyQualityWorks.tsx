@@ -163,12 +163,11 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
     setCurrentLevel(1);
     if (isTestInventoryClassification(item.name)) {
       // TODO - will introduce type in db and use it iso Classification Name
-      const testWorkCategory = item.testWorkCategoriesData[0];
-      navigation.navigate('AssignTestMaterialsPurchage', {
+      //const testWorkCategory = item.testWorkCategoriesData[1];
+      navigation.navigate('SelectTestWorkCategory', {
         testClassificationId: item.id,
         testClassificationName: item.name,
-        testWorkCategoryId: testWorkCategory._id,
-        testWorkCategoryName: testWorkCategory.name,
+        testWorkCategoriesData: item.testWorkCategoriesData,
         workType: workType,
       });
       return;

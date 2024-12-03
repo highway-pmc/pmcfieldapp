@@ -39,6 +39,7 @@ export const HeaderItems = {
     title: 'Assign Test Classification',
   },
   assignTestWorkCategory: {showBack: true, title: 'Assign Test Work Category'},
+  selectTestWorkCategory: {showBack: true, title: 'Select Test Work Category'},
   assignTestMaterials: {showBack: true, title: 'Assign Test Materials'},
   assignTestTypes: {showBack: true, title: 'Assign Test Types'},
   sourceApprovals: {showBack: true, title: 'Source Approvals'},

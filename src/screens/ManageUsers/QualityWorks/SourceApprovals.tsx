@@ -248,77 +248,77 @@ const SourceApprovals = ({
   //   });
   //   setOpenSourceApprovalsPopup(true);
   // };
-const handleEdit = (item: any) => {
-  setSelectedSource(item);
-  if (testWorkCategoryName === 'Bituminous Works') {
-    switch (testMaterialName) {
-      case TEST_MATERIALS_TYPES.FINE_AGGREGATE:
-        setFineAggregate({
-          ratePerKG: item.ratePerKG ,
-          comments: item.comments,
-          status: item.status,
-        });
-        break;
+  const handleEdit = (item: any) => {
+    setSelectedSource(item);
+    if (testWorkCategoryName === 'Bituminous Works') {
+      switch (materialType) {
+        case TEST_MATERIALS_TYPES.FINE_AGGREGATE:
+          setFineAggregate({
+            ratePerKG: item.ratePerKG,
+            comments: item.comments,
+            status: item.status,
+          });
+          break;
 
-      case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_DBM_BC:
-        setCoarseAggregateDBMBC({
-          nominalSize: item.nominalSize, 
-          ratePerKG: item.ratePerKG,
-          comments: item.comments,
-          status: item.status,
-        });
-        break;
+        case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_DBM_BC:
+          setCoarseAggregateDBMBC({
+            nominalSize: item.nominalSize,
+            ratePerKG: item.ratePerKG,
+            comments: item.comments,
+            status: item.status,
+          });
+          break;
 
-      case TEST_MATERIALS_TYPES.BITUMEN:
-        setBitumen({
-          gradeOfBitumen: item.gradeOfBitumen, 
-          ratePerMT: item.ratePerMT , 
-          bitumenBrand: item.bitumenBrand , 
-          comments: item.comments,
-          status: item.status,
-        });
-        break;
+        case TEST_MATERIALS_TYPES.BITUMEN:
+          setBitumen({
+            gradeOfBitumen: item.gradeOfBitumen,
+            ratePerMT: item.ratePerMT,
+            bitumenBrand: item.bitumenBrand,
+            comments: item.comments,
+            status: item.status,
+          });
+          break;
 
-      case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING:
-        setCoarseAggregateMicro({
-          nominalSize: item.nominalSize,
-          ratePerKG: item.ratePerKG,
-          comments: item.comments ,
-          status: item.status,
-        });
-        break;
+        case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING:
+          setCoarseAggregateMicro({
+            nominalSize: item.nominalSize,
+            ratePerKG: item.ratePerKG,
+            comments: item.comments,
+            status: item.status,
+          });
+          break;
 
-      case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA:
-        setCoarseAggregateSMA({
-          nominalSize: item.nominalSize || '', // 37.5mm / 26.5mm / 19mm / 13.2mm
-          ratePerKG: item.ratePerKG || '', // (3 decimal, >0, 100000)
-          comments: item.comments || '',
-          status: item.status || SOURCE_APPROVAL_STATUS.PENDING,
-        });
-        break;
+        case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA:
+          setCoarseAggregateSMA({
+            nominalSize: item.nominalSize || '', // 37.5mm / 26.5mm / 19mm / 13.2mm
+            ratePerKG: item.ratePerKG || '', // (3 decimal, >0, 100000)
+            comments: item.comments || '',
+            status: item.status || SOURCE_APPROVAL_STATUS.PENDING,
+          });
+          break;
 
-      case TEST_MATERIALS_TYPES.EMULSION:
-        setEmulsion({
-          gradeOfEmulsion: item.gradeOfEmulsion || '', // characters, max limit 100
-          ratePerMT: item.ratePerMT || '', // (3 decimal, >0, 100000)
-          emulsionBrand: item.emulsionBrand || '', // characters, max limit 100
-          comments: item.comments || '',
-          status: item.status || SOURCE_APPROVAL_STATUS.PENDING,
-        });
-        break;
+        case TEST_MATERIALS_TYPES.EMULSION:
+          setEmulsion({
+            gradeOfEmulsion: item.gradeOfEmulsion || '', // characters, max limit 100
+            ratePerMT: item.ratePerMT || '', // (3 decimal, >0, 100000)
+            emulsionBrand: item.emulsionBrand || '', // characters, max limit 100
+            comments: item.comments || '',
+            status: item.status || SOURCE_APPROVAL_STATUS.PENDING,
+          });
+          break;
+      }
+    } else {
+      setSourceForm({
+        name: item.name || '',
+        location: item.location || '',
+        vendorName: item.vendorName || '',
+        comments: item.comments || '',
+        status: item.status || SOURCE_APPROVAL_STATUS.PENDING,
+      });
     }
-  } else {
-    setSourceForm({
-      name: item.name || '',
-      location: item.location || '',
-      vendorName: item.vendorName || '',
-      comments: item.comments || '',
-      status: item.status || SOURCE_APPROVAL_STATUS.PENDING,
-    });
-  }
-  setSelectedSource(item);
-  setOpenSourceApprovalsPopup(true);
-};
+    setSelectedSource(item);
+    setOpenSourceApprovalsPopup(true);
+  };
 
   const handleAdd = (item: any) => {
     setSelectedSource(item);
@@ -442,7 +442,6 @@ const handleEdit = (item: any) => {
     }
   };
 
-
   const handleBitumenInputChange = (
     name: keyof typeof bitumen,
     value: string,
@@ -490,7 +489,6 @@ const handleEdit = (item: any) => {
       showSnackbar(message, 'error');
     }
   };
-
 
   const handleCoarseAggregateMicroInputChange = (
     name: keyof typeof coarseAggregateMicro,
@@ -543,7 +541,6 @@ const handleEdit = (item: any) => {
     }
   };
 
-
   const handleCoarseAggregateSMAInputChange = (
     name: keyof typeof coarseAggregateSMA,
     value: string | number,
@@ -594,7 +591,6 @@ const handleEdit = (item: any) => {
       showSnackbar(message, 'error');
     }
   };
-
 
   const handleEmulsionInputChange = (
     name: keyof typeof emulsion,
@@ -682,13 +678,88 @@ const handleEdit = (item: any) => {
     setSourceDetailForm({...sourceDetailForm, [name]: value});
   };
 
+  // const handleSubmit = () => {
+  //   if (selectedSource == null) {
+  //     dispatch(
+  //       addSourceApproval({
+  //         projectId: loggedInUser.projectId,
+  //         testMaterialId: testMaterialId,
+  //         body: sourceForm,
+  //       }),
+  //     );
+  //   } else {
+  //     dispatch(
+  //       updateSourceApproval({
+  //         projectId: loggedInUser.projectId,
+  //         testMaterialId: testMaterialId,
+  //         id: selectedSource._id,
+  //         body: sourceForm,
+  //       }),
+  //     );
+  //   }
+  // };
   const handleSubmit = () => {
+    let body;
+
+    if (testWorkCategoryName === 'Bituminous Works') {
+      switch (materialType) {
+        case TEST_MATERIALS_TYPES.FINE_AGGREGATE:
+          body = {
+            ...fineAggregate,
+            ratePerKG: Number(fineAggregate.ratePerKG), // Convert to number
+          };
+          break;
+
+        case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_DBM_BC:
+          body = {
+            ...coarseAggregateDBMBC,
+            ratePerKG: Number(coarseAggregateDBMBC.ratePerKG), // Convert to number
+          };
+          break;
+
+        case TEST_MATERIALS_TYPES.BITUMEN:
+          body = {
+            ...bitumen,
+            ratePerMT: Number(bitumen.ratePerMT), // Convert to number
+          };
+          break;
+
+        case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING:
+          body = {
+            ...coarseAggregateMicro,
+            ratePerKG: Number(coarseAggregateMicro.ratePerKG), // Convert to number
+          };
+          break;
+
+        case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA:
+          body = {
+            ...coarseAggregateSMA,
+            ratePerKG: Number(coarseAggregateSMA.ratePerKG), // Convert to number
+          };
+          break;
+
+        case TEST_MATERIALS_TYPES.EMULSION:
+          body = {
+            ...emulsion,
+            ratePerMT: Number(emulsion.ratePerMT), // Convert to number
+          };
+          break;
+
+        default:
+          console.error('Unknown material type for Bituminous Works');
+          return; // Exit if material type is unknown
+      }
+    } else {
+      body = {
+        ...sourceForm,
+      };
+    }
     if (selectedSource == null) {
       dispatch(
         addSourceApproval({
           projectId: loggedInUser.projectId,
           testMaterialId: testMaterialId,
-          body: sourceForm,
+          body,
         }),
       );
     } else {
@@ -697,7 +768,7 @@ const handleEdit = (item: any) => {
           projectId: loggedInUser.projectId,
           testMaterialId: testMaterialId,
           id: selectedSource._id,
-          body: sourceForm,
+          body,
         }),
       );
     }
@@ -885,11 +956,12 @@ const handleEdit = (item: any) => {
   };
 
   const handleAddSource = () => {
+    console.log(materialType);
     if (testWorkCategoryName === 'Bituminous Works') {
-      switch (testMaterialName) {
+      switch (materialType) {
         case TEST_MATERIALS_TYPES.FINE_AGGREGATE:
           setFineAggregate({
-            ratePerKG:'', // (3 decimal, >0, 100000)
+            ratePerKG: '', // (3 decimal, >0, 100000)
             comments: '',
             status: SOURCE_APPROVAL_STATUS.PENDING,
           });
@@ -1041,7 +1113,9 @@ const handleEdit = (item: any) => {
             </TouchableOpacity>
           </View>
         );
-      } else if (materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE_DBM_BC) {
+      } else if (
+        materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE_DBM_BC
+      ) {
         return (
           <View style={styles.reportFields}>
             <View>
@@ -1088,7 +1162,9 @@ const handleEdit = (item: any) => {
             </TouchableOpacity>
           </View>
         );
-      } else if (materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING) {
+      } else if (
+        materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING
+      ) {
         return (
           <View style={styles.reportFields}>
             <View>
@@ -1137,7 +1213,7 @@ const handleEdit = (item: any) => {
           </View>
         );
       } else if (materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA) {
-       return (
+        return (
           <View style={styles.reportFields}>
             <View>
               <View>

@@ -644,6 +644,11 @@ export const TASK_TYPES = {
 };
 
 export const TEST_MATERIALS_TYPES = {
+  COARSE_AGGREGATE_DBM_BC: 'coarse-aggregate-dbm-bc',
+  BITUMEN: 'bitumen',
+  COARSE_AGGREGATE_MICRO_SURFACING: 'coarse-aggregate-micro-surfacing',
+  COARSE_AGGREGATE_SMA: 'coarse-aggregate-sma',
+  EMULSION: 'emulsion',
   WATER: 'water',
   FINE_AGGREGATE: 'fine-aggregate',
   GRANULATED_SLAG: 'granulated-slag',

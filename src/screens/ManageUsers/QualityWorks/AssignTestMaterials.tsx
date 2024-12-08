@@ -1,26 +1,69 @@
-import { View, Text, TouchableOpacity, NativeEventEmitter, StyleSheet, Image, Modal, Alert, TextInput } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { useIsFocused } from '@react-navigation/native';
-import { HeaderItems, TEST_ASSIGNMENT_LEVEL, TEST_MATERIALS_TYPES } from '../../../constants/constants';
-import { useDispatch, useSelector } from 'react-redux';
-import { clearTestClassificationsAssignmentData, getUsersForTestAssignment, getTestMaterials, testMaterialsTestAssignToUsers } from './actions';
-import { ScrollView } from 'react-native-gesture-handler';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  NativeEventEmitter,
+  StyleSheet,
+  Image,
+  Modal,
+  Alert,
+  TextInput,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {useIsFocused} from '@react-navigation/native';
+import {
+  HeaderItems,
+  TEST_ASSIGNMENT_LEVEL,
+  TEST_MATERIALS_TYPES,
+} from '../../../constants/constants';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  clearTestClassificationsAssignmentData,
+  getUsersForTestAssignment,
+  getTestMaterials,
+  testMaterialsTestAssignToUsers,
+} from './actions';
+import {ScrollView} from 'react-native-gesture-handler';
 import CheckBox from '@react-native-community/checkbox';
 import LoadingAnimation from '../../Common/LoadingAnimation';
-import { isTestInventoryClassification } from '../../../utils/Utils';
+import {isTestInventoryClassification} from '../../../utils/Utils';
 
-const AssignTestMaterials = ({ route, navigation }: { route: any, navigation: any }) => {
-  const { testClassificationId, testClassificationName, testWorkCategoryId, testWorkCategoryName, workType } = route.params;
+const AssignTestMaterials = ({
+  route,
+  navigation,
+}: {
+  route: any;
+  navigation: any;
+}) => {
+  const {
+    testClassificationId,
+    testClassificationName,
+    testWorkCategoryId,
+    testWorkCategoryName,
+    workType,
+  } = route.params;
 
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const { testMaterials, users, loadingUsers, loadingTestWorkCategory, testMaterialsTestAssigned, loading, error } = useSelector((state: any) => state.TestAssignment);
+  const {
+    testMaterials,
+    users,
+    loadingUsers,
+    loadingTestWorkCategory,
+    testMaterialsTestAssigned,
+    loading,
+    error,
+  } = useSelector((state: any) => state.TestAssignment);
   const [testMaterialsData, setTestMaterialsData] = useState([]);
-  const [selectedTestMaterial, setSelectedTestMaterial] = useState({ isChecked: false, _id: "", name: "" });
+  const [selectedTestMaterial, setSelectedTestMaterial] = useState({
+    isChecked: false,
+    _id: '',
+    name: '',
+  });
   const [userData, setUserCheckboxes] = useState([]);
   const [isAssignPopOpen, openAssignPopup] = useState(false);
   const [searchText, setSearchText] = useState('');
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();
@@ -30,36 +73,40 @@ const AssignTestMaterials = ({ route, navigation }: { route: any, navigation: an
   useEffect(() => {
     if (testMaterials) {
       testMaterials.forEach((tMaterial: any) => {
-        tMaterial.isChecked = false
+        tMaterial.isChecked = false;
       });
       setTestMaterialsData(testMaterials);
     }
 
     if (users) {
       users.forEach((user: any) => {
-        user.isChecked = false
+        user.isChecked = false;
       });
       setUserCheckboxes(users);
     }
   }, [testMaterials, users, error]);
 
   useEffect(() => {
-    dispatch(getTestMaterials({
-      projectId: loggedInUser.projectId,
-      testClassificationId: testClassificationId,
-      testWorkCategoryId: testWorkCategoryId
-    }));
+    dispatch(
+      getTestMaterials({
+        projectId: loggedInUser.projectId,
+        testClassificationId: testClassificationId,
+        testWorkCategoryId: testWorkCategoryId,
+      }),
+    );
 
-    dispatch(getUsersForTestAssignment({
-      projectId: loggedInUser.projectId,
-      workType: workType
-    }));
+    dispatch(
+      getUsersForTestAssignment({
+        projectId: loggedInUser.projectId,
+        workType: workType,
+      }),
+    );
   }, []);
 
   const handleRadioChange = (index: any) => {
     const testMaterial: any = testMaterialsData[index];
 
-    testMaterial.isChecked = !testMaterial.isChecked
+    testMaterial.isChecked = !testMaterial.isChecked;
     setSelectedTestMaterial(testMaterial);
 
     const updatedCheckboxes: any = [...userData];
@@ -68,17 +115,45 @@ const AssignTestMaterials = ({ route, navigation }: { route: any, navigation: an
       updatedCheckboxes.forEach((user: any) => {
         user.isChecked = false;
         delete user.assignmentLevel;
-        if (user.testAssignment?.find((wa: any) => wa.testClassification?.id === testClassificationId && wa.assignmentLevel === 1) != null) {
+        if (
+          user.testAssignment?.find(
+            (wa: any) =>
+              wa.testClassification?.id === testClassificationId &&
+              wa.assignmentLevel === 1,
+          ) != null
+        ) {
           user.assignmentLevel = TEST_ASSIGNMENT_LEVEL.LEVEL1;
           user.isChecked = true;
-        } else if (user.testAssignment?.find((wa: any) => wa.testClassification?.id === testClassificationId && wa.testWorkCategoryId === testWorkCategoryId && wa.assignmentLevel === 2)) {
+        } else if (
+          user.testAssignment?.find(
+            (wa: any) =>
+              wa.testClassification?.id === testClassificationId &&
+              wa.testWorkCategoryId === testWorkCategoryId &&
+              wa.assignmentLevel === 2,
+          )
+        ) {
           user.assignmentLevel = TEST_ASSIGNMENT_LEVEL.LEVEL2;
           user.isChecked = true;
-        } else if (user.testAssignment?.find((wa: any) => wa.testClassification?.id === testClassificationId && wa.testWorkCategoryId === testWorkCategoryId && wa.testMaterialId === testMaterial._id && wa.testTypeId && wa.assignmentLevel === 4)) {
+        } else if (
+          user.testAssignment?.find(
+            (wa: any) =>
+              wa.testClassification?.id === testClassificationId &&
+              wa.testWorkCategoryId === testWorkCategoryId &&
+              wa.testMaterialId === testMaterial._id &&
+              wa.testTypeId &&
+              wa.assignmentLevel === 4,
+          )
+        ) {
           user.assignmentLevel = TEST_ASSIGNMENT_LEVEL.LEVEL4;
           user.isChecked = true;
         } else {
-        const testAssignment = user.testAssignment?.find((wa: any) => wa.testClassification?.id === testClassificationId && wa.testWorkCategoryId === testWorkCategoryId && wa.testMaterialId === testMaterial._id && wa.assignmentLevel === 3);
+          const testAssignment = user.testAssignment?.find(
+            (wa: any) =>
+              wa.testClassification?.id === testClassificationId &&
+              wa.testWorkCategoryId === testWorkCategoryId &&
+              wa.testMaterialId === testMaterial._id &&
+              wa.assignmentLevel === 3,
+          );
           if (testAssignment) {
             user.isChecked = true;
           }
@@ -94,7 +169,13 @@ const AssignTestMaterials = ({ route, navigation }: { route: any, navigation: an
     const updatedCheckboxes: any = [...userData];
     const selectedUser: any = updatedCheckboxes[index];
     selectedUser.isChecked = !selectedUser.isChecked;
-    const testAssignment = selectedUser.testAssignment?.find((wa: any) => wa.testClassification?.id === testClassificationId && wa.testWorkCategoryId === testWorkCategoryId && wa.testMaterialId === selectedTestMaterial._id && wa.assignmentLevel === 3)
+    const testAssignment = selectedUser.testAssignment?.find(
+      (wa: any) =>
+        wa.testClassification?.id === testClassificationId &&
+        wa.testWorkCategoryId === testWorkCategoryId &&
+        wa.testMaterialId === selectedTestMaterial._id &&
+        wa.assignmentLevel === 3,
+    );
     if (selectedUser.isChecked) {
       if (testAssignment) {
         testAssignment.dirty = false;
@@ -118,15 +199,17 @@ const AssignTestMaterials = ({ route, navigation }: { route: any, navigation: an
 
   useEffect(() => {
     if (testMaterialsTestAssigned) {
-      Alert.alert("Success", "Tests assigned successfully");
+      Alert.alert('Success', 'Tests assigned successfully');
       openAssignClose();
       dispatch(clearTestClassificationsAssignmentData());
       setTimeout(() => {
-        dispatch(getUsersForTestAssignment({
-          projectId: loggedInUser.projectId,
-          workType: workType
-        }));
-      }, 500)
+        dispatch(
+          getUsersForTestAssignment({
+            projectId: loggedInUser.projectId,
+            workType: workType,
+          }),
+        );
+      }, 500);
     }
   }, [testMaterialsTestAssigned, error]);
 
@@ -138,8 +221,8 @@ const AssignTestMaterials = ({ route, navigation }: { route: any, navigation: an
     usersToBeAssign.forEach((u: any) => {
       let user: any = {
         _id: u._id,
-        delete: u.delete || false
-      }
+        delete: u.delete || false,
+      };
       const testAssignment = u.testAssignment?.find((wa: any) => wa.dirty);
       if (testAssignment) {
         user.testAssignmentId = testAssignment._id;
@@ -149,18 +232,20 @@ const AssignTestMaterials = ({ route, navigation }: { route: any, navigation: an
     });
 
     if (usersToBeAssignArray.length) {
-      dispatch(testMaterialsTestAssignToUsers({
-        projectId: loggedInUser.projectId,
-        testClassificationId: testClassificationId,
-        testWorkCategoryId: testWorkCategoryId,
-        testMaterialId: selectedTestMaterial._id,
-        body: {
-          users: usersToBeAssignArray,
-          level: 3
-        }
-      }));
+      dispatch(
+        testMaterialsTestAssignToUsers({
+          projectId: loggedInUser.projectId,
+          testClassificationId: testClassificationId,
+          testWorkCategoryId: testWorkCategoryId,
+          testMaterialId: selectedTestMaterial._id,
+          body: {
+            users: usersToBeAssignArray,
+            level: 3,
+          },
+        }),
+      );
     }
-  }
+  };
 
   const openAssignClose = () => {
     testMaterialsData.forEach((item: any) => {
@@ -174,14 +259,28 @@ const AssignTestMaterials = ({ route, navigation }: { route: any, navigation: an
   };
 
   // unmount
-  useEffect(() => () => {
-    setSearchText('');
-  }, []);
+  useEffect(
+    () => () => {
+      setSearchText('');
+    },
+    [],
+  );
 
   const onNext = (item: any) => {
-    if (isTestInventoryClassification(testClassificationName)) { // TODO - will introduce type in db and use it iso Classification Name
-      if (item.materialType === TEST_MATERIALS_TYPES.CONCRETE || item.materialType === TEST_MATERIALS_TYPES.CEMENT || 
-        (testWorkCategoryName === 'Bituminous Works' && (item.materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE))
+    if (isTestInventoryClassification(testClassificationName)) {
+      // TODO - will introduce type in db and use it iso Classification Name
+      if (
+        item.materialType === TEST_MATERIALS_TYPES.CONCRETE ||
+        item.materialType === TEST_MATERIALS_TYPES.CEMENT ||
+        (testWorkCategoryName === 'Bituminous Works' &&
+          (item.materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE ||
+            item.materialType === TEST_MATERIALS_TYPES.EMULSION ||
+            item.materialType ===
+              TEST_MATERIALS_TYPES.COARSE_AGGREGATE_DBM_BC ||
+            item.materialType ===
+              TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING ||
+            item.materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA ||
+            item.materialType === TEST_MATERIALS_TYPES.BITUMEN))
       ) {
         if (testClassificationName === 'Procurement Details') {
           navigation.navigate('Procurements', {
@@ -192,8 +291,8 @@ const AssignTestMaterials = ({ route, navigation }: { route: any, navigation: an
             testMaterialId: item._id,
             testMaterialName: item.name,
             materialType: item.materialType,
-            workType: workType
-          })
+            workType: workType,
+          });
         } else if (testClassificationName === 'Source Approvals') {
           navigation.navigate('SourceApprovals', {
             testClassificationId: testClassificationId,
@@ -203,8 +302,8 @@ const AssignTestMaterials = ({ route, navigation }: { route: any, navigation: an
             testMaterialId: item._id,
             testMaterialName: item.name,
             materialType: item.materialType,
-            workType: workType
-          })
+            workType: workType,
+          });
         }
       }
     } else {
@@ -215,16 +314,18 @@ const AssignTestMaterials = ({ route, navigation }: { route: any, navigation: an
         testWorkCategoryName: testWorkCategoryName,
         testMaterialId: item._id,
         testMaterialName: item.name,
-        workType: workType
-      })
+        workType: workType,
+      });
     }
   };
 
   return (
     <View style={styles.Container}>
-      {(error) && <View style={styles.ErrorSectionStyle}>
-        <Text style={styles.errorText}>{error}</Text>
-      </View>}
+      {error && (
+        <View style={styles.ErrorSectionStyle}>
+          <Text style={styles.errorText}>{error}</Text>
+        </View>
+      )}
       <View style={styles.SectionStyle}>
         <Image
           source={require('./../../../images/search-icon.png')}
@@ -239,45 +340,46 @@ const AssignTestMaterials = ({ route, navigation }: { route: any, navigation: an
           underlineColorAndroid="#f000"
           blurOnSubmit={false}
           value={searchText}
-          onChangeText={(text) => {
+          onChangeText={text => {
             setSearchText(text);
           }}
         />
       </View>
       <ScrollView showsVerticalScrollIndicator={false} style={styles.Height100}>
         <View style={{paddingBottom: 50}}>
-
-        {testMaterialsData.filter((subSeg: any) => {
-            if (searchText && subSeg.name) {
-              return subSeg.name.toLowerCase().includes(searchText.toLowerCase())
-            } else {
-              return true;
-            }
-          }).map((item: any, index) => (
-          <View style={styles.UserCategory}>
-            <View style={styles.FlexRowCenter}>
-              {
-                !isTestInventoryClassification(testClassificationName) &&
-                <CheckBox
-                  value={item.isChecked}
-                  onValueChange={() => handleRadioChange(index)}
-                  style={styles.checkbox}
-                  tintColors={{ true: '#0F56B3', false: '#818181' }}
-                />
+          {testMaterialsData
+            .filter((subSeg: any) => {
+              if (searchText && subSeg.name) {
+                return subSeg.name
+                  .toLowerCase()
+                  .includes(searchText.toLowerCase());
+              } else {
+                return true;
               }
-              <View>
-                <Text style={styles.UserRole}>{item.name}</Text>
+            })
+            .map((item: any, index) => (
+              <View style={styles.UserCategory}>
+                <View style={styles.FlexRowCenter}>
+                  {!isTestInventoryClassification(testClassificationName) && (
+                    <CheckBox
+                      value={item.isChecked}
+                      onValueChange={() => handleRadioChange(index)}
+                      style={styles.checkbox}
+                      tintColors={{true: '#0F56B3', false: '#818181'}}
+                    />
+                  )}
+                  <View>
+                    <Text style={styles.UserRole}>{item.name}</Text>
+                  </View>
+                </View>
+                <TouchableOpacity onPress={() => onNext(item)}>
+                  <Image
+                    style={styles.CloseIcon}
+                    source={require('./../../../images/right-arrow.png')}
+                  />
+                </TouchableOpacity>
               </View>
-            </View>
-            <TouchableOpacity
-              onPress={() => onNext(item)}>
-              <Image
-                style={styles.CloseIcon}
-                source={require('./../../../images/right-arrow.png')}
-              />
-            </TouchableOpacity>
-          </View>
-        ))}
+            ))}
         </View>
       </ScrollView>
       {/* Modal Start */}
@@ -288,7 +390,7 @@ const AssignTestMaterials = ({ route, navigation }: { route: any, navigation: an
         onRequestClose={() => {
           openAssignPopup(!isAssignPopOpen);
         }}>
-        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.3)' }}>
+        <View style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.3)'}}>
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <View style={styles.ModalHeader}>
@@ -305,9 +407,11 @@ const AssignTestMaterials = ({ route, navigation }: { route: any, navigation: an
               </View>
               <View style={styles.ModalInnerContainer}>
                 <View>
-                  <Text style={styles.AssignRoleText}>Test Material: {selectedTestMaterial.name}</Text>
+                  <Text style={styles.AssignRoleText}>
+                    Test Material: {selectedTestMaterial.name}
+                  </Text>
                 </View>
-                <ScrollView style={{ paddingTop: 10, height: 500 }}>
+                <ScrollView style={{paddingTop: 10, height: 500}}>
                   {userData.map((item: any, index) => (
                     <View style={styles.CategoryType}>
                       <View style={styles.FlexRowCenter}>
@@ -316,26 +420,24 @@ const AssignTestMaterials = ({ route, navigation }: { route: any, navigation: an
                           disabled={item.assignmentLevel != null}
                           onValueChange={() => handleUserData(index)}
                           style={styles.checkbox}
-                          tintColors={{ true: '#0F56B3', false: '#818181' }}
+                          tintColors={{true: '#0F56B3', false: '#818181'}}
                         />
-                        <View style={{ flexDirection: 'row' }}>
-                          <Text style={styles.AssignRoleText}>
-                            {item.name}
-                          </Text>
-                          {
-                            item.assignmentLevel ?
+                        <View style={{flexDirection: 'row'}}>
+                          <Text style={styles.AssignRoleText}>{item.name}</Text>
+                          {item.assignmentLevel ? (
                             <Text style={styles.userAlreadyAssigned}>
                               {item.assignmentLevel}
-                            </Text> : null
-                          }
-
+                            </Text>
+                          ) : null}
                         </View>
                       </View>
                     </View>
                   ))}
                 </ScrollView>
 
-                <TouchableOpacity style={styles.assignTagButoon} onPress={() => onTestAssignment()}>
+                <TouchableOpacity
+                  style={styles.assignTagButoon}
+                  onPress={() => onTestAssignment()}>
                   <Text style={styles.assignTagButoonText}>Assign</Text>
                 </TouchableOpacity>
               </View>
@@ -343,10 +445,13 @@ const AssignTestMaterials = ({ route, navigation }: { route: any, navigation: an
           </View>
         </View>
       </Modal>
-      <LoadingAnimation loading={loading || loadingUsers || loadingTestWorkCategory}></LoadingAnimation>
+      <LoadingAnimation
+        loading={
+          loading || loadingUsers || loadingTestWorkCategory
+        }></LoadingAnimation>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   Container: {
@@ -428,7 +533,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     fontWeight: '600',
     paddingVertical: 15,
-    height: 55
+    height: 55,
   },
   SectionStyle: {
     flexDirection: 'row',
@@ -437,7 +542,7 @@ const styles = StyleSheet.create({
     marginHorizontal: -15,
     backgroundColor: '#fff',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10 },
+    shadowOffset: {width: 0, height: 10},
     shadowOpacity: 0.25,
     shadowRadius: 20,
     // Shadow for Android
@@ -460,10 +565,10 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     flexDirection: 'row',
     alignContent: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   checkbox: {
-    transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }],
+    transform: [{scaleX: 1.2}, {scaleY: 1.2}],
   },
   label: {
     margin: 8,
@@ -618,4 +723,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AssignTestMaterials
+export default AssignTestMaterials;

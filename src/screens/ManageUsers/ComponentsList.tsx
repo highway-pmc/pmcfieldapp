@@ -4,9 +4,12 @@ import { useIsFocused } from '@react-navigation/native';
 import { HeaderItems, WORK_ASSIGNMENT_LEVEL } from '../../constants/constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearProjectModulesWorkAssignmentData, getProjectModuleComponents, getUsersForWorkAssignment, componentWorkAssignToUsers, getProjectModuleNextLevel, clearNextLevel } from './actions';
+import commonStyles from '../Common/commonStyles';
 import { ScrollView } from 'react-native-gesture-handler';
 import CheckBox from '@react-native-community/checkbox';
 import LoadingAnimation from '../Common/LoadingAnimation';
+import CardComponent from '../Common/CardComponent';
+import { commonComponentTypes } from '../Common/CommonConstantsTypes';
 
 const ComponentsList = ({ route, navigation }: { route: any, navigation: any }) => {
   const { projectModuleId, projectModuleName, type, subType, segmentId, segmentName, workType } = route.params;
@@ -225,6 +228,45 @@ const ComponentsList = ({ route, navigation }: { route: any, navigation: any }) 
     }
   }, [nextLevel]);
 
+  // code for Grouping coponent types
+  const { componentType } = componentsData.filter((subSeg: any) => {
+    if (searchText && subSeg.name) {
+      return subSeg.name.toLowerCase().includes(searchText.toLowerCase());
+    }
+    return true;
+  }).reduce(
+    (result: { componentType: any[] }, item: any) => {
+        result.componentType.push(item);
+      return result;
+    },
+    { componentType: [] }
+  );
+  
+  const repeatedComponentTypes = commonComponentTypes.map((type: any) => {
+    const filteredItems = componentType.filter((item) => item.type === type);
+    return (
+      filteredItems.length > 0 && (
+        <View style={commonStyles.separatTaskType} key={type}>
+          <View style={commonStyles.titleTextForGrouping}>
+            <Text style={commonStyles.titleText}>{type}</Text>
+          </View>
+          {filteredItems.map((item, index) => (
+            <CardComponent
+              key={`${type}-${index}`}
+              item={item}
+              index={index}
+              isChecked={item.isChecked}
+              name={item.name || ''}
+              handleRadio={handleRadioChange}
+              onComponentNext={onComponentNextClick}
+            />
+          ))}
+        </View>
+      )
+    );
+  })
+// End code for Grouping coponent types
+
   return (
     <View style={styles.Container}>
       {(error) && <View style={styles.ErrorSectionStyle}>
@@ -249,35 +291,10 @@ const ComponentsList = ({ route, navigation }: { route: any, navigation: any }) 
           }}
         />
       </View>
-      <ScrollView style={styles.Height100}>
-        {componentsData.filter((subSeg: any) => {
-            if (searchText && subSeg.name) {
-              return subSeg.name.toLowerCase().includes(searchText.toLowerCase())
-            } else {
-              return true;
-            }
-          }).map((item: any, index) => (
-          <View style={styles.UserCategory}>
-            <View style={styles.FlexRowCenter}>
-              <CheckBox
-                value={item.isChecked}
-                onValueChange={() => handleRadioChange(index)}
-                style={styles.checkbox}
-                tintColors={{ true: '#0F56B3', false: '#818181' }}
-              />
-              <View>
-                <Text style={styles.UserRole}>{item.name}</Text>
-              </View>
-            </View>
-            <TouchableOpacity
-              onPress={() => onComponentNextClick(item)}>
-              <Image
-                style={styles.CloseIcon}
-                source={require('./../../images/right-arrow.png')}
-              />
-            </TouchableOpacity>
-          </View>
-        ))}
+      <ScrollView style={styles.Height100} contentContainerStyle={commonStyles.paddingBottom20}>
+        <>
+          {repeatedComponentTypes}
+        </>
       </ScrollView>
       {/* Modal Start */}
       <Modal

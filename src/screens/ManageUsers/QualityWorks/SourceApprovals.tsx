@@ -149,6 +149,7 @@ const SourceApprovals = ({
   //Bitumious work source approval form
   // Fine Aggregate
   const [fineAggregate, setFineAggregate] = useState({
+    name: '',
     ratePerKG: '', // (3 decimal, >0, 100000)
     comments: '',
     status: SOURCE_APPROVAL_STATUS.PENDING,
@@ -156,6 +157,7 @@ const SourceApprovals = ({
 
   //Emulsion
   const [emulsion, setEmulsion] = useState({
+    name: '',
     gradeOfEmulsion: '', // characters, max limit 100
     ratePerMT: '', // (3 decimal, >0, 100000)
     emulsionBrand: '', // characters, max limit 100
@@ -165,6 +167,7 @@ const SourceApprovals = ({
 
   //Coarse Aggregate (SMA)
   const [coarseAggregateSMA, setCoarseAggregateSMA] = useState({
+    name: '',
     nominalSize: '', // 37.5mm / 26.5mm / 19mm / 13.2mm
     ratePerKG: '', // (3 decimal, >0, 100000)
     comments: '',
@@ -173,6 +176,7 @@ const SourceApprovals = ({
 
   //Coarse Aggregate (Micro Surfacing)
   const [coarseAggregateMicro, setCoarseAggregateMicro] = useState({
+    name: '',
     nominalSize: '', // 37.5mm / 26.5mm / 19mm / 13.2mm
     ratePerKG: '', // (3 decimal, >0, 100000)
     comments: '',
@@ -181,6 +185,7 @@ const SourceApprovals = ({
 
   //Bitumen
   const [bitumen, setBitumen] = useState({
+    name: '',
     gradeOfBitumen: '', // VG 30 / VG 40 / PMB
     ratePerMT: '', // (3 decimal, >0, 100000)
     bitumenBrand: '', // characters, max limit 100
@@ -190,6 +195,7 @@ const SourceApprovals = ({
 
   //Coarse Aggregate (DBM/BC)
   const [coarseAggregateDBMBC, setCoarseAggregateDBMBC] = useState({
+    name: '',
     nominalSize: '', // 37.5mm / 26.5mm / 19mm / 13.2mm / 10mm / 20mm
     ratePerKG: '', // (3 decimal, >0, 100000)
     comments: '',
@@ -254,6 +260,7 @@ const SourceApprovals = ({
       switch (materialType) {
         case TEST_MATERIALS_TYPES.FINE_AGGREGATE:
           setFineAggregate({
+            name: item.name,
             ratePerKG: item.ratePerKG,
             comments: item.comments,
             status: item.status,
@@ -262,6 +269,7 @@ const SourceApprovals = ({
 
         case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_DBM_BC:
           setCoarseAggregateDBMBC({
+            name: item.name,
             nominalSize: item.nominalSize,
             ratePerKG: item.ratePerKG,
             comments: item.comments,
@@ -271,6 +279,7 @@ const SourceApprovals = ({
 
         case TEST_MATERIALS_TYPES.BITUMEN:
           setBitumen({
+            name: item.name,
             gradeOfBitumen: item.gradeOfBitumen,
             ratePerMT: item.ratePerMT,
             bitumenBrand: item.bitumenBrand,
@@ -281,6 +290,7 @@ const SourceApprovals = ({
 
         case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING:
           setCoarseAggregateMicro({
+            name: item.name,
             nominalSize: item.nominalSize,
             ratePerKG: item.ratePerKG,
             comments: item.comments,
@@ -290,30 +300,32 @@ const SourceApprovals = ({
 
         case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA:
           setCoarseAggregateSMA({
-            nominalSize: item.nominalSize || '', // 37.5mm / 26.5mm / 19mm / 13.2mm
-            ratePerKG: item.ratePerKG || '', // (3 decimal, >0, 100000)
-            comments: item.comments || '',
-            status: item.status || SOURCE_APPROVAL_STATUS.PENDING,
+            name: item.name,
+            nominalSize: item.nominalSize, // 37.5mm / 26.5mm / 19mm / 13.2mm
+            ratePerKG: item.ratePerKG, // (3 decimal, >0, 100000)
+            comments: item.comments,
+            status: item.status,
           });
           break;
 
         case TEST_MATERIALS_TYPES.EMULSION:
           setEmulsion({
-            gradeOfEmulsion: item.gradeOfEmulsion || '', // characters, max limit 100
-            ratePerMT: item.ratePerMT || '', // (3 decimal, >0, 100000)
-            emulsionBrand: item.emulsionBrand || '', // characters, max limit 100
-            comments: item.comments || '',
-            status: item.status || SOURCE_APPROVAL_STATUS.PENDING,
+            name: item.name,
+            gradeOfEmulsion: item.gradeOfEmulsion, // characters, max limit 100
+            ratePerMT: item.ratePerMT, // (3 decimal, >0, 100000)
+            emulsionBrand: item.emulsionBrand, // characters, max limit 100
+            comments: item.comments,
+            status: item.status,
           });
           break;
       }
     } else {
       setSourceForm({
-        name: item.name || '',
-        location: item.location || '',
-        vendorName: item.vendorName || '',
-        comments: item.comments || '',
-        status: item.status || SOURCE_APPROVAL_STATUS.PENDING,
+        name: item.name,
+        location: item.location,
+        vendorName: item.vendorName,
+        comments: item.comments,
+        status: item.status,
       });
     }
     setSelectedSource(item);
@@ -351,6 +363,12 @@ const SourceApprovals = ({
     let message = '';
 
     switch (name) {
+      case 'name':
+        if (typeof value === 'string' && value.length > 100) {
+          isValid = false;
+          message = `${name} should be less than 100 characters.`;
+        }
+        break;
       case 'ratePerKG':
         if (typeof value === 'string') {
           // Validate that the input is numeric with up to 3 decimal places
@@ -397,6 +415,12 @@ const SourceApprovals = ({
     let message = '';
 
     switch (name) {
+      case 'name':
+        if (typeof value === 'string' && value.length > 100) {
+          isValid = false;
+          message = `${name} should be less than 100 characters.`;
+        }
+        break;
       case 'nominalSize':
         if (
           typeof value === 'string' &&
@@ -450,6 +474,12 @@ const SourceApprovals = ({
     let message = '';
 
     switch (name) {
+      case 'name':
+        if (typeof value === 'string' && value.length > 100) {
+          isValid = false;
+          message = `${name} should be less than 100 characters.`;
+        }
+        break;
       case 'gradeOfBitumen':
         if (
           typeof value === 'string' &&
@@ -498,6 +528,12 @@ const SourceApprovals = ({
     let message = '';
 
     switch (name) {
+      case 'name':
+        if (typeof value === 'string' && value.length > 100) {
+          isValid = false;
+          message = `${name} should be less than 100 characters.`;
+        }
+        break;
       case 'nominalSize':
         if (
           typeof value === 'string' &&
@@ -549,6 +585,12 @@ const SourceApprovals = ({
     let message = '';
 
     switch (name) {
+      case 'name':
+        if (typeof value === 'string' && value.length > 100) {
+          isValid = false;
+          message = `${name} should be less than 100 characters.`;
+        }
+        break;
       case 'nominalSize':
         if (
           typeof value === 'string' &&
@@ -600,6 +642,12 @@ const SourceApprovals = ({
     let message = '';
 
     switch (name) {
+      case 'name':
+        if (typeof value === 'string' && value.length > 100) {
+          isValid = false;
+          message = `${name} should be less than 100 characters.`;
+        }
+        break;
       case 'gradeOfEmulsion':
       case 'emulsionBrand':
         if (typeof value === 'string' && value.length > 100) {
@@ -747,7 +795,7 @@ const SourceApprovals = ({
 
         default:
           console.error('Unknown material type for Bituminous Works');
-          return; // Exit if material type is unknown
+          return;
       }
     } else {
       body = {
@@ -961,6 +1009,7 @@ const SourceApprovals = ({
       switch (materialType) {
         case TEST_MATERIALS_TYPES.FINE_AGGREGATE:
           setFineAggregate({
+            name: '',
             ratePerKG: '', // (3 decimal, >0, 100000)
             comments: '',
             status: SOURCE_APPROVAL_STATUS.PENDING,
@@ -969,6 +1018,7 @@ const SourceApprovals = ({
 
         case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_DBM_BC:
           setCoarseAggregateDBMBC({
+            name: '',
             nominalSize: '', // 37.5mm / 26.5mm / 19mm / 13.2mm / 10mm / 20mm
             ratePerKG: '', // (3 decimal, >0, 100000)
             comments: '',
@@ -978,6 +1028,7 @@ const SourceApprovals = ({
 
         case TEST_MATERIALS_TYPES.BITUMEN:
           setBitumen({
+            name: '',
             gradeOfBitumen: '', // VG 30 / VG 40 / PMB
             ratePerMT: '', // (3 decimal, >0, 100000)
             bitumenBrand: '', // characters, max limit 100
@@ -988,6 +1039,7 @@ const SourceApprovals = ({
 
         case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING:
           setCoarseAggregateMicro({
+            name: '',
             nominalSize: '', // 37.5mm / 26.5mm / 19mm / 13.2mm
             ratePerKG: '', // (3 decimal, >0, 100000)
             comments: '',
@@ -997,6 +1049,7 @@ const SourceApprovals = ({
 
         case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA:
           setCoarseAggregateSMA({
+            name: '',
             nominalSize: '', // 37.5mm / 26.5mm / 19mm / 13.2mm
             ratePerKG: '', // (3 decimal, >0, 100000)
             comments: '',
@@ -1006,6 +1059,7 @@ const SourceApprovals = ({
 
         case TEST_MATERIALS_TYPES.EMULSION:
           setEmulsion({
+            name: '',
             gradeOfEmulsion: '', // characters, max limit 100
             ratePerMT: '', // (3 decimal, >0, 100000)
             emulsionBrand: '', // characters, max limit 100
@@ -1038,6 +1092,14 @@ const SourceApprovals = ({
           <View style={styles.reportFields}>
             <View>
               <Input
+                label="Source Name"
+                value={sourceForm.name}
+                onChange={(value: string) => handleInputChange('name', value)}
+                isRequired={true}
+              />
+            </View>
+            <View>
+              <Input
                 label="Rate per KG"
                 value={fineAggregate.ratePerKG.toString()}
                 onChange={(value: string) =>
@@ -1066,6 +1128,14 @@ const SourceApprovals = ({
       } else if (materialType === TEST_MATERIALS_TYPES.EMULSION) {
         return (
           <View style={styles.reportFields}>
+            <View>
+              <Input
+                label="Source Name"
+                value={sourceForm.name}
+                onChange={(value: string) => handleInputChange('name', value)}
+                isRequired={true}
+              />
+            </View>
             <View>
               <Input
                 label="Grade of Emulsion"
@@ -1119,6 +1189,14 @@ const SourceApprovals = ({
         return (
           <View style={styles.reportFields}>
             <View>
+              <Input
+                label="Source Name"
+                value={sourceForm.name}
+                onChange={(value: string) => handleInputChange('name', value)}
+                isRequired={true}
+              />
+            </View>
+            <View>
               <DropdownPicker
                 label="Nominal Size"
                 items={[
@@ -1167,6 +1245,14 @@ const SourceApprovals = ({
       ) {
         return (
           <View style={styles.reportFields}>
+            <View>
+              <Input
+                label="Source Name"
+                value={sourceForm.name}
+                onChange={(value: string) => handleInputChange('name', value)}
+                isRequired={true}
+              />
+            </View>
             <View>
               <DropdownPicker
                 label="Nominal Size"
@@ -1217,6 +1303,14 @@ const SourceApprovals = ({
           <View style={styles.reportFields}>
             <View>
               <View>
+                <Input
+                  label="Source Name"
+                  value={sourceForm.name}
+                  onChange={(value: string) => handleInputChange('name', value)}
+                  isRequired={true}
+                />
+              </View>
+              <View>
                 <DropdownPicker
                   label="Nominal Size"
                   items={[
@@ -1265,6 +1359,14 @@ const SourceApprovals = ({
       } else if (materialType === TEST_MATERIALS_TYPES.BITUMEN) {
         return (
           <View style={styles.reportFields}>
+            <View>
+              <Input
+                label="Source Name"
+                value={sourceForm.name}
+                onChange={(value: string) => handleInputChange('name', value)}
+                isRequired={true}
+              />
+            </View>
             <View>
               <DropdownPicker
                 label="Grade of Bitumen"

@@ -19,8 +19,8 @@ export const getSourceApprovalsByStatusApi = async (projectId, testMaterialId, s
     });
 }
 
-export const addSourceApprovalApi = async (projectId, testMaterialId, body) => {
-    return apiService.postRequest(`v1/auth/projects/${projectId}/test-material/${testMaterialId}/source-approvals`, body).then((response) => {
+export const addSourceApprovalApi = async (projectId, testCategoryType, testMaterialId, body) => {
+    return apiService.postRequest(`v1/auth/projects/${projectId}/test-work-category/${testCategoryType}/test-material/${testMaterialId}/source-approvals`, body).then((response) => {
         return response;
     }).catch((err) => {
         const errorMessge = err?.message || 'Unable to add source.';
@@ -28,8 +28,8 @@ export const addSourceApprovalApi = async (projectId, testMaterialId, body) => {
     });
 }
 
-export const patchSourceApprovalApi = async (projectId, testMaterialId, id, body) => {
-    return apiService.patchRequest(`v1/auth/projects/${projectId}/test-material/${testMaterialId}/source-approvals/${id}`, body).then((response) => {
+export const patchSourceApprovalApi = async (projectId, testCategoryType, testMaterialId, id, body) => {
+    return apiService.patchRequest(`v1/auth/projects/${projectId}/test-work-category/${testCategoryType}/test-material/${testMaterialId}/source-approvals/${id}`, body).then((response) => {
         return response;
     }).catch((err) => {
         const errorMessge = err.message || 'Unable to update source.';
@@ -37,8 +37,8 @@ export const patchSourceApprovalApi = async (projectId, testMaterialId, id, body
     });
 }
 
-export const updateSourceApprovalApi = async (projectId, testMaterialId, id, body) => {
-    return apiService.putRequest(`v1/auth/projects/${projectId}/test-material/${testMaterialId}/source-approvals/${id}`, body).then((response) => {
+export const updateSourceApprovalApi = async (projectId, testCategoryType, testMaterialId, id, body) => {
+    return apiService.putRequest(`v1/auth/projects/${projectId}/test-work-category/${testCategoryType}/test-material/${testMaterialId}/source-approvals/${id}`, body).then((response) => {
         return response;
     }).catch((err) => {
         const errorMessge = err.message || 'Unable to update source.';

@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { TEST_CLASSIFICATION_TYPES } from '../constants/constants';
 
 const groupBy = (arr, property) => {
     return arr.reduce(function (memo, x) {
@@ -8,9 +9,9 @@ const groupBy = (arr, property) => {
     }, {});
 };
 
-const isTestInventoryClassification = (testClassificationName) => {
+const isTestInventoryClassification = (testClassificationType) => {
     // TODO: need to introduce types in db and use them here iso name
-    return (testClassificationName === 'Source Approvals' || testClassificationName === 'Procurement Details');
+    return (testClassificationType === TEST_CLASSIFICATION_TYPES.SOURCE_APPROVALS || testClassificationType === TEST_CLASSIFICATION_TYPES.PROCUREMENT_DETAILS);
 }
 
 const getDbDate = (date) => {

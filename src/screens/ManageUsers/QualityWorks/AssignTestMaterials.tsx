@@ -14,7 +14,9 @@ import {useIsFocused} from '@react-navigation/native';
 import {
   HeaderItems,
   TEST_ASSIGNMENT_LEVEL,
+  TEST_CLASSIFICATION_TYPES,
   TEST_MATERIALS_TYPES,
+  TEST_WORK_CATEGORY_TYPES,
 } from '../../../constants/constants';
 import {useDispatch, useSelector} from 'react-redux';
 import {
@@ -38,8 +40,10 @@ const AssignTestMaterials = ({
   const {
     testClassificationId,
     testClassificationName,
+    testClassificationType,
     testWorkCategoryId,
     testWorkCategoryName,
+    testWorkCategoryType,
     workType,
   } = route.params;
 
@@ -267,12 +271,12 @@ const AssignTestMaterials = ({
   );
 
   const onNext = (item: any) => {
-    if (isTestInventoryClassification(testClassificationName)) {
+    if (isTestInventoryClassification(testClassificationType)) {
       // TODO - will introduce type in db and use it iso Classification Name
       if (
         item.materialType === TEST_MATERIALS_TYPES.CONCRETE ||
         item.materialType === TEST_MATERIALS_TYPES.CEMENT ||
-        (testWorkCategoryName === 'Bituminous Works' &&
+        (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BITUMINOUS_WORKS &&
           (item.materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE ||
             item.materialType === TEST_MATERIALS_TYPES.EMULSION ||
             item.materialType ===
@@ -282,7 +286,7 @@ const AssignTestMaterials = ({
             item.materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA ||
             item.materialType === TEST_MATERIALS_TYPES.BITUMEN))
       ) {
-        if (testClassificationName === 'Procurement Details') {
+        if (testClassificationType === TEST_CLASSIFICATION_TYPES.PROCUREMENT_DETAILS) {
           navigation.navigate('Procurements', {
             testClassificationId: testClassificationId,
             testClassificationName: testClassificationName,
@@ -293,12 +297,14 @@ const AssignTestMaterials = ({
             materialType: item.materialType,
             workType: workType,
           });
-        } else if (testClassificationName === 'Source Approvals') {
+        } else if (testClassificationType === TEST_CLASSIFICATION_TYPES.SOURCE_APPROVALS) {
           navigation.navigate('SourceApprovals', {
             testClassificationId: testClassificationId,
             testClassificationName: testClassificationName,
+            testClassificationType: testClassificationType,
             testWorkCategoryId: testWorkCategoryId,
             testWorkCategoryName: testWorkCategoryName,
+            testWorkCategoryType: testWorkCategoryType,
             testMaterialId: item._id,
             testMaterialName: item.name,
             materialType: item.materialType,
@@ -360,7 +366,7 @@ const AssignTestMaterials = ({
             .map((item: any, index) => (
               <View style={styles.UserCategory}>
                 <View style={styles.FlexRowCenter}>
-                  {!isTestInventoryClassification(testClassificationName) && (
+                  {!isTestInventoryClassification(testClassificationType) && (
                     <CheckBox
                       value={item.isChecked}
                       onValueChange={() => handleRadioChange(index)}

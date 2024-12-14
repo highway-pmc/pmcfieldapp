@@ -240,7 +240,7 @@ const AssignTestClassification = () => {
                   workType: workType
                 })}>
                 {
-                  !isTestInventoryClassification(item.name) &&
+                  !isTestInventoryClassification(item.type) &&
                   <Image
                     style={styles.CloseIcon}
                     source={require('./../../../images/right-arrow.png')}

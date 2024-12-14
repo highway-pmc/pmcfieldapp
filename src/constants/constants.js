@@ -643,6 +643,21 @@ export const TASK_TYPES = {
   SAND_LAYER:'sand-layer'
 };
 
+export const TEST_CLASSIFICATION_TYPES = {
+  THIRD_PARTY_LAB_TEST: 'third-party-lab-test',
+  FIELD_LAB_TEST: 'field-lab-test',
+  PROCUREMENT_DETAILS: 'procurement-details',
+  MIX_DESIGN: 'mix-design',
+  SOURCE_APPROVALS: 'source-approvals',
+  UPLOAD_MTC: 'upload-mtc',
+  EQUIPMENT_CALIBRATION: 'equipment-calibration',
+};
+
+export const TEST_WORK_CATEGORY_TYPES = {
+  CONCRETE_STRUCTURE: 'concrete-structure',
+  BITUMINOUS_WORKS: 'bituminous-works',
+};
+
 export const TEST_MATERIALS_TYPES = {
   COARSE_AGGREGATE_DBM_BC: 'coarse-aggregate-dbm-bc',
   BITUMEN: 'bitumen',

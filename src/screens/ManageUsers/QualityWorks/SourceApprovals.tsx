@@ -21,6 +21,7 @@ import {
   HeaderItems,
   SOURCE_APPROVAL_STATUS,
   TEST_MATERIALS_TYPES,
+  TEST_WORK_CATEGORY_TYPES,
 } from '../../../constants/constants';
 import {Image} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -47,7 +48,7 @@ const SourceApprovals = ({
   route: any;
   navigation: any;
 }) => {
-  const {testWorkCategoryName, testMaterialName, materialType, testMaterialId} =
+  const {testWorkCategoryName, testMaterialName, testWorkCategoryType, materialType, testMaterialId} =
     route.params;
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
   const {
@@ -256,7 +257,7 @@ const SourceApprovals = ({
   // };
   const handleEdit = (item: any) => {
     setSelectedSource(item);
-    if (testWorkCategoryName === 'Bituminous Works') {
+    if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BITUMINOUS_WORKS) {
       switch (materialType) {
         case TEST_MATERIALS_TYPES.FINE_AGGREGATE:
           setFineAggregate({
@@ -749,7 +750,7 @@ const SourceApprovals = ({
   const handleSubmit = () => {
     let body;
 
-    if (testWorkCategoryName === 'Bituminous Works') {
+    if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BITUMINOUS_WORKS) {
       switch (materialType) {
         case TEST_MATERIALS_TYPES.FINE_AGGREGATE:
           body = {
@@ -806,6 +807,7 @@ const SourceApprovals = ({
       dispatch(
         addSourceApproval({
           projectId: loggedInUser.projectId,
+          testCategoryType: testWorkCategoryType,
           testMaterialId: testMaterialId,
           body,
         }),
@@ -814,6 +816,7 @@ const SourceApprovals = ({
       dispatch(
         updateSourceApproval({
           projectId: loggedInUser.projectId,
+          testCategoryType: testWorkCategoryType,
           testMaterialId: testMaterialId,
           id: selectedSource._id,
           body,
@@ -826,6 +829,7 @@ const SourceApprovals = ({
     dispatch(
       patchSourceApproval({
         projectId: loggedInUser.projectId,
+        testCategoryType: testWorkCategoryType,
         testMaterialId: testMaterialId,
         id: item._id,
         body: {
@@ -1005,7 +1009,7 @@ const SourceApprovals = ({
 
   const handleAddSource = () => {
     console.log(materialType);
-    if (testWorkCategoryName === 'Bituminous Works') {
+    if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BITUMINOUS_WORKS) {
       switch (materialType) {
         case TEST_MATERIALS_TYPES.FINE_AGGREGATE:
           setFineAggregate({
@@ -1086,7 +1090,7 @@ const SourceApprovals = ({
   };
 
   const addSourceApprovalsForm = () => {
-    if (testWorkCategoryName === 'Bituminous Works') {
+    if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BITUMINOUS_WORKS) {
       if (materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE) {
         return (
           <View style={styles.reportFields}>

@@ -161,12 +161,13 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
 
   const onMyTestClick = (item: any) => {
     setCurrentLevel(1);
-    if (isTestInventoryClassification(item.name)) {
+    if (isTestInventoryClassification(item.type)) {
       // TODO - will introduce type in db and use it iso Classification Name
       //const testWorkCategory = item.testWorkCategoriesData[1];
       navigation.navigate('SelectTestWorkCategory', {
         testClassificationId: item.id,
         testClassificationName: item.name,
+        testClassificationType: item.type,
         testWorkCategoriesData: item.testWorkCategoriesData,
         workType: workType,
       });
@@ -184,14 +185,16 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
     testTypeIndex: number = -1,
   ) => {
     const testClassifData: any = myTestsData[testClassifIndex];
-    if (isTestInventoryClassification(testClassifData.name)) {
+    if (isTestInventoryClassification(testClassifData.type)) {
       // TODO - will introduce type in db and use it iso Classification Name
       const testWorkCategory = testClassifData.testWorkCategoriesData[0];
       navigation.navigate('AssignTestMaterialsPurchage', {
         testClassificationId: testClassifData.id,
         testClassificationName: testClassifData.name,
+        testClassificationType: testClassifData.type,
         testWorkCategoryId: testWorkCategory._id,
         testWorkCategoryName: testWorkCategory.name,
+        testWorkCategoryType: testWorkCategory.type,
         workType: workType,
       });
       return;

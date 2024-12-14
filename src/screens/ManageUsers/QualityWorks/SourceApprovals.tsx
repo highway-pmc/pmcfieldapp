@@ -1097,7 +1097,7 @@ const SourceApprovals = ({
             <View>
               <Input
                 label="Source Name"
-                value={sourceForm.name}
+                value={fineAggregate.name}
                 onChange={(value: string) =>
                   handleFineAggregateInputChange('name', value)
                 }
@@ -1137,7 +1137,7 @@ const SourceApprovals = ({
             <View>
               <Input
                 label="Source Name"
-                value={sourceForm.name}
+                value={emulsion.name}
                 onChange={(value: string) =>
                   handleEmulsionInputChange('name', value)
                 }
@@ -1199,7 +1199,7 @@ const SourceApprovals = ({
             <View>
               <Input
                 label="Source Name"
-                value={sourceForm.name}
+                value={coarseAggregateDBMBC.name}
                 onChange={(value: string) =>
                   handleCoarseAggregateDBMBCInputChange('name', value)
                 }
@@ -1258,7 +1258,7 @@ const SourceApprovals = ({
             <View>
               <Input
                 label="Source Name"
-                value={sourceForm.name}
+                value={coarseAggregateMicro.name}
                 onChange={(value: string) =>
                   handleCoarseAggregateMicroInputChange('name', value)
                 }
@@ -1317,7 +1317,7 @@ const SourceApprovals = ({
               <View>
                 <Input
                   label="Source Name"
-                  value={sourceForm.name}
+                  value={coarseAggregateSMA.name}
                   onChange={(value: string) =>
                     handleCoarseAggregateSMAInputChange('name', value)
                   }
@@ -1376,7 +1376,7 @@ const SourceApprovals = ({
             <View>
               <Input
                 label="Source Name"
-                value={sourceForm.name}
+                value={bitumen.name}
                 onChange={(value: string) =>
                   handleBitumenInputChange('name', value)
                 }

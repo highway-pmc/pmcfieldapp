@@ -20,6 +20,7 @@ import {
   HeaderItems,
   SOURCE_APPROVAL_STATUS,
   TEST_MATERIALS_TYPES,
+  TEST_WORK_CATEGORY_TYPES,
 } from '../../../constants/constants';
 import {Image} from 'react-native-elements';
 import LoadingAnimation from '../../Common/LoadingAnimation';
@@ -43,7 +44,7 @@ import DocumentPicker from 'react-native-document-picker';
 import appConfig from '../../../common/app.config';
 
 const Procurements = ({route, navigation}: {route: any; navigation: any}) => {
-  const {testWorkCategoryName, testMaterialName, materialType, testMaterialId} =
+  const {testWorkCategoryName,testWorkCategoryType, testMaterialName, materialType, testMaterialId} =
     route.params;
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
   const {
@@ -225,7 +226,7 @@ const Procurements = ({route, navigation}: {route: any; navigation: any}) => {
     setSelectedProcurement(null);
     setSourceApprovalDetails([]);
     setVehicleNos([]);
-    if (testWorkCategoryName === 'Bituminous Works') {
+    if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BITUMINOUS_WORKS) {
       switch (materialType) {
         case TEST_MATERIALS_TYPES.FINE_AGGREGATE:
           setDetailsFineAggregate({
@@ -334,7 +335,7 @@ const Procurements = ({route, navigation}: {route: any; navigation: any}) => {
     );
     setVehicleNos(item.vehicleNo || []);
 
-    if (testWorkCategoryName === 'Bituminous Works') {
+    if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BITUMINOUS_WORKS) {
       switch (materialType) {
         case TEST_MATERIALS_TYPES.FINE_AGGREGATE:
           setDetailsFineAggregate({
@@ -420,7 +421,7 @@ const Procurements = ({route, navigation}: {route: any; navigation: any}) => {
     let isValid = true;
     let errorMessage = '';
 
-    if (testWorkCategoryName === 'Bituminous Works') {
+    if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BITUMINOUS_WORKS) {
       switch (materialType) {
         case TEST_MATERIALS_TYPES.FINE_AGGREGATE:
           if (!detailsFineAggregate.sourceName) {
@@ -665,7 +666,7 @@ const handleInputChangeBituminousWork = (field:any, value:any, detail:any) => {
 
     let materialSpecificFields = {};
 
-    if (testWorkCategoryName === 'Bituminous Works') {
+    if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BITUMINOUS_WORKS) {
       switch (materialType) {
         case TEST_MATERIALS_TYPES.FINE_AGGREGATE:
           materialSpecificFields = {
@@ -891,7 +892,7 @@ const handleInputChangeBituminousWork = (field:any, value:any, detail:any) => {
   };
 
   const addProcurementsForm = () => {
-    if (testWorkCategoryName === 'Bituminous Works') {
+    if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BITUMINOUS_WORKS) {
       switch (materialType) {
         case TEST_MATERIALS_TYPES.FINE_AGGREGATE:
           return (

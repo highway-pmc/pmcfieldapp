@@ -1098,7 +1098,9 @@ const SourceApprovals = ({
               <Input
                 label="Source Name"
                 value={sourceForm.name}
-                onChange={(value: string) => handleInputChange('name', value)}
+                onChange={(value: string) =>
+                  handleFineAggregateInputChange('name', value)
+                }
                 isRequired={true}
               />
             </View>
@@ -1136,7 +1138,9 @@ const SourceApprovals = ({
               <Input
                 label="Source Name"
                 value={sourceForm.name}
-                onChange={(value: string) => handleInputChange('name', value)}
+                onChange={(value: string) =>
+                  handleEmulsionInputChange('name', value)
+                }
                 isRequired={true}
               />
             </View>
@@ -1196,7 +1200,9 @@ const SourceApprovals = ({
               <Input
                 label="Source Name"
                 value={sourceForm.name}
-                onChange={(value: string) => handleInputChange('name', value)}
+                onChange={(value: string) =>
+                  handleCoarseAggregateDBMBCInputChange('name', value)
+                }
                 isRequired={true}
               />
             </View>
@@ -1253,7 +1259,9 @@ const SourceApprovals = ({
               <Input
                 label="Source Name"
                 value={sourceForm.name}
-                onChange={(value: string) => handleInputChange('name', value)}
+                onChange={(value: string) =>
+                  handleCoarseAggregateMicroInputChange('name', value)
+                }
                 isRequired={true}
               />
             </View>
@@ -1310,7 +1318,9 @@ const SourceApprovals = ({
                 <Input
                   label="Source Name"
                   value={sourceForm.name}
-                  onChange={(value: string) => handleInputChange('name', value)}
+                  onChange={(value: string) =>
+                    handleCoarseAggregateSMAInputChange('name', value)
+                  }
                   isRequired={true}
                 />
               </View>
@@ -1367,7 +1377,9 @@ const SourceApprovals = ({
               <Input
                 label="Source Name"
                 value={sourceForm.name}
-                onChange={(value: string) => handleInputChange('name', value)}
+                onChange={(value: string) =>
+                  handleBitumenInputChange('name', value)
+                }
                 isRequired={true}
               />
             </View>

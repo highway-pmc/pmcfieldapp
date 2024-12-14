@@ -85,6 +85,66 @@ const Procurements = ({route, navigation}: {route: any; navigation: any}) => {
     invoiceFile: '',
   });
 
+  // use state form for Bituminous work
+  // Details_Bitumen Form
+  const [detailsBitumen, setDetailsBitumen] = useState({
+    gradeOfBitumen: '', // VG 30 / VG 40 / PMB
+    sourceName: '', // Dropdown showing sources for corresponding cement grade
+    vehicleNo: [], // Last 4 digits, numeric only
+    qtyInKg: '', // >0, up to 3 decimals, max limit 20
+    uploadWeightSlip: '', // Image or PDF
+    lotNumber: '', // Combination of characters and numbers, max limit 100
+  });
+
+  // Details_FineAggregate Form
+  const [detailsFineAggregate, setDetailsFineAggregate] = useState({
+    sourceName: '', // Dropdown showing sources for the corresponding zone
+    vehicleNo: [], // Last 4 digits, numeric only
+    qtyInKg: '', // >0, up to 3 decimals, max limit 20
+    uploadWeightSlip: '', // Image or PDF
+  });
+
+  // Details_CoarseAggregate_SMA Form
+  const [detailsCoarseAggregateSMA, setDetailsCoarseAggregateSMA] = useState({
+    nominalSize: '', // 37.5mm / 26.5mm / 19mm / 13.2mm
+    sourceName: '', // Dropdown showing sources for the corresponding size of aggregate grade
+    vehicleNo: [], // Last 4 digits, numeric only
+    qtyInKg: '', // >0, up to 3 decimals, max limit 20
+    uploadWeightSlip: '', // Image or PDF
+  });
+
+  // Details_CoarseAggregate_MicroSurfacing Form
+  const [
+    detailsCoarseAggregateMicroSurfacing,
+    setDetailsCoarseAggregateMicroSurfacing,
+  ] = useState({
+    nominalSize: '', // 37.5mm / 26.5mm / 19mm / 13.2mm
+    sourceName: '', // Dropdown showing sources for the corresponding size of aggregate grade
+    vehicleNo: [], // Last 4 digits, numeric only
+    qtyInKg: '', // >0, up to 3 decimals, max limit 20
+    uploadWeightSlip: '', // Image or PDF
+  });
+
+  // Details_CoarseAggregate_DBMBC Form
+  const [detailsCoarseAggregateDBMBC, setDetailsCoarseAggregateDBMBC] =
+    useState({
+      nominalSize: '', // 37.5mm / 26.5mm / 19mm / 13.2mm
+      sourceName: '', // Dropdown showing sources for the corresponding size of aggregate grade
+      vehicleNo: [], // Last 4 digits, numeric only
+      qtyInKg: '', // >0, up to 3 decimals, max limit 20
+      uploadWeightSlip: '', // Image or PDF
+    });
+
+  // Details_Emulsion Form
+  const [detailsEmulsion, setDetailsEmulsion] = useState({
+    gradeOfBitumen: '', // Listing as per the source approval sheet
+    sourceName: '', // Dropdown showing sources for the corresponding cement grade
+    vehicleNo: [], // Last 4 digits, numeric only
+    qtyInKg: '', // >0, up to 3 decimals, max limit 20
+    uploadWeightSlip: '', // Image or PDF
+    lotNumber: '', // Combination of characters and numbers, max limit 100
+  });
+
   const [data, setData]: any = useState([]);
 
   const [sourceApprovals, setSourceApprovals]: any = useState([]);
@@ -165,16 +225,84 @@ const Procurements = ({route, navigation}: {route: any; navigation: any}) => {
     setSelectedProcurement(null);
     setSourceApprovalDetails([]);
     setVehicleNos([]);
-    setForm({
-      sourceApprovalId: '',
-      sourceApprovalDetailId: '',
-      lotNo: '',
-      [gradeField.name]: 0,
-      procurementDateTime: '',
-      vehicleNo: [],
-      vehicleNoTemp: '',
-      invoiceFile: '',
-    });
+    if (testWorkCategoryName === 'Bituminous Works') {
+      switch (materialType) {
+        case TEST_MATERIALS_TYPES.FINE_AGGREGATE:
+          setDetailsFineAggregate({
+            sourceName: '',
+            vehicleNo: [],
+            qtyInKg: '',
+            uploadWeightSlip: '',
+          });
+          break;
+
+        case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_DBM_BC:
+          setDetailsCoarseAggregateDBMBC({
+            nominalSize: '',
+            sourceName: '',
+            vehicleNo: [],
+            qtyInKg: '',
+            uploadWeightSlip: '',
+          });
+          break;
+
+        case TEST_MATERIALS_TYPES.BITUMEN:
+          setDetailsBitumen({
+            gradeOfBitumen: '',
+            sourceName: '',
+            vehicleNo: [],
+            qtyInKg: '',
+            uploadWeightSlip: '',
+            lotNumber: '',
+          });
+          break;
+
+        case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING:
+          setDetailsCoarseAggregateMicroSurfacing({
+            nominalSize: '',
+            sourceName: '',
+            vehicleNo: [],
+            qtyInKg: '',
+            uploadWeightSlip: '',
+          });
+          break;
+
+        case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA:
+          setDetailsCoarseAggregateSMA({
+            nominalSize: '',
+            sourceName: '',
+            vehicleNo: [],
+            qtyInKg: '',
+            uploadWeightSlip: '',
+          });
+          break;
+
+        case TEST_MATERIALS_TYPES.EMULSION:
+          setDetailsEmulsion({
+            gradeOfBitumen: '',
+            sourceName: '',
+            vehicleNo: [],
+            qtyInKg: '',
+            uploadWeightSlip: '',
+            lotNumber: '',
+          });
+          break;
+
+        default:
+          console.error('Unknown material type for Bituminous Works');
+      }
+    } else {
+      setForm({
+        sourceApprovalId: '',
+        sourceApprovalDetailId: '',
+        lotNo: '',
+        [gradeField.name]: 0,
+        procurementDateTime: '',
+        vehicleNo: [],
+        vehicleNoTemp: '',
+        invoiceFile: '',
+      });
+    }
     setOpenProcurementPopup(true);
   };
 
@@ -205,38 +333,230 @@ const Procurements = ({route, navigation}: {route: any; navigation: any}) => {
         ?.sourceApprovalDetails,
     );
     setVehicleNos(item.vehicleNo || []);
-    setForm({
-      sourceApprovalId: item.sourceApprovalId._id,
-      sourceApprovalDetailId: item.sourceApprovalDetailId,
-      lotNo: item.lotNo,
-      [gradeField.name]: item.metaData[gradeField.name],
-      procurementDateTime: getDisplayDate(item.procurementDateTime),
-      vehicleNo: item.vehicleNo,
-      vehicleNoTemp: '',
-      invoiceFile: item.invoiceFile,
-    });
+
+    if (testWorkCategoryName === 'Bituminous Works') {
+      switch (materialType) {
+        case TEST_MATERIALS_TYPES.FINE_AGGREGATE:
+          setDetailsFineAggregate({
+            sourceName: item.sourceApprovalId?.name || '',
+            vehicleNo: item.vehicleNo || [],
+            qtyInKg: item.qtyInKg || '',
+            uploadWeightSlip: item.uploadWeightSlip || '',
+          });
+          break;
+
+        case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_DBM_BC:
+          setDetailsCoarseAggregateDBMBC({
+            nominalSize: item.nominalSize || '',
+            sourceName: item.sourceApprovalId?.name || '',
+            vehicleNo: item.vehicleNo || [],
+            qtyInKg: item.qtyInKg || '',
+            uploadWeightSlip: item.uploadWeightSlip || '',
+          });
+          break;
+
+        case TEST_MATERIALS_TYPES.BITUMEN:
+          setDetailsBitumen({
+            gradeOfBitumen: item.gradeOfBitumen || '',
+            sourceName: item.sourceApprovalId?.name || '',
+            vehicleNo: item.vehicleNo || [],
+            qtyInKg: item.qtyInKg || '',
+            uploadWeightSlip: item.uploadWeightSlip || '',
+            lotNumber: item.lotNumber || '',
+          });
+          break;
+
+        case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING:
+          setDetailsCoarseAggregateMicroSurfacing({
+            nominalSize: item.nominalSize || '',
+            sourceName: item.sourceApprovalId?.name || '',
+            vehicleNo: item.vehicleNo || [],
+            qtyInKg: item.qtyInKg || '',
+            uploadWeightSlip: item.uploadWeightSlip || '',
+          });
+          break;
+
+        case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA:
+          setDetailsCoarseAggregateSMA({
+            nominalSize: item.nominalSize || '',
+            sourceName: item.sourceApprovalId?.name || '',
+            vehicleNo: item.vehicleNo || [],
+            qtyInKg: item.qtyInKg || '',
+            uploadWeightSlip: item.uploadWeightSlip || '',
+          });
+          break;
+
+        case TEST_MATERIALS_TYPES.EMULSION:
+          setDetailsEmulsion({
+            gradeOfBitumen: item.gradeOfBitumen || '',
+            sourceName: item.sourceApprovalId?.name || '',
+            vehicleNo: item.vehicleNo || [],
+            qtyInKg: item.qtyInKg || '',
+            uploadWeightSlip: item.uploadWeightSlip || '',
+            lotNumber: item.lotNumber || '',
+          });
+          break;
+
+        default:
+          console.error('Unknown material type for Bituminous Works');
+      }
+    } else {
+      setForm({
+        sourceApprovalId: item.sourceApprovalId._id,
+        sourceApprovalDetailId: item.sourceApprovalDetailId,
+        lotNo: item.lotNo,
+        [gradeField.name]: item.metaData[gradeField.name],
+        procurementDateTime: getDisplayDate(item.procurementDateTime),
+        vehicleNo: item.vehicleNo,
+        vehicleNoTemp: '',
+        invoiceFile: item.invoiceFile,
+      });
+    }
 
     setOpenProcurementPopup(true);
   };
+
   const validateForm = () => {
     let isValid = true;
     let errorMessage = '';
 
-    if (form.lotNo.length > 100) {
-      isValid = false;
-      errorMessage = 'Lot No/Trip No/Invoice No cannot exceed 100 characters.';
-    }
+    if (testWorkCategoryName === 'Bituminous Works') {
+      switch (materialType) {
+        case TEST_MATERIALS_TYPES.FINE_AGGREGATE:
+          if (!detailsFineAggregate.sourceName) {
+            isValid = false;
+            errorMessage = 'Source Name is required for Fine Aggregate.';
+          }
+          if (
+            isNaN(parseFloat(detailsFineAggregate.qtyInKg)) ||
+            Number(detailsFineAggregate.qtyInKg) <= 0
+          ) {
+            isValid = false;
+            errorMessage =
+              'Quantity for Fine Aggregate must be greater than 0.';
+          }
+          break;
 
-    const quantityValue = parseFloat(form[gradeField.name]);
-    if (
-      isNaN(quantityValue) ||
-      quantityValue <= 0 ||
-      quantityValue > 20 ||
-      form[gradeField.name].toString().split('.')[1]?.length > 3
-    ) {
-      isValid = false;
-      errorMessage =
-        'Quantity must be between 0 and 20 with up to 3 decimal places.';
+        case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_DBM_BC:
+          if (!detailsCoarseAggregateDBMBC.nominalSize) {
+            isValid = false;
+            errorMessage =
+              'Nominal Size is required for Coarse Aggregate (DBM/BC).';
+          }
+          if (!detailsCoarseAggregateDBMBC.sourceName) {
+            isValid = false;
+            errorMessage =
+              'Source Name is required for Coarse Aggregate (DBM/BC).';
+          }
+          if (
+            isNaN(parseFloat(detailsCoarseAggregateDBMBC.qtyInKg)) ||
+            Number(detailsCoarseAggregateDBMBC.qtyInKg) <= 0
+          ) {
+            isValid = false;
+            errorMessage =
+              'Quantity for Coarse Aggregate (DBM/BC) must be greater than 0.';
+          }
+          break;
+
+        case TEST_MATERIALS_TYPES.BITUMEN:
+          if (!detailsBitumen.gradeOfBitumen) {
+            isValid = false;
+            errorMessage = 'Grade of Bitumen is required.';
+          }
+          if (!detailsBitumen.sourceName) {
+            isValid = false;
+            errorMessage = 'Source Name is required for Bitumen.';
+          }
+          if (
+            isNaN(parseFloat(detailsBitumen.qtyInKg)) ||
+            Number(detailsBitumen.qtyInKg) <= 0
+          ) {
+            isValid = false;
+            errorMessage = 'Quantity for Bitumen must be greater than 0.';
+          }
+          break;
+
+        case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING:
+          if (!detailsCoarseAggregateMicroSurfacing.nominalSize) {
+            isValid = false;
+            errorMessage =
+              'Nominal Size is required for Coarse Aggregate (Micro Surfacing).';
+          }
+          if (!detailsCoarseAggregateMicroSurfacing.sourceName) {
+            isValid = false;
+            errorMessage =
+              'Source Name is required for Coarse Aggregate (Micro Surfacing).';
+          }
+          if (
+            isNaN(parseFloat(detailsCoarseAggregateMicroSurfacing.qtyInKg)) ||
+            Number(detailsCoarseAggregateMicroSurfacing.qtyInKg) <= 0
+          ) {
+            isValid = false;
+            errorMessage =
+              'Quantity for Coarse Aggregate (Micro Surfacing) must be greater than 0.';
+          }
+          break;
+
+        case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA:
+          if (!detailsCoarseAggregateSMA.nominalSize) {
+            isValid = false;
+            errorMessage =
+              'Nominal Size is required for Coarse Aggregate (SMA).';
+          }
+          if (!detailsCoarseAggregateSMA.sourceName) {
+            isValid = false;
+            errorMessage =
+              'Source Name is required for Coarse Aggregate (SMA).';
+          }
+          if (
+            isNaN(parseFloat(detailsCoarseAggregateSMA.qtyInKg)) ||
+            Number(detailsCoarseAggregateSMA.qtyInKg) <= 0
+          ) {
+            isValid = false;
+            errorMessage =
+              'Quantity for Coarse Aggregate (SMA) must be greater than 0.';
+          }
+          break;
+
+        case TEST_MATERIALS_TYPES.EMULSION:
+          if (!detailsEmulsion.gradeOfBitumen) {
+            isValid = false;
+            errorMessage = 'Grade of Bitumen is required for Emulsion.';
+          }
+          if (!detailsEmulsion.sourceName) {
+            isValid = false;
+            errorMessage = 'Source Name is required for Emulsion.';
+          }
+          if (
+            isNaN(parseFloat(detailsEmulsion.qtyInKg)) ||
+            Number(detailsEmulsion.qtyInKg) <= 0
+          ) {
+            isValid = false;
+            errorMessage = 'Quantity for Emulsion must be greater than 0.';
+          }
+          break;
+
+        default:
+          console.error('Unknown material type for Bituminous Works');
+      }
+    } else {
+      if (form.lotNo.length > 100) {
+        isValid = false;
+        errorMessage =
+          'Lot No/Trip No/Invoice No cannot exceed 100 characters.';
+      }
+
+      const quantityValue = parseFloat(form[gradeField.name]);
+      if (
+        isNaN(quantityValue) ||
+        quantityValue <= 0 ||
+        quantityValue > 20 ||
+        form[gradeField.name].toString().split('.')[1]?.length > 3
+      ) {
+        isValid = false;
+        errorMessage =
+          'Quantity must be between 0 and 20 with up to 3 decimal places.';
+      }
     }
 
     if (!isValid) {
@@ -246,6 +566,7 @@ const Procurements = ({route, navigation}: {route: any; navigation: any}) => {
     return isValid;
   };
 
+  // change karna hai
   const handleInputChange = (
     name: keyof FormState,
     value: string | number | [],
@@ -295,50 +616,145 @@ const Procurements = ({route, navigation}: {route: any; navigation: any}) => {
       showSnackbar(errorMessage, 'error');
     }
   };
+const handleInputChangeBituminousWork = (field:any, value:any, detail:any) => {
+  if (detail === 'detailsBitumen') {
+    setDetailsBitumen(prevState => ({
+      ...prevState,
+      [field]: value,
+    }));
+  } else if (detail === 'detailsFineAggregate') {
+    setDetailsFineAggregate(prevState => ({
+      ...prevState,
+      [field]: value,
+    }));
+  } else if (detail === 'detailsCoarseAggregateSMA') {
+    setDetailsCoarseAggregateSMA(prevState => ({
+      ...prevState,
+      [field]: value,
+    }));
+  } else if (detail === 'detailsCoarseAggregateMicroSurfacing') {
+    setDetailsCoarseAggregateMicroSurfacing(prevState => ({
+      ...prevState,
+      [field]: value,
+    }));
+  } else if (detail === 'detailsCoarseAggregateDBMBC') {
+    setDetailsCoarseAggregateDBMBC(prevState => ({
+      ...prevState,
+      [field]: value,
+    }));
+  } else if (detail === 'detailsEmulsion') {
+    setDetailsEmulsion(prevState => ({
+      ...prevState,
+      [field]: value,
+    }));
+  } else {
+    console.warn(`Unknown detail type: ${detail}`);
+  }
+};
 
   const handleSubmit = () => {
     if (!validateForm()) {
       return;
     }
+
+    const commonBodyFields = {
+      projectId: loggedInUser.projectId,
+      testMaterialId: testMaterialId,
+      vehicleNo: vehicleNos.length ? vehicleNos : [form.vehicleNo || ''],
+    };
+
+    let materialSpecificFields = {};
+
+    if (testWorkCategoryName === 'Bituminous Works') {
+      switch (materialType) {
+        case TEST_MATERIALS_TYPES.FINE_AGGREGATE:
+          materialSpecificFields = {
+            sourceApprovalId: detailsFineAggregate.sourceName,
+            qtyInKg: detailsFineAggregate.qtyInKg,
+            uploadWeightSlip: detailsFineAggregate.uploadWeightSlip,
+          };
+          break;
+
+        case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_DBM_BC:
+          materialSpecificFields = {
+            nominalSize: detailsCoarseAggregateDBMBC.nominalSize,
+            sourceApprovalId: detailsCoarseAggregateDBMBC.sourceName,
+            qtyInKg: detailsCoarseAggregateDBMBC.qtyInKg,
+            uploadWeightSlip: detailsCoarseAggregateDBMBC.uploadWeightSlip,
+          };
+          break;
+
+        case TEST_MATERIALS_TYPES.BITUMEN:
+          materialSpecificFields = {
+            gradeOfBitumen: detailsBitumen.gradeOfBitumen,
+            sourceApprovalId: detailsBitumen.sourceName,
+            qtyInKg: detailsBitumen.qtyInKg,
+            uploadWeightSlip: detailsBitumen.uploadWeightSlip,
+            lotNumber: detailsBitumen.lotNumber,
+          };
+          break;
+
+        case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING:
+          materialSpecificFields = {
+            nominalSize: detailsCoarseAggregateMicroSurfacing.nominalSize,
+            sourceApprovalId: detailsCoarseAggregateMicroSurfacing.sourceName,
+            qtyInKg: detailsCoarseAggregateMicroSurfacing.qtyInKg,
+            uploadWeightSlip:
+              detailsCoarseAggregateMicroSurfacing.uploadWeightSlip,
+          };
+          break;
+
+        case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA:
+          materialSpecificFields = {
+            nominalSize: detailsCoarseAggregateSMA.nominalSize,
+            sourceApprovalId: detailsCoarseAggregateSMA.sourceName,
+            qtyInKg: detailsCoarseAggregateSMA.qtyInKg,
+            uploadWeightSlip: detailsCoarseAggregateSMA.uploadWeightSlip,
+          };
+          break;
+
+        case TEST_MATERIALS_TYPES.EMULSION:
+          materialSpecificFields = {
+            gradeOfBitumen: detailsEmulsion.gradeOfBitumen,
+            sourceApprovalId: detailsEmulsion.sourceName,
+            qtyInKg: detailsEmulsion.qtyInKg,
+            uploadWeightSlip: detailsEmulsion.uploadWeightSlip,
+            lotNumber: detailsEmulsion.lotNumber,
+          };
+          break;
+
+        default:
+          console.error('Unknown material type for Bituminous Works');
+          return;
+      }
+    } else {
+      materialSpecificFields = {
+        sourceApprovalId: form.sourceApprovalId,
+        sourceApprovalDetailId: form.sourceApprovalDetailId,
+        lotNo: form.lotNo,
+        procurementDateTime: getDbDateFromDDMMYYYY(form.procurementDateTime),
+        metaData: {
+          [gradeField.name]: Number(form[gradeField.name]),
+        },
+      };
+    }
+
+    const requestBody = {
+      ...commonBodyFields,
+      ...materialSpecificFields,
+    };
+
     if (!selectedProcurement) {
       dispatch(
         addProcurement({
-          projectId: loggedInUser.projectId,
-          testMaterialId: testMaterialId,
-          body: {
-            sourceApprovalId: form.sourceApprovalId,
-            sourceApprovalDetailId: form.sourceApprovalDetailId,
-            lotNo: form.lotNo,
-            procurementDateTime: getDbDateFromDDMMYYYY(
-              form.procurementDateTime,
-            ),
-            vehicleNo: vehicleNos.length ? vehicleNos : [form.vehicleNo || ''],
-            invoiceFile: form.invoiceFile,
-            metaData: {
-              [gradeField.name]: Number(form[gradeField.name]),
-            },
-          },
+          ...requestBody,
         }),
       );
     } else {
       dispatch(
         updateProcurement({
-          projectId: loggedInUser.projectId,
-          testMaterialId: testMaterialId,
+          ...requestBody,
           id: selectedProcurement._id,
-          body: {
-            sourceApprovalId: form.sourceApprovalId,
-            sourceApprovalDetailId: form.sourceApprovalDetailId,
-            lotNo: form.lotNo,
-            procurementDateTime: getDbDateFromDDMMYYYY(
-              form.procurementDateTime,
-            ),
-            vehicleNo: vehicleNos.length ? vehicleNos : [form.vehicleNo || ''],
-            invoiceFile: form.invoiceFile,
-            metaData: {
-              [gradeField.name]: Number(form[gradeField.name]),
-            },
-          },
         }),
       );
     }
@@ -347,7 +763,7 @@ const Procurements = ({route, navigation}: {route: any; navigation: any}) => {
   useEffect(() => {
     if (addedProcurement) {
       setOpenProcurementPopup(false);
-      showSnackbar('Procurement Added Successfully', 'success'); 
+      showSnackbar('Procurement Added Successfully', 'success');
       dispatch(
         getProcurements({
           projectId: loggedInUser.projectId,
@@ -458,7 +874,7 @@ const Procurements = ({route, navigation}: {route: any; navigation: any}) => {
         if (responseOfFileUpload.status == 200) {
           let responseInJs = await responseOfFileUpload.json();
           console.log('===responseInJs====', responseInJs);
-          let fileName = responseInJs.data.fileUrl; 
+          let fileName = responseInJs.data.fileUrl;
           showSnackbar('Upload Succesfull');
           setFileRes(null);
         } else {
@@ -475,102 +891,846 @@ const Procurements = ({route, navigation}: {route: any; navigation: any}) => {
   };
 
   const addProcurementsForm = () => {
-    return (
-      <View style={styles.reportFields}>
-        <View>
-          <View>{renderPicker('Select source', 'sourceApprovalId')}</View>
-          <View>
-            {renderSourceDetailsPicker(
-              'Select source details',
-              'sourceApprovalDetailId',
-            )}
-          </View>
-          <View>
-            <Input
-              label="Lot No/Trip No/Invoice No"
-              value={form.lotNo}
-              onChange={(value: string) => handleInputChange('lotNo', value)}
-              isRequired={true}
-            />
-          </View>
-          <View>
-            <Input
-              label="Qty (in cum)"
-              value={'' + form[gradeField.name]}
-              onChange={(value: string) =>
-                handleInputChange(gradeField.name, value)
-              }
-              isRequired={true}
-            />
-          </View>
-          <View>
-            <CalendarPicker
-              label="Date"
-              value={form.procurementDateTime}
-              onChange={date => handleInputChange('procurementDateTime', date)}
-            />
-          </View>
-          <View>
-            <View
-              style={{
-                flexDirection: 'row',
-                width: '100%',
-                display: 'flex',
-                gap: 10,
-              }}>
-              <View style={{width: '70%'}}>
-                <Input
-                  label="Vehicle no."
-                  value={form.vehicleNoTemp}
-                  onChange={(value: string) =>
-                    handleInputChange('vehicleNoTemp', value)
-                  }
-                />
+    if (testWorkCategoryName === 'Bituminous Works') {
+      switch (materialType) {
+        case TEST_MATERIALS_TYPES.FINE_AGGREGATE:
+          return (
+            <View style={styles.reportFields}>
+              <View>
+                <View>
+                  <Input
+                    label="Source Name"
+                    value={detailsFineAggregate.sourceName}
+                    onChange={(value: string) =>
+                      handleInputChangeBituminousWork(
+                        'sourceName',
+                        value,
+                        'detailsFineAggregate',
+                      )
+                    }
+                    isRequired={true}
+                  />
+                </View>
+                <View>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      width: '100%',
+                      display: 'flex',
+                      gap: 10,
+                    }}>
+                    <View style={{width: '70%'}}>
+                      <Input
+                        label="Vehicle no."
+                        value={detailsFineAggregate.vehicleNo}
+                        onChange={(value: string) =>
+                          handleInputChangeBituminousWork(
+                            'vehicleNoTemp',
+                            value,
+                            'detailsFineAggregate',
+                          )
+                        }
+                      />
+                    </View>
+                    <View style={{justifyContent: 'center'}}>
+                      <TouchableOpacity
+                        style={styles.add_vehicle}
+                        onPress={onAddVehicle}>
+                        <Text style={styles.btnAddVehicle}>Add Vehicle</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                  <View style={{maxHeight: 400}}>
+                    <ScrollView>
+                      <FlatList
+                        data={detailsFineAggregate.vehicleNo}
+                        renderItem={renderAddedVehicleItem}
+                        keyExtractor={item => item}
+                      />
+                    </ScrollView>
+                  </View>
+                </View>
+                <View>
+                  <Input
+                    label="Quantity (in kg)"
+                    value={detailsFineAggregate.qtyInKg}
+                    onChange={(value: string) =>
+                      handleInputChangeBituminousWork(
+                        'qtyInKg',
+                        value,
+                        'detailsFineAggregate',
+                      )
+                    }
+                    isRequired={true}
+                  />
+                </View>
+                <View>
+                  <CalendarPicker
+                    label="Date"
+                    value={form.procurementDateTime}
+                    onChange={date =>
+                      handleInputChange('procurementDateTime', date)
+                    }
+                  />
+                </View>
+                <View style={{flexDirection: 'column'}}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <TouchableOpacity
+                      style={styles.upload_container}
+                      onPress={onDocumentPress}>
+                      <Text style={styles.uploadBtn}>Upload Weight Slip</Text>
+                    </TouchableOpacity>
+                    {detailsFineAggregate.uploadWeightSlip && (
+                      <Text>{detailsFineAggregate.uploadWeightSlip}</Text>
+                    )}
+                  </View>
+                </View>
               </View>
-              <View style={{justifyContent: 'center'}}>
-                <TouchableOpacity
-                  style={styles.add_vehicle}
-                  onPress={onAddVehicle}>
-                  <Text style={styles.btnAddVehicle}>Add Vehicle</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-            <View style={{maxHeight: 400}}>
-              <ScrollView>
-                <FlatList
-                  data={vehicleNos}
-                  renderItem={renderAddedVehicleItem}
-                  keyExtractor={item => item}
-                />
-              </ScrollView>
-            </View>
-          </View>
-          <View style={{flexDirection: 'column'}}>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
               <TouchableOpacity
-                style={styles.upload_container}
-                onPress={onDocumentPress}>
-                <Text style={styles.uploadBtn}>Upload Invoice</Text>
+                style={styles.btnContainer}
+                onPress={handleSubmit}>
+                <Text style={styles.submitBtn}>Submit</Text>
               </TouchableOpacity>
-              {fileRes && <Text>{fileRes.name}</Text>}
             </View>
-            {selectedProcurement?.invoiceFile && (
-              <Image
-                source={{uri: selectedProcurement.invoiceFile}}
-                style={{width: 300, height: 200}}></Image>
-            )}
+          );
+
+        case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_DBM_BC:
+          return (
+            <View style={styles.reportFields}>
+              <View>
+                <View>
+                  <Input
+                    label="Nominal Size (mm)"
+                    value={detailsCoarseAggregateDBMBC.nominalSize}
+                    onChange={(value: string) =>
+                      handleInputChangeBituminousWork(
+                        'nominalSize',
+                        value,
+                        'detailsCoarseAggregateDBMBC',
+                      )
+                    }
+                    isRequired={true}
+                  />
+                </View>
+                <View>
+                  <Input
+                    label="Source Name"
+                    value={detailsCoarseAggregateDBMBC.sourceName}
+                    onChange={(value: string) =>
+                      handleInputChangeBituminousWork(
+                        'sourceName',
+                        value,
+                        'detailsCoarseAggregateDBMBC',
+                      )
+                    }
+                    isRequired={true}
+                  />
+                </View>
+                <View>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      width: '100%',
+                      display: 'flex',
+                      gap: 10,
+                    }}>
+                    <View style={{width: '70%'}}>
+                      <Input
+                        label="Vehicle No. (Last 4 digits)"
+                        value={detailsCoarseAggregateDBMBC.vehicleNo}
+                        onChange={(value: string) =>
+                          handleInputChangeBituminousWork(
+                            'vehicleNoTemp',
+                            value,
+                            'detailsCoarseAggregateDBMBC',
+                          )
+                        }
+                      />
+                    </View>
+                    <View style={{justifyContent: 'center'}}>
+                      <TouchableOpacity
+                        style={styles.add_vehicle}
+                        onPress={onAddVehicle}>
+                        <Text style={styles.btnAddVehicle}>Add Vehicle</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                  <View style={{maxHeight: 400}}>
+                    <ScrollView>
+                      <FlatList
+                        data={detailsCoarseAggregateDBMBC.vehicleNo}
+                        renderItem={renderAddedVehicleItem}
+                        keyExtractor={item => item}
+                      />
+                    </ScrollView>
+                  </View>
+                </View>
+                <View>
+                  <Input
+                    label="Quantity (in kg)"
+                    value={detailsCoarseAggregateDBMBC.qtyInKg}
+                    onChange={(value: string) =>
+                      handleInputChangeBituminousWork(
+                        'qtyInKg',
+                        value,
+                        'detailsCoarseAggregateDBMBC',
+                      )
+                    }
+                    isRequired={true}
+                  />
+                </View>
+                <View>
+                  <CalendarPicker
+                    label="Date"
+                    value={form.procurementDateTime}
+                    onChange={date =>
+                      handleInputChange('procurementDateTime', date)
+                    }
+                  />
+                </View>
+                <View style={{flexDirection: 'column'}}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <TouchableOpacity
+                      style={styles.upload_container}
+                      onPress={onDocumentPress}>
+                      <Text style={styles.uploadBtn}>Upload Weight Slip</Text>
+                    </TouchableOpacity>
+                    {detailsCoarseAggregateDBMBC.uploadWeightSlip && (
+                      <Text>
+                        {detailsCoarseAggregateDBMBC.uploadWeightSlip}
+                      </Text>
+                    )}
+                  </View>
+                </View>
+              </View>
+              <TouchableOpacity
+                style={styles.btnContainer}
+                onPress={handleSubmit}>
+                <Text style={styles.submitBtn}>Submit</Text>
+              </TouchableOpacity>
+            </View>
+          );
+
+        case TEST_MATERIALS_TYPES.BITUMEN:
+          return (
+            <View style={styles.reportFields}>
+              <View>
+                <View>
+                  <Input
+                    label="Grade of Bitumen (VG 30 / VG 40 / PMB)"
+                    value={detailsBitumen.gradeOfBitumen}
+                    onChange={(value: string) =>
+                      handleInputChangeBituminousWork(
+                        'gradeOfBitumen',
+                        value,
+                        'detailsBitumen',
+                      )
+                    }
+                    isRequired={true}
+                  />
+                </View>
+                <View>
+                  <Input
+                    label="Source Name"
+                    value={detailsBitumen.sourceName}
+                    onChange={(value: string) =>
+                      handleInputChangeBituminousWork(
+                        'sourceName',
+                        value,
+                        'detailsBitumen',
+                      )
+                    }
+                    isRequired={true}
+                  />
+                </View>
+                <View>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      width: '100%',
+                      display: 'flex',
+                      gap: 10,
+                    }}>
+                    <View style={{width: '70%'}}>
+                      <Input
+                        label="Vehicle No. (Last 4 digits)"
+                        value={detailsBitumen.vehicleNo}
+                        onChange={(value: string) =>
+                          handleInputChangeBituminousWork(
+                            'vehicleNoTemp',
+                            value,
+                            'detailsBitumen',
+                          )
+                        }
+                      />
+                    </View>
+                    <View style={{justifyContent: 'center'}}>
+                      <TouchableOpacity
+                        style={styles.add_vehicle}
+                        onPress={onAddVehicle}>
+                        <Text style={styles.btnAddVehicle}>Add Vehicle</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                  <View style={{maxHeight: 400}}>
+                    <ScrollView>
+                      <FlatList
+                        data={detailsBitumen.vehicleNo}
+                        renderItem={renderAddedVehicleItem}
+                        keyExtractor={item => item}
+                      />
+                    </ScrollView>
+                  </View>
+                </View>
+                <View>
+                  <Input
+                    label="Quantity (in kg)"
+                    value={detailsBitumen.qtyInKg}
+                    onChange={(value: string) =>
+                      handleInputChangeBituminousWork(
+                        'qtyInKg',
+                        value,
+                        'detailsBitumen',
+                      )
+                    }
+                    isRequired={true}
+                  />
+                </View>
+                <View>
+                  <CalendarPicker
+                    label="Date"
+                    value={form.procurementDateTime}
+                    onChange={date =>
+                      handleInputChange('procurementDateTime', date)
+                    }
+                  />
+                </View>
+                <View>
+                  <Input
+                    label="Lot Number"
+                    value={detailsBitumen.lotNumber}
+                    onChange={(value: string) =>
+                      handleInputChangeBituminousWork(
+                        'lotNumber',
+                        value,
+                        'detailsBitumen',
+                      )
+                    }
+                    isRequired={true}
+                  />
+                </View>
+                <View style={{flexDirection: 'column'}}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <TouchableOpacity
+                      style={styles.upload_container}
+                      onPress={onDocumentPress}>
+                      <Text style={styles.uploadBtn}>Upload Weight Slip</Text>
+                    </TouchableOpacity>
+                    {detailsBitumen.uploadWeightSlip && (
+                      <Text>{detailsBitumen.uploadWeightSlip}</Text>
+                    )}
+                  </View>
+                </View>
+              </View>
+              <TouchableOpacity
+                style={styles.btnContainer}
+                onPress={handleSubmit}>
+                <Text style={styles.submitBtn}>Submit</Text>
+              </TouchableOpacity>
+            </View>
+          );
+
+        case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING:
+          return (
+            <View style={styles.reportFields}>
+              <View>
+                <View>
+                  <Input
+                    label="Nominal Size (37.5mm / 26.5mm / 19mm / 13.2mm)"
+                    value={detailsCoarseAggregateMicroSurfacing.nominalSize}
+                    onChange={(value: string) =>
+                      handleInputChangeBituminousWork(
+                        'nominalSize',
+                        value,
+                        'detailsCoarseAggregateMicroSurfacing',
+                      )
+                    }
+                    isRequired={true}
+                  />
+                </View>
+                <View>
+                  <Input
+                    label="Source Name"
+                    value={detailsCoarseAggregateMicroSurfacing.sourceName}
+                    onChange={(value: string) =>
+                      handleInputChangeBituminousWork(
+                        'sourceName',
+                        value,
+                        'detailsCoarseAggregateMicroSurfacing',
+                      )
+                    }
+                    isRequired={true}
+                  />
+                </View>
+                <View>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      width: '100%',
+                      display: 'flex',
+                      gap: 10,
+                    }}>
+                    <View style={{width: '70%'}}>
+                      <Input
+                        label="Vehicle No. (Last 4 digits)"
+                        value={detailsCoarseAggregateMicroSurfacing.vehicleNo}
+                        onChange={(value: string) =>
+                          handleInputChangeBituminousWork(
+                            'vehicleNoTemp',
+                            value,
+                            'detailsCoarseAggregateMicroSurfacing',
+                          )
+                        }
+                      />
+                    </View>
+                    <View style={{justifyContent: 'center'}}>
+                      <TouchableOpacity
+                        style={styles.add_vehicle}
+                        onPress={onAddVehicle}>
+                        <Text style={styles.btnAddVehicle}>Add Vehicle</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                  <View style={{maxHeight: 400}}>
+                    <ScrollView>
+                      <FlatList
+                        data={detailsCoarseAggregateMicroSurfacing.vehicleNo}
+                        renderItem={renderAddedVehicleItem}
+                        keyExtractor={item => item}
+                      />
+                    </ScrollView>
+                  </View>
+                </View>
+                <View>
+                  <Input
+                    label="Quantity (in kg)"
+                    value={detailsCoarseAggregateMicroSurfacing.qtyInKg}
+                    onChange={(value: string) =>
+                      handleInputChangeBituminousWork(
+                        'qtyInKg',
+                        value,
+                        'detailsCoarseAggregateMicroSurfacing',
+                      )
+                    }
+                    isRequired={true}
+                  />
+                </View>
+                <View>
+                  <CalendarPicker
+                    label="Date"
+                    value={form.procurementDateTime}
+                    onChange={date =>
+                      handleInputChange('procurementDateTime', date)
+                    }
+                  />
+                </View>
+                <View style={{flexDirection: 'column'}}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <TouchableOpacity
+                      style={styles.upload_container}
+                      onPress={onDocumentPress}>
+                      <Text style={styles.uploadBtn}>Upload Weight Slip</Text>
+                    </TouchableOpacity>
+                    {detailsCoarseAggregateMicroSurfacing.uploadWeightSlip && (
+                      <Text>
+                        {detailsCoarseAggregateMicroSurfacing.uploadWeightSlip}
+                      </Text>
+                    )}
+                  </View>
+                </View>
+              </View>
+              <TouchableOpacity
+                style={styles.btnContainer}
+                onPress={handleSubmit}>
+                <Text style={styles.submitBtn}>Submit</Text>
+              </TouchableOpacity>
+            </View>
+          );
+
+        case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA:
+          return (
+            <View style={styles.reportFields}>
+              <View>
+                <View>
+                  <Input
+                    label="Nominal Size (37.5mm / 26.5mm / 19mm / 13.2mm)"
+                    value={detailsCoarseAggregateSMA.nominalSize}
+                    onChange={(value: string) =>
+                      handleInputChangeBituminousWork(
+                        'nominalSize',
+                        value,
+                        'detailsCoarseAggregateSMA',
+                      )
+                    }
+                    isRequired={true}
+                  />
+                </View>
+                <View>
+                  <Input
+                    label="Source Name"
+                    value={detailsCoarseAggregateSMA.sourceName}
+                    onChange={(value: string) =>
+                      handleInputChangeBituminousWork(
+                        'sourceName',
+                        value,
+                        'detailsCoarseAggregateSMA',
+                      )
+                    }
+                    isRequired={true}
+                  />
+                </View>
+                <View>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      width: '100%',
+                      display: 'flex',
+                      gap: 10,
+                    }}>
+                    <View style={{width: '70%'}}>
+                      <Input
+                        label="Vehicle No. (Last 4 digits)"
+                        value={detailsCoarseAggregateSMA.vehicleNo}
+                        onChange={(value: string) =>
+                          handleInputChangeBituminousWork(
+                            'vehicleNoTemp',
+                            value,
+                            'detailsCoarseAggregateSMA',
+                          )
+                        }
+                      />
+                    </View>
+                    <View style={{justifyContent: 'center'}}>
+                      <TouchableOpacity
+                        style={styles.add_vehicle}
+                        onPress={onAddVehicle}>
+                        <Text style={styles.btnAddVehicle}>Add Vehicle</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                  <View style={{maxHeight: 400}}>
+                    <ScrollView>
+                      <FlatList
+                        data={detailsCoarseAggregateSMA.vehicleNo}
+                        renderItem={renderAddedVehicleItem}
+                        keyExtractor={item => item}
+                      />
+                    </ScrollView>
+                  </View>
+                </View>
+                <View>
+                  <Input
+                    label="Quantity (in kg)"
+                    value={detailsCoarseAggregateSMA.qtyInKg}
+                    onChange={(value: string) =>
+                      handleInputChangeBituminousWork(
+                        'qtyInKg',
+                        value,
+                        'detailsCoarseAggregateSMA',
+                      )
+                    }
+                    isRequired={true}
+                  />
+                </View>
+                <View>
+                  <CalendarPicker
+                    label="Date"
+                    value={form.procurementDateTime}
+                    onChange={date =>
+                      handleInputChange('procurementDateTime', date)
+                    }
+                  />
+                </View>
+                <View style={{flexDirection: 'column'}}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <TouchableOpacity
+                      style={styles.upload_container}
+                      onPress={onDocumentPress}>
+                      <Text style={styles.uploadBtn}>Upload Weight Slip</Text>
+                    </TouchableOpacity>
+                    {detailsCoarseAggregateSMA.uploadWeightSlip && (
+                      <Text>{detailsCoarseAggregateSMA.uploadWeightSlip}</Text>
+                    )}
+                  </View>
+                </View>
+              </View>
+              <TouchableOpacity
+                style={styles.btnContainer}
+                onPress={handleSubmit}>
+                <Text style={styles.submitBtn}>Submit</Text>
+              </TouchableOpacity>
+            </View>
+          );
+
+        case TEST_MATERIALS_TYPES.EMULSION:
+          return (
+            <View style={styles.reportFields}>
+              <View>
+                <View>
+                  <Input
+                    label="Grade of Bitumen (as per Source Approval Sheet)"
+                    value={detailsEmulsion.gradeOfBitumen}
+                    onChange={(value: string) =>
+                      handleInputChangeBituminousWork(
+                        'gradeOfBitumen',
+                        value,
+                        'detailsEmulsion',
+                      )
+                    }
+                    isRequired={true}
+                  />
+                </View>
+                <View>
+                  <Input
+                    label="Source Name"
+                    value={detailsEmulsion.sourceName}
+                    onChange={(value: string) =>
+                      handleInputChangeBituminousWork(
+                        'sourceName',
+                        value,
+                        'detailsEmulsion',
+                      )
+                    }
+                    isRequired={true}
+                  />
+                </View>
+                <View>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      width: '100%',
+                      display: 'flex',
+                      gap: 10,
+                    }}>
+                    <View style={{width: '70%'}}>
+                      <Input
+                        label="Vehicle No. (Last 4 digits)"
+                        value={detailsEmulsion.vehicleNo}
+                        onChange={(value: string) =>
+                          handleInputChangeBituminousWork(
+                            'vehicleNoTemp',
+                            value,
+                            'detailsEmulsion',
+                          )
+                        }
+                      />
+                    </View>
+                    <View style={{justifyContent: 'center'}}>
+                      <TouchableOpacity
+                        style={styles.add_vehicle}
+                        onPress={onAddVehicle}>
+                        <Text style={styles.btnAddVehicle}>Add Vehicle</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                  <View style={{maxHeight: 400}}>
+                    <ScrollView>
+                      <FlatList
+                        data={detailsEmulsion.vehicleNo}
+                        renderItem={renderAddedVehicleItem}
+                        keyExtractor={item => item}
+                      />
+                    </ScrollView>
+                  </View>
+                </View>
+                <View>
+                  <Input
+                    label="Quantity (in kg)"
+                    value={detailsEmulsion.qtyInKg}
+                    onChange={(value: string) =>
+                      handleInputChangeBituminousWork(
+                        'qtyInKg',
+                        value,
+                        'detailsEmulsion',
+                      )
+                    }
+                    isRequired={true}
+                  />
+                </View>
+                <View>
+                  <CalendarPicker
+                    label="Date"
+                    value={form.procurementDateTime}
+                    onChange={date =>
+                      handleInputChange('procurementDateTime', date)
+                    }
+                  />
+                </View>
+                <View>
+                  <Input
+                    label="Lot Number (Max 100 Characters)"
+                    value={detailsEmulsion.lotNumber}
+                    onChange={(value: string) =>
+                      handleInputChangeBituminousWork(
+                        'lotNumber',
+                        value,
+                        'detailsEmulsion',
+                      )
+                    }
+                    isRequired={true}
+                  />
+                </View>
+                <View style={{flexDirection: 'column'}}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <TouchableOpacity
+                      style={styles.upload_container}
+                      onPress={onDocumentPress}>
+                      <Text style={styles.uploadBtn}>Upload Weight Slip</Text>
+                    </TouchableOpacity>
+                    {detailsEmulsion.uploadWeightSlip && (
+                      <Text>{detailsEmulsion.uploadWeightSlip}</Text>
+                    )}
+                  </View>
+                </View>
+              </View>
+              <TouchableOpacity
+                style={styles.btnContainer}
+                onPress={handleSubmit}>
+                <Text style={styles.submitBtn}>Submit</Text>
+              </TouchableOpacity>
+            </View>
+          );
+      }
+    } else {
+      return (
+        <View style={styles.reportFields}>
+          <View>
+            <View>{renderPicker('Select source', 'sourceApprovalId')}</View>
+            <View>
+              {renderSourceDetailsPicker(
+                'Select source details',
+                'sourceApprovalDetailId',
+              )}
+            </View>
+            <View>
+              <Input
+                label="Lot No/Trip No/Invoice No"
+                value={form.lotNo}
+                onChange={(value: string) => handleInputChange('lotNo', value)}
+                isRequired={true}
+              />
+            </View>
+            <View>
+              <Input
+                label="Qty (in cum)"
+                value={'' + form[gradeField.name]}
+                onChange={(value: string) =>
+                  handleInputChange(gradeField.name, value)
+                }
+                isRequired={true}
+              />
+            </View>
+            <View>
+              <CalendarPicker
+                label="Date"
+                value={form.procurementDateTime}
+                onChange={date =>
+                  handleInputChange('procurementDateTime', date)
+                }
+              />
+            </View>
+            <View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  width: '100%',
+                  display: 'flex',
+                  gap: 10,
+                }}>
+                <View style={{width: '70%'}}>
+                  <Input
+                    label="Vehicle no."
+                    value={form.vehicleNoTemp}
+                    onChange={(value: string) =>
+                      handleInputChange('vehicleNoTemp', value)
+                    }
+                  />
+                </View>
+                <View style={{justifyContent: 'center'}}>
+                  <TouchableOpacity
+                    style={styles.add_vehicle}
+                    onPress={onAddVehicle}>
+                    <Text style={styles.btnAddVehicle}>Add Vehicle</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View style={{maxHeight: 400}}>
+                <ScrollView>
+                  <FlatList
+                    data={vehicleNos}
+                    renderItem={renderAddedVehicleItem}
+                    keyExtractor={item => item}
+                  />
+                </ScrollView>
+              </View>
+            </View>
+            <View style={{flexDirection: 'column'}}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <TouchableOpacity
+                  style={styles.upload_container}
+                  onPress={onDocumentPress}>
+                  <Text style={styles.uploadBtn}>Upload Invoice</Text>
+                </TouchableOpacity>
+                {fileRes && <Text>{fileRes.name}</Text>}
+              </View>
+              {selectedProcurement?.invoiceFile && (
+                <Image
+                  source={{uri: selectedProcurement.invoiceFile}}
+                  style={{width: 300, height: 200}}></Image>
+              )}
+            </View>
           </View>
+          <TouchableOpacity style={styles.btnContainer} onPress={handleSubmit}>
+            <Text style={styles.submitBtn}>Submit</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.btnContainer} onPress={handleSubmit}>
-          <Text style={styles.submitBtn}>Submit</Text>
-        </TouchableOpacity>
-      </View>
-    );
+      );
+    }
   };
 
   const renderPicker = (

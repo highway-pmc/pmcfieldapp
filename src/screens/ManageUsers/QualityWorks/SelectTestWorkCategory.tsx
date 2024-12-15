@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux';
 import { ScrollView } from 'react-native-gesture-handler';
 
 const SelectTestWorkCategory = ({ route, navigation }: { route: any, navigation: any }) => {
-  const { testClassificationId, testClassificationName, testWorkCategoriesData, workType } = route.params;
+  const { testClassificationId, testClassificationName, testClassificationType, testWorkCategoriesData, workType } = route.params;
 
   const dispatch = useDispatch()
 
@@ -19,8 +19,10 @@ const SelectTestWorkCategory = ({ route, navigation }: { route: any, navigation:
     navigation.navigate('AssignTestMaterialsPurchage', {
       testClassificationId: testClassificationId,
       testClassificationName: testClassificationName,
+      testClassificationType: testClassificationType,
       testWorkCategoryId: item._id,
       testWorkCategoryName: item.name,
+      testWorkCategoryType: item.type,
       workType: workType,
     })
   }

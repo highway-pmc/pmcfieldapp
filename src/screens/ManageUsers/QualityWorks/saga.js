@@ -135,7 +135,7 @@ function* getSourceApprovalsByStatus({ payload }) {
 
 function* addSourceApproval({ payload }) {
     try {
-        const response = yield (addSourceApprovalApi(payload.projectId, payload.testMaterialId, payload.body));
+        const response = yield (addSourceApprovalApi(payload.projectId, payload.testCategoryType, payload.testMaterialId, payload.body));
         yield put({ type: SOURCE_APPROVALS.ADD_SOURCE_APPROVAL_SUCCESS, response });
     } catch (error) {
         yield put({ type: SOURCE_APPROVALS.ADD_SOURCE_APPROVAL_FAILURE, error: error.message });
@@ -144,7 +144,7 @@ function* addSourceApproval({ payload }) {
 
 function* patchSourceApproval({ payload }) {
     try {
-        const response = yield (patchSourceApprovalApi(payload.projectId, payload.testMaterialId, payload.id, payload.body));
+        const response = yield (patchSourceApprovalApi(payload.projectId, payload.testCategoryType, payload.testMaterialId, payload.id, payload.body));
         yield put({ type: SOURCE_APPROVALS.PATCH_SOURCE_APPROVAL_SUCCESS, response });
     } catch (error) {
         yield put({ type: SOURCE_APPROVALS.PATCH_SOURCE_APPROVAL_FAILURE, error: error.message });
@@ -153,7 +153,7 @@ function* patchSourceApproval({ payload }) {
 
 function* updateSourceApproval({ payload }) {
     try {
-        const response = yield (updateSourceApprovalApi(payload.projectId, payload.testMaterialId, payload.id, payload.body));
+        const response = yield (updateSourceApprovalApi(payload.projectId, payload.testCategoryType, payload.testMaterialId, payload.id, payload.body));
         yield put({ type: SOURCE_APPROVALS.UPDATE_SOURCE_APPROVAL_SUCCESS, response });
     } catch (error) {
         yield put({ type: SOURCE_APPROVALS.UPDATE_SOURCE_APPROVAL_FAILURE, error: error.message });

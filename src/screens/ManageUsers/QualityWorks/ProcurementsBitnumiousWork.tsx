@@ -89,6 +89,8 @@ const ProcurementsBitnumiousWork = ({route, navigation}: {route: any; navigation
   // use state form for Bituminous work
   // Details_Bitumen Form
   const [detailsBitumen, setDetailsBitumen] = useState({
+    sourceApprovalId: '',
+    sourceApprovalDetailId: '',
     gradeOfBitumen: '', // VG 30 / VG 40 / PMB
     sourceName: '', // Dropdown showing sources for corresponding cement grade
     vehicleNo: [], // Last 4 digits, numeric only
@@ -99,6 +101,8 @@ const ProcurementsBitnumiousWork = ({route, navigation}: {route: any; navigation
 
   // Details_FineAggregate Form
   const [detailsFineAggregate, setDetailsFineAggregate] = useState({
+    sourceApprovalId: '',
+    sourceApprovalDetailId: '',
     sourceName: '', // Dropdown showing sources for the corresponding zone
     vehicleNo: [], // Last 4 digits, numeric only
     qtyInKg: '', // >0, up to 3 decimals, max limit 20
@@ -107,6 +111,8 @@ const ProcurementsBitnumiousWork = ({route, navigation}: {route: any; navigation
 
   // Details_CoarseAggregate_SMA Form
   const [detailsCoarseAggregateSMA, setDetailsCoarseAggregateSMA] = useState({
+    sourceApprovalId: '',
+    sourceApprovalDetailId: '',
     nominalSize: '', // 37.5mm / 26.5mm / 19mm / 13.2mm
     sourceName: '', // Dropdown showing sources for the corresponding size of aggregate grade
     vehicleNo: [], // Last 4 digits, numeric only
@@ -119,6 +125,8 @@ const ProcurementsBitnumiousWork = ({route, navigation}: {route: any; navigation
     detailsCoarseAggregateMicroSurfacing,
     setDetailsCoarseAggregateMicroSurfacing,
   ] = useState({
+    sourceApprovalId: '',
+    sourceApprovalDetailId: '',
     nominalSize: '', // 37.5mm / 26.5mm / 19mm / 13.2mm
     sourceName: '', // Dropdown showing sources for the corresponding size of aggregate grade
     vehicleNo: [], // Last 4 digits, numeric only
@@ -129,6 +137,8 @@ const ProcurementsBitnumiousWork = ({route, navigation}: {route: any; navigation
   // Details_CoarseAggregate_DBMBC Form
   const [detailsCoarseAggregateDBMBC, setDetailsCoarseAggregateDBMBC] =
     useState({
+      sourceApprovalId: '',
+      sourceApprovalDetailId: '',
       nominalSize: '', // 37.5mm / 26.5mm / 19mm / 13.2mm
       sourceName: '', // Dropdown showing sources for the corresponding size of aggregate grade
       vehicleNo: [], // Last 4 digits, numeric only
@@ -138,6 +148,8 @@ const ProcurementsBitnumiousWork = ({route, navigation}: {route: any; navigation
 
   // Details_Emulsion Form
   const [detailsEmulsion, setDetailsEmulsion] = useState({
+    sourceApprovalId: '',
+    sourceApprovalDetailId: '',
     gradeOfBitumen: '', // Listing as per the source approval sheet
     sourceName: '', // Dropdown showing sources for the corresponding cement grade
     vehicleNo: [], // Last 4 digits, numeric only
@@ -230,6 +242,8 @@ const ProcurementsBitnumiousWork = ({route, navigation}: {route: any; navigation
       switch (materialType) {
         case TEST_MATERIALS_TYPES.FINE_AGGREGATE:
           setDetailsFineAggregate({
+            sourceApprovalId: '',
+            sourceApprovalDetailId: '',
             sourceName: '',
             vehicleNo: [],
             qtyInKg: '',
@@ -239,6 +253,8 @@ const ProcurementsBitnumiousWork = ({route, navigation}: {route: any; navigation
 
         case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_DBM_BC:
           setDetailsCoarseAggregateDBMBC({
+            sourceApprovalId: '',
+            sourceApprovalDetailId: '',
             nominalSize: '',
             sourceName: '',
             vehicleNo: [],
@@ -249,6 +265,8 @@ const ProcurementsBitnumiousWork = ({route, navigation}: {route: any; navigation
 
         case TEST_MATERIALS_TYPES.BITUMEN:
           setDetailsBitumen({
+            sourceApprovalId: '',
+            sourceApprovalDetailId: '',
             gradeOfBitumen: '',
             sourceName: '',
             vehicleNo: [],
@@ -260,6 +278,8 @@ const ProcurementsBitnumiousWork = ({route, navigation}: {route: any; navigation
 
         case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING:
           setDetailsCoarseAggregateMicroSurfacing({
+            sourceApprovalId: '',
+            sourceApprovalDetailId: '',
             nominalSize: '',
             sourceName: '',
             vehicleNo: [],
@@ -270,6 +290,8 @@ const ProcurementsBitnumiousWork = ({route, navigation}: {route: any; navigation
 
         case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA:
           setDetailsCoarseAggregateSMA({
+            sourceApprovalId: '',
+            sourceApprovalDetailId: '',
             nominalSize: '',
             sourceName: '',
             vehicleNo: [],
@@ -280,6 +302,8 @@ const ProcurementsBitnumiousWork = ({route, navigation}: {route: any; navigation
 
         case TEST_MATERIALS_TYPES.EMULSION:
           setDetailsEmulsion({
+            sourceApprovalId: '',
+            sourceApprovalDetailId: '',
             gradeOfBitumen: '',
             sourceName: '',
             vehicleNo: [],
@@ -339,62 +363,74 @@ const ProcurementsBitnumiousWork = ({route, navigation}: {route: any; navigation
       switch (materialType) {
         case TEST_MATERIALS_TYPES.FINE_AGGREGATE:
           setDetailsFineAggregate({
-            sourceName: item.sourceApprovalId?.name || '',
-            vehicleNo: item.vehicleNo || [],
-            qtyInKg: item.qtyInKg || '',
-            uploadWeightSlip: item.uploadWeightSlip || '',
+            sourceApprovalId: item.sourceApprovalId._id,
+            sourceApprovalDetailId: item.sourceApprovalDetailId,
+            sourceName: item.sourceApprovalId?.name,
+            vehicleNo: item.vehicleNo,
+            qtyInKg: item.qtyInKg,
+            uploadWeightSlip: item.uploadWeightSlip,
           });
           break;
 
         case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_DBM_BC:
           setDetailsCoarseAggregateDBMBC({
-            nominalSize: item.nominalSize || '',
-            sourceName: item.sourceApprovalId?.name || '',
-            vehicleNo: item.vehicleNo || [],
-            qtyInKg: item.qtyInKg || '',
-            uploadWeightSlip: item.uploadWeightSlip || '',
+            sourceApprovalId: item.sourceApprovalId._id,
+            sourceApprovalDetailId: item.sourceApprovalDetailId,
+            nominalSize: item.nominalSize,
+            sourceName: item.sourceApprovalId?.name,
+            vehicleNo: item.vehicleNo,
+            qtyInKg: item.qtyInKg,
+            uploadWeightSlip: item.uploadWeightSlip,
           });
           break;
 
         case TEST_MATERIALS_TYPES.BITUMEN:
           setDetailsBitumen({
-            gradeOfBitumen: item.gradeOfBitumen || '',
-            sourceName: item.sourceApprovalId?.name || '',
-            vehicleNo: item.vehicleNo || [],
-            qtyInKg: item.qtyInKg || '',
-            uploadWeightSlip: item.uploadWeightSlip || '',
-            lotNumber: item.lotNumber || '',
+            sourceApprovalId: item.sourceApprovalId._id,
+            sourceApprovalDetailId: item.sourceApprovalDetailId,
+            gradeOfBitumen: item.gradeOfBitumen,
+            sourceName: item.sourceApprovalId?.name,
+            vehicleNo: item.vehicleNo,
+            qtyInKg: item.qtyInKg,
+            uploadWeightSlip: item.uploadWeightSlip,
+            lotNumber: item.lotNumber,
           });
           break;
 
         case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING:
           setDetailsCoarseAggregateMicroSurfacing({
-            nominalSize: item.nominalSize || '',
-            sourceName: item.sourceApprovalId?.name || '',
-            vehicleNo: item.vehicleNo || [],
-            qtyInKg: item.qtyInKg || '',
-            uploadWeightSlip: item.uploadWeightSlip || '',
+            sourceApprovalId: item.sourceApprovalId._id,
+            sourceApprovalDetailId: item.sourceApprovalDetailId,
+            nominalSize: item.nominalSize,
+            sourceName: item.sourceApprovalId?.name,
+            vehicleNo: item.vehicleNo,
+            qtyInKg: item.qtyInKg,
+            uploadWeightSlip: item.uploadWeightSlip,
           });
           break;
 
         case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA:
           setDetailsCoarseAggregateSMA({
-            nominalSize: item.nominalSize || '',
-            sourceName: item.sourceApprovalId?.name || '',
-            vehicleNo: item.vehicleNo || [],
-            qtyInKg: item.qtyInKg || '',
-            uploadWeightSlip: item.uploadWeightSlip || '',
+            sourceApprovalId: item.sourceApprovalId._id,
+            sourceApprovalDetailId: item.sourceApprovalDetailId,
+            nominalSize: item.nominalSize,
+            sourceName: item.sourceApprovalId?.name,
+            vehicleNo: item.vehicleNo,
+            qtyInKg: item.qtyInKg,
+            uploadWeightSlip: item.uploadWeightSlip,
           });
           break;
 
         case TEST_MATERIALS_TYPES.EMULSION:
           setDetailsEmulsion({
-            gradeOfBitumen: item.gradeOfBitumen || '',
-            sourceName: item.sourceApprovalId?.name || '',
-            vehicleNo: item.vehicleNo || [],
-            qtyInKg: item.qtyInKg || '',
-            uploadWeightSlip: item.uploadWeightSlip || '',
-            lotNumber: item.lotNumber || '',
+            sourceApprovalId: item.sourceApprovalId._id,
+            sourceApprovalDetailId: item.sourceApprovalDetailId,
+            gradeOfBitumen: item.gradeOfBitumen,
+            sourceName: item.sourceApprovalId?.name,
+            vehicleNo: item.vehicleNo,
+            qtyInKg: item.qtyInKg,
+            uploadWeightSlip: item.uploadWeightSlip,
+            lotNumber: item.lotNumber,
           });
           break;
 

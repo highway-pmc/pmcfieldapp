@@ -36,6 +36,7 @@ import Procurements from "../../screens/ManageUsers/QualityWorks/Procurements";
 import ReportsDashboard from "../../screens/Reports/ReportDashboard";
 import ReportsFieldWork from "../../screens/Reports/ReportsFieldWork";
 import SelectTestWorkCategory from "../../screens/ManageUsers/QualityWorks/SelectTestWorkCategory";
+import ProcurementsBitnumiousWork from "../../screens/ManageUsers/QualityWorks/ProcurementsBitnumiousWork";
 
 const Stack = createStackNavigator();
 
@@ -74,6 +75,7 @@ const MyQualityWorksStackNavigator = () => {
       <Stack.Screen name="AssignTestMaterialsPurchage" component={AssignTestMaterials} options={{headerShown: false}} />
       <Stack.Screen name="SourceApprovals" component={SourceApprovals} options={{headerShown: false}} />
       <Stack.Screen name="Procurements" component={Procurements} options={{headerShown: false}} />
+      <Stack.Screen name="ProcurementsBitnumiousWork" component={ProcurementsBitnumiousWork} options={{headerShown: false}} />
     </Stack.Navigator>
   );
 };

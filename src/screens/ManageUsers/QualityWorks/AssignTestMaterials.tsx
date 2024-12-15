@@ -288,11 +288,17 @@ const AssignTestMaterials = ({
           testClassificationType ===
           TEST_CLASSIFICATION_TYPES.PROCUREMENT_DETAILS
         ) {
-          navigation.navigate('Procurements', {
+          let routeName = "Procurements";
+          if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BITUMINOUS_WORKS) {
+            routeName = "ProcurementsBitnumiousWork";
+          }
+          navigation.navigate(routeName, {
             testClassificationId: testClassificationId,
             testClassificationName: testClassificationName,
+            testClassificationType: testClassificationType,
             testWorkCategoryId: testWorkCategoryId,
             testWorkCategoryName: testWorkCategoryName,
+            testWorkCategoryType: testWorkCategoryType,
             testMaterialId: item._id,
             testMaterialName: item.name,
             materialType: item.materialType,

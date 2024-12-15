@@ -43,7 +43,7 @@ import {
 import DocumentPicker from 'react-native-document-picker';
 import appConfig from '../../../common/app.config';
 
-const Procurements = ({route, navigation}: {route: any; navigation: any}) => {
+const ProcurementsBitnumiousWork = ({route, navigation}: {route: any; navigation: any}) => {
   const {testWorkCategoryName,testWorkCategoryType, testMaterialName, materialType, testMaterialId} =
     route.params;
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
@@ -2163,4 +2163,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Procurements;
+export default ProcurementsBitnumiousWork;

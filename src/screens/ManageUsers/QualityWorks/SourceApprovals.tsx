@@ -637,6 +637,7 @@ const SourceApprovals = ({
       dispatch(
         addSourceApproval({
           projectId: loggedInUser.projectId,
+          testCategoryType: testWorkCategoryType,
           testMaterialId: testMaterialId,
           body: sourceForm,
         }),
@@ -645,6 +646,7 @@ const SourceApprovals = ({
       dispatch(
         updateSourceApproval({
           projectId: loggedInUser.projectId,
+          testCategoryType: testWorkCategoryType,
           testMaterialId: testMaterialId,
           id: selectedSource._id,
           body: sourceForm,

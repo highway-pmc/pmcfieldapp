@@ -276,17 +276,18 @@ const AssignTestMaterials = ({
       if (
         item.materialType === TEST_MATERIALS_TYPES.CONCRETE ||
         item.materialType === TEST_MATERIALS_TYPES.CEMENT ||
-        (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BITUMINOUS_WORKS &&
-          (item.materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE ||
-            item.materialType === TEST_MATERIALS_TYPES.EMULSION ||
-            item.materialType ===
-              TEST_MATERIALS_TYPES.COARSE_AGGREGATE_DBM_BC ||
-            item.materialType ===
-              TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING ||
-            item.materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA ||
-            item.materialType === TEST_MATERIALS_TYPES.BITUMEN))
+        item.materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE ||
+        item.materialType === TEST_MATERIALS_TYPES.EMULSION ||
+        item.materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE_DBM_BC ||
+        item.materialType ===
+          TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING ||
+        item.materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA ||
+        item.materialType === TEST_MATERIALS_TYPES.BITUMEN
       ) {
-        if (testClassificationType === TEST_CLASSIFICATION_TYPES.PROCUREMENT_DETAILS) {
+        if (
+          testClassificationType ===
+          TEST_CLASSIFICATION_TYPES.PROCUREMENT_DETAILS
+        ) {
           navigation.navigate('Procurements', {
             testClassificationId: testClassificationId,
             testClassificationName: testClassificationName,
@@ -297,7 +298,9 @@ const AssignTestMaterials = ({
             materialType: item.materialType,
             workType: workType,
           });
-        } else if (testClassificationType === TEST_CLASSIFICATION_TYPES.SOURCE_APPROVALS) {
+        } else if (
+          testClassificationType === TEST_CLASSIFICATION_TYPES.SOURCE_APPROVALS
+        ) {
           navigation.navigate('SourceApprovals', {
             testClassificationId: testClassificationId,
             testClassificationName: testClassificationName,

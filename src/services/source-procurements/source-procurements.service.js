@@ -11,6 +11,10 @@ export const getSourceApprovalsApi = async (projectId, testMaterialId) => {
 }
 
 export const getSourceApprovalsByStatusApi = async (projectId, testMaterialId, status) => {
+    console.log(
+      '=========',
+      `v1/auth/projects/${projectId}/test-material/${testMaterialId}/source-approvals/status/${status}`,
+    );
     return apiService.getRequest(`v1/auth/projects/${projectId}/test-material/${testMaterialId}/source-approvals/status/${status}`).then((response) => {
         return response;
     }).catch((err) => {

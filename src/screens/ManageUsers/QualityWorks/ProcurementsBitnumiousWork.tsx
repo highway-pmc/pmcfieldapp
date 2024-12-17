@@ -43,9 +43,20 @@ import {
 import DocumentPicker from 'react-native-document-picker';
 import appConfig from '../../../common/app.config';
 
-const ProcurementsBitnumiousWork = ({route, navigation}: {route: any; navigation: any}) => {
-  const {testWorkCategoryName,testWorkCategoryType, testMaterialName, materialType, testMaterialId} =
-    route.params;
+const ProcurementsBitnumiousWork = ({
+  route,
+  navigation,
+}: {
+  route: any;
+  navigation: any;
+}) => {
+  const {
+    testWorkCategoryName,
+    testWorkCategoryType,
+    testMaterialName,
+    materialType,
+    testMaterialId,
+  } = route.params;
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
   const {
     procurements,
@@ -93,7 +104,8 @@ const ProcurementsBitnumiousWork = ({route, navigation}: {route: any; navigation
     sourceApprovalDetailId: '',
     gradeOfBitumen: '', // VG 30 / VG 40 / PMB
     sourceName: '', // Dropdown showing sources for corresponding cement grade
-    vehicleNo: [], // Last 4 digits, numeric only
+    vehicleNo: [],
+    //vehicleNoTemp: '', // Last 4 digits, numeric only
     qtyInKg: '', // >0, up to 3 decimals, max limit 20
     uploadWeightSlip: '', // Image or PDF
     lotNumber: '', // Combination of characters and numbers, max limit 100
@@ -104,7 +116,8 @@ const ProcurementsBitnumiousWork = ({route, navigation}: {route: any; navigation
     sourceApprovalId: '',
     sourceApprovalDetailId: '',
     sourceName: '', // Dropdown showing sources for the corresponding zone
-    vehicleNo: [], // Last 4 digits, numeric only
+    vehicleNo: [],
+    vehicleNoTemp: '', // Last 4 digits, numeric only
     qtyInKg: '', // >0, up to 3 decimals, max limit 20
     uploadWeightSlip: '', // Image or PDF
   });
@@ -115,7 +128,8 @@ const ProcurementsBitnumiousWork = ({route, navigation}: {route: any; navigation
     sourceApprovalDetailId: '',
     nominalSize: '', // 37.5mm / 26.5mm / 19mm / 13.2mm
     sourceName: '', // Dropdown showing sources for the corresponding size of aggregate grade
-    vehicleNo: [], // Last 4 digits, numeric only
+    vehicleNo: [],
+    vehicleNoTemp: '', // Last 4 digits, numeric only
     qtyInKg: '', // >0, up to 3 decimals, max limit 20
     uploadWeightSlip: '', // Image or PDF
   });
@@ -130,6 +144,7 @@ const ProcurementsBitnumiousWork = ({route, navigation}: {route: any; navigation
     nominalSize: '', // 37.5mm / 26.5mm / 19mm / 13.2mm
     sourceName: '', // Dropdown showing sources for the corresponding size of aggregate grade
     vehicleNo: [], // Last 4 digits, numeric only
+    vehicleNoTemp: '',
     qtyInKg: '', // >0, up to 3 decimals, max limit 20
     uploadWeightSlip: '', // Image or PDF
   });
@@ -141,7 +156,8 @@ const ProcurementsBitnumiousWork = ({route, navigation}: {route: any; navigation
       sourceApprovalDetailId: '',
       nominalSize: '', // 37.5mm / 26.5mm / 19mm / 13.2mm
       sourceName: '', // Dropdown showing sources for the corresponding size of aggregate grade
-      vehicleNo: [], // Last 4 digits, numeric only
+      vehicleNo: [],
+      vehicleNoTemp: '', // Last 4 digits, numeric only
       qtyInKg: '', // >0, up to 3 decimals, max limit 20
       uploadWeightSlip: '', // Image or PDF
     });
@@ -152,7 +168,8 @@ const ProcurementsBitnumiousWork = ({route, navigation}: {route: any; navigation
     sourceApprovalDetailId: '',
     gradeOfBitumen: '', // Listing as per the source approval sheet
     sourceName: '', // Dropdown showing sources for the corresponding cement grade
-    vehicleNo: [], // Last 4 digits, numeric only
+    vehicleNo: [],
+    vehicleNoTemp: '', // Last 4 digits, numeric only
     qtyInKg: '', // >0, up to 3 decimals, max limit 20
     uploadWeightSlip: '', // Image or PDF
     lotNumber: '', // Combination of characters and numbers, max limit 100
@@ -181,6 +198,7 @@ const ProcurementsBitnumiousWork = ({route, navigation}: {route: any; navigation
   }, [procurements, error]);
 
   useEffect(() => {
+    console.log('======', sourceApprovalsByStatus);
     if (sourceApprovalsByStatus) {
       setSourceApprovals(sourceApprovalsByStatus);
     } else if (error) {
@@ -246,6 +264,7 @@ const ProcurementsBitnumiousWork = ({route, navigation}: {route: any; navigation
             sourceApprovalDetailId: '',
             sourceName: '',
             vehicleNo: [],
+            vehicleNoTemp: '',
             qtyInKg: '',
             uploadWeightSlip: '',
           });
@@ -258,6 +277,7 @@ const ProcurementsBitnumiousWork = ({route, navigation}: {route: any; navigation
             nominalSize: '',
             sourceName: '',
             vehicleNo: [],
+            vehicleNoTemp: '',
             qtyInKg: '',
             uploadWeightSlip: '',
           });
@@ -270,6 +290,7 @@ const ProcurementsBitnumiousWork = ({route, navigation}: {route: any; navigation
             gradeOfBitumen: '',
             sourceName: '',
             vehicleNo: [],
+            //vehicleNoTemp: '',
             qtyInKg: '',
             uploadWeightSlip: '',
             lotNumber: '',
@@ -283,6 +304,7 @@ const ProcurementsBitnumiousWork = ({route, navigation}: {route: any; navigation
             nominalSize: '',
             sourceName: '',
             vehicleNo: [],
+            vehicleNoTemp: '',
             qtyInKg: '',
             uploadWeightSlip: '',
           });
@@ -295,6 +317,7 @@ const ProcurementsBitnumiousWork = ({route, navigation}: {route: any; navigation
             nominalSize: '',
             sourceName: '',
             vehicleNo: [],
+            vehicleNoTemp: '',
             qtyInKg: '',
             uploadWeightSlip: '',
           });
@@ -307,6 +330,7 @@ const ProcurementsBitnumiousWork = ({route, navigation}: {route: any; navigation
             gradeOfBitumen: '',
             sourceName: '',
             vehicleNo: [],
+            vehicleNoTemp: '',
             qtyInKg: '',
             uploadWeightSlip: '',
             lotNumber: '',
@@ -367,6 +391,7 @@ const ProcurementsBitnumiousWork = ({route, navigation}: {route: any; navigation
             sourceApprovalDetailId: item.sourceApprovalDetailId,
             sourceName: item.sourceApprovalId?.name,
             vehicleNo: item.vehicleNo,
+            vehicleNoTemp: '',
             qtyInKg: item.qtyInKg,
             uploadWeightSlip: item.uploadWeightSlip,
           });
@@ -379,6 +404,7 @@ const ProcurementsBitnumiousWork = ({route, navigation}: {route: any; navigation
             nominalSize: item.nominalSize,
             sourceName: item.sourceApprovalId?.name,
             vehicleNo: item.vehicleNo,
+            vehicleNoTemp: '',
             qtyInKg: item.qtyInKg,
             uploadWeightSlip: item.uploadWeightSlip,
           });
@@ -391,6 +417,7 @@ const ProcurementsBitnumiousWork = ({route, navigation}: {route: any; navigation
             gradeOfBitumen: item.gradeOfBitumen,
             sourceName: item.sourceApprovalId?.name,
             vehicleNo: item.vehicleNo,
+            //vehicleNoTemp: '',
             qtyInKg: item.qtyInKg,
             uploadWeightSlip: item.uploadWeightSlip,
             lotNumber: item.lotNumber,
@@ -404,6 +431,7 @@ const ProcurementsBitnumiousWork = ({route, navigation}: {route: any; navigation
             nominalSize: item.nominalSize,
             sourceName: item.sourceApprovalId?.name,
             vehicleNo: item.vehicleNo,
+            vehicleNoTemp: '',
             qtyInKg: item.qtyInKg,
             uploadWeightSlip: item.uploadWeightSlip,
           });
@@ -416,6 +444,7 @@ const ProcurementsBitnumiousWork = ({route, navigation}: {route: any; navigation
             nominalSize: item.nominalSize,
             sourceName: item.sourceApprovalId?.name,
             vehicleNo: item.vehicleNo,
+            vehicleNoTemp: '',
             qtyInKg: item.qtyInKg,
             uploadWeightSlip: item.uploadWeightSlip,
           });
@@ -428,6 +457,7 @@ const ProcurementsBitnumiousWork = ({route, navigation}: {route: any; navigation
             gradeOfBitumen: item.gradeOfBitumen,
             sourceName: item.sourceApprovalId?.name,
             vehicleNo: item.vehicleNo,
+            vehicleNoTemp: '',
             qtyInKg: item.qtyInKg,
             uploadWeightSlip: item.uploadWeightSlip,
             lotNumber: item.lotNumber,
@@ -653,41 +683,58 @@ const ProcurementsBitnumiousWork = ({route, navigation}: {route: any; navigation
       showSnackbar(errorMessage, 'error');
     }
   };
-const handleInputChangeBituminousWork = (field:any, value:any, detail:any) => {
-  if (detail === 'detailsBitumen') {
-    setDetailsBitumen(prevState => ({
-      ...prevState,
-      [field]: value,
-    }));
-  } else if (detail === 'detailsFineAggregate') {
-    setDetailsFineAggregate(prevState => ({
-      ...prevState,
-      [field]: value,
-    }));
-  } else if (detail === 'detailsCoarseAggregateSMA') {
-    setDetailsCoarseAggregateSMA(prevState => ({
-      ...prevState,
-      [field]: value,
-    }));
-  } else if (detail === 'detailsCoarseAggregateMicroSurfacing') {
-    setDetailsCoarseAggregateMicroSurfacing(prevState => ({
-      ...prevState,
-      [field]: value,
-    }));
-  } else if (detail === 'detailsCoarseAggregateDBMBC') {
-    setDetailsCoarseAggregateDBMBC(prevState => ({
-      ...prevState,
-      [field]: value,
-    }));
-  } else if (detail === 'detailsEmulsion') {
-    setDetailsEmulsion(prevState => ({
-      ...prevState,
-      [field]: value,
-    }));
-  } else {
-    console.warn(`Unknown detail type: ${detail}`);
-  }
-};
+  const handleInputChangeBituminousWork = (
+    field: any,
+    value: any,
+    detail: any,
+  ) => {
+    let isValid;
+    let errorMessage;
+
+    if (field === 'vehicleNoTemp') {
+      const vehicleNoRegex = /^\d{4}$/;
+      if (!vehicleNoRegex.test(value as string)) {
+        isValid = false;
+        errorMessage = 'Last 4 digit of Vehicle number only';
+      }
+    }
+    if (!isValid) {
+      showSnackbar(errorMessage, 'error');
+    }
+    if (detail === 'detailsBitumen') {
+      setDetailsBitumen(prevState => ({
+        ...prevState,
+        [field]: value,
+      }));
+    } else if (detail === 'detailsFineAggregate') {
+      setDetailsFineAggregate(prevState => ({
+        ...prevState,
+        [field]: value,
+      }));
+    } else if (detail === 'detailsCoarseAggregateSMA') {
+      setDetailsCoarseAggregateSMA(prevState => ({
+        ...prevState,
+        [field]: value,
+      }));
+    } else if (detail === 'detailsCoarseAggregateMicroSurfacing') {
+      setDetailsCoarseAggregateMicroSurfacing(prevState => ({
+        ...prevState,
+        [field]: value,
+      }));
+    } else if (detail === 'detailsCoarseAggregateDBMBC') {
+      setDetailsCoarseAggregateDBMBC(prevState => ({
+        ...prevState,
+        [field]: value,
+      }));
+    } else if (detail === 'detailsEmulsion') {
+      setDetailsEmulsion(prevState => ({
+        ...prevState,
+        [field]: value,
+      }));
+    } else {
+      console.warn(`Unknown detail type: ${detail}`);
+    }
+  };
 
   const handleSubmit = () => {
     if (!validateForm()) {
@@ -845,6 +892,7 @@ const handleInputChangeBituminousWork = (field:any, value:any, detail:any) => {
   }, [deletedProcurement, error]);
 
   const onAddVehicle = () => {
+    //temp
     const vehicleNoTemp = form.vehicleNoTemp.trim();
     const vehicleNoRegex = /^\d{4}$/;
 
@@ -935,6 +983,12 @@ const handleInputChangeBituminousWork = (field:any, value:any, detail:any) => {
             <View style={styles.reportFields}>
               <View>
                 <View>
+                  {renderSourceDetailsPicker(
+                    'Select source details',
+                    'sourceApprovalDetailId',
+                  )}
+                </View>
+                <View>
                   <Input
                     label="Source Name"
                     value={detailsFineAggregate.sourceName}
@@ -959,7 +1013,7 @@ const handleInputChangeBituminousWork = (field:any, value:any, detail:any) => {
                     <View style={{width: '70%'}}>
                       <Input
                         label="Vehicle no."
-                        value={detailsFineAggregate.vehicleNo}
+                        value={detailsFineAggregate.vehicleNoTemp}
                         onChange={(value: string) =>
                           handleInputChangeBituminousWork(
                             'vehicleNoTemp',
@@ -1006,7 +1060,11 @@ const handleInputChangeBituminousWork = (field:any, value:any, detail:any) => {
                     label="Date"
                     value={form.procurementDateTime}
                     onChange={date =>
-                      handleInputChange('procurementDateTime', date)
+                      handleInputChangeBituminousWork(
+                        'procurementDateTime',
+                        date,
+                        'detailsFineAggregate',
+                      )
                     }
                   />
                 </View>
@@ -1040,6 +1098,12 @@ const handleInputChangeBituminousWork = (field:any, value:any, detail:any) => {
           return (
             <View style={styles.reportFields}>
               <View>
+                <View>
+                  {renderSourceDetailsPicker(
+                    'Select source details',
+                    'sourceApprovalDetailId',
+                  )}
+                </View>
                 <View>
                   <Input
                     label="Nominal Size (mm)"
@@ -1126,7 +1190,11 @@ const handleInputChangeBituminousWork = (field:any, value:any, detail:any) => {
                     label="Date"
                     value={form.procurementDateTime}
                     onChange={date =>
-                      handleInputChange('procurementDateTime', date)
+                      handleInputChangeBituminousWork(
+                        'procurementDateTime',
+                        date,
+                        'detailsCoarseAggregateDBMBC',
+                      )
                     }
                   />
                 </View>
@@ -1162,6 +1230,12 @@ const handleInputChangeBituminousWork = (field:any, value:any, detail:any) => {
           return (
             <View style={styles.reportFields}>
               <View>
+                <View>
+                  {renderSourceDetailsPicker(
+                    'Select source details',
+                    'sourceApprovalDetailId',
+                  )}
+                </View>
                 <View>
                   <Input
                     label="Grade of Bitumen (VG 30 / VG 40 / PMB)"
@@ -1297,6 +1371,12 @@ const handleInputChangeBituminousWork = (field:any, value:any, detail:any) => {
             <View style={styles.reportFields}>
               <View>
                 <View>
+                  {renderSourceDetailsPicker(
+                    'Select source details',
+                    'sourceApprovalDetailId',
+                  )}
+                </View>
+                <View>
                   <Input
                     label="Nominal Size (37.5mm / 26.5mm / 19mm / 13.2mm)"
                     value={detailsCoarseAggregateMicroSurfacing.nominalSize}
@@ -1419,6 +1499,12 @@ const handleInputChangeBituminousWork = (field:any, value:any, detail:any) => {
             <View style={styles.reportFields}>
               <View>
                 <View>
+                  {renderSourceDetailsPicker(
+                    'Select source details',
+                    'sourceApprovalDetailId',
+                  )}
+                </View>
+                <View>
                   <Input
                     label="Nominal Size (37.5mm / 26.5mm / 19mm / 13.2mm)"
                     value={detailsCoarseAggregateSMA.nominalSize}
@@ -1538,6 +1624,12 @@ const handleInputChangeBituminousWork = (field:any, value:any, detail:any) => {
           return (
             <View style={styles.reportFields}>
               <View>
+                <View>
+                  {renderSourceDetailsPicker(
+                    'Select source details',
+                    'sourceApprovalDetailId',
+                  )}
+                </View>
                 <View>
                   <Input
                     label="Grade of Bitumen (as per Source Approval Sheet)"

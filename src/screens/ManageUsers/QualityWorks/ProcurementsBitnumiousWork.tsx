@@ -85,6 +85,7 @@ const ProcurementsBitnumiousWork = ({
     invoiceFile: string;
   };
   const [vehicleNos, setVehicleNos]: any = useState([]);
+  const [vehicleNoTemp, setVehicleNoTemp]: any = useState([]);
   const [form, setForm]: any = useState<FormState>({
     // projectId: loggedInUser.projectId,
     sourceApprovalId: '',

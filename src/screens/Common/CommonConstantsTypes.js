@@ -1,4 +1,5 @@
 export const commonComponentTypes = [
+    'footing',
     'open',
     'pile',
     'pile-cap',

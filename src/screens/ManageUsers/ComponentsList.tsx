@@ -241,30 +241,35 @@ const ComponentsList = ({ route, navigation }: { route: any, navigation: any }) 
     },
     { componentType: [] }
   );
+
+  const filteredCategory = componentType.filter((item, index) => index === 0).map((item) => ({ segmentCategory: item.segmentCategory || '' }));
   
-  const repeatedComponentTypes = commonComponentTypes.map((type: any) => {
+  const repeatedComponentTypes = commonComponentTypes.map((type: any, index: any) => {
     const filteredItems = componentType.filter((item) => item.type === type);
+  
     return (
       filteredItems.length > 0 && (
-        <View style={commonStyles.separatTaskType} key={type}>
-          <View style={commonStyles.titleTextForGrouping}>
-            <Text style={commonStyles.titleText}>{type}</Text>
+        <>
+          <View style={commonStyles.separatTaskType} key={type}>
+            <View style={commonStyles.titleTextForGrouping}>
+              <Text style={commonStyles.titleText}>{type}</Text>
+            </View>
+            {filteredItems.map((item, index) => (
+              <CardComponent
+                key={`${type}-${index}`}
+                item={item}
+                index={index}
+                isChecked={item.isChecked}
+                name={item.name || ''}
+                handleRadio={handleRadioChange}
+                onComponentNext={onComponentNextClick}
+              />
+            ))}
           </View>
-          {filteredItems.map((item, index) => (
-            <CardComponent
-              key={`${type}-${index}`}
-              item={item}
-              index={index}
-              isChecked={item.isChecked}
-              name={item.name || ''}
-              handleRadio={handleRadioChange}
-              onComponentNext={onComponentNextClick}
-            />
-          ))}
-        </View>
+        </>
       )
     );
-  })
+  });
 // End code for Grouping coponent types
 
   return (
@@ -293,6 +298,11 @@ const ComponentsList = ({ route, navigation }: { route: any, navigation: any }) 
       </View>
       <ScrollView style={styles.Height100} contentContainerStyle={commonStyles.paddingBottom20}>
         <>
+          <View style={{ paddingTop: 15 }}>
+            <Text style={commonStyles.titleText}>
+              {filteredCategory[0].segmentCategory || ''}
+            </Text>
+          </View>
           {repeatedComponentTypes}
         </>
       </ScrollView>

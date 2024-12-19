@@ -166,14 +166,12 @@ const SourceApprovals = ({
   //Bitumious work source approval form
   // Fine Aggregate
   const [fineAggregate, setFineAggregate] = useState({
-    [gradeField.name]: '',
     sourceApprovalId: '',
     ratePerKG: 0, // (3 decimal, >0, 100000)
   });
 
   //Emulsion
   const [emulsion, setEmulsion] = useState({
-    [gradeField.name]: '',
     sourceApprovalId: '',
     gradeOfEmulsion: '', // characters, max limit 100
     ratePerMT: 0.0, // (3 decimal, >0, 100000)
@@ -182,7 +180,6 @@ const SourceApprovals = ({
 
   //Coarse Aggregate (SMA)
   const [coarseAggregateSMA, setCoarseAggregateSMA] = useState({
-    [gradeField.name]: '',
     sourceApprovalId: '',
     nominalSize: '37.5mm', // 37.5mm / 26.5mm / 19mm / 13.2mm
     ratePerKG: 0.0, // (3 decimal, >0, 100000)
@@ -190,7 +187,6 @@ const SourceApprovals = ({
 
   //Coarse Aggregate (Micro Surfacing)
   const [coarseAggregateMicro, setCoarseAggregateMicro] = useState({
-    [gradeField.name]: '',
     sourceApprovalId: '',
     nominalSize: '37.5mm', // 37.5mm / 26.5mm / 19mm / 13.2mm
     ratePerKG: 0.0, // (3 decimal, >0, 100000)
@@ -198,7 +194,6 @@ const SourceApprovals = ({
 
   //Bitumen
   const [bitumen, setBitumen] = useState({
-    [gradeField.name]: '',
     sourceApprovalId: '',
     gradeOfBitumen: 'VG 30', // VG 30 / VG 40 / PMB
     ratePerMT: 0.0, // (3 decimal, >0, 100000)
@@ -207,7 +202,6 @@ const SourceApprovals = ({
 
   //Coarse Aggregate (DBM/BC)
   const [coarseAggregateDBMBC, setCoarseAggregateDBMBC] = useState({
-    [gradeField.name]: '',
     sourceApprovalId: '',
     nominalSize: '37.5mm', // 37.5mm / 26.5mm / 19mm / 13.2mm / 10mm / 20mm
     ratePerKG: 0.0, // (3 decimal, >0, 100000)
@@ -276,7 +270,6 @@ const SourceApprovals = ({
         case TEST_MATERIALS_TYPES.FINE_AGGREGATE:
           setFineAggregate({
             sourceApprovalId: item._id,
-            [gradeField.name]: '',
             ratePerKG: item.ratePerKG,
           });
           break;
@@ -284,7 +277,6 @@ const SourceApprovals = ({
         case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_DBM_BC:
           setCoarseAggregateDBMBC({
             sourceApprovalId: item._id,
-            [gradeField.name]: '',
             nominalSize: item.nominalSize,
             ratePerKG: item.ratePerKG,
           });
@@ -293,7 +285,6 @@ const SourceApprovals = ({
         case TEST_MATERIALS_TYPES.BITUMEN:
           setBitumen({
             sourceApprovalId: item._id,
-            [gradeField.name]: '',
             gradeOfBitumen: item.gradeOfBitumen,
             ratePerMT: item.ratePerMT,
             bitumenBrand: item.bitumenBrand,
@@ -303,7 +294,6 @@ const SourceApprovals = ({
         case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING:
           setCoarseAggregateMicro({
             sourceApprovalId: item._id,
-            [gradeField.name]: '',
             nominalSize: item.nominalSize,
             ratePerKG: item.ratePerKG,
           });
@@ -312,7 +302,6 @@ const SourceApprovals = ({
         case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA:
           setCoarseAggregateSMA({
             sourceApprovalId: item._id,
-            [gradeField.name]: '',
             nominalSize: item.nominalSize, // 37.5mm /26.5mm/19mm /13.2mm
             ratePerKG: item.ratePerKG, // (3 decimal, >0, 100000)
           });
@@ -321,7 +310,6 @@ const SourceApprovals = ({
         case TEST_MATERIALS_TYPES.EMULSION:
           setEmulsion({
             sourceApprovalId: item._id,
-            [gradeField.name]: '',
             gradeOfEmulsion: item.gradeOfEmulsion, // characters, max limit 100
             ratePerMT: item.ratePerMT, // (3 decimal, >0, 100000)
             emulsionBrand: item.emulsionBrand, // characters, max limit 100
@@ -689,7 +677,7 @@ const SourceApprovals = ({
       }
     }
 
-    return true; 
+    return true;
   };
 
   //Need to change function logic
@@ -703,7 +691,6 @@ const SourceApprovals = ({
           body = {
             name: fineAggregate.ratePerKG,
             metaData: {
-              [gradeField.name]: fineAggregate[gradeField.name],
               ratePerKG: Number(fineAggregate.ratePerKG),
             },
           };
@@ -711,9 +698,8 @@ const SourceApprovals = ({
 
         case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_DBM_BC:
           body = {
-            name: coarseAggregateDBMBC[gradeField.name],
+            name: coarseAggregateDBMBC.nominalSize,
             metaData: {
-              [gradeField.name]: coarseAggregateDBMBC[gradeField.name],
               nominalSize: coarseAggregateDBMBC.nominalSize,
               ratePerKG: Number(coarseAggregateDBMBC.ratePerKG),
             },
@@ -722,9 +708,8 @@ const SourceApprovals = ({
 
         case TEST_MATERIALS_TYPES.BITUMEN:
           body = {
-            name: bitumen[gradeField.name],
+            name: bitumen.gradeOfBitumen,
             metaData: {
-              [gradeField.name]: bitumen[gradeField.name],
               ratePerMT: Number(bitumen.ratePerMT),
               gradeOfBitumen: bitumen.gradeOfBitumen,
               bitumenBrand: bitumen.bitumenBrand,
@@ -734,9 +719,8 @@ const SourceApprovals = ({
 
         case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING:
           body = {
-            name: coarseAggregateMicro[gradeField.name],
+            name: coarseAggregateMicro.nominalSize,
             metaData: {
-              [gradeField.name]: coarseAggregateMicro[gradeField.name],
               nominalSize: coarseAggregateMicro.nominalSize,
               ratePerKG: Number(coarseAggregateMicro.ratePerKG),
             },
@@ -745,9 +729,8 @@ const SourceApprovals = ({
 
         case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA:
           body = {
-            name: coarseAggregateMicro[gradeField.name],
+            name: coarseAggregateMicro.nominalSize,
             metaData: {
-              [gradeField.name]: coarseAggregateMicro[gradeField.name],
               nominalSize: coarseAggregateMicro.nominalSize,
               ratePerKG: Number(coarseAggregateMicro.ratePerKG),
             },
@@ -756,9 +739,8 @@ const SourceApprovals = ({
 
         case TEST_MATERIALS_TYPES.EMULSION:
           body = {
-            name: emulsion[gradeField.name],
+            name: emulsion.gradeOfEmulsion,
             metaData: {
-              [gradeField.name]: emulsion[gradeField.name],
               ratePerMT: Number(emulsion.ratePerMT),
               gradeOfEmulsion: emulsion.gradeOfEmulsion,
               emulsionBrand: emulsion.emulsionBrand,
@@ -812,7 +794,6 @@ const SourceApprovals = ({
           case TEST_MATERIALS_TYPES.FINE_AGGREGATE:
             setFineAggregate({
               sourceApprovalId: selectedSource._id,
-              [gradeField.name]: '',
               ratePerKG: 0.0,
             });
             break;
@@ -820,7 +801,6 @@ const SourceApprovals = ({
           case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_DBM_BC:
             setCoarseAggregateDBMBC({
               sourceApprovalId: selectedSource._id,
-              [gradeField.name]: '',
               nominalSize: '',
               ratePerKG: 0.0,
             });
@@ -829,7 +809,6 @@ const SourceApprovals = ({
           case TEST_MATERIALS_TYPES.BITUMEN:
             setBitumen({
               sourceApprovalId: selectedSource._id,
-              [gradeField.name]: '',
               gradeOfBitumen: '',
               ratePerMT: 0.0,
               bitumenBrand: '',
@@ -839,7 +818,6 @@ const SourceApprovals = ({
           case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING:
             setCoarseAggregateMicro({
               sourceApprovalId: selectedSource._id,
-              [gradeField.name]: '',
               nominalSize: '',
               ratePerKG: 0.0,
             });
@@ -848,7 +826,6 @@ const SourceApprovals = ({
           case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA:
             setCoarseAggregateSMA({
               sourceApprovalId: selectedSource._id,
-              [gradeField.name]: '',
               nominalSize: '',
               ratePerKG: 0.0,
             });
@@ -946,6 +923,59 @@ const SourceApprovals = ({
       // Reset form based on material type
       if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BITUMINOUS_WORKS) {
         // Reset logic for bituminous materials (same as above in addedSourceDetail)
+        switch (materialType) {
+          case TEST_MATERIALS_TYPES.FINE_AGGREGATE:
+            setFineAggregate({
+              sourceApprovalId: selectedSource._id,
+              ratePerKG: 0.0,
+            });
+            break;
+
+          case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_DBM_BC:
+            setCoarseAggregateDBMBC({
+              sourceApprovalId: selectedSource._id,
+              nominalSize: '',
+              ratePerKG: 0.0,
+            });
+            break;
+
+          case TEST_MATERIALS_TYPES.BITUMEN:
+            setBitumen({
+              sourceApprovalId: selectedSource._id,
+              gradeOfBitumen: '',
+              ratePerMT: 0.0,
+              bitumenBrand: '',
+            });
+            break;
+
+          case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING:
+            setCoarseAggregateMicro({
+              sourceApprovalId: selectedSource._id,
+              nominalSize: '',
+              ratePerKG: 0.0,
+            });
+            break;
+
+          case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA:
+            setCoarseAggregateSMA({
+              sourceApprovalId: selectedSource._id,
+              nominalSize: '',
+              ratePerKG: 0.0,
+            });
+            break;
+
+          case TEST_MATERIALS_TYPES.EMULSION:
+            setEmulsion({
+              sourceApprovalId: selectedSource._id,
+              gradeOfEmulsion: '',
+              ratePerMT: 0.0,
+              emulsionBrand: '',
+            });
+            break;
+
+          default:
+            console.warn(`Unknown material type: ${materialType}`);
+        }
       } else {
         setSourceDetailForm({
           sourceApprovalId: selectedSource._id,
@@ -1028,7 +1058,6 @@ const SourceApprovals = ({
         case TEST_MATERIALS_TYPES.FINE_AGGREGATE:
           setFineAggregate({
             sourceApprovalId: item.sourceApprovalId,
-            [gradeField.name]: item.metaData?.[gradeField.name] || '',
             ratePerKG: item.metaData?.ratePerKG || 0,
           });
           break;
@@ -1036,7 +1065,6 @@ const SourceApprovals = ({
         case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_DBM_BC:
           setCoarseAggregateDBMBC({
             sourceApprovalId: item.sourceApprovalId,
-            [gradeField.name]: item.metaData?.[gradeField.name] || '',
             nominalSize: item.metaData?.nominalSize || '',
             ratePerKG: item.metaData?.ratePerKG || 0,
           });
@@ -1045,7 +1073,6 @@ const SourceApprovals = ({
         case TEST_MATERIALS_TYPES.BITUMEN:
           setBitumen({
             sourceApprovalId: item.sourceApprovalId,
-            [gradeField.name]: item.metaData?.[gradeField.name],
             gradeOfBitumen: item.metaData?.gradeOfBitumen,
             ratePerMT: item.metaData?.ratePerMT,
             bitumenBrand: item.metaData?.bitumenBrand,
@@ -1055,7 +1082,6 @@ const SourceApprovals = ({
         case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING:
           setCoarseAggregateMicro({
             sourceApprovalId: item.sourceApprovalId,
-            [gradeField.name]: item.metaData?.[gradeField.name],
             nominalSize: item.metaData?.nominalSize,
             ratePerKG: item.metaData?.ratePerKG,
           });
@@ -1064,7 +1090,6 @@ const SourceApprovals = ({
         case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA:
           setCoarseAggregateSMA({
             sourceApprovalId: item.sourceApprovalId,
-            [gradeField.name]: item.metaData?.[gradeField.name],
             nominalSize: item.metaData?.nominalSize,
             ratePerKG: item.metaData?.ratePerKG,
           });
@@ -1273,10 +1298,7 @@ const SourceApprovals = ({
                 label="Rate per KG"
                 value={coarseAggregateMicro.ratePerKG}
                 onChange={(value: number) =>
-                  handleCoarseAggregateMicroInputChange(
-                    'ratePerKG',
-                    value,
-                  )
+                  handleCoarseAggregateMicroInputChange('ratePerKG', value)
                 }
                 isRequired={true}
                 keyboardType="numeric"
@@ -1312,10 +1334,7 @@ const SourceApprovals = ({
                 label="Rate per KG"
                 value={coarseAggregateSMA.ratePerKG.toString()}
                 onChange={(value: number) =>
-                  handleCoarseAggregateSMAInputChange(
-                    'ratePerKG',
-                    value,
-                  )
+                  handleCoarseAggregateSMAInputChange('ratePerKG', value)
                 }
                 isRequired={true}
                 keyboardType="numeric"

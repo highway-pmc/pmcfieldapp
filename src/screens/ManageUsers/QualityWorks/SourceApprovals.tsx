@@ -801,7 +801,7 @@ const SourceApprovals = ({
           case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_DBM_BC:
             setCoarseAggregateDBMBC({
               sourceApprovalId: selectedSource._id,
-              nominalSize: '',
+              nominalSize: '37.5mm',
               ratePerKG: 0.0,
             });
             break;
@@ -818,7 +818,7 @@ const SourceApprovals = ({
           case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING:
             setCoarseAggregateMicro({
               sourceApprovalId: selectedSource._id,
-              nominalSize: '',
+              nominalSize: '37.5mm',
               ratePerKG: 0.0,
             });
             break;
@@ -826,7 +826,7 @@ const SourceApprovals = ({
           case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA:
             setCoarseAggregateSMA({
               sourceApprovalId: selectedSource._id,
-              nominalSize: '',
+              nominalSize: '37.5',
               ratePerKG: 0.0,
             });
             break;
@@ -834,7 +834,7 @@ const SourceApprovals = ({
           case TEST_MATERIALS_TYPES.EMULSION:
             setEmulsion({
               sourceApprovalId: selectedSource._id,
-              gradeOfEmulsion: '',
+              gradeOfEmulsion: 'VG 30',
               ratePerMT: 0.0,
               emulsionBrand: '',
             });
@@ -1058,7 +1058,7 @@ const SourceApprovals = ({
         case TEST_MATERIALS_TYPES.FINE_AGGREGATE:
           setFineAggregate({
             sourceApprovalId: item.sourceApprovalId,
-            ratePerKG: item.metaData?.ratePerKG || 0,
+            ratePerKG: item.metaData?.ratePerKG,
           });
           break;
 
@@ -1066,7 +1066,7 @@ const SourceApprovals = ({
           setCoarseAggregateDBMBC({
             sourceApprovalId: item.sourceApprovalId,
             nominalSize: item.metaData?.nominalSize || '',
-            ratePerKG: item.metaData?.ratePerKG || 0,
+            ratePerKG: item.metaData?.ratePerKG,
           });
           break;
 
@@ -1332,7 +1332,7 @@ const SourceApprovals = ({
             <View>
               <Input
                 label="Rate per KG"
-                value={coarseAggregateSMA.ratePerKG.toString()}
+                value={coarseAggregateSMA.ratePerKG}
                 onChange={(value: number) =>
                   handleCoarseAggregateSMAInputChange('ratePerKG', value)
                 }

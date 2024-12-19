@@ -74,30 +74,8 @@ const ProcurementsBitnumiousWork = ({
   const [selectedProcurement, setSelectedProcurement]: any = useState(null);
   const [confirmationAlert, setConfirmationAlert] = useState(false);
   const [gradeField, setGradeField]: any = useState({});
-
-  type FormState = {
-    // projectId: string;
-    sourceApprovalId: string;
-    sourceApprovalDetailId: string;
-    lotNo: string;
-    procurementDateTime: string;
-    vehicleNo: any[];
-    vehicleNoTemp: any;
-    invoiceFile: string;
-  };
   const [vehicleNos, setVehicleNos]: any = useState([]);
   const [vehicleNoTemp, setVehicleNoTemp]: any = useState([]);
-  const [form, setForm]: any = useState<FormState>({
-    // projectId: loggedInUser.projectId,
-    sourceApprovalId: '',
-    sourceApprovalDetailId: '',
-    lotNo: '',
-    [gradeField.name]: 0,
-    procurementDateTime: '',
-    vehicleNo: [],
-    vehicleNoTemp: '',
-    invoiceFile: '',
-  });
 
   // use state form for Bituminous work
   // Details_Bitumen Form
@@ -167,7 +145,7 @@ const ProcurementsBitnumiousWork = ({
   const [detailsEmulsion, setDetailsEmulsion] = useState({
     sourceApprovalId: '',
     sourceApprovalDetailId: '',
-    gradeOfBitumen: '', // Listing as per the source approval sheet
+    //gradeOfBitumen: '', // Listing as per the source approval sheet
     vehicleNo: [],
     qtyInKg: '', // >0, up to 3 decimals, max limit 20
     uploadWeightSlip: '', // Image or PDF
@@ -367,7 +345,7 @@ const ProcurementsBitnumiousWork = ({
           setDetailsEmulsion({
             sourceApprovalId: '',
             sourceApprovalDetailId: '',
-            gradeOfBitumen: '',
+            //gradeOfBitumen: '',
             lotNo: '',
             vehicleNo: [],
             qtyInKg: '',
@@ -379,17 +357,6 @@ const ProcurementsBitnumiousWork = ({
         default:
           console.error('Unknown material type for Bituminous Works');
       }
-    } else {
-      setForm({
-        sourceApprovalId: '',
-        sourceApprovalDetailId: '',
-        lotNo: '',
-        [gradeField.name]: 0,
-        procurementDateTime: '',
-        vehicleNo: [],
-        vehicleNoTemp: '',
-        invoiceFile: '',
-      });
     }
     setOpenProcurementPopup(true);
   };
@@ -423,6 +390,7 @@ const ProcurementsBitnumiousWork = ({
     setVehicleNos(item.vehicleNo || []);
 
     if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BITUMINOUS_WORKS) {
+      console.log('=====MetaData====',item.metaData.qtyInKg)
       switch (materialType) {
         case TEST_MATERIALS_TYPES.FINE_AGGREGATE:
           setDetailsFineAggregate({
@@ -430,7 +398,7 @@ const ProcurementsBitnumiousWork = ({
             sourceApprovalDetailId: item.sourceApprovalDetailId,
             lotNo: item.lotNo,
             vehicleNo: item.vehicleNo,
-            qtyInKg: item.metaData.qtyInKg,
+            qtyInKg:''+ item.metaData.qtyInKg,
             uploadWeightSlip: item.uploadWeightSlip,
             procurementDateTime: getDisplayDate(item.procurementDateTime),
           });
@@ -443,7 +411,7 @@ const ProcurementsBitnumiousWork = ({
             nominalSize: item.metaData.nominalSize,
             lotNo: item.lotNo,
             vehicleNo: item.vehicleNo,
-            qtyInKg: item.metaData.qtyInKg,
+            qtyInKg: ''+ item.metaData.qtyInKg,
             uploadWeightSlip: item.uploadWeightSlip,
             procurementDateTime: getDisplayDate(item.procurementDateTime),
           });
@@ -456,7 +424,7 @@ const ProcurementsBitnumiousWork = ({
             gradeOfBitumen: item.metaData.gradeOfBitumen,
             lotNo: item.lotNo,
             vehicleNo: item.vehicleNo,
-            qtyInKg: item.metaData.qtyInKg,
+            qtyInKg: '' + item.metaData.qtyInKg,
             uploadWeightSlip: item.uploadWeightSlip,
             procurementDateTime: getDisplayDate(item.procurementDateTime),
           });
@@ -469,7 +437,7 @@ const ProcurementsBitnumiousWork = ({
             nominalSize: item.metaData.nominalSize,
             lotNo: item.lotNo,
             vehicleNo: item.vehicleNo,
-            qtyInKg: item.metaData.qtyInKg,
+            qtyInKg: '' + item.metaData.qtyInKg,
             uploadWeightSlip: item.uploadWeightSlip,
             procurementDateTime: getDisplayDate(item.procurementDateTime),
           });
@@ -482,7 +450,7 @@ const ProcurementsBitnumiousWork = ({
             nominalSize: item.metaData.nominalSize,
             vehicleNo: item.vehicleNo,
             lotNo: item.lotNo,
-            qtyInKg: item.metaData.qtyInKg,
+            qtyInKg: '' + item.metaData.qtyInKg,
             uploadWeightSlip: item.uploadWeightSlip,
             procurementDateTime: getDisplayDate(item.procurementDateTime),
           });
@@ -492,9 +460,9 @@ const ProcurementsBitnumiousWork = ({
           setDetailsEmulsion({
             sourceApprovalId: item.sourceApprovalId._id,
             sourceApprovalDetailId: item.sourceApprovalDetailId,
-            gradeOfBitumen: item.metaData.gradeOfBitumen,
+            //gradeOfBitumen: item.metaData.gradeOfBitumen,
             vehicleNo: item.vehicleNo,
-            qtyInKg: item.metaData.qtyInKg,
+            qtyInKg: '' + item.metaData.qtyInKg,
             uploadWeightSlip: item.uploadWeightSlip,
             lotNo: item.lotNo,
             procurementDateTime: getDisplayDate(item.procurementDateTime),
@@ -504,17 +472,6 @@ const ProcurementsBitnumiousWork = ({
         default:
           console.error('Unknown material type for Bituminous Works');
       }
-    } else {
-      setForm({
-        sourceApprovalId: item.sourceApprovalId._id,
-        sourceApprovalDetailId: item.sourceApprovalDetailId,
-        lotNo: item.lotNo,
-        [gradeField.name]: item.metaData[gradeField.name],
-        procurementDateTime: getDisplayDate(item.procurementDateTime),
-        vehicleNo: item.vehicleNo,
-        vehicleNoTemp: '',
-        invoiceFile: item.invoiceFile,
-      });
     }
 
     setOpenProcurementPopup(true);
@@ -630,10 +587,6 @@ const ProcurementsBitnumiousWork = ({
             errorMessage =
               'Lot No/Trip No/Invoice No cannot exceed 100 characters.';
           }
-          if (!detailsEmulsion.gradeOfBitumen) {
-            isValid = false;
-            errorMessage = 'Grade of Bitumen is required for Emulsion.';
-          }
           if (
             isNaN(parseFloat(detailsEmulsion.qtyInKg)) ||
             Number(detailsEmulsion.qtyInKg) <= 0
@@ -646,24 +599,6 @@ const ProcurementsBitnumiousWork = ({
         default:
           console.error('Unknown material type for Bituminous Works');
       }
-    } else {
-      if (form.lotNo.length > 100) {
-        isValid = false;
-        errorMessage =
-          'Lot No/Trip No/Invoice No cannot exceed 100 characters.';
-      }
-
-      const quantityValue = parseFloat(form[gradeField.name]);
-      if (
-        isNaN(quantityValue) ||
-        quantityValue <= 0 ||
-        quantityValue > 20 ||
-        form[gradeField.name].toString().split('.')[1]?.length > 3
-      ) {
-        isValid = false;
-        errorMessage =
-          'Quantity must be between 0 and 20 with up to 3 decimal places.';
-      }
     }
 
     if (!isValid) {
@@ -674,55 +609,6 @@ const ProcurementsBitnumiousWork = ({
   };
 
   // change karna hai
-  const handleInputChange = (
-    name: keyof FormState,
-    value: string | number | [],
-  ) => {
-    let isValid = true;
-    let errorMessage = '';
-
-    if (name === 'vehicleNoTemp') {
-      const vehicleNoRegex = /^\d{4}$/;
-      if (!vehicleNoRegex.test(value as string)) {
-        isValid = false;
-        errorMessage = 'Last 4 digit of Vehicle number only';
-      }
-    }
-
-    if (name === gradeField.name) {
-      const quantityValue = parseFloat(value as string);
-      if (
-        isNaN(quantityValue) ||
-        quantityValue <= 0 ||
-        quantityValue > 20 ||
-        value.toString().split('.')[1]?.length > 3
-      ) {
-        isValid = false;
-        errorMessage =
-          'Quantity must be between 0 and 20 with up to 3 decimal places.';
-      }
-    }
-    if (name === 'lotNo') {
-      if ((value as string).length > 100) {
-        showSnackbar(
-          'Lot No/Trip No/Invoice No cannot exceed 100 characters.',
-          'error',
-        );
-        return;
-      }
-    }
-
-    setForm({...form, [name]: value});
-    if (name === 'sourceApprovalId') {
-      setSourceApprovalDetails(
-        sourceApprovals.find((x: any) => x._id === value)
-          ?.sourceApprovalDetails,
-      );
-    }
-    if (!isValid) {
-      showSnackbar(errorMessage, 'error');
-    }
-  };
   const handleInputChangeBituminousWork = (
     field: any,
     value: any,
@@ -849,8 +735,8 @@ const ProcurementsBitnumiousWork = ({
               lotNo: detailsBitumen.lotNo,
               uploadWeightSlip: detailsBitumen.uploadWeightSlip,
               metaData: {
-                gradeOfBitumen: Number(detailsBitumen.gradeOfBitumen),
-                qtyInKg: detailsBitumen.qtyInKg,
+                gradeOfBitumen: detailsBitumen.gradeOfBitumen,
+                qtyInKg: Number(detailsBitumen.qtyInKg),
               },
             },
           };
@@ -922,8 +808,8 @@ const ProcurementsBitnumiousWork = ({
               lotNo: detailsEmulsion.lotNo,
               uploadWeightSlip: detailsEmulsion.uploadWeightSlip,
               metaData: {
-                gradeOfBitumen: Number(detailsEmulsion.gradeOfBitumen),
-                qtyInKg: detailsEmulsion.qtyInKg,
+                //gradeOfBitumen: detailsEmulsion.gradeOfBitumen,
+                qtyInKg: Number(detailsEmulsion.qtyInKg),
               },
             },
           };
@@ -1491,7 +1377,11 @@ const ProcurementsBitnumiousWork = ({
                     label="Date"
                     value={detailsBitumen.procurementDateTime}
                     onChange={date =>
-                      handleInputChange('procurementDateTime', date)
+                      handleInputChangeBituminousWork(
+                        'procurementDateTime',
+                        date,
+                        'detailsBitumen',
+                      )
                     }
                   />
                 </View>
@@ -1626,7 +1516,11 @@ const ProcurementsBitnumiousWork = ({
                       detailsCoarseAggregateMicroSurfacing.procurementDateTime
                     }
                     onChange={date =>
-                      handleInputChange('procurementDateTime', date)
+                      handleInputChangeBituminousWork(
+                        'procurementDateTime',
+                        date,
+                        'detailsCoarseAggregateMicroSurfacing',
+                      )
                     }
                   />
                 </View>
@@ -1761,7 +1655,11 @@ const ProcurementsBitnumiousWork = ({
                     label="Date"
                     value={detailsCoarseAggregateSMA.procurementDateTime}
                     onChange={date =>
-                      handleInputChange('procurementDateTime', date)
+                      handleInputChangeBituminousWork(
+                        'procurementDateTime',
+                        date,
+                        'detailsCoarseAggregateSMA',
+                      )
                     }
                   />
                 </View>
@@ -1809,7 +1707,7 @@ const ProcurementsBitnumiousWork = ({
                     'detailsEmulsion',
                   )}
                 </View>
-                <View>
+                {/* <View>
                   <Input
                     label="Grade of Bitumen (as per Source Approval Sheet)"
                     value={detailsEmulsion.gradeOfBitumen}
@@ -1822,7 +1720,7 @@ const ProcurementsBitnumiousWork = ({
                     }
                     isRequired={true}
                   />
-                </View>
+                </View> */}
                 <View>
                   <Input
                     label="Lot No/Trip No/Invoice No"
@@ -1889,22 +1787,12 @@ const ProcurementsBitnumiousWork = ({
                     label="Date"
                     value={detailsEmulsion.procurementDateTime}
                     onChange={date =>
-                      handleInputChange('procurementDateTime', date)
-                    }
-                  />
-                </View>
-                <View>
-                  <Input
-                    label="Lot No/Trip No/Invoice No"
-                    value={detailsEmulsion.lotNo}
-                    onChange={(value: string) =>
                       handleInputChangeBituminousWork(
-                        'lotNo',
-                        value,
+                        'procurementDateTime',
+                        date,
                         'detailsEmulsion',
                       )
                     }
-                    isRequired={true}
                   />
                 </View>
                 <View style={{flexDirection: 'column'}}>
@@ -2012,57 +1900,7 @@ const ProcurementsBitnumiousWork = ({
     );
   };
 
-  const renderPicker = (
-    label: string,
-    name: keyof FormState,
-    options = [{name: 'Select', _id: ''}].concat(sourceApprovals),
-  ) => {
-    return (
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>{label}</Text>
-        <View style={styles.pickerContainer}>
-          <Picker
-            selectedValue={form[name]}
-            style={styles.picker}
-            onValueChange={itemValue => handleInputChange(name, itemValue)}>
-            {options.map((option, index) => (
-              <Picker.Item
-                key={index}
-                label={option['name']}
-                value={option['_id']}
-              />
-            ))}
-          </Picker>
-        </View>
-      </View>
-    );
-  };
 
-  const renderSourceDetailsPicker = (
-    label: string,
-    name: keyof FormState,
-    options = [{name: 'Select', _id: ''}].concat(sourceApprovalDetails),
-  ) => {
-    return (
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>{label}</Text>
-        <View style={styles.pickerContainer}>
-          <Picker
-            selectedValue={form[name]}
-            style={styles.picker}
-            onValueChange={itemValue => handleInputChange(name, itemValue)}>
-            {options.map((option, index) => (
-              <Picker.Item
-                key={index}
-                label={option['name']}
-                value={option['_id']}
-              />
-            ))}
-          </Picker>
-        </View>
-      </View>
-    );
-  };
 
   const renderItem = ({item}: {item: any}) => (
     <View style={[styles.itemContainer]}>

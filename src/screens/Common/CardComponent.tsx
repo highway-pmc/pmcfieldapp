@@ -53,8 +53,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignContent: 'center',
     justifyContent: 'space-between',
-    marginLeft: 7,
-    marginRight: 7
+    marginLeft: 12,
+    marginRight: 12
   },
   checkbox: {
     transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }],

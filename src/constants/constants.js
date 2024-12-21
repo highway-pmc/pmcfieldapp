@@ -378,6 +378,12 @@ export const SEGMENT_TYPES_DISPLAY = {
   'head-wall': 'Head Wall',
   'stone-pitching': 'Stone Pitching',
   'longitudinal-drain': 'Longitudinal Drain',
+  'pavement': 'Pavement',
+  'kerb': 'Kerb',
+  'embankment': 'Embankment',
+  'crash-barrier': 'Crash Barrier',
+  'transverse-pipe-drain': 'Transverse Pipe Drain',
+  'median': 'Madian'
 };
 
 export const RFIs_TYPE = {

@@ -300,7 +300,7 @@ const ComponentsList = ({ route, navigation }: { route: any, navigation: any }) 
         <>
           <View style={{ paddingTop: 15 }}>
             <Text style={commonStyles.titleText}>
-              {filteredCategory[0].segmentCategory || ''}
+              {filteredCategory[0]?.segmentCategory || ''}
             </Text>
           </View>
           {repeatedComponentTypes}

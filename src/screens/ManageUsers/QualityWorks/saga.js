@@ -127,6 +127,7 @@ function* getSourceApprovals({ payload }) {
 function* getSourceApprovalsByStatus({ payload }) {
     try {
         const response = yield (getSourceApprovalsByStatusApi(payload.projectId, payload.testMaterialId, payload.status));
+        console.log('===response===',response)
         yield put({ type: SOURCE_APPROVALS.GET_SOURCE_APPROVALS_BY_STATUS_SUCCESS, response });
     } catch (error) {
         yield put({ type: SOURCE_APPROVALS.GET_SOURCE_APPROVALS_BY_STATUS_FAILURE, error: error.message });

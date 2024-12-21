@@ -527,7 +527,7 @@ export const TASK_TYPES = {
     'compacting-ground-support-for-embankment',
   DEWATERING: 'dewatering',
   STRIPPING_AND_STORING_TOP_SOIL: 'stripping-storing-top-soil',
-  SPREADING_AND_COMPACTION: 'spreading-and-compaction',//start here
+  SPREADING_AND_COMPACTION: 'spreading-and-compaction', //start here
   PRIME_COAT: 'applying-prime-coat',
   TACK_COAT: 'applying-tack-coat',
   ROAD_MARKING: 'road-marking',
@@ -640,7 +640,7 @@ export const TASK_TYPES = {
   CONSTRUCTION_OF_CONTROL_ROOM: 'construction-of-control-room',
   CONSTRUCTION_OF_FOUNDATION: 'construction-of-foundation',
   CASTING_OF_BALLAST: 'casting-of-ballast',
-  SAND_LAYER:'sand-layer'
+  SAND_LAYER: 'sand-layer',
 };
 
 export const TEST_CLASSIFICATION_TYPES = {
@@ -701,10 +701,10 @@ export const TEST_TYPES = {
   FINENESS_CONSISTENCY_INITIAL_AND_FINAL_SETTING_TIME:
     'fineness-consistency-initial-and-final-setting-time',
   //Bituminous work
-  AIV:'aiv',
-  BINDER_CONTENT:'binder-content',
-  DENSITY_AFTER_COMPACTION:'density-after-compaction',
-  STABILITY_AND_VOID_ANALYSIS:'stability-and-void-analysis',
+  AIV: 'aiv',
+  BINDER_CONTENT: 'binder-content',
+  DENSITY_AFTER_COMPACTION: 'density-after-compaction',
+  STABILITY_AND_VOID_ANALYSIS: 'stability-and-void-analysis',
   BC_MIX_GRADE_1: 'bc-mix-grade_1',
   BC_MIX_GRADE_2: 'bc-mix-grade_2',
   DBM_MIX_GRADING_1: 'dbm-mix-grading-1',
@@ -784,7 +784,6 @@ export const SOURCE_APPROVAL_STATUS = {
   CANCELLED: 'cancelled',
   APPROVED: 'approved',
 };
-
 export const CONCRETE_GRADE_LIST = [
   {
     label: 'M20',

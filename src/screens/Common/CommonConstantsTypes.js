@@ -1,3 +1,4 @@
+import { PROJECT_TYPE } from "../../constants/constants"
 export const commonComponentTypes = [
     'footing',
     'open',
@@ -233,3 +234,27 @@ export const commonComponentTypes = [
     'electrical-room',
     'pipe',
 ];
+
+export const WORK_MODULE_TYPE = [
+          {
+            title: 'Structure',
+            workType: PROJECT_TYPE.STRUCTURE_WORK,
+            color: '#1C58C0',
+            discription: 'The Backbone of Successful Execution',
+            src: 'structure'
+          },
+          {
+            title: 'Highway',
+            workType: PROJECT_TYPE.HIGHWAY_WORK,
+            color: '#ffa879',
+            discription: 'Keeping Roads Safe, Smooth, and Reliable',
+            src: 'highway'
+          },
+          {
+            title: 'Other',
+            workType: PROJECT_TYPE.OTHER_WORK,
+            color: '#FCB700',
+            discription: 'Bridging Gaps in the Workflow',
+            src: 'other'
+          }
+        ]

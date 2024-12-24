@@ -547,7 +547,10 @@ const styles = StyleSheet.create({
     marginTop: 15,
     flexDirection: 'row',
     alignContent: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    borderWidth: 1,
+    borderColor: '#BECADA',
+    borderStyle: 'solid',
   },
   checkbox: {
     transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }],

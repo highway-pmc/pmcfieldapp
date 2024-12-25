@@ -242,7 +242,7 @@ const ComponentsList = ({ route, navigation }: { route: any, navigation: any }) 
     { componentType: [] }
   );
 
-  const filteredCategory = componentType.filter((item, index) => index === 0).map((item) => ({ segmentCategory: item.segmentCategory || '' }));
+  const filteredCategory = componentType.filter((item, index) => index === 0).map((item) => ({ segmentCategory: item.segmentCategory || '', name: item.type || '' }));
   
   const repeatedComponentTypes = commonComponentTypes.map((type: any, index: any) => {
     const filteredItems = componentType.filter((item) => item.type === type);
@@ -300,7 +300,7 @@ const ComponentsList = ({ route, navigation }: { route: any, navigation: any }) 
         <>
           <View style={{ paddingTop: 15 }}>
             <Text style={commonStyles.titleText}>
-              {filteredCategory[0]?.segmentCategory || ''}
+              {filteredCategory[0]?.segmentCategory !== 'NA' ? filteredCategory[0]?.segmentCategory : filteredCategory[0]?.name || ''}
             </Text>
           </View>
           {repeatedComponentTypes}

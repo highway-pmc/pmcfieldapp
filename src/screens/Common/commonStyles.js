@@ -5,12 +5,13 @@ const commonStyles = StyleSheet.create({
     separatTaskType: {
         borderWidth: 1,
         borderRadius: 4,
-        borderColor: '#E3E3E3',
+        borderColor: '#1c58c0',
         marginTop: 10,
-        paddingBottom: 10
+        paddingBottom: 10,
+        backgroundColor: '#eaf0fa',
     },
     titleTextForGrouping: {
-        backgroundColor: '#E3E3E3',
+        backgroundColor: '#acc2e9',
         paddingBottom: 7, 
         paddingTop: 7,
         paddingLeft: 10,

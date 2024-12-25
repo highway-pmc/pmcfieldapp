@@ -3,6 +3,8 @@ import React, {useEffect, useState} from 'react'
 import { useIsFocused } from '@react-navigation/native';
 import { HeaderItems, PROJECT_TYPE, ROLES } from "../../constants/constants"
 import { useSelector } from 'react-redux';
+import TileCardComponent from '../Common/TileCardComponent';
+import { WORK_MODULE_TYPE } from '../Common/CommonConstantsTypes';
 
 const MyWorkType = ({navigation}: {navigation: any}) => {
   const [projectHead, setProjectHead] = useState(false);
@@ -24,23 +26,7 @@ const MyWorkType = ({navigation}: {navigation: any}) => {
     let rolesArr: any = [];
     if(loggedInUser.roles) {
       if (loggedInUser.roles.split(',').find((role: any) => role === ROLES.PROJECT_HEAD)) {
-        rolesArr = [
-          {
-            title: 'Structure',
-            workType: PROJECT_TYPE.STRUCTURE_WORK,
-            color: '#1C58C0'
-          },
-          {
-            title: 'Highway',
-            workType: PROJECT_TYPE.HIGHWAY_WORK,
-            color: '#ffa879'
-          },
-          {
-            title: 'Other',
-            workType: PROJECT_TYPE.OTHER_WORK,
-            color: '#FCB700'
-          }
-        ];
+        rolesArr = WORK_MODULE_TYPE;
         setProjectHead(true);
       } else {
         loggedInUser.roles.split(',').forEach((role: any) => {
@@ -93,9 +79,18 @@ const MyWorkType = ({navigation}: {navigation: any}) => {
       <View style={styles.rfiTabBar}>
           {
             roles.map((role: any) => (
-            <TouchableOpacity style={[styles.rfiTab, {backgroundColor: role.color}]} onPress={() => onPressWorkType(role.workType)}>
-              <Text style={styles.tabText}>{role.title}</Text>
-            </TouchableOpacity>
+              <>
+              <TileCardComponent
+                title={role.title}
+                content={role.discription}
+                bgColor={role.color}
+                image={role.src}
+                onPress={() => onPressWorkType(role.workType)}
+              />
+              </>
+            // <TouchableOpacity style={[styles.rfiTab, {backgroundColor: role.color}]} onPress={() => onPressWorkType(role.workType)}>
+            //   <Text style={styles.tabText}>{role.title}</Text>
+            // </TouchableOpacity>
             ))
           }
       </View>

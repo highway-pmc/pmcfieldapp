@@ -4,6 +4,8 @@ import { useIsFocused } from '@react-navigation/native';
 import { HeaderItems, PROJECT_TYPE, ROLES, WORK_TYPE } from "../../constants/constants"
 import { useSelector } from 'react-redux';
 import AssignTestClassification from './QualityWorks/AssignTestClassification';
+import TileCardComponent from '../Common/TileCardComponent';
+import { WORK_MODULE_TYPE } from '../Common/CommonConstantsTypes';
 
 const WorkType = ({ navigation }: { navigation: any }) => {
   const [projectHead, setProjectHead] = useState(false);
@@ -24,23 +26,7 @@ const WorkType = ({ navigation }: { navigation: any }) => {
     if (loggedInUser.roles) {
       //loggedInUser.roles = 'structure-head,highway-head';
       if (loggedInUser.roles.split(',').find((role: any) => role === ROLES.PROJECT_HEAD)) {
-        rolesArr = [
-          {
-            title: 'Structure',
-            workType: PROJECT_TYPE.STRUCTURE_WORK,
-            color: '#1C58C0'
-          },
-          {
-            title: 'Highway',
-            workType: PROJECT_TYPE.HIGHWAY_WORK,
-            color: '#ffa879'
-          },
-          {
-            title: 'Other',
-            workType: PROJECT_TYPE.OTHER_WORK,
-            color: '#FCB700'
-          }
-        ];
+        rolesArr = WORK_MODULE_TYPE;
         setProjectHead(true);
       } else {
         loggedInUser.roles.split(',').forEach((role: any) => {
@@ -115,9 +101,13 @@ const WorkType = ({ navigation }: { navigation: any }) => {
             <View style={styles.rfiTabBar}>
               {
                 roles.map((role: any) => (
-                  <TouchableOpacity style={[styles.rfiTab, { backgroundColor: role.color }]} onPress={() => onPressWorkType(role.workType)}>
-                    <Text style={styles.tabText}>{role.title}</Text>
-                  </TouchableOpacity>
+                  <TileCardComponent
+                    title={role.title}
+                    content={role.discription}
+                    bgColor={role.color}
+                    image={role.src}
+                    onPress={() => onPressWorkType(role.workType)}
+                  />
                 ))
               }
             </View>

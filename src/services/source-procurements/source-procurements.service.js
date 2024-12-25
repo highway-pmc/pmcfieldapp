@@ -88,8 +88,8 @@ export const deleteSourceDetailApi = async (projectId, sourceApprovalId, id) => 
 
 /* Procurements APIs */
 
-export const getProcurementsApi = async (projectId, testMaterialId) => {
-    return apiService.getRequest(`v1/auth/projects/${projectId}/test-material/${testMaterialId}/procurements`).then((response) => {
+export const getProcurementsApi = async (projectId, testWorkCategoryType, testMaterialId) => {
+    return apiService.getRequest(`v1/auth/projects/${projectId}/test-work-category/${testWorkCategoryType}/test-material/${testMaterialId}/procurements`).then((response) => {
         return response;
     }).catch((err) => {
         const errorMessge = err.message || 'Unable to get list of procurements.';
@@ -97,8 +97,8 @@ export const getProcurementsApi = async (projectId, testMaterialId) => {
     });
 }
 
-export const addProcurementApi = async (projectId, testMaterialId, body) => {
-    return apiService.postRequest(`v1/auth/projects/${projectId}/test-material/${testMaterialId}/procurements`, body).then((response) => {
+export const addProcurementApi = async (projectId, testWorkCategoryType, testMaterialId, body) => {
+    return apiService.postRequest(`v1/auth/projects/${projectId}/test-work-category/${testWorkCategoryType}/test-material/${testMaterialId}/procurements`, body).then((response) => {
         return response;
     }).catch((err) => {
         const errorMessge = err.message || 'Unable to add procurements.';
@@ -106,8 +106,8 @@ export const addProcurementApi = async (projectId, testMaterialId, body) => {
     });
 }
 
-export const updateProcurementApi = async (projectId, testMaterialId, id, body) => {
-    return apiService.putRequest(`v1/auth/projects/${projectId}/test-material/${testMaterialId}/procurements/${id}`, body).then((response) => {
+export const updateProcurementApi = async (projectId, testWorkCategoryType, testMaterialId, id, body) => {
+    return apiService.putRequest(`v1/auth/projects/${projectId}/test-work-category/${testWorkCategoryType}/test-material/${testMaterialId}/procurements/${id}`, body).then((response) => {
         return response;
     }).catch((err) => {
         const errorMessge = err.message || 'Unable to update procurements.';

@@ -203,7 +203,7 @@ function* deleteSourceDetail({ payload }) {
 
 function* getProcurements({ payload }) {
     try {
-        const response = yield (getProcurementsApi(payload.projectId, payload.testMaterialId));
+        const response = yield (getProcurementsApi(payload.projectId, payload.testWorkCategoryType, payload.testMaterialId));
         yield put({ type: PROCUREMENTS.GET_PROCUREMENTS_SUCCESS, response });
     } catch (error) {
         yield put({ type: PROCUREMENTS.GET_PROCUREMENTS_FAILURE, error: error.message });
@@ -212,7 +212,7 @@ function* getProcurements({ payload }) {
 
 function* addProcurement({ payload }) {
     try {
-        const response = yield (addProcurementApi(payload.projectId, payload.testMaterialId, payload.body));
+        const response = yield (addProcurementApi(payload.projectId, payload.testWorkCategoryType, payload.testMaterialId, payload.body));
         yield put({ type: PROCUREMENTS.ADD_PROCUREMENT_SUCCESS, response });
     } catch (error) {
         yield put({ type: PROCUREMENTS.ADD_PROCUREMENT_FAILURE, error: error.message });
@@ -221,7 +221,7 @@ function* addProcurement({ payload }) {
 
 function* updateProcurement({ payload }) {
     try {
-        const response = yield (updateProcurementApi(payload.projectId, payload.testMaterialId, payload.id, payload.body));
+        const response = yield (updateProcurementApi(payload.projectId, payload.testWorkCategoryType, payload.testMaterialId, payload.id, payload.body));
         yield put({ type: PROCUREMENTS.UPDATE_PROCUREMENT_SUCCESS, response });
     } catch (error) {
         yield put({ type: PROCUREMENTS.UPDATE_PROCUREMENT_FAILURE, error: error.message });

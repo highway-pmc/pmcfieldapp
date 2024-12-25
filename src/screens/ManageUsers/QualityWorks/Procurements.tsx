@@ -43,7 +43,7 @@ import DocumentPicker from 'react-native-document-picker';
 import appConfig from '../../../common/app.config';
 
 const Procurements = ({route, navigation}: {route: any; navigation: any}) => {
-  const {testWorkCategoryName, testMaterialName, materialType, testMaterialId} =
+  const {testWorkCategoryName, testWorkCategoryType, testMaterialName, materialType, testMaterialId} =
     route.params;
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
   const {
@@ -132,6 +132,7 @@ const Procurements = ({route, navigation}: {route: any; navigation: any}) => {
       getProcurements({
         projectId: loggedInUser.projectId,
         testMaterialId: testMaterialId,
+        testWorkCategoryType: testWorkCategoryType,
       }),
     );
 
@@ -308,6 +309,7 @@ const Procurements = ({route, navigation}: {route: any; navigation: any}) => {
         addProcurement({
           projectId: loggedInUser.projectId,
           testMaterialId: testMaterialId,
+          testWorkCategoryType: testWorkCategoryType,
           body: {
             sourceApprovalId: form.sourceApprovalId,
             sourceApprovalDetailId: form.sourceApprovalDetailId,
@@ -328,6 +330,7 @@ const Procurements = ({route, navigation}: {route: any; navigation: any}) => {
         updateProcurement({
           projectId: loggedInUser.projectId,
           testMaterialId: testMaterialId,
+          testWorkCategoryType: testWorkCategoryType,
           id: selectedProcurement._id,
           body: {
             sourceApprovalId: form.sourceApprovalId,
@@ -355,6 +358,7 @@ const Procurements = ({route, navigation}: {route: any; navigation: any}) => {
         getProcurements({
           projectId: loggedInUser.projectId,
           testMaterialId: testMaterialId,
+          testWorkCategoryType: testWorkCategoryType,
         }),
       );
       uploadInvoice();
@@ -371,6 +375,7 @@ const Procurements = ({route, navigation}: {route: any; navigation: any}) => {
         getProcurements({
           projectId: loggedInUser.projectId,
           testMaterialId: testMaterialId,
+          testWorkCategoryType: testWorkCategoryType,
         }),
       );
       uploadInvoice();
@@ -386,6 +391,7 @@ const Procurements = ({route, navigation}: {route: any; navigation: any}) => {
         getProcurements({
           projectId: loggedInUser.projectId,
           testMaterialId: testMaterialId,
+          testWorkCategoryType: testWorkCategoryType,
         }),
       );
       onPressAlertCancelButton();

@@ -201,6 +201,7 @@ const ProcurementsBitnumiousWork = ({
       getProcurements({
         projectId: loggedInUser.projectId,
         testMaterialId: testMaterialId,
+        testWorkCategoryType: testWorkCategoryType
       }),
     );
 
@@ -660,7 +661,7 @@ const ProcurementsBitnumiousWork = ({
       return;
     }
     console.log('===submit======');
-    let materialSpecificFields = {};
+    let materialSpecificFields: any = {};
 
     if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BITUMINOUS_WORKS) {
       switch (materialType) {
@@ -821,6 +822,7 @@ const ProcurementsBitnumiousWork = ({
       }
     }
 
+    materialSpecificFields.testWorkCategoryType = testWorkCategoryType;
     const requestBody = {
       ...materialSpecificFields,
     };
@@ -849,6 +851,7 @@ const ProcurementsBitnumiousWork = ({
         getProcurements({
           projectId: loggedInUser.projectId,
           testMaterialId: testMaterialId,
+          testWorkCategoryType: testWorkCategoryType
         }),
       );
       uploadInvoice();
@@ -865,6 +868,7 @@ const ProcurementsBitnumiousWork = ({
         getProcurements({
           projectId: loggedInUser.projectId,
           testMaterialId: testMaterialId,
+          testWorkCategoryType: testWorkCategoryType,
         }),
       );
       uploadInvoice();
@@ -880,6 +884,7 @@ const ProcurementsBitnumiousWork = ({
         getProcurements({
           projectId: loggedInUser.projectId,
           testMaterialId: testMaterialId,
+          testWorkCategoryType: testWorkCategoryType,
         }),
       );
       onPressAlertCancelButton();

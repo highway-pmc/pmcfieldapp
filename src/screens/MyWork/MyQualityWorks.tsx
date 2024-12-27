@@ -47,6 +47,7 @@ import DropdownPicker from '../../components/UI/DropdownPicker';
 import TimePicker from '../../components/UI/TimePicker';
 import {useSnackbar} from '../../context/SnackbarContext';
 import commonStyles from '../Common/commonStyles';
+import { CARD_COLORS_ARRAY, CARD_ICONS } from '../Common/CommonConstantsTypes';
 const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
   const workType = PROJECT_TYPE.QUALITY_WORK;
@@ -5286,16 +5287,8 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
       );
     }
   };
-  const colors = ['#FF6968', '#7A54FF', '#FF8F61', '#2AC3FF', '#5A65FF', '#96DA45', '#B72CB2'];
-  const imageMap: any = [
-    require('./../../images/source-approval.png'),
-    require('./../../images/procurement-detail.png'),
-    require('./../../images/lab-test.png'),
-    require('./../../images/lab-test.png'),
-    require('./../../images/upload-mtcs.png'),
-    require('./../../images/mix-design.png'),
-    require('./../../images/equipment-calibration.png'),
-  ]
+  const colors = CARD_COLORS_ARRAY;
+  const imageMap: any = CARD_ICONS;
   return (
     <View style={styles.Container}>
       {breadcrumbData.length ? (

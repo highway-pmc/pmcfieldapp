@@ -25,7 +25,36 @@ const commonStyles = StyleSheet.create({
     },
     paddingBottom20: {
         paddingBottom: 20
-    }
+    },
+    iconsStyle: {
+        backgroundColor: '#fff',
+        borderTopRightRadius: 50,
+        borderBottomRightRadius: 50,
+        opacity: .7,
+        height: 105,
+        position: 'absolute',
+        left: 0,
+        top: 0,
+        width: 70,
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 10,
+    },
+    rightStyle: {
+        width: 50,
+    },
+    CloseIcon: {
+        width: 45,
+        height: 45,
+        tintColor: '#fff'
+    },
+    image: {
+        width: 40,
+        height: 40,
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+    },
 });
 
 export default commonStyles;

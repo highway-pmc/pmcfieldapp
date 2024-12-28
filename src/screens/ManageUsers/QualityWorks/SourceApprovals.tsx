@@ -729,10 +729,10 @@ const SourceApprovals = ({
 
         case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA:
           body = {
-            name: coarseAggregateMicro.nominalSize,
+            name: coarseAggregateSMA.nominalSize,
             metaData: {
-              nominalSize: coarseAggregateMicro.nominalSize,
-              ratePerKG: Number(coarseAggregateMicro.ratePerKG),
+              nominalSize: coarseAggregateSMA.nominalSize,
+              ratePerKG: Number(coarseAggregateSMA.ratePerKG),
             },
           };
           break;
@@ -826,7 +826,7 @@ const SourceApprovals = ({
           case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA:
             setCoarseAggregateSMA({
               sourceApprovalId: selectedSource._id,
-              nominalSize: '37.5',
+              nominalSize: '37.5mm',
               ratePerKG: 0.0,
             });
             break;
@@ -867,54 +867,57 @@ const SourceApprovals = ({
 
       if (editedObj) {
         // Update object based on material type
-        switch (materialType) {
-          case TEST_MATERIALS_TYPES.FINE_AGGREGATE:
-            editedObj.metaData[gradeField.name] =
-              sourceDetailForm[gradeField.name];
-            editedObj.metaData.ratePerKG = sourceDetailForm.ratePerKG;
-            break;
+        if (
+          testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BITUMINOUS_WORKS
+        ) {
+          switch (materialType) {
+            case TEST_MATERIALS_TYPES.FINE_AGGREGATE:
+              editedObj.name = fineAggregate.ratePerKG;
+              editedObj.metaData.ratePerKG = fineAggregate.ratePerKG;
+              break;
 
-          case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_DBM_BC:
-            editedObj.metaData[gradeField.name] =
-              sourceDetailForm[gradeField.name];
-            editedObj.metaData.nominalSize = sourceDetailForm.nominalSize;
-            editedObj.metaData.ratePerKG = sourceDetailForm.ratePerKG;
-            break;
+            case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_DBM_BC:
+              editedObj.name = coarseAggregateDBMBC.nominalSize;
+              editedObj.metaData.nominalSize = coarseAggregateDBMBC.nominalSize;
+              editedObj.metaData.ratePerKG = coarseAggregateDBMBC.ratePerKG;
+              break;
 
-          case TEST_MATERIALS_TYPES.BITUMEN:
-            editedObj.metaData[gradeField.name] =
-              sourceDetailForm[gradeField.name];
-            editedObj.metaData.gradeOfBitumen = sourceDetailForm.gradeOfBitumen;
-            editedObj.metaData.ratePerMT = sourceDetailForm.ratePerMT;
-            editedObj.metaData.bitumenBrand = sourceDetailForm.bitumenBrand;
-            break;
+            case TEST_MATERIALS_TYPES.BITUMEN:
+              editedObj.name = bitumen.gradeOfBitumen;
+              editedObj.metaData.gradeOfBitumen = bitumen.gradeOfBitumen;
+              editedObj.metaData.ratePerMT = bitumen.ratePerMT;
+              editedObj.metaData.bitumenBrand = bitumen.bitumenBrand;
+              break;
 
-          case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING:
-            editedObj.metaData[gradeField.name] =
-              sourceDetailForm[gradeField.name];
-            editedObj.metaData.nominalSize = sourceDetailForm.nominalSize;
-            editedObj.metaData.ratePerKG = sourceDetailForm.ratePerKG;
-            break;
+            case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING:
+              editedObj.name = coarseAggregateMicro.nominalSize;
+              editedObj.metaData.nominalSize = coarseAggregateMicro.nominalSize;
+              editedObj.metaData.ratePerKG = coarseAggregateMicro.ratePerKG;
+              break;
 
-          case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA:
-            editedObj.metaData[gradeField.name] =
-              sourceDetailForm[gradeField.name];
-            editedObj.metaData.nominalSize = sourceDetailForm.nominalSize;
-            editedObj.metaData.ratePerKG = sourceDetailForm.ratePerKG;
-            break;
+            case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA:
+              editedObj.name = coarseAggregateSMA.nominalSize;
+              editedObj.metaData.nominalSize = coarseAggregateSMA.nominalSize;
+              editedObj.metaData.ratePerKG = coarseAggregateSMA.ratePerKG;
+              break;
 
-          case TEST_MATERIALS_TYPES.EMULSION:
-            editedObj.metaData.gradeOfEmulsion =
-              sourceDetailForm.gradeOfEmulsion;
-            editedObj.metaData.ratePerMT = sourceDetailForm.ratePerMT;
-            editedObj.metaData.emulsionBrand = sourceDetailForm.emulsionBrand;
-            break;
+            case TEST_MATERIALS_TYPES.EMULSION:
+              editedObj.name = sourceDetailForm.nominalSize;
+              editedObj.metaData.gradeOfEmulsion = emulsion.gradeOfEmulsion;
+              editedObj.metaData.ratePerMT = emulsion.ratePerMT;
+              editedObj.metaData.emulsionBrand = emulsion.emulsionBrand;
+              break;
 
-          default:
-            // Default logic for non-bituminous works
-            editedObj.metaData[gradeField.name] =
-              sourceDetailForm[gradeField.name];
-            editedObj.metaData.ratePerCum = sourceDetailForm.ratePerCum;
+            default:
+              // Default logic for non-bituminous works
+              console.error('Material type Not Found');
+          }
+        } else {
+          editedObj.name = sourceDetailForm[gradeField.name];
+          editedObj.metaData[gradeField.name] =
+            sourceDetailForm[gradeField.name];
+          editedObj.metaData.ratePerCum = sourceDetailForm.ratePerCum;
+          setSourceApprovalDetails(list);
         }
 
         setSourceApprovalDetails(list);
@@ -934,7 +937,7 @@ const SourceApprovals = ({
           case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_DBM_BC:
             setCoarseAggregateDBMBC({
               sourceApprovalId: selectedSource._id,
-              nominalSize: '',
+              nominalSize: '37.5mm',
               ratePerKG: 0.0,
             });
             break;
@@ -951,7 +954,7 @@ const SourceApprovals = ({
           case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING:
             setCoarseAggregateMicro({
               sourceApprovalId: selectedSource._id,
-              nominalSize: '',
+              nominalSize: '37.5mm',
               ratePerKG: 0.0,
             });
             break;
@@ -959,7 +962,7 @@ const SourceApprovals = ({
           case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA:
             setCoarseAggregateSMA({
               sourceApprovalId: selectedSource._id,
-              nominalSize: '',
+              nominalSize: '37.5mm',
               ratePerKG: 0.0,
             });
             break;
@@ -967,7 +970,7 @@ const SourceApprovals = ({
           case TEST_MATERIALS_TYPES.EMULSION:
             setEmulsion({
               sourceApprovalId: selectedSource._id,
-              gradeOfEmulsion: '',
+              gradeOfEmulsion: 'VG 30',
               ratePerMT: 0.0,
               emulsionBrand: '',
             });
@@ -1065,7 +1068,7 @@ const SourceApprovals = ({
         case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_DBM_BC:
           setCoarseAggregateDBMBC({
             sourceApprovalId: item.sourceApprovalId,
-            nominalSize: item.metaData?.nominalSize || '',
+            nominalSize: item.metaData?.nominalSize,
             ratePerKG: item.metaData?.ratePerKG,
           });
           break;

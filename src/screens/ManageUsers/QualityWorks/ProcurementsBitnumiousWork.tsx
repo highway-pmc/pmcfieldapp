@@ -149,7 +149,7 @@ const ProcurementsBitnumiousWork = ({
   const [detailsEmulsion, setDetailsEmulsion]: any = useState({
     sourceApprovalId: '',
     sourceApprovalDetailId: '',
-    //gradeOfBitumen: '', // Listing as per the source approval sheet
+    gradeOfBitumen: '', // Listing as per the source approval sheet
     vehicleNo: [],
     qtyInKg: '', // >0, up to 3 decimals, max limit 20
     uploadWeightSlip: '', // Image or PDF
@@ -354,7 +354,7 @@ const ProcurementsBitnumiousWork = ({
           setDetailsEmulsion({
             sourceApprovalId: '',
             sourceApprovalDetailId: '',
-            //gradeOfBitumen: '',
+            gradeOfBitumen: '',
             lotNo: '',
             vehicleNo: [],
             qtyInKg: '',
@@ -473,7 +473,7 @@ const ProcurementsBitnumiousWork = ({
           setDetailsEmulsion({
             sourceApprovalId: item.sourceApprovalId._id,
             sourceApprovalDetailId: item.sourceApprovalDetailId,
-            //gradeOfBitumen: item.metaData.gradeOfBitumen,
+            gradeOfBitumen: item.metaData.gradeOfBitumen,
             vehicleNo: item.vehicleNo,
             qtyInKg: '' + item.metaData.qtyInKg,
             uploadWeightSlip: item.uploadWeightSlip,
@@ -795,7 +795,7 @@ const ProcurementsBitnumiousWork = ({
             body: {
               sourceApprovalId: detailsCoarseAggregateSMA.sourceApprovalId,
               //sourceApprovalDetailId:
-              //  detailsCoarseAggregateSMA.sourceApprovalDetailId,
+              //detailsCoarseAggregateSMA.sourceApprovalDetailId,
               vehicleNo: vehicleNos.length
                 ? vehicleNos
                 : [detailsCoarseAggregateSMA.vehicleNo || ''],
@@ -829,7 +829,7 @@ const ProcurementsBitnumiousWork = ({
               lotNo: detailsEmulsion.lotNo,
               uploadWeightSlip: detailsEmulsion.uploadWeightSlip,
               metaData: {
-                //gradeOfBitumen: detailsEmulsion.gradeOfBitumen,
+                gradeOfBitumen: detailsEmulsion.gradeOfBitumen,
                 qtyInKg: Number(detailsEmulsion.qtyInKg),
               },
             },
@@ -1186,6 +1186,14 @@ const ProcurementsBitnumiousWork = ({
                   />
                 </View>
                 <View>
+                  {renderSourceDetailsPickerBituminousWork(
+                    'Source Detail',
+                    'sourceApprovalDetailId',
+                    'detailsCoarseAggregateDBMBC',
+                    sourceApprovalsFiltered,
+                  )}
+                </View>
+                <View>
                   <Input
                     label="Lot No/Trip No/Invoice No"
                     value={detailsCoarseAggregateDBMBC.lotNo}
@@ -1306,20 +1314,6 @@ const ProcurementsBitnumiousWork = ({
             <View style={styles.reportFields}>
               <View>
                 <View>
-                  {renderPickerBituminousWork(
-                    'Source',
-                    'sourceApprovalId',
-                    'detailsBitumen',
-                  )}
-                </View>
-                <View>
-                  {renderSourceDetailsPickerBituminousWork(
-                    'Source Detail',
-                    'sourceApprovalDetailId',
-                    'detailsBitumen',
-                  )}
-                </View>
-                <View>
                   <DropdownPicker
                     label="Grade of Bitumen"
                     items={[
@@ -1337,6 +1331,14 @@ const ProcurementsBitnumiousWork = ({
                       )
                     }
                   />
+                </View>
+                <View>
+                  {renderSourceDetailsPickerBituminousWork(
+                    'Source Detail',
+                    'sourceApprovalDetailId',
+                    'detailsBitumen',
+                    sourceApprovalsFiltered,
+                  )}
                 </View>
                 <View>
                   <Input
@@ -1461,6 +1463,14 @@ const ProcurementsBitnumiousWork = ({
                       )
                     }
                   />
+                </View>
+                <View>
+                  {renderSourceDetailsPickerBituminousWork(
+                    'Source Detail',
+                    'sourceApprovalDetailId',
+                    'detailsCoarseAggregateMicroSurfacing',
+                    sourceApprovalsFiltered,
+                  )}
                 </View>
                 <View>
                   <Input
@@ -1605,6 +1615,14 @@ const ProcurementsBitnumiousWork = ({
                   />
                 </View>
                 <View>
+                  {renderSourceDetailsPickerBituminousWork(
+                    'Source Detail',
+                    'sourceApprovalDetailId',
+                    'detailsCoarseAggregateSMA',
+                    sourceApprovalsFiltered,
+                  )}
+                </View>
+                <View>
                   <Input
                     label="Lot No/Trip No/Invoice No"
                     value={detailsCoarseAggregateSMA.lotNo}
@@ -1723,23 +1741,15 @@ const ProcurementsBitnumiousWork = ({
             <View style={styles.reportFields}>
               <View>
                 <View>
-                  {renderPickerBituminousWork(
-                    'Source',
-                    'sourceApprovalId',
-                    'detailsEmulsion',
-                  )}
-                </View>
-                <View>
-                  {renderSourceDetailsPickerBituminousWork(
-                    'Source Detail',
-                    'sourceApprovalDetailId',
-                    'detailsEmulsion',
-                    sourceApprovalsFiltered
-                  )}
-                </View>
-                {/* <View>
-                  <Input
-                    label="Grade of Bitumen (as per Source Approval Sheet)"
+                  {/*Wrong dropdown it must fetch by backend*/}
+                  <DropdownPicker
+                    label="Grade of Bitumen"
+                    items={[
+                      {label: 'Select', value: ''},
+                      {label: 'VG 30', value: 'VG 30'},
+                      {label: 'VG 40', value: 'VG 40'},
+                      {label: 'PMB', value: 'PMB'},
+                    ]}
                     value={detailsEmulsion.gradeOfBitumen}
                     onChange={(value: string) =>
                       handleInputChangeBituminousWork(
@@ -1748,9 +1758,16 @@ const ProcurementsBitnumiousWork = ({
                         'detailsEmulsion',
                       )
                     }
-                    isRequired={true}
                   />
-                </View> */}
+                </View>
+                <View>
+                  {renderSourceDetailsPickerBituminousWork(
+                    'Source Detail',
+                    'sourceApprovalDetailId',
+                    'detailsEmulsion',
+                    sourceApprovalsFiltered,
+                  )}
+                </View>
                 <View>
                   <Input
                     label="Lot No/Trip No/Invoice No"

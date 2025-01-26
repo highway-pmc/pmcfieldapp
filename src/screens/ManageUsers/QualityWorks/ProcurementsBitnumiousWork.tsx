@@ -79,10 +79,10 @@ const ProcurementsBitnumiousWork = ({
 
   // use state form for Bituminous work
   // Details_Bitumen Form
-  const [detailsBitumen, setDetailsBitumen] = useState({
+  const [detailsBitumen, setDetailsBitumen]: any = useState({
     sourceApprovalId: '',
     sourceApprovalDetailId: '',
-    gradeOfBitumen: 'VG 30', // VG 30 / VG 40 / PMB
+    gradeOfBitumen: '', // VG 30 / VG 40 / PMB
     vehicleNo: [],
     qtyInKg: '', // >0, up to 3 decimals, max limit 20
     uploadWeightSlip: '', // Image or PDF
@@ -91,23 +91,25 @@ const ProcurementsBitnumiousWork = ({
   });
 
   // Details_FineAggregate Form
-  const [detailsFineAggregate, setDetailsFineAggregate] = useState({
+  const [detailsFineAggregate, setDetailsFineAggregate]: any = useState({
     sourceApprovalId: '',
     sourceApprovalDetailId: '',
     vehicleNo: [],
     qtyInKg: '', // >0, up to 3 decimals, max limit 20
+    qtyInCum: '',
     uploadWeightSlip: '', // Image or PDF
     procurementDateTime: '',
     lotNo: '',
   });
 
   // Details_CoarseAggregate_SMA Form
-  const [detailsCoarseAggregateSMA, setDetailsCoarseAggregateSMA] = useState({
+  const [detailsCoarseAggregateSMA, setDetailsCoarseAggregateSMA]: any = useState({
     sourceApprovalId: '',
     sourceApprovalDetailId: '',
-    nominalSize: '37.5mm', // 37.5mm / 26.5mm / 19mm / 13.2mm
+    nominalSize: '', // 37.5mm / 26.5mm / 19mm / 13.2mm
     vehicleNo: [],
     qtyInKg: '', // >0, up to 3 decimals, max limit 20
+    qtyInCum: '',
     uploadWeightSlip: '', // Image or PDF
     procurementDateTime: '',
     lotNo: '',
@@ -117,35 +119,37 @@ const ProcurementsBitnumiousWork = ({
   const [
     detailsCoarseAggregateMicroSurfacing,
     setDetailsCoarseAggregateMicroSurfacing,
-  ] = useState({
+  ]: any = useState({
     sourceApprovalId: '',
     sourceApprovalDetailId: '',
-    nominalSize: '37.5mm', // 37.5mm / 26.5mm / 19mm / 13.2mm
+    nominalSize: '', // 37.5mm / 26.5mm / 19mm / 13.2mm
     vehicleNo: [], // Last 4 digits, numeric only
     qtyInKg: '', // >0, up to 3 decimals, max limit 20
+    qtyInCum: '',
     uploadWeightSlip: '', // Image or PDF
     procurementDateTime: '',
     lotNo: '',
   });
 
   // Details_CoarseAggregate_DBMBC Form
-  const [detailsCoarseAggregateDBMBC, setDetailsCoarseAggregateDBMBC] =
+  const [detailsCoarseAggregateDBMBC, setDetailsCoarseAggregateDBMBC]: any =
     useState({
       sourceApprovalId: '',
       sourceApprovalDetailId: '',
-      nominalSize: '37.5mm', // 37.5mm / 26.5mm / 19mm / 13.2mm
+      nominalSize: '', // 37.5mm / 26.5mm / 19mm / 13.2mm
       vehicleNo: [],
       qtyInKg: '', // >0, up to 3 decimals, max limit 20
+      qtyInCum: '',
       uploadWeightSlip: '', // Image or PDF
       procurementDateTime: '',
       lotNo: '',
     });
 
   // Details_Emulsion Form
-  const [detailsEmulsion, setDetailsEmulsion] = useState({
+  const [detailsEmulsion, setDetailsEmulsion]: any = useState({
     sourceApprovalId: '',
     sourceApprovalDetailId: '',
-    //gradeOfBitumen: '', // Listing as per the source approval sheet
+    gradeOfBitumen: '', // Listing as per the source approval sheet
     vehicleNo: [],
     qtyInKg: '', // >0, up to 3 decimals, max limit 20
     uploadWeightSlip: '', // Image or PDF
@@ -155,7 +159,8 @@ const ProcurementsBitnumiousWork = ({
 
   const [data, setData]: any = useState([]);
 
-  const [sourceApprovals, setSourceApprovals]: any = useState([]);
+  const [sourceApprovals, setSourceApprovals]: any[] = useState([]);
+  const [sourceApprovalsFiltered, setSourceApprovalsFiltered]: any = useState([]);
   const [sourceApprovalDetails, setSourceApprovalDetails] = useState([]);
 
   if (useIsFocused()) {
@@ -176,7 +181,6 @@ const ProcurementsBitnumiousWork = ({
   }, [procurements, error]);
 
   useEffect(() => {
-    console.log('======', sourceApprovalsByStatus);
     if (sourceApprovalsByStatus) {
       setSourceApprovals(sourceApprovalsByStatus);
     } else if (error) {
@@ -285,6 +289,7 @@ const ProcurementsBitnumiousWork = ({
             vehicleNo: [],
             lotNo: '',
             qtyInKg: '',
+            qtyInCum: '',
             uploadWeightSlip: '',
             procurementDateTime: '',
           });
@@ -294,9 +299,10 @@ const ProcurementsBitnumiousWork = ({
           setDetailsCoarseAggregateDBMBC({
             sourceApprovalId: '',
             sourceApprovalDetailId: '',
-            nominalSize: '37.5mm',
+            nominalSize: '',
             vehicleNo: [],
             qtyInKg: '',
+            qtyInCum: '',
             uploadWeightSlip: '',
             procurementDateTime: '',
             lotNo: '',
@@ -307,7 +313,7 @@ const ProcurementsBitnumiousWork = ({
           setDetailsBitumen({
             sourceApprovalId: '',
             sourceApprovalDetailId: '',
-            gradeOfBitumen: 'VG 30',
+            gradeOfBitumen: '',
             vehicleNo: [],
             qtyInKg: '',
             uploadWeightSlip: '',
@@ -320,9 +326,10 @@ const ProcurementsBitnumiousWork = ({
           setDetailsCoarseAggregateMicroSurfacing({
             sourceApprovalId: '',
             sourceApprovalDetailId: '',
-            nominalSize: '37.5mm',
+            nominalSize: '',
             vehicleNo: [],
             qtyInKg: '',
+            qtyInCum: '',
             uploadWeightSlip: '',
             procurementDateTime: '',
             lotNo: '',
@@ -333,9 +340,10 @@ const ProcurementsBitnumiousWork = ({
           setDetailsCoarseAggregateSMA({
             sourceApprovalId: '',
             sourceApprovalDetailId: '',
-            nominalSize: '37.5mm',
+            nominalSize: '',
             vehicleNo: [],
             qtyInKg: '',
+            qtyInCum: '',
             uploadWeightSlip: '',
             procurementDateTime: '',
             lotNo: '',
@@ -346,7 +354,7 @@ const ProcurementsBitnumiousWork = ({
           setDetailsEmulsion({
             sourceApprovalId: '',
             sourceApprovalDetailId: '',
-            //gradeOfBitumen: '',
+            gradeOfBitumen: '',
             lotNo: '',
             vehicleNo: [],
             qtyInKg: '',
@@ -399,7 +407,8 @@ const ProcurementsBitnumiousWork = ({
             sourceApprovalDetailId: item.sourceApprovalDetailId,
             lotNo: item.lotNo,
             vehicleNo: item.vehicleNo,
-            qtyInKg:''+ item.metaData.qtyInKg,
+            qtyInKg: '' + item.metaData.qtyInKg,
+            qtyInCum: '' + item.metaData.qtyInCum,
             uploadWeightSlip: item.uploadWeightSlip,
             procurementDateTime: getDisplayDate(item.procurementDateTime),
           });
@@ -412,7 +421,8 @@ const ProcurementsBitnumiousWork = ({
             nominalSize: item.metaData.nominalSize,
             lotNo: item.lotNo,
             vehicleNo: item.vehicleNo,
-            qtyInKg: ''+ item.metaData.qtyInKg,
+            qtyInKg: '' + item.metaData.qtyInKg,
+            qtyInCum: '' + item.metaData.qtyInCum,
             uploadWeightSlip: item.uploadWeightSlip,
             procurementDateTime: getDisplayDate(item.procurementDateTime),
           });
@@ -439,6 +449,7 @@ const ProcurementsBitnumiousWork = ({
             lotNo: item.lotNo,
             vehicleNo: item.vehicleNo,
             qtyInKg: '' + item.metaData.qtyInKg,
+            qtyInCum: '' + item.metaData.qtyInCum,
             uploadWeightSlip: item.uploadWeightSlip,
             procurementDateTime: getDisplayDate(item.procurementDateTime),
           });
@@ -452,6 +463,7 @@ const ProcurementsBitnumiousWork = ({
             vehicleNo: item.vehicleNo,
             lotNo: item.lotNo,
             qtyInKg: '' + item.metaData.qtyInKg,
+            qtyInCum: '' + item.metaData.qtyInCum,
             uploadWeightSlip: item.uploadWeightSlip,
             procurementDateTime: getDisplayDate(item.procurementDateTime),
           });
@@ -461,7 +473,7 @@ const ProcurementsBitnumiousWork = ({
           setDetailsEmulsion({
             sourceApprovalId: item.sourceApprovalId._id,
             sourceApprovalDetailId: item.sourceApprovalDetailId,
-            //gradeOfBitumen: item.metaData.gradeOfBitumen,
+            gradeOfBitumen: item.metaData.gradeOfBitumen,
             vehicleNo: item.vehicleNo,
             qtyInKg: '' + item.metaData.qtyInKg,
             uploadWeightSlip: item.uploadWeightSlip,
@@ -616,32 +628,32 @@ const ProcurementsBitnumiousWork = ({
     detail: any,
   ) => {
     if (detail === 'detailsBitumen') {
-      setDetailsBitumen(prevState => ({
+      setDetailsBitumen((prevState: any) => ({
         ...prevState,
         [field]: value,
       }));
     } else if (detail === 'detailsFineAggregate') {
-      setDetailsFineAggregate(prevState => ({
+      setDetailsFineAggregate((prevState: any) => ({
         ...prevState,
         [field]: value,
       }));
     } else if (detail === 'detailsCoarseAggregateSMA') {
-      setDetailsCoarseAggregateSMA(prevState => ({
+      setDetailsCoarseAggregateSMA((prevState: any) => ({
         ...prevState,
         [field]: value,
       }));
     } else if (detail === 'detailsCoarseAggregateMicroSurfacing') {
-      setDetailsCoarseAggregateMicroSurfacing(prevState => ({
+      setDetailsCoarseAggregateMicroSurfacing((prevState: any) => ({
         ...prevState,
         [field]: value,
       }));
     } else if (detail === 'detailsCoarseAggregateDBMBC') {
-      setDetailsCoarseAggregateDBMBC(prevState => ({
+      setDetailsCoarseAggregateDBMBC((prevState: any) => ({
         ...prevState,
         [field]: value,
       }));
     } else if (detail === 'detailsEmulsion') {
-      setDetailsEmulsion(prevState => ({
+      setDetailsEmulsion((prevState: any) => ({
         ...prevState,
         [field]: value,
       }));
@@ -653,6 +665,9 @@ const ProcurementsBitnumiousWork = ({
         sourceApprovals.find((x: any) => x._id === value)
           ?.sourceApprovalDetails,
       );
+    } else if (field === 'nominalSize' || field === 'gradeOfBitumen') {
+      const filteredData = sourceApprovals.filter((s: any) => s.sourceApprovalDetails && s.sourceApprovalDetails.find((sd: any)=> sd.metaData && sd.metaData[field] === value));
+      setSourceApprovalsFiltered(filteredData);
     }
   };
 
@@ -691,6 +706,7 @@ const ProcurementsBitnumiousWork = ({
               uploadWeightSlip: detailsFineAggregate.uploadWeightSlip,
               metaData: {
                 qtyInKg: Number(detailsFineAggregate.qtyInKg),
+                qtyInCum: Number(detailsFineAggregate.qtyInCum),
               },
             },
           };
@@ -714,6 +730,7 @@ const ProcurementsBitnumiousWork = ({
               uploadWeightSlip: detailsCoarseAggregateDBMBC.uploadWeightSlip,
               metaData: {
                 qtyInKg: Number(detailsCoarseAggregateDBMBC.qtyInKg),
+                qtyInCum: Number(detailsCoarseAggregateDBMBC.qtyInCum),
                 nominalSize: detailsCoarseAggregateDBMBC.nominalSize,
               },
             },
@@ -763,6 +780,7 @@ const ProcurementsBitnumiousWork = ({
                 detailsCoarseAggregateMicroSurfacing.uploadWeightSlip,
               metaData: {
                 qtyInKg: Number(detailsCoarseAggregateMicroSurfacing.qtyInKg),
+                qtyInCum: Number(detailsCoarseAggregateMicroSurfacing.qtyInCum),
                 nominalSize: detailsCoarseAggregateMicroSurfacing.nominalSize,
               },
             },
@@ -770,13 +788,14 @@ const ProcurementsBitnumiousWork = ({
           break;
 
         case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA:
+          console.log('====detailsCoarseAggregateSMA====', JSON.stringify(detailsCoarseAggregateSMA))
           materialSpecificFields = {
             projectId: loggedInUser.projectId,
             testMaterialId: testMaterialId,
             body: {
               sourceApprovalId: detailsCoarseAggregateSMA.sourceApprovalId,
-              sourceApprovalDetailId:
-                detailsCoarseAggregateSMA.sourceApprovalDetailId,
+              //sourceApprovalDetailId:
+              //detailsCoarseAggregateSMA.sourceApprovalDetailId,
               vehicleNo: vehicleNos.length
                 ? vehicleNos
                 : [detailsCoarseAggregateSMA.vehicleNo || ''],
@@ -787,6 +806,7 @@ const ProcurementsBitnumiousWork = ({
               uploadWeightSlip: detailsCoarseAggregateSMA.uploadWeightSlip,
               metaData: {
                 qtyInKg: Number(detailsCoarseAggregateSMA.qtyInKg),
+                qtyInCum: Number(detailsCoarseAggregateSMA.qtyInCum),
                 nominalSize: detailsCoarseAggregateSMA.nominalSize,
               },
             },
@@ -809,7 +829,7 @@ const ProcurementsBitnumiousWork = ({
               lotNo: detailsEmulsion.lotNo,
               uploadWeightSlip: detailsEmulsion.uploadWeightSlip,
               metaData: {
-                //gradeOfBitumen: detailsEmulsion.gradeOfBitumen,
+                gradeOfBitumen: detailsEmulsion.gradeOfBitumen,
                 qtyInKg: Number(detailsEmulsion.qtyInKg),
               },
             },
@@ -851,7 +871,7 @@ const ProcurementsBitnumiousWork = ({
         getProcurements({
           projectId: loggedInUser.projectId,
           testMaterialId: testMaterialId,
-          testWorkCategoryType: testWorkCategoryType
+          testWorkCategoryType: testWorkCategoryType,
         }),
       );
       uploadInvoice();
@@ -1029,14 +1049,14 @@ const ProcurementsBitnumiousWork = ({
               <View>
                 <View>
                   {renderPickerBituminousWork(
-                    'Source Approval',
+                    'Source',
                     'sourceApprovalId',
                     'detailsFineAggregate',
                   )}
                 </View>
                 <View>
                   {renderSourceDetailsPickerBituminousWork(
-                    'Source Approval Detail',
+                    'Source Detail',
                     'sourceApprovalDetailId',
                     'detailsFineAggregate',
                   )}
@@ -1146,23 +1166,10 @@ const ProcurementsBitnumiousWork = ({
             <View style={styles.reportFields}>
               <View>
                 <View>
-                  {renderPickerBituminousWork(
-                    'Source Approval',
-                    'sourceApprovalId',
-                    'detailsCoarseAggregateDBMBC',
-                  )}
-                </View>
-                <View>
-                  {renderSourceDetailsPickerBituminousWork(
-                    'Source Approval Detail',
-                    'sourceApprovalDetailId',
-                    'detailsCoarseAggregateDBMBC',
-                  )}
-                </View>
-                <View>
                   <DropdownPicker
                     label="Nominal Size"
                     items={[
+                      {label: 'Select', value: ''},
                       {label: '37.5mm', value: '37.5mm'},
                       {label: '26.5mm', value: '26.5mm'},
                       {label: '19mm', value: '19mm'},
@@ -1177,6 +1184,14 @@ const ProcurementsBitnumiousWork = ({
                       )
                     }
                   />
+                </View>
+                <View>
+                  {renderSourceDetailsPickerBituminousWork(
+                    'Source Detail',
+                    'sourceApprovalDetailId',
+                    'detailsCoarseAggregateDBMBC',
+                    sourceApprovalsFiltered,
+                  )}
                 </View>
                 <View>
                   <Input
@@ -1240,6 +1255,20 @@ const ProcurementsBitnumiousWork = ({
                   />
                 </View>
                 <View>
+                  <Input
+                    label="Quantity (in cum)"
+                    value={detailsCoarseAggregateDBMBC.qtyInCum}
+                    onChange={(value: string) =>
+                      handleInputChangeBituminousWork(
+                        'qtyInCum',
+                        value,
+                        'detailsCoarseAggregateDBMBC',
+                      )
+                    }
+                    isRequired={true}
+                  />
+                </View>
+                <View>
                   <CalendarPicker
                     label="Date"
                     value={detailsCoarseAggregateDBMBC.procurementDateTime}
@@ -1285,23 +1314,10 @@ const ProcurementsBitnumiousWork = ({
             <View style={styles.reportFields}>
               <View>
                 <View>
-                  {renderPickerBituminousWork(
-                    'Source Approval',
-                    'sourceApprovalId',
-                    'detailsBitumen',
-                  )}
-                </View>
-                <View>
-                  {renderSourceDetailsPickerBituminousWork(
-                    'Source Approval Detail',
-                    'sourceApprovalDetailId',
-                    'detailsBitumen',
-                  )}
-                </View>
-                <View>
                   <DropdownPicker
                     label="Grade of Bitumen"
                     items={[
+                      {label: 'Select', value: ''},
                       {label: 'VG 30', value: 'VG 30'},
                       {label: 'VG 40', value: 'VG 40'},
                       {label: 'PMB', value: 'PMB'},
@@ -1315,6 +1331,14 @@ const ProcurementsBitnumiousWork = ({
                       )
                     }
                   />
+                </View>
+                <View>
+                  {renderSourceDetailsPickerBituminousWork(
+                    'Source Detail',
+                    'sourceApprovalDetailId',
+                    'detailsBitumen',
+                    sourceApprovalsFiltered,
+                  )}
                 </View>
                 <View>
                   <Input
@@ -1421,23 +1445,10 @@ const ProcurementsBitnumiousWork = ({
             <View style={styles.reportFields}>
               <View>
                 <View>
-                  {renderPickerBituminousWork(
-                    'Source Approval',
-                    'sourceApprovalId',
-                    'detailsCoarseAggregateMicroSurfacing',
-                  )}
-                </View>
-                <View>
-                  {renderSourceDetailsPickerBituminousWork(
-                    'Source Approval Detail',
-                    'sourceApprovalDetailId',
-                    'detailsCoarseAggregateMicroSurfacing',
-                  )}
-                </View>
-                <View>
                   <DropdownPicker
                     label="Nominal Size"
                     items={[
+                      {label: 'Select', value: ''},
                       {label: '37.5mm', value: '37.5mm'},
                       {label: '26.5mm', value: '26.5mm'},
                       {label: '19mm', value: '19mm'},
@@ -1452,6 +1463,14 @@ const ProcurementsBitnumiousWork = ({
                       )
                     }
                   />
+                </View>
+                <View>
+                  {renderSourceDetailsPickerBituminousWork(
+                    'Source Detail',
+                    'sourceApprovalDetailId',
+                    'detailsCoarseAggregateMicroSurfacing',
+                    sourceApprovalsFiltered,
+                  )}
                 </View>
                 <View>
                   <Input
@@ -1515,6 +1534,20 @@ const ProcurementsBitnumiousWork = ({
                   />
                 </View>
                 <View>
+                  <Input
+                    label="Quantity (in cum)"
+                    value={detailsCoarseAggregateMicroSurfacing.qtyInCum}
+                    onChange={(value: string) =>
+                      handleInputChangeBituminousWork(
+                        'qtyInCum',
+                        value,
+                        'detailsCoarseAggregateMicroSurfacing',
+                      )
+                    }
+                    isRequired={true}
+                  />
+                </View>
+                <View>
                   <CalendarPicker
                     label="Date"
                     value={
@@ -1562,23 +1595,10 @@ const ProcurementsBitnumiousWork = ({
             <View style={styles.reportFields}>
               <View>
                 <View>
-                  {renderPickerBituminousWork(
-                    'Source Approval',
-                    'sourceApprovalId',
-                    'detailsCoarseAggregateSMA',
-                  )}
-                </View>
-                <View>
-                  {renderSourceDetailsPickerBituminousWork(
-                    'Source Approval Detail',
-                    'sourceApprovalDetailId',
-                    'detailsCoarseAggregateSMA',
-                  )}
-                </View>
-                <View>
                   <DropdownPicker
                     label="Nominal Size"
                     items={[
+                      {label: 'Select', value: ''},
                       {label: '37.5mm', value: '37.5mm'},
                       {label: '26.5mm', value: '26.5mm'},
                       {label: '19mm', value: '19mm'},
@@ -1593,6 +1613,14 @@ const ProcurementsBitnumiousWork = ({
                       )
                     }
                   />
+                </View>
+                <View>
+                  {renderSourceDetailsPickerBituminousWork(
+                    'Source Detail',
+                    'sourceApprovalDetailId',
+                    'detailsCoarseAggregateSMA',
+                    sourceApprovalsFiltered,
+                  )}
                 </View>
                 <View>
                   <Input
@@ -1656,6 +1684,20 @@ const ProcurementsBitnumiousWork = ({
                   />
                 </View>
                 <View>
+                  <Input
+                    label="Quantity (in cum)"
+                    value={detailsCoarseAggregateSMA.qtyInCum}
+                    onChange={(value: string) =>
+                      handleInputChangeBituminousWork(
+                        'qtyInCum',
+                        value,
+                        'detailsCoarseAggregateSMA',
+                      )
+                    }
+                    isRequired={true}
+                  />
+                </View>
+                <View>
                   <CalendarPicker
                     label="Date"
                     value={detailsCoarseAggregateSMA.procurementDateTime}
@@ -1699,22 +1741,15 @@ const ProcurementsBitnumiousWork = ({
             <View style={styles.reportFields}>
               <View>
                 <View>
-                  {renderPickerBituminousWork(
-                    'Source Approval',
-                    'sourceApprovalId',
-                    'detailsEmulsion',
-                  )}
-                </View>
-                <View>
-                  {renderSourceDetailsPickerBituminousWork(
-                    'Source Approval Detail',
-                    'sourceApprovalDetailId',
-                    'detailsEmulsion',
-                  )}
-                </View>
-                {/* <View>
-                  <Input
-                    label="Grade of Bitumen (as per Source Approval Sheet)"
+                  {/*Wrong dropdown it must fetch by backend*/}
+                  <DropdownPicker
+                    label="Grade of Bitumen"
+                    items={[
+                      {label: 'Select', value: ''},
+                      {label: 'VG 30', value: 'VG 30'},
+                      {label: 'VG 40', value: 'VG 40'},
+                      {label: 'PMB', value: 'PMB'},
+                    ]}
                     value={detailsEmulsion.gradeOfBitumen}
                     onChange={(value: string) =>
                       handleInputChangeBituminousWork(
@@ -1723,9 +1758,16 @@ const ProcurementsBitnumiousWork = ({
                         'detailsEmulsion',
                       )
                     }
-                    isRequired={true}
                   />
-                </View> */}
+                </View>
+                <View>
+                  {renderSourceDetailsPickerBituminousWork(
+                    'Source Detail',
+                    'sourceApprovalDetailId',
+                    'detailsEmulsion',
+                    sourceApprovalsFiltered,
+                  )}
+                </View>
                 <View>
                   <Input
                     label="Lot No/Trip No/Invoice No"
@@ -1832,8 +1874,9 @@ const ProcurementsBitnumiousWork = ({
     label: string,
     field: string,
     detail: string,
-    options = [{name: 'Select', _id: ''}].concat(sourceApprovals),
+    data: any = sourceApprovals
   ) => {
+    const options = [{name: 'Select', _id: ''}].concat(data)
     return (
       <View style={styles.inputContainer}>
         <Text style={styles.label}>{label}</Text>
@@ -1855,8 +1898,9 @@ const ProcurementsBitnumiousWork = ({
                 : ''
             }
             style={styles.picker}
-            onValueChange={itemValue =>
-              handleInputChangeBituminousWork(field, itemValue, detail)
+            onValueChange={itemValue => {
+                handleInputChangeBituminousWork(field, itemValue, detail)
+              }
             }>
             {options.map((option, index) => (
               <Picker.Item key={index} label={option.name} value={option._id} />
@@ -1904,8 +1948,6 @@ const ProcurementsBitnumiousWork = ({
       </View>
     );
   };
-
-
 
   const renderItem = ({item}: {item: any}) => (
     <View style={[styles.itemContainer]}>

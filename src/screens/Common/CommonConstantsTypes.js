@@ -236,25 +236,35 @@ export const commonComponentTypes = [
 ];
 
 export const WORK_MODULE_TYPE = [
-          {
-            title: 'Structure',
-            workType: PROJECT_TYPE.STRUCTURE_WORK,
-            color: '#1C58C0',
-            discription: 'The Backbone of Successful Execution',
-            src: 'structure'
-          },
-          {
-            title: 'Highway',
-            workType: PROJECT_TYPE.HIGHWAY_WORK,
-            color: '#ffa879',
-            discription: 'Keeping Roads Safe, Smooth, and Reliable',
-            src: 'highway'
-          },
-          {
-            title: 'Other',
-            workType: PROJECT_TYPE.OTHER_WORK,
-            color: '#FCB700',
-            discription: 'Bridging Gaps in the Workflow',
-            src: 'other'
-          }
-        ]
+    {
+      title: 'Structure',
+      workType: PROJECT_TYPE.STRUCTURE_WORK,
+      color: '#7A54FF',
+      discription: 'The Backbone of Successful Execution',
+      src: 'structure'
+    },
+    {
+      title: 'Highway',
+      workType: PROJECT_TYPE.HIGHWAY_WORK,
+      color: '#2AC3FF',
+      discription: 'Keeping Roads Safe, Smooth, and Reliable',
+      src: 'highway'
+    },
+    {
+      title: 'Other',
+      workType: PROJECT_TYPE.OTHER_WORK,
+      color: '#FF6968',
+      discription: 'Bridging Gaps in the Workflow',
+      src: 'other'
+    }
+  ]
+  export const CARD_COLORS_ARRAY = ['#FF6968', '#7A54FF', '#FF8F61', '#2AC3FF', '#5A65FF', '#96DA45', '#B72CB2'];
+  export const CARD_ICONS = [
+    require('./../../images/source-approval.png'),
+    require('./../../images/procurement-detail.png'),
+    require('./../../images/lab-test.png'),
+    require('./../../images/lab-test.png'),
+    require('./../../images/upload-mtcs.png'),
+    require('./../../images/mix-design.png'),
+    require('./../../images/equipment-calibration.png'),
+  ];

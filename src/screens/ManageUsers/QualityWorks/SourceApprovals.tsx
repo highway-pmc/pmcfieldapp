@@ -41,6 +41,7 @@ import {
 import CustomAlert from '../../Common/CustomAlert';
 import DropdownPicker from '../../../components/UI/DropdownPicker';
 import {number} from 'prop-types';
+import commonStyles from '../../Common/commonStyles';
 
 const SourceApprovals = ({
   route,
@@ -1451,65 +1452,88 @@ const SourceApprovals = ({
   };
 
   const renderItem = ({item}: {item: any}) => (
-    <View
-      style={[
-        styles.itemContainer,
-        {borderLeftColor: getBorderColor(item.status)},
-      ]}>
-      <Text style={styles.itemText}>{item.name}</Text>
-      {/* <Text style={styles.itemText}>{item.status}</Text> */}
-      <View style={{flexDirection: 'column'}}>
-        {item.status !== SOURCE_APPROVAL_STATUS.APPROVED && (
-          <View style={styles.iconContainer}>
-            <Image
-              style={styles.ActionIcon}
-              tintColor={'#333'}
-              onPress={() => handleAdd(item)}
-              source={require('./../../../images/add-square.png')}
-            />
-            <Image
-              style={styles.ActionIcon}
-              tintColor={'#333'}
-              onPress={() => handleEdit(item)}
-              source={require('./../../../images/edit.png')}
-            />
-            <Image
-              style={styles.ActionIcon}
-              tintColor={'#333'}
-              onPress={() => handleDelete(item)}
-              source={require('./../../../images/trash.png')}
-            />
-          </View>
-        )}
-        {item.status === SOURCE_APPROVAL_STATUS.PENDING ? (
-          <View style={{flexDirection: 'row', gap: 6}}>
-            <Text
-              onPress={() =>
-                onSourceStatusChanged(item, SOURCE_APPROVAL_STATUS.APPROVED)
-              }>
-              Approve
-            </Text>
-            <Text
-              onPress={() =>
-                onSourceStatusChanged(item, SOURCE_APPROVAL_STATUS.REJECTED)
-              }>
-              Reject
-            </Text>
-          </View>
-        ) : (
-          item.status === SOURCE_APPROVAL_STATUS.REJECTED && (
-            <View style={{flexDirection: 'row', gap: 6}}>
-              <Text
-                onPress={() =>
-                  onSourceStatusChanged(item, SOURCE_APPROVAL_STATUS.APPROVED)
-                }>
-                Approve
-              </Text>
-            </View>
-          )
-        )}
+    <>
+    <View style={[commonStyles.sourceApprovalsBox, {borderColor: getBorderColor(item.status)}]}>
+      <View style={commonStyles.boxRowWithBtn}>
+      {item.status === SOURCE_APPROVAL_STATUS.APPROVED && 
+      <View>
+        <Image style={commonStyles.actionTypeIcon}
+        source={require('./../../../images/Check_fill.png')} />
       </View>
+      }
+      {item.status === SOURCE_APPROVAL_STATUS.REJECTED && 
+      <View>
+        <Image style={commonStyles.actionTypeIcon}
+        source={require('./../../../images/Close_round_fill.png')} />
+      </View>
+      }
+        <View style={commonStyles.sourceContent}>
+          <Text style={commonStyles.sourceContentSize}>{item.name}</Text>
+        </View>
+        <View style={commonStyles.editAddDeleteContainer}>
+        {item.status !== SOURCE_APPROVAL_STATUS.APPROVED && (
+          <>
+          <Image
+              style={commonStyles.editAddDeleteIcons}
+              onPress={() => handleAdd(item)}
+              source={require('./../../../images/plus.png')}
+            />
+            <Image
+              style={commonStyles.editAddDeleteIcons}
+              onPress={() => handleEdit(item)}
+              source={require('./../../../images/edit-source.png')}
+            />
+            <Image
+              style={commonStyles.editAddDeleteIcons}
+              onPress={() => handleDelete(item)}
+              source={require('./../../../images/delete.png')}
+            />
+            </>
+          )}
+          {item.status === SOURCE_APPROVAL_STATUS.APPROVED && <Text style={commonStyles.approveText}>Approved</Text>}
+          {/* {item.status === SOURCE_APPROVAL_STATUS.REJECTED && <Text style={commonStyles.rejectText}>Rejected</Text>} */}
+        </View>
+      </View>
+      {item.status === SOURCE_APPROVAL_STATUS.PENDING && (
+      <>
+      <View style={commonStyles.approvalRejectedContainer}>
+        <TouchableOpacity onPress={() => onSourceStatusChanged(item, SOURCE_APPROVAL_STATUS.APPROVED)} 
+          style={commonStyles.subActionRow}>
+            <Image
+                style={commonStyles.actionTypeIcon}
+                source={require('./../../../images/Check_fill.png')} /> 
+            <Text style={commonStyles.approveText}>
+                Approve
+            </Text>
+        </TouchableOpacity> 
+        <TouchableOpacity onPress={() => onSourceStatusChanged(item, SOURCE_APPROVAL_STATUS.REJECTED)} 
+          style={commonStyles.subActionRow}>
+          <Image
+            style={commonStyles.actionTypeIcon}
+            source={require('./../../../images/Close_round_fill.png')} />
+          <Text style={commonStyles.rejectText}>
+            Reject
+          </Text>
+        </TouchableOpacity>
+      </View>
+      </>
+      )}
+      {item.status === SOURCE_APPROVAL_STATUS.REJECTED && (
+      <>
+      <View style={commonStyles.approvalRejectedContainer}>
+        <View style={commonStyles.subActionRow}>
+            <Image
+                style={commonStyles.actionTypeIcon}
+                source={require('./../../../images/Check_fill.png')} /> 
+            <Text style={commonStyles.approveText}>
+                Approve
+            </Text>
+        </View>
+      </View>
+      </>
+      )}
     </View>
+    </>
   );
 
   const renderSourceDetailItem = ({item}: {item: any}) => (
@@ -1541,25 +1565,16 @@ const SourceApprovals = ({
               {testWorkCategoryName + ' > ' + testMaterialName}
             </Text>
           </View>
-          <View>
+          <View style={commonStyles.rightAlignBtn}>
             <TouchableOpacity
-              style={styles.btnContainer}
+              style={commonStyles.outLineBtn}
               onPress={() => handleAddSource()}>
-              <Text style={styles.submitBtn}>Add Source</Text>
+              <Image style={commonStyles.addSourceIcon} source={require('./../../../images/add-circle.png')} />
+              <Text style={commonStyles.btnTextSize}>Add Source</Text>
             </TouchableOpacity>
           </View>
           <View>
             <ScrollView>
-              <View style={styles.legends}>
-                <View style={styles.legendContainer}>
-                  <Text style={styles.approve}></Text>
-                  <Text style={styles.approveText}>Approved</Text>
-                </View>
-                <View style={styles.legendContainer}>
-                  <Text style={styles.rejected}></Text>
-                  <Text style={styles.rejectText}>Rejected</Text>
-                </View>
-              </View>
               <FlatList
                 data={data}
                 renderItem={renderItem}
@@ -1672,7 +1687,8 @@ const SourceApprovals = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    margin: 10,
+    padding: 15,
+    backgroundColor: '#F1F6FF'
   },
   ActionIcon: {
     width: 20,

@@ -211,8 +211,10 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
                     <Text style={styles.assignTagText}>{item.title}</Text>
                   </View> */}
                 </View>
-                <Text style={styles.UserRole}>{item.designation}</Text>
-                <Text style={styles.UserCategoryDisplay}>{item.categoriesDisplay}</Text>
+                <View style={{flexDirection: 'row', alignItems: 'center', gap: 5}}>
+                  <Text style={styles.UserRole}>{item.designation}:</Text>
+                  <Text style={styles.UserCategoryDisplay}>{item.categoriesDisplay}</Text>
+                </View>
               </View>
             </View>
             {
@@ -338,7 +340,8 @@ const styles = StyleSheet.create({
   Container: {
     flexDirection: 'column',
     paddingVertical: 10,
-    padding: 15,
+    paddingHorizontal: 15,
+    backgroundColor: '#F1F6FF'
   },
   NoDataContainer: {
     flexDirection: 'column',
@@ -440,18 +443,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#BECADA',
     borderStyle: 'solid',
-    borderRadius: 6,
+    borderRadius: 8,
     paddingHorizontal: 15,
-    paddingVertical: 15,
-    marginBottom: 20,
+    paddingVertical: 10,
+    marginBottom: 15,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 0,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+    shadowOpacity: 0.1,
+    elevation: 3,
   },
   checkbox: {
     transform: [{scaleX: 1.2}, {scaleY: 1.2}],
@@ -474,12 +476,12 @@ const styles = StyleSheet.create({
     color: '#27272A',
   },
   UserRole: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '400',
     color: '#808089',
   },
   UserCategoryDisplay: {
-    fontSize: 16,
+    fontSize: 12,
     fontWeight: '500',
     color: '#1C58C0',
   },

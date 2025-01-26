@@ -46,7 +46,8 @@ import Input from '../../components/UI/Input';
 import DropdownPicker from '../../components/UI/DropdownPicker';
 import TimePicker from '../../components/UI/TimePicker';
 import {useSnackbar} from '../../context/SnackbarContext';
-
+import commonStyles from '../Common/commonStyles';
+import { CARD_COLORS_ARRAY, CARD_ICONS } from '../Common/CommonConstantsTypes';
 const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
   const workType = PROJECT_TYPE.QUALITY_WORK;
@@ -5286,7 +5287,8 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
       );
     }
   };
-
+  const colors = CARD_COLORS_ARRAY;
+  const imageMap: any = CARD_ICONS;
   return (
     <View style={styles.Container}>
       {breadcrumbData.length ? (
@@ -5354,18 +5356,29 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
       ) : null}
       <ScrollView showsVerticalScrollIndicator={false} style={styles.Height100}>
         {currentLevel === 0
-          ? myTestsDataAll.map((testClassificationItem: any) => (
+          ? myTestsDataAll.map((testClassificationItem: any, index: number) => (
               <TouchableOpacity
-                style={styles.MyWorkCard}
+              style={[
+                styles.MyWorkCard,
+                { backgroundColor: colors[index % colors.length] }
+              ]}
                 onPress={() => onMyTestClick(testClassificationItem)}>
-                <Text style={styles.HeadingText}>
-                  {testClassificationItem.name}
-                </Text>
                 <View style={styles.TaskDetails}>
-                  <Text style={styles.SubHeadingText}>Assigned:</Text>
-                  <Text style={[styles.SubHeadingText, styles.SubActive]}>
+                  <Text style={styles.HeadingText}>
                     {testClassificationItem.name}
                   </Text>
+                  <View style={{flexDirection: 'row'}}>
+                    <Text style={styles.SubHeadingText}>Assigned:</Text>
+                    <Text style={[styles.SubHeadingText, styles.SubActive]}>
+                      {testClassificationItem.name}
+                    </Text>
+                  </View>
+                </View>
+                <View style={commonStyles.iconsStyle}>
+                  {imageMap.length && <Image source={imageMap[index % imageMap.length]} style={commonStyles.image} />}
+                </View>
+                <View style={commonStyles.rightStyle}>
+                  <Image style={commonStyles.CloseIcon} source={require('./../../images/right-arrow.png')} />
                 </View>
               </TouchableOpacity>
             ))
@@ -5374,7 +5387,10 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
               (testClassificationItem: any, testClassificationIndex: number) =>
                 testClassificationItem.assignmentLevel === 1 ? (
                   <TouchableOpacity
-                    style={styles.MyWorkCard}
+                  style={[
+                    styles.MyWorkCard,
+                    { backgroundColor: colors[testClassificationIndex % colors.length] }
+                  ]}
                     onPress={() =>
                       onClick(
                         2,
@@ -5382,14 +5398,22 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
                         testClassificationIndex,
                       )
                     }>
-                    <Text style={styles.HeadingText}>
-                      {testClassificationItem.name}
-                    </Text>
                     <View style={styles.TaskDetails}>
-                      <Text style={styles.SubHeadingText}>Assigned:</Text>
-                      <Text style={[styles.SubHeadingText, styles.SubActive]}>
+                      <Text style={styles.HeadingText}>
                         {testClassificationItem.name}
                       </Text>
+                      <View style={{flexDirection: 'row'}}>
+                        <Text style={styles.SubHeadingText}>Assigned:</Text>
+                        <Text style={[styles.SubHeadingText, styles.SubActive]}>
+                          {testClassificationItem.name}
+                        </Text>
+                      </View>
+                    </View>
+                    <View style={commonStyles.iconsStyle}>
+                      {imageMap.length && <Image source={imageMap[testClassificationIndex % imageMap.length]} style={commonStyles.image} />}
+                    </View>
+                    <View style={commonStyles.rightStyle}>
+                      <Image style={commonStyles.CloseIcon} source={require('./../../images/right-arrow.png')} />
                     </View>
                   </TouchableOpacity>
                 ) : (
@@ -5397,7 +5421,10 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
                     (workCateItem: any, workCateIndex: any) =>
                       workCateItem.assignmentLevel === 2 ? (
                         <TouchableOpacity
-                          style={styles.MyWorkCard}
+                        style={[
+                          styles.MyWorkCard,
+                          { backgroundColor: colors[workCateIndex % colors.length] }
+                        ]}
                           onPress={() =>
                             onClick(
                               3,
@@ -5406,20 +5433,28 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
                               workCateIndex,
                             )
                           }>
-                          <Text style={styles.HeadingText}>
-                            {testClassificationItem.name}
-                          </Text>
                           <View style={styles.TaskDetails}>
-                            <Text style={styles.SubHeadingText}>Assigned:</Text>
+                            <Text style={styles.HeadingText}>
+                              {testClassificationItem.name}
+                            </Text>
                             <View style={{flexDirection: 'row'}}>
-                              <Text
-                                style={[
-                                  styles.SubHeadingText,
-                                  styles.SubActive,
-                                ]}>
-                                {workCateItem.name}
-                              </Text>
+                              <Text style={styles.SubHeadingText}>Assigned:</Text>
+                              <View style={{flexDirection: 'row'}}>
+                                <Text
+                                  style={[
+                                    styles.SubHeadingText,
+                                    styles.SubActive,
+                                  ]}>
+                                  {workCateItem.name}
+                                </Text>
+                              </View>
                             </View>
+                          </View>
+                          <View style={commonStyles.iconsStyle}>
+                            {imageMap.length && <Image source={imageMap[workCateIndex % imageMap.length]} style={commonStyles.image} />}
+                          </View>
+                          <View style={commonStyles.rightStyle}>
+                            <Image style={commonStyles.CloseIcon} source={require('./../../images/right-arrow.png')} />
                           </View>
                         </TouchableOpacity>
                       ) : workCateItem.testMaterialsData &&
@@ -5428,7 +5463,10 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
                           (testMateItem: any, testMateIndex: number) =>
                             testMateItem.assignmentLevel === 3 ? (
                               <TouchableOpacity
-                                style={styles.MyWorkCard}
+                              style={[
+                                styles.MyWorkCard,
+                                { backgroundColor: colors[testMateIndex % colors.length] }
+                              ]}
                                 onPress={() =>
                                   onClick(
                                     4,
@@ -5438,23 +5476,31 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
                                     testMateIndex,
                                   )
                                 }>
-                                <Text style={styles.HeadingText}>
-                                  {testClassificationItem.name}
-                                </Text>
                                 <View style={styles.TaskDetails}>
-                                  <Text style={styles.SubHeadingText}>
-                                    Assigned:
+                                  <Text style={styles.HeadingText}>
+                                    {testClassificationItem.name}
                                   </Text>
-                                  <Text style={styles.SubHeadingText}>
-                                    {workCateItem.name} /
-                                  </Text>
-                                  <Text
-                                    style={[
-                                      styles.SubHeadingText,
-                                      styles.SubActive,
-                                    ]}>
-                                    {testMateItem.name}
-                                  </Text>
+                                  <View style={{flexDirection: 'row'}}>
+                                    <Text style={styles.SubHeadingText}>
+                                      Assigned:
+                                    </Text>
+                                    <Text style={styles.SubHeadingText}>
+                                      {workCateItem.name} /
+                                    </Text>
+                                    <Text
+                                      style={[
+                                        styles.SubHeadingText,
+                                        styles.SubActive,
+                                      ]}>
+                                      {testMateItem.name}
+                                    </Text>
+                                  </View>
+                                </View>
+                                <View style={commonStyles.iconsStyle}>
+                                  {imageMap.length && <Image source={imageMap[testMateIndex % imageMap.length]} style={commonStyles.image} />}
+                                </View>
+                                <View style={commonStyles.rightStyle}>
+                                  <Image style={commonStyles.CloseIcon} source={require('./../../images/right-arrow.png')} />
                                 </View>
                               </TouchableOpacity>
                             ) : (
@@ -5462,7 +5508,10 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
                                 (testTypeItem: any, testTypeIndex: number) =>
                                   testTypeItem.assignmentLevel === 4 && (
                                     <TouchableOpacity
-                                      style={styles.MyWorkCard}
+                                    style={[
+                                      styles.MyWorkCard,
+                                      { backgroundColor: colors[testTypeIndex % colors.length] }
+                                    ]}
                                       onPress={() =>
                                         onClick(
                                           5,
@@ -5473,26 +5522,34 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
                                           testTypeIndex,
                                         )
                                       }>
-                                      <Text style={styles.HeadingText}>
-                                        {testClassificationItem.name}
-                                      </Text>
                                       <View style={styles.TaskDetails}>
-                                        <Text style={styles.SubHeadingText}>
-                                          Assigned:
-                                        </Text>
-                                        <Text style={styles.SubHeadingText}>
-                                          {workCateItem.name} /
-                                        </Text>
-                                        <Text style={styles.SubHeadingText}>
-                                          {testMateItem.name} /
-                                        </Text>
-                                        <Text
-                                          style={[
-                                            styles.SubHeadingText,
-                                            styles.SubActive,
-                                          ]}>
-                                          {testTypeItem.name}
-                                        </Text>
+                                          <Text style={styles.HeadingText}>
+                                            {testClassificationItem.name}
+                                          </Text>
+                                          <View style={{flexDirection: 'row'}}>
+                                          <Text style={styles.SubHeadingText}>
+                                            Assigned:
+                                          </Text>
+                                          <Text style={styles.SubHeadingText}>
+                                            {workCateItem.name} /
+                                          </Text>
+                                          <Text style={styles.SubHeadingText}>
+                                            {testMateItem.name} /
+                                          </Text>
+                                          <Text
+                                            style={[
+                                              styles.SubHeadingText,
+                                              styles.SubActive,
+                                            ]}>
+                                            {testTypeItem.name}
+                                          </Text>
+                                        </View>
+                                      </View>
+                                      <View style={commonStyles.iconsStyle}>
+                                        {imageMap.length && <Image source={imageMap[testTypeIndex % imageMap.length]} style={commonStyles.image} />}
+                                      </View>
+                                      <View style={commonStyles.rightStyle}>
+                                        <Image style={commonStyles.CloseIcon} source={require('./../../images/right-arrow.png')} />
                                       </View>
                                     </TouchableOpacity>
                                   ),
@@ -5764,7 +5821,8 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   Container: {
-    padding: 20,
+    paddingHorizontal: 15,
+    paddingVertical: 20,
   },
   Height100: {
     height: '100%',
@@ -6015,9 +6073,9 @@ const styles = StyleSheet.create({
   MyWorkCard: {
     backgroundColor: '#fff',
     borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-    paddingVertical: 20,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    paddingVertical: 18,
     paddingHorizontal: 20,
     marginBottom: 20,
     marginHorizontal: 10,
@@ -6028,6 +6086,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 20,
     elevation: 5,
+    flexDirection: 'row',
+    overflow: 'hidden'
   },
   CompleteWork: {
     borderWidth: 1,
@@ -6041,24 +6101,26 @@ const styles = StyleSheet.create({
     top: 10,
   },
   HeadingText: {
-    color: '#010101',
+    color: '#fff',
     fontSize: 16,
     fontWeight: '700',
     marginBottom: 5,
   },
   TaskDetails: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'flex-start',
     flexWrap: 'wrap',
+    paddingLeft: 65,
+    width: '90%'
   },
   SubHeadingText: {
-    color: '#000',
+    color: '#fff',
     fontSize: 12,
     fontWeight: '400',
     marginRight: 5,
   },
   SubActive: {
-    color: '#1C58C0',
+    color: '#fff',
     fontWeight: '800',
   },
   NoDataContainer: {

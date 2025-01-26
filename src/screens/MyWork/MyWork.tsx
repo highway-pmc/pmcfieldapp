@@ -4392,7 +4392,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.DUMPING:
-          if (rfiData.metaData.dumpingData) {
+          if (rfiData.metaData?.dumpingData) {
             rfiData.metaData.dumpingData.forEach((item: any) => {
               item.key = Guid.create();
             });
@@ -4930,7 +4930,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.FIXING_OF_GEO_GRID:
-          if (rfiData.metaData.fixingOfGeoGridData) {
+          if (rfiData.metaData?.fixingOfGeoGridData) {
             setFixingOfGeoGridData(rfiData.metaData.fixingOfGeoGridData);
           } else {
             setFixingOfGeoGridData({
@@ -4944,7 +4944,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.ERECTION_OF_FRICTION_SLAB:
-          if (rfiData.metaData.erectionOfFrictionSlabData) {
+          if (rfiData.metaData?.erectionOfFrictionSlabData) {
             setErectionOfFrictionSlabData(
               rfiData.metaData.erectionOfFrictionSlabData,
             );
@@ -4960,7 +4960,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.ERECTION_OF_FACIA_PANELS:
-          if (rfiData.metaData.erectionOfFaciaPanelsData) {
+          if (rfiData.metaData?.erectionOfFaciaPanelsData) {
             setErectionOfFaciaPanelsData(
               rfiData.metaData.erectionOfFaciaPanelsData,
             );
@@ -4976,7 +4976,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.ERECTION_OF_COLUMNS:
-          if (rfiData.metaData.erectionOfColumnsData) {
+          if (rfiData.metaData?.erectionOfColumnsData) {
             setErectionOfColumnsData(rfiData.metaData.erectionOfColumnsData);
           } else {
             setErectionOfColumnsData({
@@ -4988,7 +4988,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.APPLICATION_OF_FILTER_MEDIA:
-          if (rfiData.metaData.applicationOfFilterMediaData) {
+          if (rfiData.metaData?.applicationOfFilterMediaData) {
             setApplicationOfFilterMediaData(
               rfiData.metaData.applicationOfFilterMediaData,
             );
@@ -4999,7 +4999,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.FIXING_OF_BRACINGS:
-          if (rfiData.metaData.fixingOfBracingsData) {
+          if (rfiData.metaData?.fixingOfBracingsData) {
             setFixingOfBracingsData(rfiData.metaData.fixingOfBracingsData);
           } else {
             setFixingOfBracingsData({
@@ -5010,7 +5010,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.FIXING_OF_RAILING:
-          if (rfiData.metaData.fixingOfRailingData) {
+          if (rfiData.metaData?.fixingOfRailingData) {
             setFixingOfRailingData(rfiData.metaData.fixingOfRailingData);
           } else {
             setFixingOfRailingData({
@@ -5020,7 +5020,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.PROCUREMENT_OF_SHEET:
-          if (rfiData.metaData.procurementOfSheetData) {
+          if (rfiData.metaData?.procurementOfSheetData) {
             setProcurementOfSheetData(rfiData.metaData.procurementOfSheetData);
           } else {
             setProcurementOfSheetData({
@@ -5029,7 +5029,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.DUMPING_OF_SOIL:
-          if (rfiData.metaData.dumpingOfSoilData) {
+          if (rfiData.metaData?.dumpingOfSoilData) {
             setDumpingOfSoilData(rfiData.metaData.dumpingOfSoilData);
           } else {
             setDumpingOfSoilData({
@@ -5040,7 +5040,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.BORING_OF_DIAPHRAGM:
-          if (rfiData.metaData.boringOfDiaphragmData) {
+          if (rfiData.metaData?.boringOfDiaphragmData) {
             setBoringOfDiaphragmData(rfiData.metaData.boringOfDiaphragmData);
           } else {
             setBoringOfDiaphragmData({
@@ -5053,7 +5053,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.ERECTION:
-          if (rfiData.metaData.erectionData) {
+          if (rfiData.metaData?.erectionData) {
             setErectionData(rfiData.metaData.erectionData);
           } else {
             setErectionData({
@@ -5082,7 +5082,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.STRIPPING_AND_STORING_TOP_SOIL:
-          if (rfiData.metaData.strippingAndStoringTopSoilData) {
+          if (rfiData.metaData?.strippingAndStoringTopSoilData) {
             setStrippingAndStoringTopSoilData(
               rfiData.metaData.strippingAndStoringTopSoilData,
             );
@@ -5093,7 +5093,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.SPREADING_AND_COMPACTION:
-          if (rfiData.metaData.spreadingAndCompactionData) {
+          if (rfiData.metaData?.spreadingAndCompactionData) {
             setSpreadingAndCompactionData(
               rfiData.metaData.spreadingAndCompactionData,
             );
@@ -5123,7 +5123,7 @@ const renderBallastHeadings = () => (
           break;
         case TASK_TYPES.PRIME_COAT:
         case TASK_TYPES.TACK_COAT:
-          if (rfiData.metaData.primeCoatData) {
+          if (rfiData.metaData?.primeCoatData) {
             setPrimeCoatData(rfiData.metaData.primeCoatData);
           } else {
             setPrimeCoatData({
@@ -5137,7 +5137,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.ROAD_MARKING:
-          if (rfiData.metaData.roadMarkingData) {
+          if (rfiData.metaData?.roadMarkingData) {
             setRoadMarkingData(rfiData.metaData.roadMarkingData);
           } else {
             setRoadMarkingData({
@@ -5156,7 +5156,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.LAYING_AND_COMPACTION:
-          if (rfiData.metaData.layingAndCompactionData) {
+          if (rfiData.metaData?.layingAndCompactionData) {
             setLayingAndCompactionData(
               rfiData.metaData.layingAndCompactionData,
             );
@@ -5186,7 +5186,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.PIPE_LAYING_AND_JOINTING:
-          if (rfiData.metaData.pipeLayingAndJointingData) {
+          if (rfiData.metaData?.pipeLayingAndJointingData) {
             setPipeLayingAndJointingData(
               rfiData.metaData.pipeLayingAndJointingData,
             );
@@ -5211,7 +5211,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.FIXING_OF_METAL_BEAM:
-          if (rfiData.metaData.fixingOfMetalBeamData) {
+          if (rfiData.metaData?.fixingOfMetalBeamData) {
             setFixingOfMetalBeamData(rfiData.metaData.fixingOfMetalBeamData);
           } else {
             setFixingOfMetalBeamData({
@@ -5225,7 +5225,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.FIXING_VERTICAL_POST:
-          if (rfiData.metaData.fixingVerticalPostData) {
+          if (rfiData.metaData?.fixingVerticalPostData) {
             setFixingVerticalPostData(rfiData.metaData.fixingVerticalPostData);
           } else {
             setFixingVerticalPostData({
@@ -5240,7 +5240,7 @@ const renderBallastHeadings = () => (
           break;
 
         case TASK_TYPES.CUTTING_OF_JOINTS:
-          if (rfiData.metaData.cuttingOfJointsData) {
+          if (rfiData.metaData?.cuttingOfJointsData) {
             setCuttingOfJointsData(rfiData.metaData.cuttingOfJointsData);
           } else {
             setCuttingOfJointsData({
@@ -5252,7 +5252,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.LAYING_OF_PAVER_BLOCK:
-          if (rfiData.metaData.layingOfPaverBlockData) {
+          if (rfiData.metaData?.layingOfPaverBlockData) {
             setLayingOfPaverBlockData(rfiData.metaData.layingOfPaverBlockData);
           } else {
             setLayingOfPaverBlockData({
@@ -5272,7 +5272,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.LAYING_OF_DLC:
-          if (rfiData.metaData.layingOfDlcTableData) {
+          if (rfiData.metaData?.layingOfDlcTableData) {
             rfiData.metaData.layingOfDlcTableData.forEach((item: any) => {
               item.key = Guid.create();
             });
@@ -5280,7 +5280,7 @@ const renderBallastHeadings = () => (
           } else {
             setLayingOfDlcTableData([]);
           }
-          if (rfiData.metaData.layingOfDLCData) {
+          if (rfiData.metaData?.layingOfDLCData) {
             setLayingOfDLCData(rfiData.metaData.layingOfDLCData);
           } else {
             setLayingOfDLCData({
@@ -5302,7 +5302,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.MACHINE_CUTTING_OF_JOINTS:
-          if (rfiData.metaData.machineCuttingData) {
+          if (rfiData.metaData?.machineCuttingData) {
             setMachineCuttingData(rfiData.metaData.machineCuttingData);
           } else {
             setMachineCuttingData({
@@ -5315,7 +5315,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.PLACING_OF_TIE_BAR:
-          if (rfiData.metaData.placingOfTieBarData) {
+          if (rfiData.metaData?.placingOfTieBarData) {
             setPlacingOfTieBarData(rfiData.metaData.placingOfTieBarData);
           } else {
             setPlacingOfTieBarData({
@@ -5327,7 +5327,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.FIXING_OF_WIRE_ROPE:
-          if (rfiData.metaData.fixingOfWireRopeData) {
+          if (rfiData.metaData?.fixingOfWireRopeData) {
             setFixingOfWireRopeData(rfiData.metaData.fixingOfWireRopeData);
           } else {
             setFixingOfWireRopeData({
@@ -5341,7 +5341,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.TEXTURING:
-          if (rfiData.metaData.texturingData) {
+          if (rfiData.metaData?.texturingData) {
             setTexturingData(rfiData.metaData.texturingData);
           } else {
             setTexturingData({
@@ -5359,7 +5359,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.PLACING_OF_DOWEL:
-          if (rfiData.metaData.placingOfDowelData) {
+          if (rfiData.metaData?.placingOfDowelData) {
             setPlacingOfDowelData(rfiData.metaData.placingOfDowelData);
           } else {
             setPlacingOfDowelData({
@@ -5375,7 +5375,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.COMPACTION:
-          if (rfiData.metaData.compactionData) {
+          if (rfiData.metaData?.compactionData) {
             setCompactionData(rfiData.metaData.compactionData);
           } else {
             setCompactionData({
@@ -5394,7 +5394,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.PLACING_OF_FILLER_BOARD:
-          if (rfiData.metaData.placingOfFillerBoardData) {
+          if (rfiData.metaData?.placingOfFillerBoardData) {
             setPlacingOfFillerBoardData(
               rfiData.metaData.placingOfFillerBoardData,
             );
@@ -5411,7 +5411,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.SEALANT_FILING:
-          if (rfiData.metaData.sealantFilingData) {
+          if (rfiData.metaData?.sealantFilingData) {
             setSealantFilingData(rfiData.metaData.sealantFilingData);
           } else {
             setSealantFilingData({
@@ -5428,7 +5428,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.MILLING_OF_FLEXIBLE_PAVEMENT:
-          if (rfiData.metaData.millingData) {
+          if (rfiData.metaData?.millingData) {
             setMillingData(rfiData.metaData.millingData);
           } else {
             setMillingData({
@@ -5442,7 +5442,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.LAYING_OF_SEPARATION_MEMBRANE:
-          if (rfiData.metaData.layingOfSeparationMembraneData) {
+          if (rfiData.metaData?.layingOfSeparationMembraneData) {
             setLayingOfSeparationMembraneData(
               rfiData.metaData.layingOfSeparationMembraneData,
             );
@@ -5460,7 +5460,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.CUTTING_OF_SOIL:
-          if (rfiData.metaData.cuttingOfSoilData) {
+          if (rfiData.metaData?.cuttingOfSoilData) {
             setCuttingOfSoilData(rfiData.metaData.cuttingOfSoilData);
           } else {
             setCuttingOfSoilData({
@@ -5472,7 +5472,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.LAYING_OF_PAVEMENT_QUALITY_CONCRETE:
-          if (rfiData.metaData.layingOfPQCData) {
+          if (rfiData.metaData?.layingOfPQCData) {
             setLayingOfPQCData(rfiData.metaData.layingOfPQCData);
           } else {
             setLayingOfPQCData({
@@ -5501,7 +5501,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.BACKFILLING:
-          if (rfiData.metaData.backfillingData) {
+          if (rfiData.metaData?.backfillingData) {
             setBackfillingData(rfiData.metaData.backfillingData);
           } else {
             setBackfillingData({
@@ -5520,7 +5520,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.BRICKS_WORK:
-          if (rfiData.metaData.bricksWorkData) {
+          if (rfiData.metaData?.bricksWorkData) {
             setBricksWorkData(rfiData.metaData.bricksWorkData);
           } else {
             setBricksWorkData({
@@ -5543,7 +5543,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.FIXING_GEO_CELL:
-          if (rfiData.metaData.fixingGeoCellData) {
+          if (rfiData.metaData?.fixingGeoCellData) {
             setFixingGeoCellData(rfiData.metaData.fixingGeoCellData);
           } else {
             setFixingGeoCellData({
@@ -5560,7 +5560,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.FIXING_OF_MESH:
-          if (rfiData.metaData.fixingOfMeshData) {
+          if (rfiData.metaData?.fixingOfMeshData) {
             setFixingOfMeshData(rfiData.metaData.fixingOfMeshData);
           } else {
             setFixingOfMeshData({
@@ -5574,7 +5574,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.LAYING_OF_GRASS_TURF:
-          if (rfiData.metaData.layingOfGrassTurfData) {
+          if (rfiData.metaData?.layingOfGrassTurfData) {
             setLayingOfGrassTurfData(rfiData.metaData.layingOfGrassTurfData);
           } else {
             setLayingOfGrassTurfData({
@@ -5595,7 +5595,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.LAYING_OF_TOP_SOIL:
-          if (rfiData.metaData.layingOfTopSoilData) {
+          if (rfiData.metaData?.layingOfTopSoilData) {
             setLayingOfTopSoilData(rfiData.metaData.layingOfTopSoilData);
           } else {
             setLayingOfTopSoilData({
@@ -5609,7 +5609,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.PLACING_AND_JOINTING_OF_CHUTE_MEMBERS:
-          if (rfiData.metaData.chuteMembersData) {
+          if (rfiData.metaData?.chuteMembersData) {
             setChuteMembersData(rfiData.metaData.chuteMembersData);
           } else {
             setChuteMembersData({
@@ -5624,7 +5624,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.PIT_EXCAVATION:
-          if (rfiData.metaData.pitExcavationData) {
+          if (rfiData.metaData?.pitExcavationData) {
             setPitExcavationData(rfiData.metaData.pitExcavationData);
           } else {
             setPitExcavationData({
@@ -5643,7 +5643,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.PLANTING_GRASS:
-          if (rfiData.metaData.plantingGrassData) {
+          if (rfiData.metaData?.plantingGrassData) {
             setPlantingGrassData(rfiData.metaData.plantingGrassData);
           } else {
             setPlantingGrassData({
@@ -5660,7 +5660,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.PLANTING_TREES:
-          if (rfiData.metaData.plantingTreesData) {
+          if (rfiData.metaData?.plantingTreesData) {
             setPlantingTreesData(rfiData.metaData.plantingTreesData);
           } else {
             setPlantingTreesData({
@@ -5677,7 +5677,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.PREPARATION_OF_SOIL:
-          if (rfiData.metaData.preparationOfSoilData) {
+          if (rfiData.metaData?.preparationOfSoilData) {
             setPreparationOfSoilData(rfiData.metaData.preparationOfSoilData);
           } else {
             setPreparationOfSoilData({
@@ -5690,7 +5690,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.SPREADING_OF_GRASS_SEEDS:
-          if (rfiData.metaData.spreadingOfGrassSeedsData) {
+          if (rfiData.metaData?.spreadingOfGrassSeedsData) {
             setSpreadingOfGrassSeedsData(
               rfiData.metaData.spreadingOfGrassSeedsData,
             );
@@ -5703,7 +5703,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.WATERING:
-          if (rfiData.metaData.wateringData) {
+          if (rfiData.metaData?.wateringData) {
             setWateringData(rfiData.metaData.wateringData);
           } else {
             setWateringData({
@@ -5714,7 +5714,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.PLANTATION:
-          if (rfiData.metaData.plantationData) {
+          if (rfiData.metaData?.plantationData) {
             setPlantationData(rfiData.metaData.plantationData);
           } else {
             setPlantationData({
@@ -5733,7 +5733,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.STONE_PITCHING:
-          if (rfiData.metaData.stonePitchingData) {
+          if (rfiData.metaData?.stonePitchingData) {
             setStonePitchingData(rfiData.metaData.stonePitchingData);
           } else {
             setStonePitchingData({
@@ -5749,7 +5749,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.FIXING_INVERTER_INSTALLATION:
-          if (rfiData.metaData.inverterInstallationData) {
+          if (rfiData.metaData?.inverterInstallationData) {
             setInverterInstallationData(
               rfiData.metaData.inverterInstallationData,
             );
@@ -5770,7 +5770,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.ERECTION_OF_DOUBLE_POLE_STRUCTURE:
-          if (rfiData.metaData.erectionOfDoublePoleStructureData) {
+          if (rfiData.metaData?.erectionOfDoublePoleStructureData) {
             setErectionOfDoublePoleStructureData(
               rfiData.metaData.erectionOfDoublePoleStructureData,
             );
@@ -5790,7 +5790,7 @@ const renderBallastHeadings = () => (
           break;
 
         case TASK_TYPES.FIXING_OF_MC4_Y_CONNECTOR:
-          if (rfiData.metaData.fixingOfMC4Data) {
+          if (rfiData.metaData?.fixingOfMC4Data) {
             setFixingOfMC4Data(rfiData.metaData.fixingOfMC4Data);
           } else {
             setFixingOfMC4Data({
@@ -5801,7 +5801,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.FIXING_OF_MC4_Y_CONNECTOR:
-          if (rfiData.metaData.fixingOfMC4Data) {
+          if (rfiData.metaData?.fixingOfMC4Data) {
             setFixingOfMC4Data(rfiData.metaData.fixingOfMC4Data);
           } else {
             setFixingOfMC4Data({
@@ -5812,7 +5812,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.FIXING_OF_MMS:
-          if (rfiData.metaData.fixingOfMMSData) {
+          if (rfiData.metaData?.fixingOfMMSData) {
             setFixingOfMMSData(rfiData.metaData.fixingOfMMSData);
           } else {
             setFixingOfMMSData({
@@ -5832,7 +5832,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.FIXING_OF_MODULES:
-          if (rfiData.metaData.fixingOfModulesData) {
+          if (rfiData.metaData?.fixingOfModulesData) {
             setFixingOfModulesData(rfiData.metaData.fixingOfModulesData);
           } else {
             setFixingOfModulesData({
@@ -5851,7 +5851,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.LAYING_OF_CAUTION_TAPE:
-          if (rfiData.metaData.layingCautionTapeData) {
+          if (rfiData.metaData?.layingCautionTapeData) {
             setLayingCautionTapeData(rfiData.metaData.layingCautionTapeData);
           } else {
             setLayingCautionTapeData({
@@ -5865,7 +5865,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.ROUTE_MARKING:
-          if (rfiData.metaData.routeMarkingData) {
+          if (rfiData.metaData?.routeMarkingData) {
             setRouteMarkingData(rfiData.metaData.routeMarkingData);
           } else {
             setRouteMarkingData({
@@ -5881,7 +5881,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.BRICKS_LAYERING:
-          if (rfiData.metaData.bricksLayeringData) {
+          if (rfiData.metaData?.bricksLayeringData) {
             setBricksLayeringData(rfiData.metaData.bricksLayeringData);
           } else {
             setBricksLayeringData({
@@ -5894,7 +5894,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.CABLE_DRESSING:
-          if (rfiData.metaData.cableDressingData) {
+          if (rfiData.metaData?.cableDressingData) {
             setCableDressingData(rfiData.metaData.cableDressingData);
           } else {
             setCableDressingData({
@@ -5904,7 +5904,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.CABLE_TRENCH_DRESSING:
-          if (rfiData.metaData.cableTrenchDressingData) {
+          if (rfiData.metaData?.cableTrenchDressingData) {
             setCableTrenchDressingData(
               rfiData.metaData.cableTrenchDressingData,
             );
@@ -5920,7 +5920,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.CONDUIT_LAYING:
-          if (rfiData.metaData.conduitLayingData) {
+          if (rfiData.metaData?.conduitLayingData) {
             setConduitLayingData(rfiData.metaData.conduitLayingData);
           } else {
             setConduitLayingData({
@@ -5934,7 +5934,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.CABLE_TRENCH_EXCAVATION:
-          if (rfiData.metaData.cableTrenchExcavationData) {
+          if (rfiData.metaData?.cableTrenchExcavationData) {
             setCableTrenchExcavationData(
               rfiData.metaData.cableTrenchExcavationData,
             );
@@ -5956,7 +5956,7 @@ const renderBallastHeadings = () => (
         case TASK_TYPES.FIXING_AND_INSTALLATION_OF_INVERTOR:
         case TASK_TYPES.FIXING_AND_INSTALLATION_OF_HT_PANEL:
         case TASK_TYPES.FIXING_AND_INSTALLATION_OF_TRANSFORMER:
-          if (rfiData.metaData.fixingAndInstallationData) {
+          if (rfiData.metaData?.fixingAndInstallationData) {
             setFixingAndInstallationData(
               rfiData.metaData.fixingAndInstallationData,
             );
@@ -5977,7 +5977,7 @@ const renderBallastHeadings = () => (
           }
           break;
         // case TASK_TYPES.HT_PANEL_INSTALLATION:
-        //   if (rfiData.metaData.htPanelInstallationData) {
+        //   if (rfiData.metaData?.htPanelInstallationData) {
         //     setHtPanelInstallationData(
         //       rfiData.metaData.htPanelInstallationData,
         //     );
@@ -5998,7 +5998,7 @@ const renderBallastHeadings = () => (
         //   }
         //   break;
         case TASK_TYPES.ERECTION_OF_STRUCTURE:
-          if (rfiData.metaData.erectionOfStructureData) {
+          if (rfiData.metaData?.erectionOfStructureData) {
             setErectionOfStructureData(
               rfiData.metaData.erectionOfStructureData,
             );
@@ -6012,7 +6012,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.FABRICATION_OF_STRUCTURE:
-          if (rfiData.metaData.fabricationOfStructureData) {
+          if (rfiData.metaData?.fabricationOfStructureData) {
             setFabricationOfStructureData(
               rfiData.metaData.fabricationOfStructureData,
             );
@@ -6037,7 +6037,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.FIXING_OF_PANELS:
-          if (rfiData.metaData.fixingOfPanelsData) {
+          if (rfiData.metaData?.fixingOfPanelsData) {
             setFixingOfPanelsData(rfiData.metaData.fixingOfPanelsData);
           } else {
             setFixingOfPanelsData({
@@ -6053,7 +6053,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.ERECTION_OF_PRECAST_COLUMN:
-          if (rfiData.metaData.erectionPreCastColumnData) {
+          if (rfiData.metaData?.erectionPreCastColumnData) {
             setErectionPreCastColumnData(
               rfiData.metaData.erectionPreCastColumnData,
             );
@@ -6072,7 +6072,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.ERECTION_OF_BUS_SHELTER:
-          if (rfiData.metaData.erectionOfBusShelterData) {
+          if (rfiData.metaData?.erectionOfBusShelterData) {
             setErectionOfBusShelterData(
               rfiData.metaData.erectionOfBusShelterData,
             );
@@ -6088,7 +6088,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.ERECTION_OF_ANGLE_SECTION:
-          if (rfiData.metaData.erectionOfAngleSectionData) {
+          if (rfiData.metaData?.erectionOfAngleSectionData) {
             setErectionOfAngleSectionData(
               rfiData.metaData.erectionOfAngleSectionData,
             );
@@ -6104,7 +6104,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.PLACING_OF_PRE_CAST_RCC_PANELS:
-          if (rfiData.metaData.preCastRccPanelData) {
+          if (rfiData.metaData?.preCastRccPanelData) {
             setPreCastRccPanelData(rfiData.metaData.preCastRccPanelData);
           } else {
             setPreCastRccPanelData({
@@ -6118,7 +6118,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.PLACING_OF_CHAIN_LINK:
-          if (rfiData.metaData.placingChainLinkData) {
+          if (rfiData.metaData?.placingChainLinkData) {
             setPlacingChainLinkData(rfiData.metaData.placingChainLinkData);
           } else {
             setPlacingChainLinkData({
@@ -6141,7 +6141,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.MORTAR_CHECKLIST:
-          if (rfiData.metaData.mortarChecklistData) {
+          if (rfiData.metaData?.mortarChecklistData) {
             setMortarChecklistData(rfiData.metaData.mortarChecklistData);
           } else {
             setMortarChecklistData({
@@ -6157,7 +6157,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.FLOORING:
-          if (rfiData.metaData.flooringData) {
+          if (rfiData.metaData?.flooringData) {
             setFlooringData(rfiData.metaData.flooringData);
           } else {
             setFlooringData({
@@ -6172,7 +6172,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.SIGNAGE_LOCATION_IDENTIFICATION:
-          if (rfiData.metaData.signageLocationData) {
+          if (rfiData.metaData?.signageLocationData) {
             setSignageLocationData(rfiData.metaData.signageLocationData);
           } else {
             setSignageLocationData({
@@ -6184,7 +6184,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.BACKFILL:
-          if (rfiData.metaData.backfillData) {
+          if (rfiData.metaData?.backfillData) {
             setBackfillData(rfiData.metaData.backfillData);
           } else {
             setBackfillData({
@@ -6198,7 +6198,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.PLACEMENT_OF_SIGNAGE_SHEET:
-          if (rfiData.metaData.placementOfSignageSheetData) {
+          if (rfiData.metaData?.placementOfSignageSheetData) {
             setPlacementOfSignageSheetData(
               rfiData.metaData.placementOfSignageSheetData,
             );
@@ -6215,7 +6215,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.FIXING_OF_TRAFFIC_IMPACT_ATTENUATORS:
-          if (rfiData.metaData.trafficImpactAttenuatorsData) {
+          if (rfiData.metaData?.trafficImpactAttenuatorsData) {
             setTrafficImpactAttenuatorsData(
               rfiData.metaData.trafficImpactAttenuatorsData,
             );
@@ -6233,7 +6233,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.FIXING_OF_SPRING_POST:
-          if (rfiData.metaData.fixingOfSpringPostData) {
+          if (rfiData.metaData?.fixingOfSpringPostData) {
             setFixingOfSpringPostData(rfiData.metaData.fixingOfSpringPostData);
           } else {
             setFixingOfSpringPostData({
@@ -6250,7 +6250,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.FIXING_OF_SOLAR_ROAD_STUDS:
-          if (rfiData.metaData.fixingOfSolarRoadStudsData) {
+          if (rfiData.metaData?.fixingOfSolarRoadStudsData) {
             setFixingOfSolarRoadStudsData(
               rfiData.metaData.fixingOfSolarRoadStudsData,
             );
@@ -6270,7 +6270,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.FIXING_OF_SOLAR_BLINKERS:
-          if (rfiData.metaData.fixingOfSolarBlinkersData) {
+          if (rfiData.metaData?.fixingOfSolarBlinkersData) {
             setFixingOfSolarBlinkersData(
               rfiData.metaData.fixingOfSolarBlinkersData,
             );
@@ -6289,7 +6289,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.FIXING_OF_ROAD_STUDS:
-          if (rfiData.metaData.fixingOfRoadStudsData) {
+          if (rfiData.metaData?.fixingOfRoadStudsData) {
             setFixingOfRoadStudsData(rfiData.metaData.fixingOfRoadStudsData);
           } else {
             setFixingOfRoadStudsData({
@@ -6307,7 +6307,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.FIXING_OF_ROAD_DELINEATORS:
-          if (rfiData.metaData.fixingOfRoadDelineatorsData) {
+          if (rfiData.metaData?.fixingOfRoadDelineatorsData) {
             setFixingOfRoadDelineatorsData(
               rfiData.metaData.fixingOfRoadDelineatorsData,
             );
@@ -6325,7 +6325,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.FIXING_OF_OBJECT_MARKERS:
-          if (rfiData.metaData.fixingOfObjectMarkersData) {
+          if (rfiData.metaData?.fixingOfObjectMarkersData) {
             setFixingOfObjectMarkersData(
               rfiData.metaData.fixingOfObjectMarkersData,
             );
@@ -6343,7 +6343,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.FIXING_OF_NOISE_BARRIER:
-          if (rfiData.metaData.fixingOfNoiseBarrierData) {
+          if (rfiData.metaData?.fixingOfNoiseBarrierData) {
             setFixingOfNoiseBarrierData(
               rfiData.metaData.fixingOfNoiseBarrierData,
             );
@@ -6362,7 +6362,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.FIXING_OF_LED_TRAFFIC_BLINKERS:
-          if (rfiData.metaData.fixingOfLEDTrafficBlinkersData) {
+          if (rfiData.metaData?.fixingOfLEDTrafficBlinkersData) {
             setFixingOfLEDTrafficBlinkersData(
               rfiData.metaData.fixingOfLEDTrafficBlinkersData,
             );
@@ -6381,7 +6381,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.FIXING_OF_HAZARD_MARKERS:
-          if (rfiData.metaData.fixingOfHazardMarkersData) {
+          if (rfiData.metaData?.fixingOfHazardMarkersData) {
             setFixingOfHazardMarkersData(
               rfiData.metaData.fixingOfHazardMarkersData,
             );
@@ -6399,7 +6399,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.FIXING_OF_FLEXIBLE_MEDIAN_MARKERS:
-          if (rfiData.metaData.fixingOfFlexibleMedianMarkersData) {
+          if (rfiData.metaData?.fixingOfFlexibleMedianMarkersData) {
             setFixingOfFlexibleMedianMarkersData(
               rfiData.metaData.fixingOfFlexibleMedianMarkersData,
             );
@@ -6418,7 +6418,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.FIXING_OF_CONVEX_MIRRORS:
-          if (rfiData.metaData.fixingOfConvexMirrorsData) {
+          if (rfiData.metaData?.fixingOfConvexMirrorsData) {
             setFixingOfConvexMirrorsData(
               rfiData.metaData.fixingOfConvexMirrorsData,
             );
@@ -6437,7 +6437,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.FIXING_OF_ANTIGLARES:
-          if (rfiData.metaData.fixingOfAntiglaresData) {
+          if (rfiData.metaData?.fixingOfAntiglaresData) {
             setFixingOfAntiglaresData(rfiData.metaData.fixingOfAntiglaresData);
           } else {
             setFixingOfAntiglaresData({
@@ -6454,7 +6454,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.ERECTION_OF_POLES:
-          if (rfiData.metaData.erectionOfPolesData) {
+          if (rfiData.metaData?.erectionOfPolesData) {
             setErectionOfPolesData(rfiData.metaData.erectionOfPolesData);
           } else {
             setErectionOfPolesData({
@@ -6470,7 +6470,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.FIXING_OF_ARMS:
-          if (rfiData.metaData.fixingOfArmsData) {
+          if (rfiData.metaData?.fixingOfArmsData) {
             setFixingOfArmsData(rfiData.metaData.fixingOfArmsData);
           } else {
             setFixingOfArmsData({
@@ -6485,7 +6485,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.INSTALLATION_OF_LED_LIGHTS:
-          if (rfiData.metaData.installationOfLEDLightsData) {
+          if (rfiData.metaData?.installationOfLEDLightsData) {
             setInstallationOfLEDLightsData(
               rfiData.metaData.installationOfLEDLightsData,
             );
@@ -6502,7 +6502,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.LAYING_OF_FLEXIBLE_CABLE:
-          if (rfiData.metaData.layingOfFlexibleCableData) {
+          if (rfiData.metaData?.layingOfFlexibleCableData) {
             setLayingOfFlexibleCableData(
               rfiData.metaData.layingOfFlexibleCableData,
             );
@@ -6521,7 +6521,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.LAYING_OF_LT_CABLE:
-          if (rfiData.metaData.layingOfLTCableData) {
+          if (rfiData.metaData?.layingOfLTCableData) {
             setLayingOfLTCableData(rfiData.metaData.layingOfLTCableData);
           } else {
             setLayingOfLTCableData({
@@ -6538,7 +6538,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.FIXING_OF_STONE:
-          if (rfiData.metaData.fixingOfStoneData) {
+          if (rfiData.metaData?.fixingOfStoneData) {
             setFixingOfStoneData(rfiData.metaData.fixingOfStoneData);
           } else {
             setFixingOfStoneData({
@@ -6554,7 +6554,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.PLASTERING:
-          if (rfiData.metaData.plasteringData) {
+          if (rfiData.metaData?.plasteringData) {
             setPlasteringData(rfiData.metaData.plasteringData);
           } else {
             setPlasteringData({
@@ -6569,7 +6569,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.PUTTY:
-          if (rfiData.metaData.puttyData) {
+          if (rfiData.metaData?.puttyData) {
             setPuttyData(rfiData.metaData.puttyData);
           } else {
             setPuttyData({
@@ -6583,7 +6583,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.HVAC_WORK:
-          if (rfiData.metaData.hvacWorkData) {
+          if (rfiData.metaData?.hvacWorkData) {
             setHvacWorkData(rfiData.metaData.hvacWorkData);
           } else {
             setHvacWorkData({
@@ -6600,7 +6600,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.CEILING_WORK:
-          if (rfiData.metaData.ceilingWorkData) {
+          if (rfiData.metaData?.ceilingWorkData) {
             setCeilingWorkData(rfiData.metaData.ceilingWorkData);
           } else {
             setCeilingWorkData({
@@ -6615,7 +6615,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.FURNITURE_WORK:
-          if (rfiData.metaData.furnitureWorkData) {
+          if (rfiData.metaData?.furnitureWorkData) {
             setFurnitureWorkData(rfiData.metaData.furnitureWorkData);
           } else {
             setFurnitureWorkData({
@@ -6629,7 +6629,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.DOOR_WORKS:
-          if (rfiData.metaData.doorWorksData) {
+          if (rfiData.metaData?.doorWorksData) {
             setDoorWorksData(rfiData.metaData.doorWorksData);
           } else {
             setDoorWorksData({
@@ -6643,7 +6643,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.WINDOW_WORKS:
-          if (rfiData.metaData.windowWorksData) {
+          if (rfiData.metaData?.windowWorksData) {
             setWindowWorksData(rfiData.metaData.windowWorksData);
           } else {
             setWindowWorksData({
@@ -6657,7 +6657,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.GLASS_WORKS:
-          if (rfiData.metaData.glassWorksData) {
+          if (rfiData.metaData?.glassWorksData) {
             setGlassWorksData(rfiData.metaData.glassWorksData);
           } else {
             setGlassWorksData({
@@ -6673,7 +6673,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.ELECTRICAL_WORK:
-          if (rfiData.metaData.electricalWorkData) {
+          if (rfiData.metaData?.electricalWorkData) {
             setElectricalWorkData(rfiData.metaData.electricalWorkData);
           } else {
             setElectricalWorkData({
@@ -6691,7 +6691,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.PLUMBING_WORK:
-          if (rfiData.metaData.plumbingWorkData) {
+          if (rfiData.metaData?.plumbingWorkData) {
             setPlumbingWorkData(rfiData.metaData.plumbingWorkData);
           } else {
             setPlumbingWorkData({
@@ -6709,7 +6709,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.FLOORING_WORK:
-          if (rfiData.metaData.flooringWorkData) {
+          if (rfiData.metaData?.flooringWorkData) {
             setFlooringWorkData(rfiData.metaData.flooringWorkData);
           } else {
             setFlooringWorkData({
@@ -6725,7 +6725,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.EXCAVATION_OF_TRENCH:
-          if (rfiData.metaData.excavationOfTrenchData) {
+          if (rfiData.metaData?.excavationOfTrenchData) {
             setExcavationOfTrenchData(rfiData.metaData.excavationOfTrenchData);
           } else {
             setExcavationOfTrenchData({
@@ -6741,7 +6741,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.LAYING_OF_DUCT:
-          if (rfiData.metaData.layingOfDuctData) {
+          if (rfiData.metaData?.layingOfDuctData) {
             setLayingOfDuctData(rfiData.metaData.layingOfDuctData);
           } else {
             setLayingOfDuctData({
@@ -6756,7 +6756,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.HDD_CROSSING:
-          if (rfiData.metaData.hddCrossingData) {
+          if (rfiData.metaData?.hddCrossingData) {
             setHddCrossingData(rfiData.metaData.hddCrossingData);
           } else {
             setHddCrossingData({
@@ -6772,7 +6772,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.CONSTRUCTION_OF_CHAMBER:
-          if (rfiData.metaData.constructionOfChamberData) {
+          if (rfiData.metaData?.constructionOfChamberData) {
             setConstructionOfChamberData(
               rfiData.metaData.constructionOfChamberData,
             );
@@ -6797,7 +6797,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.INSTALLATION_OF_EQUIPMENT:
-          if (rfiData.metaData.installationOfEquipmentData) {
+          if (rfiData.metaData?.installationOfEquipmentData) {
             setInstallationOfEquipmentData(
               rfiData.metaData.installationOfEquipmentData,
             );
@@ -6819,7 +6819,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.INSTALLATION_OF_SOLAR_SYSTEM:
-          if (rfiData.metaData.installationOfSolarSystemData) {
+          if (rfiData.metaData?.installationOfSolarSystemData) {
             setInstallationOfSolarSystemData(
               rfiData.metaData.installationOfSolarSystemData,
             );
@@ -6839,7 +6839,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.INSTALLATION_OF_NETWORK_DEVICES:
-          if (rfiData.metaData.installationOfNetworkDevicesData) {
+          if (rfiData.metaData?.installationOfNetworkDevicesData) {
             setInstallationOfNetworkDevicesData(
               rfiData.metaData.installationOfNetworkDevicesData,
             );
@@ -6858,7 +6858,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.CONSTRUCTION_OF_FOUNDATION:
-          if (rfiData.metaData.constructionOfFoundationData) {
+          if (rfiData.metaData?.constructionOfFoundationData) {
             setConstructionOfFoundationData(
               rfiData.metaData.constructionOfFoundationData,
             );
@@ -6882,7 +6882,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.CASTING_OF_BALLAST:
-          if (rfiData.metaData.castingOfBallastData) {
+          if (rfiData.metaData?.castingOfBallastData) {
             setCastingOfBallastData(rfiData.metaData.castingOfBallastData);
           } else {
             setCastingOfBallastData({
@@ -6902,7 +6902,7 @@ const renderBallastHeadings = () => (
           }
           break;
         case TASK_TYPES.SAND_LAYER:
-          if (rfiData.metaData.sandLayerData) {
+          if (rfiData.metaData?.sandLayerData) {
             setSandLayerData(rfiData.metaData.sandLayerData);
           } else {
             setSandLayerData({
@@ -6984,10 +6984,7 @@ const renderBallastHeadings = () => (
             const prestressingCablesDetails =
               selectedTask.taskDetailsData[0]?.details
                 ?.prestressingCablesDetails;
-            console.log(
-              '====prestressing===',
-              JSON.stringify(prestressingCablesDetails),
-            );
+            
             const array = [];
             for (let prop in prestressingCablesDetails) {
               array.push({
@@ -18600,6 +18597,7 @@ const renderBallastHeadings = () => (
           </View>
         );
       case TASK_TYPES.LAYING_AND_COMPACTION:
+        console.log('call 3')
         const layingAndCompactionProperties = [
           {
             title: 'All Safety Measures Taken as per Plan',

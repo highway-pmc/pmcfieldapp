@@ -681,6 +681,7 @@ export const TEST_MATERIALS_TYPES = {
   CEMENT: 'cement',
   ADMIXTURE: 'admixture',
   SILICA_FUME: 'silica-fume',
+  SMA: 'sma',
 };
 
 export const TEST_TYPES = {

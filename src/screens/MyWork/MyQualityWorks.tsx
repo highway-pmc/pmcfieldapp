@@ -269,6 +269,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
         if (testTypeIndex != -1) {
           testTypeData = testMateData.testTypesData[testTypeIndex];
           breadCrumb[3].name = testTypeData.name;
+          console.log('testTypeData>>>>>>>>>>>>:', testMateData);
           testTypeData.testRFIsData?.forEach((rfi: any) => {
             rfi.type = testTypeData.type;
           });
@@ -332,6 +333,21 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
             testMateData.materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE
           ) {
             testTypeData.materialType = TEST_MATERIALS_TYPES.COARSE_AGGREGATE;
+            setCurrentSubTestTypeRFIsData(testTypeData.testRFIsData);
+            setSelectedTestSample(testTypeData);
+            setCurrentLevel(6);
+            // const testObservations: any = [];
+            // testObservations.push(getTestSampleCementCoarseAggregateObject(1, testTypeData.type));
+            // if (testTypeData.type === TEST_TYPES.GRADATION) {
+            //   testObservations.push(getTestSampleCementCoarseAggregateObject(2, testTypeData.type));
+            //   testObservations.push(getTestSampleCementCoarseAggregateObject(3, testTypeData.type));
+            // }
+            // setConcreteSampleTestItems(testObservations);
+            // setOpenPopup(true);
+          } else if (
+            testMateData.materialType === TEST_MATERIALS_TYPES.SMA
+          ) {
+            testTypeData.materialType = TEST_MATERIALS_TYPES.SMA;
             setCurrentSubTestTypeRFIsData(testTypeData.testRFIsData);
             setSelectedTestSample(testTypeData);
             setCurrentLevel(6);
@@ -5650,7 +5666,16 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
                   }
                 })
                 .map((item: any) => (
-                  <View>
+                  (currentTestMaterialData.materialType ===
+                    TEST_MATERIALS_TYPES.SMA) ?
+                    <TouchableOpacity
+                        style={getStyle(item)}
+                        onPress={() => onClickNested(6, item)}>
+                        <View style={styles.leftContainer}>
+                          <Text style={styles.HeadText}>{item.name}</Text>
+                        </View>
+                      </TouchableOpacity>
+                    : <View>
                     <View
                       style={
                         item.sampleStatus != TEST_SAMPLE_STATUS.PREPARED && {

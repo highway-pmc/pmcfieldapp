@@ -1,0 +1,18427 @@
+import { Alert, FlatList, Image, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import DropdownPicker from "../../../../../components/UI/DropdownPicker";
+import { CEMENT_TYPE_LIST, CONCRETE_GRADE_LIST, RFI_STATUS, TASK_TYPES, YES_NO_LIST, YES_NO_NA_LIST } from "../../../../../constants/constants";
+import { handleTextInputChangeBallast, handleTextInputChangeFoundation, handleTextInputChangeTorquing, handleTimeChangeBallast, handleTimeChangeFoundation } from "./Validates";
+import { useState } from "react";
+import DropDownPicker from "react-native-dropdown-picker";
+import TimePicker from "../../../../../components/UI/TimePicker";
+import { applicationOfFilterMediaData, assemblingOfTrussData, autoLaunchingData, backfillData, backfillingData, ballastData, barBendingScheduleChecked, boringOfDiaphragmData, boringOfPileData, bricksLayeringData, bricksWorkData, cableDressingData, cableTrenchDressingData, cableTrenchExcavationData, castingOfBallastData, ceilingWorkData, chippingAndRemovalOfConcreteData, chuteMembersData, cleanliness, closeRow, comments, compactionData, concreteData, concreteFinishLevelMarked, concreteHasAchievedDesiredStrength, conduitLayingData, constructionOfChamberData, constructionOfFoundationData, couplerArrangementsWithinTolerance, curingData, currentTasksData, cuttingOfJointsData, cuttingOfSoilData, deleteBallastItem, deleteDumpingItem, deleteItem, deleteTorquingItem, deStressingOfGirderData, doorWorksData, dumpingData, dumpingOfSoilData, electricalWorkData, erectionData, erectionOfAngleSectionData, erectionOfBusShelterData, erectionOfColumnsData, erectionOfDoublePoleStructureData, erectionOfFaciaPanelsData, erectionOfFrictionSlabData, erectionOfPolesData, erectionOfStructureData, erectionOfTemporaryStructure, erectionPreCastColumnData, erectionUsingCranesData, excavationOfTrenchData, fabricationData, fabricationOfStructureData, fixingAndInstallationData, fixingGeoCellData, fixingOfAntiglaresData, fixingOfArmsData, fixingOfBearingData, fixingOfBracingsData, fixingOfConvexMirrorsData, fixingOfConvexMirrorsData, fixingOfFlexibleMedianMarkersData, fixingOfGeoGridData, fixingOfHazardMarkersData, fixingOfLEDTrafficBlinkersData, fixingOfMC4Data, fixingOfMeshData, fixingOfMetalBeamData, fixingOfMMSData, fixingOfModulesData, fixingOfNoiseBarrierData, fixingOfObjectMarkersData, fixingOfPanelsData, fixingOfRailingData, fixingOfRoadDelineatorsData, fixingOfRoadStudsData, fixingOfSheathingJointsData, fixingOfSolarBlinkersData, fixingOfSolarRoadStudsData, fixingOfSpringPostData, fixingOfStoneData, fixingOfWireRopeData, fixingShutterData, fixingVerticalPostData, flooringData, flooringWorkData, flushingOperationsData, formworkAlignmentChecked, formworkdDrawingsChecked, formworkFitConcreting, formworkProperlySupported, formworkSealingChecked, foundationData, furnitureWorkData, glassWorksData, glueingData, groutingData, hackingOfGirderData, handleBoringOfDiaphragmInputChange, handleCuring, handleErectionOfTemporaryStructure, handleFixingShutter, handleInputChangeAssemblingOfTruss, handleInputChangeAutoLaunching, handleInputChangeBoringOfPile, handleInputChangeChippingAndRemovalOfConcrete, handleInputChangeDeStressingOfGirder, handleInputChangeErectionUsingCranes, handleInputChangeFabrication, handleInputChangeFixingOfBearing, handleInputChangeFixingOfSheathingJoints, handleInputChangeFlushingOperations, handleInputChangeGrouting, handleInputChangeHackingOfGirder, handleInputChangeInstallationOfExpansionJoint, handleInputChangeLifting, handleInputChangePainting, handleInputChangeRemovalOfTemporaryStructure, handleInputChangeStackingInYard, handleInputChangeStitchConcrete, handleInputChangeStitchConcrete, handlePaintingOfSteelGirdersDiaphragms, handlePlacementOfReinforcementCage, handleTextInputChangeDumping, handleTextInputChangeProcurementOfSteel, handleTextInputChangeTemporaryPrestressing, handleTransportationOfSteelGirdersDiaphragms, hddCrossingData, hvacWorkData, imageObject, installationOfEquipmentData, installationOfExpansionJointData, installationOfLEDLightsData, installationOfNetworkDevicesData, installationOfSolarSystemData, inverterInstallationData, layingAndCompactionData, layingCautionTapeData, layingOfDLCData, layingOfDlcTableData, layingOfDuctData, layingOfFlexibleCableData, layingOfGrassTurfData, layingOfLTCableData, layingOfPaverBlockData, layingOfPQCData, layingOfSeparationMembraneData, layingOfTopSoilData, liftingCombinedLRData, machineCuttingData, millingData, minimumTimeHasBeenAttained, mortarChecklistData, noLBendBottomOfTheCageChecked, onAddComstructionOfFoundation, onAddMoreLayingOfDlc, openBarBendingScheduleChecked, openCalendar, openCleanliness, openConcreteFinishLevelMarked, openConcreteHasAchievedDesiredStrength, openCouplerArrangementsWithinTolerance, openFormworkAlignmentChecked, openFormworkdDrawingsChecked, openFormworkFitConcreting, openFormworkProperlySupported, openFormworkSealingChecked, openMinimumTimeHasBeenAttained, openNoLBendBottomOfTheCageChecked, openPlieShaftCleanedLooseMaterial, openRebarAndDimensionGFC, openRebarsSecurelyTightened, openRebarWithinToleranceLimit, openShapingNoAndLengthOfBarsGFC, openSpacerBarCheckedGFC, openSpliceLengthAndLocationGFC, openSuitableSpacerProvidedToMaintainCoverToSteel, paintingData, paintingOfSteelGirdersDiaphragms, pipeLayingAndJointingData, pitExcavationData, placementOfReinforcementCage, placementOfSignageSheetData, placingChainLinkData, placingOfDowelData, placingOfFillerBoardData, placingOfTieBarData, plantationData, plantingGrassData, plantingTreesData, plasteringData, plieShaftCleanedLooseMaterial, plumbingWorkData, preCastRccPanelData, preparationOfSoilData, prestressingData, primeCoatData, procurementOfSheetData, procurementOfSteelData, puttyData, quantity, rebarAndDimensionGFC, rebarsSecurelyTightened, rebarWithinToleranceLimit, removalFormworkData, removalOfTemporaryStructureData, rfiDate, rfiTime, roadMarkingData, routeMarkingData, sandLayerData, sealantFilingData, searchText, selectedTask, setApplicationOfFilterMediaData, setBackfillData, setBackfillingData, setBallastData, setBarBendingScheduleChecked, setBricksLayeringData, setBricksWorkData, setCableDressingData, setCableTrenchDressingData, setCableTrenchExcavationData, setCastingOfBallastData, setCeilingWorkData, setChuteMembersData, setCleanliness, setComments, setCompactionData, setConcreteData, setConcreteFinishLevelMarked, setConcreteHasAchievedDesiredStrength, setConduitLayingData, setConstructionOfChamberData, setConstructionOfFoundationData, setCouplerArrangementsWithinTolerance, setCuttingOfJointsData, setCuttingOfSoilData, setDoorWorksData, setDumpingData, setDumpingOfSoilData, setElectricalWorkData, setErectionData, setErectionOfAngleSectionData, setErectionOfBusShelterData, setErectionOfColumnsData, setErectionOfDoublePoleStructureData, setErectionOfFaciaPanelsData, setErectionOfFrictionSlabData, setErectionOfPolesData, setErectionOfStructureData, setErectionPreCastColumnData, setExcavationOfTrenchData, setFabricationOfStructureData, setFixingAndInstallationData, setFixingGeoCellData, setFixingOfAntiglaresData, setFixingOfArmsData, setFixingOfBracingsData, setFixingOfConvexMirrorsData, setFixingOfFlexibleMedianMarkersData, setFixingOfGeoGridData, setFixingOfHazardMarkersData, setFixingOfLEDTrafficBlinkersData, setFixingOfMC4Data, setFixingOfMeshData, setFixingOfMetalBeamData, setFixingOfMMSData, setFixingOfModulesData, setFixingOfNoiseBarrierData, setFixingOfObjectMarkersData, setFixingOfPanelsData, setFixingOfRailingData, setFixingOfRoadDelineatorsData, setFixingOfRoadStudsData, setFixingOfSolarBlinkersData, setFixingOfSolarRoadStudsData, setFixingOfSpringPostData, setFixingOfStoneData, setFixingOfWireRopeData, setFixingVerticalPostData, setFlooringData, setFlooringWorkData, setFormworkAlignmentChecked, setFormworkdDrawingsChecked, setFormworkFitConcreting, setFormworkProperlySupported, setFormworkSealingChecked, setFoundationData, setFurnitureWorkData, setGlassWorksData, setGlueingData, setHddCrossingData, setHvacWorkData, setImageObject, setInstallationOfEquipmentData, setInstallationOfLEDLightsData, setInstallationOfNetworkDevicesData, setInstallationOfSolarSystemData, setInverterInstallationData, setLayingAndCompactionData, setLayingCautionTapeData, setLayingOfDLCData, setLayingOfDlcTableData, setLayingOfDuctData, setLayingOfFlexibleCableData, setLayingOfGrassTurfData, setLayingOfLTCableData, setLayingOfPaverBlockData, setLayingOfPQCData, setLayingOfSeparationMembraneData, setLayingOfTopSoilData, setMachineCuttingData, setMillingData, setMinimumTimeHasBeenAttained, setMortarChecklistData, setNoLBendBottomOfTheCageChecked, setOpenBarBendingScheduleChecked, setOpenCalendar, setOpenCleanliness, setOpenConcreteFinishLevelMarked, setOpenConcreteHasAchievedDesiredStrength, setOpenCouplerArrangementsWithinTolerance, setOpenFormworkAlignmentChecked, setOpenFormworkdDrawingsChecked, setOpenFormworkFitConcreting, setOpenFormworkProperlySupported, setOpenFormworkSealingChecked, setOpenMinimumTimeHasBeenAttained, setOpenNoLBendBottomOfTheCageChecked, setOpenPlieShaftCleanedLooseMaterial, setOpenRebarAndDimensionGFC, setOpenRebarsSecurelyTightened, setOpenRebarWithinToleranceLimit, setOpenShapingNoAndLengthOfBarsGFC, setOpenSpacerBarCheckedGFC, setOpenSpliceLengthAndLocationGFC, setOpenSuitableSpacerProvidedToMaintainCoverToSteel, setPipeLayingAndJointingData, setPitExcavationData, setPlacementOfSignageSheetData, setPlacingChainLinkData, setPlacingOfDowelData, setPlacingOfFillerBoardData, setPlacingOfTieBarData, setPlantationData, setPlantingGrassData, setPlantingTreesData, setPlasteringData, setPlieShaftCleanedLooseMaterial, setPlumbingWorkData, setPreCastRccPanelData, setPreparationOfSoilData, setPrestressingData, setPrimeCoatData, setProcurementOfSheetData, setPuttyData, setQuantity, setRebarAndDimensionGFC, setRebarsSecurelyTightened, setRebarWithinToleranceLimit, setRemovalFormworkData, setRFIDate, setRFITime, setRoadMarkingData, setRouteMarkingData, setSandLayerData, setSealantFilingData, setShapingNoAndLengthOfBarsGFC, setSignageLocationData, setSpacerBarCheckedGFC, setSpliceLengthAndLocationGFC, setSpreadingAndCompactionData, setSpreadingOfGrassSeedsData, setStonePitchingData, setStrippingAndStoringTopSoilData, setSuitableSpacerProvidedToMaintainCoverToSteel, setTemporaryPrestressingData, setTexturingData, setTorquingData, setTrafficImpactAttenuatorsData, setWateringData, setWindowWorksData, shapingNoAndLengthOfBarsGFC, showSnackbar, signageLocationData, spacerBarCheckedGFC, spliceLengthAndLocationGFC, spreadingAndCompactionData, spreadingOfGrassSeedsData, stackingInYardData, stitchConcreteData, stonePitchingData, strippingAndStoringTopSoilData, suitableSpacerProvidedToMaintainCoverToSteel, temporaryPrestressingData, texturingData, torquingData, trafficImpactAttenuatorsData, transportationData, transportationOfSteelGirdersDiaphragms, wateringData, windowWorksData } from "./Variables";
+import CalendarPicker from "../../../../../components/UI/CalenderPicker";
+import * as ImagePicker from 'react-native-image-picker';
+import Input from "../../../../../components/UI/Input";
+import { Guid } from "guid-typescript";
+import { getStyle, onAddMoreConcrete, onAddMoreDumping, onAddMoreTorquing } from "./Events";
+
+export const CustomTextInput = ({
+    rowItem,
+    fieldName,
+    styles,
+}: {
+    rowItem: any;
+    fieldName: any;
+    styles: any
+}) => {
+    const [value, setValue] = useState(rowItem[fieldName]);
+    const updateValue = (text: any) => {
+        {
+            rowItem[fieldName] = text;
+        }
+    };
+
+    return (
+        <TextInput
+            style={styles.commonInputFiels}
+            placeholder=""
+            autoCapitalize="none"
+            keyboardType="email-address"
+            returnKeyType="next"
+            underlineColorAndroid="#f000"
+            blurOnSubmit={false}
+            value={value}
+            onChangeText={text => {
+                setValue(text);
+                updateValue(text);
+            }}
+        />
+    );
+};
+export const CustomTextInputValue = ({
+    rowItem,
+    fieldName,
+    index,
+    styles,
+    onChange,
+}: {
+    rowItem: any;
+    fieldName: string;
+    index: number;
+    styles: any;
+    onChange: (index: number, field: string, value: string) => void;
+}) => {
+    const [value, setValue] = useState(rowItem[fieldName]);
+
+    const handleChange = (text: string) => {
+        setValue(text);
+        onChange(index, fieldName, text);
+    };
+
+    return (
+        <TextInput
+            style={styles.commonInputFiels}
+            placeholder=""
+            autoCapitalize="none"
+            keyboardType="email-address"
+            returnKeyType="next"
+            underlineColorAndroid="#f000"
+            blurOnSubmit={false}
+            value={value}
+            onChangeText={handleChange}
+        />
+    );
+};
+
+export const CustomDropdownPicker = ({
+    items,
+    rowItem,
+    fieldName,
+    styles,
+}: {
+    items: any;
+    rowItem: any;
+    fieldName: any;
+    styles: any;
+}) => {
+    const [value, setValue] = useState(rowItem[fieldName]);
+    const [openList, setOpenList] = useState(false);
+    const updateValue = () => {
+        {
+            rowItem[fieldName] = value;
+        }
+    };
+    return (
+        <DropDownPicker
+            style={[styles.DropDownFiels, { minWidth: 110, maxWidth: 220 }]}
+            open={openList}
+            value={value}
+            items={items}
+            setOpen={setOpenList}
+            setValue={setValue}
+            listMode="MODAL"
+            closeAfterSelecting={true}
+            onChangeValue={() => updateValue()}
+        />
+    );
+};
+
+export const renderItemFoundation = (rowData: any, styles: any) => (
+    <View style={[styles.rowContainer, styles.marginBottom10]}>
+        <View style={styles.cell}>
+            <Text>{rowData.index + 1}</Text>
+        </View>
+        <View style={styles.cell}>
+            <DropdownPicker
+                label="Source"
+                items={CONCRETE_GRADE_LIST}
+                value={rowData.item.gradeOfConcrete}
+                onChange={(item: any) =>
+                    handleTextInputChangeFoundation(
+                        rowData.index,
+                        'gradeOfConcrete',
+                        item.value,
+                    )
+                }
+            />
+        </View>
+        <View style={styles.cell}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'slumpValue'}
+                index={rowData.index}
+                styles={styles}
+                onChange={handleTextInputChangeFoundation}
+            />
+        </View>
+        <View style={styles.cell}>
+            <TimePicker
+                label=""
+                value={rowData.item.concreteStartTime}
+                onChange={time =>
+                    handleTimeChangeFoundation(rowData.index, 'concreteStartTime', time)
+                }
+            />
+        </View>
+        <View style={styles.cell}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'concretePoured'}
+                index={rowData.index}
+                styles={styles}
+                onChange={handleTextInputChangeFoundation}
+            />
+        </View>
+        <View style={styles.cell}>
+            <TimePicker
+                label=""
+                value={rowData.item.concreteFinishTime}
+                onChange={time =>
+                    handleTimeChangeFoundation(
+                        rowData.index,
+                        'concreteFinishTime',
+                        time,
+                    )
+                }
+            />
+        </View>
+        <View style={styles.cell}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'totalFoundationCasted'}
+                index={rowData.index}
+                styles={styles}
+                onChange={handleTextInputChangeFoundation}
+            />
+        </View>
+        <View style={[styles.cell, { paddingHorizontal: 45 }]}>
+            <TouchableOpacity
+                style={[styles.deleteButton]}
+                onPress={() => deleteConstructionOfFoundationItem(rowData, rowData.item.key)}>
+                <Image
+                    style={[styles.CloseIcon, { tintColor: '#fff' }]}
+                    source={require('./../../images/menu/delete.png')}
+                />
+            </TouchableOpacity>
+        </View>
+    </View>
+);
+
+export const renderFoundationHeadings = (styles: any) => (
+    <View style={styles.rowContainer}>
+        <Text style={styles.cellText}>Grade of Concrete</Text>
+        <Text style={styles.cellText}>Slump Value (mm)</Text>
+        <Text style={styles.cellText}>Concrete Start Time</Text>
+        <Text style={styles.cellText}>Concrete Poured (cum)</Text>
+        <Text style={styles.cellText}>Concrete Finish Time</Text>
+        <Text style={styles.cellText}>Total Foundation Casted</Text>
+    </View>
+);
+export const renderItemBallast = (rowData: any, styles: any) => (
+    <View style={[styles.rowContainer, styles.marginBottom10]}>
+        <View style={styles.cell}>
+            <Text>{rowData.index + 1}</Text>
+        </View>
+        <View style={styles.cell}>
+            <DropdownPicker
+                label="Source"
+                items={CONCRETE_GRADE_LIST}
+                value={rowData.item.gradeOfConcrete}
+                onChange={(item: any) =>
+                    handleTextInputChangeBallast(
+                        rowData.index,
+                        'gradeOfConcrete',
+                        item.value,
+                    )
+                }
+            />
+        </View>
+        <View style={styles.cell}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'slumpValue'}
+                index={rowData.index}
+                styles={styles}
+                onChange={handleTextInputChangeBallast}
+            />
+        </View>
+        <View style={styles.cell}>
+            <TimePicker
+                label=""
+                value={rowData.item.concreteStartTime}
+                onChange={time =>
+                    handleTimeChangeBallast(rowData.index, 'concreteStartTime', time)
+                }
+            />
+        </View>
+        <View style={styles.cell}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'concretePoured'}
+                index={rowData.index}
+                styles={styles}
+                onChange={handleTextInputChangeBallast}
+            />
+        </View>
+        <View style={styles.cell}>
+            <TimePicker
+                label=""
+                value={rowData.item.concreteFinishTime}
+                onChange={time =>
+                    handleTimeChangeBallast(rowData.index, 'concreteFinishTime', time)
+                }
+            />
+        </View>
+        <View style={styles.cell}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'totalBallastCasted'}
+                index={rowData.index}
+                styles={styles}
+                onChange={handleTextInputChangeBallast}
+            />
+        </View>
+        <View style={[styles.cell, { paddingHorizontal: 45 }]}>
+            <TouchableOpacity
+                style={[styles.deleteButton]}
+                onPress={() => deleteBallastItem(rowData, rowData.item.key)}>
+                <Image
+                    style={[styles.CloseIcon, { tintColor: '#fff' }]}
+                    source={require('./../../images/menu/delete.png')}
+                />
+            </TouchableOpacity>
+        </View>
+    </View>
+);
+
+
+export const renderBallastHeadings = (styles: any) => (
+    <View style={styles.rowContainer}>
+        <Text style={styles.cellText}>Grade of Concrete</Text>
+        <Text style={styles.cellText}>Slump Value (mm)</Text>
+        <Text style={styles.cellText}>Concrete Start Time</Text>
+        <Text style={styles.cellText}>Concrete Poured (cum)</Text>
+        <Text style={styles.cellText}>Concrete Finish Time</Text>
+        <Text style={styles.cellText}>Total Ballast Casted</Text>
+    </View>
+);
+
+export const renderLayingOfDlcHeadings = (styles: any) => (
+    <View style={styles.rowContainer}>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Serial No.</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Vehicle No.</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Total Qty of DLC (cum)</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Laying Start Time</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Laying End Time</Text>
+        </View>
+        <View style={[styles.cell, { paddingHorizontal: 40 }]}>
+            <Text style={styles.cellText}>Actions</Text>
+        </View>
+    </View>
+);
+export const deleteLayingOfDlcItem = (rowMap: any, rowKey: any) => {
+    closeRow(rowMap, rowKey);
+    const newData = [...layingOfDlcTableData];
+    const prevIndex = layingOfDlcTableData.findIndex(
+        item => item.key === rowKey,
+    );
+    newData.splice(prevIndex, 1);
+    setLayingOfDlcTableData(newData);
+};
+export const deleteConstructionOfFoundationItem = (rowMap: any, rowKey: any) => {
+    closeRow(rowMap, rowKey);
+    const newData = [...foundationData];
+    const prevIndex = foundationData.findIndex(item => item.key === rowKey);
+    newData.splice(prevIndex, 1);
+    setFoundationData(newData);
+};
+export const renderItemLayingOfDlc = (rowData: any, styles: any) => (
+    <View style={[styles.rowContainer, styles.marginBottom10]}>
+        <View style={styles.cell}>
+            <Text>{rowData.index + 1}</Text>
+        </View>
+        <View style={styles.cell}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'vehicleNo'}
+                index={rowData.index}
+                styles={styles}
+                onChange={handleTextInputChangeLayingOfDlc}
+            />
+        </View>
+
+        <View style={styles.cell}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'totalQtyDlc'}
+                index={rowData.index}
+                styles={styles}
+                onChange={handleTextInputChangeLayingOfDlc}
+            />
+        </View>
+
+        <View style={styles.cell}>
+            <TimePicker
+                label="Laying Start Time"
+                value={rowData.item.layingStartTime}
+                onChange={time =>
+                    handleTimeChangeLayingOfDlc(rowData.index, 'layingStartTime', time)
+                }
+                styleCont={styles.marginBootomZero}
+                style={styles.disPlayNone}
+            />
+        </View>
+
+        <View style={styles.cell}>
+            <TimePicker
+                label="Laying End Time"
+                value={rowData.item.layingEndTime}
+                onChange={time =>
+                    handleTimeChangeLayingOfDlc(rowData.index, 'layingEndTime', time)
+                }
+                styleCont={styles.marginBootomZero}
+                style={styles.disPlayNone}
+            />
+        </View>
+
+        <View style={[styles.cell, { paddingHorizontal: 45 }]}>
+            <TouchableOpacity
+                style={[styles.deleteButton]}
+                onPress={() => deleteLayingOfDlcItem(rowData, rowData.item.key)}>
+                <Image
+                    style={[styles.CloseIcon, { tintColor: '#fff' }]}
+                    source={require('./../../images/menu/delete.png')}
+                />
+            </TouchableOpacity>
+        </View>
+    </View>
+);
+
+export const handleTextInputChangeLayingOfDlc = (index, fieldName, value) => {
+    setLayingOfDlcTableData(prevData => {
+        const newData = [...prevData];
+        newData[index] = {
+            ...newData[index],
+            [fieldName]: value,
+        };
+        return newData;
+    });
+};
+
+export const handleTimeChangeLayingOfDlc = (index, fieldName, time) => {
+    setLayingOfDlcTableData(prevData => {
+        const newData = [...prevData];
+        newData[index] = {
+            ...newData[index],
+            [fieldName]: time,
+        };
+        return newData;
+    });
+};
+
+/***************************************/
+const renderGlueingHeadings = (styles: any) => (
+    <View style={styles.rowContainer}>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Joint No.</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Ambient Temp (°C)</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Batch No Resin</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Batch No Hardener</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Mixing Start Time</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Mixing Finish Time</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Application Start Time</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Application Finish Time</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Segment Joining Time Closure</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>
+                Segment Joining Time Temporary PT Finish
+            </Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Segment Surface Area (SQM)</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>
+                Epoxy Consumption Theoretical Resin (Kgs)
+            </Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>
+                Epoxy Consumption Theoretical Hardener (Kgs)
+            </Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>
+                Epoxy Consumption Actual Resin (Kgs)
+            </Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>
+                Epoxy Consumption Actual Hardener (Kgs)
+            </Text>
+        </View>
+    </View>
+);
+const renderTemporaryPrestressingHeadings = (styles: any) => (
+    <View style={styles.rowContainer}>
+        {/* <View style={[styles.cell, {width: 50}]}>
+        <Text style={styles.cellText}>TM No.</Text>
+      </View> */}
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Joint No.</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Calibration Done</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Stressing Sequence Drawing No.</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Date of Prestressing</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Time of Prestressing</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Max Jack Pressure (Kg/Cm²)</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Jack Pressure Applied (Kg/Cm²)</Text>
+        </View>
+        {/* <View style={[styles.cell, {paddingHorizontal: 40}]}>
+        <Text style={styles.cellText}>Actions</Text>
+      </View> */}
+    </View>
+);
+const renderItemTemporaryPrestressing = (rowData: any, styles: any) => (
+    <View style={[styles.rowContainer, styles.marginBottom10]}>
+        <View style={styles.cell}>
+            {/* <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'jointNumbers'}
+          index={rowData.index}
+          onChange={
+            handleTextInputChangeTemporaryPrestressing
+          }></CustomTextInputValue> */}
+            <Text style={styles.cellText}>{rowData.item['jointNumbers']}</Text>
+        </View>
+
+        <View style={styles.cell}>
+            {/* <CustomTextInputValue
+          rowItem={rowData.item}
+          fieldName={'calibrationDone'}
+          index={rowData.index}
+          onChange={
+            handleTextInputChangeTemporaryPrestressing
+          }></CustomTextInputValue> */}
+
+            <DropdownPicker
+                label=""
+                value={rowData.item.calibrationDone}
+                items={YES_NO_NA_LIST}
+                style={styles.marginBootomZero}
+                onChange={(newValue: string) => {
+                    const newData = [...temporaryPrestressingData];
+                    newData[rowData.index]['calibrationDone'] = newValue;
+                    setTemporaryPrestressingData(newData);
+                }}
+                isRequired={true}
+            />
+        </View>
+
+        <View style={styles.cell}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'stressingSequenceDrawingNumber'}
+                index={rowData.index}
+                styles={styles}
+                onChange={
+                    handleTextInputChangeTemporaryPrestressing
+                }></CustomTextInputValue>
+        </View>
+
+        <View style={styles.cell}>
+            <CalendarPicker
+                label=""
+                value={rowData.item.dateOfPrestressing}
+                onChange={date =>
+                    handleTextInputChangeTemporaryPrestressing(
+                        rowData.index,
+                        'dateOfPrestressing',
+                        date,
+                    )
+                }
+            />
+        </View>
+        <View style={styles.cell}>
+            <TimePicker
+                label=""
+                value={rowData.item.timeOfPrestressing}
+                styleCont={styles.marginBootomZero}
+                style={styles.disPlayNone}
+                onChange={time =>
+                    handleTextInputChangeTemporaryPrestressing(
+                        rowData.index,
+                        'timeOfPrestressing',
+                        time,
+                    )
+                }
+            />
+        </View>
+        <View style={styles.cell}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'maxJackPressure'}
+                index={rowData.index}
+                styles={styles}
+                onChange={
+                    handleTextInputChangeTemporaryPrestressing
+                }></CustomTextInputValue>
+        </View>
+
+        <View style={styles.cell}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'jackPressureApplied'}
+                index={rowData.index}
+                styles={styles}
+                onChange={
+                    handleTextInputChangeTemporaryPrestressing
+                }></CustomTextInputValue>
+        </View>
+
+        {/* <View style={[styles.cell, {paddingHorizontal: 45}]}>
+        <TouchableOpacity
+          style={[styles.deleteButton]}
+          onPress={() =>
+            deleteTemporaryPrestressingItem(rowData, rowData.item.key)
+          }>
+          <Image
+            style={[styles.CloseIcon, {tintColor: '#fff'}]}
+            source={require('./../../images/menu/delete.png')}
+          />
+        </TouchableOpacity>
+      </View> */}
+    </View>
+);
+
+const renderItemTorquing = (rowData: any, styles: any) => (
+    <View style={[styles.rowContainer, styles.marginBottom10]}>
+        <View style={[styles.cell, { width: 50 }]}>
+            <Text style={styles.cellText}>TM {rowData.index + 1}</Text>
+        </View>
+
+        <View style={styles.cell}>
+            <CalendarPicker
+                label=""
+                value={rowData.item.date}
+                onChange={date =>
+                    handleTextInputChangeTorquing(rowData.index, 'date', date)
+                }
+            />
+        </View>
+        <View style={styles.cell}>
+            <TimePicker
+                label=""
+                value={rowData.item.date}
+                styleCont={styles.marginBootomZero}
+                style={styles.disPlayNone}
+                onChange={time =>
+                    handleTextInputChangeTorquing(rowData.index, 'time', time)
+                }
+            />
+        </View>
+
+        <View style={styles.cell}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'component'}
+                index={rowData.index}
+                styles={styles}
+                onChange={handleTextInputChangeTorquing}></CustomTextInputValue>
+        </View>
+
+        <View style={styles.cell}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'detailsOfJoints'}
+                index={rowData.index}
+                styles={styles}
+                onChange={handleTextInputChangeTorquing}></CustomTextInputValue>
+        </View>
+
+        <View style={styles.cell}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'nosOfBolt'}
+                index={rowData.index}
+                styles={styles}
+                onChange={handleTextInputChangeTorquing}></CustomTextInputValue>
+        </View>
+
+        <View style={styles.cell}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'diaOfBoltInMm'}
+                index={rowData.index}
+                styles={styles}
+                onChange={handleTextInputChangeTorquing}></CustomTextInputValue>
+        </View>
+
+        <View style={styles.cell}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'sizeInMm'}
+                index={rowData.index}
+                styles={styles}
+                onChange={handleTextInputChangeTorquing}></CustomTextInputValue>
+        </View>
+
+        <View style={styles.cell}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'slNoOfInvoiceMTCFile'}
+                index={rowData.index}
+                styles={styles}
+                onChange={handleTextInputChangeTorquing}></CustomTextInputValue>
+        </View>
+
+        <View style={styles.cell}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'slNoOfTorqueWrench'}
+                index={rowData.index}
+                styles={styles}
+                onChange={handleTextInputChangeTorquing}></CustomTextInputValue>
+        </View>
+
+        <View style={styles.cell}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'torqueApplied'}
+                index={rowData.index}
+                styles={styles}
+                onChange={handleTextInputChangeTorquing}></CustomTextInputValue>
+        </View>
+
+        <View style={styles.cell}>
+            <Text>{rowData.item.refusalsGauage3nos}</Text>
+        </View>
+
+        <View style={styles.cell}>
+            <Text>{rowData.item.refusalsGauage4nos}</Text>
+        </View>
+
+        <View style={styles.cell}>
+            <Text>{rowData.item.refusalsGauage5nos}</Text>
+        </View>
+
+        <View style={styles.cell}>
+            <Text>{rowData.item.refusalsGauage6nos}</Text>
+        </View>
+
+        <View style={[styles.cell, { paddingHorizontal: 45 }]}>
+            <TouchableOpacity
+                style={[styles.deleteButton]}
+                onPress={() => deleteTorquingItem(rowData, rowData.item.key)}>
+                <Image
+                    style={[styles.CloseIcon, { tintColor: '#fff' }]}
+                    source={require('./../../images/menu/delete.png')}
+                />
+            </TouchableOpacity>
+        </View>
+    </View>
+);
+
+const renderTorquingHeadings = (styles: any) => (
+    <View style={styles.rowContainer}>
+        <View style={[styles.cell, { width: 50 }]}>
+            <Text style={styles.cellText}>Date</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Time</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Component</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Details of Joints</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Nos of Bolt</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Dia of Bolt (mm)</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Size (mm)</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Invoice/MTC File No.</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Torque Wrench Sl. No.</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Torque Applied</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Refusals (Gauage 3nos)</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Refusals (Gauage 4nos)</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Refusals (Gauage 5nos)</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Refusals (Gauage 6nos)</Text>
+        </View>
+        <View style={[styles.cell, { paddingHorizontal: 40 }]}>
+            <Text style={styles.cellText}>Actions</Text>
+        </View>
+    </View>
+);
+
+const renderPrestressingHeadings = (styles: any) => (
+    <View style={styles.rowContainer}>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Cable No.</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Stressing Sequence</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Gauge A0 (100 Kg/cm²)</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Gauge B0 (100 Kg/cm²)</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Gauge A1 (200 Kg/cm²)</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Gauge B1 (200 Kg/cm²)</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Gauge A2 (Locking)</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Pressure PA (Locking)</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Gauge B2 (Locking)</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Pressure PB (Locking)</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Slip SA0 (Locking)</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Slip SB0 (Locking)</Text>
+        </View>
+    </View>
+);
+const renderItemPrestressing = (rowData: any, styles: any) => (
+    <View style={[styles.rowContainer, styles.marginBottom10]}>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>{rowData.item['cableNo']}</Text>
+        </View>
+
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>{rowData.item['stressingSequence']}</Text>
+        </View>
+
+        <View style={styles.cell}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'A0'}
+                index={rowData.index}
+                styles={styles}
+                onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
+        </View>
+
+        <View style={styles.cell}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'B0'}
+                index={rowData.index}
+                styles={styles}
+                onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
+        </View>
+
+        <View style={styles.cell}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'A1'}
+                index={rowData.index}
+                styles={styles}
+                onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
+        </View>
+
+        <View style={styles.cell}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'B1'}
+                index={rowData.index}
+                styles={styles}
+                onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
+        </View>
+
+        <View style={styles.cell}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'A2'}
+                index={rowData.index}
+                styles={styles}
+                onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
+        </View>
+
+        <View style={styles.cell}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'PA'}
+                index={rowData.index}
+                styles={styles}
+                onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
+        </View>
+
+        <View style={styles.cell}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'B2'}
+                index={rowData.index}
+                styles={styles}
+                onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
+        </View>
+
+        <View style={styles.cell}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'PB'}
+                index={rowData.index}
+                styles={styles}
+                onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
+        </View>
+
+        <View style={styles.cell}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'SA0'}
+                index={rowData.index}
+                styles={styles}
+                onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
+        </View>
+
+        <View style={styles.cell}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'SB0'}
+                index={rowData.index}
+                styles={styles}
+                onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
+        </View>
+    </View>
+);
+
+const renderHeadings = () => (
+    <View
+        style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginBottom: 10,
+            gap: 5,
+        }}>
+        <View style={{ width: 50, alignItems: 'center', padding: 5 }}>
+            <Text style={{ fontWeight: '600', fontSize: 12 }}>TM No.</Text>
+        </View>
+        <View style={{ width: 100, alignItems: 'center', padding: 5 }}>
+            <Text style={{ fontWeight: '600', fontSize: 12 }}>Vehicle No.</Text>
+        </View>
+        <View style={{ width: 150, alignItems: 'center', padding: 5 }}>
+            <Text style={{ fontWeight: '600', fontSize: 12 }}>Time of arrival</Text>
+        </View>
+        <View style={{ width: 130, alignItems: 'center', padding: 5 }}>
+            <Text style={{ fontWeight: '600', fontSize: 12 }}>Grade of Concrete</Text>
+        </View>
+        {selectedTask.name === TASK_TYPES.CONCRETING && (
+            <View style={{ width: 130, alignItems: 'center', padding: 5 }}>
+                <Text style={{ fontWeight: '600', fontSize: 12 }}>
+                    Concrete temp in C
+                </Text>
+            </View>
+        )}
+
+        {selectedTask.name === TASK_TYPES.CONCRETING && (
+            <View style={{ width: 130, alignItems: 'center', padding: 5 }}>
+                <Text style={{ fontWeight: '600', fontSize: 12 }}>
+                    Slump value in mm
+                </Text>
+            </View>
+        )}
+
+        <View style={{ width: 150, alignItems: 'center', padding: 5 }}>
+            <Text style={{ fontWeight: '600', fontSize: 12 }}>
+                Concrete start time
+            </Text>
+        </View>
+        <View style={{ width: 150, alignItems: 'center', padding: 5 }}>
+            <Text style={{ fontWeight: '600', fontSize: 12 }}>
+                Concrete poured in cum
+            </Text>
+        </View>
+        <View style={{ width: 150, alignItems: 'center', padding: 5 }}>
+            <Text style={{ fontWeight: '600', fontSize: 12 }}>
+                Concrete finish time
+            </Text>
+        </View>
+        <View style={{ width: 80, alignItems: 'center', padding: 5 }}>
+            <Text style={{ fontWeight: '600', fontSize: 12 }}>Actions</Text>
+        </View>
+    </View>
+);
+// Function to render each list item
+const handleTimeChange = (index: any, field: any, value: any) => {
+    const newData = [...concreteData];
+    newData[index][field] = value;
+    setConcreteData(newData);
+};
+const handleTimeChangeTemporaryPrestressing = (
+    index: any,
+    field: any,
+    value: any,
+) => {
+    const newData = [...temporaryPrestressingData];
+    newData[index][field] = value;
+    setTemporaryPrestressingData(newData);
+};
+const handleTimeChangeGlueing = (index: any, field: any, value: any) => {
+    const newData = [...glueingData];
+    newData[index][field] = value;
+    setGlueingData(newData);
+};
+const handleInputChangeFormwork = (field: string, value: string) => {
+    setRemovalFormworkData(prevState => ({
+        ...prevState,
+        [field]: value,
+    }));
+};
+const handleTextInputChangePrestressing = (
+    index: number,
+    field: string,
+    value: string,
+) => {
+    const updatedData = [...prestressingData];
+    let isValid = true;
+    let errorMessage = '';
+
+    const readingValue = parseFloat(value);
+
+    if (isNaN(readingValue) || readingValue <= 0 || readingValue > 500) {
+        isValid = false;
+        errorMessage =
+            'Enter a valid number greater than 0 and less than or equal to 500';
+    } else if (!/^\d+(\.\d{1,2})?$/.test(value)) {
+        isValid = false;
+        errorMessage = 'Enter a number with up to 2 decimal places';
+    }
+
+    if (!isValid) {
+        showSnackbar(errorMessage, 'error');
+    }
+    updatedData[index][field] = value;
+    setPrestressingData(updatedData);
+};
+
+const handleTextInputChange = (
+    index: number,
+    field: string,
+    value: string,
+) => {
+    const newData = [...concreteData];
+    let isValid = true;
+    let errorMessage = '';
+
+    switch (field) {
+        case 'vehicleNo':
+            const vehicleNoRegex = /^\d{4}$/;
+            if (!vehicleNoRegex.test(value)) {
+                isValid = false;
+                errorMessage = 'Enter only the last 4 digits of the vehicle number';
+            }
+            break;
+
+        case 'concreteTemp':
+            const tempValue = parseFloat(value);
+            if (
+                isNaN(tempValue) ||
+                tempValue <= 0 ||
+                tempValue > 60 ||
+                value.split('.')[1]?.length > 2
+            ) {
+                isValid = false;
+                errorMessage =
+                    'Enter a temperature between 0 and 60 with up to 2 decimal places';
+            }
+            break;
+
+        case 'slumpValue':
+            const slumpValue = parseInt(value);
+            if (
+                isNaN(slumpValue) ||
+                slumpValue <= 0 ||
+                slumpValue > 300 ||
+                !Number.isInteger(slumpValue)
+            ) {
+                isValid = false;
+                errorMessage = 'Enter an integer between 1 and 300 for slump value';
+            }
+            break;
+
+        case 'concretePoured':
+            const cubesValue = parseInt(value);
+            if (
+                isNaN(cubesValue) ||
+                cubesValue <= 0 ||
+                cubesValue > 100 ||
+                !Number.isInteger(cubesValue)
+            ) {
+                isValid = false;
+                errorMessage =
+                    'Enter an integer between 1 and 100 for number of cubes casted';
+            }
+            break;
+    }
+
+    if (isValid) {
+        newData[index][field] = value;
+        setConcreteData(newData);
+    } else {
+        newData[index][field] = value;
+        setConcreteData(newData);
+        showSnackbar(errorMessage, 'error');
+    }
+};
+
+const renderDumpingHeadings = (styles: any) => (
+    <View style={styles.rowContainer}>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Tm No.</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Vehicle No. (Last 4 digits)</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Source (Y/N)</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Qty Dumped (cum)</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Approved Source (Y/N)</Text>
+        </View>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>Boulders/ Unwanted Materials (Y/N)</Text>
+        </View>
+        <View style={[styles.cell, { paddingHorizontal: 40 }]}>
+            <Text style={styles.cellText}>Actions</Text>
+        </View>
+    </View>
+);
+
+const renderItemDumping = (rowData: any, styles: any) => (
+    <View style={[styles.rowContainer, styles.marginBottom10]}>
+        <View style={styles.cell}>
+            <Text>TM {rowData.index + 1}</Text>
+        </View>
+        <View style={styles.cell}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'vehicleNo'}
+                index={rowData.index}
+                styles={styles}
+                onChange={handleTextInputChangeDumping}
+            />
+        </View>
+
+        <View style={styles.cell}>
+            <DropdownPicker
+                label="Source"
+                value={rowData.item.source}
+                items={YES_NO_LIST}
+                onChange={(value: any) =>
+                    handleDropdownChangeDumping(rowData.index, 'source', value)
+                }
+                isRequired={true}
+            />
+        </View>
+
+        <View style={styles.cell}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'qtyDumped'}
+                index={rowData.index}
+                styles={styles}
+                onChange={handleTextInputChangeDumping}
+            />
+        </View>
+
+        <View style={styles.cell}>
+            <DropdownPicker
+                label="Approved Source"
+                value={rowData.item.approvedSource}
+                items={YES_NO_LIST}
+                onChange={(value: any) =>
+                    handleDropdownChangeDumping(rowData.index, 'approvedSource', value)
+                }
+                isRequired={true}
+            />
+        </View>
+
+        <View style={styles.cell}>
+            <DropdownPicker
+                label="Boulders Present"
+                value={rowData.item.bouldersPresent}
+                items={YES_NO_LIST}
+                onChange={(value: any) =>
+                    handleDropdownChangeDumping(rowData.index, 'bouldersPresent', value)
+                }
+                isRequired={true}
+            />
+        </View>
+
+        <View style={[styles.cell, { paddingHorizontal: 45 }]}>
+            <TouchableOpacity
+                style={[styles.deleteButton]}
+                onPress={() => deleteDumpingItem(rowData, rowData.item.key)}>
+                <Image
+                    style={[styles.CloseIcon, { tintColor: '#fff' }]}
+                    source={require('./../../images/menu/delete.png')}
+                />
+            </TouchableOpacity>
+        </View>
+    </View>
+);
+const handleDropdownChangeDumping = (
+    index: number,
+    fieldName: string,
+    value: any,
+) => {
+    setDumpingData(prevData => {
+        const newData = [...prevData];
+        newData[index] = {
+            ...newData[index],
+            [fieldName]: value,
+        };
+        return newData;
+    });
+};
+
+const renderItemGlueing = (rowData: any, styles: any) => (
+    <View style={[styles.rowContainer, styles.marginBottom10]}>
+        <View style={styles.cell}>
+            <Text style={styles.cellText}>{rowData.item['jointNumbers']}</Text>
+        </View>
+
+        <View style={styles.cell}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'ambientTemperature'}
+                index={rowData.index}
+                styles={styles}
+                onChange={handleTextInputChangeGlueing}></CustomTextInputValue>
+        </View>
+
+        <View style={styles.cell}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'batchNoResin'}
+                index={rowData.index}
+                styles={styles}
+                onChange={handleTextInputChangeGlueing}></CustomTextInputValue>
+        </View>
+
+        <View style={styles.cell}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'batchNoHardener'}
+                index={rowData.index}
+                styles={styles}
+                onChange={handleTextInputChangeGlueing}></CustomTextInputValue>
+        </View>
+
+        <View style={styles.cell}>
+            <TimePicker
+                label=""
+                value={rowData.item.mixingStartTime}
+                styleCont={styles.marginBootomZero}
+                style={styles.disPlayNone}
+                onChange={time =>
+                    handleTimeChangeGlueing(rowData.index, 'mixingStartTime', time)
+                }
+            />
+        </View>
+
+        <View style={styles.cell}>
+            <TimePicker
+                label=""
+                value={rowData.item.mixingFinishTime}
+                styleCont={styles.marginBootomZero}
+                style={styles.disPlayNone}
+                onChange={time =>
+                    handleTimeChangeGlueing(rowData.index, 'mixingFinishTime', time)
+                }
+            />
+        </View>
+
+        <View style={styles.cell}>
+            <TimePicker
+                label=""
+                value={rowData.item.applicationStartTime}
+                styleCont={styles.marginBootomZero}
+                style={styles.disPlayNone}
+                onChange={time =>
+                    handleTimeChangeGlueing(rowData.index, 'applicationStartTime', time)
+                }
+            />
+        </View>
+
+        <View style={styles.cell}>
+            <TimePicker
+                label=""
+                value={rowData.item.applicationFinishTime}
+                styleCont={styles.marginBootomZero}
+                style={styles.disPlayNone}
+                onChange={time =>
+                    handleTimeChangeGlueing(
+                        rowData.index,
+                        'applicationFinishTime',
+                        time,
+                    )
+                }
+            />
+        </View>
+        <View style={styles.cell}>
+            <TimePicker
+                label=""
+                value={rowData.item.segmentJoiningTimeClosure}
+                styleCont={styles.marginBootomZero}
+                style={styles.disPlayNone}
+                onChange={time =>
+                    handleTimeChangeGlueing(
+                        rowData.index,
+                        'segmentJoiningTimeClosure',
+                        time,
+                    )
+                }
+            />
+        </View>
+        <View style={styles.cell}>
+            <TimePicker
+                label=""
+                value={rowData.item.segmentJoiningTimeTemporaryFinish}
+                styleCont={styles.marginBootomZero}
+                style={styles.disPlayNone}
+                onChange={time =>
+                    handleTimeChangeGlueing(
+                        rowData.index,
+                        'segmentJoiningTimeTemporaryFinish',
+                        time,
+                    )
+                }
+            />
+        </View>
+
+        <View style={styles.cell}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'segmentSurfaceArea'}
+                index={rowData.index}
+                styles={styles}
+                onChange={handleTextInputChangeGlueing}></CustomTextInputValue>
+        </View>
+        <View style={styles.cell}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'epoxyConsumptionTheoreticalResin'}
+                index={rowData.index}
+                styles={styles}
+                onChange={handleTextInputChangeGlueing}></CustomTextInputValue>
+        </View>
+        <View style={styles.cell}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'epoxyConsumptionTheoreticalHardener'}
+                index={rowData.index}
+                styles={styles}
+                onChange={handleTextInputChangeGlueing}></CustomTextInputValue>
+        </View>
+
+        <View style={styles.cell}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'epoxyConsumptionActualResin'}
+                index={rowData.index}
+                styles={styles}
+                onChange={handleTextInputChangeGlueing}></CustomTextInputValue>
+        </View>
+        <View style={styles.cell}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'epoxyConsumptionActualHardener'}
+                index={rowData.index}
+                styles={styles}
+                onChange={handleTextInputChangeGlueing}></CustomTextInputValue>
+        </View>
+    </View>
+);
+
+const handleTextInputChangeGlueing = (
+    index: number,
+    field: string,
+    value: string,
+) => {
+    const updatedData = [...glueingData];
+    let isValid = true;
+    let errorMessage = '';
+
+    switch (field) {
+        case 'jointNumbers':
+            if (value.length > 50) {
+                isValid = false;
+                errorMessage = 'Joint Numbers cannot exceed 50 characters';
+            }
+            break;
+
+        case 'ambientTemperature':
+            const tempValue = parseFloat(value);
+            if (
+                isNaN(tempValue) ||
+                tempValue <= 0 ||
+                tempValue > 100 ||
+                value.split('.')[1]?.length > 2
+            ) {
+                isValid = false;
+                errorMessage =
+                    'Enter a temperature between 0 and 100 with up to 2 decimal places';
+            }
+            break;
+
+        case 'batchNoResin':
+        case 'batchNoHardener':
+            const batchNo = parseInt(value);
+            if (
+                isNaN(batchNo) ||
+                batchNo <= 0 ||
+                batchNo > 100 ||
+                !Number.isInteger(batchNo)
+            ) {
+                isValid = false;
+                errorMessage =
+                    'Enter a positive integer between 1 and 100 for batch number';
+            }
+            break;
+
+        case 'segmentSurfaceArea':
+            const surfaceArea = parseFloat(value);
+            if (
+                isNaN(surfaceArea) ||
+                surfaceArea <= 0 ||
+                surfaceArea > 1000 ||
+                value.split('.')[1]?.length > 2
+            ) {
+                isValid = false;
+                errorMessage =
+                    'Enter a surface area up to 1000 SQM with up to 2 decimal places';
+            }
+            break;
+
+        case 'epoxyConsumptionTheoreticalResin':
+        case 'epoxyConsumptionTheoreticalHardener':
+        case 'epoxyConsumptionActualResin':
+        case 'epoxyConsumptionActualHardener':
+            const epoxyConsumption = parseFloat(value);
+            if (
+                isNaN(epoxyConsumption) ||
+                epoxyConsumption <= 0 ||
+                epoxyConsumption > 1000 ||
+                value.split('.')[1]?.length > 2
+            ) {
+                isValid = false;
+                errorMessage =
+                    'Enter epoxy consumption up to 1000 Kgs with up to 2 decimal places';
+            }
+            break;
+
+        default:
+            break;
+    }
+
+    if (isValid) {
+        updatedData[index][field] = value;
+        setGlueingData(updatedData);
+    } else {
+        updatedData[index][field] = value; // To reflect changes even with an error
+        setGlueingData(updatedData);
+        showSnackbar(errorMessage, 'error');
+    }
+};
+
+const renderItem = (rowData: any, styles: any) => (
+    <View
+        style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 5,
+            marginBottom: 10,
+        }}>
+        <View style={{ width: 50, alignItems: 'center' }}>
+            <Text style={{ fontWeight: '600', fontSize: 13 }}>
+                TM {rowData.index + 1}
+            </Text>
+        </View>
+        <View style={{ width: 100 }}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'vehicleNo'}
+                index={rowData.index}
+                styles={styles}
+                onChange={handleTextInputChange}></CustomTextInputValue>
+        </View>
+        <View style={{ width: 150 }}>
+            <TimePicker
+                label=""
+                value={rowData.item.timeOfArrival}
+                style={styles.disPlayNone}
+                styleCont={styles.marginBootomZero}
+                onChange={time =>
+                    handleTimeChange(rowData.index, 'timeOfArrival', time)
+                }
+            />
+        </View>
+        <View style={{ width: 130 }}>
+            <DropdownPicker
+                label=""
+                value={rowData.item.gradeOfConcrete}
+                items={CONCRETE_GRADE_LIST}
+                style={styles.marginBootomZero}
+                onChange={(newValue: string) => {
+                    const newData = [...concreteData];
+                    newData[rowData.index]['gradeOfConcrete'] = newValue;
+                    setConcreteData(newData);
+                }}
+                isRequired={true}
+            />
+        </View>
+        {selectedTask.name === TASK_TYPES.CONCRETING && (
+            <View style={{ width: 130 }}>
+                <CustomTextInputValue
+                    rowItem={rowData.item}
+                    fieldName={'concreteTemp'}
+                    index={rowData.index}
+                    styles={styles}
+                    onChange={handleTextInputChange}></CustomTextInputValue>
+            </View>
+        )}
+
+        {selectedTask.name === TASK_TYPES.CONCRETING && (
+            <View style={{ width: 140 }}>
+                <CustomTextInputValue
+                    rowItem={rowData.item}
+                    fieldName={'slumpValue'}
+                    index={rowData.index}
+                    styles={styles}
+                    onChange={handleTextInputChange}></CustomTextInputValue>
+            </View>
+        )}
+
+        <View style={{ width: 150 }}>
+            <TimePicker
+                label=""
+                value={rowData.item.concreteStartTime}
+                style={styles.disPlayNone}
+                styleCont={styles.marginBootomZero}
+                onChange={time =>
+                    handleTimeChange(rowData.index, 'concreteStartTime', time)
+                }
+            />
+        </View>
+
+        <View style={{ width: 130 }}>
+            <CustomTextInputValue
+                rowItem={rowData.item}
+                fieldName={'concretePoured'}
+                index={rowData.index}
+                styles={styles}
+                onChange={handleTextInputChange}></CustomTextInputValue>
+        </View>
+
+        <View style={{ width: 150 }}>
+            <TimePicker
+                label=""
+                value={rowData.item.concreteFinishTime}
+                style={styles.disPlayNone}
+                styleCont={styles.marginBootomZero}
+                onChange={time =>
+                    handleTimeChange(rowData.index, 'concreteFinishTime', time)
+                }
+            />
+        </View>
+        <View style={styles.hiddenContainer}>
+            <TouchableOpacity
+                style={[styles.deleteButton]}
+                onPress={() => deleteItem(rowData, rowData.item.key)}>
+                <Image
+                    style={[styles.CloseIcon, { tintColor: '#fff' }]}
+                    source={require('./../../images/menu/delete.png')}
+                />
+            </TouchableOpacity>
+        </View>
+    </View>
+);
+
+// Function to render hidden swipe actions
+const renderHiddenItem = (rowData: any, rowMap: any, styles: any) => (
+    <View style={styles.hiddenContainer}>
+        <TouchableOpacity
+            style={[styles.closeButton]}
+            onPress={() => closeRow(rowMap, rowData.item.key)}>
+            {/* <Text style={styles.buttonText}>Close</Text>  */}
+            <Image
+                style={styles.CloseIcon}
+                source={require('./../../images/menu/close-icon.png')}
+            />
+        </TouchableOpacity>
+        <TouchableOpacity
+            style={[styles.deleteButton]}
+            onPress={() => deleteItem(rowMap, rowData.item.key)}>
+            <Image
+                style={[styles.CloseIcon, { tintColor: '#fff' }]}
+                source={require('./../../images/menu/delete.png')}
+            />
+            {/* <Text style={styles.buttonText}>Delete</Text>  */}
+        </TouchableOpacity>
+    </View>
+);
+
+const renderSectionHeader = (rowData: any) => {
+    return (
+        <View>
+            <View>
+                <Text>TM No.</Text>
+            </View>
+            <View>
+                <Text>Last 4 digits of Vehicle No.</Text>
+            </View>
+            <View>
+                <Text>Time of arrival</Text>
+            </View>
+            <View>
+                <Text>Grade of Concrete</Text>
+            </View>
+            <View>
+                <Text>Concrete temp in C</Text>
+            </View>
+            <View>
+                <Text>Slump value in mm</Text>
+            </View>
+            <View>
+                <Text>No of cubes casted</Text>
+            </View>
+            <View>
+                <Text>Concrete start time</Text>
+            </View>
+            <View>
+                <Text>Concrete poured in cum</Text>
+            </View>
+            <View>
+                <Text>Concrete finish time</Text>
+            </View>
+        </View>
+    );
+};
+
+const [enableScroll, setEnableScroll] = useState(true);
+const onSwipeValueChange = (data: any) => {
+    if (data.value < 0) {
+        setEnableScroll(false);
+    } else {
+        setEnableScroll(true);
+    }
+};
+
+const renderFileData = (styles: any) => {
+    if (imageObject.fileData) {
+        return (
+            <Image
+                source={{ uri: 'data:image/jpeg;base64,' + imageObject.fileData }}
+                style={styles.images}
+            />
+        );
+    } else {
+        return (
+            <Image
+                source={require('./../../images/dummy.png')} // ./assets/dummy.png
+                style={styles.images}
+            />
+        );
+    }
+};
+
+const renderFileUri = (styles: any) => {
+    if (imageObject.fileUri) {
+        return (
+            <Image source={{ uri: imageObject.fileUri }} style={styles.images} />
+        );
+    } else {
+        return (
+            <Image
+                source={require('./../../images/galeryImages.jpg')} // ./assets/galeryImages.jpg
+                style={styles.images}
+            />
+        );
+    }
+};
+
+const openCloseCalendar = () => {
+    setOpenCalendar(!openCalendar);
+    // if (!openCalendar) {
+    //   setLayoutHeight(DEFAULT_COMPONENT_HEIGHT + DEFAULT_CALENDAR_HEIGHT)
+    // } else {
+    //   setLayoutHeight(DEFAULT_COMPONENT_HEIGHT)
+    // }
+};
+
+const launchCamera = () => {
+    let options = {
+        includeBase64: true,
+        storageOptions: {
+            skipBackup: true,
+            path: 'images',
+        },
+    };
+    ImagePicker.launchCamera(options, (response: any) => {
+        if (response.didCancel) {
+            console.log('User cancelled image picker');
+        } else if (response.error) {
+            console.log('ImagePicker Error: ', response.error);
+        } else if (response.customButton) {
+            console.log('User tapped custom button: ', response.customButton);
+            Alert.alert(response.customButton);
+        } else {
+            const responseImage = response.assets?.length
+                ? response.assets[0]
+                : response.assets
+                    ? response.assets
+                    : response;
+
+            setImageObject({
+                filePath: responseImage,
+                fileData: responseImage.base64,
+                fileUri: responseImage.uri,
+            });
+        }
+    });
+};
+
+const launchImageLibrary = () => {
+    let options = {
+        includeBase64: true,
+        maxWidth: 1024,
+        maxHeight: 768,
+        storageOptions: {
+            skipBackup: true,
+            path: 'images',
+        },
+    };
+    ImagePicker.launchImageLibrary(options, (response: any) => {
+        if (response.didCancel) {
+            console.log('User cancelled image picker');
+        } else if (response.error) {
+            console.log('ImagePicker Error: ', response.error);
+        } else if (response.customButton) {
+            console.log('User tapped custom button: ', response.customButton);
+            Alert.alert(response.customButton);
+        } else {
+            const responseImage = response.assets?.length
+                ? response.assets[0]
+                : response.assets
+                    ? response.assets
+                    : response;
+
+            setImageObject({
+                filePath: responseImage,
+                fileData: responseImage.base64,
+                fileUri: responseImage.uri,
+            });
+        }
+    });
+};
+
+const taskForm = (taskName: any, styles: any) => {
+    switch (taskName) {
+        case TASK_TYPES.CNG_AND_SETTING_OUT:
+        case TASK_TYPES.PLACING_OF_SHEATHING_DUCT:
+        case TASK_TYPES.POST_CONCRETE_CHECK:
+        case TASK_TYPES.FIXING_OF_BEARING_SLEEVES:
+            return (
+                <View>
+                    <Text
+                        style={{ textAlign: 'center', fontSize: 20, paddingBottom: 10 }}>
+                        Pick Image from Camera & Gallery
+                    </Text>
+                    <View style={styles.ImageSections}>
+                        <View>
+                            {imageObject?.fileData && renderFileData(styles)}
+                            {/* <Text style={{ textAlign: 'center' }}>Base 64 String</Text> */}
+                        </View>
+                        {/* <View>
+          {imageObject?.fileUri && renderFileUri()}
+          <Text style={{ textAlign: 'center' }}>File Uri</Text>
+        </View> */}
+                    </View>
+
+                    <View
+                        style={[
+                            styles.btnParentSection,
+                            { flexDirection: 'row', gap: 20, justifyContent: 'center' },
+                        ]}>
+                        <TouchableOpacity
+                            onPress={launchCamera}
+                            style={styles.btnSection}>
+                            <Text style={styles.btnText}>Camera</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            onPress={launchImageLibrary}
+                            style={styles.btnSection}>
+                            <Text style={styles.btnText}>Gallery</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    <View>
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                returnKeyType="next"
+                                underlineColorAndroid="#f000"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => {
+                                    setComments(text);
+                                }}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.FORM_WORK:
+        case TASK_TYPES.PLACEMENT_OF_INNER_SHUTTERS:
+        case TASK_TYPES.PLACEMENT_OF_SIDE_SHUTTERS:
+        case TASK_TYPES.PLACEMENT_OF_BOTTOM_SHUTTER:
+        case TASK_TYPES.PLACEMENT_OF_MIDDLE_AND_TOP_SHUTTER:
+            return (
+                <View>
+                    <View style={{ flexDirection: 'column' }}>
+                        <Text style={styles.Lable}>
+                            Cleanliness and Oil application checked
+                        </Text>
+                        <View
+                            style={[
+                                styles.SectionStyle,
+                                { zIndex: 16, height: 50, borderColor: '#FF0000' },
+                            ]}>
+                            <DropDownPicker
+                                open={openCleanliness}
+                                value={cleanliness}
+                                items={YES_NO_LIST}
+                                style={styles.selectDropdown}
+                                setOpen={setOpenCleanliness}
+                                setValue={setCleanliness}
+                            />
+                        </View>
+                    </View>
+
+                    <View style={{ flexDirection: 'column' }}>
+                        <Text style={styles.Lable}>Formwork alignment checked</Text>
+                        <View style={[styles.SectionStyle, { zIndex: 15, height: 50 }]}>
+                            <DropDownPicker
+                                open={openFormworkAlignmentChecked}
+                                value={formworkAlignmentChecked}
+                                items={YES_NO_LIST}
+                                style={styles.selectDropdown}
+                                setOpen={setOpenFormworkAlignmentChecked}
+                                setValue={setFormworkAlignmentChecked}
+                            />
+                        </View>
+                    </View>
+
+                    <View style={{ flexDirection: 'column' }}>
+                        <Text style={styles.Lable}>
+                            Formwork tightness/sealing checked
+                        </Text>
+                        <View style={[styles.SectionStyle, { zIndex: 14, height: 50 }]}>
+                            <DropDownPicker
+                                open={openFormworkSealingChecked}
+                                value={formworkSealingChecked}
+                                items={YES_NO_NA_LIST}
+                                style={styles.selectDropdown}
+                                setOpen={setOpenFormworkSealingChecked}
+                                setValue={setFormworkSealingChecked}
+                            />
+                        </View>
+                    </View>
+
+                    <View style={{ flexDirection: 'column' }}>
+                        <Text style={styles.Lable}>
+                            Required covers provided as per drawings checked
+                        </Text>
+                        <View style={[styles.SectionStyle, { zIndex: 13, height: 50 }]}>
+                            <DropDownPicker
+                                open={openFormworkdDrawingsChecked}
+                                value={formworkdDrawingsChecked}
+                                items={YES_NO_LIST}
+                                style={styles.selectDropdown}
+                                setOpen={setOpenFormworkdDrawingsChecked}
+                                setValue={setFormworkdDrawingsChecked}
+                            />
+                        </View>
+                    </View>
+
+                    <View style={{ flexDirection: 'column' }}>
+                        <Text style={styles.Lable}>Concrete finish level marked</Text>
+                        <View style={[styles.SectionStyle, { zIndex: 12, height: 50 }]}>
+                            <DropDownPicker
+                                open={openConcreteFinishLevelMarked}
+                                value={concreteFinishLevelMarked}
+                                items={YES_NO_LIST}
+                                style={styles.selectDropdown}
+                                setOpen={setOpenConcreteFinishLevelMarked}
+                                setValue={setConcreteFinishLevelMarked}
+                            />
+                        </View>
+                    </View>
+
+                    <View style={{ flexDirection: 'column' }}>
+                        <Text style={styles.Lable}>Formwork properly supported</Text>
+                        <View style={[styles.SectionStyle, { zIndex: 11, height: 50 }]}>
+                            <DropDownPicker
+                                open={openFormworkProperlySupported}
+                                value={formworkProperlySupported}
+                                items={YES_NO_NA_LIST}
+                                style={styles.selectDropdown}
+                                setOpen={setOpenFormworkProperlySupported}
+                                setValue={setFormworkProperlySupported}
+                            />
+                        </View>
+                    </View>
+
+                    <View style={{ flexDirection: 'column' }}>
+                        <Text style={styles.Lable}>Formwork fit for concreting</Text>
+                        <View style={[styles.SectionStyle, { zIndex: 10, height: 50 }]}>
+                            <DropDownPicker
+                                open={openFormworkFitConcreting}
+                                value={formworkFitConcreting}
+                                items={YES_NO_NA_LIST}
+                                style={styles.selectDropdown}
+                                setOpen={setOpenFormworkFitConcreting}
+                                setValue={setFormworkFitConcreting}
+                            />
+                        </View>
+                    </View>
+
+                    <View>
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                returnKeyType="next"
+                                underlineColorAndroid="#f000"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => {
+                                    setComments(text);
+                                }}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.REINFORCEMENT:
+        case TASK_TYPES.REINFORCEMENT_PREPARATION:
+            return (
+                <View>
+                    <View style={{ flexDirection: 'column' }}>
+                        <Text style={styles.Lable}>
+                            Rebar and dimension (dia,len and shape) checked as per GFC
+                        </Text>
+                        <View style={[styles.SectionStyle, { zIndex: 16, height: 50 }]}>
+                            <DropDownPicker
+                                open={openRebarAndDimensionGFC}
+                                value={rebarAndDimensionGFC}
+                                items={YES_NO_LIST}
+                                setOpen={setOpenRebarAndDimensionGFC}
+                                setValue={setRebarAndDimensionGFC}
+                            />
+                        </View>
+                    </View>
+
+                    <View style={{ flexDirection: 'column' }}>
+                        <Text style={styles.Lable}>
+                            Shaping, No and Length of Bars checked as per GFC
+                        </Text>
+                        <View style={[styles.SectionStyle, { zIndex: 15, height: 50 }]}>
+                            <DropDownPicker
+                                open={openShapingNoAndLengthOfBarsGFC}
+                                value={shapingNoAndLengthOfBarsGFC}
+                                items={YES_NO_LIST}
+                                setOpen={setOpenShapingNoAndLengthOfBarsGFC}
+                                setValue={setShapingNoAndLengthOfBarsGFC}
+                            />
+                        </View>
+                    </View>
+
+                    <View style={{ flexDirection: 'column' }}>
+                        <Text style={styles.Lable}>
+                            Rebars securely tightened/bound by tie bars
+                        </Text>
+                        <View style={[styles.SectionStyle, { zIndex: 14, height: 50 }]}>
+                            <DropDownPicker
+                                open={openRebarsSecurelyTightened}
+                                value={rebarsSecurelyTightened}
+                                items={YES_NO_NA_LIST}
+                                setOpen={setOpenRebarsSecurelyTightened}
+                                setValue={setRebarsSecurelyTightened}
+                            />
+                        </View>
+                    </View>
+
+                    <View style={{ flexDirection: 'column' }}>
+                        <Text style={styles.Lable}>
+                            Splice length and location checked as per GFC
+                        </Text>
+                        <View style={[styles.SectionStyle, { zIndex: 13, height: 50 }]}>
+                            <DropDownPicker
+                                open={openSpliceLengthAndLocationGFC}
+                                value={spliceLengthAndLocationGFC}
+                                items={YES_NO_LIST}
+                                setOpen={setOpenSpliceLengthAndLocationGFC}
+                                setValue={setSpliceLengthAndLocationGFC}
+                            />
+                        </View>
+                    </View>
+
+                    <View style={{ flexDirection: 'column' }}>
+                        <Text style={styles.Lable}>Rebar within tolerance limit</Text>
+                        <View style={[styles.SectionStyle, { zIndex: 12, height: 50 }]}>
+                            <DropDownPicker
+                                open={openRebarWithinToleranceLimit}
+                                value={rebarWithinToleranceLimit}
+                                items={YES_NO_LIST}
+                                setOpen={setOpenRebarWithinToleranceLimit}
+                                setValue={setRebarWithinToleranceLimit}
+                            />
+                        </View>
+                    </View>
+
+                    <View style={{ flexDirection: 'column' }}>
+                        <Text style={styles.Lable}>
+                            Coupler arrangements within tolerance
+                        </Text>
+                        <View style={[styles.SectionStyle, { zIndex: 11, height: 50 }]}>
+                            <DropDownPicker
+                                open={openCouplerArrangementsWithinTolerance}
+                                value={couplerArrangementsWithinTolerance}
+                                items={YES_NO_NA_LIST}
+                                setOpen={setOpenCouplerArrangementsWithinTolerance}
+                                setValue={setCouplerArrangementsWithinTolerance}
+                            />
+                        </View>
+                    </View>
+
+                    <View style={{ flexDirection: 'column' }}>
+                        <Text style={styles.Lable}>Bar Bending schedule checked</Text>
+                        <View style={[styles.SectionStyle, { zIndex: 10, height: 50 }]}>
+                            <DropDownPicker
+                                open={openBarBendingScheduleChecked}
+                                value={barBendingScheduleChecked}
+                                items={YES_NO_NA_LIST}
+                                setOpen={setOpenBarBendingScheduleChecked}
+                                setValue={setBarBendingScheduleChecked}
+                            />
+                        </View>
+                    </View>
+
+                    <View style={{ flexDirection: 'column' }}>
+                        <Text style={styles.Lable}>Spacer bar checked as per GFC</Text>
+                        <View style={[styles.SectionStyle, { zIndex: 9, height: 50 }]}>
+                            <DropDownPicker
+                                open={openSpacerBarCheckedGFC}
+                                value={spacerBarCheckedGFC}
+                                items={YES_NO_NA_LIST}
+                                setOpen={setOpenSpacerBarCheckedGFC}
+                                setValue={setSpacerBarCheckedGFC}
+                            />
+                        </View>
+                    </View>
+
+                    <View>
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                returnKeyType="next"
+                                underlineColorAndroid="#f000"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => {
+                                    setComments(text);
+                                }}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.REINFORCEMENT_PREPARATION:
+            return (
+                <View>
+                    <View style={{ flexDirection: 'column' }}>
+                        <Text style={styles.Lable}>
+                            Rebar and dimension (dia,len and shape) checked as per GFC
+                        </Text>
+                        <View style={[styles.SectionStyle, { zIndex: 16, height: 50 }]}>
+                            <DropDownPicker
+                                open={openRebarAndDimensionGFC}
+                                value={rebarAndDimensionGFC}
+                                items={YES_NO_LIST}
+                                setOpen={setOpenRebarAndDimensionGFC}
+                                setValue={setRebarAndDimensionGFC}
+                            />
+                        </View>
+                    </View>
+
+                    <View style={{ flexDirection: 'column' }}>
+                        <Text style={styles.Lable}>
+                            Shaping, No and Length of Bars checked as per GFC
+                        </Text>
+                        <View style={[styles.SectionStyle, { zIndex: 15, height: 50 }]}>
+                            <DropDownPicker
+                                open={openShapingNoAndLengthOfBarsGFC}
+                                value={shapingNoAndLengthOfBarsGFC}
+                                items={YES_NO_LIST}
+                                setOpen={setOpenShapingNoAndLengthOfBarsGFC}
+                                setValue={setShapingNoAndLengthOfBarsGFC}
+                            />
+                        </View>
+                    </View>
+
+                    <View style={{ flexDirection: 'column' }}>
+                        <Text style={styles.Lable}>
+                            Rebars securely tightened/bound by tie bars
+                        </Text>
+                        <View style={[styles.SectionStyle, { zIndex: 14, height: 50 }]}>
+                            <DropDownPicker
+                                open={openRebarsSecurelyTightened}
+                                value={rebarsSecurelyTightened}
+                                items={YES_NO_NA_LIST}
+                                setOpen={setOpenRebarsSecurelyTightened}
+                                setValue={setRebarsSecurelyTightened}
+                            />
+                        </View>
+                    </View>
+
+                    <View style={{ flexDirection: 'column' }}>
+                        <Text style={styles.Lable}>
+                            Splice length and location checked as per GFC
+                        </Text>
+                        <View style={[styles.SectionStyle, { zIndex: 13, height: 50 }]}>
+                            <DropDownPicker
+                                open={openSpliceLengthAndLocationGFC}
+                                value={spliceLengthAndLocationGFC}
+                                items={YES_NO_LIST}
+                                setOpen={setOpenSpliceLengthAndLocationGFC}
+                                setValue={setSpliceLengthAndLocationGFC}
+                            />
+                        </View>
+                    </View>
+
+                    <View style={{ flexDirection: 'column' }}>
+                        <Text style={styles.Lable}>Rebar within tolerance limit</Text>
+                        <View style={[styles.SectionStyle, { zIndex: 12, height: 50 }]}>
+                            <DropDownPicker
+                                open={openRebarWithinToleranceLimit}
+                                value={rebarWithinToleranceLimit}
+                                items={YES_NO_LIST}
+                                setOpen={setOpenRebarWithinToleranceLimit}
+                                setValue={setRebarWithinToleranceLimit}
+                            />
+                        </View>
+                    </View>
+
+                    <View style={{ flexDirection: 'column' }}>
+                        <Text style={styles.Lable}>
+                            Coupler arrangements within tolerance
+                        </Text>
+                        <View style={[styles.SectionStyle, { zIndex: 11, height: 50 }]}>
+                            <DropDownPicker
+                                open={openCouplerArrangementsWithinTolerance}
+                                value={couplerArrangementsWithinTolerance}
+                                items={YES_NO_NA_LIST}
+                                setOpen={setOpenCouplerArrangementsWithinTolerance}
+                                setValue={setCouplerArrangementsWithinTolerance}
+                            />
+                        </View>
+                    </View>
+
+                    <View style={{ flexDirection: 'column' }}>
+                        <Text style={styles.Lable}>Bar Bending schedule checked</Text>
+                        <View style={[styles.SectionStyle, { zIndex: 10, height: 50 }]}>
+                            <DropDownPicker
+                                open={openBarBendingScheduleChecked}
+                                value={barBendingScheduleChecked}
+                                items={YES_NO_NA_LIST}
+                                setOpen={setOpenBarBendingScheduleChecked}
+                                setValue={setBarBendingScheduleChecked}
+                            />
+                        </View>
+                    </View>
+
+                    <View>
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                returnKeyType="next"
+                                underlineColorAndroid="#f000"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => {
+                                    setComments(text);
+                                }}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.EXCAVATION:
+            return (
+                <View>
+                    <View style={{ flexDirection: 'column' }}>
+                        <Text style={styles.Lable}>
+                            Qty of earth work excavated in cum
+                        </Text>
+                        <View style={[styles.SectionStyle, { zIndex: 16, height: 50 }]}>
+                            <TextInput
+                                style={styles.inputFieldsText}
+                                placeholder="Quantity"
+                                autoCapitalize="none"
+                                keyboardType="numeric"
+                                returnKeyType="next"
+                                underlineColorAndroid="#f000"
+                                blurOnSubmit={false}
+                                value={'' + quantity}
+                                onChangeText={text => {
+                                    let exp = text.replace(/[^0-9.]/g, '');
+                                    if (!isNaN(parseFloat(exp))) {
+                                        if (exp.split('.').length > 4) {
+                                            exp = parseFloat(exp).toString();
+                                        }
+                                        setQuantity(Number(exp));
+                                    } else {
+                                        setQuantity(0);
+                                    }
+                                }}
+                            />
+                        </View>
+                    </View>
+
+                    <View>
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                returnKeyType="next"
+                                underlineColorAndroid="#f000"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => {
+                                    setComments(text);
+                                }}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.REMOVAL_OF_SIDE_SHUTTERS:
+        case TASK_TYPES.REMOVAL_OF_MIDDLIE_TOP_SHUTTERS:
+        case TASK_TYPES.REMOVAL_OF_INNER_SHUTTERS:
+        case TASK_TYPES.REMOVAL_OF_SHUTTER:
+        case TASK_TYPES.REMOVAL_OF_SHUTTERS:
+            return (
+                <View>
+                    <View style={{ flexDirection: 'column' }}>
+                        <Text style={styles.Lable}>
+                            Whether concrete has achieved desired strength
+                        </Text>
+                        <View style={[styles.SectionStyle, { zIndex: 16, height: 50 }]}>
+                            <DropDownPicker
+                                open={openConcreteHasAchievedDesiredStrength}
+                                value={concreteHasAchievedDesiredStrength}
+                                items={YES_NO_LIST}
+                                setOpen={setOpenConcreteHasAchievedDesiredStrength}
+                                setValue={setConcreteHasAchievedDesiredStrength}
+                            />
+                        </View>
+                    </View>
+
+                    <View style={{ flexDirection: 'column' }}>
+                        <Text style={styles.Lable}>
+                            Whether minimum time has been attained
+                        </Text>
+                        <View style={[styles.SectionStyle, { zIndex: 15, height: 50 }]}>
+                            <DropDownPicker
+                                open={openMinimumTimeHasBeenAttained}
+                                value={minimumTimeHasBeenAttained}
+                                items={YES_NO_LIST}
+                                setOpen={setOpenMinimumTimeHasBeenAttained}
+                                setValue={setMinimumTimeHasBeenAttained}
+                            />
+                        </View>
+                    </View>
+                    <View>
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                returnKeyType="next"
+                                underlineColorAndroid="#f000"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => {
+                                    setComments(text);
+                                }}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.COMPACTION:
+            const compactionProperties = [
+                {
+                    title: 'Uniform Sprinkling of Water Done if Required',
+                    key: 'uniformSprinkling',
+                },
+                {
+                    title: 'Loose Thickness of Layer Checked',
+                    key: 'looseThicknessChecked',
+                },
+                {
+                    title: 'OMC is Maintained Before Commencement of Rolling',
+                    key: 'omcMaintained',
+                },
+                {
+                    title: 'Suitable Roller Available for Compaction',
+                    key: 'suitableRollerAvailable',
+                },
+                {
+                    title: 'Number of Passes, Speed, and Rolling Pattern Followed',
+                    key: 'passesSpeedPatternFollowed',
+                },
+                {
+                    title: 'Any Localized Wet, Soft, or Under Compacted Area Found',
+                    key: 'localizedWetSoftAreaFound',
+                },
+                {
+                    title: 'Layer is Free from Segregation',
+                    key: 'layerFreeFromSegregation',
+                },
+                {
+                    title: 'Arrangement for Protection of Finished Surface Available',
+                    key: 'protectionForFinishedSurface',
+                },
+                {
+                    title: 'Any Non-conformance/Non-compliance Found',
+                    key: 'nonConformanceFound',
+                },
+                {
+                    title: 'Finished Compacted Layer Thickness as Specified',
+                    key: 'compactedLayerThicknessSpecified',
+                },
+            ];
+
+            return (
+                <View>
+                    {compactionProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={compactionData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setCompactionData((prevData: any) => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+
+                    <Input
+                        label="Finished Compacted Layer Thickness in mm"
+                        value={compactionData.compactedLayerThickness}
+                        onChange={(value: any) =>
+                            setCompactionData(prevData => ({
+                                ...prevData,
+                                compactedLayerThickness: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.CONSTRUCTION_OF_CONTROL_ROOM:
+        case TASK_TYPES.COMPACTING_GROUND_SUPPORT_FOR_EMBANKMENT:
+        case TASK_TYPES.DEWATERING:
+        case TASK_TYPES.PLACING_OF_COVER:
+        case TASK_TYPES.FIXING_OF_SHEET:
+        case TASK_TYPES.GRADING:
+        case TASK_TYPES.THREADING_OF_PRE_STRESSING_STRANDS:
+            return (
+                <View>
+                    <View>
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                returnKeyType="next"
+                                underlineColorAndroid="#f000"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => {
+                                    setComments(text);
+                                }}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.CAGE_LOWERING:
+            return (
+                <View>
+                    <View style={{ flexDirection: 'column' }}>
+                        <Text style={styles.Lable}>
+                            Plie shaft cleaned of all loose material or not
+                        </Text>
+                        <View style={[styles.SectionStyle, { zIndex: 16, height: 50 }]}>
+                            <DropDownPicker
+                                open={openPlieShaftCleanedLooseMaterial}
+                                value={plieShaftCleanedLooseMaterial}
+                                items={YES_NO_LIST}
+                                setOpen={setOpenPlieShaftCleanedLooseMaterial}
+                                setValue={setPlieShaftCleanedLooseMaterial}
+                            />
+                        </View>
+                    </View>
+
+                    <View style={{ flexDirection: 'column' }}>
+                        <Text style={styles.Lable}>
+                            Suitable spacer provided to maintain the required cover to steel{' '}
+                        </Text>
+                        <View style={[styles.SectionStyle, { zIndex: 15, height: 50 }]}>
+                            <DropDownPicker
+                                open={openSuitableSpacerProvidedToMaintainCoverToSteel}
+                                value={suitableSpacerProvidedToMaintainCoverToSteel}
+                                items={YES_NO_LIST}
+                                setOpen={setOpenSuitableSpacerProvidedToMaintainCoverToSteel}
+                                setValue={setSuitableSpacerProvidedToMaintainCoverToSteel}
+                            />
+                        </View>
+                    </View>
+
+                    <View style={{ flexDirection: 'column' }}>
+                        <Text style={styles.Lable}>
+                            No L bend at the bottom of the Cage checked or not{' '}
+                        </Text>
+                        <View style={[styles.SectionStyle, { zIndex: 15, height: 50 }]}>
+                            <DropDownPicker
+                                open={openNoLBendBottomOfTheCageChecked}
+                                value={noLBendBottomOfTheCageChecked}
+                                items={YES_NO_NA_LIST}
+                                setOpen={setOpenNoLBendBottomOfTheCageChecked}
+                                setValue={setNoLBendBottomOfTheCageChecked}
+                            />
+                        </View>
+                    </View>
+
+                    <View>
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                returnKeyType="next"
+                                underlineColorAndroid="#f000"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => {
+                                    setComments(text);
+                                }}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+
+        case TASK_TYPES.BORING_OF_PILE:
+            return (
+                <View>
+                    <View style={{ flexDirection: 'column' }}>
+                        <Input
+                            label="Density of Polymer in gm/ml"
+                            value={boringOfPileData.densityOfPolymer}
+                            onChange={(value: string) =>
+                                handleInputChangeBoringOfPile('densityOfPolymer', value)
+                            }
+                        />
+                    </View>
+
+                    <View style={{ flexDirection: 'column' }}>
+                        <Input
+                            label="Viscosity of Polymer in sec/liter"
+                            value={boringOfPileData.viscosityOfPolymer}
+                            onChange={(value: string) =>
+                                handleInputChangeBoringOfPile('viscosityOfPolymer', value)
+                            }
+                        />
+                    </View>
+
+                    <View style={{ flexDirection: 'column' }}>
+                        <Input
+                            label="pH value of Polymer"
+                            value={boringOfPileData.valueOfPolymer}
+                            onChange={(value: string) =>
+                                handleInputChangeBoringOfPile('valueOfPolymer', value)
+                            }
+                        />
+                    </View>
+
+                    <View style={{ flexDirection: 'column' }}>
+                        <Input
+                            label="Sand content of Polymer in %"
+                            value={boringOfPileData.contentOfPolymer}
+                            onChange={(value: string) =>
+                                handleInputChangeBoringOfPile('contentOfPolymer', value)
+                            }
+                        />
+                    </View>
+
+                    <View style={{ flexDirection: 'column' }}>
+                        <Input
+                            label="Depth of Bore in m"
+                            value={boringOfPileData.depthOfBore}
+                            onChange={(value: string) =>
+                                handleInputChangeBoringOfPile('depthOfBore', value)
+                            }
+                        />
+                    </View>
+
+                    <View>
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                returnKeyType="next"
+                                underlineColorAndroid="#f000"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => {
+                                    setComments(text);
+                                }}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+
+        case TASK_TYPES.FLUSHING_OPERATIONS:
+            return (
+                <View>
+                    <View style={{ flexDirection: 'column' }}>
+                        <TimePicker
+                            label="Start time of flushing"
+                            value={flushingOperationsData.startTimeOfFlushing}
+                            onChange={time =>
+                                handleInputChangeFlushingOperations(
+                                    'startTimeOfFlushing',
+                                    time,
+                                )
+                            }
+                        />
+                    </View>
+
+                    <View style={{ flexDirection: 'column' }}>
+                        <TimePicker
+                            label="Finish time of flushing"
+                            value={flushingOperationsData.finishTimeOfFlushing}
+                            onChange={time =>
+                                handleInputChangeFlushingOperations(
+                                    'finishTimeOfFlushing',
+                                    time,
+                                )
+                            }
+                        />
+                    </View>
+
+                    <View style={{ flexDirection: 'column' }}>
+                        <DropdownPicker
+                            label="Whether Pour cleared or not"
+                            value={flushingOperationsData.whetherPourCleared}
+                            items={YES_NO_LIST}
+                            onChange={(newValue: string) => {
+                                handleInputChangeFlushingOperations(
+                                    'whetherPourCleared',
+                                    newValue,
+                                );
+                            }}
+                            isRequired={true}
+                        />
+                    </View>
+
+                    <View style={{ flexDirection: 'column' }}>
+                        <Input
+                            label="Density of Polymer in gm/ml"
+                            value={boringOfPileData.densityOfPolymer}
+                            onChange={(value: string) =>
+                                handleInputChangeFlushingOperations('densityOfPolymer', value)
+                            }
+                        />
+                    </View>
+
+                    <View style={{ flexDirection: 'column' }}>
+                        <Input
+                            label="Viscosity of Polymer in sec/liter"
+                            value={boringOfPileData.viscosityOfPolymer}
+                            onChange={(value: string) =>
+                                handleInputChangeFlushingOperations(
+                                    'viscosityOfPolymer',
+                                    value,
+                                )
+                            }
+                        />
+                    </View>
+
+                    <View style={{ flexDirection: 'column' }}>
+                        <Input
+                            label="pH value of Polymer"
+                            value={boringOfPileData.valueOfPolymer}
+                            onChange={(value: string) =>
+                                handleInputChangeFlushingOperations('valueOfPolymer', value)
+                            }
+                        />
+                    </View>
+
+                    <View style={{ flexDirection: 'column' }}>
+                        <Input
+                            label="Sand content of Polymer in %"
+                            value={boringOfPileData.contentOfPolymer}
+                            onChange={(value: string) =>
+                                handleInputChangeFlushingOperations('contentOfPolymer', value)
+                            }
+                        />
+                    </View>
+
+                    <View style={{ flexDirection: 'column' }}>
+                        <Input
+                            label="Depth of Bore in m"
+                            value={boringOfPileData.depthOfBore}
+                            onChange={(value: string) =>
+                                handleInputChangeFlushingOperations('depthOfBore', value)
+                            }
+                        />
+                    </View>
+
+                    <View>
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                returnKeyType="next"
+                                underlineColorAndroid="#f000"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => {
+                                    setComments(text);
+                                }}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+
+        case TASK_TYPES.CHIPPING_AND_REMOVAL_OF_CONCRETE_ABOVE_CUT_OFF_LEVEL:
+            return (
+                <View>
+                    <View style={{ flexDirection: 'column' }}>
+                        <Input
+                            label="No. of days of chipping after casting of concrete"
+                            value={chippingAndRemovalOfConcreteData.noOfDaysOfChipping}
+                            onChange={(value: string) =>
+                                handleInputChangeChippingAndRemovalOfConcrete(
+                                    'noOfDaysOfChipping',
+                                    value,
+                                )
+                            }
+                        />
+                    </View>
+
+                    <View>
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                returnKeyType="next"
+                                underlineColorAndroid="#f000"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => {
+                                    setComments(text);
+                                }}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.STITCH_CONCRETE:
+            if (!concreteData || !concreteData.length) {
+                setConcreteData([
+                    {
+                        vehicleNo: '',
+                        timeOfArrival: '',
+                        gradeOfConcrete: '',
+                        concreteTemp: 0,
+                        slumpValue: 0,
+                        concretePoured: 0,
+                        concreteStartTime: '',
+                        concreteFinishTime: '',
+                        key: Guid.create(),
+                    },
+                ]);
+            }
+
+            return (
+                <View>
+                    <DropdownPicker
+                        label="Grade of Concrete (Reference approved drawing)"
+                        value={stitchConcreteData.gradeOfConcrete}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeStitchConcrete('gradeOfConcrete', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Method statement is approved"
+                        value={stitchConcreteData.methodStatementApproved}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeStitchConcrete(
+                                'methodStatementApproved',
+                                value,
+                            )
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="All HT strands for all duct inserted before concreting"
+                        value={stitchConcreteData.htStrandsInserted}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeStitchConcrete('htStrandsInserted', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Water, sand, coarse aggregate, cement, admixture approved by IE"
+                        value={stitchConcreteData.materialsApproved}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeStitchConcrete('materialsApproved', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Formwork approved by IE"
+                        value={stitchConcreteData.formworkApproved}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeStitchConcrete('formworkApproved', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Reinforcement cage approved"
+                        value={stitchConcreteData.reinforcementCageApproved}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeStitchConcrete(
+                                'reinforcementCageApproved',
+                                value,
+                            )
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Concreting equipment is in proper working condition"
+                        value={stitchConcreteData.equipmentWorking}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeStitchConcrete('equipmentWorking', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Access provided"
+                        value={stitchConcreteData.accessProvided}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeStitchConcrete('accessProvided', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Safety arrangements are adequate"
+                        value={stitchConcreteData.safetyArrangements}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeStitchConcrete('safetyArrangements', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Heavy rainfall protection available"
+                        value={stitchConcreteData.rainfallProtection}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeStitchConcrete('rainfallProtection', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Needle Vibrators status"
+                        value={stitchConcreteData.needleVibratorStatus}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeStitchConcrete('needleVibratorStatus', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Needles vibrator’s nos and status"
+                        value={stitchConcreteData.needleVibratorNos}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeStitchConcrete('needleVibratorNos', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Slump cone apparatus and sufficient Cube moulds available"
+                        value={stitchConcreteData.slumpConeApparatusAvailable}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeStitchConcrete(
+                                'slumpConeApparatusAvailable',
+                                value,
+                            )
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Start pre-stressing after getting strength 30 Mpa or 5 days"
+                        value={stitchConcreteData.startPreStressing}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeStitchConcrete('startPreStressing', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Pre-stressing & Grouting format followed as per Spine"
+                        value={stitchConcreteData.groutingFormatFollowed}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeStitchConcrete('groutingFormatFollowed', value)
+                        }
+                        isRequired={true}
+                    />
+                    <View style={styles.MainContainer}>
+                        <ScrollView
+                            id="scrollViewConcrete"
+                            showsHorizontalScrollIndicator={false}
+                            horizontal={enableScroll}>
+                            <View>
+                                {renderHeadings()}
+                                <FlatList
+                                    data={concreteData}
+                                    renderItem={renderItem}
+                                    keyExtractor={item => item.key?.toString()}
+                                    style={{ zIndex: 10 }}
+                                    automaticallyAdjustContentInsets={true}
+                                    scrollEnabled={false}
+                                />
+                            </View>
+                        </ScrollView>
+                    </View>
+
+                    <View>
+                        <TouchableOpacity
+                            style={{ paddingVertical: 15, zIndex: 8 }}
+                            onPress={() => onAddMoreConcrete()}>
+                            <Text style={styles.AddMoreLink}>+ Add More</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    <View>
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                returnKeyType="next"
+                                underlineColorAndroid="#f000"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => {
+                                    setComments(text);
+                                }}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.COPING:
+        case TASK_TYPES.CONCRETING:
+        case TASK_TYPES.PCC_LEVELLING_COURSE:
+            if (!concreteData || !concreteData.length) {
+                setConcreteData([
+                    {
+                        vehicleNo: '',
+                        timeOfArrival: '',
+                        gradeOfConcrete: '',
+                        concreteTemp: 0,
+                        slumpValue: 0,
+                        concretePoured: 0,
+                        concreteStartTime: '',
+                        concreteFinishTime: '',
+                        key: Guid.create(),
+                    },
+                ]);
+            }
+
+            return (
+                <View>
+                    <View style={styles.MainContainer}>
+                        <ScrollView
+                            id="scrollViewConcrete"
+                            showsHorizontalScrollIndicator={false}
+                            horizontal={enableScroll}>
+                            <View>
+                                {renderHeadings()}
+                                <FlatList
+                                    data={concreteData}
+                                    renderItem={renderItem}
+                                    keyExtractor={item => item.key?.toString()}
+                                    style={{ zIndex: 10 }}
+                                    automaticallyAdjustContentInsets={true}
+                                    scrollEnabled={false}
+                                />
+                            </View>
+                        </ScrollView>
+                    </View>
+
+                    <View>
+                        <TouchableOpacity
+                            style={{ paddingVertical: 15, zIndex: 8 }}
+                            onPress={() => onAddMoreConcrete()}>
+                            <Text style={styles.AddMoreLink}>+ Add More</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    <View>
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                returnKeyType="next"
+                                underlineColorAndroid="#f000"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => {
+                                    setComments(text);
+                                }}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.TORQUING:
+            if (!torquingData || !torquingData.length) {
+                setTorquingData([
+                    {
+                        date: '',
+                        time: '',
+                        component: '',
+                        detailsOfJoints: '',
+                        nosOfBolt: 0,
+                        diaOfBoltInMm: 0,
+                        sizeInMm: 0,
+                        slNoOfInvoiceMTCFile: '',
+                        slNoOfTorqueWrench: '',
+                        torqueApplied: 0,
+                        refusalsGauage3nos: 'Y',
+                        refusalsGauage4nos: 'Y',
+                        refusalsGauage5nos: 'Y',
+                        refusalsGauage6nos: 'Y',
+                        key: Guid.create(),
+                    },
+                ]);
+            }
+            return (
+                <View>
+                    <View style={styles.MainContainer}>
+                        <ScrollView
+                            id="scrollViewTorquing"
+                            showsHorizontalScrollIndicator={false}
+                            horizontal={enableScroll}>
+                            <View>
+                                {renderTorquingHeadings(styles)}
+                                <FlatList
+                                    data={torquingData}
+                                    renderItem={renderItemTorquing}
+                                    keyExtractor={item => item.key?.toString()}
+                                    style={{ zIndex: 10 }}
+                                    automaticallyAdjustContentInsets={true}
+                                    scrollEnabled={false}
+                                />
+                            </View>
+                        </ScrollView>
+                    </View>
+
+                    <View>
+                        <TouchableOpacity
+                            style={{ paddingVertical: 15, zIndex: 8 }}
+                            onPress={() => onAddMoreTorquing()}>
+                            <Text style={styles.AddMoreLink}>+ Add More</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View>
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                returnKeyType="next"
+                                underlineColorAndroid="#f000"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => {
+                                    setComments(text);
+                                }}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+
+        case TASK_TYPES.GLUEING:
+            return (
+                <View>
+                    <View style={styles.MainContainer}>
+                        <ScrollView
+                            id="scrollViewGlueing"
+                            showsHorizontalScrollIndicator={false}
+                            horizontal={enableScroll}>
+                            <View>
+                                {renderGlueingHeadings(styles)}
+                                <FlatList
+                                    data={glueingData}
+                                    renderItem={renderItemGlueing}
+                                    keyExtractor={item => item.key?.toString()}
+                                    style={{ zIndex: 10 }}
+                                    automaticallyAdjustContentInsets={true}
+                                    scrollEnabled={false}
+                                />
+                            </View>
+                        </ScrollView>
+                    </View>
+
+                    <View>
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                returnKeyType="next"
+                                underlineColorAndroid="#f000"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => {
+                                    setComments(text);
+                                }}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.DUMPING:
+            if (!dumpingData || !dumpingData.length) {
+                setDumpingData([
+                    {
+                        vehicleNo: '',
+                        source: 'Y',
+                        qtyDumped: 0,
+                        approvedSource: '',
+                        bouldersPresent: 'Y',
+                        key: Guid.create(),
+                    },
+                ]);
+            }
+
+            return (
+                <View>
+                    <ScrollView horizontal={true}>
+                        <View>
+                            {renderDumpingHeadings(styles)}
+                            <FlatList
+                                data={dumpingData}
+                                renderItem={renderItemDumping}
+                                keyExtractor={item => item.key?.toString()}
+                                automaticallyAdjustContentInsets={true}
+                                scrollEnabled={false}
+                            />
+                        </View>
+                    </ScrollView>
+                    <TouchableOpacity onPress={() => onAddMoreDumping()}>
+                        <Text>+ Add More</Text>
+                    </TouchableOpacity>
+
+                    <View>
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                returnKeyType="next"
+                                underlineColorAndroid="#f000"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => {
+                                    setComments(text);
+                                }}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.REMOVAL_OF_FORMWORK:
+            return (
+                <View style={styles.columnWiseData}>
+                    <Text style={styles.headerText}>Removal of Formwork</Text>
+                    <View style={styles.categoryColumn}>
+                        <DropdownPicker
+                            label="Whether concrete has achieved desired strength"
+                            value={removalFormworkData.concreteStrengthAchieved}
+                            items={YES_NO_NA_LIST}
+                            onChange={(value: string) =>
+                                handleInputChangeFormwork('concreteStrengthAchieved', value)
+                            }
+                        />
+                    </View>
+                    <View style={styles.categoryColumn}>
+                        <DropdownPicker
+                            label="Whether minimum time has been attained"
+                            value={removalFormworkData.minimumTimeAttained}
+                            items={YES_NO_NA_LIST}
+                            onChange={(value: string) =>
+                                handleInputChangeFormwork('minimumTimeAttained', value)
+                            }
+                        />
+                    </View>
+                    <View>
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                returnKeyType="next"
+                                underlineColorAndroid="#f000"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => {
+                                    setComments(text);
+                                }}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.FABRICATION_OF_BUS_SHELTER:
+        case TASK_TYPES.FABRICATION_OF_MEMBERS:
+        case TASK_TYPES.FABRICATION_OF_STEEL_GIRDERS:
+            return (
+                <View style={styles.columnWiseData}>
+                    <Text style={styles.headerText}>
+                        Fabrication of Steel Girders/Diaphragms
+                    </Text>
+
+                    <View style={styles.categoryColumn}>
+                        <DropdownPicker
+                            label="Is Steel inspection for surface condition (Twist, Straightness etc.)"
+                            value={fabricationData.steelInspectionSurfaceCondition}
+                            items={YES_NO_NA_LIST}
+                            onChange={(value: string) =>
+                                handleInputChangeFabrication(
+                                    'steelInspectionSurfaceCondition',
+                                    value,
+                                )
+                            }
+                        />
+                    </View>
+
+                    <View style={styles.categoryColumn}>
+                        <DropdownPicker
+                            label="Is Section checked for dimension and checked as per GFC"
+                            value={fabricationData.sectionCheckedForDimension}
+                            items={YES_NO_NA_LIST}
+                            onChange={(value: string) =>
+                                handleInputChangeFabrication(
+                                    'sectionCheckedForDimension',
+                                    value,
+                                )
+                            }
+                        />
+                    </View>
+
+                    <View style={styles.categoryColumn}>
+                        <DropdownPicker
+                            label="Is Material specification and checked as per GFC"
+                            value={fabricationData.materialSpecificationChecked}
+                            items={YES_NO_NA_LIST}
+                            onChange={(value: string) =>
+                                handleInputChangeFabrication(
+                                    'materialSpecificationChecked',
+                                    value,
+                                )
+                            }
+                        />
+                    </View>
+
+                    <View style={styles.categoryColumn}>
+                        <DropdownPicker
+                            label="Is connection checked as per GFC"
+                            value={fabricationData.connectionChecked}
+                            items={YES_NO_NA_LIST}
+                            onChange={(value: string) =>
+                                handleInputChangeFabrication('connectionChecked', value)
+                            }
+                        />
+                    </View>
+
+                    <View style={styles.categoryColumn}>
+                        <DropdownPicker
+                            label="Are bolt holes clean and to size?"
+                            value={fabricationData.boltHolesClean}
+                            items={YES_NO_NA_LIST}
+                            onChange={(value: string) =>
+                                handleInputChangeFabrication('boltHolesClean', value)
+                            }
+                        />
+                    </View>
+
+                    <View style={styles.categoryColumn}>
+                        <DropdownPicker
+                            label="Only approved welders used"
+                            value={fabricationData.approvedWeldersUsed}
+                            items={YES_NO_NA_LIST}
+                            onChange={(value: string) =>
+                                handleInputChangeFabrication('approvedWeldersUsed', value)
+                            }
+                        />
+                    </View>
+
+                    <View style={styles.categoryColumn}>
+                        <DropdownPicker
+                            label="Welds identified as per welder ID"
+                            value={fabricationData.weldsIdentified}
+                            items={YES_NO_NA_LIST}
+                            onChange={(value: string) =>
+                                handleInputChangeFabrication('weldsIdentified', value)
+                            }
+                        />
+                    </View>
+
+                    <View style={styles.categoryColumn}>
+                        <DropdownPicker
+                            label="Welds inspected for dimension, shape, location, etc."
+                            value={fabricationData.weldsInspected}
+                            items={YES_NO_NA_LIST}
+                            onChange={(value: string) =>
+                                handleInputChangeFabrication('weldsInspected', value)
+                            }
+                        />
+                    </View>
+
+                    <View style={styles.categoryColumn}>
+                        <DropdownPicker
+                            label="Welds repaired as required."
+                            value={fabricationData.weldsRepaired}
+                            items={YES_NO_NA_LIST}
+                            onChange={(value: string) =>
+                                handleInputChangeFabrication('weldsRepaired', value)
+                            }
+                        />
+                    </View>
+
+                    <View style={styles.categoryColumn}>
+                        <DropdownPicker
+                            label="Shape edge burns, weld spatter removed."
+                            value={fabricationData.shapeEdgeBurnsRemoved}
+                            items={YES_NO_NA_LIST}
+                            onChange={(value: string) =>
+                                handleInputChangeFabrication('shapeEdgeBurnsRemoved', value)
+                            }
+                        />
+                    </View>
+
+                    <View style={styles.categoryColumn}>
+                        <DropdownPicker
+                            label="Oil grease removed prior to final clean."
+                            value={fabricationData.oilGreaseRemoved}
+                            items={YES_NO_NA_LIST}
+                            onChange={(value: string) =>
+                                handleInputChangeFabrication('oilGreaseRemoved', value)
+                            }
+                        />
+                    </View>
+
+                    <View style={styles.categoryColumn}>
+                        <DropdownPicker
+                            label="Steel cleaned and painted as per specification."
+                            value={fabricationData.steelCleanedAndPainted}
+                            items={YES_NO_NA_LIST}
+                            onChange={(value: string) =>
+                                handleInputChangeFabrication('steelCleanedAndPainted', value)
+                            }
+                        />
+                    </View>
+
+                    <View style={styles.categoryColumn}>
+                        <DropdownPicker
+                            label="Final shop coat applied as per approve color."
+                            value={fabricationData.finalShopCoatApplied}
+                            items={YES_NO_NA_LIST}
+                            onChange={(value: string) =>
+                                handleInputChangeFabrication('finalShopCoatApplied', value)
+                            }
+                        />
+                    </View>
+
+                    <View style={styles.categoryColumn}>
+                        <DropdownPicker
+                            label="Each member marked for erection as per scope"
+                            value={fabricationData.memberMarkedForErection}
+                            items={YES_NO_NA_LIST}
+                            onChange={(value: string) =>
+                                handleInputChangeFabrication('memberMarkedForErection', value)
+                            }
+                        />
+                    </View>
+
+                    <View style={styles.categoryColumn}>
+                        <DropdownPicker
+                            label="Each member approved by inspector prior to shipment."
+                            value={fabricationData.memberApprovedByInspector}
+                            items={YES_NO_NA_LIST}
+                            onChange={(value: string) =>
+                                handleInputChangeFabrication(
+                                    'memberApprovedByInspector',
+                                    value,
+                                )
+                            }
+                        />
+                    </View>
+
+                    <View>
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                returnKeyType="next"
+                                underlineColorAndroid="#f000"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => {
+                                    setComments(text);
+                                }}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+
+        case TASK_TYPES.TEMPORARY_PRESTRESSING:
+            return (
+                <View>
+                    <View style={styles.MainContainer}>
+                        <ScrollView
+                            id="scrollViewTemporaryPrestressing"
+                            showsHorizontalScrollIndicator={false}
+                            horizontal={enableScroll}>
+                            <View>
+                                {renderTemporaryPrestressingHeadings(styles)}
+                                <FlatList
+                                    data={temporaryPrestressingData}
+                                    renderItem={renderItemTemporaryPrestressing}
+                                    keyExtractor={item => item.key?.toString()}
+                                    style={{ zIndex: 10 }}
+                                    automaticallyAdjustContentInsets={true}
+                                    scrollEnabled={false}
+                                />
+                            </View>
+                        </ScrollView>
+                    </View>
+
+                    <View>
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                returnKeyType="next"
+                                underlineColorAndroid="#f000"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => {
+                                    setComments(text);
+                                }}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.ERECTION_USING_CRANES:
+            const erectionUsingCranesProperties = [
+                {
+                    label: 'Has any risk assessment been carried out',
+                    key: 'riskAssessmentCarriedOut',
+                },
+                {
+                    label: 'Is the crane on firm level bases',
+                    key: 'craneOnFirmLevelBases',
+                },
+                {
+                    label: 'Are all operators trained and competent',
+                    key: 'allOperatorsTrained',
+                },
+                {
+                    label: 'Is crane tested and operated',
+                    key: 'craneTestedAndOperated',
+                },
+                {
+                    label: 'Is there swing alarm installed and functioning',
+                    key: 'swingAlarmFunctioning',
+                },
+                {
+                    label: 'Does the crane have a current test certificate',
+                    key: 'craneTestCertificate',
+                },
+                {
+                    label: 'Boom of crane have a current test certificate',
+                    key: 'boomTestCertificate',
+                },
+                { label: 'Oil (leakage)', key: 'oilLeakage' },
+                { label: 'Greasing', key: 'greasing' },
+                {
+                    label: 'Outriggers (Fully extended)',
+                    key: 'outriggersFullyExtended',
+                },
+                {
+                    label: 'Level indicators (2 degree to 3 degree)',
+                    key: 'levelIndicators',
+                },
+                {
+                    label: 'Base plate under the outriggers',
+                    key: 'basePlateUnderOutriggers',
+                },
+                { label: 'Rigging (2 Nos) angles', key: 'riggingAngles' },
+                {
+                    label:
+                        'Are all the examination and test carried out and certified by competent person',
+                    key: 'examinationCertified',
+                },
+                {
+                    label:
+                        'All lifting tools and tackles are being identified, checked and have valid register',
+                    key: 'liftingToolsChecked',
+                },
+                {
+                    label:
+                        'The person working at height are trained and lash with all fall protection devices',
+                    key: 'workersWithFallProtection',
+                },
+                {
+                    label: 'Workmen provided with all required PPE’s',
+                    key: 'ppeProvided',
+                },
+                {
+                    label:
+                        'Whether sufficient illumination is provided around the working area',
+                    key: 'sufficientIllumination',
+                },
+                {
+                    label: 'Is the SWL marked on all lifting tools & tackles',
+                    key: 'swlMarked',
+                },
+                {
+                    label:
+                        'All welding machine, electrical equipment’s & generators properly earthed',
+                    key: 'equipmentProperlyEarthed',
+                },
+                {
+                    label: 'Are the walkway maintained free from obstacle all the time',
+                    key: 'walkwayObstacleFree',
+                },
+                {
+                    label: 'Is safety latch/locking available',
+                    key: 'safetyLatchAvailable',
+                },
+                {
+                    label: 'Proper warning sign available at site',
+                    key: 'warningSignAvailable',
+                },
+                { label: 'Lifting arrangements', key: 'liftingArrangements' },
+                { label: 'Ground leveling', key: 'groundLeveling' },
+                {
+                    label: 'Is Structure set out to the required line and levels',
+                    key: 'structureSetOut',
+                },
+                {
+                    label:
+                        'For welding, is welder qualification and skill checked and certified',
+                    key: 'welderQualificationChecked',
+                },
+            ];
+
+            return (
+                <View>
+                    {erectionUsingCranesProperties.map(property => (
+                        <DropdownPicker
+                            label={property.label}
+                            value={erectionUsingCranesData[property.key]}
+                            items={YES_NO_LIST}
+                            onChange={(value: string) =>
+                                handleInputChangeErectionUsingCranes(property.key, value)
+                            }
+                            isRequired={true}
+                        />
+                    ))}
+
+                    {/* Additional form elements */}
+                    <View>
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                returnKeyType="next"
+                                underlineColorAndroid="#f000"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => {
+                                    setComments(text);
+                                }}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.STACKING_IN_YARD:
+            const stackingInYardProperties = [
+                {
+                    title: 'Area Barricaded with Proper Signages',
+                    key: 'areaBarricaded',
+                },
+                {
+                    title: 'Temporary Lights Available at Night',
+                    key: 'temporaryLightsAvailable',
+                },
+                { title: 'Flag Man/Marshal Available', key: 'flagManAvailable' },
+                {
+                    title: 'Methodology & Scheme for Lifting and Stacking Available',
+                    key: 'methodologyAvailable',
+                },
+                {
+                    title: 'De-shackles and Slings with Test Certificate',
+                    key: 'deShacklesAndSlings',
+                },
+                { title: 'Safety Color Code on De-shackles', key: 'safetyColorCode' },
+                {
+                    title: 'Hydraulic Jacks in Good Condition',
+                    key: 'hydraulicJacksCondition',
+                },
+                {
+                    title: 'Limit Switch of Lifting Hoist Working',
+                    key: 'limitSwitchWorking',
+                },
+                {
+                    title: 'Cotter Pins in All Lifting Assemblies',
+                    key: 'cotterPinsInPlace',
+                },
+                {
+                    title: 'Macalloy Bars/Pins for Lifting in Proper Condition',
+                    key: 'macalloyBarsCondition',
+                },
+                { title: 'Work at Height Permit Obtained', key: 'workAtHeightPermit' },
+                {
+                    title: 'All Macalloy Bars and Wire Rope Assemblies Certified',
+                    key: 'macalloyBarsCertificate',
+                },
+                {
+                    title: 'Lifting Sequence as per Approved Methodology',
+                    key: 'liftingSequenceProvided',
+                },
+                {
+                    title: 'Lifting Holes in Proper Location',
+                    key: 'liftingHolesLocation',
+                },
+                {
+                    title: 'Lifting Arrangements Working Properly',
+                    key: 'liftingArrangementsWorking',
+                },
+                {
+                    title: 'Pre-stressing Duct Clear of Foreign Materials',
+                    key: 'preStressingDuctClear',
+                },
+                {
+                    title: 'Concrete Strength as per Approved Drawing',
+                    key: 'concreteStrength',
+                },
+                {
+                    title: 'Slider Trolley in Proper Position',
+                    key: 'sliderTrolleyPosition',
+                },
+                {
+                    title: 'Methodology for Stacking Approved',
+                    key: 'methodologyForStackingApproved',
+                },
+                {
+                    title: 'Stacking Area Properly Located and Earmarked',
+                    key: 'stackingAreaLocation',
+                },
+                {
+                    title: 'Stacking Area Level and Supported',
+                    key: 'stackingAreaLevelSupport',
+                },
+            ];
+            return (
+                <View>
+                    {stackingInYardProperties.map(property => (
+                        <DropdownPicker
+                            key={property.key}
+                            label={property.title}
+                            value={stackingInYardData[property.key]}
+                            items={YES_NO_LIST}
+                            onChange={(value: string) =>
+                                handleInputChangeStackingInYard(property.key, value)
+                            }
+                            isRequired={true}
+                        />
+                    ))}
+                    <View>
+                        {/* This should present irrespective of property */}
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                keyboardType="default"
+                                returnKeyType="next"
+                                underlineColorAndroid="#f000"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => setComments(text)}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+
+        case TASK_TYPES.ASSEMBLING_OF_TRUSS:
+            return (
+                <View>
+                    <DropdownPicker
+                        label="Parts Accurately Assembled (GFC)"
+                        value={assemblingOfTrussData.partsAccuratelyAssembled}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeAssemblingOfTruss(
+                                'partsAccuratelyAssembled',
+                                value,
+                            )
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="No Bent or Broken Parts During Handling"
+                        value={assemblingOfTrussData.noBentOrBrokenParts}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeAssemblingOfTruss('noBentOrBrokenParts', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Truss Span Laid on Blocks for Proper Camber"
+                        value={assemblingOfTrussData.trussSpanOnBlocks}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeAssemblingOfTruss('trussSpanOnBlocks', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="All Joint Surfaces Free from Dirt, Burrs"
+                        value={assemblingOfTrussData.cleanJointSurfaces}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeAssemblingOfTruss('cleanJointSurfaces', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="All Fasteners Have Washer Under Nut or Bolt"
+                        value={assemblingOfTrussData.fastenersWithWashers}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeAssemblingOfTruss(
+                                'fastenersWithWashers',
+                                value,
+                            )
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Service Bolts Fully Tightened"
+                        value={assemblingOfTrussData.serviceBoltsTightened}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeAssemblingOfTruss(
+                                'serviceBoltsTightened',
+                                value,
+                            )
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        {/* this should present irrespective of property */}
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                returnKeyType="next"
+                                underlineColorAndroid="#f000"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => {
+                                    setComments(text);
+                                }}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.HACKING_OF_GIRDER:
+            return (
+                <View>
+                    <DropdownPicker
+                        label="Methodology Approved for Hacking by the Contractor"
+                        value={hackingOfGirderData.methodologyApproved}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeHackingOfGirder('methodologyApproved', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Whether the Surface Cleaned and Wet at Which Hacking is to be Done"
+                        value={hackingOfGirderData.surfaceCleanedAndWet}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeHackingOfGirder('surfaceCleanedAndWet', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Whether the Personnel are Skilled"
+                        value={hackingOfGirderData.skilledPersonnel}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeHackingOfGirder('skilledPersonnel', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Whether the Instrument Used for Hacking is Sharpened"
+                        value={hackingOfGirderData.sharpenedInstruments}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeHackingOfGirder('sharpenedInstruments', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Whether the 300-400 Recess Cut Formed in Per Square Meter"
+                        value={hackingOfGirderData.recessCutFormation}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeHackingOfGirder('recessCutFormation', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <View>
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                returnKeyType="next"
+                                underlineColorAndroid="#f000"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => {
+                                    setComments(text);
+                                }}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.DE_STRESSING_OF_GIRDER:
+            return (
+                <View>
+                    <DropdownPicker
+                        label="Girders and Segments Achieved Their Strength"
+                        value={deStressingOfGirderData.strengthAchieved}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeDeStressingOfGirder('strengthAchieved', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Diamond Bit Saw or Grinder Used to Cut the Strands"
+                        value={deStressingOfGirderData.diamondBitSawUsed}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeDeStressingOfGirder('diamondBitSawUsed', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Normal Gradual Uniform Transfer of Prestress to Girder"
+                        value={deStressingOfGirderData.gradualUniformTransfer}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeDeStressingOfGirder(
+                                'gradualUniformTransfer',
+                                value,
+                            )
+                        }
+                        isRequired={true}
+                    />
+
+                    <View>
+                        {/* Additional common components */}
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                returnKeyType="next"
+                                underlineColorAndroid="#f000"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => {
+                                    setComments(text);
+                                }}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.FIXING_OF_BEARING:
+            return (
+                <View>
+                    <DropdownPicker
+                        label="Bearing Placed as Per GFC Drawing"
+                        value={fixingOfBearingData.bearingPlacedAsPerGFC}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeFixingOfBearing('bearingPlacedAsPerGFC', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Bearing Surface Fully Contact with Girder"
+                        value={fixingOfBearingData.bearingSurfaceFullyContactWithGirder}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeFixingOfBearing(
+                                'bearingSurfaceFullyContactWithGirder',
+                                value,
+                            )
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Bearing Plates Set Horizontal in Both Directions"
+                        value={fixingOfBearingData.bearingPlatesSetHorizontal}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeFixingOfBearing(
+                                'bearingPlatesSetHorizontal',
+                                value,
+                            )
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Bearing Pre-Set with Respect to Axis"
+                        value={fixingOfBearingData.bearingPreSetWithAxis}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeFixingOfBearing('bearingPreSetWithAxis', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Supports Provided to Hold Bearing in Position"
+                        value={fixingOfBearingData.supportsProvidedToHoldBearing}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeFixingOfBearing(
+                                'supportsProvidedToHoldBearing',
+                                value,
+                            )
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Anchor Bolt Holes Matching"
+                        value={fixingOfBearingData.anchorBoltHolesMatching}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeFixingOfBearing(
+                                'anchorBoltHolesMatching',
+                                value,
+                            )
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Void Beneath Bearing Filled with Bedding Material"
+                        value={fixingOfBearingData.voidBeneathBearingFilled}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeFixingOfBearing(
+                                'voidBeneathBearingFilled',
+                                value,
+                            )
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Bearing Fixed with Metal Bedding Plate"
+                        value={fixingOfBearingData.bearingFixedWithMetalBedding}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeFixingOfBearing(
+                                'bearingFixedWithMetalBedding',
+                                value,
+                            )
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Threaded Fastener Tightened Uniformly"
+                        value={fixingOfBearingData.threadedFastenerTightenedUniformly}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeFixingOfBearing(
+                                'threadedFastenerTightenedUniformly',
+                                value,
+                            )
+                        }
+                        isRequired={true}
+                    />
+
+                    {/* Common fields for Date, Time, Recommendations */}
+                    <View style={{ flexDirection: 'column' }}>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                    </View>
+
+                    <View>
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                    </View>
+
+                    <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                        <Text style={styles.Lable}>Recommendations</Text>
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            autoCapitalize="none"
+                            keyboardType="email-address"
+                            returnKeyType="next"
+                            underlineColorAndroid="#f000"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.REMOVAL_OF_TEMPORARY_STRUCTURE:
+            return (
+                <View>
+                    <DropdownPicker
+                        label="Whether Concrete Has Achieved Desired Strength"
+                        value={removalOfTemporaryStructureData.concreteAchievedStrength}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeRemovalOfTemporaryStructure(
+                                'concreteAchievedStrength',
+                                value,
+                            )
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Whether Minimum Time Has Been Attained"
+                        value={removalOfTemporaryStructureData.minimumTimeAttained}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeRemovalOfTemporaryStructure(
+                                'minimumTimeAttained',
+                                value,
+                            )
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Whether All Main Components Tightened and Fixed at Their Position"
+                        value={removalOfTemporaryStructureData.allComponentsTightened}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeRemovalOfTemporaryStructure(
+                                'allComponentsTightened',
+                                value,
+                            )
+                        }
+                        isRequired={true}
+                    />
+
+                    <View>
+                        {/* this should present irrespective of property */}
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                returnKeyType="next"
+                                underlineColorAndroid="#f000"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => {
+                                    setComments(text);
+                                }}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.INSTALLATION_OF_EXPANSION_JOINT:
+            return (
+                <View>
+                    <DropdownPicker
+                        label="Expansion Joint in the Right Position"
+                        value={
+                            installationOfExpansionJointData.expansionJointPositionCorrect
+                        }
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeInstallationOfExpansionJoint(
+                                'expansionJointPositionCorrect',
+                                value,
+                            )
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Shipping Devices or Stabilizers Removed"
+                        value={installationOfExpansionJointData.shippingDevicesRemoved}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeInstallationOfExpansionJoint(
+                                'shippingDevicesRemoved',
+                                value,
+                            )
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="No Foreign Objects Impending the Expansion Joint"
+                        value={installationOfExpansionJointData.noForeignObjects}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeInstallationOfExpansionJoint(
+                                'noForeignObjects',
+                                value,
+                            )
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Materials Flowing in the Right Direction"
+                        value={installationOfExpansionJointData.materialsFlowProperly}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeInstallationOfExpansionJoint(
+                                'materialsFlowProperly',
+                                value,
+                            )
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Anchors and Supports Match System Drawing"
+                        value={installationOfExpansionJointData.anchorsAndSupportsMatched}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeInstallationOfExpansionJoint(
+                                'anchorsAndSupportsMatched',
+                                value,
+                            )
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Joints Properly Aligned"
+                        value={installationOfExpansionJointData.jointsProperlyAligned}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeInstallationOfExpansionJoint(
+                                'jointsProperlyAligned',
+                                value,
+                            )
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="No Damage Sustained During Shipping or Installation"
+                        value={installationOfExpansionJointData.noDamageSustained}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeInstallationOfExpansionJoint(
+                                'noDamageSustained',
+                                value,
+                            )
+                        }
+                        isRequired={true}
+                    />
+
+                    <View>
+                        {/* Common components irrespective of property */}
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                returnKeyType="next"
+                                underlineColorAndroid="#f000"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => {
+                                    setComments(text);
+                                }}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.PAINTING:
+            return (
+                <View>
+                    <DropdownPicker
+                        label="Painting System Including Materials and Color Shades Approved"
+                        value={paintingData.paintingSystemApproved}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangePainting('paintingSystemApproved', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Method Statement, QCP, ITP & Risk Assessment Approved"
+                        value={paintingData.documentsApproved}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangePainting('documentsApproved', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Surface Preparation Done as Per Approved Method Statement"
+                        value={paintingData.surfacePreparationDone}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangePainting('surfacePreparationDone', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Defects in Substrate Corrected"
+                        value={paintingData.defectsCorrected}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangePainting('defectsCorrected', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Moisture Content Checked"
+                        value={paintingData.moistureContentChecked}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangePainting('moistureContentChecked', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Plaster Surfaces Rubbed Down with Rubbing Stone"
+                        value={paintingData.plasterSurfacesRubbed}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangePainting('plasterSurfacesRubbed', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Material Thoroughly Stirred Prior to Application"
+                        value={paintingData.materialStirred}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangePainting('materialStirred', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Filler Coat Applied Only After Curing Period of Primer"
+                        value={paintingData.fillerCoatAfterPrimer}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangePainting('fillerCoatAfterPrimer', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Suction Spots Covered with Primer Prior to Filler Coat Application"
+                        value={paintingData.suctionSpotsPrimed}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangePainting('suctionSpotsPrimed', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Filler Coat Applied Evenly and All Angles and Corners are Straight"
+                        value={paintingData.fillerCoatAppliedEvenly}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangePainting('fillerCoatAppliedEvenly', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Sanding Done Between Coats"
+                        value={paintingData.sandingBetweenCoats}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangePainting('sandingBetweenCoats', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Drying Time Allowed as Per Approved Method Statement"
+                        value={paintingData.dryingTimeAllowed}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangePainting('dryingTimeAllowed', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Materials Mixed Properly"
+                        value={paintingData.materialsMixedProperly}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangePainting('materialsMixedProperly', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="First Coat Applied by Roller Over the Whole Surface"
+                        value={paintingData.firstCoatAppliedByRoller}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangePainting('firstCoatAppliedByRoller', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Roller Joints Checked"
+                        value={paintingData.rollerJointsChecked}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangePainting('rollerJointsChecked', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Curing Period Allowed as Per Approved Method Statement"
+                        value={paintingData.curingPeriodAllowed}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangePainting('curingPeriodAllowed', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Second Coat Applied After Touch Up on First Coat"
+                        value={paintingData.secondCoatAfterTouchUp}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangePainting('secondCoatAfterTouchUp', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Final Coat Applied"
+                        value={paintingData.finalCoatApplied}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangePainting('finalCoatApplied', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Cleaning and Protection of Adjacent Surfaces"
+                        value={paintingData.cleaningAndProtection}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangePainting('cleaningAndProtection', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <View>
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                returnKeyType="next"
+                                underlineColorAndroid="#f000"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => {
+                                    setComments(text);
+                                }}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.AUTO_LAUNCHING:
+            return (
+                <View>
+                    <DropdownPicker
+                        label="First Span Lowering on Temporary Steel Stools Completed"
+                        value={autoLaunchingData.firstSpanLowering}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeAutoLaunching('firstSpanLowering', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Slider as per Drawing/Methodology"
+                        value={autoLaunchingData.sliderPerDrawing}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeAutoLaunching('sliderPerDrawing', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Middle Support Leveling & Alignment Completed"
+                        value={autoLaunchingData.middleSupportLeveling}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeAutoLaunching('middleSupportLeveling', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Rear Support Leveling & Alignment Completed"
+                        value={autoLaunchingData.rearSupportLeveling}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeAutoLaunching('rearSupportLeveling', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Check for Hydraulic Jacks at Mid & Rear Support (Alignment & Seating)"
+                        value={autoLaunchingData.checkHydraulicJacks}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeAutoLaunching('checkHydraulicJacks', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Ensure All Vertical Jacks at Mid Support are Connected to Single Power Pack"
+                        value={autoLaunchingData.allVerticalJacksMidSupport}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeAutoLaunching(
+                                'allVerticalJacksMidSupport',
+                                value,
+                            )
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Ensure All Vertical Jacks at Rear Support are Connected to Single Power Pack"
+                        value={autoLaunchingData.allVerticalJacksRearSupport}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeAutoLaunching(
+                                'allVerticalJacksRearSupport',
+                                value,
+                            )
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Ensure Cleanliness and Application of Lubricant on Sliding Surfaces at Mid & Rear Support"
+                        value={autoLaunchingData.cleanlinessAndApplicationLubricant}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeAutoLaunching(
+                                'cleanlinessAndApplicationLubricant',
+                                value,
+                            )
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Physically Checked All Accessories of Launching (Rear Support, Middle Support, Anchoring Bolt)"
+                        value={autoLaunchingData.physicallyCheckedAllAccessories}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeAutoLaunching(
+                                'physicallyCheckedAllAccessories',
+                                value,
+                            )
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Ensure Pins Between Jack and Monorail are Properly Fixed & in Good Condition"
+                        value={autoLaunchingData.jackAndMonorailProperlyFixed}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeAutoLaunching(
+                                'jackAndMonorailProperlyFixed',
+                                value,
+                            )
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Knuckle Bearing in Position"
+                        value={autoLaunchingData.knuckleBearing}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeAutoLaunching('knuckleBearing', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Guide Rollers in Place and Functioning"
+                        value={autoLaunchingData.guideRollers}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeAutoLaunching('guideRollers', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Macalloy Bars Stressed - Mid Support & Rear Support"
+                        value={autoLaunchingData.macalloyBarsStressed}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeAutoLaunching('macalloyBarsStressed', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Front Support Telescopic Leg Closed Properly"
+                        value={autoLaunchingData.frontSupportTelescopic}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeAutoLaunching('frontSupportTelescopic', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Ensure Lock Nuts Arrangement at Mid & Rear Support is Unlocked"
+                        value={autoLaunchingData.lockNutsArrangement}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeAutoLaunching('lockNutsArrangement', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Check Pressure on Mid Support and Rear Support Jacks"
+                        value={autoLaunchingData.pressureOnMidRearSupport}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeAutoLaunching(
+                                'pressureOnMidRearSupport',
+                                value,
+                            )
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Gradient of Auto Launching Checked"
+                        value={autoLaunchingData.gradient}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeAutoLaunching('gradient', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Check Alignment of Track Rail for Rear Trolley Movement"
+                        value={autoLaunchingData.alignmentOfTrackRail}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeAutoLaunching('alignmentOfTrackRail', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Ensure Front Support is at Correct Position to Lower Legs as per Methodology Drawing"
+                        value={autoLaunchingData.frontSupportCorrectPosition}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeAutoLaunching(
+                                'frontSupportCorrectPosition',
+                                value,
+                            )
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Ensure Front Support Pins are Properly Placed and Locked"
+                        value={autoLaunchingData.frontSupportPins}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeAutoLaunching('frontSupportPins', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Ensure Inserts at Pier Cap are Tightened Properly"
+                        value={autoLaunchingData.insertsPierCap}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeAutoLaunching('insertsPierCap', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Ensure Front Support is Engaged Properly"
+                        value={autoLaunchingData.frontSupportEngaged}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeAutoLaunching('frontSupportEngaged', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Ensure Entire Area is Barricaded"
+                        value={autoLaunchingData.entireAreaBarricaded}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeAutoLaunching('entireAreaBarricaded', value)
+                        }
+                        isRequired={true}
+                    />
+
+                    {/* Date, Time, and Comments Fields */}
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                returnKeyType="next"
+                                underlineColorAndroid="#f000"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => {
+                                    setComments(text);
+                                }}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+
+        case TASK_TYPES.PROCUREMENT_OF_STRUCTURAL_STEEL:
+            return (
+                <View>
+                    <Input
+                        label="Total qty of steel procured in tonne"
+                        value={procurementOfSteelData.totalQtyOfSteelProcured}
+                        onChange={(value: string) =>
+                            handleTextInputChangeProcurementOfSteel(
+                                'totalQtyOfSteelProcured',
+                                value,
+                            )
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                returnKeyType="next"
+                                underlineColorAndroid="#f000"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => {
+                                    setComments(text);
+                                }}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.TRANSPORTATION_OF_MATERIAL:
+            <View>
+                <Input
+                    label="Transit Time in hrs"
+                    value={transportationData.transitTime}
+                    onChange={(value: string) =>
+                        handleTextInputChangeTransportation('transitTime', value)
+                    }
+                    isRequired={true}
+                />
+                <View>
+                    <CalendarPicker
+                        label="Date"
+                        value={rfiDate}
+                        onChange={date => setRFIDate(date)}
+                    />
+                    <TimePicker
+                        label="Time"
+                        value={rfiTime}
+                        onChange={time => setRFITime(time)}
+                    />
+                    <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                        <Text style={styles.Lable}>Recommendations</Text>
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            autoCapitalize="none"
+                            keyboardType="email-address"
+                            returnKeyType="next"
+                            underlineColorAndroid="#f000"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => {
+                                setComments(text);
+                            }}
+                        />
+                    </View>
+                </View>
+            </View>;
+        case TASK_TYPES.FIXING_OF_SHEATHING_JOINTS:
+            return (
+                <View>
+                    <DropdownPicker
+                        label="All Temporary Openings in Sheathing Satisfactory Plugged"
+                        value={fixingOfSheathingJointsData.temporaryOpeningsPlugged}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeFixingOfSheathingJoints(
+                                'temporaryOpeningsPlugged',
+                                value,
+                            )
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Has Joint Water Tight"
+                        value={fixingOfSheathingJointsData.jointWaterTight}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeFixingOfSheathingJoints(
+                                'jointWaterTight',
+                                value,
+                            )
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Sheathing Neatly Fitted at Joint without Internal Projection"
+                        value={fixingOfSheathingJointsData.sheathingNeatlyFitted}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeFixingOfSheathingJoints(
+                                'sheathingNeatlyFitted',
+                                value,
+                            )
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Sheathing Tightly Fitted on Anchorage End and Sealed with Tape"
+                        value={fixingOfSheathingJointsData.anchorageEndSealed}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeFixingOfSheathingJoints(
+                                'anchorageEndSealed',
+                                value,
+                            )
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Coupler Tightly Screwed on Outer Side of Sheathing Duct"
+                        value={fixingOfSheathingJointsData.couplerTightlyScrewed}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeFixingOfSheathingJoints(
+                                'couplerTightlyScrewed',
+                                value,
+                            )
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Length of Coupler Not Less Than 150mm (Up to 200mm)"
+                        value={fixingOfSheathingJointsData.couplerLengthSufficient}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeFixingOfSheathingJoints(
+                                'couplerLengthSufficient',
+                                value,
+                            )
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Joint Between Coupler End and Duct Sealed with Tape"
+                        value={fixingOfSheathingJointsData.jointSealedWithTape}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeFixingOfSheathingJoints(
+                                'jointSealedWithTape',
+                                value,
+                            )
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Coupler of Adjacent Duct Staggered"
+                        value={fixingOfSheathingJointsData.couplerStaggered}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeFixingOfSheathingJoints(
+                                'couplerStaggered',
+                                value,
+                            )
+                        }
+                        isRequired={true}
+                    />
+
+                    <View>
+                        {/* Common Date and Time Picker Section */}
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                returnKeyType="next"
+                                underlineColorAndroid="#f000"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => {
+                                    setComments(text);
+                                }}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.FIXING_OF_GEO_GRID:
+            const fixingOfGeoGridProperties = [
+                {
+                    title: 'Material of Geo Grid Approved by Engineer',
+                    key: 'materialApprovedByEngineer',
+                },
+                {
+                    title: 'Specifications/Strength as per Approved Drawing',
+                    key: 'specificationsAsPerApprovedDrawing',
+                },
+                {
+                    title:
+                        'Underneath Soil Layer Compacted, Tested (Moisture & Density)',
+                    key: 'soilProperlyCompacted',
+                },
+                {
+                    title: 'Geo Grids Properly Anchored into Facia Panels',
+                    key: 'geoGridsAnchoredIntoFaciaPanels',
+                },
+                {
+                    title: 'Geo Grids Properly Tensioned and Nailed into Soil',
+                    key: 'geoGridsTensionedAndNailed',
+                },
+                {
+                    title: 'Minimum Length of Geo Grid as per Approved Drawing',
+                    key: 'minimumLengthAsPerApprovedDrawing',
+                },
+            ];
+
+            return (
+                <View>
+                    {fixingOfGeoGridProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={fixingOfGeoGridData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setFixingOfGeoGridData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <View>
+                        {/* This section can remain the same for date, time, and recommendations */}
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => setComments(text)}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.ERECTION_OF_FRICTION_SLAB:
+            const erectionOfFrictionSlabProperties = [
+                {
+                    title: 'Friction Slab cum Crash Barrier has Sufficient Strength',
+                    key: 'sufficientStrength',
+                },
+                {
+                    title: 'Friction Slab cum Crash Barrier Not Damaged',
+                    key: 'notDamaged',
+                },
+                {
+                    title: 'Line/Levels Checked',
+                    key: 'lineLevelsChecked',
+                },
+                {
+                    title: 'Vertical Slope as per Drawing',
+                    key: 'verticalSlopeAsPerDrawing',
+                },
+                {
+                    title: 'Soil Compacted & Geo Grids Fixed under Panels',
+                    key: 'soilCompactedAndGeoGridsFixed',
+                },
+                {
+                    title: 'Coping Done',
+                    key: 'copingDone',
+                },
+            ];
+
+            return (
+                <View>
+                    {erectionOfFrictionSlabProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={erectionOfFrictionSlabData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setErectionOfFrictionSlabData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <View>
+                        {/* Common Section for Date, Time, and Recommendations */}
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => setComments(text)}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.ERECTION_OF_FACIA_PANELS:
+            const erectionOfFaciaPanelsProperties = [
+                {
+                    title: 'Facia Panels have Sufficient Strength',
+                    key: 'sufficientStrength',
+                },
+                {
+                    title: 'Facia Panels Not Damaged',
+                    key: 'notDamaged',
+                },
+                {
+                    title: 'Line/Levels Checked',
+                    key: 'lineLevelsChecked',
+                },
+                {
+                    title: 'Male-Female Joints Checked',
+                    key: 'maleFemaleJointsChecked',
+                },
+                {
+                    title: 'Vertical Slope as per Drawing',
+                    key: 'verticalSlopeAsPerDrawing',
+                },
+                {
+                    title: 'Soil Compacted & Geo Grids Fixed under Panels',
+                    key: 'soilCompactedAndGeoGridsFixed',
+                },
+            ];
+
+            return (
+                <View>
+                    {erectionOfFaciaPanelsProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={erectionOfFaciaPanelsData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setErectionOfFaciaPanelsData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <View>
+                        {/* Common Section for Date, Time, and Recommendations */}
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => setComments(text)}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.ERECTION_OF_COLUMNS:
+            const erectionOfColumnsProperties = [
+                {
+                    title: 'Position Checked',
+                    key: 'positionChecked',
+                },
+                {
+                    title: 'Welding Done as per Approved Drawing',
+                    key: 'weldingAsPerDrawing',
+                },
+                {
+                    title: 'Columns are as per Approved Drawing',
+                    key: 'columnsAsPerDrawing',
+                },
+                {
+                    title: 'Necessary Support Provided',
+                    key: 'supportProvided',
+                },
+            ];
+
+            return (
+                <View>
+                    {erectionOfColumnsProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={erectionOfColumnsData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setErectionOfColumnsData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <View>
+                        {/* Common Section for Date, Time, and Recommendations */}
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => setComments(text)}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.APPLICATION_OF_FILTER_MEDIA:
+            return (
+                <View>
+                    <View style={{ flexDirection: 'column' }}>
+                        <DropdownPicker
+                            label="Filter Media is as per the approved drawing"
+                            value={applicationOfFilterMediaData.filterMediaAsPerDrawing}
+                            items={YES_NO_LIST}
+                            onChange={(value: any) =>
+                                setApplicationOfFilterMediaData(prevData => ({
+                                    ...prevData,
+                                    filterMediaAsPerDrawing: value,
+                                }))
+                            }
+                            isRequired={true}
+                        />
+                    </View>
+
+                    {/* Common Section for Date, Time, and Recommendations */}
+                    <View style={{ flexDirection: 'column' }}>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                    </View>
+                    <View>
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                    </View>
+                    <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                        <Text style={styles.Lable}>Recommendations</Text>
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            autoCapitalize="none"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.FIXING_OF_BRACINGS:
+            const fixingOfBracingsProperties = [
+                {
+                    title: 'Line/Levels Checked',
+                    key: 'lineLevelsChecked',
+                },
+                {
+                    title: 'Welding Done as per Approved Drawing',
+                    key: 'weldingAsPerApprovedDrawing',
+                },
+                {
+                    title: 'Bracings are as per Approved Drawing',
+                    key: 'bracingsAsPerApprovedDrawing',
+                },
+            ];
+
+            return (
+                <View>
+                    {fixingOfBracingsProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={fixingOfBracingsData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setFixingOfBracingsData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <View>
+                        {/* Common Section for Date, Time, and Recommendations */}
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => setComments(text)}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.FIXING_OF_RAILING:
+            const fixingOfRailingProperties = [
+                {
+                    title: 'Line/Levels Checked',
+                    key: 'lineLevelsChecked',
+                },
+                {
+                    title: 'Railing is as per Approved Drawing',
+                    key: 'railingAsPerApprovedDrawing',
+                },
+            ];
+
+            return (
+                <View>
+                    {fixingOfRailingProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={fixingOfRailingData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setFixingOfRailingData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <View>
+                        {/* Common Section for Date, Time, and Recommendations */}
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => setComments(text)}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.PROCUREMENT_OF_SHEET:
+            return (
+                <View>
+                    <View style={{ flexDirection: 'column' }}>
+                        <Input
+                            label="Total Sheet purchased (sqm)"
+                            value={procurementOfSheetData.totalSheetPurchased}
+                            onChange={(value: any) =>
+                                setProcurementOfSheetData(prevData => ({
+                                    ...prevData,
+                                    totalSheetPurchased: value,
+                                }))
+                            }
+                            isRequired={true}
+                        />
+                    </View>
+
+                    <View>
+                        {/* This section can remain the same for date, time, and recommendations */}
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => setComments(text)}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.DUMPING_OF_SOIL:
+            return (
+                <View>
+                    <View style={{ flexDirection: 'column' }}>
+                        <DropdownPicker
+                            label="Soil from Approved Source"
+                            value={dumpingOfSoilData.soilApprovedSource}
+                            items={YES_NO_LIST}
+                            onChange={(value: any) =>
+                                setDumpingOfSoilData(prevData => ({
+                                    ...prevData,
+                                    soilApprovedSource: value,
+                                }))
+                            }
+                            isRequired={true}
+                        />
+                    </View>
+
+                    <View style={{ flexDirection: 'column' }}>
+                        <DropdownPicker
+                            label="Soil without Unwanted Materials"
+                            value={dumpingOfSoilData.soilWithoutUnwantedMaterials}
+                            items={YES_NO_LIST}
+                            onChange={(value: any) =>
+                                setDumpingOfSoilData(prevData => ({
+                                    ...prevData,
+                                    soilWithoutUnwantedMaterials: value,
+                                }))
+                            }
+                            isRequired={true}
+                        />
+                    </View>
+
+                    <View style={{ flexDirection: 'column' }}>
+                        <Input
+                            label="Quantity of Soil Dumped (cum)"
+                            value={dumpingOfSoilData.quantityOfSoilDumped}
+                            onChange={(value: any) =>
+                                setDumpingOfSoilData(prevData => ({
+                                    ...prevData,
+                                    quantityOfSoilDumped: value,
+                                }))
+                            }
+                            isRequired={true}
+                        />
+                    </View>
+
+                    {/* Date and Time */}
+                    <View style={{ flexDirection: 'column' }}>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                    </View>
+                    <View>
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                    </View>
+
+                    {/* Recommendations */}
+                    <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                        <Text style={styles.Lable}>Recommendations</Text>
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            autoCapitalize="none"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.BORING_OF_DIAPHRAGM:
+            return (
+                <View>
+                    <View>
+                        {/* Density of Polymer */}
+                        <Input
+                            label="Density of Polymer (gm/ml)"
+                            value={boringOfDiaphragmData.densityOfPolymer}
+                            onChange={(value: string) =>
+                                handleBoringOfDiaphragmInputChange('densityOfPolymer', value)
+                            }
+                            isRequired={true}
+                        />
+
+                        {/* Viscosity of Polymer */}
+                        <Input
+                            label="Viscosity of Polymer (sec/liter)"
+                            value={boringOfDiaphragmData.viscosityOfPolymer}
+                            onChange={(value: string) =>
+                                handleBoringOfDiaphragmInputChange(
+                                    'viscosityOfPolymer',
+                                    value,
+                                )
+                            }
+                            isRequired={true}
+                        />
+
+                        {/* pH Value of Polymer */}
+                        <Input
+                            label="pH Value of Polymer"
+                            value={boringOfDiaphragmData.pHValueOfPolymer}
+                            onChange={(value: string) =>
+                                handleBoringOfDiaphragmInputChange('pHValueOfPolymer', value)
+                            }
+                            isRequired={true}
+                        />
+
+                        {/* Sand Content of Polymer */}
+                        <Input
+                            label="Sand Content of Polymer (%)"
+                            value={boringOfDiaphragmData.sandContentOfPolymer}
+                            onChange={(value: string) =>
+                                handleBoringOfDiaphragmInputChange(
+                                    'sandContentOfPolymer',
+                                    value,
+                                )
+                            }
+                            isRequired={true}
+                        />
+
+                        {/* Depth of Wall */}
+                        <Input
+                            label="Depth of Wall (mtr)"
+                            value={boringOfDiaphragmData.depthOfWall}
+                            onChange={(value: string) =>
+                                handleBoringOfDiaphragmInputChange('depthOfWall', value)
+                            }
+                            isRequired={true}
+                        />
+                    </View>
+                    <View>
+                        {/* Date, time, and recommendations remain the same */}
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => setComments(text)}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.PRE_STRESSING:
+            return (
+                <View>
+                    <View style={styles.MainContainer}>
+                        <ScrollView
+                            id="scrollViewPrestressing"
+                            showsHorizontalScrollIndicator={false}
+                            horizontal={enableScroll}>
+                            <View>
+                                {renderPrestressingHeadings(styles)}
+                                <FlatList
+                                    data={prestressingData}
+                                    renderItem={renderItemPrestressing}
+                                    keyExtractor={item => item.key?.toString()}
+                                    style={{ zIndex: 10 }}
+                                    automaticallyAdjustContentInsets={true}
+                                    scrollEnabled={false}
+                                />
+                            </View>
+                        </ScrollView>
+                    </View>
+
+                    <View>
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => {
+                                    setComments(text);
+                                }}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.ERECTION:
+            const erectionProperties = [
+                {
+                    title: 'Ground properly leveled for trailer placement',
+                    key: 'groundLeveled',
+                },
+                {
+                    title: 'Area is barricaded with proper signages',
+                    key: 'areaBarricaded',
+                },
+                {
+                    title: 'Temporary lights for proper illumination at night',
+                    key: 'temporaryLights',
+                },
+                { title: 'Flag man/Marshal available', key: 'flagManAvailable' },
+                {
+                    title: 'Methodology & Scheme available at site',
+                    key: 'methodologyAvailable',
+                },
+                { title: 'Crane positioned as per drawing', key: 'cranePositioned' },
+                { title: 'De-shackles certified', key: 'deShacklesCertified' },
+                {
+                    title: 'Safety color code present on de-shackles',
+                    key: 'safetyColorCode',
+                },
+                {
+                    title: 'Hydraulic jacks calibrated',
+                    key: 'hydraulicJacksCalibrated',
+                },
+                {
+                    title: 'Limit switch of hoist working properly',
+                    key: 'limitSwitchWorking',
+                },
+                {
+                    title: 'Cotter pins placed in lifting assembly',
+                    key: 'cotterPinPlaced',
+                },
+                {
+                    title: 'Macalloy bars in proper condition',
+                    key: 'macalloyBarsCondition',
+                },
+                { title: 'TPI of Cranes & Slings done', key: 'tpiDone' },
+                {
+                    title: 'TPI certificates available',
+                    key: 'tpiCertificatesAvailable',
+                },
+                {
+                    title: 'Counter-weights placed as per drawing',
+                    key: 'counterWeightsPlaced',
+                },
+                { title: 'Positioning marked at site', key: 'positioningMarked' },
+                {
+                    title: 'Traffic diverted & marshals in place',
+                    key: 'trafficDiverted',
+                },
+                { title: 'Workers safety certified', key: 'workersSafetyCertified' },
+                { title: 'Safety arrangements at site', key: 'safetyArrangements' },
+                { title: 'Positioned at marked location', key: 'sitePositioned' },
+                {
+                    title: 'Lateral support ensured before release',
+                    key: 'lateralSupportEnsured',
+                },
+            ];
+            return (
+                <View>
+                    {erectionProperties.map(property => (
+                        <View key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={erectionData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setErectionData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <View>
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => {
+                                    setComments(text);
+                                }}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.STRIPPING_AND_STORING_TOP_SOIL:
+            return (
+                <View>
+                    <View style={{ flexDirection: 'column' }}>
+                        <Input
+                            label="Qty of Top Soil collected and stored (cum)"
+                            value={strippingAndStoringTopSoilData.topSoilCollectedStored}
+                            onChange={(value: any) =>
+                                setStrippingAndStoringTopSoilData(prevData => ({
+                                    ...prevData,
+                                    topSoilCollectedStored: value,
+                                }))
+                            }
+                            isRequired={true}
+                        />
+                    </View>
+
+                    <View>
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => setComments(text)}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.SPREADING_AND_COMPACTION:
+            const spreadingAndCompactionProperties = [
+                {
+                    title: 'Source of material is approved',
+                    key: 'sourceOfMaterialApproved',
+                },
+                {
+                    title: 'Ground improvement is done if required',
+                    key: 'groundImprovementDone',
+                },
+                {
+                    title: 'Under laying layer is approved',
+                    key: 'underLayingLayerApproved',
+                },
+                {
+                    title:
+                        'Adequate grade and survey stakes available for control of layer placement',
+                    key: 'gradeSurveyStakesAvailable',
+                },
+                {
+                    title:
+                        'Adequate no. of grader available for spreading and levelling of fill',
+                    key: 'graderAvailable',
+                },
+                {
+                    title: 'Grading is done as per the required gradient and camber',
+                    key: 'gradingDoneAsPerRequirement',
+                },
+                {
+                    title:
+                        'Uniform sprinkling of water done on previous layer if required',
+                    key: 'uniformSprinklingDone',
+                },
+                { title: 'Dumping pattern is followed', key: 'dumpingPatternFollowed' },
+                {
+                    title: 'Material free from deleterious material',
+                    key: 'materialFreeFromDeleterious',
+                },
+                {
+                    title: 'Material contains over size boulders/ stones',
+                    key: 'containsOverSizeBoulders',
+                },
+                {
+                    title: 'Loose thickness of layer checked',
+                    key: 'looseThicknessChecked',
+                },
+                {
+                    title: 'OMC is maintained before commencement of rolling',
+                    key: 'omcMaintained',
+                },
+                {
+                    title: 'Suitable roller available for compaction',
+                    key: 'suitableRollerAvailable',
+                },
+                {
+                    title: 'Number of passes, speed, and rolling pattern followed',
+                    key: 'rollingPatternFollowed',
+                },
+                {
+                    title: 'Finished compacted layer thickness is as specified',
+                    key: 'finishedLayerThicknessSpecified',
+                },
+                {
+                    title: 'Any localized wet, soft, and under compacted area found',
+                    key: 'localizedIssuesFound',
+                },
+                {
+                    title: 'Layer is free from segregation',
+                    key: 'layerFreeFromSegregation',
+                },
+                {
+                    title: 'Arrangement for protection of finished surface available',
+                    key: 'protectionOfFinishedSurfaceAvailable',
+                },
+                {
+                    title: 'Any non-conformance/ noncompliance found',
+                    key: 'nonConformanceFound',
+                },
+            ];
+
+            return (
+                <View>
+                    {spreadingAndCompactionProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={spreadingAndCompactionData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setSpreadingAndCompactionData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.PRIME_COAT:
+        case TASK_TYPES.TACK_COAT:
+            const primeCoatProperties = [
+                {
+                    title: 'Previous Layer Approved',
+                    key: 'previousLayerApproved',
+                },
+                {
+                    title: 'Surface Preparation Satisfactory (Surface Condition)',
+                    key: 'surfacePreparationSatisfactory',
+                },
+                {
+                    title: 'Grade of Material Approved',
+                    key: 'materialGradeApproved',
+                },
+                {
+                    title: 'Bituminous Emulsion Temperature Checked',
+                    key: 'bituminousEmulsionTemperatureChecked',
+                },
+                {
+                    title: 'Uniform Rate of Spray',
+                    key: 'uniformSprayRate',
+                },
+                {
+                    title: 'Non-Conformance/Non-Compliance Found',
+                    key: 'nonConformanceFound',
+                },
+            ];
+
+            return (
+                <View>
+                    {primeCoatProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={primeCoatData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setPrimeCoatData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <View>
+                        {/* Date and Time Pickers */}
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => setComments(text)}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.ROAD_MARKING:
+            const roadMarkingProperties = [
+                {
+                    title: 'Drawing & Method Statement Approved by Client',
+                    key: 'drawingAndMethodApproved',
+                },
+                {
+                    title: 'Thermoplastic Paint & Glass Bead Approved by Client',
+                    key: 'thermoplasticAndGlassBeadApproved',
+                },
+                {
+                    title: 'Heater Condition and Laying Checked',
+                    key: 'heaterConditionChecked',
+                },
+                {
+                    title: 'Thermometer of Heater Working Properly',
+                    key: 'thermometerWorking',
+                },
+                {
+                    title: 'Thermoplastic Material Heated to Specified Temperature',
+                    key: 'materialHeatedToSpecifiedTemperature',
+                },
+                {
+                    title: 'Surface is Free from Dust, Dirt, Grease, and Oil',
+                    key: 'surfaceClean',
+                },
+                {
+                    title: 'Marking Done Before Laying Thermoplastic',
+                    key: 'markingDoneBeforeLaying',
+                },
+                {
+                    title: 'Glass Beads Applied at Rate of 250gms/sqm',
+                    key: 'glassBeadsApplied',
+                },
+                {
+                    title: 'Thermoplastic Paint Laid in Molten State',
+                    key: 'paintLaidInMoltenState',
+                },
+                {
+                    title: 'Thermoplastic Paint Thickness Checked',
+                    key: 'paintThicknessChecked',
+                },
+                {
+                    title: 'Non-conformance/Non-compliance Found',
+                    key: 'nonConformanceFound',
+                },
+            ];
+
+            return (
+                <View>
+                    {roadMarkingProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={roadMarkingData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setRoadMarkingData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <View>
+                        {/* This section for date, time, and recommendations remains the same */}
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.LAYING_AND_COMPACTION:
+            console.log('call 3')
+            const layingAndCompactionProperties = [
+                {
+                    title: 'All Safety Measures Taken as per Plan',
+                    key: 'safetyMeasuresTaken',
+                },
+                {
+                    title: 'Approved Methodology Available with Paving-in-Charge',
+                    key: 'approvedMethodologyAvailable',
+                },
+                {
+                    title: 'Prime Coat Cured and Cleaned Properly',
+                    key: 'primeCoatCured',
+                },
+                {
+                    title: 'Rate of Spray for Tact Coat Checked & Recorded',
+                    key: 'sprayRateChecked',
+                },
+                {
+                    title: 'Joint Trimmed & Prepared as per Method Statement',
+                    key: 'jointTrimmedPrepared',
+                },
+                {
+                    title: 'Program of Laying Conveyed to Plant and QA/QC',
+                    key: 'programConveyed',
+                },
+                {
+                    title: 'Thermometer Available at Laying Location',
+                    key: 'thermometerAvailable',
+                },
+                {
+                    title: 'Paver Sensors Set as per Requirement',
+                    key: 'paverSensorsSet',
+                },
+                { title: 'Alignment Marked with Lime Powder', key: 'alignmentMarked' },
+                {
+                    title: 'Paver Placed & Skeed Cleaned at Laying Area',
+                    key: 'paverPlacedCleaned',
+                },
+                {
+                    title: 'Mix Transported with Tarpaulin Covering',
+                    key: 'mixTransported',
+                },
+                {
+                    title: 'Mix Temperature as per Table 500-2',
+                    key: 'mixTemperatureFound',
+                },
+                {
+                    title: 'Loose Thickness Checked for Required Compactness',
+                    key: 'looseThicknessChecked',
+                },
+                {
+                    title: 'Rolling Pattern Followed as per Trial Patch',
+                    key: 'rollingPatternFollowed',
+                },
+                {
+                    title: 'Surface Level Checked within Tolerance',
+                    key: 'surfaceLevelChecked',
+                },
+                {
+                    title: 'Transverse Joints Prepared as per Method Statement',
+                    key: 'transverseJointsPrepared',
+                },
+                {
+                    title: 'Non-conformance/Non-compliance Found',
+                    key: 'nonConformanceFound',
+                },
+            ];
+            return (
+                <View>
+                    {layingAndCompactionProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={layingAndCompactionData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setLayingAndCompactionData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Thickness of Layer Laid in mm"
+                        value={layingAndCompactionData.layerThickness}
+                        onChange={(value: any) =>
+                            setLayingAndCompactionData(prevData => ({
+                                ...prevData,
+                                layerThickness: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+
+                    <Input
+                        label="Total Material Qty Laid in Tonne"
+                        value={layingAndCompactionData.totalMaterialQtyLaid}
+                        onChange={(value: any) =>
+                            setLayingAndCompactionData(prevData => ({
+                                ...prevData,
+                                totalMaterialQtyLaid: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+
+                    <Input
+                        label="Total Material Qty in Sqm"
+                        value={layingAndCompactionData.totalMaterialQtySqm}
+                        onChange={(value: any) =>
+                            setLayingAndCompactionData(prevData => ({
+                                ...prevData,
+                                totalMaterialQtySqm: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.PIPE_LAYING_AND_JOINTING:
+            const pipeLayingAndJointingProperties = [
+                {
+                    title: 'Ensure all material as per GFC drawing',
+                    key: 'materialAsPerGFC',
+                },
+                {
+                    title: 'Check for availability of the latest GFC drawing',
+                    key: 'latestGFCAvailable',
+                },
+                {
+                    title: 'Location, levels, pipe size as per GFC',
+                    key: 'locationLevelsPipeSizeAsPerGFC',
+                },
+                {
+                    title: 'Check routing of pipe as per drawing',
+                    key: 'routingCheckedAsPerGFC',
+                },
+                {
+                    title: 'Check hanger & support spacing as per drawing',
+                    key: 'hangerSupportProperSpacing',
+                },
+                {
+                    title: 'Fastener & hanger rod as per drawing',
+                    key: 'fastenerHangerRodAsPerGFC',
+                },
+                {
+                    title: 'Joint preparation & fit-up proper',
+                    key: 'jointPreparationFitUp',
+                },
+                {
+                    title: 'Visual inspection of welded joints',
+                    key: 'visualInspectionOfWeldedJoints',
+                },
+                { title: 'Thread check for pipe joints', key: 'threadCheckForJoints' },
+                {
+                    title: 'Threaded joints properly tightened',
+                    key: 'threadedJointsTightened',
+                },
+                {
+                    title:
+                        'Bituminous paint & polythene tape applied to underground GI piping',
+                    key: 'undergroundGIPipingTreatment',
+                },
+                {
+                    title: 'Threaded pipes aligned and straight',
+                    key: 'threadedPipesAlignedStraight',
+                },
+                {
+                    title: 'Installed pipes aligned properly',
+                    key: 'installedPipesAlignedProperly',
+                },
+            ];
+
+            return (
+                <View>
+                    {pipeLayingAndJointingProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={pipeLayingAndJointingData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setPipeLayingAndJointingData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total Length of Pipe Laid in Meters"
+                        value={pipeLayingAndJointingData.totalPipeLength}
+                        onChange={(value: any) =>
+                            setPipeLayingAndJointingData(prevData => ({
+                                ...prevData,
+                                totalPipeLength: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <Input
+                        label="Total Number of Pipes Laid"
+                        value={pipeLayingAndJointingData.totalNumberOfPipes}
+                        onChange={(value: any) =>
+                            setPipeLayingAndJointingData(prevData => ({
+                                ...prevData,
+                                totalNumberOfPipes: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.FIXING_OF_METAL_BEAM:
+            const fixingOfMetalBeamProperties = [
+                {
+                    title:
+                        'Distance maintained between barrier and start of embankment slope',
+                    key: 'barrierToEmbankmentDistance',
+                },
+                {
+                    title:
+                        'Distance maintained between barrier and edge of carriageway',
+                    key: 'barrierToEdgeOfCarriagewayDistance',
+                },
+                {
+                    title:
+                        'At median, W-beam face is 100 mm away from carriageway face of median',
+                    key: 'medianWBeamFaceDistance',
+                },
+                {
+                    title: 'All spacers installed properly as per approved drawing',
+                    key: 'spacersInstalledProperly',
+                },
+                {
+                    title: 'All bolts are fixed and tightened properly',
+                    key: 'boltsFixedAndTightened',
+                },
+            ];
+
+            return (
+                <View>
+                    {fixingOfMetalBeamProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={fixingOfMetalBeamData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setFixingOfMetalBeamData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total Length of Metal Beam Fixed in RM"
+                        value={fixingOfMetalBeamData.totalLengthOfMetalBeamFixed}
+                        onChange={(value: any) =>
+                            setFixingOfMetalBeamData(prevData => ({
+                                ...prevData,
+                                totalLengthOfMetalBeamFixed: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.FIXING_VERTICAL_POST:
+            const fixingVerticalPostProperties = [
+                {
+                    title: 'Pits Dugged/Drilled to Depth Indicated on Plan',
+                    key: 'pitsDuggedToPlan',
+                },
+                {
+                    title:
+                        'Distance Maintained Between Barrier and Start of Embankment Slope',
+                    key: 'distanceMaintainedBarrierSlope',
+                },
+                {
+                    title:
+                        'Distance Maintained Between Barrier and Edge of Carriageway',
+                    key: 'distanceMaintainedBarrierCarriageway',
+                },
+                {
+                    title:
+                        'Posts Aligned Properly & Height Above Ground as per Approved Drawing',
+                    key: 'postsAlignedHeightAsPerDrawing',
+                },
+                {
+                    title: 'Steel Posts Placed as per Methodology',
+                    key: 'steelPostsPlacedMethodology',
+                },
+                {
+                    title: 'Total No. of Vertical Post Installed',
+                    key: 'totalVerticalPostInstalled',
+                },
+            ];
+
+            return (
+                <View>
+                    {fixingVerticalPostProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={fixingVerticalPostData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setFixingVerticalPostData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total No. of Vertical Post Installed"
+                        value={fixingVerticalPostData.totalVerticalPostInstalled}
+                        onChange={(value: any) =>
+                            setFixingVerticalPostData(prevData => ({
+                                ...prevData,
+                                totalVerticalPostInstalled: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.CUTTING_OF_JOINTS:
+            const cuttingOfJointsProperties = [
+                {
+                    title: 'Is joints cut at desired intervals',
+                    key: 'jointsCutAtDesiredIntervals',
+                },
+                {
+                    title: 'Is joint cut at desired depth',
+                    key: 'jointsCutAtDesiredDepth',
+                },
+                { title: 'Is joint cut done properly', key: 'jointCutDoneProperly' },
+            ];
+
+            return (
+                <View>
+                    {cuttingOfJointsProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={cuttingOfJointsData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setCuttingOfJointsData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+
+                    <Input
+                        label="Total Length Completed in Km"
+                        value={cuttingOfJointsData.totalLengthCompleted}
+                        onChange={(value: any) =>
+                            setCuttingOfJointsData(prevData => ({
+                                ...prevData,
+                                totalLengthCompleted: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.LAYING_OF_PAVER_BLOCK:
+            const layingOfPaverBlockProperties = [
+                {
+                    title:
+                        'Top 150mm thick sub base layer spread levelled and compacted to 95% MMD?',
+                    key: 'subBaseCompacted',
+                },
+                {
+                    title:
+                        'Washed sand of appropriate thickness 50 mm as laying course?',
+                    key: 'sandLayingCourse',
+                },
+                {
+                    title: 'Paving Blocks from Approved Source',
+                    key: 'pavingBlocksApprovedSource',
+                },
+                {
+                    title:
+                        'Paving blocks dimension and finishing as per approved material submitted and shop drawing?',
+                    key: 'pavingBlocksDimension',
+                },
+                {
+                    title:
+                        'Paving blocks installation/ pattern done as per approved drawing',
+                    key: 'pavingBlocksInstallation',
+                },
+                {
+                    title:
+                        'Check Whether the plate compactor has been moved on laid paving blocks with dune sand spread over it?',
+                    key: 'plateCompactorMoved',
+                },
+                {
+                    title:
+                        'Check whether the joints between the paving blocks are as per method statement and joint filler spread on paving blocks and brushed between the blocks',
+                    key: 'jointsAsPerMethodStatement',
+                },
+                {
+                    title:
+                        'Location, Elevation, Level and Alignment of installed paver block are as per approved drawing and tolerances (+/- 6mm)',
+                    key: 'locationAlignmentCorrect',
+                },
+            ];
+
+            return (
+                <View>
+                    {layingOfPaverBlockProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={layingOfPaverBlockData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setLayingOfPaverBlockData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+
+                    <Input
+                        label="Total Length of Paver Block Laid (RM)"
+                        value={layingOfPaverBlockData.totalLengthLaid}
+                        onChange={(value: any) =>
+                            setLayingOfPaverBlockData(prevData => ({
+                                ...prevData,
+                                totalLengthLaid: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+
+                    <Input
+                        label="Total SQM of Paver Blocks Laid"
+                        value={layingOfPaverBlockData.totalSqmLaid}
+                        onChange={(value: any) =>
+                            setLayingOfPaverBlockData(prevData => ({
+                                ...prevData,
+                                totalSqmLaid: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+
+                    <Input
+                        label="Thickness of Paver Block Laid (mm)"
+                        value={layingOfPaverBlockData.thicknessPaverBlock}
+                        onChange={(value: any) =>
+                            setLayingOfPaverBlockData(prevData => ({
+                                ...prevData,
+                                thicknessPaverBlock: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+
+                    <DropdownPicker
+                        label="Grade of Concrete"
+                        value={layingOfPaverBlockData.gradeOfConcrete}
+                        items={['M20', 'M25', 'M30', 'M35', 'M40']}
+                        onChange={(value: any) =>
+                            setLayingOfPaverBlockData(prevData => ({
+                                ...prevData,
+                                gradeOfConcrete: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.LAYING_OF_DLC:
+            if (!layingOfDlcTableData || !layingOfDlcTableData.length) {
+                setLayingOfDlcTableData([
+                    {
+                        vehicleNo: '',
+                        totalQtyDlc: 0,
+                        layingStartTime: '',
+                        layingEndTime: '',
+                        key: Guid.create(),
+                    },
+                ]);
+            }
+            const layingOfDLCProperties = [
+                {
+                    title: 'Is the mix design of DLC approved?',
+                    key: 'mixDesignApproved',
+                },
+                {
+                    title: 'Is the under laying GSB layer approved?',
+                    key: 'gsbLayerApproved',
+                },
+                {
+                    title:
+                        'Are there adequate grade and survey stakes available for control of placement layers?',
+                    key: 'gradeSurveyStakesAvailable',
+                },
+                {
+                    title: 'Is the placing of material appropriate?',
+                    key: 'placingMaterialAppropriate',
+                },
+                {
+                    title: 'Is there paver available for the laying of DLC?',
+                    key: 'paverAvailable',
+                },
+                {
+                    title: 'Is the arrangement of curing available?',
+                    key: 'curingArrangementAvailable',
+                },
+                {
+                    title:
+                        'Are there adequate number of suitable rollers available for the compaction operation?',
+                    key: 'suitableRollersAvailable',
+                },
+                {
+                    title: 'Is the layer free from any segregation?',
+                    key: 'layersSegregationFree',
+                },
+                {
+                    title:
+                        'Is there any arrangement for protection of the finished surface?',
+                    key: 'surfaceProtectionArrangement',
+                },
+                {
+                    title: 'Is there adequate arrangement of light for night work?',
+                    key: 'lightArrangementForNightWork',
+                },
+                {
+                    title: 'Is the received batch slip as per approved mix design?',
+                    key: 'batchSlipAsPerMixDesign',
+                },
+                {
+                    title:
+                        'Whether the worker and staff have proper personal protection equipment (PPE)?',
+                    key: 'workerPPE',
+                },
+            ];
+
+            return (
+                <View>
+                    {layingOfDLCProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={layingOfDLCData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setLayingOfDLCData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total Length of DLC Laid in Mtr"
+                        value={layingOfDLCData.totalLengthDLC}
+                        onChange={(value: any) =>
+                            setLayingOfDLCData(prevData => ({
+                                ...prevData,
+                                totalLengthDLC: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+
+                    <Input
+                        label="Total Area of DLC Laid in Sqm"
+                        value={layingOfDLCData.totalAreaDLC}
+                        onChange={(value: any) =>
+                            setLayingOfDLCData(prevData => ({
+                                ...prevData,
+                                totalAreaDLC: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <ScrollView horizontal={true}>
+                        <View>
+                            {renderLayingOfDlcHeadings(styles)}
+                            <FlatList
+                                data={layingOfDlcTableData}
+                                renderItem={renderItemLayingOfDlc}
+                                keyExtractor={item => item.key?.toString()}
+                                automaticallyAdjustContentInsets={true}
+                                scrollEnabled={false}
+                            />
+                        </View>
+                    </ScrollView>
+                    <TouchableOpacity onPress={() => onAddMoreLayingOfDlc()}>
+                        <Text>+ Add More</Text>
+                    </TouchableOpacity>
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.MACHINE_CUTTING_OF_JOINTS:
+            const machineCuttingProperties = [
+                {
+                    title: 'Is adequate no. of cutting saws available at site?',
+                    key: 'cuttingSawsAvailable',
+                },
+                {
+                    title:
+                        'Is adequate no. of diamond-edge saw blades available at site?',
+                    key: 'diamondSawBladesAvailable',
+                },
+                {
+                    title:
+                        'Is water tank with proper flexible hose and pump available at site?',
+                    key: 'waterTankAvailable',
+                },
+                {
+                    title:
+                        'Is machine cut started after 4-8 hr of initial setting time?',
+                    key: 'machineCutStartTimeCorrect',
+                },
+                {
+                    title: 'Is cutting done as per approved drawing?',
+                    key: 'cuttingAsPerApprovedDrawing',
+                },
+            ];
+
+            return (
+                <View>
+                    {machineCuttingProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={machineCuttingData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setMachineCuttingData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.PLACING_OF_TIE_BAR:
+            const placingOfTieBarProperties = [
+                { title: 'Whether the drawing approved', key: 'drawingApproved' },
+                {
+                    title: 'Whether the placing is done as per drawings',
+                    key: 'placingDoneAsPerDrawings',
+                },
+                {
+                    title: 'Whether the alignment done properly',
+                    key: 'alignmentDoneProperly',
+                },
+                {
+                    title: 'Was a Non-conformance/Non-compliance found',
+                    key: 'nonConformanceFound',
+                },
+            ];
+
+            return (
+                <View>
+                    {placingOfTieBarProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={placingOfTieBarData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setPlacingOfTieBarData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.FIXING_OF_WIRE_ROPE:
+            const fixingOfWireRopeProperties = [
+                {
+                    title: 'Strands are from Approved Source',
+                    key: 'strandsFromApprovedSource',
+                },
+                {
+                    title: 'End Attachments Cracked/Deformed/Worn',
+                    key: 'endAttachmentsCondition',
+                },
+                {
+                    title: 'Evidence of Heat Damage',
+                    key: 'heatDamageEvidence',
+                },
+                {
+                    title:
+                        'Kinking, Crushing, Bird Caging, or Other Damage Rectification',
+                    key: 'ropeDamageRectification',
+                },
+                {
+                    title: 'Proper Alignment as per Drawing',
+                    key: 'alignedProperlyAsPerDrawing',
+                },
+                {
+                    title: 'Strand Tensioned Tightly at Ends',
+                    key: 'strandTensionedAtEnds',
+                },
+            ];
+
+            return (
+                <View>
+                    {fixingOfWireRopeProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={fixingOfWireRopeData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setFixingOfWireRopeData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.TEXTURING:
+            const texturingProperties = [
+                {
+                    title: 'Steel Tines/Brush Automatic Sensing & Control Devices',
+                    key: 'steelTinesBrushAutomatic',
+                },
+                {
+                    title: 'Texturing Time Limits for Temperature Conditions',
+                    key: 'texturingWithinTimeLimits',
+                },
+                {
+                    title: 'Tining Unit Pressure Adjusted',
+                    key: 'tiningUnitPressureAdjusted',
+                },
+                { title: 'Tining Rakers Cleaned Properly', key: 'tiningRakersCleaned' },
+                { title: 'Tines Bent or Damaged', key: 'tinesBentOrDamaged' },
+                {
+                    title: 'Tined Groove Dimensions (3mm Wide, 3-4mm Deep)',
+                    key: 'tinedGrooveDimensionsCorrect',
+                },
+                { title: 'Surface Bleeding Done', key: 'surfaceBleedingDone' },
+                {
+                    title: 'Brush Applied in One Direction',
+                    key: 'brushAppliedOneDirection',
+                },
+                {
+                    title: 'Brush for Texturing as per Morth Specification',
+                    key: 'brushAsPerMorthSpecification',
+                },
+            ];
+
+            return (
+                <View>
+                    {texturingProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={texturingData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setTexturingData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total Texturing Done (sqmtr)"
+                        value={texturingData.totalTexturingDone}
+                        onChange={(value: any) =>
+                            setTexturingData(prevData => ({
+                                ...prevData,
+                                totalTexturingDone: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.PLACING_OF_DOWEL:
+            const placingOfDowelProperties = [
+                {
+                    title: 'Whether the PQC drawing approved',
+                    key: 'pqcDrawingApproved',
+                },
+                {
+                    title: 'Whether the dowel bars placed at the proper depth',
+                    key: 'dowelBarsPlacedProperDepth',
+                },
+                {
+                    title: 'Whether the bars are aligned properly',
+                    key: 'barsAlignedProperly',
+                },
+                {
+                    title: 'Is the dowel bar covered with plastic sheath',
+                    key: 'dowelBarCoveredWithPlasticSheath',
+                },
+                { title: 'Dia of the sheath in mm', key: 'sheathDia' },
+                { title: 'Is sheath mouth closed properly', key: 'sheathMouthClosed' },
+                {
+                    title: 'Is the Length of each dowel bar as per approved drawing',
+                    key: 'dowelBarLengthAsPerDrawing',
+                },
+                { title: 'Total number of dowel bars', key: 'totalDowelBars' },
+            ];
+
+            return (
+                <View>
+                    {placingOfDowelProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={placingOfDowelData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setPlacingOfDowelData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Dia of Sheath (in mm)"
+                        value={placingOfDowelData.sheathDia}
+                        onChange={(value: any) =>
+                            setPlacingOfDowelData(prevData => ({
+                                ...prevData,
+                                sheathDia: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <Input
+                        label="Total number of dowel bars"
+                        value={placingOfDowelData.totalDowelBars}
+                        onChange={(value: any) =>
+                            setPlacingOfDowelData(prevData => ({
+                                ...prevData,
+                                totalDowelBars: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.PLACING_OF_FILLER_BOARD:
+            const placingOfFillerBoardProperties = [
+                {
+                    title: 'Is the source of filler board material approved',
+                    key: 'sourceApproved',
+                },
+                {
+                    title:
+                        'Is the joint surface free from dusts, flakes or other particles',
+                    key: 'surfaceFreeFromDust',
+                },
+                {
+                    title: 'Is filler board cut in proper shape and size',
+                    key: 'fillerBoardCutProperly',
+                },
+                {
+                    title: 'Is placing of filler board done properly',
+                    key: 'fillerBoardPlacedProperly',
+                },
+                {
+                    title: 'Is the filler board compressed to the desired level',
+                    key: 'fillerBoardCompressed',
+                },
+            ];
+
+            return (
+                <View>
+                    {placingOfFillerBoardProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={placingOfFillerBoardData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setPlacingOfFillerBoardData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Thickness of Filler Board in mm"
+                        value={placingOfFillerBoardData.fillerBoardThickness}
+                        onChange={(value: any) =>
+                            setPlacingOfFillerBoardData(prevData => ({
+                                ...prevData,
+                                fillerBoardThickness: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <Input
+                        label="Total Filler Board Qty in Sqmm"
+                        value={placingOfFillerBoardData.totalFillerBoardQty}
+                        onChange={(value: any) =>
+                            setPlacingOfFillerBoardData(prevData => ({
+                                ...prevData,
+                                totalFillerBoardQty: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.SEALANT_FILING:
+            const sealantFilingProperties = [
+                {
+                    title: 'Is the sealant source approved',
+                    key: 'sealantSourceApproved',
+                },
+                {
+                    title: 'Is the joint face cleaned properly',
+                    key: 'jointFaceCleaned',
+                },
+                {
+                    title: 'Is the sealant placed at the proper depth',
+                    key: 'sealantPlacedProperDepth',
+                },
+                { title: 'Is the two-coat primer done', key: 'twoCoatPrimerDone' },
+                {
+                    title: 'Is the tapping done at the edges of joint face',
+                    key: 'tappingDoneEdges',
+                },
+                {
+                    title: 'Is the sealant poured properly',
+                    key: 'sealantPouredProperly',
+                },
+                {
+                    title: 'Is the tape removed after tooling of sealant',
+                    key: 'tapeRemovedAfterTooling',
+                },
+                {
+                    title: 'Is the arrangement made for curing',
+                    key: 'arrangementForCuring',
+                },
+            ];
+
+            return (
+                <View>
+                    {sealantFilingProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={sealantFilingData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setSealantFilingData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Quantity of Sealant Utilized (in liters)"
+                        value={sealantFilingData.sealantQtyUtilized}
+                        onChange={(value: any) =>
+                            setSealantFilingData(prevData => ({
+                                ...prevData,
+                                sealantQtyUtilized: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.MILLING_OF_FLEXIBLE_PAVEMENT:
+            const millingProperties = [
+                {
+                    title: 'Is the milled surface uniform in texture?',
+                    key: 'milledSurfaceUniform',
+                },
+                {
+                    title:
+                        'Is the finished milled surface within 6-8 mm in both longitudinal and transverse directions?',
+                    key: 'finishedSurfaceWithinTolerance',
+                },
+                {
+                    title: 'Is the texture surface safe for motorists?',
+                    key: 'textureSafeForMotorist',
+                },
+                {
+                    title: 'Depth of Milling in mm',
+                    key: 'depthOfMilling',
+                },
+                {
+                    title: 'Total Quantity of Milled Material (cm)',
+                    key: 'totalQtyMilledMaterial',
+                },
+                {
+                    title: 'Total Surface Area Milled (Sqmm)',
+                    key: 'totalSurfaceAreaMilled',
+                },
+            ];
+
+            return (
+                <View>
+                    {millingProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={millingData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setMillingData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+
+                    <Input
+                        label="Depth of Milling (mm)"
+                        value={millingData.depthOfMilling}
+                        onChange={(value: any) =>
+                            setMillingData(prevData => ({
+                                ...prevData,
+                                depthOfMilling: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+
+                    <Input
+                        label="Total Quantity of Milled Material (cm)"
+                        value={millingData.totalQtyMilledMaterial}
+                        onChange={(value: any) =>
+                            setMillingData(prevData => ({
+                                ...prevData,
+                                totalQtyMilledMaterial: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+
+                    <Input
+                        label="Total Surface Area Milled (Sqmm)"
+                        value={millingData.totalSurfaceAreaMilled}
+                        onChange={(value: any) =>
+                            setMillingData(prevData => ({
+                                ...prevData,
+                                totalSurfaceAreaMilled: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.LAYING_OF_SEPARATION_MEMBRANE:
+            const layingOfSeparationMembraneProperties = [
+                {
+                    title:
+                        'The subbase / DLC layer swept clean of extraneous materials using air compressor and sprinkled with water to bring down the temperature of the PQC',
+                    key: 'subbaseSweptClean',
+                },
+                {
+                    title:
+                        'If any undulations visible after cleaning & sprinkling of water, it should be leveled with Mix of 10mm down aggregate to avoid restraint of Panel movement',
+                    key: 'undulationsLeveled',
+                },
+                {
+                    title:
+                        'Separation membrane shall be tight, straight, wrinkle free & anchored on Sub-base',
+                    key: 'membraneTightStraight',
+                },
+                { title: 'Colour of Separation Membrane', key: 'colourOfMembrane' },
+                {
+                    title: 'Thickness of Separation Membrane',
+                    key: 'thicknessOfMembrane',
+                },
+                {
+                    title:
+                        'Proper overlapping provided in case of membrane is laid in part width',
+                    key: 'properOverlappingProvided',
+                },
+                {
+                    title: 'Finished Compacted Layer Thickness in mm',
+                    key: 'finishedCompactedLayerThickness',
+                },
+                {
+                    title: 'Any non-conformance/non-compliance found',
+                    key: 'nonConformanceFound',
+                },
+            ];
+
+            return (
+                <View>
+                    {layingOfSeparationMembraneProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={layingOfSeparationMembraneData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setLayingOfSeparationMembraneData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Finished Compacted Layer Thickness in mm"
+                        value={
+                            layingOfSeparationMembraneData.finishedCompactedLayerThickness
+                        }
+                        onChange={(value: any) =>
+                            setLayingOfSeparationMembraneData(prevData => ({
+                                ...prevData,
+                                finishedCompactedLayerThickness: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.LAYING_OF_PQC:
+            const layingOfPQCProperties = [
+                {
+                    title:
+                        'Is the trail patch done and approved by the Engineer In Charge',
+                    key: 'trailPatchApproved',
+                },
+                {
+                    title: 'Is the mix design of PQC approved?',
+                    key: 'mixDesignApproved',
+                },
+                {
+                    title: 'Is the under laying DLC layer approved?',
+                    key: 'dlcLayerApproved',
+                },
+                {
+                    title:
+                        'Are there adequate grade and survey stakes available for control of placement layers?',
+                    key: 'adequateGradeSurveyStakes',
+                },
+                {
+                    title:
+                        'The PQC material is being transported by covering the tippers with tarpaulin to protect from the weather',
+                    key: 'pqcTransportedWithTarpaulin',
+                },
+                {
+                    title: 'Is the sufficient no. of labours available at laying site',
+                    key: 'sufficientLaboursAvailable',
+                },
+                {
+                    title:
+                        'Separation membrane shall be tight, straight, wrinkle free & anchored on Sub Base',
+                    key: 'separationMembraneTight',
+                },
+                {
+                    title: 'Dowel bars in the joints covered by thin plastic sheath',
+                    key: 'dowelBarsCoveredWithSheath',
+                },
+                {
+                    title:
+                        'Backhoe bucket of JCB available to protect damaging of separation membrane',
+                    key: 'backhoeBucketAvailable',
+                },
+                {
+                    title: 'Is paver available for the laying of DLC?',
+                    key: 'paverAvailableForDLC',
+                },
+                {
+                    title: 'Is the functioning of Paver checked?',
+                    key: 'paverFunctioningChecked',
+                },
+                {
+                    title: 'Is the placing of material appropriate?',
+                    key: 'materialPlacedAppropriately',
+                },
+                {
+                    title: 'Is the arrangement of curing available?',
+                    key: 'curingArrangementAvailable',
+                },
+                {
+                    title: 'Is the layers free from any segregation?',
+                    key: 'layersSegregationFree',
+                },
+                {
+                    title:
+                        'Is there any arrangement for protection of the finished surface?',
+                    key: 'surfaceProtectionArranged',
+                },
+                {
+                    title: 'Is there adequate arrangement of light for night work?',
+                    key: 'lightArrangementForNightWork',
+                },
+                {
+                    title: 'Whether the worker and staff have proper PPE?',
+                    key: 'ppeAvailable',
+                },
+            ];
+
+            return (
+                <View>
+                    {layingOfPQCProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={layingOfPQCData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setLayingOfPQCData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Lead of PQC Material (in Km)"
+                        value={layingOfPQCData.pqcLeadDistance}
+                        onChange={(value: any) =>
+                            setLayingOfPQCData(prevData => ({
+                                ...prevData,
+                                pqcLeadDistance: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+
+                    <Input
+                        label="Total Length of PQC Laid (in meters)"
+                        value={layingOfPQCData.totalPQCLaidLength}
+                        onChange={(value: any) =>
+                            setLayingOfPQCData(prevData => ({
+                                ...prevData,
+                                totalPQCLaidLength: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+
+                    <Input
+                        label="Total Area of PQC Laid (in sqm)"
+                        value={layingOfPQCData.totalPQCLaidArea}
+                        onChange={(value: any) =>
+                            setLayingOfPQCData(prevData => ({
+                                ...prevData,
+                                totalPQCLaidArea: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+
+                    <Input
+                        label="Thickness of PQC Laid (in mm)"
+                        value={layingOfPQCData.pqcThicknessLaid}
+                        onChange={(value: any) =>
+                            setLayingOfPQCData(prevData => ({
+                                ...prevData,
+                                pqcThicknessLaid: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.BACKFILLING:
+            const backfillingProperties = [
+                {
+                    title: 'Verify area is clear of debris and formwork materials',
+                    key: 'areaClearOfDebris',
+                },
+                {
+                    title:
+                        'Ensure backfilling starts after 7 days or 60% strength of concrete',
+                    key: 'backfillingTimingAppropriate',
+                },
+                {
+                    title:
+                        'Confirm fill materials are approved and comply with specifications',
+                    key: 'approvedFillMaterials',
+                },
+                {
+                    title: 'Check layer thickness does not exceed 200mm',
+                    key: 'layerThicknessCheck',
+                },
+                {
+                    title: 'Check compaction degree (95% according to Proctor test)',
+                    key: 'compactionDegreeCheck',
+                },
+                {
+                    title: 'Check required tests for each 200mm compacted layer',
+                    key: 'layerTestsDone',
+                },
+                {
+                    title: 'Verify level and elevation are correct',
+                    key: 'levelAndElevationVerified',
+                },
+                {
+                    title:
+                        'Ensure bedding material is compacted in trenches for services',
+                    key: 'beddingMaterialCompacted',
+                },
+                {
+                    title: 'Ensure waterproofing membrane, if any, is undamaged',
+                    key: 'waterproofingMembraneProtected',
+                },
+                {
+                    title: 'Ensure backfilling is complete and area is clean and tidy',
+                    key: 'backfillingCompleteAndClean',
+                },
+            ];
+
+            return (
+                <View>
+                    {backfillingProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={backfillingData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setBackfillingData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total Quantity of Soil Used in cum"
+                        value={backfillingData.totalSoilQtyUsed}
+                        onChange={(value: any) =>
+                            setBackfillingData(prevData => ({
+                                ...prevData,
+                                totalSoilQtyUsed: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.BRICKS_WORK:
+            const bricksWorkProperties = [
+                {
+                    title: 'Are the latest "Good for Construction" drawings available',
+                    key: 'drawingsAvailable',
+                },
+                {
+                    title: 'Are the size and Class of bricks as per approved drawing',
+                    key: 'bricksSizeClassAsPerDrawing',
+                },
+                {
+                    title: 'Are the required number of blocks available',
+                    key: 'requiredBlocksAvailable',
+                },
+                {
+                    title:
+                        'Has the hacking at contact surfaces of columns and beams been done',
+                    key: 'hackingDone',
+                },
+                {
+                    title:
+                        'Has cement mortar slurry been applied over the hacked surface',
+                    key: 'cementMortarApplied',
+                },
+                {
+                    title:
+                        'Have aluminium templates been used for door/window openings',
+                    key: 'aluminiumTemplatesUsed',
+                },
+                {
+                    title: 'Are the required tools available',
+                    key: 'requiredToolsAvailable',
+                },
+                {
+                    title: 'Are there any specific requirements from the client',
+                    key: 'clientSpecificRequirements',
+                },
+                {
+                    title: 'Is Cement of the approved grade and less than 1 month old',
+                    key: 'cementApprovedGrade',
+                },
+                {
+                    title: 'Is sand medium gritty, clean, and silt-free',
+                    key: 'sandCleanGritty',
+                },
+                {
+                    title:
+                        'Is the finished floor level button marked on the structural slab',
+                    key: 'floorLevelMarked',
+                },
+                {
+                    title: 'Are the markings for reference lines on the pillar done',
+                    key: 'pillarMarkingsDone',
+                },
+                {
+                    title:
+                        'Is the brickwork checked in vertical and horizontal directions',
+                    key: 'brickworkChecked',
+                },
+            ];
+
+            return (
+                <View>
+                    {bricksWorkProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={bricksWorkData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setBricksWorkData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total Area where Brick Work is to be done in Sqm"
+                        value={bricksWorkData.totalBrickWorkArea}
+                        onChange={(value: any) =>
+                            setBricksWorkData(prevData => ({
+                                ...prevData,
+                                totalBrickWorkArea: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+
+                    <Input
+                        label="Total Brick Work in Cum"
+                        value={bricksWorkData.totalBrickWorkCum}
+                        onChange={(value: any) =>
+                            setBricksWorkData(prevData => ({
+                                ...prevData,
+                                totalBrickWorkCum: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.CUTTING_OF_SOIL:
+            const cuttingOfSoilProperties = [
+                {
+                    title:
+                        'Whether the proper safety measure taken at the site for cutting of soil?',
+                    key: 'safetyMeasuresTaken',
+                },
+                {
+                    title:
+                        'Whether all the equipment and tools are available at site at time of cutting of soil?',
+                    key: 'equipmentAvailable',
+                },
+                {
+                    title: 'Whether the excavation done at required depth?',
+                    key: 'excavationDone',
+                },
+            ];
+
+            return (
+                <View>
+                    {cuttingOfSoilProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={cuttingOfSoilData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setCuttingOfSoilData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total qty of soil cut in cum"
+                        value={cuttingOfSoilData.totalSoilCutQty}
+                        onChange={(value: any) =>
+                            setCuttingOfSoilData(prevData => ({
+                                ...prevData,
+                                totalSoilCutQty: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.FIXING_GEO_CELL:
+            const fixingGeoCellProperties = [
+                { title: 'Whether the source is approved', key: 'sourceApproved' },
+                {
+                    title: 'Whether the method statement is approved',
+                    key: 'methodStatementApproved',
+                },
+                {
+                    title: 'Whether the slope is properly maintained',
+                    key: 'slopeMaintained',
+                },
+                {
+                    title: 'Whether the slope is properly compacted',
+                    key: 'slopeCompacted',
+                },
+                {
+                    title: 'Whether the Geo cell is laid as per approved drawing',
+                    key: 'geoCellLaidAsPerDrawing',
+                },
+                {
+                    title: 'Whether joints of geo cell are fixed properly',
+                    key: 'geoCellJointsFixedProperly',
+                },
+                {
+                    title: 'Whether the Geo cell size is as per approved drawing',
+                    key: 'geoCellSizeAsPerDrawing',
+                },
+            ];
+
+            return (
+                <View>
+                    {fixingGeoCellProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={fixingGeoCellData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setFixingGeoCellData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total Area where Geo cell placed (Sqm)"
+                        value={fixingGeoCellData.totalGeoCellArea}
+                        onChange={(value: any) =>
+                            setFixingGeoCellData(prevData => ({
+                                ...prevData,
+                                totalGeoCellArea: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+
+                    <Input
+                        label="Total consumption of Geo cell in Sqm"
+                        value={fixingGeoCellData.totalGeoCellConsumption}
+                        onChange={(value: any) =>
+                            setFixingGeoCellData(prevData => ({
+                                ...prevData,
+                                totalGeoCellConsumption: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.FIXING_OF_MESH:
+            const fixingOfMeshProperties = [
+                {
+                    title: 'Whether the source of approved',
+                    key: 'sourceApproved',
+                },
+                {
+                    title: 'Whether the size of mesh as per approved drawing',
+                    key: 'sizeAsPerDrawing',
+                },
+                {
+                    title: 'Check for the damage of the wire mesh after the opening',
+                    key: 'wireMeshDamageChecked',
+                },
+                {
+                    title:
+                        'Whether the unit shall be stretched for removal of fold/bend after opening',
+                    key: 'unitStretchedForFoldsRemoved',
+                },
+            ];
+
+            return (
+                <View>
+                    {fixingOfMeshProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={fixingOfMeshData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setFixingOfMeshData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+
+                    <Input
+                        label="Total Area of the Slope in Sqm"
+                        value={fixingOfMeshData.totalAreaSlope}
+                        onChange={(value: any) =>
+                            setFixingOfMeshData(prevData => ({
+                                ...prevData,
+                                totalAreaSlope: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+
+                    <Input
+                        label="Total Qty of Mesh in kg"
+                        value={fixingOfMeshData.totalQtyMesh}
+                        onChange={(value: any) =>
+                            setFixingOfMeshData(prevData => ({
+                                ...prevData,
+                                totalQtyMesh: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.LAYING_OF_GRASS_TURF:
+            const layingOfGrassTurfProperties = [
+                {
+                    title: 'Ensure turfs are cut and will be planted within 24 hours',
+                    key: 'turfsCutPlantedWithin24hrs',
+                },
+                {
+                    title: 'Check that the base area is well prepared',
+                    key: 'baseAreaPrepared',
+                },
+                {
+                    title: 'Verify correct topsoil thickness',
+                    key: 'topsoilThicknessVerified',
+                },
+                {
+                    title:
+                        'Check suitable material to be used for top dressing (no gaps)',
+                    key: 'suitableTopDressingMaterial',
+                },
+                {
+                    title:
+                        'Check the turfing level; fill any sunken or depressed areas',
+                    key: 'turfingLevelChecked',
+                },
+                {
+                    title: 'Ensure water is sprayed upon completion of turfing work',
+                    key: 'waterSprayedCompletion',
+                },
+                {
+                    title:
+                        'Check that wood nailing is used to hold the turves in position',
+                    key: 'woodNailingUsed',
+                },
+                {
+                    title: 'Check the turfing arrangement and nailing pattern',
+                    key: 'turfingArrangementChecked',
+                },
+                {
+                    title: 'Check that the overall turfing work is visually acceptable',
+                    key: 'overallTurfingWorkAccepted',
+                },
+                {
+                    title: 'Ensure no vehicles enter or trespass the turfed area',
+                    key: 'noVehiclesTrespass',
+                },
+                {
+                    title:
+                        'Ensure hydroseeding is carried out properly with the correct method',
+                    key: 'hydroseedingMethodVerified',
+                },
+                {
+                    title: 'Fibromat installation properly done and secured',
+                    key: 'fibromatInstalled',
+                },
+            ];
+
+            return (
+                <View>
+                    {layingOfGrassTurfProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={layingOfGrassTurfData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setLayingOfGrassTurfData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total Area Covered with Grass (sqm)"
+                        value={layingOfGrassTurfData.totalAreaCovered}
+                        onChange={(value: any) =>
+                            setLayingOfGrassTurfData(prevData => ({
+                                ...prevData,
+                                totalAreaCovered: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.LAYING_OF_TOP_SOIL:
+            const layingOfTopSoilProperties = [
+                {
+                    title: 'Whether the soil is from approved source',
+                    key: 'approvedSource',
+                },
+                {
+                    title: 'Proper arrangement for vehicle movement',
+                    key: 'vehicleMovementArrangement',
+                },
+                {
+                    title: 'Proper machinery and equipment available',
+                    key: 'machineryAvailable',
+                },
+                { title: 'Marking done for the level of laying', key: 'markingDone' },
+            ];
+
+            return (
+                <View>
+                    {layingOfTopSoilProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={layingOfTopSoilData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setLayingOfTopSoilData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+
+                    <Input
+                        label="Total Area where Laying is Done (Sqm)"
+                        value={layingOfTopSoilData.totalAreaLaying}
+                        onChange={(value: any) =>
+                            setLayingOfTopSoilData(prevData => ({
+                                ...prevData,
+                                totalAreaLaying: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+
+                    <Input
+                        label="Total Quantity of Soil (cum)"
+                        value={layingOfTopSoilData.totalQtyOfSoil}
+                        onChange={(value: any) =>
+                            setLayingOfTopSoilData(prevData => ({
+                                ...prevData,
+                                totalQtyOfSoil: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.PLACING_AND_JOINTING_CHUTE_MEMBERS:
+            const chuteMembersProperties = [
+                {
+                    title: 'Whether the bottom soil layer compacted properly',
+                    key: 'bottomSoilCompacted',
+                },
+                {
+                    title: 'Whether the slope properly maintained',
+                    key: 'slopeMaintained',
+                },
+                {
+                    title: 'Whether chute lining done properly',
+                    key: 'chuteLiningDone',
+                },
+                {
+                    title: 'Whether the support for chute shuttering done properly',
+                    key: 'supportForShutteringDone',
+                },
+                {
+                    title: 'Whether the joint done in line and level',
+                    key: 'jointInLineAndLevel',
+                },
+                {
+                    title: 'Whether the concrete placing arrangement done',
+                    key: 'concretePlacingArrangement',
+                },
+            ];
+
+            return (
+                <View>
+                    {chuteMembersProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={chuteMembersData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setChuteMembersData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total Length of Chute in mtr"
+                        value={chuteMembersData.totalChuteLength}
+                        onChange={(value: any) =>
+                            setChuteMembersData(prevData => ({
+                                ...prevData,
+                                totalChuteLength: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.PIT_EXCAVATION:
+            const pitExcavationProperties = [
+                {
+                    title:
+                        'Are there any underground utilities like sewers, water pipelines, cables',
+                    key: 'undergroundUtilities',
+                },
+                {
+                    title:
+                        'Check whether the excavated pits are adequately shored/ timbered',
+                    key: 'pitsShoredTimbered',
+                },
+                {
+                    title: 'Are the excavated areas provided with fences/ barricades',
+                    key: 'fencesBarricadesProvided',
+                },
+                {
+                    title:
+                        'Are the excavated material kept from the edge of the pit/ trench by at least 1m',
+                    key: 'excavatedMaterialKeptAway',
+                },
+                {
+                    title:
+                        'Are the heavy equipment such as cranes, shovels, back toe loaders etc. kept away at least 6m from the edge of excavated pit',
+                    key: 'heavyEquipmentKeptAway',
+                },
+                {
+                    title: 'Are danger signs provided near the excavated area',
+                    key: 'dangerSignsProvided',
+                },
+                {
+                    title: 'Means of access and exit from the work area provided',
+                    key: 'accessExitProvided',
+                },
+                {
+                    title: 'Check Set out',
+                    key: 'setOutChecked',
+                },
+                {
+                    title: 'Check Excavation Size with Tolerance (offset)',
+                    key: 'excavationSizeChecked',
+                },
+                {
+                    title: 'Check for Loose materials / Loose soil',
+                    key: 'looseMaterialsChecked',
+                },
+                {
+                    title:
+                        'Check bottom of excavation (indicate proposed GL/Basement level with respect to existing road level)',
+                    key: 'bottomOfExcavationChecked',
+                },
+            ];
+
+            return (
+                <View>
+                    {pitExcavationProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={pitExcavationData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setPitExcavationData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.PLANTING_GRASS:
+            const plantingGrassProperties = [
+                {
+                    title: 'Is grass seeding handled gently',
+                    key: 'grassSeedingHandledGently',
+                },
+                {
+                    title: 'Is grass seeding done after handling',
+                    key: 'grassSeedingDoneAfterHandling',
+                },
+                {
+                    title: 'Is the grass seeding protected from the sun and wind',
+                    key: 'grassSeedingProtectedFromSunWind',
+                },
+                {
+                    title: 'The grass seed kept moist',
+                    key: 'grassSeedKeptMoist',
+                },
+                {
+                    title: 'Is grass transport during cooler period',
+                    key: 'grassTransportDuringCoolerPeriod',
+                },
+                {
+                    title: 'Is seeding done as per approved drawing?',
+                    key: 'seedingDoneAsPerApprovedDrawing',
+                },
+                {
+                    title: 'Is the seeding watered properly for the growth',
+                    key: 'seedingWateredProperly',
+                },
+                {
+                    title: 'Control weeds near plantation',
+                    key: 'controlWeedsNearPlantation',
+                },
+            ];
+
+            return (
+                <View>
+                    {plantingGrassProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={plantingGrassData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setPlantingGrassData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+
+                    <Input
+                        label="Total Area Covered with Grass (sqm)"
+                        value={plantingGrassData.totalAreaCoveredWithGrass}
+                        onChange={(value: any) =>
+                            setPlantingGrassData(prevData => ({
+                                ...prevData,
+                                totalAreaCoveredWithGrass: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.PLANTING_TREES:
+            const plantingTreesProperties = [
+                { title: 'Is Plant Handle Gently?', key: 'handleGently' },
+                { title: 'Is the Plant Root Kept in Moist?', key: 'rootKeptMoist' },
+                {
+                    title: 'Is Planting Done as per Approved Drawing?',
+                    key: 'plantingDoneAsPerDrawing',
+                },
+                {
+                    title: 'Is the Watering Done Properly for Growth?',
+                    key: 'wateringDoneProperly',
+                },
+                {
+                    title: 'Control Weeds Near Plantation?',
+                    key: 'controlWeedsNearPlantation',
+                },
+                { title: 'Is Proper Barricading Done?', key: 'barricadingDone' },
+                {
+                    title: 'Is the Height of the Plant as per Drawings?',
+                    key: 'heightAsPerDrawings',
+                },
+                {
+                    title: 'Is the Type of Plant as per Approved Drawings?',
+                    key: 'typeOfPlantAsPerDrawing',
+                },
+            ];
+            return (
+                <View>
+                    {plantingTreesProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={plantingTreesData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setPlantingTreesData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total No. of Trees Planted"
+                        value={plantingTreesData.totalNoOfTreesPlanted}
+                        onChange={(value: any) =>
+                            setPlantingTreesData(prevData => ({
+                                ...prevData,
+                                totalNoOfTreesPlanted: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.PREPARATION_OF_SOIL:
+            const preparationOfSoilProperties = [
+                {
+                    title: 'Is the soil dumped in a 200mm layer?',
+                    key: 'soilDumpedInLayer',
+                },
+                {
+                    title:
+                        'Is the soil spread in the proper length as mentioned in drawing?',
+                    key: 'soilSpreadProperLength',
+                },
+                {
+                    title: 'Is the soil compacted properly?',
+                    key: 'soilCompactedProperly',
+                },
+            ];
+
+            return (
+                <View>
+                    {preparationOfSoilProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={preparationOfSoilData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setPreparationOfSoilData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total qty of soil prepared in cum"
+                        value={preparationOfSoilData.totalQtySoil}
+                        onChange={(value: any) =>
+                            setPreparationOfSoilData(prevData => ({
+                                ...prevData,
+                                totalQtySoil: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+
+                    <Input
+                        label="Total surface area of soil laid in sqm"
+                        value={preparationOfSoilData.totalSurfaceArea}
+                        onChange={(value: any) =>
+                            setPreparationOfSoilData(prevData => ({
+                                ...prevData,
+                                totalSurfaceArea: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.SPREADING_OF_GRASS_SEEDS:
+            const spreadingOfGrassSeedsProperties = [
+                {
+                    title: 'Is the seed from an approved source?',
+                    key: 'seedApprovedSource',
+                },
+                {
+                    title: 'Is the surface free from garbage and plastic material?',
+                    key: 'surfaceFreeFromGarbage',
+                },
+                { title: 'Is the surface well prepared?', key: 'surfaceWellPrepared' },
+            ];
+
+            return (
+                <View>
+                    {spreadingOfGrassSeedsProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={spreadingOfGrassSeedsData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={value =>
+                                    setSpreadingOfGrassSeedsData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.WATERING:
+            const wateringProperties = [
+                { title: 'Whether the water is clean?', key: 'waterClean' },
+                {
+                    title: 'Whether the watering is done three times a day?',
+                    key: 'wateringThreeTimesADay',
+                },
+            ];
+
+            return (
+                <View>
+                    {wateringProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={wateringData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setWateringData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+
+                    <Input
+                        label="Total Quantity of Water Used (in Litres)"
+                        value={wateringData.totalQtyWaterUsed}
+                        onChange={(value: any) =>
+                            setWateringData(prevData => ({
+                                ...prevData,
+                                totalQtyWaterUsed: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.PLANTATION:
+            const plantationProperties = [
+                { title: 'Is seeding handled gently', key: 'seedingHandledGently' },
+                {
+                    title: 'Is plant seeding done after handling',
+                    key: 'seedingDoneAfterHandling',
+                },
+                {
+                    title: 'Is the plant seeding protected from the sun and wind',
+                    key: 'protectedFromSunWind',
+                },
+                { title: 'The plant seed kept in moist', key: 'seedKeptMoist' },
+                {
+                    title: 'Is seeding transport during cooler period',
+                    key: 'transportDuringCoolerPeriod',
+                },
+                {
+                    title: 'Is seeding done as per approved drawing?',
+                    key: 'seedingAsPerDrawing',
+                },
+                {
+                    title: 'Is the seeding water done properly for the growth',
+                    key: 'waterDoneForGrowth',
+                },
+                { title: 'Control weeds near plantation', key: 'controlWeeds' },
+                {
+                    title:
+                        'Is proper barricading done around the plant to avoid animal damage',
+                    key: 'barricadingDone',
+                },
+            ];
+
+            return (
+                <View>
+                    {plantationProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={plantationData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setPlantationData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+
+                    <Input
+                        label="Total Number of Plants Planted"
+                        value={plantationData.totalPlantsPlanted}
+                        onChange={(value: any) =>
+                            setPlantationData(prevData => ({
+                                ...prevData,
+                                totalPlantsPlanted: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+
+                    <Input
+                        label="Total Area Covered in Sqm"
+                        value={plantationData.totalAreaCovered}
+                        onChange={(value: any) =>
+                            setPlantationData(prevData => ({
+                                ...prevData,
+                                totalAreaCovered: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.STONE_PITCHING:
+            const stonePitchingProperties = [
+                {
+                    title:
+                        'All Construction Docs, Approvals, and Drawings are in Place',
+                    key: 'constructionDocsApproved',
+                },
+                {
+                    title: 'Work of Other Trades Completed and Accepted',
+                    key: 'workOfOtherTradesCompleted',
+                },
+                { title: 'Layer Compacted', key: 'layerCompacted' },
+                {
+                    title: 'Stone Shape and Size as per Specification',
+                    key: 'stoneShapeAndSizeAsPerSpec',
+                },
+                {
+                    title: 'Mortar Bonding Material Ready at Work Area',
+                    key: 'mortarReady',
+                },
+                {
+                    title: 'Mortar Bonding with Stone Done Properly',
+                    key: 'mortarBondingDone',
+                },
+            ];
+            return (
+                <View>
+                    {stonePitchingProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={stonePitchingData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setStonePitchingData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total Surface Area of Stone Pitching (sqm)"
+                        value={stonePitchingData.totalSurfaceArea}
+                        onChange={(value: any) =>
+                            setStonePitchingData(prevData => ({
+                                ...prevData,
+                                totalSurfaceArea: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <Input
+                        label="Total Material Laid (tonne)"
+                        value={stonePitchingData.totalMaterialLaid}
+                        onChange={(value: any) =>
+                            setStonePitchingData(prevData => ({
+                                ...prevData,
+                                totalMaterialLaid: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.FIXING_INVERTER_INSTALLATION:
+            const inverterInstallationProperties = [
+                {
+                    title: 'Whether the Drawings approved or not',
+                    key: 'drawingsApproved',
+                },
+                {
+                    title:
+                        'Whether equipment inspected at site and factory dispatch clearance obtained',
+                    key: 'equipmentInspected',
+                },
+                {
+                    title:
+                        'Is there any damage to the equipment, if yes, informed to vendor',
+                    key: 'equipmentDamagedInformed',
+                },
+                {
+                    title: 'Whether foundation work is completed for installation',
+                    key: 'foundationWorkCompleted',
+                },
+                {
+                    title: 'Whether concrete components achieved desired strength',
+                    key: 'concreteStrengthAchieved',
+                },
+                {
+                    title: 'Installation methodology approved',
+                    key: 'installationMethodologyApproved',
+                },
+                {
+                    title: 'Whether safety arrangements are in place',
+                    key: 'safetyArrangementsInPlace',
+                },
+                {
+                    title: 'Whether sufficient machinery and manpower available',
+                    key: 'machineryAndManpowerAvailable',
+                },
+                {
+                    title: 'Installation completed as per approved methodology',
+                    key: 'installationCompletedAsPerMethodology',
+                },
+                {
+                    title:
+                        'All instructions from the manufacturer complied during installation',
+                    key: 'manufacturerInstructionsComplied',
+                },
+            ];
+
+            return (
+                <View>
+                    {inverterInstallationProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={inverterInstallationData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setInverterInstallationData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total Number of Equipment Installed"
+                        value={inverterInstallationData.totalEquipmentInstalled}
+                        onChange={(value: any) =>
+                            setInverterInstallationData(prevData => ({
+                                ...prevData,
+                                totalEquipmentInstalled: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.ERECTION_OF_DOUBLE_POLE_STRUCTURE:
+            const erectionOfDoublePoleStructureProperties = [
+                {
+                    title: 'Whether the Drawings approved or not',
+                    key: 'drawingsApproved',
+                },
+                {
+                    title:
+                        'Whether the double pole structure is reached at site and ready for erection',
+                    key: 'doublePoleReadyForErection',
+                },
+                {
+                    title:
+                        'Whether the foundation work completed in all respect and ready for installation of double pole',
+                    key: 'foundationWorkCompleted',
+                },
+                {
+                    title:
+                        'Whether the concrete components of the foundations achieved desired strength',
+                    key: 'concreteStrengthAchieved',
+                },
+                {
+                    title: 'Installation methodology approved',
+                    key: 'installationMethodologyApproved',
+                },
+                {
+                    title:
+                        'Whether all safety arrangements are in place prior to the installation',
+                    key: 'safetyArrangementsInPlace',
+                },
+                {
+                    title:
+                        'Whether sufficient machinery and manpower available at site',
+                    key: 'machineryAndManpowerAvailable',
+                },
+                {
+                    title: 'Erection completed as per the approved methodology',
+                    key: 'erectionCompleted',
+                },
+            ];
+
+            return (
+                <View>
+                    {erectionOfDoublePoleStructureProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={erectionOfDoublePoleStructureData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setErectionOfDoublePoleStructureData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total no. of double pole structures erected"
+                        value={erectionOfDoublePoleStructureData.totalDoublePolesErected}
+                        onChange={(value: any) =>
+                            setErectionOfDoublePoleStructureData(prevData => ({
+                                ...prevData,
+                                totalDoublePolesErected: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+
+        case TASK_TYPES.FIXING_OF_MC4_Y_CONNECTOR:
+            const fixingOfMC4Properties = [
+                {
+                    title:
+                        'Whether all the cables are connected using the MC 4/ Y connectors',
+                    key: 'cablesConnected',
+                },
+                {
+                    title: 'All connection checked physical and found OK',
+                    key: 'connectionsChecked',
+                },
+            ];
+
+            return (
+                <View>
+                    {fixingOfMC4Properties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={fixingOfMC4Data[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setFixingOfMC4Data(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total no. of Y connectors used"
+                        value={fixingOfMC4Data.totalYConnectorsUsed}
+                        onChange={(value: any) =>
+                            setFixingOfMC4Data(prevData => ({
+                                ...prevData,
+                                totalYConnectorsUsed: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.FIXING_OF_MMS:
+            const fixingOfMMSProperties = [
+                {
+                    title: 'Whether the Drawings approved or not',
+                    key: 'drawingsApproved',
+                },
+                {
+                    title:
+                        'Whether the material has been inspected at factory and dispatch clearance obtained',
+                    key: 'materialInspectedAndCleared',
+                },
+                {
+                    title:
+                        'Whether the material reached at site all ok and none of the part is damaged, damaged part informed to the contractor or not',
+                    key: 'materialReachedUndamaged',
+                },
+                {
+                    title:
+                        'Whether the foundation has been completed in all respect including the casting of column post in its alignment properly',
+                    key: 'foundationCompleted',
+                },
+                {
+                    title: 'Whether the concrete has achieved the desired strength',
+                    key: 'concreteAchievedStrength',
+                },
+                {
+                    title: 'The alignment of the MMS is as per the drawings or not',
+                    key: 'alignmentAsPerDrawings',
+                },
+                {
+                    title: 'Whether line / level checked or not',
+                    key: 'lineLevelChecked',
+                },
+                {
+                    title:
+                        'Whether the angle of the structure checked and found as per the drawings',
+                    key: 'structureAngleChecked',
+                },
+                {
+                    title:
+                        'Whether all the nut bolts are torqued properly and tested as per the specification',
+                    key: 'nutBoltsTorquedProperly',
+                },
+                {
+                    title:
+                        'Whether MMS installed appears to be fit in all respect visually',
+                    key: 'visualFitCheck',
+                },
+            ];
+
+            return (
+                <View>
+                    {fixingOfMMSProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={fixingOfMMSData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setFixingOfMMSData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+
+                    <Input
+                        label="Total No. of MMS Tables Erected"
+                        value={fixingOfMMSData.totalNoOfMMSTablesErected}
+                        onChange={(value: any) =>
+                            setFixingOfMMSData(prevData => ({
+                                ...prevData,
+                                totalNoOfMMSTablesErected: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+
+                    <Input
+                        label="Total Length of MMS Structure Completed in RM"
+                        value={fixingOfMMSData.totalLengthOfMMSCompleted}
+                        onChange={(value: any) =>
+                            setFixingOfMMSData(prevData => ({
+                                ...prevData,
+                                totalLengthOfMMSCompleted: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.FIXING_OF_MODULES:
+            const fixingOfModulesProperties = [
+                {
+                    title: 'Whether the Drawings approved or not',
+                    key: 'drawingsApproved',
+                },
+                {
+                    title:
+                        'Whether the material has been inspected at factory and dispatch clearance obtained',
+                    key: 'materialInspectedFactory',
+                },
+                {
+                    title:
+                        'Whether the material reached at site all ok and none of the part is damaged, damaged part informed to the vendor and insurance company',
+                    key: 'materialReachedSiteOk',
+                },
+                {
+                    title:
+                        'Whether the installation of MMS has been completed in all respect including its alignment properly',
+                    key: 'mmsInstallationCompleted',
+                },
+                {
+                    title: 'The alignment of the Modules is as per the drawings or not',
+                    key: 'alignmentAsPerDrawings',
+                },
+                {
+                    title: 'Whether line / level checked or not',
+                    key: 'lineLevelChecked',
+                },
+                {
+                    title:
+                        'Whether the angle of the Modules checked and found as per the drawings',
+                    key: 'moduleAngleChecked',
+                },
+                {
+                    title:
+                        'Whether all the nut bolts are torqued properly and tested as per the specification',
+                    key: 'nutBoltsTorqued',
+                },
+                {
+                    title:
+                        'Whether Modules installed appears to be fit in all respect visually',
+                    key: 'modulesFitVisually',
+                },
+            ];
+
+            return (
+                <View>
+                    {fixingOfModulesProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={fixingOfModulesData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setFixingOfModulesData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total No. of Modules Mounted"
+                        value={fixingOfModulesData.totalModulesMounted}
+                        onChange={(value: any) =>
+                            setFixingOfModulesData(prevData => ({
+                                ...prevData,
+                                totalModulesMounted: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+
+                    <Input
+                        label="Total Length of Modules Mounting Completed in RM"
+                        value={fixingOfModulesData.totalLengthMounted}
+                        onChange={(value: any) =>
+                            setFixingOfModulesData(prevData => ({
+                                ...prevData,
+                                totalLengthMounted: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.LAYING_OF_CAUTION_TAPE:
+            const layingCautionTapeProperties = [
+                {
+                    title: 'Whether the Drawings Approved or Not',
+                    key: 'drawingsApproved',
+                },
+                {
+                    title: 'Size, Shape and Thickness as per Drawings',
+                    key: 'sizeShapeThicknessAsPerDrawings',
+                },
+                { title: 'Source of Material Approved', key: 'sourceMaterialApproved' },
+                { title: 'Caution Tape Laid Properly', key: 'cautionTapeLaidProperly' },
+                {
+                    title: 'Caution Tape Laid at Desired Depth/Clearance',
+                    key: 'cautionTapeLaidAtDesiredDepth',
+                },
+            ];
+            return (
+                <View>
+                    {layingCautionTapeProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={layingCautionTapeData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setLayingCautionTapeData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total Length of Caution Tape Laid (RM)"
+                        value={layingCautionTapeData.totalCautionTapeLength}
+                        onChange={(value: any) =>
+                            setLayingCautionTapeData(prevData => ({
+                                ...prevData,
+                                totalCautionTapeLength: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.ROUTE_MARKING:
+            const routeMarkingProperties = [
+                {
+                    title: 'Whether the Drawings approved or not',
+                    key: 'drawingsApproved',
+                },
+                {
+                    title:
+                        'Are the size and shape of the markers as per the approved drawings/specifications',
+                    key: 'markersSizeShapeAsPerApproved',
+                },
+                {
+                    title: 'Whether source of the material approved or not',
+                    key: 'materialSourceApproved',
+                },
+                {
+                    title: 'Whether the layout marked at site or not',
+                    key: 'layoutMarkedAtSite',
+                },
+                {
+                    title: 'Whether route markers are fixed properly',
+                    key: 'routeMarkersFixedProperly',
+                },
+                {
+                    title: 'Whether spacing is as per the specifications',
+                    key: 'spacingAsPerSpecifications',
+                },
+            ];
+
+            return (
+                <View>
+                    {routeMarkingProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={routeMarkingData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setRouteMarkingData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total No. of Route Markers Installed at Site"
+                        value={routeMarkingData.totalRouteMarkersInstalled}
+                        onChange={(value: any) =>
+                            setRouteMarkingData(prevData => ({
+                                ...prevData,
+                                totalRouteMarkersInstalled: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+
+                    <Input
+                        label="Total Length Covered in RM"
+                        value={routeMarkingData.totalLengthCoveredRM}
+                        onChange={(value: any) =>
+                            setRouteMarkingData(prevData => ({
+                                ...prevData,
+                                totalLengthCoveredRM: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.BRICKS_LAYERING:
+            const bricksLayeringProperties = [
+                {
+                    title: 'Whether the Drawings Approved or Not',
+                    key: 'drawingsApproved',
+                },
+                {
+                    title: 'Are the Size and Class of Bricks as per Approved Drawing',
+                    key: 'bricksSizeClassApproved',
+                },
+            ];
+
+            return (
+                <View>
+                    {bricksLayeringProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={bricksLayeringData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setBricksLayeringData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total Area of Brick Layering Completed (sqm)"
+                        value={bricksLayeringData.totalAreaCompleted}
+                        onChange={(value: any) =>
+                            setBricksLayeringData(prevData => ({
+                                ...prevData,
+                                totalAreaCompleted: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <Input
+                        label="Total No. of Bricks Laid (No)"
+                        value={bricksLayeringData.totalBricksLaid}
+                        onChange={(value: any) =>
+                            setBricksLayeringData(prevData => ({
+                                ...prevData,
+                                totalBricksLaid: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <Input
+                        label="Total Length of Trench Completed (RM)"
+                        value={bricksLayeringData.totalLengthTrenchCompleted}
+                        onChange={(value: any) =>
+                            setBricksLayeringData(prevData => ({
+                                ...prevData,
+                                totalLengthTrenchCompleted: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.CABLE_DRESSING:
+            const cableDressingProperties = [
+                {
+                    title:
+                        'Whether all the cables are tied properly to the MMS structure and no cables are hanging',
+                    key: 'cablesTiedProperly',
+                },
+                {
+                    title: 'No cable has been damaged found during the dressing',
+                    key: 'noCableDamaged',
+                },
+            ];
+
+            return (
+                <View>
+                    {cableDressingProperties.map(property => (
+                        <View
+                            style={{ flexDirection: 'column', marginBottom: 10 }}
+                            key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={cableDressingData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setCableDressingData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.CABLE_TRENCH_DRESSING:
+            const cableTrenchDressingProperties = [
+                {
+                    title: 'Whether the proper safety measure taken at the site',
+                    key: 'safetyMeasuresTaken',
+                },
+                {
+                    title: 'Sufficient manpower available at site',
+                    key: 'manpowerAvailable',
+                },
+                {
+                    title: 'Line levels are checked properly',
+                    key: 'lineLevelsChecked',
+                },
+                {
+                    title: 'Trench has been made free from undesirable material',
+                    key: 'trenchClearedUndesirableMaterial',
+                },
+                {
+                    title: 'Bottom of trench well compacted as per specifications',
+                    key: 'trenchCompacted',
+                },
+            ];
+            return (
+                <View>
+                    {cableTrenchDressingProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={cableTrenchDressingData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setCableTrenchDressingData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total Trench Dressed in RM"
+                        value={cableTrenchDressingData.totalTrenchDressed}
+                        onChange={(value: any) =>
+                            setCableTrenchDressingData(prevData => ({
+                                ...prevData,
+                                totalTrenchDressed: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.CONDUIT_LAYING:
+            const conduitLayingProperties = [
+                {
+                    title: 'Whether the Drawings approved or not',
+                    key: 'drawingsApproved',
+                },
+                {
+                    title:
+                        'Are the size and shape of the conduit as per the approved drawings/ specifications',
+                    key: 'conduitSizeShapeAsPerSpecs',
+                },
+                {
+                    title: 'Whether source of the material approved or not',
+                    key: 'materialSourceApproved',
+                },
+                {
+                    title: 'Whether the conduit pipe laid properly',
+                    key: 'conduitPipeLaidProperly',
+                },
+                {
+                    title: 'Whether jointing has been done properly',
+                    key: 'jointingDoneProperly',
+                },
+            ];
+
+            return (
+                <View>
+                    {conduitLayingProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={conduitLayingData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setConduitLayingData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total Length of Conduit Laid in RM"
+                        value={conduitLayingData.totalConduitLength}
+                        onChange={(value: any) =>
+                            setConduitLayingData(prevData => ({
+                                ...prevData,
+                                totalConduitLength: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.CABLE_TRENCH_EXCAVATION:
+            const cableTrenchExcavationProperties = [
+                {
+                    title: 'Proper Safety Measures Taken Before Excavation',
+                    key: 'safetyMeasuresTaken',
+                },
+                { title: 'Drawings Approved', key: 'drawingsApproved' },
+                { title: 'Alignment of Trench Marked at Site', key: 'alignmentMarked' },
+                { title: 'Utility Infringement Shifted', key: 'utilitiesShifted' },
+                {
+                    title: 'Excavation Done to Required Depth and Width',
+                    key: 'excavationDepthWidth',
+                },
+            ];
+
+            return (
+                <View>
+                    {cableTrenchExcavationProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={cableTrenchExcavationData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setCableTrenchExcavationData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+
+                    <Input
+                        label="Total Qty of Soil Excavated (in Cum)"
+                        value={cableTrenchExcavationData.totalSoilQtyExcavated}
+                        onChange={(value: any) =>
+                            setCableTrenchExcavationData(prevData => ({
+                                ...prevData,
+                                totalSoilQtyExcavated: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+
+                    <Input
+                        label="Total Trench Excavated (in RM)"
+                        value={cableTrenchExcavationData.totalTrenchExcavated}
+                        onChange={(value: any) =>
+                            setCableTrenchExcavationData(prevData => ({
+                                ...prevData,
+                                totalTrenchExcavated: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.FIXING_AND_INSTALLATION_OF_LT_PANEL:
+        case TASK_TYPES.FIXING_AND_INSTALLATION_OF_SERVO:
+        case TASK_TYPES.FIXING_AND_INSTALLATION_OF_MCB:
+        case TASK_TYPES.FIXING_AND_INSTALLATION_OF_INVERTOR:
+        case TASK_TYPES.FIXING_AND_INSTALLATION_OF_HT_PANEL:
+        case TASK_TYPES.FIXING_AND_INSTALLATION_OF_TRANSFORMER:
+            const fixingAndInstallationProperties = [
+                { title: 'Drawings Approved', key: 'drawingsApproved' },
+                {
+                    title: 'Equipment Inspected at Factory Dispatch',
+                    key: 'equipmentInspected',
+                },
+                {
+                    title: 'Damage to Equipment Informed to Vendor',
+                    key: 'equipmentDamageInformed',
+                },
+                {
+                    title: 'Foundation Work Completed and Ready',
+                    key: 'foundationReady',
+                },
+                {
+                    title: 'Concrete Strength Achieved',
+                    key: 'concreteStrengthAchieved',
+                },
+                {
+                    title: 'Installation Methodology Approved',
+                    key: 'installationMethodologyApproved',
+                },
+                {
+                    title: 'Safety Arrangements in Place',
+                    key: 'safetyArrangementsInPlace',
+                },
+                {
+                    title: 'Sufficient Machinery and Manpower Available',
+                    key: 'machineryManpowerAvailable',
+                },
+                {
+                    title: 'Installation Completed per Approved Methodology',
+                    key: 'installationCompleted',
+                },
+                {
+                    title: 'Manufacturer Instructions Complied with',
+                    key: 'manufacturerInstructionsComplied',
+                },
+            ];
+
+            return (
+                <View>
+                    {fixingAndInstallationProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={fixingAndInstallationData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setFixingAndInstallationData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+
+                    <Input
+                        label="Total No. of Equipment Installed"
+                        value={fixingAndInstallationData.totalEquipmentInstalled}
+                        onChange={(value: any) =>
+                            setFixingAndInstallationData(prevData => ({
+                                ...prevData,
+                                totalEquipmentInstalled: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.FIXING_AND_INSTALLATION_OF_LT_PANEL:
+            const fixingAndInstallationLTPanelProperties = [
+                {
+                    title: 'Whether the Drawings approved or not',
+                    key: 'drawingsApproved',
+                },
+                {
+                    title:
+                        'Whether the equipment reached at site has been inspected in factory dispatch clearance obtained',
+                    key: 'equipmentInspected',
+                },
+                {
+                    title:
+                        'Is there any damage to the equipment or not, if yes whether informed to the vendor',
+                    key: 'equipmentDamageInformed',
+                },
+                {
+                    title:
+                        'Whether the equipment foundation work completed in all respect and ready for installation of equipment',
+                    key: 'foundationReady',
+                },
+                {
+                    title:
+                        'Whether the concrete components of the foundations achieved desired strength',
+                    key: 'concreteStrengthAchieved',
+                },
+                {
+                    title: 'Installation methodology approved',
+                    key: 'installationMethodologyApproved',
+                },
+                {
+                    title:
+                        'Whether all safety arrangements are in place prior to the installation',
+                    key: 'safetyArrangementsInPlace',
+                },
+                {
+                    title:
+                        'Whether sufficient machinery and manpower available at site',
+                    key: 'machineryManpowerAvailable',
+                },
+                {
+                    title: 'Installation completed as per the approved methodology',
+                    key: 'installationCompleted',
+                },
+                {
+                    title:
+                        'All instructions as informed by the manufacturer have been complied with during installation',
+                    key: 'manufacturerInstructionsComplied',
+                },
+            ];
+
+            return (
+                <View>
+                    {fixingAndInstallationLTPanelProperties.map(property => (
+                        <View
+                            style={{ flexDirection: 'column', marginBottom: 10 }}
+                            key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={fixingAndInstallationLTPanelData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setFixingAndInstallationLTPanelData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+
+                    <Input
+                        label="Total No. of Equipment Installed"
+                        value={fixingAndInstallationLTPanelData.totalEquipmentInstalled}
+                        onChange={(value: any) =>
+                            setFixingAndInstallationLTPanelData(prevData => ({
+                                ...prevData,
+                                totalEquipmentInstalled: value,
+                            }))
+                        }
+                        isRequired={true}
+                        keyboardType="numeric"
+                    />
+
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        // case TASK_TYPES.HT_PANEL_INSTALLATION:
+        //   const htPanelInstallationProperties = [
+        //     {title: 'Whether the Drawings Approved', key: 'drawingsApproved'},
+        //     {
+        //       title: 'Equipment Inspected & Factory Dispatch Clearance Obtained',
+        //       key: 'equipmentInspected',
+        //     },
+        //     {
+        //       title: 'Equipment Damage Reported to Vendor',
+        //       key: 'equipmentDamageReported',
+        //     },
+        //     {
+        //       title: 'Foundation Work Completed and Ready for Installation',
+        //       key: 'foundationWorkCompleted',
+        //     },
+        //     {
+        //       title: 'Concrete Components Achieved Desired Strength',
+        //       key: 'concreteStrengthAchieved',
+        //     },
+        //     {
+        //       title: 'Installation Methodology Approved',
+        //       key: 'installationMethodologyApproved',
+        //     },
+        //     {
+        //       title: 'All Safety Arrangements in Place',
+        //       key: 'safetyArrangementsInPlace',
+        //     },
+        //     {
+        //       title: 'Sufficient Machinery and Manpower Available',
+        //       key: 'machineryAndManpowerAvailable',
+        //     },
+        //     {
+        //       title: 'Installation Completed as per Approved Methodology',
+        //       key: 'installationCompleted',
+        //     },
+        //     {
+        //       title: 'Manufacturer Instructions Followed during Installation',
+        //       key: 'manufacturerInstructionsFollowed',
+        //     },
+        //   ];
+
+        //   return (
+        //     <View>
+        //       {htPanelInstallationProperties.map(property => (
+        //         <View style={{flexDirection: 'column'}} key={property.key}>
+        //           <DropdownPicker
+        //             label={property.title}
+        //             value={htPanelInstallationData[property.key]}
+        //             items={YES_NO_LIST}
+        //             onChange={(value: any) =>
+        //               setHtPanelInstallationData(prevData => ({
+        //                 ...prevData,
+        //                 [property.key]: value,
+        //               }))
+        //             }
+        //             isRequired={true}
+        //           />
+        //         </View>
+        //       ))}
+        //       <Input
+        //         label="Total No. of Equipment Installed"
+        //         value={htPanelInstallationData.totalEquipmentsInstalled}
+        //         onChange={(value: any) =>
+        //           setHtPanelInstallationData(prevData => ({
+        //             ...prevData,
+        //             totalEquipmentsInstalled: value,
+        //           }))
+        //         }
+        //         isRequired={true}
+        //       />
+        //     </View>
+        //   );
+        case TASK_TYPES.ERECTION_OF_STRUCTURE:
+            const erectionOfStructureProperties = [
+                { title: 'Whether the Position checked', key: 'positionChecked' },
+                {
+                    title: 'Whether the Welding done as per the approved drawing',
+                    key: 'weldingDoneAsPerDrawing',
+                },
+                {
+                    title: 'Whether the Structure is as per approved drawing',
+                    key: 'structureAsPerDrawing',
+                },
+                {
+                    title: 'Whether the Necessary support provided',
+                    key: 'necessarySupportProvided',
+                },
+            ];
+
+            return (
+                <View>
+                    {erectionOfStructureProperties.map(property => (
+                        <View
+                            style={{ flexDirection: 'column', marginBottom: 10 }}
+                            key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={erectionOfStructureData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setErectionOfStructureData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.FABRICATION_OF_STRUCTURE:
+            const fabricationOfStructureProperties = [
+                {
+                    title: 'Steel Inspection for Surface Condition',
+                    key: 'steelInspection',
+                },
+                {
+                    title: 'Section Checked for Dimension and GFC Compliance',
+                    key: 'sectionChecked',
+                },
+                {
+                    title: 'Material Specification Checked as per GFC',
+                    key: 'materialSpecificationChecked',
+                },
+                { title: 'Connection Checked as per GFC', key: 'connectionChecked' },
+                { title: 'Bolt Holes Clean and to Size', key: 'boltHolesClean' },
+                { title: 'Only Approved Welders Used', key: 'approvedWeldersUsed' },
+                { title: 'Welds Identified with Welder ID', key: 'weldsIdentified' },
+                {
+                    title: 'Welds Inspected for Dimension, Shape, Location',
+                    key: 'weldsInspected',
+                },
+                { title: 'Welds Repaired as Required', key: 'weldsRepaired' },
+                {
+                    title: 'Shape Edge Burns/Weld Spatter Removed',
+                    key: 'shapeEdgeBurnsRemoved',
+                },
+                {
+                    title: 'Oil and Grease Removed before Final Cleaning',
+                    key: 'oilGreaseRemoved',
+                },
+                {
+                    title: 'Steel Cleaned and Painted as per Specification',
+                    key: 'steelCleanedAndPainted',
+                },
+                {
+                    title: 'Final Shop Coat Applied as per Approved Color',
+                    key: 'finalShopCoatApplied',
+                },
+                {
+                    title: 'Each Structure Marked for Erection as per Scope',
+                    key: 'structureMarkedForErection',
+                },
+                {
+                    title: 'Structure Approved by Inspector Before Shipment',
+                    key: 'structureApprovedPriorShipment',
+                },
+            ];
+
+            return (
+                <View>
+                    {fabricationOfStructureProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={fabricationOfStructureData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setFabricationOfStructureData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.FIXING_OF_PANELS:
+            const fixingOfPanelsProperties = [
+                {
+                    title: 'Is the bus shelter drawing approved',
+                    key: 'drawingApproved',
+                },
+                {
+                    title: 'Is the material source approved',
+                    key: 'materialSourceApproved',
+                },
+                {
+                    title:
+                        'Is the shape and size of panel same as mentioned in drawing',
+                    key: 'panelShapeSizeAsDrawing',
+                },
+                { title: 'Are bolts and holes aligned', key: 'boltsAligned' },
+                { title: 'Are the panels fixed in line', key: 'panelsFixedInLine' },
+                { title: 'Are the all bolts fully torqued', key: 'boltsFullyTorqued' },
+            ];
+
+            return (
+                <View>
+                    {fixingOfPanelsProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={fixingOfPanelsData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setFixingOfPanelsData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total No. of Panels Installed"
+                        value={fixingOfPanelsData.totalPanelsInstalled}
+                        onChange={(value: any) =>
+                            setFixingOfPanelsData(prevData => ({
+                                ...prevData,
+                                totalPanelsInstalled: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <Input
+                        label="Total No. of Bus Shelter Completed"
+                        value={fixingOfPanelsData.totalBusShelterCompleted}
+                        onChange={(value: any) =>
+                            setFixingOfPanelsData(prevData => ({
+                                ...prevData,
+                                totalBusShelterCompleted: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.ERECTION_OF_PRECAST_COLUMN:
+            const erectionPreCastColumnProperties = [
+                { title: 'Is the Drawing Approved', key: 'drawingApproved' },
+                {
+                    title: 'Pre-Cast Columns from Approved Source',
+                    key: 'columnsFromApprovedSource',
+                },
+                { title: 'Is Any Column Damaged', key: 'columnDamaged' },
+                {
+                    title: 'Erection is as per the Drawing',
+                    key: 'erectionAsPerDrawing',
+                },
+                { title: 'Line and Level Checked Properly', key: 'lineLevelChecked' },
+                {
+                    title: 'Dimensions of the Column are as per Drawing',
+                    key: 'dimensionsAsPerDrawing',
+                },
+                {
+                    title: 'Spacing of Columns is as per Approved Drawing',
+                    key: 'columnSpacingAsPerDrawing',
+                },
+            ];
+
+            return (
+                <View>
+                    {erectionPreCastColumnProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={erectionPreCastColumnData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setErectionPreCastColumnData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total No. of Columns Erected"
+                        value={erectionPreCastColumnData.totalNoOfColumnsErected}
+                        onChange={(value: any) =>
+                            setErectionPreCastColumnData(prevData => ({
+                                ...prevData,
+                                totalNoOfColumnsErected: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+
+                    <Input
+                        label="Total Length of B/Wall Covered (RM)"
+                        value={erectionPreCastColumnData.totalLengthOfBwallCovered}
+                        onChange={(value: any) =>
+                            setErectionPreCastColumnData(prevData => ({
+                                ...prevData,
+                                totalLengthOfBwallCovered: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.ERECTION_OF_BUS_SHELTER:
+            const erectionOfBusShelterProperties = [
+                {
+                    title: 'Whether source of material approved or not',
+                    key: 'materialSourceApproved',
+                },
+                {
+                    title: 'Whether the drawings approved',
+                    key: 'drawingsApproved',
+                },
+                {
+                    title: 'Is the supporting surface checked and found OK',
+                    key: 'supportingSurfaceChecked',
+                },
+                {
+                    title: 'Are sufficient safety arrangements in place at site',
+                    key: 'safetyArrangementsInPlace',
+                },
+            ];
+
+            return (
+                <View>
+                    {erectionOfBusShelterProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={erectionOfBusShelterData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setErectionOfBusShelterData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+
+                    <Input
+                        label="Total No. of Panels Installed"
+                        value={erectionOfBusShelterData.totalPanelsInstalled}
+                        onChange={(value: any) =>
+                            setErectionOfBusShelterData(prevData => ({
+                                ...prevData,
+                                totalPanelsInstalled: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+
+                    <Input
+                        label="Total No. of Bus Stands Completed"
+                        value={erectionOfBusShelterData.totalBusStandsCompleted}
+                        onChange={(value: any) =>
+                            setErectionOfBusShelterData(prevData => ({
+                                ...prevData,
+                                totalBusStandsCompleted: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.ERECTION_OF_ANGLE_SECTION:
+            const erectionOfAngleSectionProperties = [
+                {
+                    title: 'Check all the angles are from approved source',
+                    key: 'anglesFromApprovedSource',
+                },
+                {
+                    title:
+                        'Material inspection at factory done and clearance for dispatch obtained',
+                    key: 'materialInspectionClearance',
+                },
+                {
+                    title:
+                        'Whether any material reached at site is damaged, if yes, informed to supplier',
+                    key: 'materialDamagedInformed',
+                },
+                {
+                    title: 'Erection done as per approved drawing',
+                    key: 'erectionAsPerDrawing',
+                },
+                {
+                    title: 'Alignment, plumb, fixing, and temporary support all ok',
+                    key: 'alignmentSupportOk',
+                },
+                { title: 'Total column/angles erected', key: 'totalAnglesErected' },
+            ];
+
+            return (
+                <View>
+                    {erectionOfAngleSectionProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={erectionOfAngleSectionData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setErectionOfAngleSectionData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total column/angles erected"
+                        value={erectionOfAngleSectionData.totalAnglesErected}
+                        onChange={(value: any) =>
+                            setErectionOfAngleSectionData(prevData => ({
+                                ...prevData,
+                                totalAnglesErected: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.PLACING_OF_PRE_CAST_RCC_PANELS:
+            const preCastRccPanelProperties = [
+                { title: 'Whether drawing approved', key: 'drawingApproved' },
+                {
+                    title: 'Check all the pre cast panels are from approved source',
+                    key: 'panelsFromApprovedSource',
+                },
+                {
+                    title:
+                        'Whether any panel found damaged, especially at the male-female joint',
+                    key: 'damagedPanelFound',
+                },
+                {
+                    title: 'Alignment, plumb, fixing, and temporary support',
+                    key: 'alignmentPlumbFixingSupport',
+                },
+            ];
+
+            return (
+                <View>
+                    {preCastRccPanelProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={preCastRccPanelData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setPreCastRccPanelData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total No. of Panels Installed in Nos."
+                        value={preCastRccPanelData.totalPanelsInstalled}
+                        onChange={(value: any) =>
+                            setPreCastRccPanelData(prevData => ({
+                                ...prevData,
+                                totalPanelsInstalled: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <Input
+                        label="Total Area of Panels Installed in Sqm"
+                        value={preCastRccPanelData.totalAreaInstalled}
+                        onChange={(value: any) =>
+                            setPreCastRccPanelData(prevData => ({
+                                ...prevData,
+                                totalAreaInstalled: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.PLACING_OF_CHAIN_LINK:
+            const placingChainLinkProperties = [
+                { title: 'Is the drawing approved', key: 'drawingApproved' },
+                {
+                    title: 'Is fencing installed in accordance with the plot plan?',
+                    key: 'fencingInstalledAsPerPlotPlan',
+                },
+                {
+                    title:
+                        'Are all fittings, caps, tension bars, hinges, and hardware installed properly?',
+                    key: 'fittingsCapsTensionBarsHingesHardwareInstalled',
+                },
+                {
+                    title: 'Are corner and end posts firmly anchored and supported?',
+                    key: 'cornerEndPostsAnchoredSupported',
+                },
+                {
+                    title: 'Are all fence components free from defects in workmanship?',
+                    key: 'fenceComponentsDefectFree',
+                },
+                {
+                    title:
+                        'Has the fence been installed at the correct height requirement?',
+                    key: 'fenceInstalledAtCorrectHeight',
+                },
+                {
+                    title: 'Does the fence end with a terminal post?',
+                    key: 'fenceEndsWithTerminalPost',
+                },
+                {
+                    title: 'Are appropriate fasteners used?',
+                    key: 'appropriateFastenersUsed',
+                },
+                {
+                    title: 'Is there damaged mesh, if yes informed to the supplier?',
+                    key: 'damagedMeshInformedSupplier',
+                },
+                {
+                    title:
+                        'Are there missing or damaged components such as the tension wire, tension bar, tension band, or ties?',
+                    key: 'missingDamagedComponents',
+                },
+                {
+                    title:
+                        'Is there too much movement on the top rail between end post, line post, and terminal post?',
+                    key: 'tooMuchMovementTopRail',
+                },
+                {
+                    title:
+                        'Has the right fencing material been used according to the detail?',
+                    key: 'rightFencingMaterialUsed',
+                },
+                {
+                    title:
+                        'Is the required fence gap present (from soil to the fence mesh)?',
+                    key: 'requiredFenceGapPresent',
+                },
+                {
+                    title: 'Is the mesh and tension wire/band too loose?',
+                    key: 'meshTensionWireLoose',
+                },
+            ];
+
+            return (
+                <View>
+                    {placingChainLinkProperties.map(property => (
+                        <View
+                            style={{ flexDirection: 'column', marginBottom: 10 }}
+                            key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={placingChainLinkData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setPlacingChainLinkData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+
+                    <Input
+                        label="Total Sqm of Fence Installed"
+                        value={placingChainLinkData.totalSqmFenceInstalled}
+                        onChange={(value: any) =>
+                            setPlacingChainLinkData(prevData => ({
+                                ...prevData,
+                                totalSqmFenceInstalled: value,
+                            }))
+                        }
+                        isRequired={true}
+                        keyboardType="numeric"
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.MORTAR_CHECKLIST:
+            const mortarChecklistProperties = [
+                {
+                    title: 'Is the mortar mix uniform and of optimal workability?',
+                    key: 'mortarMixUniform',
+                },
+                {
+                    title:
+                        'Is there a sufficient quantity of mortar mixed for the next 30 minutes?',
+                    key: 'sufficientMortarQuantity',
+                },
+                {
+                    title: 'Is the block work in proper alignment and plumb?',
+                    key: 'blockAlignmentPlumb',
+                },
+                {
+                    title: 'Have all the joints been staggered and raked properly?',
+                    key: 'jointsStaggered',
+                },
+                {
+                    title:
+                        'Is mortar placed between the edge of the block and the column?',
+                    key: 'mortarBetweenBlockAndColumn',
+                },
+            ];
+
+            return (
+                <View>
+                    {mortarChecklistProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={mortarChecklistData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setMortarChecklistData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total Cement Bag Consumed (in no.)"
+                        value={mortarChecklistData.totalCementBagsConsumed}
+                        onChange={(value: any) =>
+                            setMortarChecklistData(prevData => ({
+                                ...prevData,
+                                totalCementBagsConsumed: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <Input
+                        label="Total Surface Area to be Plastered (in sqm)"
+                        value={mortarChecklistData.totalSurfaceAreaToBePlastered}
+                        onChange={(value: any) =>
+                            setMortarChecklistData(prevData => ({
+                                ...prevData,
+                                totalSurfaceAreaToBePlastered: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <Input
+                        label="Total Quantity of Mortar Used (in cum)"
+                        value={mortarChecklistData.totalMortarUsed}
+                        onChange={(value: any) =>
+                            setMortarChecklistData(prevData => ({
+                                ...prevData,
+                                totalMortarUsed: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.FLOORING:
+            const flooringProperties = [
+                {
+                    title: 'Flooring Material Source Approved',
+                    key: 'flooringMaterialSourceApproved',
+                },
+                {
+                    title: 'Tiles/Other Material Free from Cracks',
+                    key: 'tilesCrackFree',
+                },
+                {
+                    title: 'Cracks, Holes or Uneven Surface Present',
+                    key: 'cracksHolesUnevenSurface',
+                },
+                {
+                    title: 'Joints at Transition Area are Smooth',
+                    key: 'jointsAtTransitionSmooth',
+                },
+                {
+                    title: 'Flooring Done at Entry/Exit Ramps',
+                    key: 'flooringDoneAtRamps',
+                },
+            ];
+
+            return (
+                <View>
+                    {flooringProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={flooringData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setFlooringData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total Surface Area Flooring Done (Sqm)"
+                        value={flooringData.totalSurfaceArea}
+                        onChange={(value: any) =>
+                            setFlooringData(prevData => ({
+                                ...prevData,
+                                totalSurfaceArea: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <Input
+                        label="Total Number of Tiles Used"
+                        value={flooringData.totalTilesUsed}
+                        onChange={(value: any) =>
+                            setFlooringData(prevData => ({
+                                ...prevData,
+                                totalTilesUsed: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.SIGNAGE_LOCATION_IDENTIFICATION:
+            const signageLocationProperties = [
+                { title: 'Whether the drawing is approved', key: 'drawingApproved' },
+                {
+                    title: 'Whether the location is marked using temporary arrangement',
+                    key: 'locationMarked',
+                },
+                {
+                    title: 'Whether the marked location is checked by engineer',
+                    key: 'locationCheckedByEngineer',
+                },
+                {
+                    title: 'Whether the location has no hindrance in installation',
+                    key: 'noHindranceInInstallation',
+                },
+            ];
+
+            return (
+                <View>
+                    {signageLocationProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={signageLocationData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setSignageLocationData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.BACKFILL:
+            const backfillProperties = [
+                {
+                    title:
+                        'Verify that the excavated area to be backfilled is clear of debris and formwork materials',
+                    key: 'areaClearOfDebris',
+                },
+                {
+                    title:
+                        'Confirm that the fill materials are approved and test results comply with the specifications',
+                    key: 'fillMaterialsApproved',
+                },
+                {
+                    title:
+                        'Ensure avoidance of damage to the cables, caution tapes, or other things laid in the trench',
+                    key: 'noDamageToCables',
+                },
+                {
+                    title:
+                        'Ensure the backfilling is complete and the area is clean and tidy',
+                    key: 'backfillingComplete',
+                },
+            ];
+
+            return (
+                <View>
+                    {backfillProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={backfillData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setBackfillData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total Qty of Soil Used in cum"
+                        value={backfillData.totalQtySoilUsed}
+                        onChange={(value: any) =>
+                            setBackfillData(prevData => ({
+                                ...prevData,
+                                totalQtySoilUsed: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <Input
+                        label="Total Length of Trench Backfilled in RM"
+                        value={backfillData.totalLengthTrenchBackfilled}
+                        onChange={(value: any) =>
+                            setBackfillData(prevData => ({
+                                ...prevData,
+                                totalLengthTrenchBackfilled: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.PLACEMENT_OF_SIGNAGE_SHEET:
+            const placementOfSignageSheetProperties = [
+                {
+                    title: 'Whether the material source is approved',
+                    key: 'materialSourceApproved',
+                },
+                { title: 'Whether the drawings approved', key: 'drawingsApproved' },
+                {
+                    title: 'Whether the letter size is as per approved drawing',
+                    key: 'letterSizeAsPerDrawing',
+                },
+                {
+                    title: 'Whether riveted properly in the frame',
+                    key: 'rivetedProperlyInFrame',
+                },
+                {
+                    title: 'Whether placed as per approved drawing',
+                    key: 'placedAsPerDrawing',
+                },
+            ];
+            return (
+                <View>
+                    {placementOfSignageSheetProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={placementOfSignageSheetData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setPlacementOfSignageSheetData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total Sheet Fixed in Sqm"
+                        value={placementOfSignageSheetData.totalSheetFixed}
+                        onChange={(value: any) =>
+                            setPlacementOfSignageSheetData(prevData => ({
+                                ...prevData,
+                                totalSheetFixed: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+
+                    <Input
+                        label="Total Length of Road Covered in Km"
+                        value={placementOfSignageSheetData.totalRoadLengthCovered}
+                        onChange={(value: any) =>
+                            setPlacementOfSignageSheetData(prevData => ({
+                                ...prevData,
+                                totalRoadLengthCovered: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.FIXING_OF_TRAFFIC_IMPACT_ATTENUATORS:
+            const trafficImpactAttenuatorsProperties = [
+                {
+                    title: 'Whether the source material approved',
+                    key: 'sourceMaterialApproved',
+                },
+                { title: 'Whether the drawing approved', key: 'drawingApproved' },
+                {
+                    title: 'Whether the shape and size as per approved drawing',
+                    key: 'shapeSizeAsPerDrawing',
+                },
+                {
+                    title: 'Whether the fixing methodology approved',
+                    key: 'fixingMethodologyApproved',
+                },
+                {
+                    title:
+                        'Whether attenuators fixed properly as per the approved method and drawings',
+                    key: 'attenuatorsFixedProperly',
+                },
+                {
+                    title: 'Whether items are cleaned and visible properly',
+                    key: 'itemsCleanedVisible',
+                },
+            ];
+
+            return (
+                <View>
+                    {trafficImpactAttenuatorsProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={trafficImpactAttenuatorsData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setTrafficImpactAttenuatorsData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total No. of Attenuators Installed"
+                        value={trafficImpactAttenuatorsData.totalNoOfAttenuatorsInstalled}
+                        onChange={(value: any) =>
+                            setTrafficImpactAttenuatorsData(prevData => ({
+                                ...prevData,
+                                totalNoOfAttenuatorsInstalled: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+
+                    <Input
+                        label="Total Length of Road Covered in Km"
+                        value={trafficImpactAttenuatorsData.totalLengthOfRoadCovered}
+                        onChange={(value: any) =>
+                            setTrafficImpactAttenuatorsData(prevData => ({
+                                ...prevData,
+                                totalLengthOfRoadCovered: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.FIXING_OF_SPRING_POST:
+            const fixingOfSpringPostProperties = [
+                {
+                    title: 'Whether the source material approved',
+                    key: 'sourceMaterialApproved',
+                },
+                { title: 'Whether the drawing approved', key: 'drawingApproved' },
+                {
+                    title: 'Whether the shape and size as per approved drawing',
+                    key: 'shapeAndSizeAsPerDrawing',
+                },
+                {
+                    title: 'Whether posts are fixed properly',
+                    key: 'postsFixedProperly',
+                },
+                {
+                    title: 'Whether line and level checked properly',
+                    key: 'lineAndLevelChecked',
+                },
+                {
+                    title: 'Whether the spacing between them are as per specifications',
+                    key: 'spacingAsPerSpecification',
+                },
+                {
+                    title: 'Whether items are properly cleaned and visible',
+                    key: 'itemsCleanedAndVisible',
+                },
+            ];
+
+            return (
+                <View>
+                    {fixingOfSpringPostProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={fixingOfSpringPostData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setFixingOfSpringPostData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Nos of Spring Post Installed"
+                        value={fixingOfSpringPostData.springPostInstalled}
+                        onChange={(value: any) =>
+                            setFixingOfSpringPostData(prevData => ({
+                                ...prevData,
+                                springPostInstalled: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <Input
+                        label="Total Length of Road Covered in km"
+                        value={fixingOfSpringPostData.totalRoadLengthCovered}
+                        onChange={(value: any) =>
+                            setFixingOfSpringPostData(prevData => ({
+                                ...prevData,
+                                totalRoadLengthCovered: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.FIXING_OF_SOLAR_ROAD_STUDS:
+            const fixingOfSolarRoadStudsProperties = [
+                {
+                    title: 'Whether the source material approved',
+                    key: 'sourceMaterialApproved',
+                },
+                { title: 'Whether the drawing approved', key: 'drawingApproved' },
+                {
+                    title: 'Whether the shape and size as per approved drawing',
+                    key: 'shapeSizeAsPerDrawing',
+                },
+                {
+                    title:
+                        'Whether the color code and locations are as per specification',
+                    key: 'colorCodeAndLocationAsPerSpec',
+                },
+                {
+                    title: 'Whether studs are fixed properly',
+                    key: 'studsFixedProperly',
+                },
+                { title: 'Whether line checked properly', key: 'lineCheckedProperly' },
+                {
+                    title: 'Whether the spacing is as per specifications',
+                    key: 'spacingAsPerSpecs',
+                },
+                {
+                    title: 'Whether items are clean and visible properly',
+                    key: 'itemsCleanVisible',
+                },
+            ];
+
+            return (
+                <View>
+                    {fixingOfSolarRoadStudsProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={fixingOfSolarRoadStudsData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setFixingOfSolarRoadStudsData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Nos of Road Studs Installed"
+                        value={fixingOfSolarRoadStudsData.noOfRoadStuds}
+                        onChange={(value: any) =>
+                            setFixingOfSolarRoadStudsData(prevData => ({
+                                ...prevData,
+                                noOfRoadStuds: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <Input
+                        label="Total Length of Road Covered in Km"
+                        value={fixingOfSolarRoadStudsData.totalLengthCovered}
+                        onChange={(value: any) =>
+                            setFixingOfSolarRoadStudsData(prevData => ({
+                                ...prevData,
+                                totalLengthCovered: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.FIXING_OF_SOLAR_BLINKERS:
+            const fixingOfSolarBlinkersProperties = [
+                {
+                    title: 'Whether the source material approved',
+                    key: 'sourceMaterialApproved',
+                },
+                { title: 'Whether the drawing approved', key: 'drawingApproved' },
+                {
+                    title: 'Whether the shape and size as per approved drawing',
+                    key: 'shapeAndSizeAsPerDrawing',
+                },
+                {
+                    title: 'Whether blinkers are in working condition',
+                    key: 'blinkersWorkingCondition',
+                },
+                {
+                    title: 'Whether blinkers are fixed properly?',
+                    key: 'blinkersFixedProperly',
+                },
+                {
+                    title: 'Whether line and level checked properly',
+                    key: 'lineLevelChecked',
+                },
+                {
+                    title: 'Whether items are properly cleaned and visible',
+                    key: 'itemsCleanedAndVisible',
+                },
+            ];
+
+            return (
+                <View>
+                    {fixingOfSolarBlinkersProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={fixingOfSolarBlinkersData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setFixingOfSolarBlinkersData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total No. of Blinkers Installed"
+                        value={fixingOfSolarBlinkersData.totalBlinkersInstalled}
+                        onChange={(value: any) =>
+                            setFixingOfSolarBlinkersData(prevData => ({
+                                ...prevData,
+                                totalBlinkersInstalled: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+
+                    <Input
+                        label="Total Length of Road Covered in Km"
+                        value={fixingOfSolarBlinkersData.totalRoadLengthCovered}
+                        onChange={(value: any) =>
+                            setFixingOfSolarBlinkersData(prevData => ({
+                                ...prevData,
+                                totalRoadLengthCovered: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.FIXING_OF_ROAD_STUDS:
+            const fixingOfRoadStudsProperties = [
+                {
+                    title: 'Whether the source material approved',
+                    key: 'sourceMaterialApproved',
+                },
+                { title: 'Whether the drawing approved', key: 'drawingApproved' },
+                {
+                    title: 'Whether the shape and size are as per approved drawing',
+                    key: 'shapeAndSizeAsPerDrawing',
+                },
+                {
+                    title:
+                        'Whether the color code and locations are as per specification and approved drawings',
+                    key: 'colorCodeAndLocationAsPerSpecification',
+                },
+                {
+                    title: 'Whether studs are fixed properly',
+                    key: 'studsFixedProperly',
+                },
+                {
+                    title: 'Whether line and level checked properly',
+                    key: 'lineAndLevelChecked',
+                },
+                {
+                    title: 'Whether the spacing is as per the specification',
+                    key: 'spacingAsPerSpecification',
+                },
+                {
+                    title: 'Whether items are cleaned and visible properly',
+                    key: 'itemsCleanedVisible',
+                },
+            ];
+
+            return (
+                <View>
+                    {fixingOfRoadStudsProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={fixingOfRoadStudsData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setFixingOfRoadStudsData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Number of Road Studs Installed"
+                        value={fixingOfRoadStudsData.roadStudsInstalled}
+                        onChange={(value: any) =>
+                            setFixingOfRoadStudsData(prevData => ({
+                                ...prevData,
+                                roadStudsInstalled: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <Input
+                        label="Total Length of Road Covered (in Km)"
+                        value={fixingOfRoadStudsData.totalLengthCovered}
+                        onChange={(value: any) =>
+                            setFixingOfRoadStudsData(prevData => ({
+                                ...prevData,
+                                totalLengthCovered: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.FIXING_OF_ROAD_DELINEATORS:
+            const fixingOfRoadDelineatorsProperties = [
+                { title: 'Source Material Approved', key: 'sourceMaterialApproved' },
+                { title: 'Drawing Approved', key: 'drawingApproved' },
+                {
+                    title: 'Shape and Size as per Approved Drawing',
+                    key: 'shapeSizeAsPerDrawing',
+                },
+                {
+                    title: 'Delineators Fixed Properly',
+                    key: 'delineatorsFixedProperly',
+                },
+                { title: 'Line and Level Checked Properly', key: 'lineLevelChecked' },
+                {
+                    title: 'Spacing Between Delineators as per Specifications',
+                    key: 'spacingBetweenDelineators',
+                },
+            ];
+            return (
+                <View>
+                    {fixingOfRoadDelineatorsProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={fixingOfRoadDelineatorsData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setFixingOfRoadDelineatorsData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Nos of Delineators Installed"
+                        value={fixingOfRoadDelineatorsData.nosOfDelineatorsInstalled}
+                        onChange={(value: any) =>
+                            setFixingOfRoadDelineatorsData(prevData => ({
+                                ...prevData,
+                                nosOfDelineatorsInstalled: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <Input
+                        label="Total Length the Road Covered in Km"
+                        value={fixingOfRoadDelineatorsData.totalLengthRoadCovered}
+                        onChange={(value: any) =>
+                            setFixingOfRoadDelineatorsData(prevData => ({
+                                ...prevData,
+                                totalLengthRoadCovered: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.FIXING_OF_OBJECT_MARKERS:
+            const fixingOfObjectMarkersProperties = [
+                {
+                    title: 'Whether the source material approved',
+                    key: 'sourceMaterialApproved',
+                },
+                { title: 'Whether the drawing approved', key: 'drawingApproved' },
+                {
+                    title: 'Whether the shape and size as per approved drawing',
+                    key: 'shapeSizeApproved',
+                },
+                {
+                    title: 'Whether the markers fixed properly?',
+                    key: 'markersFixedProperly',
+                },
+                {
+                    title: 'Whether line and levels checked properly',
+                    key: 'lineLevelsChecked',
+                },
+                {
+                    title: 'Whether items are cleaned and visible properly',
+                    key: 'itemsCleanedVisible',
+                },
+            ];
+
+            return (
+                <View>
+                    {fixingOfObjectMarkersProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={fixingOfObjectMarkersData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setFixingOfObjectMarkersData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total no. of markers installed"
+                        value={fixingOfObjectMarkersData.totalMarkersInstalled}
+                        onChange={(value: any) =>
+                            setFixingOfObjectMarkersData(prevData => ({
+                                ...prevData,
+                                totalMarkersInstalled: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+
+                    <Input
+                        label="Total length of highway covered in Km"
+                        value={fixingOfObjectMarkersData.totalLengthCoveredKm}
+                        onChange={(value: any) =>
+                            setFixingOfObjectMarkersData(prevData => ({
+                                ...prevData,
+                                totalLengthCoveredKm: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.FIXING_OF_NOISE_BARRIER:
+            const fixingOfNoiseBarrierProperties = [
+                {
+                    title: 'Whether the source material approved',
+                    key: 'sourceMaterialApproved',
+                },
+                { title: 'Whether the drawing approved', key: 'drawingApproved' },
+                {
+                    title: 'Whether the shape and size as per approved drawing',
+                    key: 'shapeSizeApproved',
+                },
+                {
+                    title: 'Whether the posts fixed at crash barrier properly',
+                    key: 'postsFixedProperly',
+                },
+                {
+                    title: 'Whether posts are in proper line and level',
+                    key: 'postsLineLevelChecked',
+                },
+                {
+                    title:
+                        'Whether there is gap left between crash barrier and noise barrier',
+                    key: 'gapBetweenCrashAndNoiseBarrier',
+                },
+                {
+                    title: 'Whether the frame fixed tightly with posts',
+                    key: 'frameFixedTightly',
+                },
+            ];
+
+            return (
+                <View>
+                    {fixingOfNoiseBarrierProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={fixingOfNoiseBarrierData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setFixingOfNoiseBarrierData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Nos of noise barrier panels installed"
+                        value={fixingOfNoiseBarrierData.totalNoiseBarrierPanelsInstalled}
+                        onChange={(value: any) =>
+                            setFixingOfNoiseBarrierData(prevData => ({
+                                ...prevData,
+                                totalNoiseBarrierPanelsInstalled: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+
+                    <Input
+                        label="Total length of noise barrier fixed at crash barrier in RM"
+                        value={fixingOfNoiseBarrierData.totalLengthNoiseBarrierFixedRM}
+                        onChange={(value: any) =>
+                            setFixingOfNoiseBarrierData(prevData => ({
+                                ...prevData,
+                                totalLengthNoiseBarrierFixedRM: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.FIXING_OF_LED_TRAFFIC_BLINKERS:
+            const fixingOfLEDTrafficBlinkersProperties = [
+                {
+                    title: 'Whether the source material approved',
+                    key: 'sourceMaterialApproved',
+                },
+                { title: 'Whether the drawing approved', key: 'drawingApproved' },
+                {
+                    title: 'Whether the shape and size as per approved drawing',
+                    key: 'shapeSizeApproved',
+                },
+                {
+                    title: 'Whether the items are in working condition',
+                    key: 'workingCondition',
+                },
+                {
+                    title: 'Whether items are fixed properly',
+                    key: 'itemsFixedProperly',
+                },
+                {
+                    title: 'Whether line and level checked properly',
+                    key: 'lineLevelChecked',
+                },
+                {
+                    title: 'Whether items are cleaned and visible properly',
+                    key: 'itemsCleanedVisible',
+                },
+            ];
+
+            return (
+                <View>
+                    {fixingOfLEDTrafficBlinkersProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={fixingOfLEDTrafficBlinkersData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setFixingOfLEDTrafficBlinkersData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total no. of blinkers installed"
+                        value={fixingOfLEDTrafficBlinkersData.totalBlinkersInstalled}
+                        onChange={(value: any) =>
+                            setFixingOfLEDTrafficBlinkersData(prevData => ({
+                                ...prevData,
+                                totalBlinkersInstalled: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+
+                    <Input
+                        label="Total length of highway covered in Km"
+                        value={fixingOfLEDTrafficBlinkersData.totalHighwayLengthCovered}
+                        onChange={(value: any) =>
+                            setFixingOfLEDTrafficBlinkersData(prevData => ({
+                                ...prevData,
+                                totalHighwayLengthCovered: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.FIXING_OF_HAZARD_MARKERS:
+            const fixingOfHazardMarkersProperties = [
+                {
+                    title: 'Whether the source material approved',
+                    key: 'sourceMaterialApproved',
+                },
+                { title: 'Whether the drawing approved', key: 'drawingApproved' },
+                {
+                    title: 'Whether the shape and size as per approved drawings',
+                    key: 'shapeSizeApproved',
+                },
+                {
+                    title: 'Whether the markers fixed properly?',
+                    key: 'markersFixedProperly',
+                },
+                { title: 'Whether line and level checked', key: 'lineLevelsChecked' },
+                {
+                    title: 'Whether items are cleaned and visible properly',
+                    key: 'itemsCleanedVisible',
+                },
+            ];
+
+            return (
+                <View>
+                    {fixingOfHazardMarkersProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={fixingOfHazardMarkersData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setFixingOfHazardMarkersData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total no. of hazard markers installed"
+                        value={fixingOfHazardMarkersData.totalMarkersInstalled}
+                        onChange={(value: any) =>
+                            setFixingOfHazardMarkersData(prevData => ({
+                                ...prevData,
+                                totalMarkersInstalled: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+
+                    <Input
+                        label="Total length of highway covered in Km"
+                        value={fixingOfHazardMarkersData.totalLengthCoveredKm}
+                        onChange={(value: any) =>
+                            setFixingOfHazardMarkersData(prevData => ({
+                                ...prevData,
+                                totalLengthCoveredKm: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.FIXING_OF_FLEXIBLE_MEDIAN_MARKERS:
+            const fixingOfFlexibleMedianMarkersProperties = [
+                {
+                    title: 'Whether the source material approved',
+                    key: 'sourceMaterialApproved',
+                },
+                { title: 'Whether the drawing approved', key: 'drawingApproved' },
+                {
+                    title: 'Whether the shape and size as per approved drawing',
+                    key: 'shapeSizeApproved',
+                },
+                {
+                    title: 'Whether the flexible median marker fixed properly',
+                    key: 'markersFixedProperly',
+                },
+                {
+                    title: 'Whether line and level checked properly',
+                    key: 'lineLevelsChecked',
+                },
+                {
+                    title: 'Whether the spacing is as per specifications',
+                    key: 'spacingAsPerSpecifications',
+                },
+                {
+                    title: 'Whether items are cleaned and visible properly',
+                    key: 'itemsCleanedVisible',
+                },
+            ];
+
+            return (
+                <View>
+                    {fixingOfFlexibleMedianMarkersProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={fixingOfFlexibleMedianMarkersData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setFixingOfFlexibleMedianMarkersData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Nos of flexible median marker installed"
+                        value={fixingOfFlexibleMedianMarkersData.totalMarkersInstalled}
+                        onChange={(value: any) =>
+                            setFixingOfFlexibleMedianMarkersData(prevData => ({
+                                ...prevData,
+                                totalMarkersInstalled: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+
+                    <Input
+                        label="Total length of the road covered in Km"
+                        value={fixingOfFlexibleMedianMarkersData.totalLengthCoveredKm}
+                        onChange={(value: any) =>
+                            setFixingOfFlexibleMedianMarkersData(prevData => ({
+                                ...prevData,
+                                totalLengthCoveredKm: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.FIXING_OF_CONVEX_MIRRORS:
+            const fixingOfConvexMirrorsProperties = [
+                {
+                    title: 'Whether the source material approved',
+                    key: 'sourceMaterialApproved',
+                },
+                { title: 'Whether the drawing approved', key: 'drawingApproved' },
+                {
+                    title: 'Whether the shape and size as per approved drawing',
+                    key: 'shapeSizeApproved',
+                },
+                {
+                    title: 'Whether items are in working condition',
+                    key: 'workingCondition',
+                },
+                {
+                    title: 'Whether mirrors fixed properly at proper location',
+                    key: 'mirrorsFixedProperly',
+                },
+                {
+                    title: 'Whether line, level and angle checked properly',
+                    key: 'lineLevelAngleChecked',
+                },
+                {
+                    title: 'Whether items are clean and visible properly',
+                    key: 'itemsCleanVisible',
+                },
+            ];
+
+            return (
+                <View>
+                    {fixingOfConvexMirrorsProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={fixingOfConvexMirrorsData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setFixingOfConvexMirrorsData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total no. of mirrors installed"
+                        value={fixingOfConvexMirrorsData.totalMirrorsInstalled}
+                        onChange={(value: any) =>
+                            setFixingOfConvexMirrorsData(prevData => ({
+                                ...prevData,
+                                totalMirrorsInstalled: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+
+                    <Input
+                        label="Total length of highway covered in Km"
+                        value={fixingOfConvexMirrorsData.totalLengthCoveredKm}
+                        onChange={(value: any) =>
+                            setFixingOfConvexMirrorsData(prevData => ({
+                                ...prevData,
+                                totalLengthCoveredKm: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.FIXING_OF_ANTIGLARES:
+            const fixingOfAntiglaresProperties = [
+                {
+                    title: 'Whether the source material approved',
+                    key: 'sourceMaterialApproved',
+                },
+                { title: 'Whether the drawing approved', key: 'drawingApproved' },
+                {
+                    title: 'Whether the shape and size as per approved drawing',
+                    key: 'shapeSizeApproved',
+                },
+                {
+                    title: 'Whether items are fixed properly',
+                    key: 'itemsFixedProperly',
+                },
+                { title: 'Whether line and level checked', key: 'lineLevelsChecked' },
+                {
+                    title: 'Whether the spacing are as per specifications',
+                    key: 'spacingAsPerSpecifications',
+                },
+                {
+                    title: 'Whether items are clean and visible properly',
+                    key: 'itemsCleanVisible',
+                },
+            ];
+
+            return (
+                <View>
+                    {fixingOfAntiglaresProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={fixingOfAntiglaresData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setFixingOfAntiglaresData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total Nos of Antiglares installed"
+                        value={fixingOfAntiglaresData.totalAntiglaresInstalled}
+                        onChange={(value: any) =>
+                            setFixingOfAntiglaresData(prevData => ({
+                                ...prevData,
+                                totalAntiglaresInstalled: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+
+                    <Input
+                        label="Total length of the road covered in Km"
+                        value={fixingOfAntiglaresData.totalLengthCoveredKm}
+                        onChange={(value: any) =>
+                            setFixingOfAntiglaresData(prevData => ({
+                                ...prevData,
+                                totalLengthCoveredKm: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.ERECTION_OF_POLES:
+            const erectionOfPolesProperties = [
+                {
+                    title: 'Whether the drawings approved or not',
+                    key: 'drawingsApproved',
+                },
+                { title: 'Whether the source approved or not', key: 'sourceApproved' },
+                {
+                    title:
+                        'Whether the factory inspection done and dispatch clearance obtained',
+                    key: 'factoryInspectionDone',
+                },
+                {
+                    title:
+                        'Whether foundations are ready and concrete has achieved the desired strength',
+                    key: 'foundationsReady',
+                },
+                {
+                    title:
+                        'All the poles are erected properly with alignment as per drawings',
+                    key: 'polesAlignedProperly',
+                },
+                {
+                    title: 'All the nut bolts are tightened and checked properly',
+                    key: 'nutBoltsTightened',
+                },
+            ];
+
+            return (
+                <View>
+                    {erectionOfPolesProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={erectionOfPolesData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setErectionOfPolesData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total qty of poles erected"
+                        value={erectionOfPolesData.totalPolesErected}
+                        onChange={(value: any) =>
+                            setErectionOfPolesData(prevData => ({
+                                ...prevData,
+                                totalPolesErected: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <Input
+                        label="Total length of highway covered in Km"
+                        value={erectionOfPolesData.totalHighwayLengthCovered}
+                        onChange={(value: any) =>
+                            setErectionOfPolesData(prevData => ({
+                                ...prevData,
+                                totalHighwayLengthCovered: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.FIXING_OF_ARMS:
+            const fixingOfArmsProperties = [
+                {
+                    title: 'Whether the drawings approved or not',
+                    key: 'drawingsApproved',
+                },
+                { title: 'Whether the source approved or not', key: 'sourceApproved' },
+                {
+                    title:
+                        'Whether the factory inspection done and dispatch clearance obtained',
+                    key: 'factoryInspectionDone',
+                },
+                {
+                    title:
+                        'All the arms are fixed properly with alignment as per drawings',
+                    key: 'armsFixedProperly',
+                },
+                {
+                    title: 'All the nut bolts are tightened and checked properly',
+                    key: 'nutsBoltsTightened',
+                },
+            ];
+
+            return (
+                <View>
+                    {fixingOfArmsProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={fixingOfArmsData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setFixingOfArmsData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total qty of arms erected in no."
+                        value={fixingOfArmsData.totalQtyArmsErected}
+                        onChange={(value: any) =>
+                            setFixingOfArmsData(prevData => ({
+                                ...prevData,
+                                totalQtyArmsErected: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <Input
+                        label="Total length of highway covered in Km"
+                        value={fixingOfArmsData.totalHighwayLengthCoveredKm}
+                        onChange={(value: any) =>
+                            setFixingOfArmsData(prevData => ({
+                                ...prevData,
+                                totalHighwayLengthCoveredKm: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.INSTALLATION_OF_LED_LIGHTS:
+            const installationOfLEDLightsProperties = [
+                {
+                    title: 'Whether the drawings approved or not',
+                    key: 'drawingsApproved',
+                },
+                { title: 'Whether the source approved or not', key: 'sourceApproved' },
+                {
+                    title:
+                        'Whether the factory inspection done and dispatch clearance obtained',
+                    key: 'factoryInspectionDone',
+                },
+                {
+                    title: 'All the lights are tested before installation',
+                    key: 'lightsTestedBeforeInstallation',
+                },
+                { title: 'All the installed properly', key: 'lightsInstalledProperly' },
+            ];
+
+            return (
+                <View>
+                    {installationOfLEDLightsProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={installationOfLEDLightsData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setInstallationOfLEDLightsData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total qty of lights installed"
+                        value={installationOfLEDLightsData.totalQtyOfLightsInstalled}
+                        onChange={(value: any) =>
+                            setInstallationOfLEDLightsData(prevData => ({
+                                ...prevData,
+                                totalQtyOfLightsInstalled: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <Input
+                        label="Total length of highway covered in Km"
+                        value={installationOfLEDLightsData.totalLengthOfHighwayCoveredKm}
+                        onChange={(value: any) =>
+                            setInstallationOfLEDLightsData(prevData => ({
+                                ...prevData,
+                                totalLengthOfHighwayCoveredKm: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.LAYING_OF_FLEXIBLE_CABLE:
+            const layingOfFlexibleCableProperties = [
+                {
+                    title: 'Whether the drawings approved or not',
+                    key: 'drawingsApproved',
+                },
+                { title: 'Whether the source approved or not', key: 'sourceApproved' },
+                {
+                    title:
+                        'Whether the factory inspection done and dispatch clearance obtained',
+                    key: 'factoryInspectionDone',
+                },
+                {
+                    title: 'Whether the cable have been laid properly',
+                    key: 'cableLaidProperly',
+                },
+                {
+                    title:
+                        'Whether all the joints are made properly and junction boxes are as per specifications',
+                    key: 'jointsMadeProperly',
+                },
+                {
+                    title: 'Whether the end points are terminated properly',
+                    key: 'endpointsTerminatedProperly',
+                },
+                {
+                    title: 'Whether proper testing done and successful',
+                    key: 'testingSuccessful',
+                },
+            ];
+
+            return (
+                <View>
+                    {layingOfFlexibleCableProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={layingOfFlexibleCableData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setLayingOfFlexibleCableData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total length of cable laid in RM"
+                        value={layingOfFlexibleCableData.totalCableLengthRM}
+                        onChange={(value: any) =>
+                            setLayingOfFlexibleCableData(prevData => ({
+                                ...prevData,
+                                totalCableLengthRM: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <Input
+                        label="Total length of highway covered in Km"
+                        value={layingOfFlexibleCableData.totalHighwayLengthKm}
+                        onChange={(value: any) =>
+                            setLayingOfFlexibleCableData(prevData => ({
+                                ...prevData,
+                                totalHighwayLengthKm: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.LAYING_OF_LT_CABLE:
+            const layingOfLTCableProperties = [
+                {
+                    title: 'Whether the drawings approved or not',
+                    key: 'drawingsApproved',
+                },
+                { title: 'Whether the source approved or not', key: 'sourceApproved' },
+                {
+                    title:
+                        'Whether the factory inspection done and dispatch clearance obtained',
+                    key: 'factoryInspectionDone',
+                },
+                {
+                    title: 'Whether the cable have been laid properly',
+                    key: 'cableLaidProperly',
+                },
+                {
+                    title:
+                        'Whether all the joints are made properly as per the specifications or not',
+                    key: 'jointsMadeProperly',
+                },
+                {
+                    title: 'Whether the end points are terminated properly',
+                    key: 'endPointsTerminated',
+                },
+                {
+                    title: 'Whether proper testing done and successful',
+                    key: 'properTestingDone',
+                },
+            ];
+
+            return (
+                <View>
+                    {layingOfLTCableProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={layingOfLTCableData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setLayingOfLTCableData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total length of cable laid in RM"
+                        value={layingOfLTCableData.totalCableLengthRM}
+                        onChange={(value: any) =>
+                            setLayingOfLTCableData(prevData => ({
+                                ...prevData,
+                                totalCableLengthRM: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <Input
+                        label="Total length of highway covered in Km"
+                        value={layingOfLTCableData.totalHighwayLengthKm}
+                        onChange={(value: any) =>
+                            setLayingOfLTCableData(prevData => ({
+                                ...prevData,
+                                totalHighwayLengthKm: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.FIXING_OF_STONE:
+            const fixingOfStoneProperties = [
+                {
+                    title: 'Whether the source material approved',
+                    key: 'sourceMaterialApproved',
+                },
+                { title: 'Whether the drawing approved', key: 'drawingApproved' },
+                {
+                    title: 'Whether the shape and size as per approved drawing',
+                    key: 'shapeSizeApproved',
+                },
+                {
+                    title: 'Whether the stones are fixed properly',
+                    key: 'stonesFixedProperly',
+                },
+                {
+                    title:
+                        'Whether the project number, Terminal station & kilometrage etc. are mentioned',
+                    key: 'projectDetailsCorrect',
+                },
+                {
+                    title: 'Whether the items are properly cleaned and visible',
+                    key: 'itemsCleanedVisible',
+                },
+            ];
+
+            return (
+                <View>
+                    {fixingOfStoneProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={fixingOfStoneData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setFixingOfStoneData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total no. of stones installed"
+                        value={fixingOfStoneData.totalStonesInstalled}
+                        onChange={(value: any) =>
+                            setFixingOfStoneData(prevData => ({
+                                ...prevData,
+                                totalStonesInstalled: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <Input
+                        label="Total length of road covered in Km"
+                        value={fixingOfStoneData.totalLengthCoveredKm}
+                        onChange={(value: any) =>
+                            setFixingOfStoneData(prevData => ({
+                                ...prevData,
+                                totalLengthCoveredKm: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.PLASTERING:
+            const plasteringProperties = [
+                {
+                    title: 'Whether the drawings approved or not',
+                    key: 'drawingsApproved',
+                },
+                {
+                    title: 'Whether the cement source approved or not',
+                    key: 'cementSourceApproved',
+                },
+                {
+                    title:
+                        'Whether the source of other materials such as sand, water etc.',
+                    key: 'otherMaterialsSourceApproved',
+                },
+                {
+                    title:
+                        'Whether the plaster has been made in the proportions as per the specifications',
+                    key: 'proportionsAsPerSpecs',
+                },
+                {
+                    title:
+                        'Whether the thickness of plaster has been done as per the approved drawings',
+                    key: 'thicknessAsPerDrawings',
+                },
+                {
+                    title: 'Whether the surface finish is proper and uniform',
+                    key: 'surfaceFinishProper',
+                },
+            ];
+
+            return (
+                <View>
+                    {plasteringProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={plasteringData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setPlasteringData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total plastering work done in sqft"
+                        value={plasteringData.totalPlasteringWorkSqft}
+                        onChange={(value: any) =>
+                            setPlasteringData(prevData => ({
+                                ...prevData,
+                                totalPlasteringWorkSqft: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.PUTTY:
+            const puttyProperties = [
+                {
+                    title: 'Whether the drawings approved or not',
+                    key: 'drawingsApproved',
+                },
+                {
+                    title: 'Whether the material source approved or not',
+                    key: 'materialSourceApproved',
+                },
+                {
+                    title:
+                        'Whether the plastered surface is dried properly and ready for putty',
+                    key: 'surfaceDriedReadyForPutty',
+                },
+                {
+                    title:
+                        'Whether the thickness of putty has been done as per the approved drawings',
+                    key: 'thicknessAsPerDrawing',
+                },
+                {
+                    title: 'Whether the surface finish is proper and uniform',
+                    key: 'surfaceFinishUniform',
+                },
+            ];
+
+            return (
+                <View>
+                    {puttyProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={puttyData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setPuttyData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total putty work done in sqft"
+                        value={puttyData.totalPuttyWorkSqft}
+                        onChange={(value: any) =>
+                            setPuttyData(prevData => ({
+                                ...prevData,
+                                totalPuttyWorkSqft: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.HVAC_WORK:
+            const hvacWorkProperties = [
+                {
+                    title: 'Whether the drawings approved or not',
+                    key: 'drawingsApproved',
+                },
+                {
+                    title: 'Whether the material source approved or not',
+                    key: 'materialSourceApproved',
+                },
+                {
+                    title: 'Whether inspection done and dispatch clearance obtained',
+                    key: 'inspectionAndDispatchCleared',
+                },
+                {
+                    title: 'Whether the site is ready prior to HVAC work',
+                    key: 'siteReadyForHVAC',
+                },
+                {
+                    title: 'Whether ducting is done as per the approved drawings',
+                    key: 'ductingAsPerDrawings',
+                },
+                {
+                    title:
+                        'Whether all the connection points are as per the approved drawings',
+                    key: 'connectionPointsAsPerDrawings',
+                },
+                {
+                    title: 'Whether AC fittings etc done as per the approved drawings',
+                    key: 'acFittingsAsPerDrawings',
+                },
+                {
+                    title:
+                        'Whether the entire system is tested properly and electrical certificate obtained',
+                    key: 'systemTestedAndCertified',
+                },
+            ];
+
+            return (
+                <View>
+                    {hvacWorkProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={hvacWorkData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setHvacWorkData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total sqft area covered under HVAC work"
+                        value={hvacWorkData.totalSqftAreaCovered}
+                        onChange={(value: any) =>
+                            setHvacWorkData(prevData => ({
+                                ...prevData,
+                                totalSqftAreaCovered: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.CEILING_WORK:
+            const ceilingWorkProperties = [
+                {
+                    title: 'Whether the drawings approved or not',
+                    key: 'drawingsApproved',
+                },
+                {
+                    title: 'Whether the material source approved or not',
+                    key: 'materialSourceApproved',
+                },
+                {
+                    title:
+                        'Whether material received at site is as per the specifications and not damaged',
+                    key: 'materialReceivedAsPerSpecifications',
+                },
+                {
+                    title: 'Whether the site is ready for ceiling work',
+                    key: 'siteReadyForCeilingWork',
+                },
+                {
+                    title:
+                        'Whether the finishing work of ceiling is proper and uniform',
+                    key: 'finishingWorkUniform',
+                },
+                {
+                    title:
+                        'Whether the ceiling work completed to the satisfaction of the site in charge',
+                    key: 'ceilingWorkCompletedToSatisfaction',
+                },
+            ];
+
+            return (
+                <View>
+                    {ceilingWorkProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={ceilingWorkData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setCeilingWorkData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total sqft area of ceiling work completed"
+                        value={ceilingWorkData.totalSqftAreaCompleted}
+                        onChange={(value: any) =>
+                            setCeilingWorkData(prevData => ({
+                                ...prevData,
+                                totalSqftAreaCompleted: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.FURNITURE_WORK:
+            const furnitureWorkProperties = [
+                {
+                    title: 'Whether the drawings approved or not',
+                    key: 'drawingsApproved',
+                },
+                {
+                    title: 'Whether the material source approved or not',
+                    key: 'materialSourceApproved',
+                },
+                {
+                    title:
+                        'Whether material received at site is as per the specifications and not damaged',
+                    key: 'materialReceivedAsPerSpecs',
+                },
+                {
+                    title: 'Whether the site is ready for Furniture work',
+                    key: 'siteReadyForFurnitureWork',
+                },
+                {
+                    title: 'Whether the finishing furniture work is proper and uniform',
+                    key: 'finishingFurnitureProper',
+                },
+                {
+                    title:
+                        'Whether the furniture work completed to the satisfaction of the site in charge',
+                    key: 'workSatisfactoryToSiteInCharge',
+                },
+            ];
+
+            return (
+                <View>
+                    {furnitureWorkProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={furnitureWorkData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setFurnitureWorkData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.DOOR_WORKS:
+            const doorWorksProperties = [
+                {
+                    title: 'Whether the drawings approved or not',
+                    key: 'drawingsApproved',
+                },
+                {
+                    title: 'Whether the material source approved or not',
+                    key: 'materialSourceApproved',
+                },
+                {
+                    title:
+                        'Whether material received at site is as per the specifications and not damaged',
+                    key: 'materialReceivedAsPerSpec',
+                },
+                {
+                    title: 'Whether the site is ready for Door work',
+                    key: 'siteReadyForDoorWork',
+                },
+                {
+                    title: 'Whether the finishing work is proper and uniform',
+                    key: 'finishingWorkProper',
+                },
+                {
+                    title:
+                        'Whether the work completed to the satisfaction of the site in charge',
+                    key: 'workSatisfactionAchieved',
+                },
+            ];
+
+            return (
+                <View>
+                    {doorWorksProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={doorWorksData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setDoorWorksData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.WINDOW_WORKS:
+            const windowWorksProperties = [
+                {
+                    title: 'Whether the drawings approved or not',
+                    key: 'drawingsApproved',
+                },
+                {
+                    title: 'Whether the material source approved or not',
+                    key: 'materialSourceApproved',
+                },
+                {
+                    title:
+                        'Whether material received at site is as per the specifications and not damaged',
+                    key: 'materialReceivedAsPerSpecs',
+                },
+                {
+                    title: 'Whether the site is ready for Window work',
+                    key: 'siteReadyForWindowWork',
+                },
+                {
+                    title: 'Whether the finishing work is proper and uniform',
+                    key: 'finishingWorkProper',
+                },
+                {
+                    title:
+                        'Whether the work completed to the satisfaction of the site in charge',
+                    key: 'workCompletedToSatisfaction',
+                },
+            ];
+
+            return (
+                <View>
+                    {windowWorksProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={windowWorksData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setWindowWorksData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.GLASS_WORKS:
+            const glassWorksProperties = [
+                {
+                    title: 'Whether the drawings approved or not',
+                    key: 'drawingsApproved',
+                },
+                {
+                    title: 'Whether the material source approved or not',
+                    key: 'materialSourceApproved',
+                },
+                {
+                    title:
+                        'Whether material received at site is as per the specifications and not damaged',
+                    key: 'materialReceivedAsPerSpecs',
+                },
+                {
+                    title:
+                        'Whether the quality and thickness of the glass is as per the desired specifications',
+                    key: 'glassQualityAndThicknessApproved',
+                },
+                {
+                    title: 'Whether the site is ready for Glass work',
+                    key: 'siteReadyForGlassWork',
+                },
+                {
+                    title: 'Whether the finishing work is proper and uniform',
+                    key: 'finishingWorkProper',
+                },
+                {
+                    title:
+                        'Whether the work completed to the satisfaction of the site in charge',
+                    key: 'workCompletedToSiteInChargeSatisfaction',
+                },
+            ];
+
+            return (
+                <View>
+                    {glassWorksProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={glassWorksData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setGlassWorksData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total glass work completed in sqft"
+                        value={glassWorksData.totalGlassWorkCompletedSqft}
+                        onChange={(value: any) =>
+                            setGlassWorksData(prevData => ({
+                                ...prevData,
+                                totalGlassWorkCompletedSqft: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.ELECTRICAL_WORK:
+            const electricalWorkProperties = [
+                {
+                    title: 'Whether the drawings approved or not',
+                    key: 'drawingsApproved',
+                },
+                {
+                    title: 'Whether the material source approved or not',
+                    key: 'materialSourceApproved',
+                },
+                {
+                    title:
+                        'Whether material received at site is as per the specifications and not damaged',
+                    key: 'materialReceived',
+                },
+                {
+                    title: 'Whether the site is ready for electrical work',
+                    key: 'siteReadyForWork',
+                },
+                {
+                    title: 'All safety arrangements are in place during the work',
+                    key: 'safetyArrangementsInPlace',
+                },
+                {
+                    title:
+                        'Whether the total no. of input/output points are given as per the drawings and Engineer’s decision',
+                    key: 'inputOutputPointsCorrect',
+                },
+                {
+                    title:
+                        'Whether the work completed to the satisfaction of the site in charge',
+                    key: 'workCompletedSatisfactorily',
+                },
+                {
+                    title:
+                        'Whether the work has been tested properly and certified by an authorized contractor',
+                    key: 'workTestedAndCertified',
+                },
+                {
+                    title:
+                        'Whether the copy of approved layout drawings placed in the building for future reference',
+                    key: 'layoutDrawingsPlacedForReference',
+                },
+            ];
+
+            return (
+                <View>
+                    {electricalWorkProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={electricalWorkData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setElectricalWorkData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+
+                    <Input
+                        label="Total sqft area of the building completed"
+                        value={electricalWorkData.totalSqftCompleted}
+                        onChange={(value: any) =>
+                            setElectricalWorkData(prevData => ({
+                                ...prevData,
+                                totalSqftCompleted: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.PLUMBING_WORK:
+            const plumbingWorkProperties = [
+                {
+                    title: 'Whether the drawings approved or not',
+                    key: 'drawingsApproved',
+                },
+                {
+                    title: 'Whether the material source approved or not',
+                    key: 'materialSourceApproved',
+                },
+                {
+                    title:
+                        'Whether material received at site is as per the specifications and not damaged',
+                    key: 'materialReceived',
+                },
+                {
+                    title: 'Whether the site is ready for Plumbing work',
+                    key: 'siteReady',
+                },
+                {
+                    title: 'All safety arrangements are in place during the work',
+                    key: 'safetyArrangementsInPlace',
+                },
+                {
+                    title:
+                        'Whether the total no. of input/ output points are given as per the drawings approved',
+                    key: 'inputOutputPointsGiven',
+                },
+                {
+                    title:
+                        'Whether the work completed to the satisfaction of the site in charge',
+                    key: 'workCompletedSatisfactorily',
+                },
+                {
+                    title: 'Whether the work has been tested properly',
+                    key: 'workTestedProperly',
+                },
+                {
+                    title:
+                        'Whether the copy of approved layout drawings placed in the building for future reference',
+                    key: 'approvedLayoutInBuilding',
+                },
+            ];
+
+            return (
+                <View>
+                    {plumbingWorkProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={plumbingWorkData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setPlumbingWorkData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total sqft area of the building completed"
+                        value={plumbingWorkData.totalSqftAreaCompleted}
+                        onChange={(value: any) =>
+                            setPlumbingWorkData(prevData => ({
+                                ...prevData,
+                                totalSqftAreaCompleted: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.FLOORING_WORK:
+            const flooringWorkProperties = [
+                {
+                    title: 'Whether the drawings approved or not',
+                    key: 'drawingsApproved',
+                },
+                {
+                    title: 'Whether the material source approved or not',
+                    key: 'materialSourceApproved',
+                },
+                {
+                    title:
+                        'Whether material received at site is as per the specifications and not damaged',
+                    key: 'materialReceivedAsPerSpecs',
+                },
+                {
+                    title: 'Whether the site is ready for flooring work',
+                    key: 'siteReadyForFlooring',
+                },
+                {
+                    title:
+                        'Whether the finishing work of flooring work is proper and uniform',
+                    key: 'finishingWorkProper',
+                },
+                {
+                    title:
+                        'Whether slope is properly checked and is as per the requirement',
+                    key: 'slopeCheckedAsRequired',
+                },
+                {
+                    title:
+                        'Whether the flooring work completed to the satisfaction of the site in charge',
+                    key: 'workCompletedToSatisfaction',
+                },
+            ];
+
+            return (
+                <View>
+                    {flooringWorkProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={flooringWorkData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setFlooringWorkData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total sqft area of flooring work completed"
+                        value={flooringWorkData.totalSqftAreaCompleted}
+                        onChange={(value: any) =>
+                            setFlooringWorkData(prevData => ({
+                                ...prevData,
+                                totalSqftAreaCompleted: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.EXCAVATION_OF_TRENCH:
+            const excavationProperties = [
+                {
+                    title: 'Whether the drawings approved or not',
+                    key: 'drawingsApproved',
+                },
+                {
+                    title: 'Whether the safety arrangements are in place',
+                    key: 'safetyArrangementsInPlace',
+                },
+                {
+                    title:
+                        'Whether the layout marked at site for ensuring the alignment',
+                    key: 'layoutMarked',
+                },
+                {
+                    title:
+                        'It has been ensured that there is no utility in the alignment',
+                    key: 'noUtilityInAlignment',
+                },
+                {
+                    title: 'Whether the depth and width are as per drawings',
+                    key: 'depthWidthAsPerDrawing',
+                },
+                {
+                    title: 'Whether the excavated area has been covered properly',
+                    key: 'areaCoveredProperly',
+                },
+            ];
+
+            return (
+                <View>
+                    {excavationProperties.map(property => (
+                        <DropdownPicker
+                            label={property.title}
+                            value={excavationOfTrenchData[property.key]}
+                            items={YES_NO_LIST}
+                            onChange={(value: any) =>
+                                setExcavationOfTrenchData(prev => ({
+                                    ...prev,
+                                    [property.key]: value,
+                                }))
+                            }
+                            isRequired={true}
+                        />
+                    ))}
+                    <Input
+                        label="Total length of trench excavated properly"
+                        value={excavationOfTrenchData.totalLengthExcavated}
+                        onChange={(value: any) =>
+                            setExcavationOfTrenchData(prev => ({
+                                ...prev,
+                                totalLengthExcavated: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <Input
+                        label="Total quantity of earth excavated"
+                        value={excavationOfTrenchData.totalQtyEarthExcavated}
+                        onChange={(value: any) =>
+                            setExcavationOfTrenchData(prev => ({
+                                ...prev,
+                                totalQtyEarthExcavated: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.LAYING_OF_DUCT:
+            const layingOfDuctProperties = [
+                {
+                    title: 'Whether the drawings approved or not',
+                    key: 'drawingsApproved',
+                },
+                {
+                    title: 'Whether the safety arrangements are in place',
+                    key: 'safetyArrangementsInPlace',
+                },
+                {
+                    title: 'Whether the source of material obtained',
+                    key: 'sourceMaterialObtained',
+                },
+                {
+                    title:
+                        'Whether material reached at site is not damaged and as per the design specifications',
+                    key: 'materialNotDamaged',
+                },
+                {
+                    title:
+                        'Whether the ducts laid properly in the trench with all the safety precautions',
+                    key: 'ductsLaidProperly',
+                },
+                {
+                    title: 'Whether all joints are completed properly',
+                    key: 'jointsCompletedProperly',
+                },
+            ];
+
+            return (
+                <View>
+                    {layingOfDuctProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={layingOfDuctData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setLayingOfDuctData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total length of duct laid in RM"
+                        value={layingOfDuctData.totalLengthOfDuctLaid}
+                        onChange={(value: any) =>
+                            setLayingOfDuctData(prevData => ({
+                                ...prevData,
+                                totalLengthOfDuctLaid: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.HDD_CROSSING:
+            const hddCrossingProperties = [
+                {
+                    title: 'Whether the drawings approved or not',
+                    key: 'drawingsApproved',
+                },
+                {
+                    title: 'Whether the safety arrangements are in place',
+                    key: 'safetyArrangementsInPlace',
+                },
+                {
+                    title:
+                        'Whether the layout marked at site for ensuring the alignment of the HDD crossing',
+                    key: 'layoutMarkedAtSite',
+                },
+                {
+                    title: 'Whether the route marking device available at site',
+                    key: 'routeMarkingDeviceAvailable',
+                },
+                {
+                    title:
+                        'Whether the depth and alignment is as per the approved drawings',
+                    key: 'depthAlignmentAsPerDrawings',
+                },
+                {
+                    title: 'Whether the excavated area has been covered properly',
+                    key: 'excavatedAreaCoveredProperly',
+                },
+                {
+                    title: 'Whether the duct/pipe pulled successfully',
+                    key: 'ductPipePulledSuccessfully',
+                },
+            ];
+
+            return (
+                <View>
+                    {hddCrossingProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={hddCrossingData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setHddCrossingData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total length of HDD crossing"
+                        value={hddCrossingData.totalLengthOfHddCrossing}
+                        onChange={(value: any) =>
+                            setHddCrossingData(prevData => ({
+                                ...prevData,
+                                totalLengthOfHddCrossing: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.CONSTRUCTION_OF_CHAMBER:
+            const constructionOfChamberProperties = [
+                {
+                    title: 'Are the latest "Good for Construction" drawings available',
+                    key: 'drawingsAvailable',
+                },
+                {
+                    title: 'Are the size and Class of bricks as per approved drawing',
+                    key: 'sizeClassOfBricksApproved',
+                },
+                {
+                    title: 'Are the required number of blocks available',
+                    key: 'requiredBlocksAvailable',
+                },
+                {
+                    title:
+                        'Has the hacking at contact surfaces of columns and beams been done',
+                    key: 'hackingDone',
+                },
+                {
+                    title: 'Has cement mortar slurry been applied and cured for 3 days',
+                    key: 'cementSlurryCured',
+                },
+                {
+                    title:
+                        'Have aluminium templates been used for door/window openings',
+                    key: 'aluminiumTemplatesUsed',
+                },
+                {
+                    title: 'Are the required tools available',
+                    key: 'requiredToolsAvailable',
+                },
+                {
+                    title: 'Are there any specific requirements from the client',
+                    key: 'specificClientRequirements',
+                },
+            ];
+
+            return (
+                <View>
+                    {constructionOfChamberProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={constructionOfChamberData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setConstructionOfChamberData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+
+                    <Input
+                        label="Total area where brick work is to be done (Sqm)"
+                        value={constructionOfChamberData.totalBrickworkAreaSqm}
+                        onChange={(value: any) =>
+                            setConstructionOfChamberData(prevData => ({
+                                ...prevData,
+                                totalBrickworkAreaSqm: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+
+                    <Input
+                        label="Total brick work in cum"
+                        value={constructionOfChamberData.totalBrickworkVolumeCum}
+                        onChange={(value: any) =>
+                            setConstructionOfChamberData(prevData => ({
+                                ...prevData,
+                                totalBrickworkVolumeCum: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.INSTALLATION_OF_EQUIPMENT:
+            const installationOfEquipmentProperties = [
+                {
+                    title: 'Whether the Drawings approved or not',
+                    key: 'drawingsApproved',
+                },
+                {
+                    title:
+                        'Whether the equipment inspected at site with factory clearance',
+                    key: 'equipmentInspected',
+                },
+                {
+                    title:
+                        'Is there any damage to the equipment? If yes, informed to the vendor',
+                    key: 'damageReportedToVendor',
+                },
+                {
+                    title: 'Whether factory inspection done and clearance obtained',
+                    key: 'factoryInspectionCleared',
+                },
+                {
+                    title: 'Is the foundation work ready for installation?',
+                    key: 'foundationWorkReady',
+                },
+                {
+                    title: 'Have concrete components achieved required strength?',
+                    key: 'foundationStrengthAchieved',
+                },
+                {
+                    title: 'Installation methodology approved?',
+                    key: 'installationMethodologyApproved',
+                },
+                {
+                    title: 'Are all safety arrangements in place?',
+                    key: 'safetyArrangementsInPlace',
+                },
+                {
+                    title: 'Is there sufficient machinery and manpower available?',
+                    key: 'sufficientMachineryManpower',
+                },
+                {
+                    title: 'Installation completed as planned?',
+                    key: 'installationCompletedAsPlanned',
+                },
+                {
+                    title: 'All manufacturer instructions followed?',
+                    key: 'manufacturerInstructionsComplied',
+                },
+            ];
+
+            return (
+                <View>
+                    {installationOfEquipmentProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={installationOfEquipmentData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setInstallationOfEquipmentData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total no. of equipment installed"
+                        value={installationOfEquipmentData.totalEquipmentInstalled}
+                        onChange={(value: any) =>
+                            setInstallationOfEquipmentData(prevData => ({
+                                ...prevData,
+                                totalEquipmentInstalled: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.INSTALLATION_OF_SOLAR_SYSTEM:
+            const installationOfSolarSystemProperties = [
+                {
+                    title: 'Whether the Drawings approved or not',
+                    key: 'drawingsApproved',
+                },
+                {
+                    title: 'Whether all equipment inspected at the factory',
+                    key: 'equipmentInspectedAtFactory',
+                },
+                {
+                    title: 'Any damage to equipment, informed to vendor',
+                    key: 'damageReportedToVendor',
+                },
+                {
+                    title: 'Factory inspection done, dispatch clearance obtained',
+                    key: 'factoryInspectionAndDispatchClearance',
+                },
+                {
+                    title: 'Installation methodology approved',
+                    key: 'installationMethodologyApproved',
+                },
+                {
+                    title: 'All safety arrangements in place prior to installation',
+                    key: 'safetyArrangementsInPlace',
+                },
+                {
+                    title: 'Sufficient machinery and manpower available',
+                    key: 'machineryAndManpowerAvailable',
+                },
+                {
+                    title: 'Installation completed as per methodology',
+                    key: 'installationCompleted',
+                },
+                {
+                    title: 'Manufacturer instructions complied during installation',
+                    key: 'manufacturerInstructionsComplied',
+                },
+            ];
+
+            return (
+                <View>
+                    {installationOfSolarSystemProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={installationOfSolarSystemData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setInstallationOfSolarSystemData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Number of Solar Systems Installed"
+                        value={installationOfSolarSystemData.totalSolarSystemsInstalled}
+                        onChange={(value: any) =>
+                            setInstallationOfSolarSystemData(prevData => ({
+                                ...prevData,
+                                totalSolarSystemsInstalled: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.INSTALLATION_OF_NETWORK_DEVICES:
+            const installationProperties = [
+                {
+                    title: 'Whether the Drawings approved or not',
+                    key: 'drawingsApproved',
+                },
+                {
+                    title: 'Whether the devices inspected at the factory',
+                    key: 'devicesInspected',
+                },
+                {
+                    title:
+                        'Is there any damage to any device? If yes, informed vendor?',
+                    key: 'damageReported',
+                },
+                {
+                    title: 'Installation methodology approved',
+                    key: 'methodologyApproved',
+                },
+                {
+                    title: 'All safety arrangements in place before installation?',
+                    key: 'safetyArrangementsInPlace',
+                },
+                {
+                    title: 'Sufficient machinery and manpower available at site?',
+                    key: 'machineryAndManpowerAvailable',
+                },
+                {
+                    title: 'Installation completed as per the approved methodology',
+                    key: 'installationCompleted',
+                },
+                {
+                    title: 'Manufacturer’s instructions complied during installation',
+                    key: 'instructionsComplied',
+                },
+            ];
+
+            return (
+                <View>
+                    {installationProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={installationOfNetworkDevicesData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setInstallationOfNetworkDevicesData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Number of Devices Installed"
+                        value={installationOfNetworkDevicesData.devicesInstalled}
+                        onChange={(value: any) =>
+                            setInstallationOfNetworkDevicesData(prevData => ({
+                                ...prevData,
+                                devicesInstalled: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.CONSTRUCTION_OF_FOUNDATION:
+            if (!foundationData || !foundationData.length) {
+                setFoundationData([
+                    {
+                        gradeOfConcrete: '',
+                        slumpValue: 0,
+                        concreteStartTime: '',
+                        concretePoured: 0,
+                        concreteFinishTime: '',
+                        totalFoundationCasted: 0,
+                        key: Guid.create(),
+                    },
+                ]);
+            }
+            const constructionOfFoundationProperties = [
+                {
+                    title: 'Whether the Drawings approved or not',
+                    key: 'drawingsApproved',
+                },
+                {
+                    title: 'Whether the pit excavated at the approved location',
+                    key: 'pitExcavatedAtApprovedLocation',
+                },
+                {
+                    title:
+                        'Whether the pits have been excavated as per the approved drawings',
+                    key: 'pitsExcavatedAsPerDrawings',
+                },
+                {
+                    title:
+                        'Whether the reinforcement has been placed properly as per the approved BBS',
+                    key: 'reinforcementPlacedProperly',
+                },
+                {
+                    title: 'Whether the formwork/shuttering checked properly',
+                    key: 'formworkCheckedProperly',
+                },
+            ];
+
+            return (
+                <View>
+                    {constructionOfFoundationProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={constructionOfFoundationData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setConstructionOfFoundationData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total weight of reinforcement in Kg per foundation"
+                        value={constructionOfFoundationData.totalWeightReinforcementKg}
+                        onChange={(value: any) =>
+                            setConstructionOfFoundationData(prevData => ({
+                                ...prevData,
+                                totalWeightReinforcementKg: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <ScrollView
+                        horizontal={true}
+                        showsHorizontalScrollIndicator={false}>
+                        <View>
+                            {renderFoundationHeadings(styles)}
+                            <FlatList
+                                data={foundationData}
+                                renderItem={renderItemFoundation}
+                                keyExtractor={item => item.key.toString()}
+                                style={{ zIndex: 10 }}
+                                automaticallyAdjustContentInsets={true}
+                                scrollEnabled={false}
+                            />
+                        </View>
+                    </ScrollView>
+                    <TouchableOpacity onPress={() => onAddComstructionOfFoundation()}>
+                        <Text>+ Add More</Text>
+                    </TouchableOpacity>
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.CASTING_OF_BALLAST:
+            if (!ballastData || !ballastData.length) {
+                setBallastData([
+                    {
+                        gradeOfConcrete: '',
+                        slumpValue: 0,
+                        concreteStartTime: '',
+                        concretePoured: 0,
+                        concreteFinishTime: '',
+                        totalBallastCasted: 0,
+                        key: Guid.create(),
+                    },
+                ]);
+            }
+
+            const castingOfBallastProperties = [
+                {
+                    title: 'Whether the Drawings approved or not',
+                    key: 'drawingsApproved',
+                },
+                {
+                    title: 'Whether the moulds are finished and ready for concreting',
+                    key: 'mouldsReady',
+                },
+                {
+                    title:
+                        'In case of reinforcement or mess in the ballast, the same has been tied in the mould properly',
+                    key: 'reinforcementTiedProperly',
+                },
+            ];
+
+            return (
+                <View>
+                    {castingOfBallastProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={castingOfBallastData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setCastingOfBallastData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total weight of reinforcement/mess in Kg per ballast"
+                        value={castingOfBallastData.totalReinforcementWeightKg}
+                        onChange={(value: any) =>
+                            setCastingOfBallastData(prevData => ({
+                                ...prevData,
+                                totalReinforcementWeightKg: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <ScrollView
+                        horizontal={true}
+                        showsHorizontalScrollIndicator={false}>
+                        <View>
+                            {renderBallastHeadings(styles)}
+                            <FlatList
+                                data={foundationData}
+                                renderItem={renderItemBallast}
+                                keyExtractor={item => item.key.toString()}
+                                style={{ zIndex: 10 }}
+                                automaticallyAdjustContentInsets={true}
+                                scrollEnabled={false}
+                            />
+                        </View>
+                    </ScrollView>
+                    <TouchableOpacity onPress={() => onAddBallastItem()}>
+                        <Text>+ Add More</Text>
+                    </TouchableOpacity>
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.SAND_LAYER:
+            const sandLayerProperties = [
+                { title: 'Whether the drawings approved', key: 'drawingsApproved' },
+                {
+                    title: 'Whether the safety arrangements are in place',
+                    key: 'safetyArrangementsInPlace',
+                },
+                {
+                    title: 'Whether the source of sand approved',
+                    key: 'sourceOfSandApproved',
+                },
+                {
+                    title:
+                        'Whether the thickness of sand layer laid is as per the approved drawings',
+                    key: 'thicknessAsPerDrawings',
+                },
+                {
+                    title: 'Whether the excavated area has been covered properly',
+                    key: 'excavatedAreaCovered',
+                },
+            ];
+
+            return (
+                <View>
+                    {sandLayerProperties.map(property => (
+                        <View style={{ flexDirection: 'column' }} key={property.key}>
+                            <DropdownPicker
+                                label={property.title}
+                                value={sandLayerData[property.key]}
+                                items={YES_NO_LIST}
+                                onChange={(value: any) =>
+                                    setSandLayerData(prevData => ({
+                                        ...prevData,
+                                        [property.key]: value,
+                                    }))
+                                }
+                                isRequired={true}
+                            />
+                        </View>
+                    ))}
+                    <Input
+                        label="Total length of trench covered by sand layer"
+                        value={sandLayerData.totalLengthTrenchCovered}
+                        onChange={(value: any) =>
+                            setSandLayerData(prevData => ({
+                                ...prevData,
+                                totalLengthTrenchCovered: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+
+                    <Input
+                        label="Total quantity of sand filled in cum"
+                        value={sandLayerData.totalQtySandFilled}
+                        onChange={(value: any) =>
+                            setSandLayerData(prevData => ({
+                                ...prevData,
+                                totalQtySandFilled: value,
+                            }))
+                        }
+                        isRequired={true}
+                    />
+                    <View>
+                        <CalendarPicker
+                            label="Date"
+                            value={rfiDate}
+                            onChange={date => setRFIDate(date)}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={rfiTime}
+                            onChange={time => setRFITime(time)}
+                        />
+                        <TextInput
+                            style={styles.commonInputFiels}
+                            placeholder="Recommendations"
+                            multiline={true}
+                            numberOfLines={4}
+                            blurOnSubmit={false}
+                            value={comments}
+                            onChangeText={text => setComments(text)}
+                        />
+                    </View>
+                </View>
+            );
+
+        case TASK_TYPES.LIFTING_LEFT:
+        case TASK_TYPES.LIFTING_YARD:
+        case TASK_TYPES.LIFTING_RIGHT:
+        case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
+            return (
+                <ScrollView showsHorizontalScrollIndicator={false}>
+                    <View style={styles.columnWiseData}>
+                        <Text style={styles.headerText}>
+                            Preparation of Area for Lifting at Stacking Yard
+                        </Text>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Area is hard barricaded with proper signages"
+                                value={liftingCombinedLRData.areaBarricaded}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting('areaBarricaded', value)
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Temporary lights for proper illumination of the erection area is available at night"
+                                value={liftingCombinedLRData.temporaryLights}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting('temporaryLights', value)
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Flag man/Marshal available"
+                                value={liftingCombinedLRData.flagManAvailable}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting('flagManAvailable', value)
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Methodology & Scheme for lifting and stacking is available at site"
+                                value={liftingCombinedLRData.liftingMethodology}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting('liftingMethodology', value)
+                                }
+                            />
+                        </View>
+                        <Text style={styles.headerText}>
+                            Tools and Tackles for Lifting at Stacking Yard
+                        </Text>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="De-shackles and slings of proper capacity and their test certificate by third party is available"
+                                value={liftingCombinedLRData.deshacklesTestCertificate}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting('deshacklesTestCertificate', value)
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Safety color code present on the de-shackles"
+                                value={liftingCombinedLRData.safetyColorCode}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting('safetyColorCode', value)
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Hydraulic jacks are in good condition with proper calibration certificates"
+                                value={liftingCombinedLRData.hydraulicJacksCondition}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting('hydraulicJacksCondition', value)
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Limit switch of lifting hoist is working properly"
+                                value={liftingCombinedLRData.hoistLimitSwitch}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting('hoistLimitSwitch', value)
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Cotter pin are placed in all lifting assembly"
+                                value={liftingCombinedLRData.cotterPinsPlaced}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting('cotterPinsPlaced', value)
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Macalloy Bars / pins for lifting of Wings in proper condition"
+                                value={liftingCombinedLRData.macalloyBarsCondition}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting('macalloyBarsCondition', value)
+                                }
+                            />
+                        </View>
+                        <Text style={styles.headerText}>
+                            Lifting of Segment at Stacking Yard
+                        </Text>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Work at height permit obtained from IE/concerned agency"
+                                value={liftingCombinedLRData.heightPermitObtained}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting('heightPermitObtained', value)
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="All Mac-alloy bars and wire rope assemblies have valid third-party test certificate"
+                                value={liftingCombinedLRData.macalloyBarsTestCertificate}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting(
+                                        'macalloyBarsTestCertificate',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Lifting sequence as per the approved methodology provided at site for counter"
+                                value={liftingCombinedLRData.liftingSequence}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting('liftingSequence', value)
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Lifting holes are in proper location as per approved drawing"
+                                value={liftingCombinedLRData.liftingHolesLocation}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting('liftingHolesLocation', value)
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Lifting arrangements are working properly"
+                                value={liftingCombinedLRData.liftingArrangementsWorking}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting(
+                                        'liftingArrangementsWorking',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Pre-stressing duct of segments are clear of any foreign materials"
+                                value={liftingCombinedLRData.preStressingDuctsClear}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting('preStressingDuctsClear', value)
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Comprehensive Strength of concrete of wings are gained as per the approved drawing"
+                                value={liftingCombinedLRData.concreteStrengthGained}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting('concreteStrengthGained', value)
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Slider trolley is in proper position"
+                                value={liftingCombinedLRData.sliderTrolleyPosition}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting('sliderTrolleyPosition', value)
+                                }
+                            />
+                        </View>
+
+                        <Text style={styles.headerText}>
+                            Segment Dispatch and Transportation
+                        </Text>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Sand blasting on match cast face done"
+                                value={liftingCombinedLRData.sandBlastingDone}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting('sandBlastingDone', value)
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Repairing (if necessary) & finishing done"
+                                value={liftingCombinedLRData.repairingFinished}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting('repairingFinished', value)
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="No repairing on shearkey & gluing location"
+                                value={liftingCombinedLRData.noRepairsOnShearkey}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting('noRepairsOnShearkey', value)
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Bund for curing at top removed & top to be cleaned by broom"
+                                value={liftingCombinedLRData.bundRemoved}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting('bundRemoved', value)
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Soffit & deck top cleaned by broomer"
+                                value={liftingCombinedLRData.soffitDeckCleaned}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting('soffitDeckCleaned', value)
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Sheathing duct is cleaned, no concrete at rubber bunk portion"
+                                value={liftingCombinedLRData.sheathingDuctCleaned}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting('sheathingDuctCleaned', value)
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Sheathing duct alignment ok, checked by drolly passing"
+                                value={liftingCombinedLRData.ductAlignmentChecked}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting('ductAlignmentChecked', value)
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Temporary stressing hole at soffit cleaned & dimension checked"
+                                value={liftingCombinedLRData.temporaryStressingHoleCleaned}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting('stressingHoleCleaned', value)
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Fitness of Trailer with proper calibration certificate"
+                                value={liftingCombinedLRData.trailerFitnessChecked}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting('trailerFitnessChecked', value)
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Tyres of trailer and air pressure checked"
+                                value={liftingCombinedLRData.trailerTyresChecked}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting('trailerTyresChecked', value)
+                                }
+                            />
+                        </View>
+
+                        <Text style={styles.headerText}>
+                            Preparation of Area for Lifting at Erection Site
+                        </Text>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Ground properly leveled for placement of trailer"
+                                value={liftingCombinedLRData.groundLeveled}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting('groundLeveled', value)
+                                }
+                            />
+                        </View>
+                        {/* E) Preparation of Area for Lifting at Erection Site */}
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Ground properly leveled for placement of trailer"
+                                value={liftingCombinedLRData.groundLeveled}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting('groundLeveled', value)
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Area is hard barricaded with proper signages"
+                                value={liftingCombinedLRData.areaBarricadedErectionSite}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting(
+                                        'areaBarricadedErectionSite',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Temporary lights for proper illumination of the erection area is available at night"
+                                value={liftingCombinedLRData.temporaryLightsErectionSite}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting(
+                                        'temporaryLightsErectionSite',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Flag man/Marshal available"
+                                value={liftingCombinedLRData.flagManAvailableErectionSite}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting(
+                                        'flagManAvailableErectionSite',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Methodology & Scheme for lifting and stacking is available at site"
+                                value={liftingCombinedLRData.liftingMethodologyErectionSite}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting(
+                                        'liftingMethodologyErectionSite',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Crane is positioned as per drawing"
+                                value={liftingCombinedLRData.cranePositioned}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting('cranePositioned', value)
+                                }
+                            />
+                        </View>
+
+                        {/* F) Tools and Tackles for lifting at Erection Site */}
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="De-shackles and slings of proper capacity and their test certificate by third party is available"
+                                value={
+                                    liftingCombinedLRData.deshacklesTestCertificateErectionSite
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting(
+                                        'deshacklesTestCertificateErectionSite',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Safety color code present on the de-shackles"
+                                value={liftingCombinedLRData.safetyColorCodeErectionSite}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting(
+                                        'safetyColorCodeErectionSite',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Hydraulic jacks are in good condition with proper calibration certificates"
+                                value={
+                                    liftingCombinedLRData.hydraulicJacksConditionErectionSite
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting(
+                                        'hydraulicJacksConditionErectionSite',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Limit switch of lifting hoist is working properly"
+                                value={liftingCombinedLRData.hoistLimitSwitchErectionSite}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting(
+                                        'hoistLimitSwitchErectionSite',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Cotter pin are placed in all lifting assembly"
+                                value={liftingCombinedLRData.cotterPinsPlacedErectionSite}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting(
+                                        'cotterPinsPlacedErectionSite',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Macalloy Bars / pins for lifting of Wings in proper condition"
+                                value={
+                                    liftingCombinedLRData.macalloyBarsConditionErectionSite
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting(
+                                        'macalloyBarsConditionErectionSite',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="TPI of all parts of Cranes & Slings done"
+                                value={liftingCombinedLRData.cranesTPICompleted}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting('cranesTPICompleted', value)
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Latest TPI Certificates of all parts of Cranes & Slings available at Site"
+                                value={liftingCombinedLRData.cranesTPICertificatesAvailable}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting(
+                                        'cranesTPICertificatesAvailable',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Counter-weights are available & placed as per drawing"
+                                value={liftingCombinedLRData.counterWeightsPlaced}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting('counterWeightsPlaced', value)
+                                }
+                            />
+                        </View>
+
+                        {/* G) Lifting and Positioning of segments */}
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Positioning of segment marked"
+                                value={liftingCombinedLRData.positioningOfSegmentMarked}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting(
+                                        'positioningOfSegmentMarked',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Traffic properly diverted & Traffic marshals are in place"
+                                value={liftingCombinedLRData.trafficDiverted}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting('trafficDiverted', value)
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Safety & Fitness of all workers working at height checked and certified"
+                                value={liftingCombinedLRData.workersSafetyChecked}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting('workersSafetyChecked', value)
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="All Safety arrangements are placed at Site"
+                                value={liftingCombinedLRData.safetyArrangementsPlaced}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting('safetyArrangementsPlaced', value)
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Segments positioned at the specified / marked location"
+                                value={liftingCombinedLRData.segmentPositioned}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting('segmentPositioned', value)
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Necessary lateral / Site support ensured before releasing the segment by Cranes"
+                                value={liftingCombinedLRData.lateralSupportEnsured}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleInputChangeLifting('lateralSupportEnsured', value)
+                                }
+                            />
+                        </View>
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <View style={{ flexDirection: 'column' }}>
+                                <CalendarPicker
+                                    label="Date"
+                                    value={rfiDate}
+                                    onChange={date => setRFIDate(date)}
+                                />
+                            </View>
+                            <View>
+                                <TimePicker
+                                    label="Time"
+                                    value={rfiTime}
+                                    onChange={time => setRFITime(time)}
+                                />
+                            </View>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                returnKeyType="next"
+                                underlineColorAndroid="#f000"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => {
+                                    setComments(text);
+                                }}
+                            />
+                        </View>
+                    </View>
+                </ScrollView>
+            );
+        case TASK_TYPES.GROUTING:
+            return (
+                <View>
+                    <View style={{ flexDirection: 'column' }}>
+                        <DropdownPicker
+                            label="Inlet free of blockage"
+                            value={groutingData.inletFree}
+                            items={YES_NO_NA_LIST}
+                            onChange={(newValue: string) => {
+                                handleInputChangeGrouting('inletFree', newValue);
+                            }}
+                            isRequired={true}
+                        />
+                    </View>
+
+                    <View style={{ flexDirection: 'column' }}>
+                        <DropdownPicker
+                            label="Outlet free of blockage"
+                            value={groutingData.outletFree}
+                            items={YES_NO_NA_LIST}
+                            onChange={(value: string) =>
+                                handleInputChangeGrouting('outletFree', value)
+                            }
+                        />
+                    </View>
+
+                    <View style={{ flexDirection: 'column' }}>
+                        <DropdownPicker
+                            label="Vents free of blockage"
+                            value={groutingData.ventsFree}
+                            items={YES_NO_LIST}
+                            onChange={(value: string) =>
+                                handleInputChangeGrouting('ventsFree', value)
+                            }
+                        />
+                    </View>
+
+                    <View style={{ flexDirection: 'column' }}>
+                        <DropdownPicker
+                            label="Cable Duct free of blockage"
+                            value={groutingData.cableDuctFree}
+                            items={YES_NO_LIST}
+                            onChange={(value: string) =>
+                                handleInputChangeGrouting('cableDuctFree', value)
+                            }
+                        />
+                    </View>
+
+                    <View style={{ flexDirection: 'column' }}>
+                        <DropdownPicker
+                            label="Leakage observed"
+                            value={groutingData.leakageObserved}
+                            items={YES_NO_LIST}
+                            onChange={(value: string) =>
+                                handleInputChangeGrouting('leakageObserved', value)
+                            }
+                        />
+                    </View>
+                    <View style={{ flexDirection: 'column' }}>
+                        <DropdownPicker
+                            label="Sealed"
+                            value={groutingData.sealed}
+                            items={YES_NO_LIST}
+                            onChange={(value: string) =>
+                                handleInputChangeGrouting('sealed', value)
+                            }
+                        />
+                    </View>
+                    <View style={{ flexDirection: 'column' }}>
+                        <DropdownPicker
+                            label="If cable duct blocked remedial measures taken"
+                            value={groutingData.remedialMeasures}
+                            items={YES_NO_NA_LIST}
+                            onChange={(value: string) =>
+                                handleInputChangeGrouting('remedialMeasures', value)
+                            }
+                        />
+                    </View>
+                    <Text style={styles.HeadText}>Details of Grouting</Text>
+                    <CalendarPicker
+                        label="Last Date of prestressing"
+                        value={groutingData.prestressingDate}
+                        onChange={date =>
+                            handleInputChangeGrouting('prestressingDate', date)
+                        }
+                    />
+                    <CalendarPicker
+                        label="Date of Grouting"
+                        value={groutingData.groutingDate}
+                        onChange={date => handleInputChangeGrouting('groutingDate', date)}
+                    />
+                    <DropdownPicker
+                        label="Type of cement"
+                        value={groutingData.cementType}
+                        items={CEMENT_TYPE_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeGrouting('cementType', value)
+                        }
+                    />
+                    <Input
+                        label="W/c Ratio"
+                        value={groutingData.wcRatio}
+                        onChange={(value: string) =>
+                            handleInputChangeGrouting('wcRatio', value)
+                        }
+                        isRequired={true}
+                    />
+                    <Input
+                        label="Temperature of mixing water (°C)"
+                        value={groutingData.mixingWaterTemp}
+                        onChange={(value: string) =>
+                            handleInputChangeGrouting('mixingWaterTemp', value)
+                        }
+                        isRequired={true}
+                    />
+                    <Input
+                        label="Temperature of Grout (°C)"
+                        value={groutingData.groutTemp}
+                        onChange={(value: string) =>
+                            handleInputChangeGrouting('groutTemp', value)
+                        }
+                        isRequired={true}
+                    />
+                    <TimePicker
+                        label="Start Time"
+                        value={groutingData.startTime}
+                        onChange={time => handleInputChangeGrouting('startTime', time)}
+                    />
+                    <TimePicker
+                        label="Finish Time"
+                        value={groutingData.finishTime}
+                        onChange={time => handleInputChangeGrouting('finishTime', time)}
+                    />
+                    <Input
+                        label="Volume of Grout (Ltr)"
+                        value={groutingData.volumeOfGrout}
+                        onChange={(value: string) =>
+                            handleInputChangeGrouting('volumeOfGrout', value)
+                        }
+                        isRequired={true}
+                    />
+                    <Input
+                        label="Grouting Pressure (Kg/cm²)"
+                        value={groutingData.groutingPressure}
+                        onChange={(value: string) =>
+                            handleInputChangeGrouting('groutingPressure', value)
+                        }
+                        isRequired={true}
+                    />
+                    <Input
+                        label="Cement consumption theoretical"
+                        value={groutingData.cementConsumptionTheoretical}
+                        onChange={(value: string) =>
+                            handleInputChangeGrouting('cementConsumptionTheoretical', value)
+                        }
+                        isRequired={true}
+                    />
+                    <Input
+                        label="Cement consumption actual"
+                        value={groutingData.cementConsumptionActual}
+                        onChange={(value: string) =>
+                            handleInputChangeGrouting('cementConsumptionActual', value)
+                        }
+                        isRequired={true}
+                    />
+                    <DropdownPicker
+                        label="Passage of grout through vents"
+                        value={groutingData.passageThroughVents}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeGrouting('passageThroughVents', value)
+                        }
+                    />
+                    <DropdownPicker
+                        label="Passage of grout through outlet"
+                        value={groutingData.passageThroughOutlet}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeGrouting('passageThroughOutlet', value)
+                        }
+                    />
+                    <DropdownPicker
+                        label="Any equipment failure"
+                        value={groutingData.equipmentFailure}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeGrouting('equipmentFailure', value)
+                        }
+                    />
+                    <DropdownPicker
+                        label="Probing by Stiffwire"
+                        value={groutingData.probingByStiffwire}
+                        items={YES_NO_LIST}
+                        onChange={(value: string) =>
+                            handleInputChangeGrouting('probingByStiffwire', value)
+                        }
+                    />
+
+                    <View>
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                returnKeyType="next"
+                                underlineColorAndroid="#f000"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => {
+                                    setComments(text);
+                                }}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+        case TASK_TYPES.CURING:
+            return (
+                <ScrollView showsHorizontalScrollIndicator={false}>
+                    <View style={styles.columnWiseData}>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Water used for curing is free from oil, salt, acid and organic minerals."
+                                value={curingData.waterUsedForCuring}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleCuring('waterUsedForCuring', value)
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="pH value of water not be less than 6."
+                                value={curingData.waterUsedForCuring}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleCuring('phValueOfWater', value)
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <Input
+                                label="Consumption of water in Kilo liter"
+                                value={curingData.consumptionOfWater}
+                                onChange={(value: string) =>
+                                    handleCuring('consumptionOfWater', value)
+                                }
+                            />
+                        </View>
+                        <View>
+                            <View style={{ flexDirection: 'column' }}>
+                                <CalendarPicker
+                                    label="Date"
+                                    value={rfiDate}
+                                    onChange={date => setRFIDate(date)}
+                                />
+                            </View>
+                            <View>
+                                <TimePicker
+                                    label="Time"
+                                    value={rfiTime}
+                                    onChange={time => setRFITime(time)}
+                                />
+                            </View>
+
+                            <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                                <Text style={styles.Lable}>Recommendations</Text>
+                                <TextInput
+                                    style={styles.commonInputFiels}
+                                    placeholder="Recommendations"
+                                    autoCapitalize="none"
+                                    keyboardType="email-address"
+                                    returnKeyType="next"
+                                    underlineColorAndroid="#f000"
+                                    multiline={true}
+                                    numberOfLines={4}
+                                    blurOnSubmit={false}
+                                    value={comments}
+                                    onChangeText={text => {
+                                        setComments(text);
+                                    }}
+                                />
+                            </View>
+                        </View>
+                    </View>
+                </ScrollView>
+            );
+        case TASK_TYPES.FIXING_OF_SHUTTER:
+            return (
+                <ScrollView showsHorizontalScrollIndicator={false}>
+                    <View style={styles.columnWiseData}>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Shuttering material is New"
+                                value={fixingShutterData.shutterMaterial}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleFixingShutter('shutterMaterial', value)
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Repairs are ok"
+                                value={fixingShutterData.repairsAreOf}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleFixingShutter('repairsAreOf', value)
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Cleanliness of shuttering"
+                                value={fixingShutterData.cleanlinessOfShutter}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleFixingShutter('cleanlinessOfShutter', value)
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Oiling of shuttering"
+                                value={fixingShutterData.oilingOfShutter}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleFixingShutter('oilingOfShutter', value)
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Shuttering design, ok? (Dimension, Diagonal, Sunken portion etc.)"
+                                value={fixingShutterData.shutterDesignOk}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleFixingShutter('shutterDesignOk', value)
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Alignments /levels /rigidity, ok"
+                                value={fixingShutterData.alignmentLevelsRigidity}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleFixingShutter('alignmentLevelsRigidity', value)
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Check props are they ok"
+                                value={fixingShutterData.checkPropsAreTheyOk}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleFixingShutter('checkPropsAreTheyOk', value)
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Check acrow span. Are they ok"
+                                value={fixingShutterData.checkAcrowSapnAreTheyOk}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleFixingShutter('checkAcrowSapnAreTheyOk', value)
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Check braces. Are they ok"
+                                value={fixingShutterData.checkBracesAreTheyOk}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleFixingShutter('checkBracesAreTheyOk', value)
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Check sealing joints/holes, ok"
+                                value={fixingShutterData.checkSealingJointsHoles}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleFixingShutter('checkSealingJointsHoles', value)
+                                }
+                            />
+                        </View>
+                        <View>
+                            <View style={{ flexDirection: 'column' }}>
+                                <CalendarPicker
+                                    label="Date"
+                                    value={rfiDate}
+                                    onChange={date => setRFIDate(date)}
+                                />
+                            </View>
+                            <View>
+                                <TimePicker
+                                    label="Time"
+                                    value={rfiTime}
+                                    onChange={time => setRFITime(time)}
+                                />
+                            </View>
+
+                            <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                                <Text style={styles.Lable}>Recommendations</Text>
+                                <TextInput
+                                    style={styles.commonInputFiels}
+                                    placeholder="Recommendations"
+                                    autoCapitalize="none"
+                                    keyboardType="email-address"
+                                    returnKeyType="next"
+                                    underlineColorAndroid="#f000"
+                                    multiline={true}
+                                    numberOfLines={4}
+                                    blurOnSubmit={false}
+                                    value={comments}
+                                    onChangeText={text => {
+                                        setComments(text);
+                                    }}
+                                />
+                            </View>
+                        </View>
+                    </View>
+                </ScrollView>
+            );
+        case TASK_TYPES.ERECTION_OF_TEMPORARY_STRUCTURE:
+            return (
+                <ScrollView showsHorizontalScrollIndicator={false}>
+                    <View style={styles.columnWiseData}>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Has any risk assessment been carried out"
+                                value={erectionOfTemporaryStructure.hasAnyRiskAssessment}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleErectionOfTemporaryStructure(
+                                        'hasAnyRiskAssessment',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is the crane/hydra on firm level bases"
+                                value={erectionOfTemporaryStructure.craneHydraLevelBase}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleErectionOfTemporaryStructure(
+                                        'craneHydraLevelBase',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Are all operation trained and competent"
+                                value={erectionOfTemporaryStructure.areAllOperationTrained}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleErectionOfTemporaryStructure(
+                                        'areAllOperationTrained',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is crane tested and operated"
+                                value={erectionOfTemporaryStructure.isCraneTested}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleErectionOfTemporaryStructure('isCraneTested', value)
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Does the crane have a current test certificate"
+                                value={erectionOfTemporaryStructure.doesTheCraneCertificate}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleErectionOfTemporaryStructure(
+                                        'doesTheCraneCertificate',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="All lifting tools and tackles are being identified, checked and have valid resister"
+                                value={erectionOfTemporaryStructure.allLiftingToolsAndTackles}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleErectionOfTemporaryStructure(
+                                        'allLiftingToolsAndTackles',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="The person working at height are trained and lash with all fall protection devices"
+                                value={erectionOfTemporaryStructure.protectionDevices}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleErectionOfTemporaryStructure(
+                                        'protectionDevices',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Structure on which columns / beams erected have attained their strength"
+                                value={erectionOfTemporaryStructure.atteainedTheirStrength}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleErectionOfTemporaryStructure(
+                                        'atteainedTheirStrength',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Workmen provided with all required PPE’s"
+                                value={erectionOfTemporaryStructure.workmenProvided}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleErectionOfTemporaryStructure('workmenProvided', value)
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Whether sufficient illumination is provided around the working area"
+                                value={erectionOfTemporaryStructure.whetherSufficient}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleErectionOfTemporaryStructure(
+                                        'whetherSufficient',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is the SWL marked on all lifting tools & tackles"
+                                value={erectionOfTemporaryStructure.liftingToolsTackles}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleErectionOfTemporaryStructure(
+                                        'liftingToolsTackles',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="All wielding machine, electrical equipment’s & generators properly earthed."
+                                value={
+                                    erectionOfTemporaryStructure.equipmentsGeneratorsProperlyEarthed
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleErectionOfTemporaryStructure(
+                                        'equipmentsGeneratorsProperlyEarthed',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Are the walkway maintained free from obstacle all the time."
+                                value={erectionOfTemporaryStructure.walkwayMaintainedFreeForm}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleErectionOfTemporaryStructure(
+                                        'walkwayMaintainedFreeForm',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is safety latch/locking available"
+                                value={
+                                    erectionOfTemporaryStructure.safetyLatchLockingAvailable
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleErectionOfTemporaryStructure(
+                                        'safetyLatchLockingAvailable',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Proper warning sign available at site."
+                                value={erectionOfTemporaryStructure.properWarningSign}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleErectionOfTemporaryStructure(
+                                        'properWarningSign',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Lifting arrangements are approved by competent person"
+                                value={
+                                    erectionOfTemporaryStructure.liftingArrangementsAreApproved
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleErectionOfTemporaryStructure(
+                                        'liftingArrangementsAreApproved',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is footing above temp. structure fixed achieve their compressive strength"
+                                value={
+                                    erectionOfTemporaryStructure.achieveTheirCompressiveStrength
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleErectionOfTemporaryStructure(
+                                        'achieveTheirCompressiveStrength',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Ground leveling"
+                                value={erectionOfTemporaryStructure.groundLeveling}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleErectionOfTemporaryStructure('groundLeveling', value)
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is Structure set out to the required line and levels."
+                                value={
+                                    erectionOfTemporaryStructure.structureSetOutToTheLevels
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleErectionOfTemporaryStructure(
+                                        'structureSetOutToTheLevels',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="For welding, is welder qualification and skilled checked and certified"
+                                value={
+                                    erectionOfTemporaryStructure.aualificationAndSkilledCheckedAndCertified
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleErectionOfTemporaryStructure(
+                                        'aualificationAndSkilledCheckedAndCertified',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View>
+                            <View style={{ flexDirection: 'column' }}>
+                                <CalendarPicker
+                                    label="Date"
+                                    value={rfiDate}
+                                    onChange={date => setRFIDate(date)}
+                                />
+                            </View>
+                            <View>
+                                <TimePicker
+                                    label="Time"
+                                    value={rfiTime}
+                                    onChange={time => setRFITime(time)}
+                                />
+                            </View>
+
+                            <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                                <Text style={styles.Lable}>Recommendations</Text>
+                                <TextInput
+                                    style={styles.commonInputFiels}
+                                    placeholder="Recommendations"
+                                    autoCapitalize="none"
+                                    keyboardType="email-address"
+                                    returnKeyType="next"
+                                    underlineColorAndroid="#f000"
+                                    multiline={true}
+                                    numberOfLines={4}
+                                    blurOnSubmit={false}
+                                    value={comments}
+                                    onChangeText={text => {
+                                        setComments(text);
+                                    }}
+                                />
+                            </View>
+                        </View>
+                    </View>
+                </ScrollView>
+            );
+        case TASK_TYPES.PAINTING_OF_STEEL_GIRDERS_DIAPHRAGMS:
+            return (
+                <ScrollView showsHorizontalScrollIndicator={false}>
+                    <View style={styles.columnWiseData}>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is equipment regular inspected"
+                                value={paintingOfSteelGirdersDiaphragms.hasAnyRiskAssessment}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handlePaintingOfSteelGirdersDiaphragms(
+                                        'hasAnyRiskAssessment',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is the worker worn Personal Protective Equipment"
+                                value={
+                                    paintingOfSteelGirdersDiaphragms.isWorkerWarnPersonalProtective
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handlePaintingOfSteelGirdersDiaphragms(
+                                        'isWorkerWarnPersonalProtective',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is the personal present at the Blasting Pot and compressor at all times"
+                                value={paintingOfSteelGirdersDiaphragms.presentAtBlastingPot}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handlePaintingOfSteelGirdersDiaphragms(
+                                        'presentAtBlastingPot',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is every structural member released for painting having identification Tag"
+                                value={paintingOfSteelGirdersDiaphragms.identificationTag}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handlePaintingOfSteelGirdersDiaphragms(
+                                        'identificationTag',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is the surface checking prior to blasting for mechanical damages (like spatters, slag’s etc.)"
+                                value={
+                                    paintingOfSteelGirdersDiaphragms.surfaceCheckPriorBlasting
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handlePaintingOfSteelGirdersDiaphragms(
+                                        'surfaceCheckPriorBlasting',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is the surface free from oil, grease and other contamination"
+                                value={
+                                    paintingOfSteelGirdersDiaphragms.surfaceFreeFromContamination
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handlePaintingOfSteelGirdersDiaphragms(
+                                        'surfaceFreeFromContamination',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is the weather and temperature suitable for blasting"
+                                value={
+                                    paintingOfSteelGirdersDiaphragms.suitableWeatherForBlasting
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handlePaintingOfSteelGirdersDiaphragms(
+                                        'suitableWeatherForBlasting',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is the compressed air free from water, oil etc."
+                                value={paintingOfSteelGirdersDiaphragms.compressedAirQuality}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handlePaintingOfSteelGirdersDiaphragms(
+                                        'compressedAirQuality',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Are the areas of member protected that not to be blasted"
+                                value={paintingOfSteelGirdersDiaphragms.protectedAreas}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handlePaintingOfSteelGirdersDiaphragms(
+                                        'protectedAreas',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is there high-pressure water used to remove salt and other contaminations"
+                                value={
+                                    paintingOfSteelGirdersDiaphragms.highPressureWaterUsage
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handlePaintingOfSteelGirdersDiaphragms(
+                                        'highPressureWaterUsage',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is the abrasive used as per the required specification (No reuse of abrasives in open Blast condition)"
+                                value={paintingOfSteelGirdersDiaphragms.abrasiveSpecification}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handlePaintingOfSteelGirdersDiaphragms(
+                                        'abrasiveSpecification',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is the copy of batch certificate of abrasive used available at the factory"
+                                value={
+                                    paintingOfSteelGirdersDiaphragms.batchCertificateAvailable
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handlePaintingOfSteelGirdersDiaphragms(
+                                        'batchCertificateAvailable',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is the Blasting Nozzle Pressure checked"
+                                value={paintingOfSteelGirdersDiaphragms.nozzlePressureChecked}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handlePaintingOfSteelGirdersDiaphragms(
+                                        'nozzlePressureChecked',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Are the all-blasted surface inspected for proper cleaning"
+                                value={paintingOfSteelGirdersDiaphragms.inspectedForCleaning}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handlePaintingOfSteelGirdersDiaphragms(
+                                        'inspectedForCleaning',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is the Visually checked for any mechanical damage/ lamination"
+                                value={paintingOfSteelGirdersDiaphragms.visualCheckDamage}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handlePaintingOfSteelGirdersDiaphragms(
+                                        'visualCheckDamage',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is the Blasted structural member shifted carefully without damage"
+                                value={paintingOfSteelGirdersDiaphragms.shiftedWithoutDamage}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handlePaintingOfSteelGirdersDiaphragms(
+                                        'shiftedWithoutDamage',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Are the surrounding areas covered to prevent overspray"
+                                value={
+                                    paintingOfSteelGirdersDiaphragms.surroundingAreaCovered
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handlePaintingOfSteelGirdersDiaphragms(
+                                        'surroundingAreaCovered',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is the painting system as per specification"
+                                value={
+                                    paintingOfSteelGirdersDiaphragms.paintingSystemSpecification
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handlePaintingOfSteelGirdersDiaphragms(
+                                        'paintingSystemSpecification',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is the Paint mixed and prepared in accordance with the approved manufacturer instructions"
+                                value={
+                                    paintingOfSteelGirdersDiaphragms.paintMixedAsPerInstructions
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handlePaintingOfSteelGirdersDiaphragms(
+                                        'paintMixedAsPerInstructions',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is the TIP size and spraying procedure adhered"
+                                value={
+                                    paintingOfSteelGirdersDiaphragms.tipSizeSprayingProcedure
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handlePaintingOfSteelGirdersDiaphragms(
+                                        'tipSizeSprayingProcedure',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is the Solvent dilution accordance with the manufacturer instruction and recommendation"
+                                value={
+                                    paintingOfSteelGirdersDiaphragms.solventDilutionAccordance
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handlePaintingOfSteelGirdersDiaphragms(
+                                        'solventDilutionAccordance',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is the required areas striped before applying paints"
+                                value={
+                                    paintingOfSteelGirdersDiaphragms.areasStripedBeforePainting
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handlePaintingOfSteelGirdersDiaphragms(
+                                        'areasStripedBeforePainting',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Are the paints, curing agent, Thinner used of within the shelf life and from the same manufacturer"
+                                value={
+                                    paintingOfSteelGirdersDiaphragms.materialsWithinShelfLife
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handlePaintingOfSteelGirdersDiaphragms(
+                                        'materialsWithinShelfLife',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is the weather condition checked prior to painting"
+                                value={
+                                    paintingOfSteelGirdersDiaphragms.weatherConditionChecked
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handlePaintingOfSteelGirdersDiaphragms(
+                                        'weatherConditionChecked',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is the paint applied as per specification and related paint system"
+                                value={
+                                    paintingOfSteelGirdersDiaphragms.paintAppliedPerSpecification
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handlePaintingOfSteelGirdersDiaphragms(
+                                        'paintAppliedPerSpecification',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is the paint mixed, agitated and applied within the specified pot life"
+                                value={
+                                    paintingOfSteelGirdersDiaphragms.paintMixedWithinPotLife
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handlePaintingOfSteelGirdersDiaphragms(
+                                        'paintMixedWithinPotLife',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is the paint applied having even coating thickness at the overlapping passes to achieve the specified dry film thickness"
+                                value={paintingOfSteelGirdersDiaphragms.evenCoatingThickness}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handlePaintingOfSteelGirdersDiaphragms(
+                                        'evenCoatingThickness',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is the WFT checked for required DFT"
+                                value={paintingOfSteelGirdersDiaphragms.wftCheckedForDft}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handlePaintingOfSteelGirdersDiaphragms(
+                                        'wftCheckedForDft',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is the overcoating interval maintained as per requirement"
+                                value={
+                                    paintingOfSteelGirdersDiaphragms.overcoatingIntervalMaintained
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handlePaintingOfSteelGirdersDiaphragms(
+                                        'overcoatingIntervalMaintained',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is the proper coating system applied during intervals"
+                                value={
+                                    paintingOfSteelGirdersDiaphragms.properCoatingSystemApplied
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handlePaintingOfSteelGirdersDiaphragms(
+                                        'properCoatingSystemApplied',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is the paint surface visually good and free from runs, sags, wrinkles etc.…"
+                                value={paintingOfSteelGirdersDiaphragms.paintSurfaceQuality}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handlePaintingOfSteelGirdersDiaphragms(
+                                        'paintSurfaceQuality',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is the record maintained of painting"
+                                value={paintingOfSteelGirdersDiaphragms.recordMaintained}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handlePaintingOfSteelGirdersDiaphragms(
+                                        'recordMaintained',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+
+                        <View>
+                            <View style={{ flexDirection: 'column' }}>
+                                <CalendarPicker
+                                    label="Date"
+                                    value={rfiDate}
+                                    onChange={date => setRFIDate(date)}
+                                />
+                            </View>
+                            <View>
+                                <TimePicker
+                                    label="Time"
+                                    value={rfiTime}
+                                    onChange={time => setRFITime(time)}
+                                />
+                            </View>
+
+                            <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                                <Text style={styles.Lable}>Recommendations</Text>
+                                <TextInput
+                                    style={styles.commonInputFiels}
+                                    placeholder="Recommendations"
+                                    autoCapitalize="none"
+                                    keyboardType="email-address"
+                                    returnKeyType="next"
+                                    underlineColorAndroid="#f000"
+                                    multiline={true}
+                                    numberOfLines={4}
+                                    blurOnSubmit={false}
+                                    value={comments}
+                                    onChangeText={text => {
+                                        setComments(text);
+                                    }}
+                                />
+                            </View>
+                        </View>
+                    </View>
+                </ScrollView>
+            );
+        case TASK_TYPES.PLACEMENT_OF_REINFORCEMENT_CAGE:
+            return (
+                <ScrollView showsHorizontalScrollIndicator={false}>
+                    <View style={styles.columnWiseData}>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Rebar and dimension (dia, len, and shape) checked as per GFC"
+                                value={placementOfReinforcementCage.rebarDimensionChecked}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handlePlacementOfReinforcementCage(
+                                        'rebarDimensionChecked',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Shaping, No and Length of Bars checked as per GFC"
+                                value={placementOfReinforcementCage.shapingCheckedAsPerGFC}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handlePlacementOfReinforcementCage(
+                                        'shapingCheckedAsPerGFC',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Rebars securely tightened/bound by tie bars"
+                                value={placementOfReinforcementCage.rebarsSecurelyBound}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handlePlacementOfReinforcementCage(
+                                        'rebarsSecurelyBound',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Splice length and location checked as per GFC"
+                                value={placementOfReinforcementCage.spliceLengthChecked}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handlePlacementOfReinforcementCage(
+                                        'spliceLengthChecked',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Rebar within tolerance limit"
+                                value={placementOfReinforcementCage.rebarWithinTolerance}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handlePlacementOfReinforcementCage(
+                                        'rebarWithinTolerance',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Coupler arrangements within tolerance"
+                                value={
+                                    placementOfReinforcementCage.couplerArrangementsWithinTolerance
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handlePlacementOfReinforcementCage(
+                                        'couplerArrangementsWithinTolerance',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Bar Bending schedule checked"
+                                value={placementOfReinforcementCage.barBendingScheduleChecked}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handlePlacementOfReinforcementCage(
+                                        'barBendingScheduleChecked',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                    </View>
+                    <View>
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                returnKeyType="next"
+                                underlineColorAndroid="#f000"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => {
+                                    setComments(text);
+                                }}
+                            />
+                        </View>
+                    </View>
+                </ScrollView>
+            );
+        case TASK_TYPES.TRANSPORTATION_OF_STEEL_GIRDERS_DIAPHRAGMS_ERECTION_AT_SITE:
+            return (
+                <ScrollView showsHorizontalScrollIndicator={false}>
+                    <View style={styles.columnWiseData}>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Whether safe access to workplace is provided?"
+                                value={
+                                    transportationOfSteelGirdersDiaphragms.safeAccessProvided
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleTransportationOfSteelGirdersDiaphragms(
+                                        'safeAccessProvided',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is the working platform fully onboarded on the deck?"
+                                value={
+                                    transportationOfSteelGirdersDiaphragms.workingPlatformOnBoarded
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleTransportationOfSteelGirdersDiaphragms(
+                                        'workingPlatformOnBoarded',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="All guard rails are firmly attached with mould (at 1m with mid rails and toe board)?"
+                                value={
+                                    transportationOfSteelGirdersDiaphragms.guardRailsAttached
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleTransportationOfSteelGirdersDiaphragms(
+                                        'guardRailsAttached',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Adequate fall protection arrangement made (static line, double lanyard harness, fall arrestor)?"
+                                value={
+                                    transportationOfSteelGirdersDiaphragms.fallProtectionArrangement
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleTransportationOfSteelGirdersDiaphragms(
+                                        'fallProtectionArrangement',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Whether hand tools and handling material secure against accidental fall?"
+                                value={
+                                    transportationOfSteelGirdersDiaphragms.toolsSecuredAgainstFall
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleTransportationOfSteelGirdersDiaphragms(
+                                        'toolsSecuredAgainstFall',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Has any risk assessment been carried out?"
+                                value={
+                                    transportationOfSteelGirdersDiaphragms.riskAssessmentCarriedOut
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleTransportationOfSteelGirdersDiaphragms(
+                                        'riskAssessmentCarriedOut',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is the crane on firm level bases?"
+                                value={
+                                    transportationOfSteelGirdersDiaphragms.craneOnFirmLevelBases
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleTransportationOfSteelGirdersDiaphragms(
+                                        'craneOnFirmLevelBases',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Are all operators trained and competent?"
+                                value={
+                                    transportationOfSteelGirdersDiaphragms.operatorsTrainedAndCompetent
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleTransportationOfSteelGirdersDiaphragms(
+                                        'operatorsTrainedAndCompetent',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is the crane tested and operated?"
+                                value={
+                                    transportationOfSteelGirdersDiaphragms.craneTestedAndOperated
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleTransportationOfSteelGirdersDiaphragms(
+                                        'craneTestedAndOperated',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is there a swing alarm installed and functioning?"
+                                value={
+                                    transportationOfSteelGirdersDiaphragms.swingAlarmInstalled
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleTransportationOfSteelGirdersDiaphragms(
+                                        'swingAlarmInstalled',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Does the crane have a current test certificate?"
+                                value={
+                                    transportationOfSteelGirdersDiaphragms.craneTestCertificateCurrent
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleTransportationOfSteelGirdersDiaphragms(
+                                        'craneTestCertificateCurrent',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Does the boom of the crane have a current test certificate?"
+                                value={
+                                    transportationOfSteelGirdersDiaphragms.craneBoomTestCertificateCurrent
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleTransportationOfSteelGirdersDiaphragms(
+                                        'craneBoomTestCertificateCurrent',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Oil (leakage)"
+                                value={
+                                    transportationOfSteelGirdersDiaphragms.oilLeakageChecked
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleTransportationOfSteelGirdersDiaphragms(
+                                        'oilLeakageChecked',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Greasing"
+                                value={transportationOfSteelGirdersDiaphragms.greasingChecked}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleTransportationOfSteelGirdersDiaphragms(
+                                        'greasingChecked',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Outriggers (Fully extended)"
+                                value={
+                                    transportationOfSteelGirdersDiaphragms.outriggersFullyExtended
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleTransportationOfSteelGirdersDiaphragms(
+                                        'outriggersFullyExtended',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Level indicators (2 degree to 3 degree)"
+                                value={
+                                    transportationOfSteelGirdersDiaphragms.levelIndicatorsWithinLimit
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleTransportationOfSteelGirdersDiaphragms(
+                                        'levelIndicatorsWithinLimit',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Base plate under the outriggers"
+                                value={
+                                    transportationOfSteelGirdersDiaphragms.basePlateUnderOutriggers
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleTransportationOfSteelGirdersDiaphragms(
+                                        'basePlateUnderOutriggers',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Rigging (2 Nos) angles"
+                                value={
+                                    transportationOfSteelGirdersDiaphragms.riggingAnglesChecked
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleTransportationOfSteelGirdersDiaphragms(
+                                        'riggingAnglesChecked',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Are all the examination and tests carried out and certified by a competent person?"
+                                value={
+                                    transportationOfSteelGirdersDiaphragms.examsAndTestsCertified
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleTransportationOfSteelGirdersDiaphragms(
+                                        'examsAndTestsCertified',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="All lifting tools and tackles are being identified, checked, and have a valid register?"
+                                value={
+                                    transportationOfSteelGirdersDiaphragms.liftingToolsCheckedAndValid
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleTransportationOfSteelGirdersDiaphragms(
+                                        'liftingToolsCheckedAndValid',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Are personnel working at height trained and equipped with all fall protection devices?"
+                                value={
+                                    transportationOfSteelGirdersDiaphragms.personnelTrainedAndProtected
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleTransportationOfSteelGirdersDiaphragms(
+                                        'personnelTrainedAndProtected',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Are workmen provided with all required PPEs?"
+                                value={transportationOfSteelGirdersDiaphragms.ppeProvided}
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleTransportationOfSteelGirdersDiaphragms(
+                                        'ppeProvided',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Whether sufficient illumination is provided around the working area?"
+                                value={
+                                    transportationOfSteelGirdersDiaphragms.sufficientIlluminationProvided
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleTransportationOfSteelGirdersDiaphragms(
+                                        'sufficientIlluminationProvided',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is the SWL marked on all lifting tools & tackles?"
+                                value={
+                                    transportationOfSteelGirdersDiaphragms.swlMarkedOnTools
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleTransportationOfSteelGirdersDiaphragms(
+                                        'swlMarkedOnTools',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="All welding machines, electrical equipment, and generators properly earthed?"
+                                value={
+                                    transportationOfSteelGirdersDiaphragms.equipmentProperlyEarthed
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleTransportationOfSteelGirdersDiaphragms(
+                                        'equipmentProperlyEarthed',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Are the walkways maintained free from obstacles at all times?"
+                                value={
+                                    transportationOfSteelGirdersDiaphragms.walkwaysFreeFromObstacles
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleTransportationOfSteelGirdersDiaphragms(
+                                        'walkwaysFreeFromObstacles',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is safety latch/locking available?"
+                                value={
+                                    transportationOfSteelGirdersDiaphragms.safetyLatchAvailable
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleTransportationOfSteelGirdersDiaphragms(
+                                        'safetyLatchAvailable',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Are proper warning signs available at the site?"
+                                value={
+                                    transportationOfSteelGirdersDiaphragms.warningSignsAvailable
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleTransportationOfSteelGirdersDiaphragms(
+                                        'warningSignsAvailable',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Lifting arrangements checked?"
+                                value={
+                                    transportationOfSteelGirdersDiaphragms.liftingArrangementsChecked
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleTransportationOfSteelGirdersDiaphragms(
+                                        'liftingArrangementsChecked',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Ground leveling done?"
+                                value={
+                                    transportationOfSteelGirdersDiaphragms.groundLevelingDone
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleTransportationOfSteelGirdersDiaphragms(
+                                        'groundLevelingDone',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="Is the structure set out to the required line and levels?"
+                                value={
+                                    transportationOfSteelGirdersDiaphragms.structureSetOutCorrectly
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleTransportationOfSteelGirdersDiaphragms(
+                                        'structureSetOutCorrectly',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                        <View style={styles.categoryColumn}>
+                            <DropdownPicker
+                                label="For welding, is welder qualification and skill checked and certified?"
+                                value={
+                                    transportationOfSteelGirdersDiaphragms.welderQualifiedAndCertified
+                                }
+                                items={YES_NO_NA_LIST}
+                                onChange={(value: string) =>
+                                    handleTransportationOfSteelGirdersDiaphragms(
+                                        'welderQualifiedAndCertified',
+                                        value,
+                                    )
+                                }
+                            />
+                        </View>
+                    </View>
+                    <View>
+                        <View style={{ flexDirection: 'column' }}>
+                            <CalendarPicker
+                                label="Date"
+                                value={rfiDate}
+                                onChange={date => setRFIDate(date)}
+                            />
+                        </View>
+                        <View>
+                            <TimePicker
+                                label="Time"
+                                value={rfiTime}
+                                onChange={time => setRFITime(time)}
+                            />
+                        </View>
+
+                        <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
+                            <Text style={styles.Lable}>Recommendations</Text>
+                            <TextInput
+                                style={styles.commonInputFiels}
+                                placeholder="Recommendations"
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                returnKeyType="next"
+                                underlineColorAndroid="#f000"
+                                multiline={true}
+                                numberOfLines={4}
+                                blurOnSubmit={false}
+                                value={comments}
+                                onChangeText={text => {
+                                    setComments(text);
+                                }}
+                            />
+                        </View>
+                    </View>
+                </ScrollView>
+            );
+        default:
+            return (
+                <View>
+                    <Text>TODO</Text>
+                </View>
+            );
+    }
+};
+
+const tasksListing = (styles: any) => {
+    return currentTasksData
+        .filter((task: any) => {
+            if (searchText && task.displayName) {
+                return task.displayName
+                    .toLowerCase()
+                    .includes(searchText.toLowerCase());
+            } else {
+                return true;
+            }
+        })
+        .map((item: any, index) => (
+            <View style={getStyle(item, styles)}>
+                <View style={styles.leftContainer}>
+                    <Text style={[styles.HeadText, { maxWidth: 300 }]}>
+                        {item.displayName}
+                    </Text>
+                    {/* <Text style={styles.MyWorkSubHead}>Sub Text</Text> */}
+                </View>
+                {item.rfiStatus === RFI_STATUS.GENERATED ? (
+                    <TouchableOpacity
+                        style={[styles.MyWorkCta, styles.StartBorder]}
+                        onPress={() => {
+                            getRFIDataByWorkAssignmentId(item);
+                        }}>
+                        <Image
+                            style={styles.WorkIcon}
+                            source={require('../../images/play-icon.png')}
+                        />
+                        <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>
+                            Start
+                        </Text>
+                    </TouchableOpacity>
+                ) : null}
+
+                {item.rfiStatus === RFI_STATUS.RE_GENERATED ? (
+                    <TouchableOpacity
+                        style={[styles.MyWorkCta, styles.StartBorder]}
+                        onPress={() => {
+                            getRFIDataByWorkAssignmentId(item);
+                        }}>
+                        <Image
+                            style={styles.WorkIcon}
+                            source={require('../../images/play-icon.png')}
+                        />
+                        <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>
+                            Re-start
+                        </Text>
+                    </TouchableOpacity>
+                ) : null}
+
+                {item.rfiStatus === RFI_STATUS.REJECTED ||
+                    item.rfiStatus === RFI_STATUS.CANCELLED ? (
+                    <TouchableOpacity
+                        style={[styles.MyWorkCta, styles.StartRejectBorder]}>
+                        {/* <Image style={styles.WorkIcon} source={require('../../images/play-icon.png')} /> */}
+                        <Text style={[styles.CtaStartText, styles.CtaRejectTextColor]}>
+                            {item.rfiStatus === RFI_STATUS.CANCELLED
+                                ? 'Cancelled'
+                                : 'Rejected'}
+                        </Text>
+                    </TouchableOpacity>
+                ) : null}
+
+                {item.rfiStatus === RFI_STATUS.IN_PROGRESS ? (
+                    <TouchableOpacity
+                        style={[styles.MyWorkCta, styles.StartInProgressBorder]}
+                        onPress={() => {
+                            getRFIDataByWorkAssignmentId(item);
+                        }}>
+                        <Image
+                            style={styles.WorkIcon}
+                            source={require('../../images/inprogress.png')}
+                        />
+                        <Text
+                            style={[styles.CtaStartText, styles.CtaInProgressTextColor]}>
+                            In Progress
+                        </Text>
+                    </TouchableOpacity>
+                ) : null}
+
+                {item.rfiStatus === RFI_STATUS.IN_REVIEW ? (
+                    <TouchableOpacity
+                        style={[styles.MyWorkCta, styles.StartReviewBorder]}>
+                        <Image
+                            style={styles.WorkIcon}
+                            source={require('../../images/review-icon.png')}
+                        />
+                        <Text style={[styles.CtaStartText, styles.CtaReviewTextColor]}>
+                            Under Review
+                        </Text>
+                    </TouchableOpacity>
+                ) : null}
+
+                {item.rfiStatus === RFI_STATUS.APPROVED ? (
+                    <TouchableOpacity
+                        style={[styles.MyWorkCta, styles.StartCompleteBorder]}>
+                        <Image
+                            style={styles.WorkIcon}
+                            source={require('../../images/complete-icon.png')}
+                        />
+                        <Text style={[styles.CtaStartText, styles.CtaCompleteTextColor]}>
+                            Completed
+                        </Text>
+                    </TouchableOpacity>
+                ) : null}
+            </View>
+        ));
+};
+function handleTextInputChangeTransportation(arg0: string, value: string) {
+    throw new Error("Function not implemented.");
+}
+

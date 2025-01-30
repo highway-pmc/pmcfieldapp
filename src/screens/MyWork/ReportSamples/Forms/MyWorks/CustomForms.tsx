@@ -5,21 +5,20 @@ import { handleTextInputChangeBallast, handleTextInputChangeFoundation, handleTe
 import { useState } from "react";
 import DropDownPicker from "react-native-dropdown-picker";
 import TimePicker from "../../../../../components/UI/TimePicker";
-import { applicationOfFilterMediaData, assemblingOfTrussData, autoLaunchingData, backfillData, backfillingData, ballastData, barBendingScheduleChecked, boringOfDiaphragmData, boringOfPileData, bricksLayeringData, bricksWorkData, cableDressingData, cableTrenchDressingData, cableTrenchExcavationData, castingOfBallastData, ceilingWorkData, chippingAndRemovalOfConcreteData, chuteMembersData, cleanliness, closeRow, comments, compactionData, concreteData, concreteFinishLevelMarked, concreteHasAchievedDesiredStrength, conduitLayingData, constructionOfChamberData, constructionOfFoundationData, couplerArrangementsWithinTolerance, curingData, currentTasksData, cuttingOfJointsData, cuttingOfSoilData, deleteBallastItem, deleteDumpingItem, deleteItem, deleteTorquingItem, deStressingOfGirderData, doorWorksData, dumpingData, dumpingOfSoilData, electricalWorkData, erectionData, erectionOfAngleSectionData, erectionOfBusShelterData, erectionOfColumnsData, erectionOfDoublePoleStructureData, erectionOfFaciaPanelsData, erectionOfFrictionSlabData, erectionOfPolesData, erectionOfStructureData, erectionOfTemporaryStructure, erectionPreCastColumnData, erectionUsingCranesData, excavationOfTrenchData, fabricationData, fabricationOfStructureData, fixingAndInstallationData, fixingGeoCellData, fixingOfAntiglaresData, fixingOfArmsData, fixingOfBearingData, fixingOfBracingsData, fixingOfConvexMirrorsData, fixingOfConvexMirrorsData, fixingOfFlexibleMedianMarkersData, fixingOfGeoGridData, fixingOfHazardMarkersData, fixingOfLEDTrafficBlinkersData, fixingOfMC4Data, fixingOfMeshData, fixingOfMetalBeamData, fixingOfMMSData, fixingOfModulesData, fixingOfNoiseBarrierData, fixingOfObjectMarkersData, fixingOfPanelsData, fixingOfRailingData, fixingOfRoadDelineatorsData, fixingOfRoadStudsData, fixingOfSheathingJointsData, fixingOfSolarBlinkersData, fixingOfSolarRoadStudsData, fixingOfSpringPostData, fixingOfStoneData, fixingOfWireRopeData, fixingShutterData, fixingVerticalPostData, flooringData, flooringWorkData, flushingOperationsData, formworkAlignmentChecked, formworkdDrawingsChecked, formworkFitConcreting, formworkProperlySupported, formworkSealingChecked, foundationData, furnitureWorkData, glassWorksData, glueingData, groutingData, hackingOfGirderData, handleBoringOfDiaphragmInputChange, handleCuring, handleErectionOfTemporaryStructure, handleFixingShutter, handleInputChangeAssemblingOfTruss, handleInputChangeAutoLaunching, handleInputChangeBoringOfPile, handleInputChangeChippingAndRemovalOfConcrete, handleInputChangeDeStressingOfGirder, handleInputChangeErectionUsingCranes, handleInputChangeFabrication, handleInputChangeFixingOfBearing, handleInputChangeFixingOfSheathingJoints, handleInputChangeFlushingOperations, handleInputChangeGrouting, handleInputChangeHackingOfGirder, handleInputChangeInstallationOfExpansionJoint, handleInputChangeLifting, handleInputChangePainting, handleInputChangeRemovalOfTemporaryStructure, handleInputChangeStackingInYard, handleInputChangeStitchConcrete, handleInputChangeStitchConcrete, handlePaintingOfSteelGirdersDiaphragms, handlePlacementOfReinforcementCage, handleTextInputChangeDumping, handleTextInputChangeProcurementOfSteel, handleTextInputChangeTemporaryPrestressing, handleTransportationOfSteelGirdersDiaphragms, hddCrossingData, hvacWorkData, imageObject, installationOfEquipmentData, installationOfExpansionJointData, installationOfLEDLightsData, installationOfNetworkDevicesData, installationOfSolarSystemData, inverterInstallationData, layingAndCompactionData, layingCautionTapeData, layingOfDLCData, layingOfDlcTableData, layingOfDuctData, layingOfFlexibleCableData, layingOfGrassTurfData, layingOfLTCableData, layingOfPaverBlockData, layingOfPQCData, layingOfSeparationMembraneData, layingOfTopSoilData, liftingCombinedLRData, machineCuttingData, millingData, minimumTimeHasBeenAttained, mortarChecklistData, noLBendBottomOfTheCageChecked, onAddComstructionOfFoundation, onAddMoreLayingOfDlc, openBarBendingScheduleChecked, openCalendar, openCleanliness, openConcreteFinishLevelMarked, openConcreteHasAchievedDesiredStrength, openCouplerArrangementsWithinTolerance, openFormworkAlignmentChecked, openFormworkdDrawingsChecked, openFormworkFitConcreting, openFormworkProperlySupported, openFormworkSealingChecked, openMinimumTimeHasBeenAttained, openNoLBendBottomOfTheCageChecked, openPlieShaftCleanedLooseMaterial, openRebarAndDimensionGFC, openRebarsSecurelyTightened, openRebarWithinToleranceLimit, openShapingNoAndLengthOfBarsGFC, openSpacerBarCheckedGFC, openSpliceLengthAndLocationGFC, openSuitableSpacerProvidedToMaintainCoverToSteel, paintingData, paintingOfSteelGirdersDiaphragms, pipeLayingAndJointingData, pitExcavationData, placementOfReinforcementCage, placementOfSignageSheetData, placingChainLinkData, placingOfDowelData, placingOfFillerBoardData, placingOfTieBarData, plantationData, plantingGrassData, plantingTreesData, plasteringData, plieShaftCleanedLooseMaterial, plumbingWorkData, preCastRccPanelData, preparationOfSoilData, prestressingData, primeCoatData, procurementOfSheetData, procurementOfSteelData, puttyData, quantity, rebarAndDimensionGFC, rebarsSecurelyTightened, rebarWithinToleranceLimit, removalFormworkData, removalOfTemporaryStructureData, rfiDate, rfiTime, roadMarkingData, routeMarkingData, sandLayerData, sealantFilingData, searchText, selectedTask, setApplicationOfFilterMediaData, setBackfillData, setBackfillingData, setBallastData, setBarBendingScheduleChecked, setBricksLayeringData, setBricksWorkData, setCableDressingData, setCableTrenchDressingData, setCableTrenchExcavationData, setCastingOfBallastData, setCeilingWorkData, setChuteMembersData, setCleanliness, setComments, setCompactionData, setConcreteData, setConcreteFinishLevelMarked, setConcreteHasAchievedDesiredStrength, setConduitLayingData, setConstructionOfChamberData, setConstructionOfFoundationData, setCouplerArrangementsWithinTolerance, setCuttingOfJointsData, setCuttingOfSoilData, setDoorWorksData, setDumpingData, setDumpingOfSoilData, setElectricalWorkData, setErectionData, setErectionOfAngleSectionData, setErectionOfBusShelterData, setErectionOfColumnsData, setErectionOfDoublePoleStructureData, setErectionOfFaciaPanelsData, setErectionOfFrictionSlabData, setErectionOfPolesData, setErectionOfStructureData, setErectionPreCastColumnData, setExcavationOfTrenchData, setFabricationOfStructureData, setFixingAndInstallationData, setFixingGeoCellData, setFixingOfAntiglaresData, setFixingOfArmsData, setFixingOfBracingsData, setFixingOfConvexMirrorsData, setFixingOfFlexibleMedianMarkersData, setFixingOfGeoGridData, setFixingOfHazardMarkersData, setFixingOfLEDTrafficBlinkersData, setFixingOfMC4Data, setFixingOfMeshData, setFixingOfMetalBeamData, setFixingOfMMSData, setFixingOfModulesData, setFixingOfNoiseBarrierData, setFixingOfObjectMarkersData, setFixingOfPanelsData, setFixingOfRailingData, setFixingOfRoadDelineatorsData, setFixingOfRoadStudsData, setFixingOfSolarBlinkersData, setFixingOfSolarRoadStudsData, setFixingOfSpringPostData, setFixingOfStoneData, setFixingOfWireRopeData, setFixingVerticalPostData, setFlooringData, setFlooringWorkData, setFormworkAlignmentChecked, setFormworkdDrawingsChecked, setFormworkFitConcreting, setFormworkProperlySupported, setFormworkSealingChecked, setFoundationData, setFurnitureWorkData, setGlassWorksData, setGlueingData, setHddCrossingData, setHvacWorkData, setImageObject, setInstallationOfEquipmentData, setInstallationOfLEDLightsData, setInstallationOfNetworkDevicesData, setInstallationOfSolarSystemData, setInverterInstallationData, setLayingAndCompactionData, setLayingCautionTapeData, setLayingOfDLCData, setLayingOfDlcTableData, setLayingOfDuctData, setLayingOfFlexibleCableData, setLayingOfGrassTurfData, setLayingOfLTCableData, setLayingOfPaverBlockData, setLayingOfPQCData, setLayingOfSeparationMembraneData, setLayingOfTopSoilData, setMachineCuttingData, setMillingData, setMinimumTimeHasBeenAttained, setMortarChecklistData, setNoLBendBottomOfTheCageChecked, setOpenBarBendingScheduleChecked, setOpenCalendar, setOpenCleanliness, setOpenConcreteFinishLevelMarked, setOpenConcreteHasAchievedDesiredStrength, setOpenCouplerArrangementsWithinTolerance, setOpenFormworkAlignmentChecked, setOpenFormworkdDrawingsChecked, setOpenFormworkFitConcreting, setOpenFormworkProperlySupported, setOpenFormworkSealingChecked, setOpenMinimumTimeHasBeenAttained, setOpenNoLBendBottomOfTheCageChecked, setOpenPlieShaftCleanedLooseMaterial, setOpenRebarAndDimensionGFC, setOpenRebarsSecurelyTightened, setOpenRebarWithinToleranceLimit, setOpenShapingNoAndLengthOfBarsGFC, setOpenSpacerBarCheckedGFC, setOpenSpliceLengthAndLocationGFC, setOpenSuitableSpacerProvidedToMaintainCoverToSteel, setPipeLayingAndJointingData, setPitExcavationData, setPlacementOfSignageSheetData, setPlacingChainLinkData, setPlacingOfDowelData, setPlacingOfFillerBoardData, setPlacingOfTieBarData, setPlantationData, setPlantingGrassData, setPlantingTreesData, setPlasteringData, setPlieShaftCleanedLooseMaterial, setPlumbingWorkData, setPreCastRccPanelData, setPreparationOfSoilData, setPrestressingData, setPrimeCoatData, setProcurementOfSheetData, setPuttyData, setQuantity, setRebarAndDimensionGFC, setRebarsSecurelyTightened, setRebarWithinToleranceLimit, setRemovalFormworkData, setRFIDate, setRFITime, setRoadMarkingData, setRouteMarkingData, setSandLayerData, setSealantFilingData, setShapingNoAndLengthOfBarsGFC, setSignageLocationData, setSpacerBarCheckedGFC, setSpliceLengthAndLocationGFC, setSpreadingAndCompactionData, setSpreadingOfGrassSeedsData, setStonePitchingData, setStrippingAndStoringTopSoilData, setSuitableSpacerProvidedToMaintainCoverToSteel, setTemporaryPrestressingData, setTexturingData, setTorquingData, setTrafficImpactAttenuatorsData, setWateringData, setWindowWorksData, shapingNoAndLengthOfBarsGFC, showSnackbar, signageLocationData, spacerBarCheckedGFC, spliceLengthAndLocationGFC, spreadingAndCompactionData, spreadingOfGrassSeedsData, stackingInYardData, stitchConcreteData, stonePitchingData, strippingAndStoringTopSoilData, suitableSpacerProvidedToMaintainCoverToSteel, temporaryPrestressingData, texturingData, torquingData, trafficImpactAttenuatorsData, transportationData, transportationOfSteelGirdersDiaphragms, wateringData, windowWorksData } from "./Variables";
+import { applicationOfFilterMediaData, assemblingOfTrussData, autoLaunchingData, backfillData, backfillingData, ballastData, barBendingScheduleChecked, boringOfDiaphragmData, boringOfPileData, bricksLayeringData, bricksWorkData, cableDressingData, cableTrenchDressingData, cableTrenchExcavationData, castingOfBallastData, ceilingWorkData, chippingAndRemovalOfConcreteData, chuteMembersData, cleanliness, closeRow, comments, compactionData, concreteData, concreteFinishLevelMarked, concreteHasAchievedDesiredStrength, conduitLayingData, constructionOfChamberData, constructionOfFoundationData, couplerArrangementsWithinTolerance, curingData, currentTasksData, cuttingOfJointsData, cuttingOfSoilData, deleteBallastItem, deleteDumpingItem, deleteItem, deleteTorquingItem, deStressingOfGirderData, doorWorksData, dumpingData, dumpingOfSoilData, electricalWorkData, erectionData, erectionOfAngleSectionData, erectionOfBusShelterData, erectionOfColumnsData, erectionOfDoublePoleStructureData, erectionOfFaciaPanelsData, erectionOfFrictionSlabData, erectionOfPolesData, erectionOfStructureData, erectionOfTemporaryStructure, erectionPreCastColumnData, erectionUsingCranesData, excavationOfTrenchData, fabricationData, fabricationOfStructureData, fixingAndInstallationData, fixingAndInstallationLTPanelData, fixingGeoCellData, fixingOfAntiglaresData, fixingOfArmsData, fixingOfBearingData, fixingOfBracingsData, fixingOfConvexMirrorsData, fixingOfFlexibleMedianMarkersData, fixingOfGeoGridData, fixingOfHazardMarkersData, fixingOfLEDTrafficBlinkersData, fixingOfMC4Data, fixingOfMeshData, fixingOfMetalBeamData, fixingOfMMSData, fixingOfModulesData, fixingOfNoiseBarrierData, fixingOfObjectMarkersData, fixingOfPanelsData, fixingOfRailingData, fixingOfRoadDelineatorsData, fixingOfRoadStudsData, fixingOfSheathingJointsData, fixingOfSolarBlinkersData, fixingOfSolarRoadStudsData, fixingOfSpringPostData, fixingOfStoneData, fixingOfWireRopeData, fixingShutterData, fixingVerticalPostData, flooringData, flooringWorkData, flushingOperationsData, formworkAlignmentChecked, formworkdDrawingsChecked, formworkFitConcreting, formworkProperlySupported, formworkSealingChecked, foundationData, furnitureWorkData, glassWorksData, glueingData, groutingData, hackingOfGirderData, handleBoringOfDiaphragmInputChange, handleCuring, handleErectionOfTemporaryStructure, handleFixingShutter, handleInputChangeAssemblingOfTruss, handleInputChangeAutoLaunching, handleInputChangeBoringOfPile, handleInputChangeChippingAndRemovalOfConcrete, handleInputChangeDeStressingOfGirder, handleInputChangeErectionUsingCranes, handleInputChangeFabrication, handleInputChangeFixingOfBearing, handleInputChangeFixingOfSheathingJoints, handleInputChangeFlushingOperations, handleInputChangeGrouting, handleInputChangeHackingOfGirder, handleInputChangeInstallationOfExpansionJoint, handleInputChangeLifting, handleInputChangePainting, handleInputChangeRemovalOfTemporaryStructure, handleInputChangeStackingInYard, handleInputChangeStitchConcrete, handlePaintingOfSteelGirdersDiaphragms, handlePlacementOfReinforcementCage, handleTextInputChangeDumping, handleTextInputChangeProcurementOfSteel, handleTextInputChangeTemporaryPrestressing, handleTextInputChangeTransportation, handleTransportationOfSteelGirdersDiaphragms, hddCrossingData, hvacWorkData, imageObject, installationOfEquipmentData, installationOfExpansionJointData, installationOfLEDLightsData, installationOfNetworkDevicesData, installationOfSolarSystemData, inverterInstallationData, layingAndCompactionData, layingCautionTapeData, layingOfDLCData, layingOfDlcTableData, layingOfDuctData, layingOfFlexibleCableData, layingOfGrassTurfData, layingOfLTCableData, layingOfPaverBlockData, layingOfPQCData, layingOfSeparationMembraneData, layingOfTopSoilData, liftingCombinedLRData, machineCuttingData, millingData, minimumTimeHasBeenAttained, mortarChecklistData, noLBendBottomOfTheCageChecked, onAddComstructionOfFoundation, onAddMoreLayingOfDlc, openBarBendingScheduleChecked, openCalendar, openCleanliness, openConcreteFinishLevelMarked, openConcreteHasAchievedDesiredStrength, openCouplerArrangementsWithinTolerance, openFormworkAlignmentChecked, openFormworkdDrawingsChecked, openFormworkFitConcreting, openFormworkProperlySupported, openFormworkSealingChecked, openMinimumTimeHasBeenAttained, openNoLBendBottomOfTheCageChecked, openPlieShaftCleanedLooseMaterial, openRebarAndDimensionGFC, openRebarsSecurelyTightened, openRebarWithinToleranceLimit, openShapingNoAndLengthOfBarsGFC, openSpacerBarCheckedGFC, openSpliceLengthAndLocationGFC, openSuitableSpacerProvidedToMaintainCoverToSteel, paintingData, paintingOfSteelGirdersDiaphragms, pipeLayingAndJointingData, pitExcavationData, placementOfReinforcementCage, placementOfSignageSheetData, placingChainLinkData, placingOfDowelData, placingOfFillerBoardData, placingOfTieBarData, plantationData, plantingGrassData, plantingTreesData, plasteringData, plieShaftCleanedLooseMaterial, plumbingWorkData, preCastRccPanelData, preparationOfSoilData, prestressingData, primeCoatData, procurementOfSheetData, procurementOfSteelData, puttyData, quantity, rebarAndDimensionGFC, rebarsSecurelyTightened, rebarWithinToleranceLimit, removalFormworkData, removalOfTemporaryStructureData, rfiDate, rfiTime, roadMarkingData, routeMarkingData, sandLayerData, sealantFilingData, searchText, selectedTask, setApplicationOfFilterMediaData, setBackfillData, setBackfillingData, setBallastData, setBarBendingScheduleChecked, setBricksLayeringData, setBricksWorkData, setCableDressingData, setCableTrenchDressingData, setCableTrenchExcavationData, setCastingOfBallastData, setCeilingWorkData, setChuteMembersData, setCleanliness, setComments, setCompactionData, setConcreteData, setConcreteFinishLevelMarked, setConcreteHasAchievedDesiredStrength, setConduitLayingData, setConstructionOfChamberData, setConstructionOfFoundationData, setCouplerArrangementsWithinTolerance, setCuttingOfJointsData, setCuttingOfSoilData, setDoorWorksData, setDumpingData, setDumpingOfSoilData, setElectricalWorkData, setErectionData, setErectionOfAngleSectionData, setErectionOfBusShelterData, setErectionOfColumnsData, setErectionOfDoublePoleStructureData, setErectionOfFaciaPanelsData, setErectionOfFrictionSlabData, setErectionOfPolesData, setErectionOfStructureData, setErectionPreCastColumnData, setExcavationOfTrenchData, setFabricationOfStructureData, setFixingAndInstallationData, setFixingAndInstallationLTPanelData, setFixingGeoCellData, setFixingOfAntiglaresData, setFixingOfArmsData, setFixingOfBracingsData, setFixingOfConvexMirrorsData, setFixingOfFlexibleMedianMarkersData, setFixingOfGeoGridData, setFixingOfHazardMarkersData, setFixingOfLEDTrafficBlinkersData, setFixingOfMC4Data, setFixingOfMeshData, setFixingOfMetalBeamData, setFixingOfMMSData, setFixingOfModulesData, setFixingOfNoiseBarrierData, setFixingOfObjectMarkersData, setFixingOfPanelsData, setFixingOfRailingData, setFixingOfRoadDelineatorsData, setFixingOfRoadStudsData, setFixingOfSolarBlinkersData, setFixingOfSolarRoadStudsData, setFixingOfSpringPostData, setFixingOfStoneData, setFixingOfWireRopeData, setFixingVerticalPostData, setFlooringData, setFlooringWorkData, setFormworkAlignmentChecked, setFormworkdDrawingsChecked, setFormworkFitConcreting, setFormworkProperlySupported, setFormworkSealingChecked, setFoundationData, setFurnitureWorkData, setGlassWorksData, setGlueingData, setHddCrossingData, setHvacWorkData, setImageObject, setInstallationOfEquipmentData, setInstallationOfLEDLightsData, setInstallationOfNetworkDevicesData, setInstallationOfSolarSystemData, setInverterInstallationData, setLayingAndCompactionData, setLayingCautionTapeData, setLayingOfDLCData, setLayingOfDlcTableData, setLayingOfDuctData, setLayingOfFlexibleCableData, setLayingOfGrassTurfData, setLayingOfLTCableData, setLayingOfPaverBlockData, setLayingOfPQCData, setLayingOfSeparationMembraneData, setLayingOfTopSoilData, setMachineCuttingData, setMillingData, setMinimumTimeHasBeenAttained, setMortarChecklistData, setNoLBendBottomOfTheCageChecked, setOpenBarBendingScheduleChecked, setOpenCalendar, setOpenCleanliness, setOpenConcreteFinishLevelMarked, setOpenConcreteHasAchievedDesiredStrength, setOpenCouplerArrangementsWithinTolerance, setOpenFormworkAlignmentChecked, setOpenFormworkdDrawingsChecked, setOpenFormworkFitConcreting, setOpenFormworkProperlySupported, setOpenFormworkSealingChecked, setOpenMinimumTimeHasBeenAttained, setOpenNoLBendBottomOfTheCageChecked, setOpenPlieShaftCleanedLooseMaterial, setOpenRebarAndDimensionGFC, setOpenRebarsSecurelyTightened, setOpenRebarWithinToleranceLimit, setOpenShapingNoAndLengthOfBarsGFC, setOpenSpacerBarCheckedGFC, setOpenSpliceLengthAndLocationGFC, setOpenSuitableSpacerProvidedToMaintainCoverToSteel, setPipeLayingAndJointingData, setPitExcavationData, setPlacementOfSignageSheetData, setPlacingChainLinkData, setPlacingOfDowelData, setPlacingOfFillerBoardData, setPlacingOfTieBarData, setPlantationData, setPlantingGrassData, setPlantingTreesData, setPlasteringData, setPlieShaftCleanedLooseMaterial, setPlumbingWorkData, setPreCastRccPanelData, setPreparationOfSoilData, setPrestressingData, setPrimeCoatData, setProcurementOfSheetData, setPuttyData, setQuantity, setRebarAndDimensionGFC, setRebarsSecurelyTightened, setRebarWithinToleranceLimit, setRemovalFormworkData, setRFIDate, setRFITime, setRoadMarkingData, setRouteMarkingData, setSandLayerData, setSealantFilingData, setShapingNoAndLengthOfBarsGFC, setSignageLocationData, setSpacerBarCheckedGFC, setSpliceLengthAndLocationGFC, setSpreadingAndCompactionData, setSpreadingOfGrassSeedsData, setStonePitchingData, setStrippingAndStoringTopSoilData, setSuitableSpacerProvidedToMaintainCoverToSteel, setTemporaryPrestressingData, setTexturingData, setTorquingData, setTrafficImpactAttenuatorsData, setWateringData, setWindowWorksData, shapingNoAndLengthOfBarsGFC, showSnackbar, signageLocationData, spacerBarCheckedGFC, spliceLengthAndLocationGFC, spreadingAndCompactionData, spreadingOfGrassSeedsData, stackingInYardData, stitchConcreteData, stonePitchingData, strippingAndStoringTopSoilData, suitableSpacerProvidedToMaintainCoverToSteel, temporaryPrestressingData, texturingData, torquingData, trafficImpactAttenuatorsData, transportationData, transportationOfSteelGirdersDiaphragms, wateringData, windowWorksData } from "./Variables";
 import CalendarPicker from "../../../../../components/UI/CalenderPicker";
 import * as ImagePicker from 'react-native-image-picker';
 import Input from "../../../../../components/UI/Input";
 import { Guid } from "guid-typescript";
 import { getStyle, onAddMoreConcrete, onAddMoreDumping, onAddMoreTorquing } from "./Events";
+import { styles } from "./Styles";
 
 export const CustomTextInput = ({
     rowItem,
     fieldName,
-    styles,
 }: {
     rowItem: any;
     fieldName: any;
-    styles: any
 }) => {
     const [value, setValue] = useState(rowItem[fieldName]);
     const updateValue = (text: any) => {
@@ -49,13 +48,11 @@ export const CustomTextInputValue = ({
     rowItem,
     fieldName,
     index,
-    styles,
     onChange,
 }: {
     rowItem: any;
     fieldName: string;
     index: number;
-    styles: any;
     onChange: (index: number, field: string, value: string) => void;
 }) => {
     const [value, setValue] = useState(rowItem[fieldName]);
@@ -84,12 +81,10 @@ export const CustomDropdownPicker = ({
     items,
     rowItem,
     fieldName,
-    styles,
 }: {
     items: any;
     rowItem: any;
     fieldName: any;
-    styles: any;
 }) => {
     const [value, setValue] = useState(rowItem[fieldName]);
     const [openList, setOpenList] = useState(false);
@@ -113,7 +108,7 @@ export const CustomDropdownPicker = ({
     );
 };
 
-export const renderItemFoundation = (rowData: any, styles: any) => (
+export const renderItemFoundation = (rowData: any) => (
     <View style={[styles.rowContainer, styles.marginBottom10]}>
         <View style={styles.cell}>
             <Text>{rowData.index + 1}</Text>
@@ -137,7 +132,6 @@ export const renderItemFoundation = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'slumpValue'}
                 index={rowData.index}
-                styles={styles}
                 onChange={handleTextInputChangeFoundation}
             />
         </View>
@@ -155,7 +149,6 @@ export const renderItemFoundation = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'concretePoured'}
                 index={rowData.index}
-                styles={styles}
                 onChange={handleTextInputChangeFoundation}
             />
         </View>
@@ -177,7 +170,6 @@ export const renderItemFoundation = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'totalFoundationCasted'}
                 index={rowData.index}
-                styles={styles}
                 onChange={handleTextInputChangeFoundation}
             />
         </View>
@@ -187,14 +179,14 @@ export const renderItemFoundation = (rowData: any, styles: any) => (
                 onPress={() => deleteConstructionOfFoundationItem(rowData, rowData.item.key)}>
                 <Image
                     style={[styles.CloseIcon, { tintColor: '#fff' }]}
-                    source={require('./../../images/menu/delete.png')}
+                    source={require('../../../../../images/menu/delete.png')}
                 />
             </TouchableOpacity>
         </View>
     </View>
 );
 
-export const renderFoundationHeadings = (styles: any) => (
+export const renderFoundationHeadings = () => (
     <View style={styles.rowContainer}>
         <Text style={styles.cellText}>Grade of Concrete</Text>
         <Text style={styles.cellText}>Slump Value (mm)</Text>
@@ -204,7 +196,7 @@ export const renderFoundationHeadings = (styles: any) => (
         <Text style={styles.cellText}>Total Foundation Casted</Text>
     </View>
 );
-export const renderItemBallast = (rowData: any, styles: any) => (
+export const renderItemBallast = (rowData: any) => (
     <View style={[styles.rowContainer, styles.marginBottom10]}>
         <View style={styles.cell}>
             <Text>{rowData.index + 1}</Text>
@@ -228,7 +220,6 @@ export const renderItemBallast = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'slumpValue'}
                 index={rowData.index}
-                styles={styles}
                 onChange={handleTextInputChangeBallast}
             />
         </View>
@@ -246,7 +237,6 @@ export const renderItemBallast = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'concretePoured'}
                 index={rowData.index}
-                styles={styles}
                 onChange={handleTextInputChangeBallast}
             />
         </View>
@@ -264,7 +254,6 @@ export const renderItemBallast = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'totalBallastCasted'}
                 index={rowData.index}
-                styles={styles}
                 onChange={handleTextInputChangeBallast}
             />
         </View>
@@ -274,7 +263,7 @@ export const renderItemBallast = (rowData: any, styles: any) => (
                 onPress={() => deleteBallastItem(rowData, rowData.item.key)}>
                 <Image
                     style={[styles.CloseIcon, { tintColor: '#fff' }]}
-                    source={require('./../../images/menu/delete.png')}
+                    source={require('../../../../../images/menu/delete.png')}
                 />
             </TouchableOpacity>
         </View>
@@ -282,7 +271,7 @@ export const renderItemBallast = (rowData: any, styles: any) => (
 );
 
 
-export const renderBallastHeadings = (styles: any) => (
+export const renderBallastHeadings = () => (
     <View style={styles.rowContainer}>
         <Text style={styles.cellText}>Grade of Concrete</Text>
         <Text style={styles.cellText}>Slump Value (mm)</Text>
@@ -293,7 +282,7 @@ export const renderBallastHeadings = (styles: any) => (
     </View>
 );
 
-export const renderLayingOfDlcHeadings = (styles: any) => (
+export const renderLayingOfDlcHeadings = () => (
     <View style={styles.rowContainer}>
         <View style={styles.cell}>
             <Text style={styles.cellText}>Serial No.</Text>
@@ -331,7 +320,7 @@ export const deleteConstructionOfFoundationItem = (rowMap: any, rowKey: any) => 
     newData.splice(prevIndex, 1);
     setFoundationData(newData);
 };
-export const renderItemLayingOfDlc = (rowData: any, styles: any) => (
+export const renderItemLayingOfDlc = (rowData: any) => (
     <View style={[styles.rowContainer, styles.marginBottom10]}>
         <View style={styles.cell}>
             <Text>{rowData.index + 1}</Text>
@@ -341,7 +330,6 @@ export const renderItemLayingOfDlc = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'vehicleNo'}
                 index={rowData.index}
-                styles={styles}
                 onChange={handleTextInputChangeLayingOfDlc}
             />
         </View>
@@ -351,7 +339,6 @@ export const renderItemLayingOfDlc = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'totalQtyDlc'}
                 index={rowData.index}
-                styles={styles}
                 onChange={handleTextInputChangeLayingOfDlc}
             />
         </View>
@@ -386,7 +373,7 @@ export const renderItemLayingOfDlc = (rowData: any, styles: any) => (
                 onPress={() => deleteLayingOfDlcItem(rowData, rowData.item.key)}>
                 <Image
                     style={[styles.CloseIcon, { tintColor: '#fff' }]}
-                    source={require('./../../images/menu/delete.png')}
+                    source={require('../../../../../images/menu/delete.png')}
                 />
             </TouchableOpacity>
         </View>
@@ -416,7 +403,7 @@ export const handleTimeChangeLayingOfDlc = (index, fieldName, time) => {
 };
 
 /***************************************/
-const renderGlueingHeadings = (styles: any) => (
+const renderGlueingHeadings = () => (
     <View style={styles.rowContainer}>
         <View style={styles.cell}>
             <Text style={styles.cellText}>Joint No.</Text>
@@ -475,7 +462,7 @@ const renderGlueingHeadings = (styles: any) => (
         </View>
     </View>
 );
-const renderTemporaryPrestressingHeadings = (styles: any) => (
+const renderTemporaryPrestressingHeadings = () => (
     <View style={styles.rowContainer}>
         {/* <View style={[styles.cell, {width: 50}]}>
         <Text style={styles.cellText}>TM No.</Text>
@@ -506,7 +493,7 @@ const renderTemporaryPrestressingHeadings = (styles: any) => (
       </View> */}
     </View>
 );
-const renderItemTemporaryPrestressing = (rowData: any, styles: any) => (
+const renderItemTemporaryPrestressing = (rowData: any) => (
     <View style={[styles.rowContainer, styles.marginBottom10]}>
         <View style={styles.cell}>
             {/* <CustomTextInputValue
@@ -547,7 +534,6 @@ const renderItemTemporaryPrestressing = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'stressingSequenceDrawingNumber'}
                 index={rowData.index}
-                styles={styles}
                 onChange={
                     handleTextInputChangeTemporaryPrestressing
                 }></CustomTextInputValue>
@@ -586,7 +572,6 @@ const renderItemTemporaryPrestressing = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'maxJackPressure'}
                 index={rowData.index}
-                styles={styles}
                 onChange={
                     handleTextInputChangeTemporaryPrestressing
                 }></CustomTextInputValue>
@@ -597,7 +582,6 @@ const renderItemTemporaryPrestressing = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'jackPressureApplied'}
                 index={rowData.index}
-                styles={styles}
                 onChange={
                     handleTextInputChangeTemporaryPrestressing
                 }></CustomTextInputValue>
@@ -611,14 +595,14 @@ const renderItemTemporaryPrestressing = (rowData: any, styles: any) => (
           }>
           <Image
             style={[styles.CloseIcon, {tintColor: '#fff'}]}
-            source={require('./../../images/menu/delete.png')}
+            source={require('../../../../../images/menu/delete.png')}
           />
         </TouchableOpacity>
       </View> */}
     </View>
 );
 
-const renderItemTorquing = (rowData: any, styles: any) => (
+const renderItemTorquing = (rowData: any) => (
     <View style={[styles.rowContainer, styles.marginBottom10]}>
         <View style={[styles.cell, { width: 50 }]}>
             <Text style={styles.cellText}>TM {rowData.index + 1}</Text>
@@ -650,7 +634,6 @@ const renderItemTorquing = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'component'}
                 index={rowData.index}
-                styles={styles}
                 onChange={handleTextInputChangeTorquing}></CustomTextInputValue>
         </View>
 
@@ -659,7 +642,6 @@ const renderItemTorquing = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'detailsOfJoints'}
                 index={rowData.index}
-                styles={styles}
                 onChange={handleTextInputChangeTorquing}></CustomTextInputValue>
         </View>
 
@@ -668,7 +650,6 @@ const renderItemTorquing = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'nosOfBolt'}
                 index={rowData.index}
-                styles={styles}
                 onChange={handleTextInputChangeTorquing}></CustomTextInputValue>
         </View>
 
@@ -677,7 +658,6 @@ const renderItemTorquing = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'diaOfBoltInMm'}
                 index={rowData.index}
-                styles={styles}
                 onChange={handleTextInputChangeTorquing}></CustomTextInputValue>
         </View>
 
@@ -686,7 +666,6 @@ const renderItemTorquing = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'sizeInMm'}
                 index={rowData.index}
-                styles={styles}
                 onChange={handleTextInputChangeTorquing}></CustomTextInputValue>
         </View>
 
@@ -695,7 +674,6 @@ const renderItemTorquing = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'slNoOfInvoiceMTCFile'}
                 index={rowData.index}
-                styles={styles}
                 onChange={handleTextInputChangeTorquing}></CustomTextInputValue>
         </View>
 
@@ -704,7 +682,6 @@ const renderItemTorquing = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'slNoOfTorqueWrench'}
                 index={rowData.index}
-                styles={styles}
                 onChange={handleTextInputChangeTorquing}></CustomTextInputValue>
         </View>
 
@@ -713,7 +690,6 @@ const renderItemTorquing = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'torqueApplied'}
                 index={rowData.index}
-                styles={styles}
                 onChange={handleTextInputChangeTorquing}></CustomTextInputValue>
         </View>
 
@@ -739,14 +715,14 @@ const renderItemTorquing = (rowData: any, styles: any) => (
                 onPress={() => deleteTorquingItem(rowData, rowData.item.key)}>
                 <Image
                     style={[styles.CloseIcon, { tintColor: '#fff' }]}
-                    source={require('./../../images/menu/delete.png')}
+                    source={require('../../../../../images/menu/delete.png')}
                 />
             </TouchableOpacity>
         </View>
     </View>
 );
 
-const renderTorquingHeadings = (styles: any) => (
+const renderTorquingHeadings = () => (
     <View style={styles.rowContainer}>
         <View style={[styles.cell, { width: 50 }]}>
             <Text style={styles.cellText}>Date</Text>
@@ -796,7 +772,7 @@ const renderTorquingHeadings = (styles: any) => (
     </View>
 );
 
-const renderPrestressingHeadings = (styles: any) => (
+const renderPrestressingHeadings = () => (
     <View style={styles.rowContainer}>
         <View style={styles.cell}>
             <Text style={styles.cellText}>Cable No.</Text>
@@ -836,7 +812,7 @@ const renderPrestressingHeadings = (styles: any) => (
         </View>
     </View>
 );
-const renderItemPrestressing = (rowData: any, styles: any) => (
+const renderItemPrestressing = (rowData: any) => (
     <View style={[styles.rowContainer, styles.marginBottom10]}>
         <View style={styles.cell}>
             <Text style={styles.cellText}>{rowData.item['cableNo']}</Text>
@@ -851,7 +827,6 @@ const renderItemPrestressing = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'A0'}
                 index={rowData.index}
-                styles={styles}
                 onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
         </View>
 
@@ -860,7 +835,6 @@ const renderItemPrestressing = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'B0'}
                 index={rowData.index}
-                styles={styles}
                 onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
         </View>
 
@@ -869,7 +843,6 @@ const renderItemPrestressing = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'A1'}
                 index={rowData.index}
-                styles={styles}
                 onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
         </View>
 
@@ -878,7 +851,6 @@ const renderItemPrestressing = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'B1'}
                 index={rowData.index}
-                styles={styles}
                 onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
         </View>
 
@@ -887,7 +859,6 @@ const renderItemPrestressing = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'A2'}
                 index={rowData.index}
-                styles={styles}
                 onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
         </View>
 
@@ -896,7 +867,6 @@ const renderItemPrestressing = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'PA'}
                 index={rowData.index}
-                styles={styles}
                 onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
         </View>
 
@@ -905,7 +875,6 @@ const renderItemPrestressing = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'B2'}
                 index={rowData.index}
-                styles={styles}
                 onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
         </View>
 
@@ -914,7 +883,6 @@ const renderItemPrestressing = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'PB'}
                 index={rowData.index}
-                styles={styles}
                 onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
         </View>
 
@@ -923,7 +891,6 @@ const renderItemPrestressing = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'SA0'}
                 index={rowData.index}
-                styles={styles}
                 onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
         </View>
 
@@ -932,7 +899,6 @@ const renderItemPrestressing = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'SB0'}
                 index={rowData.index}
-                styles={styles}
                 onChange={handleTextInputChangePrestressing}></CustomTextInputValue>
         </View>
     </View>
@@ -1117,7 +1083,7 @@ const handleTextInputChange = (
     }
 };
 
-const renderDumpingHeadings = (styles: any) => (
+const renderDumpingHeadings = () => (
     <View style={styles.rowContainer}>
         <View style={styles.cell}>
             <Text style={styles.cellText}>Tm No.</Text>
@@ -1143,7 +1109,7 @@ const renderDumpingHeadings = (styles: any) => (
     </View>
 );
 
-const renderItemDumping = (rowData: any, styles: any) => (
+const renderItemDumping = (rowData: any) => (
     <View style={[styles.rowContainer, styles.marginBottom10]}>
         <View style={styles.cell}>
             <Text>TM {rowData.index + 1}</Text>
@@ -1153,7 +1119,6 @@ const renderItemDumping = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'vehicleNo'}
                 index={rowData.index}
-                styles={styles}
                 onChange={handleTextInputChangeDumping}
             />
         </View>
@@ -1175,7 +1140,6 @@ const renderItemDumping = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'qtyDumped'}
                 index={rowData.index}
-                styles={styles}
                 onChange={handleTextInputChangeDumping}
             />
         </View>
@@ -1210,7 +1174,7 @@ const renderItemDumping = (rowData: any, styles: any) => (
                 onPress={() => deleteDumpingItem(rowData, rowData.item.key)}>
                 <Image
                     style={[styles.CloseIcon, { tintColor: '#fff' }]}
-                    source={require('./../../images/menu/delete.png')}
+                    source={require('../../../../../images/menu/delete.png')}
                 />
             </TouchableOpacity>
         </View>
@@ -1231,7 +1195,7 @@ const handleDropdownChangeDumping = (
     });
 };
 
-const renderItemGlueing = (rowData: any, styles: any) => (
+const renderItemGlueing = (rowData: any) => (
     <View style={[styles.rowContainer, styles.marginBottom10]}>
         <View style={styles.cell}>
             <Text style={styles.cellText}>{rowData.item['jointNumbers']}</Text>
@@ -1242,7 +1206,6 @@ const renderItemGlueing = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'ambientTemperature'}
                 index={rowData.index}
-                styles={styles}
                 onChange={handleTextInputChangeGlueing}></CustomTextInputValue>
         </View>
 
@@ -1251,7 +1214,6 @@ const renderItemGlueing = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'batchNoResin'}
                 index={rowData.index}
-                styles={styles}
                 onChange={handleTextInputChangeGlueing}></CustomTextInputValue>
         </View>
 
@@ -1260,7 +1222,6 @@ const renderItemGlueing = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'batchNoHardener'}
                 index={rowData.index}
-                styles={styles}
                 onChange={handleTextInputChangeGlueing}></CustomTextInputValue>
         </View>
 
@@ -1351,7 +1312,6 @@ const renderItemGlueing = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'segmentSurfaceArea'}
                 index={rowData.index}
-                styles={styles}
                 onChange={handleTextInputChangeGlueing}></CustomTextInputValue>
         </View>
         <View style={styles.cell}>
@@ -1359,7 +1319,6 @@ const renderItemGlueing = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'epoxyConsumptionTheoreticalResin'}
                 index={rowData.index}
-                styles={styles}
                 onChange={handleTextInputChangeGlueing}></CustomTextInputValue>
         </View>
         <View style={styles.cell}>
@@ -1367,7 +1326,6 @@ const renderItemGlueing = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'epoxyConsumptionTheoreticalHardener'}
                 index={rowData.index}
-                styles={styles}
                 onChange={handleTextInputChangeGlueing}></CustomTextInputValue>
         </View>
 
@@ -1376,7 +1334,6 @@ const renderItemGlueing = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'epoxyConsumptionActualResin'}
                 index={rowData.index}
-                styles={styles}
                 onChange={handleTextInputChangeGlueing}></CustomTextInputValue>
         </View>
         <View style={styles.cell}>
@@ -1384,7 +1341,6 @@ const renderItemGlueing = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'epoxyConsumptionActualHardener'}
                 index={rowData.index}
-                styles={styles}
                 onChange={handleTextInputChangeGlueing}></CustomTextInputValue>
         </View>
     </View>
@@ -1481,7 +1437,7 @@ const handleTextInputChangeGlueing = (
     }
 };
 
-const renderItem = (rowData: any, styles: any) => (
+const renderItem = (rowData: any) => (
     <View
         style={{
             flexDirection: 'row',
@@ -1499,7 +1455,6 @@ const renderItem = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'vehicleNo'}
                 index={rowData.index}
-                styles={styles}
                 onChange={handleTextInputChange}></CustomTextInputValue>
         </View>
         <View style={{ width: 150 }}>
@@ -1566,7 +1521,6 @@ const renderItem = (rowData: any, styles: any) => (
                 rowItem={rowData.item}
                 fieldName={'concretePoured'}
                 index={rowData.index}
-                styles={styles}
                 onChange={handleTextInputChange}></CustomTextInputValue>
         </View>
 
@@ -1587,7 +1541,7 @@ const renderItem = (rowData: any, styles: any) => (
                 onPress={() => deleteItem(rowData, rowData.item.key)}>
                 <Image
                     style={[styles.CloseIcon, { tintColor: '#fff' }]}
-                    source={require('./../../images/menu/delete.png')}
+                    source={require('../../../../../images/menu/delete.png')}
                 />
             </TouchableOpacity>
         </View>
@@ -1595,7 +1549,7 @@ const renderItem = (rowData: any, styles: any) => (
 );
 
 // Function to render hidden swipe actions
-const renderHiddenItem = (rowData: any, rowMap: any, styles: any) => (
+const renderHiddenItem = (rowData: any, rowMap: any) => (
     <View style={styles.hiddenContainer}>
         <TouchableOpacity
             style={[styles.closeButton]}
@@ -1603,7 +1557,7 @@ const renderHiddenItem = (rowData: any, rowMap: any, styles: any) => (
             {/* <Text style={styles.buttonText}>Close</Text>  */}
             <Image
                 style={styles.CloseIcon}
-                source={require('./../../images/menu/close-icon.png')}
+                source={require('../../../../../images/menu/close-icon.png')}
             />
         </TouchableOpacity>
         <TouchableOpacity
@@ -1611,7 +1565,7 @@ const renderHiddenItem = (rowData: any, rowMap: any, styles: any) => (
             onPress={() => deleteItem(rowMap, rowData.item.key)}>
             <Image
                 style={[styles.CloseIcon, { tintColor: '#fff' }]}
-                source={require('./../../images/menu/delete.png')}
+                source={require('../../../../../images/menu/delete.png')}
             />
             {/* <Text style={styles.buttonText}>Delete</Text>  */}
         </TouchableOpacity>
@@ -1664,7 +1618,7 @@ const onSwipeValueChange = (data: any) => {
     }
 };
 
-const renderFileData = (styles: any) => {
+const renderFileData = () => {
     if (imageObject.fileData) {
         return (
             <Image
@@ -1675,14 +1629,14 @@ const renderFileData = (styles: any) => {
     } else {
         return (
             <Image
-                source={require('./../../images/dummy.png')} // ./assets/dummy.png
+                source={require('../../../../../images/dummy.png')} // ./assets/dummy.png
                 style={styles.images}
             />
         );
     }
 };
 
-const renderFileUri = (styles: any) => {
+const renderFileUri = () => {
     if (imageObject.fileUri) {
         return (
             <Image source={{ uri: imageObject.fileUri }} style={styles.images} />
@@ -1690,7 +1644,7 @@ const renderFileUri = (styles: any) => {
     } else {
         return (
             <Image
-                source={require('./../../images/galeryImages.jpg')} // ./assets/galeryImages.jpg
+                source={require('../../../../../images/galeryImages.jpg')} // ./assets/galeryImages.jpg
                 style={styles.images}
             />
         );
@@ -1772,7 +1726,7 @@ const launchImageLibrary = () => {
     });
 };
 
-const taskForm = (taskName: any, styles: any) => {
+export const taskForm = (taskName: any) => {
     switch (taskName) {
         case TASK_TYPES.CNG_AND_SETTING_OUT:
         case TASK_TYPES.PLACING_OF_SHEATHING_DUCT:
@@ -1786,7 +1740,7 @@ const taskForm = (taskName: any, styles: any) => {
                     </Text>
                     <View style={styles.ImageSections}>
                         <View>
-                            {imageObject?.fileData && renderFileData(styles)}
+                            {imageObject?.fileData && renderFileData()}
                             {/* <Text style={{ textAlign: 'center' }}>Base 64 String</Text> */}
                         </View>
                         {/* <View>
@@ -3304,7 +3258,7 @@ const taskForm = (taskName: any, styles: any) => {
                             showsHorizontalScrollIndicator={false}
                             horizontal={enableScroll}>
                             <View>
-                                {renderTorquingHeadings(styles)}
+                                {renderTorquingHeadings()}
                                 <FlatList
                                     data={torquingData}
                                     renderItem={renderItemTorquing}
@@ -3371,7 +3325,7 @@ const taskForm = (taskName: any, styles: any) => {
                             showsHorizontalScrollIndicator={false}
                             horizontal={enableScroll}>
                             <View>
-                                {renderGlueingHeadings(styles)}
+                                {renderGlueingHeadings()}
                                 <FlatList
                                     data={glueingData}
                                     renderItem={renderItemGlueing}
@@ -3439,7 +3393,7 @@ const taskForm = (taskName: any, styles: any) => {
                 <View>
                     <ScrollView horizontal={true}>
                         <View>
-                            {renderDumpingHeadings(styles)}
+                            {renderDumpingHeadings()}
                             <FlatList
                                 data={dumpingData}
                                 renderItem={renderItemDumping}
@@ -3784,7 +3738,7 @@ const taskForm = (taskName: any, styles: any) => {
                             showsHorizontalScrollIndicator={false}
                             horizontal={enableScroll}>
                             <View>
-                                {renderTemporaryPrestressingHeadings(styles)}
+                                {renderTemporaryPrestressingHeadings()}
                                 <FlatList
                                     data={temporaryPrestressingData}
                                     renderItem={renderItemTemporaryPrestressing}
@@ -6209,7 +6163,7 @@ const taskForm = (taskName: any, styles: any) => {
                             showsHorizontalScrollIndicator={false}
                             horizontal={enableScroll}>
                             <View>
-                                {renderPrestressingHeadings(styles)}
+                                {renderPrestressingHeadings()}
                                 <FlatList
                                     data={prestressingData}
                                     renderItem={renderItemPrestressing}
@@ -7439,7 +7393,7 @@ const taskForm = (taskName: any, styles: any) => {
                     />
                     <ScrollView horizontal={true}>
                         <View>
-                            {renderLayingOfDlcHeadings(styles)}
+                            {renderLayingOfDlcHeadings()}
                             <FlatList
                                 data={layingOfDlcTableData}
                                 renderItem={renderItemLayingOfDlc}
@@ -15519,7 +15473,7 @@ const taskForm = (taskName: any, styles: any) => {
                         horizontal={true}
                         showsHorizontalScrollIndicator={false}>
                         <View>
-                            {renderFoundationHeadings(styles)}
+                            {renderFoundationHeadings()}
                             <FlatList
                                 data={foundationData}
                                 renderItem={renderItemFoundation}
@@ -15620,7 +15574,7 @@ const taskForm = (taskName: any, styles: any) => {
                         horizontal={true}
                         showsHorizontalScrollIndicator={false}>
                         <View>
-                            {renderBallastHeadings(styles)}
+                            {renderBallastHeadings()}
                             <FlatList
                                 data={foundationData}
                                 renderItem={renderItemBallast}
@@ -18312,7 +18266,11 @@ const taskForm = (taskName: any, styles: any) => {
     }
 };
 
-const tasksListing = (styles: any) => {
+export const tasksListing = () => {
+    function getRFIDataByWorkAssignmentId(item: any) {
+        throw new Error("Function not implemented.");
+    }
+
     return currentTasksData
         .filter((task: any) => {
             if (searchText && task.displayName) {
@@ -18324,7 +18282,7 @@ const tasksListing = (styles: any) => {
             }
         })
         .map((item: any, index) => (
-            <View style={getStyle(item, styles)}>
+            <View style={getStyle(item)}>
                 <View style={styles.leftContainer}>
                     <Text style={[styles.HeadText, { maxWidth: 300 }]}>
                         {item.displayName}
@@ -18339,7 +18297,7 @@ const tasksListing = (styles: any) => {
                         }}>
                         <Image
                             style={styles.WorkIcon}
-                            source={require('../../images/play-icon.png')}
+                            source={require('../../../../../images/play-icon.png')}
                         />
                         <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>
                             Start
@@ -18355,7 +18313,7 @@ const tasksListing = (styles: any) => {
                         }}>
                         <Image
                             style={styles.WorkIcon}
-                            source={require('../../images/play-icon.png')}
+                            source={require('../../../../../images/play-icon.png')}
                         />
                         <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>
                             Re-start
@@ -18367,7 +18325,7 @@ const tasksListing = (styles: any) => {
                     item.rfiStatus === RFI_STATUS.CANCELLED ? (
                     <TouchableOpacity
                         style={[styles.MyWorkCta, styles.StartRejectBorder]}>
-                        {/* <Image style={styles.WorkIcon} source={require('../../images/play-icon.png')} /> */}
+                        {/* <Image style={styles.WorkIcon} source={require('../../../../../images/play-icon.png')} /> */}
                         <Text style={[styles.CtaStartText, styles.CtaRejectTextColor]}>
                             {item.rfiStatus === RFI_STATUS.CANCELLED
                                 ? 'Cancelled'
@@ -18384,7 +18342,7 @@ const tasksListing = (styles: any) => {
                         }}>
                         <Image
                             style={styles.WorkIcon}
-                            source={require('../../images/inprogress.png')}
+                            source={require('../../../../../images/inprogress.png')}
                         />
                         <Text
                             style={[styles.CtaStartText, styles.CtaInProgressTextColor]}>
@@ -18398,7 +18356,7 @@ const tasksListing = (styles: any) => {
                         style={[styles.MyWorkCta, styles.StartReviewBorder]}>
                         <Image
                             style={styles.WorkIcon}
-                            source={require('../../images/review-icon.png')}
+                            source={require('../../../../../images/review-icon.png')}
                         />
                         <Text style={[styles.CtaStartText, styles.CtaReviewTextColor]}>
                             Under Review
@@ -18411,7 +18369,7 @@ const tasksListing = (styles: any) => {
                         style={[styles.MyWorkCta, styles.StartCompleteBorder]}>
                         <Image
                             style={styles.WorkIcon}
-                            source={require('../../images/complete-icon.png')}
+                            source={require('../../../../../images/complete-icon.png')}
                         />
                         <Text style={[styles.CtaStartText, styles.CtaCompleteTextColor]}>
                             Completed
@@ -18421,7 +18379,3 @@ const tasksListing = (styles: any) => {
             </View>
         ));
 };
-function handleTextInputChangeTransportation(arg0: string, value: string) {
-    throw new Error("Function not implemented.");
-}
-

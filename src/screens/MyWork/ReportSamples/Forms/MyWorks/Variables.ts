@@ -2,11 +2,22 @@ import { Guid } from "guid-typescript";
 import { useState } from "react";
 import { useSnackbar } from "../../../../../context/SnackbarContext";
 import { Dimensions } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+
+export const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
+export const { myWorks, rfiData, rfiChecklistSaved, loading, error } = useSelector(
+    (state: any) => state.MyWorks,
+);
+// const [myWorksData, setMyWorksData]: any = useState([]);
+
+
+export const dispatch = useDispatch();
 
 export const { showSnackbar } = useSnackbar();
 
 export const [myWorksData, setMyWorksData]: any = useState([]);
 
+export const [fixingAndInstallationLTPanelData, setFixingAndInstallationLTPanelData]: any = useState([]);
 export const [currentSegmentsData, setCurrentSegmentsData]: any = useState([]);
 export const [currentComponentsData, setCurrentComponentsData]: any = useState([]);
 export const [currentSubComponentsData, setCurrentSubComponentsData]: any = useState(
@@ -1890,7 +1901,7 @@ export const onAddMoreTemporaryPrestressing = () => {
     ]);
 };
 
-export const [curingData, setCuringData]:any = useState({
+export const [curingData, setCuringData]: any = useState({
     waterUsedForCuring: 'Y',
     phValueOfWater: 'Y',
     consumptionOfWater: 0,
@@ -2004,7 +2015,7 @@ export const [torquingData, setTorquingData] = useState([
         key: Guid.create(),
     },
 ]);
-const handleTextInputChangeTransportation = (key: any, value: any) => {
+export const handleTextInputChangeTransportation = (key: any, value: any) => {
     setTransportationData({
         ...transportationData,
         [key]: value,

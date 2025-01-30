@@ -333,7 +333,7 @@ export const SEGMENT_TYPES = {
   APPROACH_SLAB: 'approach-slab',
 };
 
-export const SEGMENT_TYPES_DISPLAY = {
+export const SEGMENT_TYPES_DISPLAY: any = {
   foundations: 'Foundations',
   'sub-structures': 'Sub Structures',
   'super-structure': 'Super Structure',
@@ -490,7 +490,6 @@ export const TASK_TYPES = {
   FIXING_OF_SHUTTER: 'fixing-of-shutter',
   ERECTION_OF_TEMPORARY_STRUCTURE: 'erection-of-temporary-structure',
   PAINTING_OF_STEEL_GIRDERS_DIAPHRAGMS: 'painting-of-steel-girders-diaphragms',
-  PLACEMENT_OF_REINFORCEMENT_CAGE: 'placement-of-reinforcement-cage',
   TRANSPORTATION_OF_STEEL_GIRDERS_DIAPHRAGMS_ERECTION_AT_SITE:
     'transportation-of-steel-girders-diaphragms-erection-at-site',
   ASSEMBLING_OF_TRUSS: 'assembling-of-truss',
@@ -647,6 +646,8 @@ export const TASK_TYPES = {
   CONSTRUCTION_OF_FOUNDATION: 'construction-of-foundation',
   CASTING_OF_BALLAST: 'casting-of-ballast',
   SAND_LAYER: 'sand-layer',
+  PLACING_AND_JOINTING_CHUTE_MEMBERS: 'placing-and-jointing-ofchute-members',
+  LAYING_OF_PQC: 'N/A',
 };
 
 export const TEST_CLASSIFICATION_TYPES = {

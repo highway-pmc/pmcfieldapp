@@ -720,6 +720,10 @@ export const TEST_TYPES = {
   FLASH_FIRE_POINTS: 'flash-fire-points',
   DUCTILITY_TEST: 'ductility-test',
   BITUMINOUS_PENETRATION_TEST: 'bituminous-penetration-test',
+  WATER_ABSORPTION:'water-absorption',
+  MICRO_SURFACING_GRADATION: 'micro-surfacing-gradation',
+  SAND_EQUIVALENT: 'sand-equivalent',
+  PERCENTAGE_OF_FRACTURE_FACE: 'percentage-of-fracture-face',
 };
 
 export const YES_NO_LIST = [

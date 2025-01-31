@@ -780,7 +780,7 @@ export const getPercentageOfFracturedFaceObject = (sampleNum: any) => {
     },
   };
 };
-//Bituminus work -> Coarse Aggregate(Micro Surfacing) -> Gradation
+//Bituminus work -> Coarse Aggregate(Micro Surfacing) -> Micro Surfacing Gradation
 export const getTestSampleGradationObject = (sampleNum: any) => {
   return {
     sampleNo: {
@@ -860,4 +860,4 @@ export const getSandEquivalentObject = (sampleNum: any) => {
   };
 };
 
-//Bituminus work -> Fine Aggregate -> Plasticity index
+//Bituminus work -> Fine Aggregate -> Plasticity index(In Progress)

@@ -1,19 +1,19 @@
 import { Guid } from "guid-typescript";
 import { TASK_TYPES } from "../../../../../constants/constants";
-import { selectedTask, setApplicationOfFilterMediaData, setAssemblingOfTrussData, setAutoLaunchingData, setBackfillData, setBackfillingData, setBallastData, setBarBendingScheduleChecked, setBoringOfDiaphragmData, setBoringOfPileData, setBricksLayeringData, setBricksWorkData, setCableDressingData, setCableTrenchDressingData, setCableTrenchExcavationData, setCastingOfBallastData, setCeilingWorkData, setChippingAndRemovalOfConcreteData, setChuteMembersData, setCleanliness, setComments, setCompactionData, setConcreteData, setConcreteFinishLevelMarked, setConcreteHasAchievedDesiredStrength, setConduitLayingData, setConstructionOfChamberData, setConstructionOfFoundationData, setCouplerArrangementsWithinTolerance, setCuringData, setCuttingOfJointsData, setCuttingOfSoilData, setDeStressingOfGirderData, setDoorWorksData, setDumpingData, setDumpingOfSoilData, setElectricalWorkData, setErectionData, setErectionOfAngleSectionData, setErectionOfBusShelterData, setErectionOfColumnsData, setErectionOfDoublePoleStructureData, setErectionOfFaciaPanelsData, setErectionOfFrictionSlabData, setErectionOfPolesData, setErectionOfStructureData, setErectionOfTemporaryStructure, setErectionPreCastColumnData, setErectionUsingCranesData, setExcavationOfTrenchData, setFabricationData, setFabricationOfStructureData, setFixingAndInstallationData, setFixingGeoCellData, setFixingOfAntiglaresData, setFixingOfArmsData, setFixingOfBearingData, setFixingOfBracingsData, setFixingOfConvexMirrorsData, setFixingOfFlexibleMedianMarkersData, setFixingOfGeoGridData, setFixingOfHazardMarkersData, setFixingOfLEDTrafficBlinkersData, setFixingOfMC4Data, setFixingOfMeshData, setFixingOfMetalBeamData, setFixingOfMMSData, setFixingOfModulesData, setFixingOfNoiseBarrierData, setFixingOfObjectMarkersData, setFixingOfPanelsData, setFixingOfRailingData, setFixingOfRoadDelineatorsData, setFixingOfRoadStudsData, setFixingOfSheathingJointsData, setFixingOfSolarBlinkersData, setFixingOfSolarRoadStudsData, setFixingOfSpringPostData, setFixingOfStoneData, setFixingOfWireRopeData, setFixingShutterData, setFixingVerticalPostData, setFlooringData, setFlooringWorkData, setFlushingOperationsData, setFormworkAlignmentChecked, setFormworkdDrawingsChecked, setFormworkFitConcreting, setFormworkProperlySupported, setFormworkSealingChecked, setFoundationData, setFurnitureWorkData, setGlassWorksData, setGlueingData, setGroutingData, setHackingOfGirderData, setHddCrossingData, setHvacWorkData, setImageObject, setInstallationOfEquipmentData, setInstallationOfExpansionJointData, setInstallationOfLEDLightsData, setInstallationOfNetworkDevicesData, setInstallationOfSolarSystemData, setInverterInstallationData, setLayingAndCompactionData, setLayingCautionTapeData, setLayingOfDLCData, setLayingOfDlcTableData, setLayingOfDuctData, setLayingOfFlexibleCableData, setLayingOfGrassTurfData, setLayingOfLTCableData, setLayingOfPaverBlockData, setLayingOfPQCData, setLayingOfSeparationMembraneData, setLayingOfTopSoilData, setLiftingCombinedLRData, setMachineCuttingData, setMillingData, setMinimumTimeHasBeenAttained, setMortarChecklistData, setNoLBendBottomOfTheCageChecked, setOpenPopup, setPaintingData, setPaintingOfSteelGirdersDiaphragms, setPipeLayingAndJointingData, setPitExcavationData, setPlacementOfReinforcementCage, setPlacementOfSignageSheetData, setPlacingChainLinkData, setPlacingOfDowelData, setPlacingOfFillerBoardData, setPlacingOfTieBarData, setPlantationData, setPlantingGrassData, setPlantingTreesData, setPlasteringData, setPlieShaftCleanedLooseMaterial, setPlumbingWorkData, setPreCastRccPanelData, setPreparationOfSoilData, setPrestressingData, setPrimeCoatData, setProcurementOfSheetData, setProcurementOfSteelData, setPuttyData, setQuantity, setRebarAndDimensionGFC, setRebarsSecurelyTightened, setRebarWithinToleranceLimit, setRemovalFormworkData, setRemovalOfTemporaryStructureData, setRFIDate, setRfiId, setRoadMarkingData, setRouteMarkingData, setSandLayerData, setSealantFilingData, setShapingNoAndLengthOfBarsGFC, setSignageLocationData, setSpacerBarCheckedGFC, setSpliceLengthAndLocationGFC, setSpreadingAndCompactionData, setSpreadingOfGrassSeedsData, setStackingInYardData, setStitchConcreteData, setStonePitchingData, setStrippingAndStoringTopSoilData, setSuitableSpacerProvidedToMaintainCoverToSteel, setTemporaryPrestressingData, setTexturingData, setTorquingData, setTrafficImpactAttenuatorsData, setTransportationData, setTransportationOfSteelGirdersDiaphragms, setWateringData, setWindowWorksData } from "./Variables";
 import { getDbDate, getDisplayTime } from "../../../../../utils/Utils";
 
-export const initRfiData = (rfiData: any) => {
-    setRfiId(rfiData._id);
+export const initRfiData = (_v: any) => {
+    _v.setRfiId(_v.rfiData._id);
+    const rfiData = _v.rfiData;
     //if (rfiData.metaData) {
-    switch (selectedTask?.name) {
+    switch (_v.selectedTask?.name) {
         case TASK_TYPES.CNG_AND_SETTING_OUT:
         case TASK_TYPES.PLACING_OF_SHEATHING_DUCT:
         case TASK_TYPES.POST_CONCRETE_CHECK:
         case TASK_TYPES.FIXING_OF_BEARING_SLEEVES:
-            setImageObject({
+            _v.setImageObject({
                 filePath: '',
-                fileData: rfiData.metaData?.base64Image,
+                fileData: _v.rfiData.metaData?.base64Image,
                 fileUri: '',
             });
             break;
@@ -22,93 +22,93 @@ export const initRfiData = (rfiData: any) => {
         case TASK_TYPES.PLACEMENT_OF_SIDE_SHUTTERS:
         case TASK_TYPES.PLACEMENT_OF_BOTTOM_SHUTTER:
         case TASK_TYPES.PLACEMENT_OF_MIDDLE_AND_TOP_SHUTTER:
-            setCleanliness(rfiData.metaData?.cleanliness);
-            setFormworkAlignmentChecked(
+            _v.setCleanliness(rfiData.metaData?.cleanliness);
+            _v.setFormworkAlignmentChecked(
                 rfiData.metaData?.formworkAlignmentChecked,
             );
-            setFormworkSealingChecked(rfiData.metaData?.formworkSealingChecked);
-            setFormworkdDrawingsChecked(
+            _v.setFormworkSealingChecked(rfiData.metaData?.formworkSealingChecked);
+            _v.setFormworkdDrawingsChecked(
                 rfiData.metaData?.formworkdDrawingsChecked,
             );
-            setConcreteFinishLevelMarked(
+            _v.setConcreteFinishLevelMarked(
                 rfiData.metaData?.concreteFinishLevelMarked,
             );
-            setFormworkProperlySupported(
+            _v.setFormworkProperlySupported(
                 rfiData.metaData?.formworkProperlySupported,
             );
-            setFormworkFitConcreting(rfiData.metaData?.formworkFitConcreting);
+            _v.setFormworkFitConcreting(rfiData.metaData?.formworkFitConcreting);
             break;
         case TASK_TYPES.REINFORCEMENT_PREPARATION:
         case TASK_TYPES.REINFORCEMENT:
-            setRebarAndDimensionGFC(rfiData.metaData?.rebarAndDimensionGFC);
-            setShapingNoAndLengthOfBarsGFC(
+            _v.setRebarAndDimensionGFC(rfiData.metaData?.rebarAndDimensionGFC);
+            _v.setShapingNoAndLengthOfBarsGFC(
                 rfiData.metaData?.shapingNoAndLengthOfBarsGFC,
             );
-            setRebarsSecurelyTightened(rfiData.metaData?.rebarsSecurelyTightened);
-            setSpliceLengthAndLocationGFC(
+            _v.setRebarsSecurelyTightened(rfiData.metaData?.rebarsSecurelyTightened);
+            _v.setSpliceLengthAndLocationGFC(
                 rfiData.metaData?.spliceLengthAndLocationGFC,
             );
-            setRebarWithinToleranceLimit(
+            _v.setRebarWithinToleranceLimit(
                 rfiData.metaData?.rebarWithinToleranceLimit,
             );
-            setCouplerArrangementsWithinTolerance(
+            _v.setCouplerArrangementsWithinTolerance(
                 rfiData.metaData?.couplerArrangementsWithinTolerance,
             );
-            setBarBendingScheduleChecked(
+            _v.setBarBendingScheduleChecked(
                 rfiData.metaData?.barBendingScheduleChecked,
             );
-            setSpacerBarCheckedGFC(rfiData.metaData?.spacerBarCheckedGFC);
+            _v.setSpacerBarCheckedGFC(rfiData.metaData?.spacerBarCheckedGFC);
             break;
         case TASK_TYPES.PLACEMENT_OF_REINFORCEMENT_CAGE:
-            setRebarAndDimensionGFC(rfiData.metaData?.rebarAndDimensionGFC);
-            setShapingNoAndLengthOfBarsGFC(
+            _v.setRebarAndDimensionGFC(rfiData.metaData?.rebarAndDimensionGFC);
+            _v.setShapingNoAndLengthOfBarsGFC(
                 rfiData.metaData?.shapingNoAndLengthOfBarsGFC,
             );
-            setRebarsSecurelyTightened(rfiData.metaData?.rebarsSecurelyTightened);
-            setSpliceLengthAndLocationGFC(
+            _v.setRebarsSecurelyTightened(rfiData.metaData?.rebarsSecurelyTightened);
+            _v.setSpliceLengthAndLocationGFC(
                 rfiData.metaData?.spliceLengthAndLocationGFC,
             );
-            setRebarWithinToleranceLimit(
+            _v.setRebarWithinToleranceLimit(
                 rfiData.metaData?.rebarWithinToleranceLimit,
             );
-            setCouplerArrangementsWithinTolerance(
+            _v.setCouplerArrangementsWithinTolerance(
                 rfiData.metaData?.couplerArrangementsWithinTolerance,
             );
-            setBarBendingScheduleChecked(
+            _v.setBarBendingScheduleChecked(
                 rfiData.metaData?.barBendingScheduleChecked,
             );
             break;
         case TASK_TYPES.EXCAVATION:
-            setQuantity(rfiData.metaData?.quantity);
+            _v.setQuantity(rfiData.metaData?.quantity);
             break;
         case TASK_TYPES.REMOVAL_OF_SIDE_SHUTTERS:
         case TASK_TYPES.REMOVAL_OF_MIDDLIE_TOP_SHUTTERS:
         case TASK_TYPES.REMOVAL_OF_INNER_SHUTTERS:
         case TASK_TYPES.REMOVAL_OF_SHUTTER:
         case TASK_TYPES.REMOVAL_OF_SHUTTERS:
-            setConcreteHasAchievedDesiredStrength(
+            _v.setConcreteHasAchievedDesiredStrength(
                 rfiData.metaData?.concreteHasAchievedDesiredStrength,
             );
-            setMinimumTimeHasBeenAttained(
+            _v.setMinimumTimeHasBeenAttained(
                 rfiData.metaData?.minimumTimeHasBeenAttained,
             );
             break;
         case TASK_TYPES.CAGE_LOWERING:
-            setPlieShaftCleanedLooseMaterial(
+            _v.setPlieShaftCleanedLooseMaterial(
                 rfiData.metaData?.plieShaftCleanedLooseMaterial,
             );
-            setSuitableSpacerProvidedToMaintainCoverToSteel(
+            _v.setSuitableSpacerProvidedToMaintainCoverToSteel(
                 rfiData.metaData?.suitableSpacerProvidedToMaintainCoverToSteel,
             );
-            setNoLBendBottomOfTheCageChecked(
+            _v.setNoLBendBottomOfTheCageChecked(
                 rfiData.metaData?.noLBendBottomOfTheCageChecked,
             );
             break;
         case TASK_TYPES.BORING_OF_PILE:
             if (rfiData.metaData?.boringOfPileData) {
-                setBoringOfPileData(rfiData.metaData?.boringOfPileData);
+                _v.setBoringOfPileData(rfiData.metaData?.boringOfPileData);
             } else {
-                setBoringOfPileData({
+                _v.setBoringOfPileData({
                     densityOfPolymer: 0,
                     viscosityOfPolymer: 0,
                     valueOfPolymer: 0,
@@ -119,9 +119,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.FLUSHING_OPERATIONS:
             if (rfiData.metaData?.flushingOperationsData) {
-                setFlushingOperationsData(rfiData.metaData?.flushingOperationsData);
+                _v.setFlushingOperationsData(rfiData.metaData?.flushingOperationsData);
             } else {
-                setFlushingOperationsData({
+                _v.setFlushingOperationsData({
                     startTimeOfFlushing: '',
                     finishTimeOfFlushing: '',
                     whetherPourCleared: 'Y',
@@ -135,9 +135,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.GROUTING:
             if (rfiData.metaData?.groutingData) {
-                setBoringOfPileData(rfiData.metaData?.groutingData);
+                _v.setBoringOfPileData(rfiData.metaData?.groutingData);
             } else {
-                setGroutingData({
+                _v.setGroutingData({
                     inletFree: 'Y',
                     outletFree: 'Y',
                     ventsFree: 'Y',
@@ -166,11 +166,11 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.CHIPPING_AND_REMOVAL_OF_CONCRETE_ABOVE_CUT_OFF_LEVEL:
             if (rfiData.metaData?.chippingAndRemovalOfConcreteData) {
-                setChippingAndRemovalOfConcreteData(
+                _v.setChippingAndRemovalOfConcreteData(
                     rfiData.metaData?.chippingAndRemovalOfConcreteData,
                 );
             } else {
-                setChippingAndRemovalOfConcreteData({
+                _v.setChippingAndRemovalOfConcreteData({
                     noOfDaysOfChipping: 0,
                 });
             }
@@ -180,14 +180,14 @@ export const initRfiData = (rfiData: any) => {
                 rfiData.metaData?.concreteData.forEach((item: any) => {
                     item.key = Guid.create();
                 });
-                setConcreteData(rfiData.metaData?.concreteData);
+                _v.setConcreteData(rfiData.metaData?.concreteData);
             } else {
-                setConcreteData([]);
+                _v.setConcreteData([]);
             }
             if (rfiData.metaData?.stitchConcreteData) {
-                setStitchConcreteData(rfiData.metaData?.stitchConcreteData);
+                _v.setStitchConcreteData(rfiData.metaData?.stitchConcreteData);
             } else {
-                setStitchConcreteData({
+                _v.setStitchConcreteData({
                     gradeOfConcrete: 'Y',
                     methodStatementApproved: 'Y',
                     htStrandsInserted: 'Y',
@@ -213,9 +213,9 @@ export const initRfiData = (rfiData: any) => {
                 rfiData.metaData?.concreteData.forEach((item: any) => {
                     item.key = Guid.create();
                 });
-                setConcreteData(rfiData.metaData?.concreteData);
+                _v.setConcreteData(rfiData.metaData?.concreteData);
             } else {
-                setConcreteData([]);
+                _v.setConcreteData([]);
             }
             break;
         case TASK_TYPES.DUMPING:
@@ -223,9 +223,9 @@ export const initRfiData = (rfiData: any) => {
                 rfiData.metaData.dumpingData.forEach((item: any) => {
                     item.key = Guid.create();
                 });
-                setDumpingData(rfiData.metaData.dumpingData);
+                _v.setDumpingData(rfiData.metaData.dumpingData);
             } else {
-                setDumpingData([]);
+                _v.setDumpingData([]);
             }
             break;
 
@@ -234,11 +234,11 @@ export const initRfiData = (rfiData: any) => {
                 rfiData.metaData?.glueingData.forEach((item: any) => {
                     item.key = Guid.create();
                 });
-                setGlueingData(rfiData.metaData?.glueingData);
+                _v.setGlueingData(rfiData.metaData?.glueingData);
             } else {
-                if (selectedTask.taskDetailsData) {
+                if (_v.selectedTask.taskDetailsData) {
                     const taskDetails: any = [];
-                    selectedTask.taskDetailsData.forEach((item: any) => {
+                    _v.selectedTask.taskDetailsData.forEach((item: any) => {
                         taskDetails.push({
                             jointNumbers: item.name,
                             ambientTemperature: 0,
@@ -258,9 +258,9 @@ export const initRfiData = (rfiData: any) => {
                             key: Guid.create(),
                         });
                     });
-                    setGlueingData(taskDetails);
+                    _v.setGlueingData(taskDetails);
                 } else {
-                    setGlueingData([]);
+                    _v.setGlueingData([]);
                 }
             }
             break;
@@ -269,17 +269,17 @@ export const initRfiData = (rfiData: any) => {
                 rfiData.metaData?.torquingData.forEach((item: any) => {
                     item.key = Guid.create();
                 });
-                setTorquingData(rfiData.metaData?.torquingData);
+                _v.setTorquingData(rfiData.metaData?.torquingData);
             } else {
-                setTorquingData([]);
+                _v.setTorquingData([]);
             }
             break;
 
         case TASK_TYPES.REMOVAL_OF_FORMWORK:
             if (rfiData.metaData?.removalFormworkData) {
-                setRemovalFormworkData(rfiData.metaData?.removalFormworkData);
+                _v.setRemovalFormworkData(rfiData.metaData?.removalFormworkData);
             } else {
-                setRemovalFormworkData({
+                _v.setRemovalFormworkData({
                     concreteStrengthAchieved: 'Y',
                     minimumTimeAttained: 'Y',
                 });
@@ -289,9 +289,9 @@ export const initRfiData = (rfiData: any) => {
         case TASK_TYPES.FABRICATION_OF_MEMBERS:
         case TASK_TYPES.FABRICATION_OF_STEEL_GIRDERS:
             if (rfiData.metaData?.fabricationData) {
-                setFabricationData(rfiData.metaData?.fabricationData);
+                _v.setFabricationData(rfiData.metaData?.fabricationData);
             } else {
-                setFabricationData({
+                _v.setFabricationData({
                     steelInspectionSurfaceCondition: 'Y',
                     sectionCheckedForDimension: 'Y',
                     materialSpecificationChecked: 'Y',
@@ -318,13 +318,13 @@ export const initRfiData = (rfiData: any) => {
                     item.jackPressureApplied = item.jackPressureApplied.toString();
                     item.key = Guid.create();
                 });
-                setTemporaryPrestressingData(
+                _v.setTemporaryPrestressingData(
                     rfiData.metaData?.temporaryPrestressingData,
                 );
             } else {
-                if (selectedTask.taskDetailsData) {
+                if (_v.selectedTask.taskDetailsData) {
                     const taskDetails: any = [];
-                    selectedTask.taskDetailsData.forEach((item: any) => {
+                    _v.selectedTask.taskDetailsData.forEach((item: any) => {
                         taskDetails.push({
                             jointNumbers: item.name,
                             calibrationDone: 'Y',
@@ -336,20 +336,20 @@ export const initRfiData = (rfiData: any) => {
                             key: Guid.create(),
                         });
                     });
-                    setTemporaryPrestressingData(taskDetails);
+                    _v.setTemporaryPrestressingData(taskDetails);
                 } else {
-                    setTemporaryPrestressingData([]);
+                    _v.setTemporaryPrestressingData([]);
                 }
             }
             break;
 
         case TASK_TYPES.PAINTING_OF_STEEL_GIRDERS_DIAPHRAGMS:
             if (rfiData.metaData?.paintingOfSteelGirdersDiaphragms) {
-                setPaintingOfSteelGirdersDiaphragms(
+                _v.setPaintingOfSteelGirdersDiaphragms(
                     rfiData.metaData?.paintingOfSteelGirdersDiaphragms,
                 );
             } else {
-                setPaintingOfSteelGirdersDiaphragms({
+                _v.setPaintingOfSteelGirdersDiaphragms({
                     hasAnyRiskAssessment: 'Y',
                     isWorkerWarnPersonalProtective: 'Y',
                     presentAtBlastingPot: 'Y',
@@ -388,11 +388,11 @@ export const initRfiData = (rfiData: any) => {
 
         case TASK_TYPES.PLACEMENT_OF_REINFORCEMENT_CAGE:
             if (rfiData.metaData?.placementOfReinforcementCage) {
-                setPlacementOfReinforcementCage(
+                _v.setPlacementOfReinforcementCage(
                     rfiData.metaData?.placementOfReinforcementCage,
                 );
             } else {
-                setPlacementOfReinforcementCage({
+                _v.setPlacementOfReinforcementCage({
                     rebarDimensionChecked: 'Y',
                     shapingCheckedAsPerGFC: 'Y',
                     rebarsSecurelyBound: 'Y',
@@ -406,11 +406,11 @@ export const initRfiData = (rfiData: any) => {
 
         case TASK_TYPES.TRANSPORTATION_OF_STEEL_GIRDERS_DIAPHRAGMS_ERECTION_AT_SITE:
             if (rfiData.metaData?.transportationOfSteelGirdersDiaphragms) {
-                setTransportationOfSteelGirdersDiaphragms(
+                _v.setTransportationOfSteelGirdersDiaphragms(
                     rfiData.metaData?.transportationOfSteelGirdersDiaphragms,
                 );
             } else {
-                setTransportationOfSteelGirdersDiaphragms({
+                _v.setTransportationOfSteelGirdersDiaphragms({
                     safeAccessProvided: 'Y',
                     workingPlatformOnBoarded: 'Y',
                     guardRailsAttached: 'Y',
@@ -449,9 +449,9 @@ export const initRfiData = (rfiData: any) => {
 
         case TASK_TYPES.CURING:
             if (rfiData.metaData?.curingData) {
-                setCuringData(rfiData.metaData?.curingData);
+                _v.setCuringData(rfiData.metaData?.curingData);
             } else {
-                setCuringData({
+                _v.setCuringData({
                     waterUsedForCuring: 'Y',
                     phValueOfWater: 'Y',
                     consumptionOfWater: 0,
@@ -461,9 +461,9 @@ export const initRfiData = (rfiData: any) => {
 
         case TASK_TYPES.FIXING_OF_SHUTTER:
             if (rfiData.metaData?.fixingShutterData) {
-                setFixingShutterData(rfiData.metaData?.fixingShutterData);
+                _v.setFixingShutterData(rfiData.metaData?.fixingShutterData);
             } else {
-                setFixingShutterData({
+                _v.setFixingShutterData({
                     shutterMaterial: 'Y',
                     repairsAreOf: 'Y',
                     cleanlinessOfShutter: 'Y',
@@ -480,11 +480,11 @@ export const initRfiData = (rfiData: any) => {
 
         case TASK_TYPES.ERECTION_OF_TEMPORARY_STRUCTURE:
             if (rfiData.metaData?.erectionOfTemporaryStructure) {
-                setErectionOfTemporaryStructure(
+                _v.setErectionOfTemporaryStructure(
                     rfiData.metaData?.erectionOfTemporaryStructure,
                 );
             } else {
-                setErectionOfTemporaryStructure({
+                _v.setErectionOfTemporaryStructure({
                     hasAnyRiskAssessment: 'Y',
                     craneHydraLevelBase: 'Y',
                     areAllOperationTrained: 'Y',
@@ -510,11 +510,11 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.ERECTION_USING_CRANES:
             if (rfiData.metaData?.erectionUsingCranesData) {
-                setErectionUsingCranesData(
+                _v.setErectionUsingCranesData(
                     rfiData.metaData?.erectionUsingCranesData,
                 );
             } else {
-                setErectionUsingCranesData({
+                _v.setErectionUsingCranesData({
                     riskAssessmentCarriedOut: 'Y',
                     craneOnFirmLevelBases: 'Y',
                     allOperatorsTrained: 'Y',
@@ -547,9 +547,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.STACKING_IN_YARD:
             if (rfiData.metaData?.stackingInYardData) {
-                setStackingInYardData(rfiData.metaData?.stackingInYardData);
+                _v.setStackingInYardData(rfiData.metaData?.stackingInYardData);
             } else {
-                setStackingInYardData({
+                _v.setStackingInYardData({
                     areaBarricaded: 'Y',
                     temporaryLightsAvailable: 'Y',
                     flagManAvailable: 'Y',
@@ -577,9 +577,9 @@ export const initRfiData = (rfiData: any) => {
 
         case TASK_TYPES.ASSEMBLING_OF_TRUSS:
             if (rfiData.metaData?.assemblingOfTrussData) {
-                setAssemblingOfTrussData(rfiData.metaData?.assemblingOfTrussData);
+                _v.setAssemblingOfTrussData(rfiData.metaData?.assemblingOfTrussData);
             } else {
-                setAssemblingOfTrussData({
+                _v.setAssemblingOfTrussData({
                     partsAccuratelyAssembled: 'Y',
                     noBentOrBrokenParts: 'Y',
                     trussSpanOnBlocks: 'Y',
@@ -591,9 +591,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.HACKING_OF_GIRDER:
             if (rfiData.metaData?.hackingOfGirderData) {
-                setHackingOfGirderData(rfiData.metaData?.hackingOfGirderData);
+                _v.setHackingOfGirderData(rfiData.metaData?.hackingOfGirderData);
             } else {
-                setHackingOfGirderData({
+                _v.setHackingOfGirderData({
                     methodologyApproved: 'Y',
                     surfaceCleanedAndWet: 'Y',
                     skilledPersonnel: 'Y',
@@ -604,11 +604,11 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.DE_STRESSING_OF_GIRDER:
             if (rfiData.metaData?.deStressingOfGirderData) {
-                setDeStressingOfGirderData(
+                _v.setDeStressingOfGirderData(
                     rfiData.metaData?.deStressingOfGirderData,
                 );
             } else {
-                setDeStressingOfGirderData({
+                _v.setDeStressingOfGirderData({
                     strengthAchieved: 'Y',
                     diamondBitSawUsed: 'Y',
                     gradualUniformTransfer: 'Y',
@@ -617,9 +617,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.FIXING_OF_BEARING:
             if (rfiData.metaData?.fixingOfBearingData) {
-                setFixingOfBearingData(rfiData.metaData?.fixingOfBearingData);
+                _v.setFixingOfBearingData(rfiData.metaData?.fixingOfBearingData);
             } else {
-                setFixingOfBearingData({
+                _v.setFixingOfBearingData({
                     bearingPlacedAsPerGFC: 'Y',
                     bearingSurfaceFullyContactWithGirder: 'Y',
                     bearingPlatesSetHorizontal: 'Y',
@@ -634,11 +634,11 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.REMOVAL_OF_TEMPORARY_STRUCTURE:
             if (rfiData.metaData?.removalOfTemporaryStructureData) {
-                setRemovalOfTemporaryStructureData(
+                _v.setRemovalOfTemporaryStructureData(
                     rfiData.metaData?.removalOfTemporaryStructureData,
                 );
             } else {
-                setRemovalOfTemporaryStructureData({
+                _v.setRemovalOfTemporaryStructureData({
                     concreteAchievedStrength: 'Y',
                     minimumTimeAttained: 'Y',
                     allComponentsTightened: 'Y',
@@ -647,11 +647,11 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.INSTALLATION_OF_EXPANSION_JOINT:
             if (rfiData.metaData?.installationOfExpansionJointData) {
-                setInstallationOfExpansionJointData(
+                _v.setInstallationOfExpansionJointData(
                     rfiData.metaData?.installationOfExpansionJointData,
                 );
             } else {
-                setInstallationOfExpansionJointData({
+                _v.setInstallationOfExpansionJointData({
                     expansionJointPositionCorrect: 'Y',
                     shippingDevicesRemoved: 'Y',
                     noForeignObjects: 'Y',
@@ -664,9 +664,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.PAINTING:
             if (rfiData.metaData?.paintingData) {
-                setPaintingData(rfiData.metaData?.paintingData);
+                _v.setPaintingData(rfiData.metaData?.paintingData);
             } else {
-                setPaintingData({
+                _v.setPaintingData({
                     paintingSystemApproved: 'Y',
                     documentsApproved: 'Y',
                     surfacePreparationDone: 'Y',
@@ -691,9 +691,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.AUTO_LAUNCHING:
             if (rfiData.metaData?.autoLaunchingData) {
-                setAutoLaunchingData(rfiData.metaData?.autoLaunchingData);
+                _v.setAutoLaunchingData(rfiData.metaData?.autoLaunchingData);
             } else {
-                setAutoLaunchingData({
+                _v.setAutoLaunchingData({
                     firstSpanLowering: 'Y',
                     sliderPerDrawing: 'Y',
                     middleSupportLeveling: 'Y',
@@ -722,29 +722,29 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.PROCUREMENT_OF_STRUCTURAL_STEEL:
             if (rfiData.metaData?.procurementOfSteelData) {
-                setProcurementOfSteelData(rfiData.metaData?.procurementOfSteelData);
+                _v.setProcurementOfSteelData(rfiData.metaData?.procurementOfSteelData);
             } else {
-                setProcurementOfSteelData({
+                _v.setProcurementOfSteelData({
                     totalQtyOfSteelProcured: 0.0,
                 });
             }
             break;
         case TASK_TYPES.TRANSPORTATION_OF_MATERIAL:
             if (rfiData.metaData?.transportationData) {
-                setTransportationData(rfiData.metaData?.transportationData);
+                _v.setTransportationData(rfiData.metaData?.transportationData);
             } else {
-                setTransportationData({
+                _v.setTransportationData({
                     transitTime: 0.0,
                 });
             }
             break;
         case TASK_TYPES.FIXING_OF_SHEATHING_JOINTS:
             if (rfiData.metaData?.fixingOfSheathingJointsData) {
-                setFixingOfSheathingJointsData(
+                _v.setFixingOfSheathingJointsData(
                     rfiData.metaData?.fixingOfSheathingJointsData,
                 );
             } else {
-                setFixingOfSheathingJointsData({
+                _v.setFixingOfSheathingJointsData({
                     temporaryOpeningsPlugged: 'Y',
                     jointWaterTight: 'Y',
                     sheathingNeatlyFitted: 'Y',
@@ -758,9 +758,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.FIXING_OF_GEO_GRID:
             if (rfiData.metaData?.fixingOfGeoGridData) {
-                setFixingOfGeoGridData(rfiData.metaData.fixingOfGeoGridData);
+                _v.setFixingOfGeoGridData(rfiData.metaData.fixingOfGeoGridData);
             } else {
-                setFixingOfGeoGridData({
+                _v.setFixingOfGeoGridData({
                     materialApprovedByEngineer: 'Y',
                     specificationsAsPerApprovedDrawing: 'Y',
                     soilProperlyCompacted: 'Y',
@@ -772,11 +772,11 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.ERECTION_OF_FRICTION_SLAB:
             if (rfiData.metaData?.erectionOfFrictionSlabData) {
-                setErectionOfFrictionSlabData(
+                _v.setErectionOfFrictionSlabData(
                     rfiData.metaData.erectionOfFrictionSlabData,
                 );
             } else {
-                setErectionOfFrictionSlabData({
+                _v.setErectionOfFrictionSlabData({
                     sufficientStrength: 'Y',
                     notDamaged: 'Y',
                     lineLevelsChecked: 'Y',
@@ -788,11 +788,11 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.ERECTION_OF_FACIA_PANELS:
             if (rfiData.metaData?.erectionOfFaciaPanelsData) {
-                setErectionOfFaciaPanelsData(
+                _v.setErectionOfFaciaPanelsData(
                     rfiData.metaData.erectionOfFaciaPanelsData,
                 );
             } else {
-                setErectionOfFaciaPanelsData({
+                _v.setErectionOfFaciaPanelsData({
                     sufficientStrength: 'Y',
                     notDamaged: 'Y',
                     lineLevelsChecked: 'Y',
@@ -804,9 +804,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.ERECTION_OF_COLUMNS:
             if (rfiData.metaData?.erectionOfColumnsData) {
-                setErectionOfColumnsData(rfiData.metaData.erectionOfColumnsData);
+                _v.setErectionOfColumnsData(rfiData.metaData.erectionOfColumnsData);
             } else {
-                setErectionOfColumnsData({
+                _v.setErectionOfColumnsData({
                     positionChecked: 'Y',
                     weldingAsPerDrawing: 'Y',
                     columnsAsPerDrawing: 'Y',
@@ -816,20 +816,20 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.APPLICATION_OF_FILTER_MEDIA:
             if (rfiData.metaData?.applicationOfFilterMediaData) {
-                setApplicationOfFilterMediaData(
+                _v.setApplicationOfFilterMediaData(
                     rfiData.metaData.applicationOfFilterMediaData,
                 );
             } else {
-                setApplicationOfFilterMediaData({
+                _v.setApplicationOfFilterMediaData({
                     filterMediaAsPerDrawing: 'Y',
                 });
             }
             break;
         case TASK_TYPES.FIXING_OF_BRACINGS:
             if (rfiData.metaData?.fixingOfBracingsData) {
-                setFixingOfBracingsData(rfiData.metaData.fixingOfBracingsData);
+                _v.setFixingOfBracingsData(rfiData.metaData.fixingOfBracingsData);
             } else {
-                setFixingOfBracingsData({
+                _v.setFixingOfBracingsData({
                     lineLevelsChecked: 'Y',
                     weldingAsPerApprovedDrawing: 'Y',
                     bracingsAsPerApprovedDrawing: 'Y',
@@ -838,9 +838,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.FIXING_OF_RAILING:
             if (rfiData.metaData?.fixingOfRailingData) {
-                setFixingOfRailingData(rfiData.metaData.fixingOfRailingData);
+                _v.setFixingOfRailingData(rfiData.metaData.fixingOfRailingData);
             } else {
-                setFixingOfRailingData({
+                _v.setFixingOfRailingData({
                     lineLevelsChecked: 'Y',
                     railingAsPerApprovedDrawing: 'Y',
                 });
@@ -848,18 +848,18 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.PROCUREMENT_OF_SHEET:
             if (rfiData.metaData?.procurementOfSheetData) {
-                setProcurementOfSheetData(rfiData.metaData.procurementOfSheetData);
+                _v.setProcurementOfSheetData(rfiData.metaData.procurementOfSheetData);
             } else {
-                setProcurementOfSheetData({
+                _v.setProcurementOfSheetData({
                     totalSheetPurchased: 0,
                 });
             }
             break;
         case TASK_TYPES.DUMPING_OF_SOIL:
             if (rfiData.metaData?.dumpingOfSoilData) {
-                setDumpingOfSoilData(rfiData.metaData.dumpingOfSoilData);
+                _v.setDumpingOfSoilData(rfiData.metaData.dumpingOfSoilData);
             } else {
-                setDumpingOfSoilData({
+                _v.setDumpingOfSoilData({
                     soilApprovedSource: 'Y',
                     soilWithoutUnwantedMaterials: 'Y',
                     quantityOfSoilDumped: '0.0',
@@ -868,9 +868,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.BORING_OF_DIAPHRAGM:
             if (rfiData.metaData?.boringOfDiaphragmData) {
-                setBoringOfDiaphragmData(rfiData.metaData.boringOfDiaphragmData);
+                _v.setBoringOfDiaphragmData(rfiData.metaData.boringOfDiaphragmData);
             } else {
-                setBoringOfDiaphragmData({
+                _v.setBoringOfDiaphragmData({
                     densityOfPolymer: 0.0,
                     viscosityOfPolymer: 0,
                     pHValueOfPolymer: 0,
@@ -881,9 +881,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.ERECTION:
             if (rfiData.metaData?.erectionData) {
-                setErectionData(rfiData.metaData.erectionData);
+                _v.setErectionData(rfiData.metaData.erectionData);
             } else {
-                setErectionData({
+                _v.setErectionData({
                     groundLeveled: 'Y',
                     areaBarricaded: 'Y',
                     temporaryLights: 'Y',
@@ -910,22 +910,22 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.STRIPPING_AND_STORING_TOP_SOIL:
             if (rfiData.metaData?.strippingAndStoringTopSoilData) {
-                setStrippingAndStoringTopSoilData(
+                _v.setStrippingAndStoringTopSoilData(
                     rfiData.metaData.strippingAndStoringTopSoilData,
                 );
             } else {
-                setStrippingAndStoringTopSoilData({
+                _v.setStrippingAndStoringTopSoilData({
                     topSoilCollectedStored: 0, // Default value
                 });
             }
             break;
         case TASK_TYPES.SPREADING_AND_COMPACTION:
             if (rfiData.metaData?.spreadingAndCompactionData) {
-                setSpreadingAndCompactionData(
+                _v.setSpreadingAndCompactionData(
                     rfiData.metaData.spreadingAndCompactionData,
                 );
             } else {
-                setSpreadingAndCompactionData({
+                _v.setSpreadingAndCompactionData({
                     sourceOfMaterialApproved: 'Y',
                     groundImprovementDone: 'Y',
                     underLayingLayerApproved: 'Y',
@@ -951,9 +951,9 @@ export const initRfiData = (rfiData: any) => {
         case TASK_TYPES.PRIME_COAT:
         case TASK_TYPES.TACK_COAT:
             if (rfiData.metaData?.primeCoatData) {
-                setPrimeCoatData(rfiData.metaData.primeCoatData);
+                _v.setPrimeCoatData(rfiData.metaData.primeCoatData);
             } else {
-                setPrimeCoatData({
+                _v.setPrimeCoatData({
                     previousLayerApproved: 'Y',
                     surfacePreparationSatisfactory: 'Y',
                     materialGradeApproved: 'Y',
@@ -965,9 +965,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.ROAD_MARKING:
             if (rfiData.metaData?.roadMarkingData) {
-                setRoadMarkingData(rfiData.metaData.roadMarkingData);
+                _v.setRoadMarkingData(rfiData.metaData.roadMarkingData);
             } else {
-                setRoadMarkingData({
+                _v.setRoadMarkingData({
                     drawingAndMethodApproved: 'Y',
                     thermoplasticAndGlassBeadApproved: 'Y',
                     heaterConditionChecked: 'Y',
@@ -984,11 +984,11 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.LAYING_AND_COMPACTION:
             if (rfiData.metaData?.layingAndCompactionData) {
-                setLayingAndCompactionData(
+                _v.setLayingAndCompactionData(
                     rfiData.metaData.layingAndCompactionData,
                 );
             } else {
-                setLayingAndCompactionData({
+                _v.setLayingAndCompactionData({
                     safetyMeasuresTaken: 'Y',
                     approvedMethodologyAvailable: 'Y',
                     primeCoatCured: 'Y',
@@ -1014,11 +1014,11 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.PIPE_LAYING_AND_JOINTING:
             if (rfiData.metaData?.pipeLayingAndJointingData) {
-                setPipeLayingAndJointingData(
+                _v.setPipeLayingAndJointingData(
                     rfiData.metaData.pipeLayingAndJointingData,
                 );
             } else {
-                setPipeLayingAndJointingData({
+                _v.setPipeLayingAndJointingData({
                     materialAsPerGFC: 'Y',
                     latestGFCAvailable: 'Y',
                     locationLevelsPipeSizeAsPerGFC: 'Y',
@@ -1039,9 +1039,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.FIXING_OF_METAL_BEAM:
             if (rfiData.metaData?.fixingOfMetalBeamData) {
-                setFixingOfMetalBeamData(rfiData.metaData.fixingOfMetalBeamData);
+                _v.setFixingOfMetalBeamData(rfiData.metaData.fixingOfMetalBeamData);
             } else {
-                setFixingOfMetalBeamData({
+                _v.setFixingOfMetalBeamData({
                     barrierToEmbankmentDistance: 'Y',
                     barrierToEdgeOfCarriagewayDistance: 'Y',
                     medianWBeamFaceDistance: 'Y',
@@ -1053,9 +1053,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.FIXING_VERTICAL_POST:
             if (rfiData.metaData?.fixingVerticalPostData) {
-                setFixingVerticalPostData(rfiData.metaData.fixingVerticalPostData);
+                _v.setFixingVerticalPostData(rfiData.metaData.fixingVerticalPostData);
             } else {
-                setFixingVerticalPostData({
+                _v.setFixingVerticalPostData({
                     pitsDuggedToPlan: 'Y',
                     distanceMaintainedBarrierSlope: 'Y',
                     distanceMaintainedBarrierCarriageway: 'Y',
@@ -1068,9 +1068,9 @@ export const initRfiData = (rfiData: any) => {
 
         case TASK_TYPES.CUTTING_OF_JOINTS:
             if (rfiData.metaData?.cuttingOfJointsData) {
-                setCuttingOfJointsData(rfiData.metaData.cuttingOfJointsData);
+                _v.setCuttingOfJointsData(rfiData.metaData.cuttingOfJointsData);
             } else {
-                setCuttingOfJointsData({
+                _v.setCuttingOfJointsData({
                     jointsCutAtDesiredIntervals: 'Y',
                     jointsCutAtDesiredDepth: 'Y',
                     jointCutDoneProperly: 'Y',
@@ -1080,9 +1080,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.LAYING_OF_PAVER_BLOCK:
             if (rfiData.metaData?.layingOfPaverBlockData) {
-                setLayingOfPaverBlockData(rfiData.metaData.layingOfPaverBlockData);
+                _v.setLayingOfPaverBlockData(rfiData.metaData.layingOfPaverBlockData);
             } else {
-                setLayingOfPaverBlockData({
+                _v.setLayingOfPaverBlockData({
                     subBaseCompacted: 'Y',
                     sandLayingCourse: 'Y',
                     pavingBlocksApprovedSource: 'Y',
@@ -1103,14 +1103,14 @@ export const initRfiData = (rfiData: any) => {
                 rfiData.metaData.layingOfDlcTableData.forEach((item: any) => {
                     item.key = Guid.create();
                 });
-                setLayingOfDlcTableData(rfiData.metaData.layingOfDlcTableData);
+                _v.setLayingOfDlcTableData(rfiData.metaData.layingOfDlcTableData);
             } else {
-                setLayingOfDlcTableData([]);
+                _v.setLayingOfDlcTableData([]);
             }
             if (rfiData.metaData?.layingOfDLCData) {
-                setLayingOfDLCData(rfiData.metaData.layingOfDLCData);
+                _v.setLayingOfDLCData(rfiData.metaData.layingOfDLCData);
             } else {
-                setLayingOfDLCData({
+                _v.setLayingOfDLCData({
                     mixDesignApproved: 'Y',
                     gsbLayerApproved: 'Y',
                     gradeSurveyStakesAvailable: 'Y',
@@ -1130,9 +1130,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.MACHINE_CUTTING_OF_JOINTS:
             if (rfiData.metaData?.machineCuttingData) {
-                setMachineCuttingData(rfiData.metaData.machineCuttingData);
+                _v.setMachineCuttingData(rfiData.metaData.machineCuttingData);
             } else {
-                setMachineCuttingData({
+                _v.setMachineCuttingData({
                     cuttingSawsAvailable: 'Y',
                     diamondSawBladesAvailable: 'Y',
                     waterTankAvailable: 'Y',
@@ -1143,9 +1143,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.PLACING_OF_TIE_BAR:
             if (rfiData.metaData?.placingOfTieBarData) {
-                setPlacingOfTieBarData(rfiData.metaData.placingOfTieBarData);
+                _v.setPlacingOfTieBarData(rfiData.metaData.placingOfTieBarData);
             } else {
-                setPlacingOfTieBarData({
+                _v.setPlacingOfTieBarData({
                     drawingApproved: 'Y',
                     placingDoneAsPerDrawings: 'Y',
                     alignmentDoneProperly: 'Y',
@@ -1155,9 +1155,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.FIXING_OF_WIRE_ROPE:
             if (rfiData.metaData?.fixingOfWireRopeData) {
-                setFixingOfWireRopeData(rfiData.metaData.fixingOfWireRopeData);
+                _v.setFixingOfWireRopeData(rfiData.metaData.fixingOfWireRopeData);
             } else {
-                setFixingOfWireRopeData({
+                _v.setFixingOfWireRopeData({
                     strandsFromApprovedSource: 'Y',
                     endAttachmentsCondition: 'Y',
                     heatDamageEvidence: 'Y',
@@ -1169,9 +1169,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.TEXTURING:
             if (rfiData.metaData?.texturingData) {
-                setTexturingData(rfiData.metaData.texturingData);
+                _v.setTexturingData(rfiData.metaData.texturingData);
             } else {
-                setTexturingData({
+                _v.setTexturingData({
                     steelTinesBrushAutomatic: 'Y',
                     texturingWithinTimeLimits: 'Y',
                     tiningUnitPressureAdjusted: 'Y',
@@ -1187,9 +1187,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.PLACING_OF_DOWEL:
             if (rfiData.metaData?.placingOfDowelData) {
-                setPlacingOfDowelData(rfiData.metaData.placingOfDowelData);
+                _v.setPlacingOfDowelData(rfiData.metaData.placingOfDowelData);
             } else {
-                setPlacingOfDowelData({
+                _v.setPlacingOfDowelData({
                     pqcDrawingApproved: 'Y',
                     dowelBarsPlacedProperDepth: 'Y',
                     barsAlignedProperly: 'Y',
@@ -1203,9 +1203,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.COMPACTION:
             if (rfiData.metaData?.compactionData) {
-                setCompactionData(rfiData.metaData.compactionData);
+                _v.setCompactionData(rfiData.metaData.compactionData);
             } else {
-                setCompactionData({
+                _v.setCompactionData({
                     uniformSprinkling: 'Y',
                     looseThicknessChecked: 'Y',
                     omcMaintained: 'Y',
@@ -1222,11 +1222,11 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.PLACING_OF_FILLER_BOARD:
             if (rfiData.metaData?.placingOfFillerBoardData) {
-                setPlacingOfFillerBoardData(
+                _v.setPlacingOfFillerBoardData(
                     rfiData.metaData.placingOfFillerBoardData,
                 );
             } else {
-                setPlacingOfFillerBoardData({
+                _v.setPlacingOfFillerBoardData({
                     sourceApproved: 'Y',
                     surfaceFreeFromDust: 'Y',
                     fillerBoardCutProperly: 'Y',
@@ -1239,9 +1239,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.SEALANT_FILING:
             if (rfiData.metaData?.sealantFilingData) {
-                setSealantFilingData(rfiData.metaData.sealantFilingData);
+                _v.setSealantFilingData(rfiData.metaData.sealantFilingData);
             } else {
-                setSealantFilingData({
+                _v.setSealantFilingData({
                     sealantSourceApproved: 'Y',
                     jointFaceCleaned: 'Y',
                     sealantPlacedProperDepth: 'Y',
@@ -1256,9 +1256,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.MILLING_OF_FLEXIBLE_PAVEMENT:
             if (rfiData.metaData?.millingData) {
-                setMillingData(rfiData.metaData.millingData);
+                _v.setMillingData(rfiData.metaData.millingData);
             } else {
-                setMillingData({
+                _v.setMillingData({
                     milledSurfaceUniform: 'Y',
                     finishedSurfaceWithinTolerance: 'Y',
                     textureSafeForMotorist: 'Y',
@@ -1270,11 +1270,11 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.LAYING_OF_SEPARATION_MEMBRANE:
             if (rfiData.metaData?.layingOfSeparationMembraneData) {
-                setLayingOfSeparationMembraneData(
+                _v.setLayingOfSeparationMembraneData(
                     rfiData.metaData.layingOfSeparationMembraneData,
                 );
             } else {
-                setLayingOfSeparationMembraneData({
+                _v.setLayingOfSeparationMembraneData({
                     subbaseSweptClean: 'Y',
                     undulationsLeveled: 'Y',
                     membraneTightStraight: 'Y',
@@ -1288,9 +1288,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.CUTTING_OF_SOIL:
             if (rfiData.metaData?.cuttingOfSoilData) {
-                setCuttingOfSoilData(rfiData.metaData.cuttingOfSoilData);
+                _v.setCuttingOfSoilData(rfiData.metaData.cuttingOfSoilData);
             } else {
-                setCuttingOfSoilData({
+                _v.setCuttingOfSoilData({
                     safetyMeasuresTaken: 'Y',
                     equipmentAvailable: 'Y',
                     excavationDone: 'Y',
@@ -1300,9 +1300,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.LAYING_OF_PAVEMENT_QUALITY_CONCRETE:
             if (rfiData.metaData?.layingOfPQCData) {
-                setLayingOfPQCData(rfiData.metaData.layingOfPQCData);
+                _v.setLayingOfPQCData(rfiData.metaData.layingOfPQCData);
             } else {
-                setLayingOfPQCData({
+                _v.setLayingOfPQCData({
                     trailPatchApproved: 'Y',
                     mixDesignApproved: 'Y',
                     dlcLayerApproved: 'Y',
@@ -1329,9 +1329,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.BACKFILLING:
             if (rfiData.metaData?.backfillingData) {
-                setBackfillingData(rfiData.metaData.backfillingData);
+                _v.setBackfillingData(rfiData.metaData.backfillingData);
             } else {
-                setBackfillingData({
+                _v.setBackfillingData({
                     areaClearOfDebris: 'Y',
                     backfillingTimingAppropriate: 'Y',
                     approvedFillMaterials: 'Y',
@@ -1348,9 +1348,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.BRICKS_WORK:
             if (rfiData.metaData?.bricksWorkData) {
-                setBricksWorkData(rfiData.metaData.bricksWorkData);
+                _v.setBricksWorkData(rfiData.metaData.bricksWorkData);
             } else {
-                setBricksWorkData({
+                _v.setBricksWorkData({
                     drawingsAvailable: 'Y',
                     bricksSizeClassAsPerDrawing: 'Y',
                     requiredBlocksAvailable: 'Y',
@@ -1371,9 +1371,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.FIXING_GEO_CELL:
             if (rfiData.metaData?.fixingGeoCellData) {
-                setFixingGeoCellData(rfiData.metaData.fixingGeoCellData);
+                _v.setFixingGeoCellData(rfiData.metaData.fixingGeoCellData);
             } else {
-                setFixingGeoCellData({
+                _v.setFixingGeoCellData({
                     sourceApproved: 'Y',
                     methodStatementApproved: 'Y',
                     slopeMaintained: 'Y',
@@ -1388,9 +1388,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.FIXING_OF_MESH:
             if (rfiData.metaData?.fixingOfMeshData) {
-                setFixingOfMeshData(rfiData.metaData.fixingOfMeshData);
+                _v.setFixingOfMeshData(rfiData.metaData.fixingOfMeshData);
             } else {
-                setFixingOfMeshData({
+                _v.setFixingOfMeshData({
                     sourceApproved: 'Y',
                     sizeAsPerDrawing: 'Y',
                     wireMeshDamageChecked: 'Y',
@@ -1402,9 +1402,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.LAYING_OF_GRASS_TURF:
             if (rfiData.metaData?.layingOfGrassTurfData) {
-                setLayingOfGrassTurfData(rfiData.metaData.layingOfGrassTurfData);
+                _v.setLayingOfGrassTurfData(rfiData.metaData.layingOfGrassTurfData);
             } else {
-                setLayingOfGrassTurfData({
+                _v.setLayingOfGrassTurfData({
                     turfsCutPlantedWithin24hrs: 'Y',
                     baseAreaPrepared: 'Y',
                     topsoilThicknessVerified: 'Y',
@@ -1423,9 +1423,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.LAYING_OF_TOP_SOIL:
             if (rfiData.metaData?.layingOfTopSoilData) {
-                setLayingOfTopSoilData(rfiData.metaData.layingOfTopSoilData);
+                _v.setLayingOfTopSoilData(rfiData.metaData.layingOfTopSoilData);
             } else {
-                setLayingOfTopSoilData({
+                _v.setLayingOfTopSoilData({
                     approvedSource: 'Y',
                     vehicleMovementArrangement: 'Y',
                     machineryAvailable: 'Y',
@@ -1437,9 +1437,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.PLACING_AND_JOINTING_OF_CHUTE_MEMBERS:
             if (rfiData.metaData?.chuteMembersData) {
-                setChuteMembersData(rfiData.metaData.chuteMembersData);
+                _v.setChuteMembersData(rfiData.metaData.chuteMembersData);
             } else {
-                setChuteMembersData({
+                _v.setChuteMembersData({
                     bottomSoilCompacted: 'Y',
                     slopeMaintained: 'Y',
                     chuteLiningDone: 'Y',
@@ -1452,9 +1452,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.PIT_EXCAVATION:
             if (rfiData.metaData?.pitExcavationData) {
-                setPitExcavationData(rfiData.metaData.pitExcavationData);
+                _v.setPitExcavationData(rfiData.metaData.pitExcavationData);
             } else {
-                setPitExcavationData({
+                _v.setPitExcavationData({
                     undergroundUtilities: 'Y',
                     pitsShoredTimbered: 'Y',
                     fencesBarricadesProvided: 'Y',
@@ -1471,9 +1471,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.PLANTING_GRASS:
             if (rfiData.metaData?.plantingGrassData) {
-                setPlantingGrassData(rfiData.metaData.plantingGrassData);
+                _v.setPlantingGrassData(rfiData.metaData.plantingGrassData);
             } else {
-                setPlantingGrassData({
+                _v.setPlantingGrassData({
                     grassSeedingHandledGently: 'Y',
                     grassSeedingDoneAfterHandling: 'Y',
                     grassSeedingProtectedFromSunWind: 'Y',
@@ -1488,9 +1488,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.PLANTING_TREES:
             if (rfiData.metaData?.plantingTreesData) {
-                setPlantingTreesData(rfiData.metaData.plantingTreesData);
+                _v.setPlantingTreesData(rfiData.metaData.plantingTreesData);
             } else {
-                setPlantingTreesData({
+                _v.setPlantingTreesData({
                     handleGently: 'Y',
                     rootKeptMoist: 'Y',
                     plantingDoneAsPerDrawing: 'Y',
@@ -1505,9 +1505,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.PREPARATION_OF_SOIL:
             if (rfiData.metaData?.preparationOfSoilData) {
-                setPreparationOfSoilData(rfiData.metaData.preparationOfSoilData);
+                _v.setPreparationOfSoilData(rfiData.metaData.preparationOfSoilData);
             } else {
-                setPreparationOfSoilData({
+                _v.setPreparationOfSoilData({
                     soilDumpedInLayer: 'Y',
                     soilSpreadProperLength: 'Y',
                     soilCompactedProperly: 'Y',
@@ -1518,11 +1518,11 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.SPREADING_OF_GRASS_SEEDS:
             if (rfiData.metaData?.spreadingOfGrassSeedsData) {
-                setSpreadingOfGrassSeedsData(
+                _v.setSpreadingOfGrassSeedsData(
                     rfiData.metaData.spreadingOfGrassSeedsData,
                 );
             } else {
-                setSpreadingOfGrassSeedsData({
+                _v.setSpreadingOfGrassSeedsData({
                     seedApprovedSource: 'Y',
                     surfaceFreeFromGarbage: 'Y',
                     surfaceWellPrepared: 'Y',
@@ -1531,9 +1531,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.WATERING:
             if (rfiData.metaData?.wateringData) {
-                setWateringData(rfiData.metaData.wateringData);
+                _v.setWateringData(rfiData.metaData.wateringData);
             } else {
-                setWateringData({
+                _v.setWateringData({
                     waterClean: 'Y',
                     wateringThreeTimesADay: 'Y',
                     totalQtyWaterUsed: 0.0,
@@ -1542,9 +1542,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.PLANTATION:
             if (rfiData.metaData?.plantationData) {
-                setPlantationData(rfiData.metaData.plantationData);
+                _v.setPlantationData(rfiData.metaData.plantationData);
             } else {
-                setPlantationData({
+                _v.setPlantationData({
                     seedingHandledGently: 'Y',
                     seedingDoneAfterHandling: 'Y',
                     protectedFromSunWind: 'Y',
@@ -1561,9 +1561,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.STONE_PITCHING:
             if (rfiData.metaData?.stonePitchingData) {
-                setStonePitchingData(rfiData.metaData.stonePitchingData);
+                _v.setStonePitchingData(rfiData.metaData.stonePitchingData);
             } else {
-                setStonePitchingData({
+                _v.setStonePitchingData({
                     constructionDocsApproved: 'Y',
                     workOfOtherTradesCompleted: 'Y',
                     layerCompacted: 'Y',
@@ -1577,11 +1577,11 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.FIXING_INVERTER_INSTALLATION:
             if (rfiData.metaData?.inverterInstallationData) {
-                setInverterInstallationData(
+                _v.setInverterInstallationData(
                     rfiData.metaData.inverterInstallationData,
                 );
             } else {
-                setInverterInstallationData({
+                _v.setInverterInstallationData({
                     drawingsApproved: 'Y',
                     equipmentInspected: 'Y',
                     equipmentDamagedInformed: 'Y',
@@ -1598,11 +1598,11 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.ERECTION_OF_DOUBLE_POLE_STRUCTURE:
             if (rfiData.metaData?.erectionOfDoublePoleStructureData) {
-                setErectionOfDoublePoleStructureData(
+                _v.setErectionOfDoublePoleStructureData(
                     rfiData.metaData.erectionOfDoublePoleStructureData,
                 );
             } else {
-                setErectionOfDoublePoleStructureData({
+                _v.setErectionOfDoublePoleStructureData({
                     drawingsApproved: 'Y',
                     doublePoleReadyForErection: 'Y',
                     foundationWorkCompleted: 'Y',
@@ -1618,9 +1618,9 @@ export const initRfiData = (rfiData: any) => {
 
         case TASK_TYPES.FIXING_OF_MC4_Y_CONNECTOR:
             if (rfiData.metaData?.fixingOfMC4Data) {
-                setFixingOfMC4Data(rfiData.metaData.fixingOfMC4Data);
+                _v.setFixingOfMC4Data(rfiData.metaData.fixingOfMC4Data);
             } else {
-                setFixingOfMC4Data({
+                _v.setFixingOfMC4Data({
                     cablesConnected: 'Y',
                     connectionsChecked: 'Y',
                     totalYConnectorsUsed: 0,
@@ -1629,9 +1629,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.FIXING_OF_MC4_Y_CONNECTOR:
             if (rfiData.metaData?.fixingOfMC4Data) {
-                setFixingOfMC4Data(rfiData.metaData.fixingOfMC4Data);
+                _v.setFixingOfMC4Data(rfiData.metaData.fixingOfMC4Data);
             } else {
-                setFixingOfMC4Data({
+                _v.setFixingOfMC4Data({
                     cablesConnected: 'Y',
                     connectionsChecked: 'Y',
                     totalYConnectorsUsed: 0,
@@ -1640,9 +1640,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.FIXING_OF_MMS:
             if (rfiData.metaData?.fixingOfMMSData) {
-                setFixingOfMMSData(rfiData.metaData.fixingOfMMSData);
+                _v.setFixingOfMMSData(rfiData.metaData.fixingOfMMSData);
             } else {
-                setFixingOfMMSData({
+                _v.setFixingOfMMSData({
                     drawingsApproved: 'Y',
                     materialInspectedAndCleared: 'Y',
                     materialReachedUndamaged: 'Y',
@@ -1660,9 +1660,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.FIXING_OF_MODULES:
             if (rfiData.metaData?.fixingOfModulesData) {
-                setFixingOfModulesData(rfiData.metaData.fixingOfModulesData);
+                _v.setFixingOfModulesData(rfiData.metaData.fixingOfModulesData);
             } else {
-                setFixingOfModulesData({
+                _v.setFixingOfModulesData({
                     drawingsApproved: 'Y',
                     materialInspectedFactory: 'Y',
                     materialReachedSiteOk: 'Y',
@@ -1679,9 +1679,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.LAYING_OF_CAUTION_TAPE:
             if (rfiData.metaData?.layingCautionTapeData) {
-                setLayingCautionTapeData(rfiData.metaData.layingCautionTapeData);
+                _v.setLayingCautionTapeData(rfiData.metaData.layingCautionTapeData);
             } else {
-                setLayingCautionTapeData({
+                _v.setLayingCautionTapeData({
                     drawingsApproved: 'Y',
                     sizeShapeThicknessAsPerDrawings: 'Y',
                     sourceMaterialApproved: 'Y',
@@ -1693,9 +1693,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.ROUTE_MARKING:
             if (rfiData.metaData?.routeMarkingData) {
-                setRouteMarkingData(rfiData.metaData.routeMarkingData);
+                _v.setRouteMarkingData(rfiData.metaData.routeMarkingData);
             } else {
-                setRouteMarkingData({
+                _v.setRouteMarkingData({
                     drawingsApproved: 'Y',
                     markersSizeShapeAsPerApproved: 'Y',
                     materialSourceApproved: 'Y',
@@ -1709,9 +1709,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.BRICKS_LAYERING:
             if (rfiData.metaData?.bricksLayeringData) {
-                setBricksLayeringData(rfiData.metaData.bricksLayeringData);
+                _v.setBricksLayeringData(rfiData.metaData.bricksLayeringData);
             } else {
-                setBricksLayeringData({
+                _v.setBricksLayeringData({
                     drawingsApproved: 'Y',
                     bricksSizeClassApproved: 'Y',
                     totalAreaCompleted: 0.0,
@@ -1722,9 +1722,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.CABLE_DRESSING:
             if (rfiData.metaData?.cableDressingData) {
-                setCableDressingData(rfiData.metaData.cableDressingData);
+                _v.setCableDressingData(rfiData.metaData.cableDressingData);
             } else {
-                setCableDressingData({
+                _v.setCableDressingData({
                     cablesTiedProperly: 'Y',
                     noCableDamaged: 'Y',
                 });
@@ -1732,11 +1732,11 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.CABLE_TRENCH_DRESSING:
             if (rfiData.metaData?.cableTrenchDressingData) {
-                setCableTrenchDressingData(
+                _v.setCableTrenchDressingData(
                     rfiData.metaData.cableTrenchDressingData,
                 );
             } else {
-                setCableTrenchDressingData({
+                _v.setCableTrenchDressingData({
                     safetyMeasuresTaken: 'Y',
                     manpowerAvailable: 'Y',
                     lineLevelsChecked: 'Y',
@@ -1748,9 +1748,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.CONDUIT_LAYING:
             if (rfiData.metaData?.conduitLayingData) {
-                setConduitLayingData(rfiData.metaData.conduitLayingData);
+                _v.setConduitLayingData(rfiData.metaData.conduitLayingData);
             } else {
-                setConduitLayingData({
+                _v.setConduitLayingData({
                     drawingsApproved: 'Y',
                     conduitSizeShapeAsPerSpecs: 'Y',
                     materialSourceApproved: 'Y',
@@ -1762,11 +1762,11 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.CABLE_TRENCH_EXCAVATION:
             if (rfiData.metaData?.cableTrenchExcavationData) {
-                setCableTrenchExcavationData(
+                _v.setCableTrenchExcavationData(
                     rfiData.metaData.cableTrenchExcavationData,
                 );
             } else {
-                setCableTrenchExcavationData({
+                _v.setCableTrenchExcavationData({
                     safetyMeasuresTaken: 'Y',
                     drawingsApproved: 'Y',
                     alignmentMarked: 'Y',
@@ -1784,11 +1784,11 @@ export const initRfiData = (rfiData: any) => {
         case TASK_TYPES.FIXING_AND_INSTALLATION_OF_HT_PANEL:
         case TASK_TYPES.FIXING_AND_INSTALLATION_OF_TRANSFORMER:
             if (rfiData.metaData?.fixingAndInstallationData) {
-                setFixingAndInstallationData(
+                _v.setFixingAndInstallationData(
                     rfiData.metaData.fixingAndInstallationData,
                 );
             } else {
-                setFixingAndInstallationData({
+                _v.setFixingAndInstallationData({
                     drawingsApproved: 'Y',
                     equipmentInspected: 'Y',
                     equipmentDamageInformed: 'Y',
@@ -1805,11 +1805,11 @@ export const initRfiData = (rfiData: any) => {
             break;
         // case TASK_TYPES.HT_PANEL_INSTALLATION:
         //   if (rfiData.metaData?.htPanelInstallationData) {
-        //     setHtPanelInstallationData(
+        //     _v.setHtPanelInstallationData(
         //       rfiData.metaData.htPanelInstallationData,
         //     );
         //   } else {
-        //     setHtPanelInstallationData({
+        //     _v.setHtPanelInstallationData({
         //       drawingsApproved: 'Y',
         //       equipmentInspected: 'Y',
         //       equipmentDamageReported: 'Y',
@@ -1826,11 +1826,11 @@ export const initRfiData = (rfiData: any) => {
         //   break;
         case TASK_TYPES.ERECTION_OF_STRUCTURE:
             if (rfiData.metaData?.erectionOfStructureData) {
-                setErectionOfStructureData(
+                _v.setErectionOfStructureData(
                     rfiData.metaData.erectionOfStructureData,
                 );
             } else {
-                setErectionOfStructureData({
+                _v.setErectionOfStructureData({
                     positionChecked: 'Y',
                     weldingDoneAsPerDrawing: 'Y',
                     structureAsPerDrawing: 'Y',
@@ -1840,11 +1840,11 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.FABRICATION_OF_STRUCTURE:
             if (rfiData.metaData?.fabricationOfStructureData) {
-                setFabricationOfStructureData(
+                _v.setFabricationOfStructureData(
                     rfiData.metaData.fabricationOfStructureData,
                 );
             } else {
-                setFabricationOfStructureData({
+                _v.setFabricationOfStructureData({
                     steelInspection: 'Y',
                     sectionChecked: 'Y',
                     materialSpecificationChecked: 'Y',
@@ -1865,9 +1865,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.FIXING_OF_PANELS:
             if (rfiData.metaData?.fixingOfPanelsData) {
-                setFixingOfPanelsData(rfiData.metaData.fixingOfPanelsData);
+                _v.setFixingOfPanelsData(rfiData.metaData.fixingOfPanelsData);
             } else {
-                setFixingOfPanelsData({
+                _v.setFixingOfPanelsData({
                     drawingApproved: 'Y',
                     materialSourceApproved: 'Y',
                     panelShapeSizeAsDrawing: 'Y',
@@ -1881,11 +1881,11 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.ERECTION_OF_PRECAST_COLUMN:
             if (rfiData.metaData?.erectionPreCastColumnData) {
-                setErectionPreCastColumnData(
+                _v.setErectionPreCastColumnData(
                     rfiData.metaData.erectionPreCastColumnData,
                 );
             } else {
-                setErectionPreCastColumnData({
+                _v.setErectionPreCastColumnData({
                     drawingApproved: 'Y',
                     columnsFromApprovedSource: 'Y',
                     columnDamaged: 'Y',
@@ -1900,11 +1900,11 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.ERECTION_OF_BUS_SHELTER:
             if (rfiData.metaData?.erectionOfBusShelterData) {
-                setErectionOfBusShelterData(
+                _v.setErectionOfBusShelterData(
                     rfiData.metaData.erectionOfBusShelterData,
                 );
             } else {
-                setErectionOfBusShelterData({
+                _v.setErectionOfBusShelterData({
                     materialSourceApproved: 'Y',
                     drawingsApproved: 'Y',
                     supportingSurfaceChecked: 'Y',
@@ -1916,11 +1916,11 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.ERECTION_OF_ANGLE_SECTION:
             if (rfiData.metaData?.erectionOfAngleSectionData) {
-                setErectionOfAngleSectionData(
+                _v.setErectionOfAngleSectionData(
                     rfiData.metaData.erectionOfAngleSectionData,
                 );
             } else {
-                setErectionOfAngleSectionData({
+                _v.setErectionOfAngleSectionData({
                     anglesFromApprovedSource: 'Y',
                     materialInspectionClearance: 'Y',
                     materialDamagedInformed: 'Y',
@@ -1932,9 +1932,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.PLACING_OF_PRE_CAST_RCC_PANELS:
             if (rfiData.metaData?.preCastRccPanelData) {
-                setPreCastRccPanelData(rfiData.metaData.preCastRccPanelData);
+                _v.setPreCastRccPanelData(rfiData.metaData.preCastRccPanelData);
             } else {
-                setPreCastRccPanelData({
+                _v.setPreCastRccPanelData({
                     drawingApproved: 'Y',
                     panelsFromApprovedSource: 'Y',
                     damagedPanelFound: 'Y',
@@ -1946,9 +1946,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.PLACING_OF_CHAIN_LINK:
             if (rfiData.metaData?.placingChainLinkData) {
-                setPlacingChainLinkData(rfiData.metaData.placingChainLinkData);
+                _v.setPlacingChainLinkData(rfiData.metaData.placingChainLinkData);
             } else {
-                setPlacingChainLinkData({
+                _v.setPlacingChainLinkData({
                     drawingApproved: 'Y',
                     fencingInstalledAsPerPlotPlan: 'Y',
                     fittingsCapsTensionBarsHingesHardwareInstalled: 'Y',
@@ -1969,9 +1969,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.MORTAR_CHECKLIST:
             if (rfiData.metaData?.mortarChecklistData) {
-                setMortarChecklistData(rfiData.metaData.mortarChecklistData);
+                _v.setMortarChecklistData(rfiData.metaData.mortarChecklistData);
             } else {
-                setMortarChecklistData({
+                _v.setMortarChecklistData({
                     mortarMixUniform: 'Y',
                     sufficientMortarQuantity: 'Y',
                     blockAlignmentPlumb: 'Y',
@@ -1985,9 +1985,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.FLOORING:
             if (rfiData.metaData?.flooringData) {
-                setFlooringData(rfiData.metaData.flooringData);
+                _v.setFlooringData(rfiData.metaData.flooringData);
             } else {
-                setFlooringData({
+                _v.setFlooringData({
                     flooringMaterialSourceApproved: 'Y',
                     tilesCrackFree: 'Y',
                     cracksHolesUnevenSurface: 'Y',
@@ -2000,9 +2000,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.SIGNAGE_LOCATION_IDENTIFICATION:
             if (rfiData.metaData?.signageLocationData) {
-                setSignageLocationData(rfiData.metaData.signageLocationData);
+                _v.setSignageLocationData(rfiData.metaData.signageLocationData);
             } else {
-                setSignageLocationData({
+                _v.setSignageLocationData({
                     drawingApproved: 'Y',
                     locationMarked: 'Y',
                     locationCheckedByEngineer: 'Y',
@@ -2012,9 +2012,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.BACKFILL:
             if (rfiData.metaData?.backfillData) {
-                setBackfillData(rfiData.metaData.backfillData);
+                _v.setBackfillData(rfiData.metaData.backfillData);
             } else {
-                setBackfillData({
+                _v.setBackfillData({
                     areaClearOfDebris: 'Y',
                     fillMaterialsApproved: 'Y',
                     noDamageToCables: 'Y',
@@ -2026,11 +2026,11 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.PLACEMENT_OF_SIGNAGE_SHEET:
             if (rfiData.metaData?.placementOfSignageSheetData) {
-                setPlacementOfSignageSheetData(
+                _v.setPlacementOfSignageSheetData(
                     rfiData.metaData.placementOfSignageSheetData,
                 );
             } else {
-                setPlacementOfSignageSheetData({
+                _v.setPlacementOfSignageSheetData({
                     materialSourceApproved: 'Y',
                     drawingsApproved: 'Y',
                     letterSizeAsPerDrawing: 'Y',
@@ -2043,11 +2043,11 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.FIXING_OF_TRAFFIC_IMPACT_ATTENUATORS:
             if (rfiData.metaData?.trafficImpactAttenuatorsData) {
-                setTrafficImpactAttenuatorsData(
+                _v.setTrafficImpactAttenuatorsData(
                     rfiData.metaData.trafficImpactAttenuatorsData,
                 );
             } else {
-                setTrafficImpactAttenuatorsData({
+                _v.setTrafficImpactAttenuatorsData({
                     sourceMaterialApproved: 'Y',
                     drawingApproved: 'Y',
                     shapeSizeAsPerDrawing: 'Y',
@@ -2061,9 +2061,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.FIXING_OF_SPRING_POST:
             if (rfiData.metaData?.fixingOfSpringPostData) {
-                setFixingOfSpringPostData(rfiData.metaData.fixingOfSpringPostData);
+                _v.setFixingOfSpringPostData(rfiData.metaData.fixingOfSpringPostData);
             } else {
-                setFixingOfSpringPostData({
+                _v.setFixingOfSpringPostData({
                     sourceMaterialApproved: 'Y',
                     drawingApproved: 'Y',
                     shapeAndSizeAsPerDrawing: 'Y',
@@ -2078,11 +2078,11 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.FIXING_OF_SOLAR_ROAD_STUDS:
             if (rfiData.metaData?.fixingOfSolarRoadStudsData) {
-                setFixingOfSolarRoadStudsData(
+                _v.setFixingOfSolarRoadStudsData(
                     rfiData.metaData.fixingOfSolarRoadStudsData,
                 );
             } else {
-                setFixingOfSolarRoadStudsData({
+                _v.setFixingOfSolarRoadStudsData({
                     sourceMaterialApproved: 'Y',
                     drawingApproved: 'Y',
                     shapeSizeAsPerDrawing: 'Y',
@@ -2098,11 +2098,11 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.FIXING_OF_SOLAR_BLINKERS:
             if (rfiData.metaData?.fixingOfSolarBlinkersData) {
-                setFixingOfSolarBlinkersData(
+                _v.setFixingOfSolarBlinkersData(
                     rfiData.metaData.fixingOfSolarBlinkersData,
                 );
             } else {
-                setFixingOfSolarBlinkersData({
+                _v.setFixingOfSolarBlinkersData({
                     sourceMaterialApproved: 'Y',
                     drawingApproved: 'Y',
                     shapeAndSizeAsPerDrawing: 'Y',
@@ -2117,9 +2117,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.FIXING_OF_ROAD_STUDS:
             if (rfiData.metaData?.fixingOfRoadStudsData) {
-                setFixingOfRoadStudsData(rfiData.metaData.fixingOfRoadStudsData);
+                _v.setFixingOfRoadStudsData(rfiData.metaData.fixingOfRoadStudsData);
             } else {
-                setFixingOfRoadStudsData({
+                _v.setFixingOfRoadStudsData({
                     sourceMaterialApproved: 'Y',
                     drawingApproved: 'Y',
                     shapeAndSizeAsPerDrawing: 'Y',
@@ -2135,11 +2135,11 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.FIXING_OF_ROAD_DELINEATORS:
             if (rfiData.metaData?.fixingOfRoadDelineatorsData) {
-                setFixingOfRoadDelineatorsData(
+                _v.setFixingOfRoadDelineatorsData(
                     rfiData.metaData.fixingOfRoadDelineatorsData,
                 );
             } else {
-                setFixingOfRoadDelineatorsData({
+                _v.setFixingOfRoadDelineatorsData({
                     sourceMaterialApproved: 'Y',
                     drawingApproved: 'Y',
                     shapeSizeAsPerDrawing: 'Y',
@@ -2153,11 +2153,11 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.FIXING_OF_OBJECT_MARKERS:
             if (rfiData.metaData?.fixingOfObjectMarkersData) {
-                setFixingOfObjectMarkersData(
+                _v.setFixingOfObjectMarkersData(
                     rfiData.metaData.fixingOfObjectMarkersData,
                 );
             } else {
-                setFixingOfObjectMarkersData({
+                _v.setFixingOfObjectMarkersData({
                     sourceMaterialApproved: 'Y',
                     drawingApproved: 'Y',
                     shapeSizeApproved: 'Y',
@@ -2171,11 +2171,11 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.FIXING_OF_NOISE_BARRIER:
             if (rfiData.metaData?.fixingOfNoiseBarrierData) {
-                setFixingOfNoiseBarrierData(
+                _v.setFixingOfNoiseBarrierData(
                     rfiData.metaData.fixingOfNoiseBarrierData,
                 );
             } else {
-                setFixingOfNoiseBarrierData({
+                _v.setFixingOfNoiseBarrierData({
                     sourceMaterialApproved: 'Y',
                     drawingApproved: 'Y',
                     shapeSizeApproved: 'Y',
@@ -2190,11 +2190,11 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.FIXING_OF_LED_TRAFFIC_BLINKERS:
             if (rfiData.metaData?.fixingOfLEDTrafficBlinkersData) {
-                setFixingOfLEDTrafficBlinkersData(
+                _v.setFixingOfLEDTrafficBlinkersData(
                     rfiData.metaData.fixingOfLEDTrafficBlinkersData,
                 );
             } else {
-                setFixingOfLEDTrafficBlinkersData({
+                _v.setFixingOfLEDTrafficBlinkersData({
                     sourceMaterialApproved: 'Y',
                     drawingApproved: 'Y',
                     shapeSizeApproved: 'Y',
@@ -2209,11 +2209,11 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.FIXING_OF_HAZARD_MARKERS:
             if (rfiData.metaData?.fixingOfHazardMarkersData) {
-                setFixingOfHazardMarkersData(
+                _v.setFixingOfHazardMarkersData(
                     rfiData.metaData.fixingOfHazardMarkersData,
                 );
             } else {
-                setFixingOfHazardMarkersData({
+                _v.setFixingOfHazardMarkersData({
                     sourceMaterialApproved: 'Y',
                     drawingApproved: 'Y',
                     shapeSizeApproved: 'Y',
@@ -2227,11 +2227,11 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.FIXING_OF_FLEXIBLE_MEDIAN_MARKERS:
             if (rfiData.metaData?.fixingOfFlexibleMedianMarkersData) {
-                setFixingOfFlexibleMedianMarkersData(
+                _v.setFixingOfFlexibleMedianMarkersData(
                     rfiData.metaData.fixingOfFlexibleMedianMarkersData,
                 );
             } else {
-                setFixingOfFlexibleMedianMarkersData({
+                _v.setFixingOfFlexibleMedianMarkersData({
                     sourceMaterialApproved: 'Y',
                     drawingApproved: 'Y',
                     shapeSizeApproved: 'Y',
@@ -2246,11 +2246,11 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.FIXING_OF_CONVEX_MIRRORS:
             if (rfiData.metaData?.fixingOfConvexMirrorsData) {
-                setFixingOfConvexMirrorsData(
+                _v.setFixingOfConvexMirrorsData(
                     rfiData.metaData.fixingOfConvexMirrorsData,
                 );
             } else {
-                setFixingOfConvexMirrorsData({
+                _v.setFixingOfConvexMirrorsData({
                     sourceMaterialApproved: 'Y',
                     drawingApproved: 'Y',
                     shapeSizeApproved: 'Y',
@@ -2265,9 +2265,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.FIXING_OF_ANTIGLARES:
             if (rfiData.metaData?.fixingOfAntiglaresData) {
-                setFixingOfAntiglaresData(rfiData.metaData.fixingOfAntiglaresData);
+                _v.setFixingOfAntiglaresData(rfiData.metaData.fixingOfAntiglaresData);
             } else {
-                setFixingOfAntiglaresData({
+                _v.setFixingOfAntiglaresData({
                     sourceMaterialApproved: 'Y',
                     drawingApproved: 'Y',
                     shapeSizeApproved: 'Y',
@@ -2282,9 +2282,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.ERECTION_OF_POLES:
             if (rfiData.metaData?.erectionOfPolesData) {
-                setErectionOfPolesData(rfiData.metaData.erectionOfPolesData);
+                _v.setErectionOfPolesData(rfiData.metaData.erectionOfPolesData);
             } else {
-                setErectionOfPolesData({
+                _v.setErectionOfPolesData({
                     drawingsApproved: 'Y',
                     sourceApproved: 'Y',
                     factoryInspectionDone: 'Y',
@@ -2298,9 +2298,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.FIXING_OF_ARMS:
             if (rfiData.metaData?.fixingOfArmsData) {
-                setFixingOfArmsData(rfiData.metaData.fixingOfArmsData);
+                _v.setFixingOfArmsData(rfiData.metaData.fixingOfArmsData);
             } else {
-                setFixingOfArmsData({
+                _v.setFixingOfArmsData({
                     drawingsApproved: 'Y',
                     sourceApproved: 'Y',
                     factoryInspectionDone: 'Y',
@@ -2313,11 +2313,11 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.INSTALLATION_OF_LED_LIGHTS:
             if (rfiData.metaData?.installationOfLEDLightsData) {
-                setInstallationOfLEDLightsData(
+                _v.setInstallationOfLEDLightsData(
                     rfiData.metaData.installationOfLEDLightsData,
                 );
             } else {
-                setInstallationOfLEDLightsData({
+                _v.setInstallationOfLEDLightsData({
                     drawingsApproved: 'Y',
                     sourceApproved: 'Y',
                     factoryInspectionDone: 'Y',
@@ -2330,11 +2330,11 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.LAYING_OF_FLEXIBLE_CABLE:
             if (rfiData.metaData?.layingOfFlexibleCableData) {
-                setLayingOfFlexibleCableData(
+                _v.setLayingOfFlexibleCableData(
                     rfiData.metaData.layingOfFlexibleCableData,
                 );
             } else {
-                setLayingOfFlexibleCableData({
+                _v.setLayingOfFlexibleCableData({
                     drawingsApproved: 'Y',
                     sourceApproved: 'Y',
                     factoryInspectionDone: 'Y',
@@ -2349,9 +2349,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.LAYING_OF_LT_CABLE:
             if (rfiData.metaData?.layingOfLTCableData) {
-                setLayingOfLTCableData(rfiData.metaData.layingOfLTCableData);
+                _v.setLayingOfLTCableData(rfiData.metaData.layingOfLTCableData);
             } else {
-                setLayingOfLTCableData({
+                _v.setLayingOfLTCableData({
                     drawingsApproved: 'Y',
                     sourceApproved: 'Y',
                     factoryInspectionDone: 'Y',
@@ -2366,9 +2366,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.FIXING_OF_STONE:
             if (rfiData.metaData?.fixingOfStoneData) {
-                setFixingOfStoneData(rfiData.metaData.fixingOfStoneData);
+                _v.setFixingOfStoneData(rfiData.metaData.fixingOfStoneData);
             } else {
-                setFixingOfStoneData({
+                _v.setFixingOfStoneData({
                     sourceMaterialApproved: 'Y',
                     drawingApproved: 'Y',
                     shapeSizeApproved: 'Y',
@@ -2382,9 +2382,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.PLASTERING:
             if (rfiData.metaData?.plasteringData) {
-                setPlasteringData(rfiData.metaData.plasteringData);
+                _v.setPlasteringData(rfiData.metaData.plasteringData);
             } else {
-                setPlasteringData({
+                _v.setPlasteringData({
                     drawingsApproved: 'Y',
                     cementSourceApproved: 'Y',
                     otherMaterialsSourceApproved: 'Y',
@@ -2397,9 +2397,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.PUTTY:
             if (rfiData.metaData?.puttyData) {
-                setPuttyData(rfiData.metaData.puttyData);
+                _v.setPuttyData(rfiData.metaData.puttyData);
             } else {
-                setPuttyData({
+                _v.setPuttyData({
                     drawingsApproved: 'Y',
                     materialSourceApproved: 'Y',
                     surfaceDriedReadyForPutty: 'Y',
@@ -2411,9 +2411,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.HVAC_WORK:
             if (rfiData.metaData?.hvacWorkData) {
-                setHvacWorkData(rfiData.metaData.hvacWorkData);
+                _v.setHvacWorkData(rfiData.metaData.hvacWorkData);
             } else {
-                setHvacWorkData({
+                _v.setHvacWorkData({
                     drawingsApproved: 'Y',
                     materialSourceApproved: 'Y',
                     inspectionAndDispatchCleared: 'Y',
@@ -2428,9 +2428,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.CEILING_WORK:
             if (rfiData.metaData?.ceilingWorkData) {
-                setCeilingWorkData(rfiData.metaData.ceilingWorkData);
+                _v.setCeilingWorkData(rfiData.metaData.ceilingWorkData);
             } else {
-                setCeilingWorkData({
+                _v.setCeilingWorkData({
                     drawingsApproved: 'Y',
                     materialSourceApproved: 'Y',
                     materialReceivedAsPerSpecifications: 'Y',
@@ -2443,9 +2443,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.FURNITURE_WORK:
             if (rfiData.metaData?.furnitureWorkData) {
-                setFurnitureWorkData(rfiData.metaData.furnitureWorkData);
+                _v.setFurnitureWorkData(rfiData.metaData.furnitureWorkData);
             } else {
-                setFurnitureWorkData({
+                _v.setFurnitureWorkData({
                     drawingsApproved: 'Y',
                     materialSourceApproved: 'Y',
                     materialReceivedAsPerSpecs: 'Y',
@@ -2457,9 +2457,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.DOOR_WORKS:
             if (rfiData.metaData?.doorWorksData) {
-                setDoorWorksData(rfiData.metaData.doorWorksData);
+                _v.setDoorWorksData(rfiData.metaData.doorWorksData);
             } else {
-                setDoorWorksData({
+                _v.setDoorWorksData({
                     drawingsApproved: 'Y',
                     materialSourceApproved: 'Y',
                     materialReceivedAsPerSpec: 'Y',
@@ -2471,9 +2471,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.WINDOW_WORKS:
             if (rfiData.metaData?.windowWorksData) {
-                setWindowWorksData(rfiData.metaData.windowWorksData);
+                _v.setWindowWorksData(rfiData.metaData.windowWorksData);
             } else {
-                setWindowWorksData({
+                _v.setWindowWorksData({
                     drawingsApproved: 'Y',
                     materialSourceApproved: 'Y',
                     materialReceivedAsPerSpecs: 'Y',
@@ -2485,9 +2485,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.GLASS_WORKS:
             if (rfiData.metaData?.glassWorksData) {
-                setGlassWorksData(rfiData.metaData.glassWorksData);
+                _v.setGlassWorksData(rfiData.metaData.glassWorksData);
             } else {
-                setGlassWorksData({
+                _v.setGlassWorksData({
                     drawingsApproved: 'Y',
                     materialSourceApproved: 'Y',
                     materialReceivedAsPerSpecs: 'Y',
@@ -2501,9 +2501,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.ELECTRICAL_WORK:
             if (rfiData.metaData?.electricalWorkData) {
-                setElectricalWorkData(rfiData.metaData.electricalWorkData);
+                _v.setElectricalWorkData(rfiData.metaData.electricalWorkData);
             } else {
-                setElectricalWorkData({
+                _v.setElectricalWorkData({
                     drawingsApproved: 'Y',
                     materialSourceApproved: 'Y',
                     materialReceived: 'Y',
@@ -2519,9 +2519,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.PLUMBING_WORK:
             if (rfiData.metaData?.plumbingWorkData) {
-                setPlumbingWorkData(rfiData.metaData.plumbingWorkData);
+                _v.setPlumbingWorkData(rfiData.metaData.plumbingWorkData);
             } else {
-                setPlumbingWorkData({
+                _v.setPlumbingWorkData({
                     drawingsApproved: 'Y',
                     materialSourceApproved: 'Y',
                     materialReceived: 'Y',
@@ -2537,9 +2537,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.FLOORING_WORK:
             if (rfiData.metaData?.flooringWorkData) {
-                setFlooringWorkData(rfiData.metaData.flooringWorkData);
+                _v.setFlooringWorkData(rfiData.metaData.flooringWorkData);
             } else {
-                setFlooringWorkData({
+                _v.setFlooringWorkData({
                     drawingsApproved: 'Y',
                     materialSourceApproved: 'Y',
                     materialReceivedAsPerSpecs: 'Y',
@@ -2553,9 +2553,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.EXCAVATION_OF_TRENCH:
             if (rfiData.metaData?.excavationOfTrenchData) {
-                setExcavationOfTrenchData(rfiData.metaData.excavationOfTrenchData);
+                _v.setExcavationOfTrenchData(rfiData.metaData.excavationOfTrenchData);
             } else {
-                setExcavationOfTrenchData({
+                _v.setExcavationOfTrenchData({
                     drawingsApproved: 'Y',
                     safetyArrangementsInPlace: 'Y',
                     layoutMarked: 'Y',
@@ -2569,9 +2569,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.LAYING_OF_DUCT:
             if (rfiData.metaData?.layingOfDuctData) {
-                setLayingOfDuctData(rfiData.metaData.layingOfDuctData);
+                _v.setLayingOfDuctData(rfiData.metaData.layingOfDuctData);
             } else {
-                setLayingOfDuctData({
+                _v.setLayingOfDuctData({
                     drawingsApproved: 'Y',
                     safetyArrangementsInPlace: 'Y',
                     sourceMaterialObtained: 'Y',
@@ -2584,9 +2584,9 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.HDD_CROSSING:
             if (rfiData.metaData?.hddCrossingData) {
-                setHddCrossingData(rfiData.metaData.hddCrossingData);
+                _v.setHddCrossingData(rfiData.metaData.hddCrossingData);
             } else {
-                setHddCrossingData({
+                _v.setHddCrossingData({
                     drawingsApproved: 'Y',
                     safetyArrangementsInPlace: 'Y',
                     layoutMarkedAtSite: 'Y',
@@ -2600,11 +2600,11 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.CONSTRUCTION_OF_CHAMBER:
             if (rfiData.metaData?.constructionOfChamberData) {
-                setConstructionOfChamberData(
+                _v.setConstructionOfChamberData(
                     rfiData.metaData.constructionOfChamberData,
                 );
             } else {
-                setConstructionOfChamberData({
+                _v.setConstructionOfChamberData({
                     drawingsAvailable: 'Y',
                     sizeClassOfBricksApproved: 'Y',
                     requiredBlocksAvailable: 'Y',
@@ -2625,11 +2625,11 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.INSTALLATION_OF_EQUIPMENT:
             if (rfiData.metaData?.installationOfEquipmentData) {
-                setInstallationOfEquipmentData(
+                _v.setInstallationOfEquipmentData(
                     rfiData.metaData.installationOfEquipmentData,
                 );
             } else {
-                setInstallationOfEquipmentData({
+                _v.setInstallationOfEquipmentData({
                     drawingsApproved: 'Y',
                     equipmentInspected: 'Y',
                     damageReportedToVendor: 'Y',
@@ -2647,11 +2647,11 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.INSTALLATION_OF_SOLAR_SYSTEM:
             if (rfiData.metaData?.installationOfSolarSystemData) {
-                setInstallationOfSolarSystemData(
+                _v.setInstallationOfSolarSystemData(
                     rfiData.metaData.installationOfSolarSystemData,
                 );
             } else {
-                setInstallationOfSolarSystemData({
+                _v.setInstallationOfSolarSystemData({
                     drawingsApproved: 'Y',
                     equipmentInspectedAtFactory: 'Y',
                     damageReportedToVendor: 'Y',
@@ -2667,11 +2667,11 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.INSTALLATION_OF_NETWORK_DEVICES:
             if (rfiData.metaData?.installationOfNetworkDevicesData) {
-                setInstallationOfNetworkDevicesData(
+                _v.setInstallationOfNetworkDevicesData(
                     rfiData.metaData.installationOfNetworkDevicesData,
                 );
             } else {
-                setInstallationOfNetworkDevicesData({
+                _v.setInstallationOfNetworkDevicesData({
                     drawingsApproved: 'Y',
                     devicesInspected: 'Y',
                     damageReported: 'Y',
@@ -2686,11 +2686,11 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.CONSTRUCTION_OF_FOUNDATION:
             if (rfiData.metaData?.constructionOfFoundationData) {
-                setConstructionOfFoundationData(
+                _v.setConstructionOfFoundationData(
                     rfiData.metaData.constructionOfFoundationData,
                 );
             } else {
-                setConstructionOfFoundationData({
+                _v.setConstructionOfFoundationData({
                     drawingsApproved: 'Y',
                     pitExcavatedAtApprovedLocation: 'Y',
                     pitsExcavatedAsPerDrawings: 'Y',
@@ -2703,16 +2703,16 @@ export const initRfiData = (rfiData: any) => {
                 rfiData.metaData.foundationData.forEach((item: any) => {
                     item.key = Guid.create();
                 });
-                setFoundationData(rfiData.metaData.foundationData);
+                _v.setFoundationData(rfiData.metaData.foundationData);
             } else {
-                setFoundationData([]);
+                _v.setFoundationData([]);
             }
             break;
         case TASK_TYPES.CASTING_OF_BALLAST:
             if (rfiData.metaData?.castingOfBallastData) {
-                setCastingOfBallastData(rfiData.metaData.castingOfBallastData);
+                _v.setCastingOfBallastData(rfiData.metaData.castingOfBallastData);
             } else {
-                setCastingOfBallastData({
+                _v.setCastingOfBallastData({
                     drawingsApproved: 'Y',
                     mouldsReady: 'Y',
                     reinforcementTiedProperly: 'Y',
@@ -2723,16 +2723,16 @@ export const initRfiData = (rfiData: any) => {
                 rfiData.metaData.ballastData.forEach((item: any) => {
                     item.key = Guid.create();
                 });
-                setBallastData(rfiData.metaData.ballastData);
+                _v.setBallastData(rfiData.metaData.ballastData);
             } else {
-                setBallastData([]);
+                _v.setBallastData([]);
             }
             break;
         case TASK_TYPES.SAND_LAYER:
             if (rfiData.metaData?.sandLayerData) {
-                setSandLayerData(rfiData.metaData.sandLayerData);
+                _v.setSandLayerData(rfiData.metaData.sandLayerData);
             } else {
-                setSandLayerData({
+                _v.setSandLayerData({
                     drawingsApproved: 'Y',
                     safetyArrangementsInPlace: 'Y',
                     sourceOfSandApproved: 'Y',
@@ -2749,9 +2749,9 @@ export const initRfiData = (rfiData: any) => {
         case TASK_TYPES.LIFTING_RIGHT:
         case TASK_TYPES.LIFTING_TRANSPORT_ERECTION:
             if (rfiData.metaData?.liftingCombinedLRData) {
-                setLiftingCombinedLRData(rfiData.metaData?.liftingCombinedLRData);
+                _v.setLiftingCombinedLRData(rfiData.metaData?.liftingCombinedLRData);
             } else {
-                setLiftingCombinedLRData({
+                _v.setLiftingCombinedLRData({
                     areaBarricaded: 'Y',
                     temporaryLights: 'Y',
                     flagManAvailable: 'Y',
@@ -2806,10 +2806,10 @@ export const initRfiData = (rfiData: any) => {
             break;
         case TASK_TYPES.PRE_STRESSING:
             if (rfiData.metaData?.prestressingData) {
-                setPrestressingData(rfiData.metaData.prestressingData);
+                _v.setPrestressingData(rfiData.metaData.prestressingData);
             } else {
                 const prestressingCablesDetails =
-                    selectedTask.taskDetailsData[0]?.details
+                _v.selectedTask.taskDetailsData[0]?.details
                         ?.prestressingCablesDetails;
 
                 const array = [];
@@ -2830,7 +2830,7 @@ export const initRfiData = (rfiData: any) => {
                         SB0: 0,
                     });
                 }
-                setPrestressingData(array);
+                _v.setPrestressingData(array);
             }
             break;
         default:
@@ -2839,13 +2839,13 @@ export const initRfiData = (rfiData: any) => {
     //}
 
     if (rfiData.rfiSubmitDateTime) {
-        setRFIDate(getDbDate(rfiData.rfiSubmitDateTime));
+        _v.setRFIDate(getDbDate(rfiData.rfiSubmitDateTime));
 
         const time = getDisplayTime(rfiData.rfiSubmitDateTime);
     }
 
     if (rfiData.comments) {
-        setComments(rfiData.comments);
+        _v.setComments(rfiData.comments);
     }
-    setOpenPopup(true);
+    _v.setOpenPopup(true);
 }

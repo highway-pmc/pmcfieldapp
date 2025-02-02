@@ -53,15 +53,19 @@ import {SwipeListView} from 'react-native-swipe-list-view';
 import {Guid} from 'guid-typescript';
 import {FlatList} from 'react-native-gesture-handler';
 import Input from '../../components/UI/Input';
-import { breadcrumbData, currentComponentsData, currentLevel, currentSegmentsData, currentSubComponentsData, dispatch, error, imageObjectEmpty, loading, loggedInUser, myWorks, myWorksData, openPopup, projectModuleId, rfiChecklistSaved, rfiData, searchText, segmentsByGroupOnType, selectedTask, setBreadcrumbData, setComments, setConcreteData, setCurrentComponentsData, setCurrentLevel, setCurrentSegmentsData, setCurrentSubComponentsData, setCurrentTasksData, setImageObject, setMyWorksData, setOpenPopup, setRFIDate, setSearchText, setSelectedTask, setTemporaryPrestressingData, showSnackbar } from './ReportSamples/Forms/MyWorks/Variables';
-import { handleTextInputChangeBallast, handleTextInputChangeFoundation, handleTimeChangeFoundation } from './ReportSamples/Forms/MyWorks/Validates';
 import { initRfiData } from './ReportSamples/Forms/MyWorks/initialize';
-import { onFillChecklistData } from './ReportSamples/Forms/MyWorks/FillChecklist';
 import { styles } from './ReportSamples/Forms/MyWorks/Styles';
-import { getStyle, onClick, onClickNested, onFillChecklist, onSegmentTypeClick } from './ReportSamples/Forms/MyWorks/Events';
-import { taskForm, tasksListing } from './ReportSamples/Forms/MyWorks/CustomForms';
+import { Variables } from './ReportSamples/Forms/MyWorks/Variables';
+import { Events } from './ReportSamples/Forms/MyWorks/Events';
+import { CustomForms } from './ReportSamples/Forms/MyWorks/CustomForms';
 
 const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
+
+  const _v = Variables();
+
+  const _event = Events(_v);
+
+  const _customForms = CustomForms(_v);
 
   const {workType} = route.params;
 
@@ -71,59 +75,59 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     if (focus == true) {
       const eventEmitter = new NativeEventEmitter();
       eventEmitter.emit('headerEvent', HeaderItems.myWork);
-      setCurrentLevel(1);
-      setMyWorksData([]);
-      setCurrentSegmentsData([]);
-      setCurrentComponentsData([]);
-      setCurrentSubComponentsData([]);
-      setCurrentTasksData([]);
-      setBreadcrumbData([]);
+      _v.setCurrentLevel(1);
+      _v.setMyWorksData([]);
+      _v.setCurrentSegmentsData([]);
+      _v.setCurrentComponentsData([]);
+      _v.setCurrentSubComponentsData([]);
+      _v.setCurrentTasksData([]);
+      _v.setBreadcrumbData([]);
       getMyWorksData();
-      setSearchText('');
-      setOpenPopup(false);
+      _v.setSearchText('');
+      _v.setOpenPopup(false);
     }
   }, [focus]);
 
   const getMyWorksData = () => {
-    dispatch(
+    _v.dispatch(
       getMyWorks({
-        projectId: loggedInUser.projectId,
+        projectId: _v.loggedInUser.projectId,
         workType: workType,
       }),
     );
   };
 
   useEffect(() => {
-    if (myWorks) {
-      setMyWorksData(myWorks);
+    if (_v.myWorks) {
+      _v.setMyWorksData(_v.myWorks);
     }
 
-    if (rfiData) {
-      initRfiData(rfiData);
+    if (_v.rfiData) {
+      initRfiData(_v);
     }
 
-    if (rfiChecklistSaved) {
-      setOpenPopup(false);
+    if (_v.rfiChecklistSaved) {
+      _v.setOpenPopup(false);
       Alert.alert('RFIs checklist saved.');
-      setCurrentLevel(1);
-      setImageObject(imageObjectEmpty);
-      dispatch(clearMyWorksEvent());
+      _v.setCurrentLevel(1);
+      _v.setImageObject(_v.imageObjectEmpty);
+      _v.dispatch(clearMyWorksEvent());
       getMyWorksData();
     }
-  }, [myWorks, rfiData, rfiChecklistSaved, error]);
+  }, [_v.myWorks, _v.rfiData, _v.rfiChecklistSaved, _v.error]);
 
   // unmount
   useEffect(
     () => () => {
-      dispatch(clearMyWorksEvent());
-      setCurrentLevel(1);
-      setMyWorksData([]);
-      setCurrentSegmentsData([]);
-      setCurrentComponentsData([]);
-      setCurrentSubComponentsData([]);
-      setCurrentTasksData([]);
-      setBreadcrumbData([]);
-      setSearchText('');
+      _v.dispatch(clearMyWorksEvent());
+      _v.setCurrentLevel(1);
+      _v.setMyWorksData([]);
+      _v.setCurrentSegmentsData([]);
+      _v.setCurrentComponentsData([]);
+      _v.setCurrentSubComponentsData([]);
+      _v.setCurrentTasksData([]);
+      _v.setBreadcrumbData([]);
+      _v.setSearchText('');
     },
     [],
   );
@@ -159,28 +163,28 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
 
   return (
     <View style={styles.Container}>
-      {breadcrumbData.length ? (
+      {_v.breadcrumbData.length ? (
         <View style={styles.BreadcrumbContainer}>
           <ScrollView
             showsHorizontalScrollIndicator={false}
             horizontal={true}
             style={styles.scrollView}>
-            {breadcrumbData.map((item: any, index) => (
+            {_v.breadcrumbData.map((item: any, index) => (
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 {index == 0 ? (
                   <Text
                     style={styles.BreadcrumbPrevTextUnderline}
                     onPress={() =>
-                      index === 0 && (setCurrentLevel(1), setBreadcrumbData([]))
+                      index === 0 && (_v.setCurrentLevel(1), _v.setBreadcrumbData([]))
                     }>
                     {item.name}
                   </Text>
-                ) : index === breadcrumbData.length - 1 ? (
+                ) : index === _v.breadcrumbData.length - 1 ? (
                   <Text style={styles.BreadcrumbCurrentText}>{item.name}</Text>
                 ) : (
                   <Text style={styles.BreadcrumbPrevText}>{item.name}</Text>
                 )}
-                {index < breadcrumbData.length - 1 ? (
+                {index < _v.breadcrumbData.length - 1 ? (
                   <Image
                     style={styles.ArrowIcon}
                     source={require('../../images/right-arrow-icon.png')}
@@ -191,7 +195,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           </ScrollView>
         </View>
       ) : null}
-      {currentLevel !== 1 && currentLevel !== 5 ? (
+      {_v.currentLevel !== 1 && _v.currentLevel !== 5 ? (
         <View style={styles.SearchBox}>
           <Image
             source={require('./../../images/search-icon.png')}
@@ -205,21 +209,21 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             returnKeyType="next"
             underlineColorAndroid="#f000"
             blurOnSubmit={false}
-            value={searchText}
+            value={_v.searchText}
             onChangeText={text => {
-              setSearchText(text);
+              _v.setSearchText(text);
             }}
           />
         </View>
       ) : null}
       <ScrollView style={styles.Height100}>
-        {currentLevel === 1
-          ? myWorksData.map((projModuleItem: any, projModuleIndex) =>
+        {_v.currentLevel === 1
+          ? _v.myWorksData.map((projModuleItem: any, projModuleIndex) =>
               projModuleItem.assignmentLevel === 1 ? (
                 <TouchableOpacity
                   style={styles.MyWorkCard}
                   onPress={() =>
-                    onClick(2, projModuleItem.assignmentLevel, projModuleIndex)
+                    _event.onClick(2, projModuleItem.assignmentLevel, projModuleIndex)
                   }>
                   <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
                   <View style={styles.TaskDetails}>
@@ -239,7 +243,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                         <TouchableOpacity
                           style={styles.MyWorkCard}
                           onPress={() =>
-                            onClick(
+                            _event.onClick(
                               3,
                               segItem.assignmentLevel,
                               projModuleIndex,
@@ -291,7 +295,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                             <TouchableOpacity
                               style={styles.MyWorkCard}
                               onPress={() =>
-                                onClick(
+                                _event.onClick(
                                   2,
                                   segItem.assignmentLevel,
                                   projModuleIndex,
@@ -344,7 +348,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                             <TouchableOpacity
                               style={styles.MyWorkCard}
                               onPress={() =>
-                                onClick(
+                                _event.onClick(
                                   4,
                                   componentItem.assignmentLevel,
                                   projModuleIndex,
@@ -388,7 +392,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                                   <TouchableOpacity
                                     style={styles.MyWorkCard}
                                     onPress={() =>
-                                      onClick(
+                                      _event.onClick(
                                         5,
                                         subComponentItem.assignmentLevel,
                                         projModuleIndex,
@@ -440,7 +444,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                                         <TouchableOpacity
                                           style={styles.MyWorkCard}
                                           onPress={() =>
-                                            onClick(
+                                            _event.onClick(
                                               6,
                                               taskItem.assignmentLevel,
                                               projModuleIndex,
@@ -504,7 +508,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                                   <TouchableOpacity
                                     style={styles.MyWorkCard}
                                     onPress={() =>
-                                      onClick(
+                                      _event.onClick(
                                         6,
                                         taskItem.assignmentLevel,
                                         projModuleIndex,
@@ -561,7 +565,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                             <TouchableOpacity
                               style={styles.MyWorkCard}
                               onPress={() =>
-                                onClick(
+                                _event.onClick(
                                   6,
                                   taskItem.assignmentLevel,
                                   projModuleIndex,
@@ -610,16 +614,16 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
               ),
             )
           : null}
-        {currentLevel === 7 &&
-        segmentsByGroupOnType &&
-        Object.keys(segmentsByGroupOnType).length
-          ? Object.keys(segmentsByGroupOnType).map(item => (
+        {_v.currentLevel === 7 &&
+        _v.segmentsByGroupOnType &&
+        Object.keys(_v.segmentsByGroupOnType).length
+          ? Object.keys(_v.segmentsByGroupOnType).map(item => (
               <TouchableOpacity
                 style={[styles.StartWorkCard, styles.StartBorder]}
-                onPress={() => onSegmentTypeClick(item)}>
+                onPress={() => _event.onSegmentTypeClick(item)}>
                 <View style={styles.leftContainer}>
                   <Text style={styles.HeadText}>
-                    {segmentsByGroupOnType[item].length}
+                    {_v.segmentsByGroupOnType[item].length}
                   </Text>
                   <Text style={styles.MyWorkSubHead}>
                     {SEGMENT_TYPES_DISPLAY[item]}
@@ -628,21 +632,21 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
               </TouchableOpacity>
             ))
           : null}
-        {currentLevel === 2
-          ? currentSegmentsData
+        {_v.currentLevel === 2
+          ? _v.currentSegmentsData
               .filter((seg: any) => {
-                if (searchText && seg.name) {
+                if (_v.searchText && seg.name) {
                   return seg.name
                     .toLowerCase()
-                    .includes(searchText.toLowerCase());
+                    .includes(_v.searchText.toLowerCase());
                 } else {
                   return true;
                 }
               })
               .map((item: any, index) => (
                 <TouchableOpacity
-                  style={getStyle(item)}
-                  onPress={() => onClickNested(3, item)}>
+                  style={_event.getStyle(item)}
+                  onPress={() => _event.onClickNested(3, item)}>
                   <View style={styles.leftContainer}>
                     <Text style={styles.HeadText}>{item.name}</Text>
                     {/* <Text style={styles.MyWorkSubHead}>Sub Text</Text> */}
@@ -650,55 +654,55 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                 </TouchableOpacity>
               ))
           : null}
-        {currentLevel === 3
-          ? currentComponentsData && currentComponentsData.length
-            ? currentComponentsData
+        {_v.currentLevel === 3
+          ? _v.currentComponentsData && _v.currentComponentsData.length
+            ? _v.currentComponentsData
                 .filter((subSeg: any) => {
-                  if (searchText && subSeg.name) {
+                  if (_v.searchText && subSeg.name) {
                     return subSeg.name
                       .toLowerCase()
-                      .includes(searchText.toLowerCase());
+                      .includes(_v.searchText.toLowerCase());
                   } else {
                     return true;
                   }
                 })
                 .map((item: any, index) => (
                   <TouchableOpacity
-                    style={getStyle(item)}
-                    onPress={() => onClickNested(4, item)}>
+                    style={_event.getStyle(item)}
+                    onPress={() => _event.onClickNested(4, item)}>
                     <View style={styles.leftContainer}>
                       <Text style={styles.HeadText}>{item.name}</Text>
                     </View>
                   </TouchableOpacity>
                 ))
-            : tasksListing()
+            : _customForms.tasksListing(_v)
           : null}
-        {currentLevel === 4
-          ? currentSubComponentsData && currentSubComponentsData.length
-            ? currentSubComponentsData
+        {_v.currentLevel === 4
+          ? _v.currentSubComponentsData && _v.currentSubComponentsData.length
+            ? _v.currentSubComponentsData
                 .filter((subComponent: any) => {
-                  if (searchText && subComponent.name) {
+                  if (_v.searchText && subComponent.name) {
                     return subComponent.name
                       .toLowerCase()
-                      .includes(searchText.toLowerCase());
+                      .includes(_v.searchText.toLowerCase());
                   } else {
                     return true;
                   }
                 })
                 .map((item: any, index) => (
                   <TouchableOpacity
-                    style={getStyle(item)}
-                    onPress={() => onClickNested(5, item)}>
+                    style={_event.getStyle(item)}
+                    onPress={() => _event.onClickNested(5, item)}>
                     <View style={styles.leftContainer}>
                       <Text style={styles.HeadText}>{item.name}</Text>
                     </View>
                   </TouchableOpacity>
                 ))
-            : tasksListing()
+            : _customForms.tasksListing(_v)
           : null}
-        {currentLevel === 5 || currentLevel === 6 ? tasksListing() : null}
+        {_v.currentLevel === 5 || _v.currentLevel === 6 ? _customForms.tasksListing(_v) : null}
         {/* No Data Found */}
-        {!loading && !myWorksData.length ? (
+        {!_v.loading && !_v.myWorksData.length ? (
           <View style={styles.NoDataContainer}>
             <Image
               style={styles.WthHeight}
@@ -716,9 +720,9 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       <Modal
         animationType="fade"
         transparent={true}
-        visible={openPopup}
+        visible={_v.openPopup}
         onRequestClose={() => {
-          setOpenPopup(!openPopup);
+          _v.setOpenPopup(!_v.openPopup);
         }}>
         <View style={styles.bodyPopup}>
           <View style={styles.centeredView}>
@@ -727,7 +731,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                 <Text style={styles.modalText}>RFIs</Text>
                 <TouchableOpacity
                   style={styles.buttonClose}
-                  onPress={() => setOpenPopup(!openPopup)}>
+                  onPress={() => _v.setOpenPopup(!_v.openPopup)}>
                   <Image
                     style={styles.CloseIcon}
                     tintColor={'#333'}
@@ -740,7 +744,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                   <Text style={styles.Lable}>
                     Task:{' '}
                     <Text style={{fontWeight: '600', color: '#1C58C0'}}>
-                      {selectedTask?.displayName}
+                      {_v.selectedTask?.displayName}
                     </Text>
                   </Text>
                 </View>
@@ -749,7 +753,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                   style={{minHeight: 100, maxHeight: 500}}>
                   <Fragment>
                     <StatusBar barStyle="dark-content" />
-                    <SafeAreaView>{taskForm(selectedTask?.name)}</SafeAreaView>
+                    <SafeAreaView>{_customForms.taskForm(_v.selectedTask?.name)}</SafeAreaView>
                   </Fragment>
                 </ScrollView>
 
@@ -768,13 +772,13 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                   ]}>
                   <TouchableOpacity
                     style={[styles.submitButton, styles.saveButtonColor]}
-                    onPress={() => onFillChecklist(RFI_STATUS.IN_PROGRESS)}>
+                    onPress={() => _event.onFillChecklist(RFI_STATUS.IN_PROGRESS)}>
                     <Text style={styles.submitButtonText}>Save</Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity
                     style={styles.submitButton}
-                    onPress={() => onFillChecklist(RFI_STATUS.IN_REVIEW)}>
+                    onPress={() => _event.onFillChecklist(RFI_STATUS.IN_REVIEW)}>
                     <Text style={styles.submitButtonText}>Submit</Text>
                   </TouchableOpacity>
                 </View>
@@ -784,7 +788,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         </View>
       </Modal>
 
-      <LoadingAnimation loading={loading}></LoadingAnimation>
+      <LoadingAnimation loading={_v.loading}></LoadingAnimation>
     </View>
   );
 };

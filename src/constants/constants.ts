@@ -725,6 +725,7 @@ export const TEST_TYPES = {
   MICRO_SURFACING_GRADATION: 'micro-surfacing-gradation',
   SAND_EQUIVALENT: 'sand-equivalent',
   PERCENTAGE_OF_FRACTURE_FACE: 'percentage-of-fracture-face',
+  MIX_GRADING: 'mix-grading',
 };
 
 export const YES_NO_LIST = [

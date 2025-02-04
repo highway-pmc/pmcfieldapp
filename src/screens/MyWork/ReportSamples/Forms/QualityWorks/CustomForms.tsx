@@ -3070,6 +3070,89 @@ export const testSampleForm = (
                     ))}
                   </View>
                 ) : null)}
+
+              {currentTestMaterialData.materialType ===
+                TEST_MATERIALS_TYPES.SMA &&
+                selectedTestSample.type === TEST_TYPES.MIX_GRADING ? (
+                  <View>
+                    {concreteSampleTestItems.map((item: any, index: any) => (
+                      <View
+                        key={index}
+                        style={{flexDirection: 'row', marginBottom: 10}}>
+                        <View style={{flexDirection: 'column'}}>
+                          {item.details &&
+                            item.details.values.map(
+                              (value: any, indexDetails: number) => (
+                                <View
+                                  key={indexDetails}
+                                  style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    marginBottom: 5,
+                                  }}>
+                                  {/* Sieve Size Column */}
+                                  <View
+                                    style={{
+                                      flexDirection: 'column',
+                                      width: 100,
+                                    }}>
+                                    {index === 0 && indexDetails === 0 ? (
+                                      <View style={{height: 40}}>
+                                        <Text
+                                          style={{
+                                            fontWeight: '700',
+                                            textAlign: 'center',
+                                          }}>
+                                          {item.details.titles[0]}
+                                        </Text>
+                                      </View>
+                                    ) : null}
+                                    <Text
+                                      style={[
+                                        styles.textStyle2,
+                                        {
+                                          textAlign: 'center',
+                                          marginVertical: 5,
+                                        },
+                                      ]}>
+                                      {value.sieveSize}
+                                    </Text>
+                                  </View>
+
+                                  {/* Weight Retained Column */}
+                                  <View
+                                    style={{
+                                      flexDirection: 'column',
+                                      width: 100,
+                                    }}>
+                                    {index === 0 && indexDetails === 0 ? (
+                                      <View style={{height: 40}}>
+                                        <Text
+                                          style={{
+                                            fontWeight: '700',
+                                            textAlign: 'center',
+                                          }}>
+                                          {item.details.titles[1]}
+                                        </Text>
+                                      </View>
+                                    ) : null}
+                                    <CustomTextInput
+                                      rowItem={value}
+                                      tempProp={false}
+                                      styleName={styles.inputStyle3}
+                                      styles={styles}
+                                      fieldName={'weightRetained'}
+                                    />
+                                  </View>
+                                </View>
+                              ),
+                            )}
+                        </View>
+                      </View>
+                    ))}
+                  </View>
+                ) : null
+              }
             </ScrollView>
           </View>
         </View>

@@ -3205,7 +3205,7 @@ export const CustomForms = (_v: any) => {
                             <View>
                                 <TimePicker
                                     label="Time"
-                                    value={_v.rfiTime}
+                                    value={''+_v.rfiTime}
                                     onChange={time => _v.setRFITime(time)}
                                 />
                             </View>
@@ -3292,7 +3292,7 @@ export const CustomForms = (_v: any) => {
                             <View>
                                 <TimePicker
                                     label="Time"
-                                    value={_v.rfiTime}
+                                    value={''+_v.rfiTime}
                                     onChange={time => _v.setRFITime(time)}
                                 />
                             </View>
@@ -3352,7 +3352,7 @@ export const CustomForms = (_v: any) => {
                             <View>
                                 <TimePicker
                                     label="Time"
-                                    value={_v.rfiTime}
+                                    value={''+_v.rfiTime}
                                     onChange={time => _v.setRFITime(time)}
                                 />
                             </View>
@@ -3421,7 +3421,7 @@ export const CustomForms = (_v: any) => {
                             <View>
                                 <TimePicker
                                     label="Time"
-                                    value={_v.rfiTime}
+                                    value={''+_v.rfiTime}
                                     onChange={time => _v.setRFITime(time)}
                                 />
                             </View>
@@ -3482,7 +3482,7 @@ export const CustomForms = (_v: any) => {
                             <View>
                                 <TimePicker
                                     label="Time"
-                                    value={_v.rfiTime}
+                                    value={''+_v.rfiTime}
                                     onChange={time => _v.setRFITime(time)}
                                 />
                             </View>
@@ -3705,7 +3705,7 @@ export const CustomForms = (_v: any) => {
                             <View>
                                 <TimePicker
                                     label="Time"
-                                    value={_v.rfiTime}
+                                    value={''+_v.rfiTime}
                                     onChange={time => _v.setRFITime(time)}
                                 />
                             </View>
@@ -3765,7 +3765,7 @@ export const CustomForms = (_v: any) => {
                             <View>
                                 <TimePicker
                                     label="Time"
-                                    value={_v.rfiTime}
+                                    value={''+_v.rfiTime}
                                     onChange={time => _v.setRFITime(time)}
                                 />
                             </View>
@@ -3920,7 +3920,7 @@ export const CustomForms = (_v: any) => {
                             <View>
                                 <TimePicker
                                     label="Time"
-                                    value={_v.rfiTime}
+                                    value={''+_v.rfiTime}
                                     onChange={time => _v.setRFITime(time)}
                                 />
                             </View>
@@ -4050,7 +4050,7 @@ export const CustomForms = (_v: any) => {
                             <View>
                                 <TimePicker
                                     label="Time"
-                                    value={_v.rfiTime}
+                                    value={''+_v.rfiTime}
                                     onChange={time => _v.setRFITime(time)}
                                 />
                             </View>
@@ -4157,7 +4157,7 @@ export const CustomForms = (_v: any) => {
                             <View>
                                 <TimePicker
                                     label="Time"
-                                    value={_v.rfiTime}
+                                    value={''+_v.rfiTime}
                                     onChange={time => _v.setRFITime(time)}
                                 />
                             </View>
@@ -4247,7 +4247,7 @@ export const CustomForms = (_v: any) => {
                             <View>
                                 <TimePicker
                                     label="Time"
-                                    value={_v.rfiTime}
+                                    value={''+_v.rfiTime}
                                     onChange={time => _v.setRFITime(time)}
                                 />
                             </View>
@@ -4321,7 +4321,7 @@ export const CustomForms = (_v: any) => {
                             <View>
                                 <TimePicker
                                     label="Time"
-                                    value={_v.rfiTime}
+                                    value={''+_v.rfiTime}
                                     onChange={time => _v.setRFITime(time)}
                                 />
                             </View>
@@ -4473,7 +4473,7 @@ export const CustomForms = (_v: any) => {
                         <View>
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                         </View>
@@ -4550,7 +4550,7 @@ export const CustomForms = (_v: any) => {
                             <View>
                                 <TimePicker
                                     label="Time"
-                                    value={_v.rfiTime}
+                                    value={''+_v.rfiTime}
                                     onChange={time => _v.setRFITime(time)}
                                 />
                             </View>
@@ -4684,7 +4684,7 @@ export const CustomForms = (_v: any) => {
                             <View>
                                 <TimePicker
                                     label="Time"
-                                    value={_v.rfiTime}
+                                    value={''+_v.rfiTime}
                                     onChange={time => _v.setRFITime(time)}
                                 />
                             </View>
@@ -4914,7 +4914,7 @@ export const CustomForms = (_v: any) => {
                             <View>
                                 <TimePicker
                                     label="Time"
-                                    value={_v.rfiTime}
+                                    value={''+_v.rfiTime}
                                     onChange={time => _v.setRFITime(time)}
                                 />
                             </View>
@@ -5203,7 +5203,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
@@ -5233,7 +5233,7 @@ export const CustomForms = (_v: any) => {
                     <View>
                         <Input
                             label="Total qty of steel procured in tonne"
-                            value={_v.procurementOfSteelData.totalQtyOfSteelProcured}
+                            value={''+_v.procurementOfSteelData.totalQtyOfSteelProcured}
                             onChange={(value: string) =>
                                 _v.handleTextInputChangeProcurementOfSteel(
                                     'totalQtyOfSteelProcured',
@@ -5250,7 +5250,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
@@ -5292,7 +5292,7 @@ export const CustomForms = (_v: any) => {
                         />
                         <TimePicker
                             label="Time"
-                            value={_v.rfiTime}
+                            value={''+_v.rfiTime}
                             onChange={time => _v.setRFITime(time)}
                         />
                         <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
@@ -5434,7 +5434,7 @@ export const CustomForms = (_v: any) => {
                             <View>
                                 <TimePicker
                                     label="Time"
-                                    value={_v.rfiTime}
+                                    value={''+_v.rfiTime}
                                     onChange={time => _v.setRFITime(time)}
                                 />
                             </View>
@@ -5519,7 +5519,7 @@ export const CustomForms = (_v: any) => {
                             <View>
                                 <TimePicker
                                     label="Time"
-                                    value={_v.rfiTime}
+                                    value={''+_v.rfiTime}
                                     onChange={time => _v.setRFITime(time)}
                                 />
                             </View>
@@ -5597,7 +5597,7 @@ export const CustomForms = (_v: any) => {
                             <View>
                                 <TimePicker
                                     label="Time"
-                                    value={_v.rfiTime}
+                                    value={''+_v.rfiTime}
                                     onChange={time => _v.setRFITime(time)}
                                 />
                             </View>
@@ -5675,7 +5675,7 @@ export const CustomForms = (_v: any) => {
                             <View>
                                 <TimePicker
                                     label="Time"
-                                    value={_v.rfiTime}
+                                    value={''+_v.rfiTime}
                                     onChange={time => _v.setRFITime(time)}
                                 />
                             </View>
@@ -5745,7 +5745,7 @@ export const CustomForms = (_v: any) => {
                             <View>
                                 <TimePicker
                                     label="Time"
-                                    value={_v.rfiTime}
+                                    value={''+_v.rfiTime}
                                     onChange={time => _v.setRFITime(time)}
                                 />
                             </View>
@@ -5794,7 +5794,7 @@ export const CustomForms = (_v: any) => {
                         <View>
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                         </View>
@@ -5859,7 +5859,7 @@ export const CustomForms = (_v: any) => {
                             <View>
                                 <TimePicker
                                     label="Time"
-                                    value={_v.rfiTime}
+                                    value={''+_v.rfiTime}
                                     onChange={time => _v.setRFITime(time)}
                                 />
                             </View>
@@ -5921,7 +5921,7 @@ export const CustomForms = (_v: any) => {
                             <View>
                                 <TimePicker
                                     label="Time"
-                                    value={_v.rfiTime}
+                                    value={''+_v.rfiTime}
                                     onChange={time => _v.setRFITime(time)}
                                 />
                             </View>
@@ -5947,7 +5947,7 @@ export const CustomForms = (_v: any) => {
                         <View style={{ flexDirection: 'column' }}>
                             <Input
                                 label="Total Sheet purchased (sqm)"
-                                value={_v.procurementOfSheetData.totalSheetPurchased}
+                                value={''+_v.procurementOfSheetData.totalSheetPurchased}
                                 onChange={(value: any) =>
                                     _v.setProcurementOfSheetData((prevData: any) => ({
                                         ...prevData,
@@ -5970,7 +5970,7 @@ export const CustomForms = (_v: any) => {
                             <View>
                                 <TimePicker
                                     label="Time"
-                                    value={_v.rfiTime}
+                                    value={''+_v.rfiTime}
                                     onChange={time => _v.setRFITime(time)}
                                 />
                             </View>
@@ -6048,7 +6048,7 @@ export const CustomForms = (_v: any) => {
                         <View>
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                         </View>
@@ -6076,7 +6076,7 @@ export const CustomForms = (_v: any) => {
                             {/* Density of Polymer */}
                             <Input
                                 label="Density of Polymer (gm/ml)"
-                                value={_v.boringOfDiaphragmData.densityOfPolymer}
+                                value={''+_v.boringOfDiaphragmData.densityOfPolymer}
                                 onChange={(value: string) =>
                                     _v.handleBoringOfDiaphragmInputChange('densityOfPolymer', value)
                                 }
@@ -6086,7 +6086,7 @@ export const CustomForms = (_v: any) => {
                             {/* Viscosity of Polymer */}
                             <Input
                                 label="Viscosity of Polymer (sec/liter)"
-                                value={_v.boringOfDiaphragmData.viscosityOfPolymer}
+                                value={''+_v.boringOfDiaphragmData.viscosityOfPolymer}
                                 onChange={(value: string) =>
                                     _v.handleBoringOfDiaphragmInputChange(
                                         'viscosityOfPolymer',
@@ -6099,7 +6099,7 @@ export const CustomForms = (_v: any) => {
                             {/* pH Value of Polymer */}
                             <Input
                                 label="pH Value of Polymer"
-                                value={_v.boringOfDiaphragmData.pHValueOfPolymer}
+                                value={''+_v.boringOfDiaphragmData.pHValueOfPolymer}
                                 onChange={(value: string) =>
                                     _v.handleBoringOfDiaphragmInputChange('pHValueOfPolymer', value)
                                 }
@@ -6109,7 +6109,7 @@ export const CustomForms = (_v: any) => {
                             {/* Sand Content of Polymer */}
                             <Input
                                 label="Sand Content of Polymer (%)"
-                                value={_v.boringOfDiaphragmData.sandContentOfPolymer}
+                                value={''+_v.boringOfDiaphragmData.sandContentOfPolymer}
                                 onChange={(value: string) =>
                                     _v.handleBoringOfDiaphragmInputChange(
                                         'sandContentOfPolymer',
@@ -6122,7 +6122,7 @@ export const CustomForms = (_v: any) => {
                             {/* Depth of Wall */}
                             <Input
                                 label="Depth of Wall (mtr)"
-                                value={_v.boringOfDiaphragmData.depthOfWall}
+                                value={''+_v.boringOfDiaphragmData.depthOfWall}
                                 onChange={(value: string) =>
                                     _v.handleBoringOfDiaphragmInputChange('depthOfWall', value)
                                 }
@@ -6138,7 +6138,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <View style={{ flexDirection: 'column', paddingBottom: 20 }}>
@@ -6190,7 +6190,7 @@ export const CustomForms = (_v: any) => {
                             <View>
                                 <TimePicker
                                     label="Time"
-                                    value={_v.rfiTime}
+                                    value={''+_v.rfiTime}
                                     onChange={time => _v.setRFITime(time)}
                                 />
                             </View>
@@ -6304,7 +6304,7 @@ export const CustomForms = (_v: any) => {
                             <View>
                                 <TimePicker
                                     label="Time"
-                                    value={_v.rfiTime}
+                                    value={''+_v.rfiTime}
                                     onChange={time => _v.setRFITime(time)}
                                 />
                             </View>
@@ -6331,7 +6331,7 @@ export const CustomForms = (_v: any) => {
                         <View style={{ flexDirection: 'column' }}>
                             <Input
                                 label="Qty of Top Soil collected and stored (cum)"
-                                value={_v.strippingAndStoringTopSoilData.topSoilCollectedStored}
+                                value={''+_v.strippingAndStoringTopSoilData.topSoilCollectedStored}
                                 onChange={(value: any) =>
                                     _v.setStrippingAndStoringTopSoilData((prevData: any) => ({
                                         ...prevData,
@@ -6353,7 +6353,7 @@ export const CustomForms = (_v: any) => {
                             <View>
                                 <TimePicker
                                     label="Time"
-                                    value={_v.rfiTime}
+                                    value={''+_v.rfiTime}
                                     onChange={time => _v.setRFITime(time)}
                                 />
                             </View>
@@ -6480,7 +6480,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -6553,7 +6553,7 @@ export const CustomForms = (_v: any) => {
                             <View>
                                 <TimePicker
                                     label="Time"
-                                    value={_v.rfiTime}
+                                    value={''+_v.rfiTime}
                                     onChange={time => _v.setRFITime(time)}
                                 />
                             </View>
@@ -6648,7 +6648,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -6751,7 +6751,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Thickness of Layer Laid in mm"
-                            value={_v.layingAndCompactionData.layerThickness}
+                            value={''+_v.layingAndCompactionData.layerThickness}
                             onChange={(value: any) =>
                                 _v.setLayingAndCompactionData((prevData: any) => ({
                                     ...prevData,
@@ -6763,7 +6763,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total Material Qty Laid in Tonne"
-                            value={_v.layingAndCompactionData.totalMaterialQtyLaid}
+                            value={''+_v.layingAndCompactionData.totalMaterialQtyLaid}
                             onChange={(value: any) =>
                                 _v.setLayingAndCompactionData((prevData: any) => ({
                                     ...prevData,
@@ -6775,7 +6775,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total Material Qty in Sqm"
-                            value={_v.layingAndCompactionData.totalMaterialQtySqm}
+                            value={''+_v.layingAndCompactionData.totalMaterialQtySqm}
                             onChange={(value: any) =>
                                 _v.setLayingAndCompactionData((prevData: any) => ({
                                     ...prevData,
@@ -6792,7 +6792,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -6881,7 +6881,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total Length of Pipe Laid in Meters"
-                            value={_v.pipeLayingAndJointingData.totalPipeLength}
+                            value={''+_v.pipeLayingAndJointingData.totalPipeLength}
                             onChange={(value: any) =>
                                 _v.setPipeLayingAndJointingData((prevData: any) => ({
                                     ...prevData,
@@ -6892,7 +6892,7 @@ export const CustomForms = (_v: any) => {
                         />
                         <Input
                             label="Total Number of Pipes Laid"
-                            value={_v.pipeLayingAndJointingData.totalNumberOfPipes}
+                            value={''+_v.pipeLayingAndJointingData.totalNumberOfPipes}
                             onChange={(value: any) =>
                                 _v.setPipeLayingAndJointingData((prevData: any) => ({
                                     ...prevData,
@@ -6909,7 +6909,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -6957,7 +6957,7 @@ export const CustomForms = (_v: any) => {
                             <View style={{ flexDirection: 'column' }} key={property.key}>
                                 <DropdownPicker
                                     label={property.title}
-                                    value={_v.fixingOfMetalBeamData[property.key]}
+                                    value={''+_v.fixingOfMetalBeamData[property.key]}
                                     items={YES_NO_LIST}
                                     onChange={(value: any) =>
                                         _v.setFixingOfMetalBeamData((prevData: any) => ({
@@ -6988,7 +6988,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -7054,7 +7054,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total No. of Vertical Post Installed"
-                            value={_v.fixingVerticalPostData.totalVerticalPostInstalled}
+                            value={''+_v.fixingVerticalPostData.totalVerticalPostInstalled}
                             onChange={(value: any) =>
                                 _v.setFixingVerticalPostData((prevData: any) => ({
                                     ...prevData,
@@ -7071,7 +7071,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -7120,7 +7120,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total Length Completed in Km"
-                            value={_v.cuttingOfJointsData.totalLengthCompleted}
+                            value={''+_v.cuttingOfJointsData.totalLengthCompleted}
                             onChange={(value: any) =>
                                 _v.setCuttingOfJointsData((prevData: any) => ({
                                     ...prevData,
@@ -7137,7 +7137,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -7216,7 +7216,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total Length of Paver Block Laid (RM)"
-                            value={_v.layingOfPaverBlockData.totalLengthLaid}
+                            value={''+_v.layingOfPaverBlockData.totalLengthLaid}
                             onChange={(value: any) =>
                                 _v.setLayingOfPaverBlockData((prevData: any) => ({
                                     ...prevData,
@@ -7228,7 +7228,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total SQM of Paver Blocks Laid"
-                            value={_v.layingOfPaverBlockData.totalSqmLaid}
+                            value={''+_v.layingOfPaverBlockData.totalSqmLaid}
                             onChange={(value: any) =>
                                 _v.setLayingOfPaverBlockData((prevData: any) => ({
                                     ...prevData,
@@ -7240,7 +7240,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Thickness of Paver Block Laid (mm)"
-                            value={_v.layingOfPaverBlockData.thicknessPaverBlock}
+                            value={''+_v.layingOfPaverBlockData.thicknessPaverBlock}
                             onChange={(value: any) =>
                                 _v.setLayingOfPaverBlockData((prevData: any) => ({
                                     ...prevData,
@@ -7270,7 +7270,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -7372,7 +7372,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total Length of DLC Laid in Mtr"
-                            value={_v.layingOfDLCData.totalLengthDLC}
+                            value={''+_v.layingOfDLCData.totalLengthDLC}
                             onChange={(value: any) =>
                                 _v.setLayingOfDLCData((prevData: any) => ({
                                     ...prevData,
@@ -7384,7 +7384,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total Area of DLC Laid in Sqm"
-                            value={_v.layingOfDLCData.totalAreaDLC}
+                            value={''+_v.layingOfDLCData.totalAreaDLC}
                             onChange={(value: any) =>
                                 _v.setLayingOfDLCData((prevData: any) => ({
                                     ...prevData,
@@ -7416,7 +7416,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -7484,7 +7484,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -7542,7 +7542,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -7612,7 +7612,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -7678,7 +7678,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total Texturing Done (sqmtr)"
-                            value={_v.texturingData.totalTexturingDone}
+                            value={''+_v.texturingData.totalTexturingDone}
                             onChange={(value: any) =>
                                 _v.setTexturingData((prevData: any) => ({
                                     ...prevData,
@@ -7695,7 +7695,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -7757,7 +7757,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Dia of Sheath (in mm)"
-                            value={_v.placingOfDowelData.sheathDia}
+                            value={''+_v.placingOfDowelData.sheathDia}
                             onChange={(value: any) =>
                                 _v.setPlacingOfDowelData((prevData: any) => ({
                                     ...prevData,
@@ -7768,7 +7768,7 @@ export const CustomForms = (_v: any) => {
                         />
                         <Input
                             label="Total number of dowel bars"
-                            value={_v.placingOfDowelData.totalDowelBars}
+                            value={''+_v.placingOfDowelData.totalDowelBars}
                             onChange={(value: any) =>
                                 _v.setPlacingOfDowelData((prevData: any) => ({
                                     ...prevData,
@@ -7785,7 +7785,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -7845,7 +7845,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Thickness of Filler Board in mm"
-                            value={_v.placingOfFillerBoardData.fillerBoardThickness}
+                            value={''+_v.placingOfFillerBoardData.fillerBoardThickness}
                             onChange={(value: any) =>
                                 _v.setPlacingOfFillerBoardData((prevData: any) => ({
                                     ...prevData,
@@ -7856,7 +7856,7 @@ export const CustomForms = (_v: any) => {
                         />
                         <Input
                             label="Total Filler Board Qty in Sqmm"
-                            value={_v.placingOfFillerBoardData.totalFillerBoardQty}
+                            value={''+_v.placingOfFillerBoardData.totalFillerBoardQty}
                             onChange={(value: any) =>
                                 _v.setPlacingOfFillerBoardData((prevData: any) => ({
                                     ...prevData,
@@ -7873,7 +7873,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -7941,7 +7941,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Quantity of Sealant Utilized (in liters)"
-                            value={_v.sealantFilingData.sealantQtyUtilized}
+                            value={''+_v.sealantFilingData.sealantQtyUtilized}
                             onChange={(value: any) =>
                                 _v.setSealantFilingData((prevData: any) => ({
                                     ...prevData,
@@ -7958,7 +7958,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -8023,7 +8023,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Depth of Milling (mm)"
-                            value={_v.millingData.depthOfMilling}
+                            value={''+_v.millingData.depthOfMilling}
                             onChange={(value: any) =>
                                 _v.setMillingData((prevData: any) => ({
                                     ...prevData,
@@ -8035,7 +8035,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total Quantity of Milled Material (cm)"
-                            value={_v.millingData.totalQtyMilledMaterial}
+                            value={''+_v.millingData.totalQtyMilledMaterial}
                             onChange={(value: any) =>
                                 _v.setMillingData((prevData: any) => ({
                                     ...prevData,
@@ -8047,7 +8047,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total Surface Area Milled (Sqmm)"
-                            value={_v.millingData.totalSurfaceAreaMilled}
+                            value={''+_v.millingData.totalSurfaceAreaMilled}
                             onChange={(value: any) =>
                                 _v.setMillingData((prevData: any) => ({
                                     ...prevData,
@@ -8064,7 +8064,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -8137,7 +8137,7 @@ export const CustomForms = (_v: any) => {
                         <Input
                             label="Finished Compacted Layer Thickness in mm"
                             value={
-                                _v.layingOfSeparationMembraneData.finishedCompactedLayerThickness
+                                ''+_v.layingOfSeparationMembraneData.finishedCompactedLayerThickness
                             }
                             onChange={(value: any) =>
                                 _v.setLayingOfSeparationMembraneData((prevData: any) => ({
@@ -8155,7 +8155,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -8268,7 +8268,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Lead of PQC Material (in Km)"
-                            value={_v.layingOfPQCData.pqcLeadDistance}
+                            value={''+_v.layingOfPQCData.pqcLeadDistance}
                             onChange={(value: any) =>
                                 _v.setLayingOfPQCData((prevData: any) => ({
                                     ...prevData,
@@ -8280,7 +8280,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total Length of PQC Laid (in meters)"
-                            value={_v.layingOfPQCData.totalPQCLaidLength}
+                            value={''+_v.layingOfPQCData.totalPQCLaidLength}
                             onChange={(value: any) =>
                                 _v.setLayingOfPQCData((prevData: any) => ({
                                     ...prevData,
@@ -8292,7 +8292,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total Area of PQC Laid (in sqm)"
-                            value={_v.layingOfPQCData.totalPQCLaidArea}
+                            value={''+_v.layingOfPQCData.totalPQCLaidArea}
                             onChange={(value: any) =>
                                 _v.setLayingOfPQCData((prevData: any) => ({
                                     ...prevData,
@@ -8304,7 +8304,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Thickness of PQC Laid (in mm)"
-                            value={_v.layingOfPQCData.pqcThicknessLaid}
+                            value={''+_v.layingOfPQCData.pqcThicknessLaid}
                             onChange={(value: any) =>
                                 _v.setLayingOfPQCData((prevData: any) => ({
                                     ...prevData,
@@ -8321,7 +8321,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -8403,7 +8403,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total Quantity of Soil Used in cum"
-                            value={_v.backfillingData.totalSoilQtyUsed}
+                            value={''+_v.backfillingData.totalSoilQtyUsed}
                             onChange={(value: any) =>
                                 _v.setBackfillingData((prevData: any) => ({
                                     ...prevData,
@@ -8420,7 +8420,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -8516,7 +8516,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total Area where Brick Work is to be done in Sqm"
-                            value={_v.bricksWorkData.totalBrickWorkArea}
+                            value={''+_v.bricksWorkData.totalBrickWorkArea}
                             onChange={(value: any) =>
                                 _v.setBricksWorkData((prevData: any) => ({
                                     ...prevData,
@@ -8528,7 +8528,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total Brick Work in Cum"
-                            value={_v.bricksWorkData.totalBrickWorkCum}
+                            value={''+_v.bricksWorkData.totalBrickWorkCum}
                             onChange={(value: any) =>
                                 _v.setBricksWorkData((prevData: any) => ({
                                     ...prevData,
@@ -8545,7 +8545,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -8598,7 +8598,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total qty of soil cut in cum"
-                            value={_v.cuttingOfSoilData.totalSoilCutQty}
+                            value={''+_v.cuttingOfSoilData.totalSoilCutQty}
                             onChange={(value: any) =>
                                 _v.setCuttingOfSoilData((prevData: any) => ({
                                     ...prevData,
@@ -8615,7 +8615,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -8679,7 +8679,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total Area where Geo cell placed (Sqm)"
-                            value={_v.fixingGeoCellData.totalGeoCellArea}
+                            value={''+_v.fixingGeoCellData.totalGeoCellArea}
                             onChange={(value: any) =>
                                 _v.setFixingGeoCellData((prevData: any) => ({
                                     ...prevData,
@@ -8691,7 +8691,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total consumption of Geo cell in Sqm"
-                            value={_v.fixingGeoCellData.totalGeoCellConsumption}
+                            value={''+_v.fixingGeoCellData.totalGeoCellConsumption}
                             onChange={(value: any) =>
                                 _v.setFixingGeoCellData((prevData: any) => ({
                                     ...prevData,
@@ -8708,7 +8708,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -8765,7 +8765,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total Area of the Slope in Sqm"
-                            value={_v.fixingOfMeshData.totalAreaSlope}
+                            value={''+_v.fixingOfMeshData.totalAreaSlope}
                             onChange={(value: any) =>
                                 _v.setFixingOfMeshData((prevData: any) => ({
                                     ...prevData,
@@ -8777,7 +8777,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total Qty of Mesh in kg"
-                            value={_v.fixingOfMeshData.totalQtyMesh}
+                            value={''+_v.fixingOfMeshData.totalQtyMesh}
                             onChange={(value: any) =>
                                 _v.setFixingOfMeshData((prevData: any) => ({
                                     ...prevData,
@@ -8794,7 +8794,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -8885,7 +8885,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total Area Covered with Grass (sqm)"
-                            value={_v.layingOfGrassTurfData.totalAreaCovered}
+                            value={''+_v.layingOfGrassTurfData.totalAreaCovered}
                             onChange={(value: any) =>
                                 _v.setLayingOfGrassTurfData((prevData: any) => ({
                                     ...prevData,
@@ -8902,7 +8902,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -8955,7 +8955,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total Area where Laying is Done (Sqm)"
-                            value={_v.layingOfTopSoilData.totalAreaLaying}
+                            value={''+_v.layingOfTopSoilData.totalAreaLaying}
                             onChange={(value: any) =>
                                 _v.setLayingOfTopSoilData((prevData: any) => ({
                                     ...prevData,
@@ -8967,7 +8967,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total Quantity of Soil (cum)"
-                            value={_v.layingOfTopSoilData.totalQtyOfSoil}
+                            value={''+_v.layingOfTopSoilData.totalQtyOfSoil}
                             onChange={(value: any) =>
                                 _v.setLayingOfTopSoilData((prevData: any) => ({
                                     ...prevData,
@@ -8984,7 +8984,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -9047,7 +9047,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total Length of Chute in mtr"
-                            value={_v.chuteMembersData.totalChuteLength}
+                            value={''+_v.chuteMembersData.totalChuteLength}
                             onChange={(value: any) =>
                                 _v.setChuteMembersData((prevData: any) => ({
                                     ...prevData,
@@ -9064,7 +9064,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -9158,7 +9158,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -9230,7 +9230,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total Area Covered with Grass (sqm)"
-                            value={_v.plantingGrassData.totalAreaCoveredWithGrass}
+                            value={''+_v.plantingGrassData.totalAreaCoveredWithGrass}
                             onChange={(value: any) =>
                                 _v.setPlantingGrassData((prevData: any) => ({
                                     ...prevData,
@@ -9247,7 +9247,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -9308,7 +9308,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total No. of Trees Planted"
-                            value={_v.plantingTreesData.totalNoOfTreesPlanted}
+                            value={''+_v.plantingTreesData.totalNoOfTreesPlanted}
                             onChange={(value: any) =>
                                 _v.setPlantingTreesData((prevData: any) => ({
                                     ...prevData,
@@ -9325,7 +9325,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -9377,7 +9377,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total qty of soil prepared in cum"
-                            value={_v.preparationOfSoilData.totalQtySoil}
+                            value={''+_v.preparationOfSoilData.totalQtySoil}
                             onChange={(value: any) =>
                                 _v.setPreparationOfSoilData((prevData: any) => ({
                                     ...prevData,
@@ -9389,7 +9389,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total surface area of soil laid in sqm"
-                            value={_v.preparationOfSoilData.totalSurfaceArea}
+                            value={''+_v.preparationOfSoilData.totalSurfaceArea}
                             onChange={(value: any) =>
                                 _v.setPreparationOfSoilData((prevData: any) => ({
                                     ...prevData,
@@ -9406,7 +9406,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -9460,7 +9460,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -9505,7 +9505,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total Quantity of Water Used (in Litres)"
-                            value={_v.wateringData.totalQtyWaterUsed}
+                            value={''+_v.wateringData.totalQtyWaterUsed}
                             onChange={(value: any) =>
                                 _v.setWateringData((prevData: any) => ({
                                     ...prevData,
@@ -9522,7 +9522,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -9590,7 +9590,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total Number of Plants Planted"
-                            value={_v.plantationData.totalPlantsPlanted}
+                            value={''+_v.plantationData.totalPlantsPlanted}
                             onChange={(value: any) =>
                                 _v.setPlantationData((prevData: any) => ({
                                     ...prevData,
@@ -9602,7 +9602,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total Area Covered in Sqm"
-                            value={_v.plantationData.totalAreaCovered}
+                            value={''+_v.plantationData.totalAreaCovered}
                             onChange={(value: any) =>
                                 _v.setPlantationData((prevData: any) => ({
                                     ...prevData,
@@ -9619,7 +9619,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -9679,7 +9679,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total Surface Area of Stone Pitching (sqm)"
-                            value={_v.stonePitchingData.totalSurfaceArea}
+                            value={''+_v.stonePitchingData.totalSurfaceArea}
                             onChange={(value: any) =>
                                 _v.setStonePitchingData((prevData: any) => ({
                                     ...prevData,
@@ -9690,7 +9690,7 @@ export const CustomForms = (_v: any) => {
                         />
                         <Input
                             label="Total Material Laid (tonne)"
-                            value={_v.stonePitchingData.totalMaterialLaid}
+                            value={''+_v.stonePitchingData.totalMaterialLaid}
                             onChange={(value: any) =>
                                 _v.setStonePitchingData((prevData: any) => ({
                                     ...prevData,
@@ -9707,7 +9707,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -9789,7 +9789,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total Number of Equipment Installed"
-                            value={_v.inverterInstallationData.totalEquipmentInstalled}
+                            value={''+_v.inverterInstallationData.totalEquipmentInstalled}
                             onChange={(value: any) =>
                                 _v.setInverterInstallationData((prevData: any) => ({
                                     ...prevData,
@@ -9806,7 +9806,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -9882,7 +9882,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total no. of double pole structures erected"
-                            value={_v.erectionOfDoublePoleStructureData.totalDoublePolesErected}
+                            value={''+_v.erectionOfDoublePoleStructureData.totalDoublePolesErected}
                             onChange={(value: any) =>
                                 _v.setErectionOfDoublePoleStructureData((prevData: any) => ({
                                     ...prevData,
@@ -9899,7 +9899,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -9948,7 +9948,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total no. of Y connectors used"
-                            value={_v.fixingOfMC4Data.totalYConnectorsUsed}
+                            value={''+_v.fixingOfMC4Data.totalYConnectorsUsed}
                             onChange={(value: any) =>
                                 _v.setFixingOfMC4Data((prevData: any) => ({
                                     ...prevData,
@@ -9965,7 +9965,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -10051,7 +10051,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total No. of MMS Tables Erected"
-                            value={_v.fixingOfMMSData.totalNoOfMMSTablesErected}
+                            value={''+_v.fixingOfMMSData.totalNoOfMMSTablesErected}
                             onChange={(value: any) =>
                                 _v.setFixingOfMMSData((prevData: any) => ({
                                     ...prevData,
@@ -10063,7 +10063,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total Length of MMS Structure Completed in RM"
-                            value={_v.fixingOfMMSData.totalLengthOfMMSCompleted}
+                            value={''+_v.fixingOfMMSData.totalLengthOfMMSCompleted}
                             onChange={(value: any) =>
                                 _v.setFixingOfMMSData((prevData: any) => ({
                                     ...prevData,
@@ -10080,7 +10080,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -10161,7 +10161,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total No. of Modules Mounted"
-                            value={_v.fixingOfModulesData.totalModulesMounted}
+                            value={''+_v.fixingOfModulesData.totalModulesMounted}
                             onChange={(value: any) =>
                                 _v.setFixingOfModulesData((prevData: any) => ({
                                     ...prevData,
@@ -10173,7 +10173,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total Length of Modules Mounting Completed in RM"
-                            value={_v.fixingOfModulesData.totalLengthMounted}
+                            value={''+_v.fixingOfModulesData.totalLengthMounted}
                             onChange={(value: any) =>
                                 _v.setFixingOfModulesData((prevData: any) => ({
                                     ...prevData,
@@ -10190,7 +10190,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -10242,7 +10242,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total Length of Caution Tape Laid (RM)"
-                            value={_v.layingCautionTapeData.totalCautionTapeLength}
+                            value={''+_v.layingCautionTapeData.totalCautionTapeLength}
                             onChange={(value: any) =>
                                 _v.setLayingCautionTapeData((prevData: any) => ({
                                     ...prevData,
@@ -10259,7 +10259,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -10323,7 +10323,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total No. of Route Markers Installed at Site"
-                            value={_v.routeMarkingData.totalRouteMarkersInstalled}
+                            value={''+_v.routeMarkingData.totalRouteMarkersInstalled}
                             onChange={(value: any) =>
                                 _v.setRouteMarkingData((prevData: any) => ({
                                     ...prevData,
@@ -10335,7 +10335,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total Length Covered in RM"
-                            value={_v.routeMarkingData.totalLengthCoveredRM}
+                            value={''+_v.routeMarkingData.totalLengthCoveredRM}
                             onChange={(value: any) =>
                                 _v.setRouteMarkingData((prevData: any) => ({
                                     ...prevData,
@@ -10352,7 +10352,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -10399,7 +10399,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total Area of Brick Layering Completed (sqm)"
-                            value={_v.bricksLayeringData.totalAreaCompleted}
+                            value={''+_v.bricksLayeringData.totalAreaCompleted}
                             onChange={(value: any) =>
                                 _v.setBricksLayeringData((prevData: any) => ({
                                     ...prevData,
@@ -10410,7 +10410,7 @@ export const CustomForms = (_v: any) => {
                         />
                         <Input
                             label="Total No. of Bricks Laid (No)"
-                            value={_v.bricksLayeringData.totalBricksLaid}
+                            value={''+_v.bricksLayeringData.totalBricksLaid}
                             onChange={(value: any) =>
                                 _v.setBricksLayeringData((prevData: any) => ({
                                     ...prevData,
@@ -10421,7 +10421,7 @@ export const CustomForms = (_v: any) => {
                         />
                         <Input
                             label="Total Length of Trench Completed (RM)"
-                            value={_v.bricksLayeringData.totalLengthTrenchCompleted}
+                            value={''+_v.bricksLayeringData.totalLengthTrenchCompleted}
                             onChange={(value: any) =>
                                 _v.setBricksLayeringData((prevData: any) => ({
                                     ...prevData,
@@ -10438,7 +10438,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -10494,7 +10494,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -10552,7 +10552,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total Trench Dressed in RM"
-                            value={_v.cableTrenchDressingData.totalTrenchDressed}
+                            value={''+_v.cableTrenchDressingData.totalTrenchDressed}
                             onChange={(value: any) =>
                                 _v.setCableTrenchDressingData((prevData: any) => ({
                                     ...prevData,
@@ -10569,7 +10569,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -10646,7 +10646,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -10697,7 +10697,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total Qty of Soil Excavated (in Cum)"
-                            value={_v.cableTrenchExcavationData.totalSoilQtyExcavated}
+                            value={''+_v.cableTrenchExcavationData.totalSoilQtyExcavated}
                             onChange={(value: any) =>
                                 _v.setCableTrenchExcavationData((prevData: any) => ({
                                     ...prevData,
@@ -10709,7 +10709,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total Trench Excavated (in RM)"
-                            value={_v.cableTrenchExcavationData.totalTrenchExcavated}
+                            value={''+_v.cableTrenchExcavationData.totalTrenchExcavated}
                             onChange={(value: any) =>
                                 _v.setCableTrenchExcavationData((prevData: any) => ({
                                     ...prevData,
@@ -10726,7 +10726,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -10808,7 +10808,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total No. of Equipment Installed"
-                            value={_v.fixingAndInstallationData.totalEquipmentInstalled}
+                            value={''+_v.fixingAndInstallationData.totalEquipmentInstalled}
                             onChange={(value: any) =>
                                 _v.setFixingAndInstallationData((prevData: any) => ({
                                     ...prevData,
@@ -10825,7 +10825,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -10914,7 +10914,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total No. of Equipment Installed"
-                            value={_v.fixingAndInstallationLTPanelData.totalEquipmentInstalled}
+                            value={''+_v.fixingAndInstallationLTPanelData.totalEquipmentInstalled}
                             onChange={(value: any) =>
                                 _v.setFixingAndInstallationLTPanelData((prevData: any) => ({
                                     ...prevData,
@@ -10933,7 +10933,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -11065,7 +11065,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -11155,7 +11155,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -11210,7 +11210,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total No. of Panels Installed"
-                            value={_v.fixingOfPanelsData.totalPanelsInstalled}
+                            value={''+_v.fixingOfPanelsData.totalPanelsInstalled}
                             onChange={(value: any) =>
                                 _v.setFixingOfPanelsData((prevData: any) => ({
                                     ...prevData,
@@ -11221,7 +11221,7 @@ export const CustomForms = (_v: any) => {
                         />
                         <Input
                             label="Total No. of Bus Shelter Completed"
-                            value={_v.fixingOfPanelsData.totalBusShelterCompleted}
+                            value={''+_v.fixingOfPanelsData.totalBusShelterCompleted}
                             onChange={(value: any) =>
                                 _v.setFixingOfPanelsData((prevData: any) => ({
                                     ...prevData,
@@ -11238,7 +11238,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -11296,7 +11296,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total No. of Columns Erected"
-                            value={_v.erectionPreCastColumnData.totalNoOfColumnsErected}
+                            value={''+_v.erectionPreCastColumnData.totalNoOfColumnsErected}
                             onChange={(value: any) =>
                                 _v.setErectionPreCastColumnData((prevData: any) => ({
                                     ...prevData,
@@ -11308,7 +11308,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total Length of B/Wall Covered (RM)"
-                            value={_v.erectionPreCastColumnData.totalLengthOfBwallCovered}
+                            value={''+_v.erectionPreCastColumnData.totalLengthOfBwallCovered}
                             onChange={(value: any) =>
                                 _v.setErectionPreCastColumnData((prevData: any) => ({
                                     ...prevData,
@@ -11325,7 +11325,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -11381,7 +11381,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total No. of Panels Installed"
-                            value={_v.erectionOfBusShelterData.totalPanelsInstalled}
+                            value={''+_v.erectionOfBusShelterData.totalPanelsInstalled}
                             onChange={(value: any) =>
                                 _v.setErectionOfBusShelterData((prevData: any) => ({
                                     ...prevData,
@@ -11393,7 +11393,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total No. of Bus Stands Completed"
-                            value={_v.erectionOfBusShelterData.totalBusStandsCompleted}
+                            value={''+_v.erectionOfBusShelterData.totalBusStandsCompleted}
                             onChange={(value: any) =>
                                 _v.setErectionOfBusShelterData((prevData: any) => ({
                                     ...prevData,
@@ -11410,7 +11410,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -11472,7 +11472,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total column/angles erected"
-                            value={_v.erectionOfAngleSectionData.totalAnglesErected}
+                            value={''+_v.erectionOfAngleSectionData.totalAnglesErected}
                             onChange={(value: any) =>
                                 _v.setErectionOfAngleSectionData((prevData: any) => ({
                                     ...prevData,
@@ -11489,7 +11489,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -11542,7 +11542,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total No. of Panels Installed in Nos."
-                            value={_v.preCastRccPanelData.totalPanelsInstalled}
+                            value={''+_v.preCastRccPanelData.totalPanelsInstalled}
                             onChange={(value: any) =>
                                 _v.setPreCastRccPanelData((prevData: any) => ({
                                     ...prevData,
@@ -11553,7 +11553,7 @@ export const CustomForms = (_v: any) => {
                         />
                         <Input
                             label="Total Area of Panels Installed in Sqm"
-                            value={_v.preCastRccPanelData.totalAreaInstalled}
+                            value={''+_v.preCastRccPanelData.totalAreaInstalled}
                             onChange={(value: any) =>
                                 _v.setPreCastRccPanelData((prevData: any) => ({
                                     ...prevData,
@@ -11570,7 +11570,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -11671,7 +11671,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total Sqm of Fence Installed"
-                            value={_v.placingChainLinkData.totalSqmFenceInstalled}
+                            value={''+_v.placingChainLinkData.totalSqmFenceInstalled}
                             onChange={(value: any) =>
                                 _v.setPlacingChainLinkData((prevData: any) => ({
                                     ...prevData,
@@ -11689,7 +11689,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''=_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -11750,7 +11750,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total Cement Bag Consumed (in no.)"
-                            value={_v.mortarChecklistData.totalCementBagsConsumed}
+                            value={''+_v.mortarChecklistData.totalCementBagsConsumed}
                             onChange={(value: any) =>
                                 _v.setMortarChecklistData((prevData: any) => ({
                                     ...prevData,
@@ -11761,7 +11761,7 @@ export const CustomForms = (_v: any) => {
                         />
                         <Input
                             label="Total Surface Area to be Plastered (in sqm)"
-                            value={_v.mortarChecklistData.totalSurfaceAreaToBePlastered}
+                            value={''+_v.mortarChecklistData.totalSurfaceAreaToBePlastered}
                             onChange={(value: any) =>
                                 _v.setMortarChecklistData((prevData: any) => ({
                                     ...prevData,
@@ -11772,7 +11772,7 @@ export const CustomForms = (_v: any) => {
                         />
                         <Input
                             label="Total Quantity of Mortar Used (in cum)"
-                            value={_v.mortarChecklistData.totalMortarUsed}
+                            value={''+_v.mortarChecklistData.totalMortarUsed}
                             onChange={(value: any) =>
                                 _v.setMortarChecklistData((prevData: any) => ({
                                     ...prevData,
@@ -11789,7 +11789,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -11848,7 +11848,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total Surface Area Flooring Done (Sqm)"
-                            value={_v.flooringData.totalSurfaceArea}
+                            value={''+_v.flooringData.totalSurfaceArea}
                             onChange={(value: any) =>
                                 _v.setFlooringData((prevData: any) => ({
                                     ...prevData,
@@ -11859,7 +11859,7 @@ export const CustomForms = (_v: any) => {
                         />
                         <Input
                             label="Total Number of Tiles Used"
-                            value={_v.flooringData.totalTilesUsed}
+                            value={''+_v.flooringData.totalTilesUsed}
                             onChange={(value: any) =>
                                 _v.setFlooringData((prevData: any) => ({
                                     ...prevData,
@@ -11876,7 +11876,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -11934,7 +11934,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -11993,7 +11993,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total Qty of Soil Used in cum"
-                            value={_v.backfillData.totalQtySoilUsed}
+                            value={''+_v.backfillData.totalQtySoilUsed}
                             onChange={(value: any) =>
                                 _v.setBackfillData((prevData: any) => ({
                                     ...prevData,
@@ -12004,7 +12004,7 @@ export const CustomForms = (_v: any) => {
                         />
                         <Input
                             label="Total Length of Trench Backfilled in RM"
-                            value={_v.backfillData.totalLengthTrenchBackfilled}
+                            value={''+_v.backfillData.totalLengthTrenchBackfilled}
                             onChange={(value: any) =>
                                 _v.setBackfillData((prevData: any) => ({
                                     ...prevData,
@@ -12021,7 +12021,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -12076,7 +12076,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total Sheet Fixed in Sqm"
-                            value={_v.placementOfSignageSheetData.totalSheetFixed}
+                            value={''+_v.placementOfSignageSheetData.totalSheetFixed}
                             onChange={(value: any) =>
                                 _v.setPlacementOfSignageSheetData((prevData: any) => ({
                                     ...prevData,
@@ -12088,7 +12088,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total Length of Road Covered in Km"
-                            value={_v.placementOfSignageSheetData.totalRoadLengthCovered}
+                            value={''+_v.placementOfSignageSheetData.totalRoadLengthCovered}
                             onChange={(value: any) =>
                                 _v.setPlacementOfSignageSheetData((prevData: any) => ({
                                     ...prevData,
@@ -12105,7 +12105,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -12166,7 +12166,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total No. of Attenuators Installed"
-                            value={_v.trafficImpactAttenuatorsData.totalNoOfAttenuatorsInstalled}
+                            value={''+_v.trafficImpactAttenuatorsData.totalNoOfAttenuatorsInstalled}
                             onChange={(value: any) =>
                                 _v.setTrafficImpactAttenuatorsData((prevData: any) => ({
                                     ...prevData,
@@ -12178,7 +12178,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total Length of Road Covered in Km"
-                            value={_v.trafficImpactAttenuatorsData.totalLengthOfRoadCovered}
+                            value={''+_v.trafficImpactAttenuatorsData.totalLengthOfRoadCovered}
                             onChange={(value: any) =>
                                 _v.setTrafficImpactAttenuatorsData((prevData: any) => ({
                                     ...prevData,
@@ -12195,7 +12195,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -12259,7 +12259,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Nos of Spring Post Installed"
-                            value={_v.fixingOfSpringPostData.springPostInstalled}
+                            value={''+_v.fixingOfSpringPostData.springPostInstalled}
                             onChange={(value: any) =>
                                 _v.setFixingOfSpringPostData((prevData: any) => ({
                                     ...prevData,
@@ -12270,7 +12270,7 @@ export const CustomForms = (_v: any) => {
                         />
                         <Input
                             label="Total Length of Road Covered in km"
-                            value={_v.fixingOfSpringPostData.totalRoadLengthCovered}
+                            value={''+_v.fixingOfSpringPostData.totalRoadLengthCovered}
                             onChange={(value: any) =>
                                 _v.setFixingOfSpringPostData((prevData: any) => ({
                                     ...prevData,
@@ -12287,7 +12287,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -12353,7 +12353,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Nos of Road Studs Installed"
-                            value={_v.fixingOfSolarRoadStudsData.noOfRoadStuds}
+                            value={''+_v.fixingOfSolarRoadStudsData.noOfRoadStuds}
                             onChange={(value: any) =>
                                 _v.setFixingOfSolarRoadStudsData((prevData: any) => ({
                                     ...prevData,
@@ -12364,7 +12364,7 @@ export const CustomForms = (_v: any) => {
                         />
                         <Input
                             label="Total Length of Road Covered in Km"
-                            value={_v.fixingOfSolarRoadStudsData.totalLengthCovered}
+                            value={''+_v.fixingOfSolarRoadStudsData.totalLengthCovered}
                             onChange={(value: any) =>
                                 _v.setFixingOfSolarRoadStudsData((prevData: any) => ({
                                     ...prevData,
@@ -12381,7 +12381,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -12445,7 +12445,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total No. of Blinkers Installed"
-                            value={_v.fixingOfSolarBlinkersData.totalBlinkersInstalled}
+                            value={''+_v.fixingOfSolarBlinkersData.totalBlinkersInstalled}
                             onChange={(value: any) =>
                                 _v.setFixingOfSolarBlinkersData((prevData: any) => ({
                                     ...prevData,
@@ -12457,7 +12457,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total Length of Road Covered in Km"
-                            value={_v.fixingOfSolarBlinkersData.totalRoadLengthCovered}
+                            value={''+_v.fixingOfSolarBlinkersData.totalRoadLengthCovered}
                             onChange={(value: any) =>
                                 _v.setFixingOfSolarBlinkersData((prevData: any) => ({
                                     ...prevData,
@@ -12474,7 +12474,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -12543,7 +12543,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Number of Road Studs Installed"
-                            value={_v.fixingOfRoadStudsData.roadStudsInstalled}
+                            value={''+_v.fixingOfRoadStudsData.roadStudsInstalled}
                             onChange={(value: any) =>
                                 _v.setFixingOfRoadStudsData((prevData: any) => ({
                                     ...prevData,
@@ -12554,7 +12554,7 @@ export const CustomForms = (_v: any) => {
                         />
                         <Input
                             label="Total Length of Road Covered (in Km)"
-                            value={_v.fixingOfRoadStudsData.totalLengthCovered}
+                            value={''+_v.fixingOfRoadStudsData.totalLengthCovered}
                             onChange={(value: any) =>
                                 _v.setFixingOfRoadStudsData((prevData: any) => ({
                                     ...prevData,
@@ -12571,7 +12571,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -12712,7 +12712,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total no. of markers installed"
-                            value={_v.fixingOfObjectMarkersData.totalMarkersInstalled}
+                            value={''+_v.fixingOfObjectMarkersData.totalMarkersInstalled}
                             onChange={(value: any) =>
                                 _v.setFixingOfObjectMarkersData((prevData: any) => ({
                                     ...prevData,
@@ -12724,7 +12724,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total length of highway covered in Km"
-                            value={_v.fixingOfObjectMarkersData.totalLengthCoveredKm}
+                            value={''+_v.fixingOfObjectMarkersData.totalLengthCoveredKm}
                             onChange={(value: any) =>
                                 _v.setFixingOfObjectMarkersData((prevData: any) => ({
                                     ...prevData,
@@ -12741,7 +12741,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -12806,7 +12806,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Nos of noise barrier panels installed"
-                            value={_v.fixingOfNoiseBarrierData.totalNoiseBarrierPanelsInstalled}
+                            value={''+_v.fixingOfNoiseBarrierData.totalNoiseBarrierPanelsInstalled}
                             onChange={(value: any) =>
                                 _v.setFixingOfNoiseBarrierData((prevData: any) => ({
                                     ...prevData,
@@ -12818,7 +12818,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total length of noise barrier fixed at crash barrier in RM"
-                            value={_v.fixingOfNoiseBarrierData.totalLengthNoiseBarrierFixedRM}
+                            value={''+_v.fixingOfNoiseBarrierData.totalLengthNoiseBarrierFixedRM}
                             onChange={(value: any) =>
                                 _v.setFixingOfNoiseBarrierData((prevData: any) => ({
                                     ...prevData,
@@ -12835,7 +12835,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -12899,7 +12899,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total no. of blinkers installed"
-                            value={_v.fixingOfLEDTrafficBlinkersData.totalBlinkersInstalled}
+                            value={''+_v.fixingOfLEDTrafficBlinkersData.totalBlinkersInstalled}
                             onChange={(value: any) =>
                                 _v.setFixingOfLEDTrafficBlinkersData((prevData: any) => ({
                                     ...prevData,
@@ -12911,7 +12911,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total length of highway covered in Km"
-                            value={_v.fixingOfLEDTrafficBlinkersData.totalHighwayLengthCovered}
+                            value={''+_v.fixingOfLEDTrafficBlinkersData.totalHighwayLengthCovered}
                             onChange={(value: any) =>
                                 _v.setFixingOfLEDTrafficBlinkersData((prevData: any) => ({
                                     ...prevData,
@@ -12928,7 +12928,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -12985,7 +12985,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total no. of hazard markers installed"
-                            value={_v.fixingOfHazardMarkersData.totalMarkersInstalled}
+                            value={''+_v.fixingOfHazardMarkersData.totalMarkersInstalled}
                             onChange={(value: any) =>
                                 _v.setFixingOfHazardMarkersData((prevData: any) => ({
                                     ...prevData,
@@ -12997,7 +12997,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total length of highway covered in Km"
-                            value={_v.fixingOfHazardMarkersData.totalLengthCoveredKm}
+                            value={''+_v.fixingOfHazardMarkersData.totalLengthCoveredKm}
                             onChange={(value: any) =>
                                 _v.setFixingOfHazardMarkersData((prevData: any) => ({
                                     ...prevData,
@@ -13014,7 +13014,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -13078,7 +13078,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Nos of flexible median marker installed"
-                            value={_v.fixingOfFlexibleMedianMarkersData.totalMarkersInstalled}
+                            value={''+_v.fixingOfFlexibleMedianMarkersData.totalMarkersInstalled}
                             onChange={(value: any) =>
                                 _v.setFixingOfFlexibleMedianMarkersData((prevData: any) => ({
                                     ...prevData,
@@ -13090,7 +13090,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total length of the road covered in Km"
-                            value={_v.fixingOfFlexibleMedianMarkersData.totalLengthCoveredKm}
+                            value={''+_v.fixingOfFlexibleMedianMarkersData.totalLengthCoveredKm}
                             onChange={(value: any) =>
                                 _v.setFixingOfFlexibleMedianMarkersData((prevData: any) => ({
                                     ...prevData,
@@ -13107,7 +13107,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -13171,7 +13171,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total no. of mirrors installed"
-                            value={_v.fixingOfConvexMirrorsData.totalMirrorsInstalled}
+                            value={''+_v.fixingOfConvexMirrorsData.totalMirrorsInstalled}
                             onChange={(value: any) =>
                                 _v.setFixingOfConvexMirrorsData((prevData: any) => ({
                                     ...prevData,
@@ -13183,7 +13183,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total length of highway covered in Km"
-                            value={_v.fixingOfConvexMirrorsData.totalLengthCoveredKm}
+                            value={''+_v.fixingOfConvexMirrorsData.totalLengthCoveredKm}
                             onChange={(value: any) =>
                                 _v.setFixingOfConvexMirrorsData((prevData: any) => ({
                                     ...prevData,
@@ -13201,7 +13201,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -13262,7 +13262,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total Nos of Antiglares installed"
-                            value={_v.fixingOfAntiglaresData.totalAntiglaresInstalled}
+                            value={''+_v.fixingOfAntiglaresData.totalAntiglaresInstalled}
                             onChange={(value: any) =>
                                 _v.setFixingOfAntiglaresData((prevData: any) => ({
                                     ...prevData,
@@ -13274,7 +13274,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total length of the road covered in Km"
-                            value={_v.fixingOfAntiglaresData.totalLengthCoveredKm}
+                            value={''+_v.fixingOfAntiglaresData.totalLengthCoveredKm}
                             onChange={(value: any) =>
                                 _v.setFixingOfAntiglaresData((prevData: any) => ({
                                     ...prevData,
@@ -13291,7 +13291,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -13340,7 +13340,7 @@ export const CustomForms = (_v: any) => {
                             <View style={{ flexDirection: 'column' }} key={property.key}>
                                 <DropdownPicker
                                     label={property.title}
-                                    value={_v.erectionOfPolesData[property.key]}
+                                    value={''+_v.erectionOfPolesData[property.key]}
                                     items={YES_NO_LIST}
                                     onChange={(value: any) =>
                                         _v._v.setErectionOfPolesData((prevData: any) => ({
@@ -13354,7 +13354,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total qty of poles erected"
-                            value={_v.erectionOfPolesData.totalPolesErected}
+                            value={''+_v.erectionOfPolesData.totalPolesErected}
                             onChange={(value: any) =>
                                 _v.setErectionOfPolesData((prevData: any) => ({
                                     ...prevData,
@@ -13365,7 +13365,7 @@ export const CustomForms = (_v: any) => {
                         />
                         <Input
                             label="Total length of highway covered in Km"
-                            value={_v.erectionOfPolesData.totalHighwayLengthCovered}
+                            value={''+_v.erectionOfPolesData.totalHighwayLengthCovered}
                             onChange={(value: any) =>
                                 _v.setErectionOfPolesData((prevData: any) => ({
                                     ...prevData,
@@ -13382,7 +13382,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -13440,7 +13440,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total qty of arms erected in no."
-                            value={_v.fixingOfArmsData.totalQtyArmsErected}
+                            value={''+_v.fixingOfArmsData.totalQtyArmsErected}
                             onChange={(value: any) =>
                                 _v.setFixingOfArmsData((prevData: any) => ({
                                     ...prevData,
@@ -13451,7 +13451,7 @@ export const CustomForms = (_v: any) => {
                         />
                         <Input
                             label="Total length of highway covered in Km"
-                            value={_v.fixingOfArmsData.totalHighwayLengthCoveredKm}
+                            value={''+_v.fixingOfArmsData.totalHighwayLengthCoveredKm}
                             onChange={(value: any) =>
                                 _v.setFixingOfArmsData((prevData: any) => ({
                                     ...prevData,
@@ -13468,7 +13468,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -13522,7 +13522,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total qty of lights installed"
-                            value={_v.installationOfLEDLightsData.totalQtyOfLightsInstalled}
+                            value={''+_v.installationOfLEDLightsData.totalQtyOfLightsInstalled}
                             onChange={(value: any) =>
                                 _v.setInstallationOfLEDLightsData((prevData: any) => ({
                                     ...prevData,
@@ -13533,7 +13533,7 @@ export const CustomForms = (_v: any) => {
                         />
                         <Input
                             label="Total length of highway covered in Km"
-                            value={_v.installationOfLEDLightsData.totalLengthOfHighwayCoveredKm}
+                            value={''+_v.installationOfLEDLightsData.totalLengthOfHighwayCoveredKm}
                             onChange={(value: any) =>
                                 _v.setInstallationOfLEDLightsData((prevData: any) => ({
                                     ...prevData,
@@ -13550,7 +13550,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -13616,7 +13616,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total length of cable laid in RM"
-                            value={_v.layingOfFlexibleCableData.totalCableLengthRM}
+                            value={''+_v.layingOfFlexibleCableData.totalCableLengthRM}
                             onChange={(value: any) =>
                                 _v.setLayingOfFlexibleCableData((prevData: any) => ({
                                     ...prevData,
@@ -13627,7 +13627,7 @@ export const CustomForms = (_v: any) => {
                         />
                         <Input
                             label="Total length of highway covered in Km"
-                            value={_v.layingOfFlexibleCableData.totalHighwayLengthKm}
+                            value={''+_v.layingOfFlexibleCableData.totalHighwayLengthKm}
                             onChange={(value: any) =>
                                 _v.setLayingOfFlexibleCableData((prevData: any) => ({
                                     ...prevData,
@@ -13644,7 +13644,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -13710,7 +13710,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total length of cable laid in RM"
-                            value={_v.layingOfLTCableData.totalCableLengthRM}
+                            value={''+_v.layingOfLTCableData.totalCableLengthRM}
                             onChange={(value: any) =>
                                 _v.setLayingOfLTCableData((prevData: any) => ({
                                     ...prevData,
@@ -13721,7 +13721,7 @@ export const CustomForms = (_v: any) => {
                         />
                         <Input
                             label="Total length of highway covered in Km"
-                            value={_v.layingOfLTCableData.totalHighwayLengthKm}
+                            value={''+_v.layingOfLTCableData.totalHighwayLengthKm}
                             onChange={(value: any) =>
                                 _v.setLayingOfLTCableData((prevData: any) => ({
                                     ...prevData,
@@ -13738,7 +13738,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -13799,7 +13799,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total no. of stones installed"
-                            value={_v.fixingOfStoneData.totalStonesInstalled}
+                            value={''+_v.fixingOfStoneData.totalStonesInstalled}
                             onChange={(value: any) =>
                                 _v.setFixingOfStoneData((prevData: any) => ({
                                     ...prevData,
@@ -13810,7 +13810,7 @@ export const CustomForms = (_v: any) => {
                         />
                         <Input
                             label="Total length of road covered in Km"
-                            value={_v.fixingOfStoneData.totalLengthCoveredKm}
+                            value={''+_v.fixingOfStoneData.totalLengthCoveredKm}
                             onChange={(value: any) =>
                                 _v.setFixingOfStoneData((prevData: any) => ({
                                     ...prevData,
@@ -13827,7 +13827,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -13893,7 +13893,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total plastering work done in sqft"
-                            value={_v.plasteringData.totalPlasteringWorkSqft}
+                            value={''+_v.plasteringData.totalPlasteringWorkSqft}
                             onChange={(value: any) =>
                                 _v.setPlasteringData((prevData: any) => ({
                                     ...prevData,
@@ -13910,7 +13910,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -13971,7 +13971,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total putty work done in sqft"
-                            value={_v.puttyData.totalPuttyWorkSqft}
+                            value={''+_v.puttyData.totalPuttyWorkSqft}
                             onChange={(value: any) =>
                                 _v.setPuttyData((prevData: any) => ({
                                     ...prevData,
@@ -13988,7 +13988,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -14061,7 +14061,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total sqft area covered under HVAC work"
-                            value={_v.hvacWorkData.totalSqftAreaCovered}
+                            value={''+_v.hvacWorkData.totalSqftAreaCovered}
                             onChange={(value: any) =>
                                 _v.setHvacWorkData((prevData: any) => ({
                                     ...prevData,
@@ -14078,7 +14078,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -14144,7 +14144,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total sqft area of ceiling work completed"
-                            value={_v.ceilingWorkData.totalSqftAreaCompleted}
+                            value={''+_v.ceilingWorkData.totalSqftAreaCompleted}
                             onChange={(value: any) =>
                                 _v.setCeilingWorkData((prevData: any) => ({
                                     ...prevData,
@@ -14161,7 +14161,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -14232,7 +14232,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -14303,7 +14303,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -14374,7 +14374,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -14444,7 +14444,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total glass work completed in sqft"
-                            value={_v.glassWorksData.totalGlassWorkCompletedSqft}
+                            value={''+_v.glassWorksData.totalGlassWorkCompletedSqft}
                             onChange={(value: any) =>
                                 _v.setGlassWorksData((prevData: any) => ({
                                     ...prevData,
@@ -14461,7 +14461,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -14542,7 +14542,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total sqft area of the building completed"
-                            value={_v.electricalWorkData.totalSqftCompleted}
+                            value={''+_v.electricalWorkData.totalSqftCompleted}
                             onChange={(value: any) =>
                                 _v.setElectricalWorkData((prevData: any) => ({
                                     ...prevData,
@@ -14559,7 +14559,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -14638,7 +14638,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total sqft area of the building completed"
-                            value={_v.plumbingWorkData.totalSqftAreaCompleted}
+                            value={''+_v.plumbingWorkData.totalSqftAreaCompleted}
                             onChange={(value: any) =>
                                 _v.setPlumbingWorkData((prevData: any) => ({
                                     ...prevData,
@@ -14655,7 +14655,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -14726,7 +14726,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total sqft area of flooring work completed"
-                            value={_v.flooringWorkData.totalSqftAreaCompleted}
+                            value={''+_v.flooringWorkData.totalSqftAreaCompleted}
                             onChange={(value: any) =>
                                 _v.setFlooringWorkData((prevData: any) => ({
                                     ...prevData,
@@ -14743,7 +14743,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -14806,7 +14806,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total length of trench excavated properly"
-                            value={_v.excavationOfTrenchData.totalLengthExcavated}
+                            value={''+_v.excavationOfTrenchData.totalLengthExcavated}
                             onChange={(value: any) =>
                                 _v.setExcavationOfTrenchData(prev => ({
                                     ...prev,
@@ -14817,7 +14817,7 @@ export const CustomForms = (_v: any) => {
                         />
                         <Input
                             label="Total quantity of earth excavated"
-                            value={_v.excavationOfTrenchData.totalQtyEarthExcavated}
+                            value={''+_v.excavationOfTrenchData.totalQtyEarthExcavated}
                             onChange={(value: any) =>
                                 _v.setExcavationOfTrenchData(prev => ({
                                     ...prev,
@@ -14834,7 +14834,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -14899,7 +14899,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total length of duct laid in RM"
-                            value={_v.layingOfDuctData.totalLengthOfDuctLaid}
+                            value={''+_v.layingOfDuctData.totalLengthOfDuctLaid}
                             onChange={(value: any) =>
                                 _v.setLayingOfDuctData((prevData: any) => ({
                                     ...prevData,
@@ -14916,7 +14916,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -14985,7 +14985,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total length of HDD crossing"
-                            value={_v.hddCrossingData.totalLengthOfHddCrossing}
+                            value={''+_v.hddCrossingData.totalLengthOfHddCrossing}
                             onChange={(value: any) =>
                                 _v.setHddCrossingData((prevData: any) => ({
                                     ...prevData,
@@ -15002,7 +15002,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -15076,7 +15076,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total area where brick work is to be done (Sqm)"
-                            value={_v.constructionOfChamberData.totalBrickworkAreaSqm}
+                            value={''+_v.constructionOfChamberData.totalBrickworkAreaSqm}
                             onChange={(value: any) =>
                                 _v.setConstructionOfChamberData((prevData: any) => ({
                                     ...prevData,
@@ -15088,7 +15088,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total brick work in cum"
-                            value={_v.constructionOfChamberData.totalBrickworkVolumeCum}
+                            value={''+_v.constructionOfChamberData.totalBrickworkVolumeCum}
                             onChange={(value: any) =>
                                 _v.setConstructionOfChamberData((prevData: any) => ({
                                     ...prevData,
@@ -15105,7 +15105,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -15190,7 +15190,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total no. of equipment installed"
-                            value={_v.installationOfEquipmentData.totalEquipmentInstalled}
+                            value={''+_v.installationOfEquipmentData.totalEquipmentInstalled}
                             onChange={(value: any) =>
                                 _v.setInstallationOfEquipmentData((prevData: any) => ({
                                     ...prevData,
@@ -15207,7 +15207,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -15282,7 +15282,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Number of Solar Systems Installed"
-                            value={_v.installationOfSolarSystemData.totalSolarSystemsInstalled}
+                            value={''+_v.installationOfSolarSystemData.totalSolarSystemsInstalled}
                             onChange={(value: any) =>
                                 _v.setInstallationOfSolarSystemData((prevData: any) => ({
                                     ...prevData,
@@ -15299,7 +15299,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -15388,7 +15388,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -15462,7 +15462,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total weight of reinforcement in Kg per foundation"
-                            value={_v.constructionOfFoundationData.totalWeightReinforcementKg}
+                            value={''+_v.constructionOfFoundationData.totalWeightReinforcementKg}
                             onChange={(value: any) =>
                                 _v.setConstructionOfFoundationData((prevData: any) => ({
                                     ...prevData,
@@ -15497,7 +15497,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -15563,7 +15563,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total weight of reinforcement/mess in Kg per ballast"
-                            value={_v.castingOfBallastData.totalReinforcementWeightKg}
+                            value={''+_v.castingOfBallastData.totalReinforcementWeightKg}
                             onChange={(value: any) =>
                                 _v.setCastingOfBallastData((prevData: any) => ({
                                     ...prevData,
@@ -15598,7 +15598,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -15655,7 +15655,7 @@ export const CustomForms = (_v: any) => {
                         ))}
                         <Input
                             label="Total length of trench covered by sand layer"
-                            value={_v.sandLayerData.totalLengthTrenchCovered}
+                            value={''+_v.sandLayerData.totalLengthTrenchCovered}
                             onChange={(value: any) =>
                                 _v.setSandLayerData((prevData: any) => ({
                                     ...prevData,
@@ -15667,7 +15667,7 @@ export const CustomForms = (_v: any) => {
 
                         <Input
                             label="Total quantity of sand filled in cum"
-                            value={_v.sandLayerData.totalQtySandFilled}
+                            value={''+_v.sandLayerData.totalQtySandFilled}
                             onChange={(value: any) =>
                                 _v.setSandLayerData((prevData: any) => ({
                                     ...prevData,
@@ -15684,7 +15684,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={_v.rfiTime}
+                                value={''+_v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput
@@ -16306,7 +16306,7 @@ export const CustomForms = (_v: any) => {
                                 <View>
                                     <TimePicker
                                         label="Time"
-                                        value={_v.rfiTime}
+                                        value={''+_v.rfiTime}
                                         onChange={time => _v.setRFITime(time)}
                                     />
                                 </View>
@@ -16431,7 +16431,7 @@ export const CustomForms = (_v: any) => {
                         />
                         <Input
                             label="W/c Ratio"
-                            value={_v.groutingData.wcRatio}
+                            value={''+_v.groutingData.wcRatio}
                             onChange={(value: string) =>
                                 _v.handleInputChangeGrouting('wcRatio', value)
                             }
@@ -16439,7 +16439,7 @@ export const CustomForms = (_v: any) => {
                         />
                         <Input
                             label="Temperature of mixing water (°C)"
-                            value={_v.groutingData.mixingWaterTemp}
+                            value={''+_v.groutingData.mixingWaterTemp}
                             onChange={(value: string) =>
                                 _v.handleInputChangeGrouting('mixingWaterTemp', value)
                             }
@@ -16447,7 +16447,7 @@ export const CustomForms = (_v: any) => {
                         />
                         <Input
                             label="Temperature of Grout (°C)"
-                            value={_v.groutingData.groutTemp}
+                            value={''+_v.groutingData.groutTemp}
                             onChange={(value: string) =>
                                 _v.handleInputChangeGrouting('groutTemp', value)
                             }
@@ -16455,17 +16455,17 @@ export const CustomForms = (_v: any) => {
                         />
                         <TimePicker
                             label="Start Time"
-                            value={_v.groutingData.startTime}
+                            value={''+_v.groutingData.startTime}
                             onChange={time => _v.handleInputChangeGrouting('startTime', time)}
                         />
                         <TimePicker
                             label="Finish Time"
-                            value={_v.groutingData.finishTime}
+                            value={''+_v.groutingData.finishTime}
                             onChange={time => _v.handleInputChangeGrouting('finishTime', time)}
                         />
                         <Input
                             label="Volume of Grout (Ltr)"
-                            value={_v.groutingData.volumeOfGrout}
+                            value={''+_v.groutingData.volumeOfGrout}
                             onChange={(value: string) =>
                                 _v.handleInputChangeGrouting('volumeOfGrout', value)
                             }
@@ -16473,7 +16473,7 @@ export const CustomForms = (_v: any) => {
                         />
                         <Input
                             label="Grouting Pressure (Kg/cm²)"
-                            value={_v.groutingData.groutingPressure}
+                            value={''+_v.groutingData.groutingPressure}
                             onChange={(value: string) =>
                                 _v.handleInputChangeGrouting('groutingPressure', value)
                             }
@@ -16481,7 +16481,7 @@ export const CustomForms = (_v: any) => {
                         />
                         <Input
                             label="Cement consumption theoretical"
-                            value={_v.groutingData.cementConsumptionTheoretical}
+                            value={''+_v.groutingData.cementConsumptionTheoretical}
                             onChange={(value: string) =>
                                 _v.handleInputChangeGrouting('cementConsumptionTheoretical', value)
                             }
@@ -16489,7 +16489,7 @@ export const CustomForms = (_v: any) => {
                         />
                         <Input
                             label="Cement consumption actual"
-                            value={_v.groutingData.cementConsumptionActual}
+                            value={''+_v.groutingData.cementConsumptionActual}
                             onChange={(value: string) =>
                                 _v.handleInputChangeGrouting('cementConsumptionActual', value)
                             }
@@ -16539,7 +16539,7 @@ export const CustomForms = (_v: any) => {
                             <View>
                                 <TimePicker
                                     label="Time"
-                                    value={_v.rfiTime}
+                                    value={''+_v.rfiTime}
                                     onChange={time => _v.setRFITime(time)}
                                 />
                             </View>
@@ -16592,7 +16592,7 @@ export const CustomForms = (_v: any) => {
                             <View style={styles.categoryColumn}>
                                 <Input
                                     label="Consumption of water in Kilo liter"
-                                    value={_v.curingData.consumptionOfWater}
+                                    value={''+_v.curingData.consumptionOfWater}
                                     onChange={(value: string) =>
                                         _v.handleCuring('consumptionOfWater', value)
                                     }
@@ -16609,7 +16609,7 @@ export const CustomForms = (_v: any) => {
                                 <View>
                                     <TimePicker
                                         label="Time"
-                                        value={_v.rfiTime}
+                                        value={''+_v.rfiTime}
                                         onChange={time => _v.setRFITime(time)}
                                     />
                                 </View>
@@ -16751,7 +16751,7 @@ export const CustomForms = (_v: any) => {
                                 <View>
                                     <TimePicker
                                         label="Time"
-                                        value={_v.rfiTime}
+                                        value={''+_v.rfiTime}
                                         onChange={time => _v.setRFITime(time)}
                                     />
                                 </View>
@@ -17056,7 +17056,7 @@ export const CustomForms = (_v: any) => {
                                 <View>
                                     <TimePicker
                                         label="Time"
-                                        value={_v.rfiTime}
+                                        value={''+_v.rfiTime}
                                         onChange={time => _v.setRFITime(time)}
                                     />
                                 </View>
@@ -17579,7 +17579,7 @@ export const CustomForms = (_v: any) => {
                                 <View>
                                     <TimePicker
                                         label="Time"
-                                        value={_v.rfiTime}
+                                        value={''+_v.rfiTime}
                                         onChange={time => _v.setRFITime(time)}
                                     />
                                 </View>
@@ -17715,7 +17715,7 @@ export const CustomForms = (_v: any) => {
                             <View>
                                 <TimePicker
                                     label="Time"
-                                    value={_v.rfiTime}
+                                    value={''+_v.rfiTime}
                                     onChange={time => _v.setRFITime(time)}
                                 />
                             </View>
@@ -18233,7 +18233,7 @@ export const CustomForms = (_v: any) => {
                             <View>
                                 <TimePicker
                                     label="Time"
-                                    value={_v.rfiTime}
+                                    value={''+_v.rfiTime}
                                     onChange={time => _v.setRFITime(time)}
                                 />
                             </View>

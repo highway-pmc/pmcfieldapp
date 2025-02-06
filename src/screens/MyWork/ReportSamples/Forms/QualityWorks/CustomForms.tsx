@@ -201,7 +201,9 @@ export const testSampleForm = (
   currentTestMaterialData = _currentTestMaterialData;
   selectedTestSample = _selectedTestSample;
   concreteSampleTestItems = _concreteSampleTestItems;
-
+  console.log('currentTestMaterialData', currentTestMaterialData);
+  console.log('selectedTestSample.type :', selectedTestSample.type);
+  console.log('materialType', materialType);
   if (
     !materialType ||
     materialType === TEST_MATERIALS_TYPES.CONCRETE ||
@@ -3073,7 +3075,7 @@ export const testSampleForm = (
               {/*1.Material Type: SMA */}
               {currentTestMaterialData.materialType ===
                 TEST_MATERIALS_TYPES.SMA &&
-              selectedTestSample.type === TEST_TYPES.MIX_GRADING ? (
+              (selectedTestSample.type === TEST_TYPES.MIX_GRADING ? (
                 <View>
                   {concreteSampleTestItems.map((item: any, index: any) => (
                     <View
@@ -3412,11 +3414,11 @@ export const testSampleForm = (
                     </View>
                   ))}
                 </View>
-              ) : null}
+              ) : null)}
               {/* 2.Material Type: Micro Surfacing */}
               {currentTestMaterialData.materialType ===
                 TEST_MATERIALS_TYPES.MICRO_SURFACING &&
-              selectedTestSample.type === TEST_TYPES.BINDER_CONTENT ? (
+              (selectedTestSample.type === TEST_TYPES.BINDER_CONTENT ? (
                 <View>
                   {concreteSampleTestItems.map((item: any, index: number) => (
                     <View style={{flexDirection: 'row'}} key={index}>
@@ -3514,12 +3516,12 @@ export const testSampleForm = (
                     </View>
                   ))}
                 </View>
-              ) : null}
+              ) : null)}
               {/* 3.Material Type: DBM RAP DBM(isme 2 grading hai aur task me sirf
               ek hai mix grading) */}
               {currentTestMaterialData.materialType ===
                 TEST_MATERIALS_TYPES.DBM_RAP_DBM &&
-              selectedTestSample.type === TEST_TYPES.BINDER_CONTENT ? (
+              (selectedTestSample.type === TEST_TYPES.BINDER_CONTENT ? (
                 <View>
                   {concreteSampleTestItems.map((item: any, index: number) => (
                     <View style={{flexDirection: 'row'}} key={index}>
@@ -3858,11 +3860,11 @@ export const testSampleForm = (
                     </View>
                   ))}
                 </View>
-              ) : null}
+              ) : null)}
               {/* 4.Material Type: Corce Aggregate(Micro Surfacing) */}
               {currentTestMaterialData.materialType ===
                 TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING &&
-              selectedTestSample.type === TEST_TYPES.GRADATION ? (
+              (selectedTestSample.type === TEST_TYPES.GRADATION ? (
                 <View>
                   <View style={{flexDirection: 'column'}}>
                     <Input
@@ -4036,11 +4038,11 @@ export const testSampleForm = (
                     </View>
                   ))}
                 </View>
-              ) : null}
+              ) : null)}
               {/* 5.Material Type: Corce Aggregate(SMA) */}
               {currentTestMaterialData.materialType ===
                 TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING &&
-              selectedTestSample.type ===
+              (selectedTestSample.type ===
                 TEST_TYPES.WATER_ABSORPTION_OF_AGGREGATES ? (
                 <View>
                   {concreteSampleTestItems.map((item: any, index: number) => (
@@ -4494,11 +4496,11 @@ export const testSampleForm = (
                     </View>
                   ))}
                 </View>
-              ) : null}
+              ) : null)}
               {/* 6.Material Type: Corce Aggregate dbm bc dbm */}
               {currentTestMaterialData.materialType ===
                 TEST_MATERIALS_TYPES.COARSE_AGGREGATE_DBM_BC &&
-              selectedTestSample.type ===
+              (selectedTestSample.type ===
                 TEST_TYPES.WATER_ABSORPTION_OF_AGGREGATES ? (
                 <View>
                   {concreteSampleTestItems.map((item: any, index: number) => (
@@ -4952,10 +4954,10 @@ export const testSampleForm = (
                     </View>
                   ))}
                 </View>
-              ) : null}
+              ) : null)}
               {/* 7.Material Type: Bitumen */}
               {currentTestMaterialData.materialType ===
-                TEST_MATERIALS_TYPES.BITUMEN && selectedTestSample.type === TEST_TYPES.SOFTENING_POINT ? (
+                TEST_MATERIALS_TYPES.BITUMEN && (selectedTestSample.type === TEST_TYPES.SOFTENING_POINT ? (
                   <View>
                     {concreteSampleTestItems.map((item: any, index: any) => (
                       <View style={{flexDirection: 'row'}}>
@@ -5310,11 +5312,11 @@ export const testSampleForm = (
                       </View>
                     ))}
                   </View>
-                ):null}
+                ):null)}
               {/* 8.Material Type: BC */}
               {currentTestMaterialData.materialType ===
                 TEST_MATERIALS_TYPES.BC &&
-              selectedTestSample.type === TEST_TYPES.BINDER_CONTENT ? (
+              (selectedTestSample.type === TEST_TYPES.BINDER_CONTENT ? (
                 <View>
                   {concreteSampleTestItems.map((item: any, index: number) => (
                     <View style={{flexDirection: 'row'}} key={index}>
@@ -5653,10 +5655,10 @@ export const testSampleForm = (
                     </View>
                   ))}
                 </View>
-              ): null} 
+              ): null)} 
               {/* 9.Material Type: Micro Surfacing */}
               {currentTestMaterialData.materialType ===
-                TEST_MATERIALS_TYPES.MICRO_SURFACING && selectedTestSample.type === TEST_TYPES.SAND_EQUIVALENT ? (
+                (TEST_MATERIALS_TYPES.MICRO_SURFACING && selectedTestSample.type === TEST_TYPES.SAND_EQUIVALENT ? (
                   <View>
                     {concreteSampleTestItems.map((item: any, index: number) => (
                       <View style={{flexDirection: 'row'}} key={index}>
@@ -5757,7 +5759,7 @@ export const testSampleForm = (
                       </View>
                     ))}
                   </View>
-                ):null }
+                ):null )}
               {/* 10.Material Type: Emulsion(No form available)*/}
             </ScrollView>
           </View>

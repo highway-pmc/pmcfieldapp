@@ -6740,7 +6740,7 @@ export const CustomForms = (_v: any) => {
                                     value={_v.layingAndCompactionData[property.key]}
                                     items={YES_NO_LIST}
                                     onChange={(value: any) =>
-                                        _v._v.setLayingAndCompactionData((prevData: any) => ({
+                                        _v.setLayingAndCompactionData((prevData: any) => ({
                                             ...prevData,
                                             [property.key]: value,
                                         }))
@@ -7204,7 +7204,7 @@ export const CustomForms = (_v: any) => {
                                     value={_v.layingOfPaverBlockData[property.key]}
                                     items={YES_NO_LIST}
                                     onChange={(value: any) =>
-                                        _v._v.setLayingOfPaverBlockData((prevData: any) => ({
+                                        _v.setLayingOfPaverBlockData((prevData: any) => ({
                                             ...prevData,
                                             [property.key]: value,
                                         }))
@@ -7361,7 +7361,7 @@ export const CustomForms = (_v: any) => {
                                     value={_v.layingOfDLCData[property.key]}
                                     items={YES_NO_LIST}
                                     onChange={(value: any) =>
-                                        _v._v.setLayingOfDLCData((prevData: any) => ({
+                                        _v.setLayingOfDLCData((prevData: any) => ({
                                             ...prevData,
                                             [property.key]: value,
                                         }))
@@ -7746,7 +7746,7 @@ export const CustomForms = (_v: any) => {
                                     value={_v.placingOfDowelData[property.key]}
                                     items={YES_NO_LIST}
                                     onChange={(value: any) =>
-                                        _v._v.setPlacingOfDowelData((prevData: any) => ({
+                                        _v.setPlacingOfDowelData((prevData: any) => ({
                                             ...prevData,
                                             [property.key]: value,
                                         }))
@@ -7834,7 +7834,7 @@ export const CustomForms = (_v: any) => {
                                     value={_v.placingOfFillerBoardData[property.key]}
                                     items={YES_NO_LIST}
                                     onChange={(value: any) =>
-                                        _v._v.setPlacingOfFillerBoardData((prevData: any) => ({
+                                        _v.setPlacingOfFillerBoardData((prevData: any) => ({
                                             ...prevData,
                                             [property.key]: value,
                                         }))
@@ -8011,7 +8011,7 @@ export const CustomForms = (_v: any) => {
                                     value={_v.millingData[property.key]}
                                     items={YES_NO_LIST}
                                     onChange={(value: any) =>
-                                        _v._v.setMillingData((prevData: any) => ({
+                                        _v.setMillingData((prevData: any) => ({
                                             ...prevData,
                                             [property.key]: value,
                                         }))
@@ -8257,7 +8257,7 @@ export const CustomForms = (_v: any) => {
                                     value={_v.layingOfPQCData[property.key]}
                                     items={YES_NO_LIST}
                                     onChange={(value: any) =>
-                                        _v._v.setLayingOfPQCData((prevData: any) => ({
+                                        _v.setLayingOfPQCData((prevData: any) => ({
                                             ...prevData,
                                             [property.key]: value,
                                         }))
@@ -8505,7 +8505,7 @@ export const CustomForms = (_v: any) => {
                                     value={_v.bricksWorkData[property.key]}
                                     items={YES_NO_LIST}
                                     onChange={(value: any) =>
-                                        _v._v.setBricksWorkData((prevData: any) => ({
+                                        _v.setBricksWorkData((prevData: any) => ({
                                             ...prevData,
                                             [property.key]: value,
                                         }))
@@ -8668,7 +8668,7 @@ export const CustomForms = (_v: any) => {
                                     value={_v.fixingGeoCellData[property.key]}
                                     items={YES_NO_LIST}
                                     onChange={(value: any) =>
-                                        _v._v.setFixingGeoCellData((prevData: any) => ({
+                                        _v.setFixingGeoCellData((prevData: any) => ({
                                             ...prevData,
                                             [property.key]: value,
                                         }))
@@ -8753,7 +8753,7 @@ export const CustomForms = (_v: any) => {
                                     value={_v.fixingOfMeshData[property.key]}
                                     items={YES_NO_LIST}
                                     onChange={(value: any) =>
-                                        _v._v.setFixingOfMeshData((prevData: any) => ({
+                                        _v.setFixingOfMeshData((prevData: any) => ({
                                             ...prevData,
                                             [property.key]: value,
                                         }))
@@ -8943,7 +8943,7 @@ export const CustomForms = (_v: any) => {
                                     value={_v.layingOfTopSoilData[property.key]}
                                     items={YES_NO_LIST}
                                     onChange={(value: any) =>
-                                        _v._v.setLayingOfTopSoilData((prevData: any) => ({
+                                        _v.setLayingOfTopSoilData((prevData: any) => ({
                                             ...prevData,
                                             [property.key]: value,
                                         }))
@@ -11739,7 +11739,7 @@ export const CustomForms = (_v: any) => {
                                     value={_v.mortarChecklistData[property.key]}
                                     items={YES_NO_LIST}
                                     onChange={(value: any) =>
-                                        _v._v.setMortarChecklistData((prevData: any) => ({
+                                        _v.setMortarChecklistData((prevData: any) => ({
                                             ...prevData,
                                             [property.key]: value,
                                         }))
@@ -12532,7 +12532,7 @@ export const CustomForms = (_v: any) => {
                                     value={_v.fixingOfRoadStudsData[property.key]}
                                     items={YES_NO_LIST}
                                     onChange={(value: any) =>
-                                        _v._v.setFixingOfRoadStudsData((prevData: any) => ({
+                                        _v.setFixingOfRoadStudsData((prevData: any) => ({
                                             ...prevData,
                                             [property.key]: value,
                                         }))
@@ -12701,7 +12701,7 @@ export const CustomForms = (_v: any) => {
                                     value={_v.fixingOfObjectMarkersData[property.key]}
                                     items={YES_NO_LIST}
                                     onChange={(value: any) =>
-                                        _v._v.setFixingOfObjectMarkersData((prevData: any) => ({
+                                        _v.setFixingOfObjectMarkersData((prevData: any) => ({
                                             ...prevData,
                                             [property.key]: value,
                                         }))
@@ -12795,7 +12795,7 @@ export const CustomForms = (_v: any) => {
                                     value={_v.fixingOfNoiseBarrierData[property.key]}
                                     items={YES_NO_LIST}
                                     onChange={(value: any) =>
-                                        _v._v.setFixingOfNoiseBarrierData((prevData: any) => ({
+                                        _v.setFixingOfNoiseBarrierData((prevData: any) => ({
                                             ...prevData,
                                             [property.key]: value,
                                         }))
@@ -12888,7 +12888,7 @@ export const CustomForms = (_v: any) => {
                                     value={_v.fixingOfLEDTrafficBlinkersData[property.key]}
                                     items={YES_NO_LIST}
                                     onChange={(value: any) =>
-                                        _v._v.setFixingOfLEDTrafficBlinkersData((prevData: any) => ({
+                                        _v.setFixingOfLEDTrafficBlinkersData((prevData: any) => ({
                                             ...prevData,
                                             [property.key]: value,
                                         }))
@@ -12974,7 +12974,7 @@ export const CustomForms = (_v: any) => {
                                     value={_v.fixingOfHazardMarkersData[property.key]}
                                     items={YES_NO_LIST}
                                     onChange={(value: any) =>
-                                        _v._v.setFixingOfHazardMarkersData((prevData: any) => ({
+                                        _v.setFixingOfHazardMarkersData((prevData: any) => ({
                                             ...prevData,
                                             [property.key]: value,
                                         }))
@@ -13067,7 +13067,7 @@ export const CustomForms = (_v: any) => {
                                     value={_v.fixingOfFlexibleMedianMarkersData[property.key]}
                                     items={YES_NO_LIST}
                                     onChange={(value: any) =>
-                                        _v._v.setFixingOfFlexibleMedianMarkersData((prevData: any) => ({
+                                        _v.setFixingOfFlexibleMedianMarkersData((prevData: any) => ({
                                             ...prevData,
                                             [property.key]: value,
                                         }))
@@ -13160,7 +13160,7 @@ export const CustomForms = (_v: any) => {
                                     value={_v.fixingOfConvexMirrorsData[property.key]}
                                     items={YES_NO_LIST}
                                     onChange={(value: any) =>
-                                        _v._v.setFixingOfConvexMirrorsData((prevData: any) => ({
+                                        _v.setFixingOfConvexMirrorsData((prevData: any) => ({
                                             ...prevData,
                                             [property.key]: value,
                                         }))
@@ -13251,7 +13251,7 @@ export const CustomForms = (_v: any) => {
                                     value={_v.fixingOfAntiglaresData[property.key]}
                                     items={YES_NO_LIST}
                                     onChange={(value: any) =>
-                                        _v._v.setFixingOfAntiglaresData((prevData: any) => ({
+                                        _v.setFixingOfAntiglaresData((prevData: any) => ({
                                             ...prevData,
                                             [property.key]: value,
                                         }))
@@ -13343,7 +13343,7 @@ export const CustomForms = (_v: any) => {
                                     value={''+_v.erectionOfPolesData[property.key]}
                                     items={YES_NO_LIST}
                                     onChange={(value: any) =>
-                                        _v._v.setErectionOfPolesData((prevData: any) => ({
+                                        _v.setErectionOfPolesData((prevData: any) => ({
                                             ...prevData,
                                             [property.key]: value,
                                         }))
@@ -13429,7 +13429,7 @@ export const CustomForms = (_v: any) => {
                                     value={_v.fixingOfArmsData[property.key]}
                                     items={YES_NO_LIST}
                                     onChange={(value: any) =>
-                                        _v._v.setFixingOfArmsData((prevData: any) => ({
+                                        _v.setFixingOfArmsData((prevData: any) => ({
                                             ...prevData,
                                             [property.key]: value,
                                         }))
@@ -15713,17 +15713,17 @@ export const CustomForms = (_v: any) => {
                             <View style={styles.categoryColumn}>
                                 <DropdownPicker
                                     label="Area is hard barricaded with proper signages"
-                                    value={_v._v.liftingCombinedLRData.areaBarricaded}
+                                    value={_v.liftingCombinedLRData.areaBarricaded}
                                     items={YES_NO_NA_LIST}
                                     onChange={(value: string) =>
-                                        _v._v.handleInputChangeLifting('areaBarricaded', value)
+                                        _v.handleInputChangeLifting('areaBarricaded', value)
                                     }
                                 />
                             </View>
                             <View style={styles.categoryColumn}>
                                 <DropdownPicker
                                     label="Temporary lights for proper illumination of the erection area is available at night"
-                                    value={_v._v.liftingCombinedLRData.temporaryLights}
+                                    value={_v.liftingCombinedLRData.temporaryLights}
                                     items={YES_NO_NA_LIST}
                                     onChange={(value: string) =>
                                         _v.handleInputChangeLifting('temporaryLights', value)
@@ -15733,7 +15733,7 @@ export const CustomForms = (_v: any) => {
                             <View style={styles.categoryColumn}>
                                 <DropdownPicker
                                     label="Flag man/Marshal available"
-                                    value={_v._v.liftingCombinedLRData.flagManAvailable}
+                                    value={_v.liftingCombinedLRData.flagManAvailable}
                                     items={YES_NO_NA_LIST}
                                     onChange={(value: string) =>
                                         _v.handleInputChangeLifting('flagManAvailable', value)
@@ -15743,7 +15743,7 @@ export const CustomForms = (_v: any) => {
                             <View style={styles.categoryColumn}>
                                 <DropdownPicker
                                     label="Methodology & Scheme for lifting and stacking is available at site"
-                                    value={_v._v.liftingCombinedLRData.liftingMethodology}
+                                    value={_v.liftingCombinedLRData.liftingMethodology}
                                     items={YES_NO_NA_LIST}
                                     onChange={(value: string) =>
                                         _v.handleInputChangeLifting('liftingMethodology', value)
@@ -15756,7 +15756,7 @@ export const CustomForms = (_v: any) => {
                             <View style={styles.categoryColumn}>
                                 <DropdownPicker
                                     label="De-shackles and slings of proper capacity and their test certificate by third party is available"
-                                    value={_v._v.liftingCombinedLRData.deshacklesTestCertificate}
+                                    value={_v.liftingCombinedLRData.deshacklesTestCertificate}
                                     items={YES_NO_NA_LIST}
                                     onChange={(value: string) =>
                                         _v.handleInputChangeLifting('deshacklesTestCertificate', value)
@@ -15766,7 +15766,7 @@ export const CustomForms = (_v: any) => {
                             <View style={styles.categoryColumn}>
                                 <DropdownPicker
                                     label="Safety color code present on the de-shackles"
-                                    value={_v._v.liftingCombinedLRData.safetyColorCode}
+                                    value={_v.liftingCombinedLRData.safetyColorCode}
                                     items={YES_NO_NA_LIST}
                                     onChange={(value: string) =>
                                         _v.handleInputChangeLifting('safetyColorCode', value)
@@ -15776,7 +15776,7 @@ export const CustomForms = (_v: any) => {
                             <View style={styles.categoryColumn}>
                                 <DropdownPicker
                                     label="Hydraulic jacks are in good condition with proper calibration certificates"
-                                    value={_v._v.liftingCombinedLRData.hydraulicJacksCondition}
+                                    value={_v.liftingCombinedLRData.hydraulicJacksCondition}
                                     items={YES_NO_NA_LIST}
                                     onChange={(value: string) =>
                                         _v.handleInputChangeLifting('hydraulicJacksCondition', value)
@@ -15786,7 +15786,7 @@ export const CustomForms = (_v: any) => {
                             <View style={styles.categoryColumn}>
                                 <DropdownPicker
                                     label="Limit switch of lifting hoist is working properly"
-                                    value={_v._v.liftingCombinedLRData.hoistLimitSwitch}
+                                    value={_v.liftingCombinedLRData.hoistLimitSwitch}
                                     items={YES_NO_NA_LIST}
                                     onChange={(value: string) =>
                                         _v.handleInputChangeLifting('hoistLimitSwitch', value)

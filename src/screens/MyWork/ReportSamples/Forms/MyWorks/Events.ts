@@ -511,10 +511,9 @@ export const Events = (_v: any) => {
         }
         //return;
         let rfiSubmitDateTime = `${getDbDateFromDDMMYYYY(_v.rfiDate)} ${_v.rfiTime}:00`;
-        let checkList = {};
-
-        onFillChecklistData(_v, checkList);
-
+        const checkList = onFillChecklistData(_v);
+        
+        console.log('checkList', checkList);
         _v.dispatch(
             fillRFIsChecklist({
                 projectId: _v.loggedInUser.projectId,

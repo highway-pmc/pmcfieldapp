@@ -1,8 +1,9 @@
 import { TASK_TYPES } from "../../../../../constants/constants";
 import { Validates } from "./Validates";
 
-export const onFillChecklistData = (_v: any, checkList: any) => { 
+export const onFillChecklistData = (_v: any) => { 
   const _valdation = Validates(_v);
+  let checkList = {};
   const showSnackbar = _v.showSnackbar;
     switch (_v.selectedTask?.name) {
         case TASK_TYPES.CNG_AND_SETTING_OUT:
@@ -473,6 +474,7 @@ export const onFillChecklistData = (_v: any, checkList: any) => {
           if (!_valdation.validateLayingAndCompactionData(_v.layingAndCompactionData)) {
             return;
           }
+          console.log('Laying and compaction data', _v.layingAndCompactionData);
           checkList = {
             taskName: _v.selectedTask.name,
             layingAndCompactionData: _v.layingAndCompactionData,
@@ -1431,4 +1433,5 @@ export const onFillChecklistData = (_v: any, checkList: any) => {
         default:
           break;
       }
+    return checkList;
 };

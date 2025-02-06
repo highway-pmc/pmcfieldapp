@@ -378,12 +378,12 @@ export const SEGMENT_TYPES_DISPLAY: any = {
   'head-wall': 'Head Wall',
   'stone-pitching': 'Stone Pitching',
   'longitudinal-drain': 'Longitudinal Drain',
-  'pavement': 'Pavement',
-  'kerb': 'Kerb',
-  'embankment': 'Embankment',
+  pavement: 'Pavement',
+  kerb: 'Kerb',
+  embankment: 'Embankment',
   'crash-barrier': 'Crash Barrier',
   'transverse-pipe-drain': 'Transverse Pipe Drain',
-  'median': 'Madian'
+  median: 'Madian',
 };
 
 export const RFIs_TYPE = {
@@ -683,6 +683,9 @@ export const TEST_MATERIALS_TYPES = {
   ADMIXTURE: 'admixture',
   SILICA_FUME: 'silica-fume',
   SMA: 'sma',
+  MICRO_SURFACING: 'micro-surfacing',
+  DBM_RAP_DBM: 'dbm-rap-dbm',
+  BC: 'bc',
 };
 
 export const TEST_TYPES = {
@@ -709,23 +712,24 @@ export const TEST_TYPES = {
   FINENESS_CONSISTENCY_INITIAL_AND_FINAL_SETTING_TIME:
     'fineness-consistency-initial-and-final-setting-time',
   //Bituminous work
-  AIV: 'aiv',
   BINDER_CONTENT: 'binder-content',
-  DENSITY_AFTER_COMPACTION: 'density-after-compaction',
-  STABILITY_AND_VOID_ANALYSIS: 'stability-and-void-analysis',
+  DENSITY_OF_COMPACTED_LAYER: 'density-of-compacted-layer',
+  STABILITY_AND_VOID_ANALYSIS:
+    'stability-and-void-analysis-of-mix-including-theoretical-maximum-specific-of-loose-mix',
+  MIX_GRADING: 'mix-grading',
   BC_MIX_GRADE_1: 'bc-mix-grade_1',
   BC_MIX_GRADE_2: 'bc-mix-grade_2',
   DBM_MIX_GRADING_1: 'dbm-mix-grading-1',
   DBM_MIX_GRADING_2: 'dbm-mix-grading-2',
   SOFTENING_POINT: 'softening-point',
-  FLASH_FIRE_POINTS: 'flash-fire-points',
+  FLASH_FIRE_POINTS: 'flash-and-fire-point',
   DUCTILITY_TEST: 'ductility-test',
-  BITUMINOUS_PENETRATION_TEST: 'bituminous-penetration-test',
+  PENETRATION_TEST: 'penetration-test',
   WATER_ABSORPTION: 'water-absorption',
+  WATER_ABSORPTION_OF_AGGREGATES: 'water-absorption-of-aggregates',
   MICRO_SURFACING_GRADATION: 'micro-surfacing-gradation',
-  SAND_EQUIVALENT: 'sand-equivalent',
+  SAND_EQUIVALENT: 'sand-equivalent-test',
   PERCENTAGE_OF_FRACTURE_FACE: 'percentage-of-fracture-face',
-  MIX_GRADING: 'mix-grading',
 };
 
 export const YES_NO_LIST = [

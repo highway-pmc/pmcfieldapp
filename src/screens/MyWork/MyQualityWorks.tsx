@@ -343,9 +343,11 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
             // setConcreteSampleTestItems(testObservations);
             // setOpenPopup(true);
           } else if (
-            testMateData.materialType === TEST_MATERIALS_TYPES.SMA
+            testMateData.materialType === TEST_MATERIALS_TYPES.SMA ||
+            testMateData.materialType === TEST_MATERIALS_TYPES.DBM_RAP_DBM ||
+            testMateData.materialType === TEST_MATERIALS_TYPES.BC
           ) {
-            testTypeData.materialType = TEST_MATERIALS_TYPES.SMA;
+            //testTypeData.materialType = TEST_MATERIALS_TYPES.SMA;
             setCurrentSubTestTypeRFIsData(testTypeData.testRFIsData);
             setSelectedTestSample(testTypeData);
             setCurrentLevel(6);
@@ -1290,8 +1292,11 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
                   }
                 })
                 .map((item: any) => (
-                  (currentTestMaterialData.materialType ===
-                    TEST_MATERIALS_TYPES.SMA) ?
+                  (
+                    currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.SMA ||
+                    currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.DBM_RAP_DBM ||
+                    currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.BC
+                  ) ?
                     <TouchableOpacity
                       style={getStyle(item)}
                       onPress={() => onClickBitumenTestSampleItem(item)}>

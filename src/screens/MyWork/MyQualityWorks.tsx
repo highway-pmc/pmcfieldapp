@@ -1410,7 +1410,7 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
                   <Fragment>
                     <StatusBar barStyle="dark-content" />
                     <SafeAreaView>
-                      {testSampleForm(styles, selectedTestSample?.materialType,
+                      {selectedTestSample && testSampleForm(styles, selectedTestSample?.materialType,
                         formSampleTest7thOr28thDay, setFormSampleTest7thOr28thDay,
                         currentTestMaterialData, selectedTestSample, concreteSampleTestItems)}
                     </SafeAreaView>

@@ -11689,7 +11689,7 @@ export const CustomForms = (_v: any) => {
                             />
                             <TimePicker
                                 label="Time"
-                                value={''=_v.rfiTime}
+                                value={'' + _v.rfiTime}
                                 onChange={time => _v.setRFITime(time)}
                             />
                             <TextInput

@@ -345,31 +345,14 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
           } else if (
             testMateData.materialType === TEST_MATERIALS_TYPES.SMA ||
             testMateData.materialType === TEST_MATERIALS_TYPES.DBM_RAP_DBM ||
-            testMateData.materialType === TEST_MATERIALS_TYPES.BC
+            testMateData.materialType === TEST_MATERIALS_TYPES.BC ||
+            testMateData.materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING
           ) {
             //testTypeData.materialType = TEST_MATERIALS_TYPES.SMA;
             setCurrentSubTestTypeRFIsData(testTypeData.testRFIsData);
             setSelectedTestSample(testTypeData);
             setCurrentLevel(6);
-            // const testObservations: any = [];
-            // testObservations.push(getTestSampleCementCoarseAggregateObject(1, testTypeData.type));
-            // if (testTypeData.type === TEST_TYPES.GRADATION) {
-            //   testObservations.push(getTestSampleCementCoarseAggregateObject(2, testTypeData.type));
-            //   testObservations.push(getTestSampleCementCoarseAggregateObject(3, testTypeData.type));
-            // }
-            // setConcreteSampleTestItems(testObservations);
-            // setOpenPopup(true);
           }
-          // breadCrumb.push({
-          //   name: testTypeData.name,
-          //   testClassifIndex: testClassifIndex,
-          //   workCateIndex: workCateIndex,
-          //   testMateIndex: testMateIndex,
-          //   testTypeIndex: testTypeIndex,
-          //   level: level,
-          //   assignmentLevel: 4,
-          //   active: true
-          // })
         }
       }
     }
@@ -1295,7 +1278,8 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
                   (
                     currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.SMA ||
                     currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.DBM_RAP_DBM ||
-                    currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.BC
+                    currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.BC ||
+                    currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING
                   ) ?
                     <TouchableOpacity
                       style={getStyle(item)}

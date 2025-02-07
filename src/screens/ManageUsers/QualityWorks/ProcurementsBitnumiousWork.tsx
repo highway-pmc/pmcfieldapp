@@ -766,7 +766,7 @@ const ProcurementsBitnumiousWork = ({
             testMaterialId: testMaterialId,
             body: {
               sourceApprovalId:
-                detailsCoarseAggregateMicroSurfacing.sourceApprovalId,
+              detailsCoarseAggregateMicroSurfacing.sourceApprovalId,
               sourceApprovalDetailId:
                 detailsCoarseAggregateMicroSurfacing.sourceApprovalDetailId,
               vehicleNo: vehicleNos.length
@@ -785,6 +785,7 @@ const ProcurementsBitnumiousWork = ({
               },
             },
           };
+          console.log('====COARSE_AGGREGATE_MICRO_SURFACING====', JSON.stringify(materialSpecificFields))
           break;
 
         case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA:
@@ -1188,7 +1189,7 @@ const ProcurementsBitnumiousWork = ({
                 <View>
                   {renderSourceDetailsPickerBituminousWork(
                     'Source Detail',
-                    'sourceApprovalDetailId',
+                    'sourceApprovalId',
                     'detailsCoarseAggregateDBMBC',
                     sourceApprovalsFiltered,
                   )}
@@ -1335,7 +1336,7 @@ const ProcurementsBitnumiousWork = ({
                 <View>
                   {renderSourceDetailsPickerBituminousWork(
                     'Source Detail',
-                    'sourceApprovalDetailId',
+                    'sourceApprovalId',
                     'detailsBitumen',
                     sourceApprovalsFiltered,
                   )}
@@ -1467,7 +1468,7 @@ const ProcurementsBitnumiousWork = ({
                 <View>
                   {renderSourceDetailsPickerBituminousWork(
                     'Source Detail',
-                    'sourceApprovalDetailId',
+                    'sourceApprovalId',
                     'detailsCoarseAggregateMicroSurfacing',
                     sourceApprovalsFiltered,
                   )}
@@ -1617,7 +1618,7 @@ const ProcurementsBitnumiousWork = ({
                 <View>
                   {renderSourceDetailsPickerBituminousWork(
                     'Source Detail',
-                    'sourceApprovalDetailId',
+                    'sourceApprovalId',
                     'detailsCoarseAggregateSMA',
                     sourceApprovalsFiltered,
                   )}
@@ -1763,7 +1764,7 @@ const ProcurementsBitnumiousWork = ({
                 <View>
                   {renderSourceDetailsPickerBituminousWork(
                     'Source Detail',
-                    'sourceApprovalDetailId',
+                    'sourceApprovalId',
                     'detailsEmulsion',
                     sourceApprovalsFiltered,
                   )}
@@ -1914,8 +1915,11 @@ const ProcurementsBitnumiousWork = ({
     label: string,
     field: string,
     detail: string,
-    options = [{name: 'Select', _id: ''}].concat(sourceApprovalDetails),
+    options: any = sourceApprovalDetails,
   ) => {
+    if (!options.find((option: any) => option._id === '')) {
+      options.unshift({name: 'Select', _id: ''});
+    }
     return (
       <View style={styles.inputContainer}>
         <Text style={styles.label}>{label}</Text>

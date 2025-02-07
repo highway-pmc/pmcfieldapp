@@ -346,7 +346,11 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
             testMateData.materialType === TEST_MATERIALS_TYPES.SMA ||
             testMateData.materialType === TEST_MATERIALS_TYPES.DBM_RAP_DBM ||
             testMateData.materialType === TEST_MATERIALS_TYPES.BC ||
-            testMateData.materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING
+            testMateData.materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING ||
+            testMateData.materialType === TEST_MATERIALS_TYPES.BITUMEN ||
+            testMateData.materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE_DBM_BC ||
+            testMateData.materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA || 
+            testMateData.materialType === TEST_MATERIALS_TYPES.EMULSION
           ) {
             //testTypeData.materialType = TEST_MATERIALS_TYPES.SMA;
             setCurrentSubTestTypeRFIsData(testTypeData.testRFIsData);
@@ -1279,7 +1283,11 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
                     currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.SMA ||
                     currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.DBM_RAP_DBM ||
                     currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.BC ||
-                    currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING
+                    currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING ||
+                    currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.BITUMEN ||
+                    currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE_DBM_BC ||
+                    currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA || 
+                    currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.EMULSION
                   ) ?
                     <TouchableOpacity
                       style={getStyle(item)}

@@ -1161,7 +1161,10 @@ export const Validates = (_v: any) => {
 
         return true;
     };
-
+    const countDecimals = (num: number): number => {
+        if (Math.floor(num) === num) return 0;
+        return num.toString().split('.')[1]?.length || 0;
+    };
     const validateLayingAndCompactionData = (
         layingAndCompactionData: any,
     ): boolean => {
@@ -1179,7 +1182,7 @@ export const Validates = (_v: any) => {
             isNaN(thicknessOfLayer) ||
             thicknessOfLayer <= 0 ||
             thicknessOfLayer > 1000 ||
-            layingAndCompactionData.layerThickness.split('.')[1]?.length > 3
+            countDecimals(thicknessOfLayer) > 3
         ) {
             showSnackbar(
                 'Please enter a valid Thickness of Layer laid (in mm) with max 3 decimal places, value should be > 0 and <= 1000',
@@ -1190,16 +1193,16 @@ export const Validates = (_v: any) => {
 
         // Validation for Total material qty laid in tonne
         if (
-            isNaN(totalMaterialQtyTonne) ||
-            totalMaterialQtyTonne <= 0 ||
-            totalMaterialQtyTonne > 10000 ||
-            layingAndCompactionData.totalMaterialQtyLaid.split('.')[1]?.length > 3
+          isNaN(totalMaterialQtyTonne) ||
+          totalMaterialQtyTonne <= 0 ||
+          totalMaterialQtyTonne > 10000 ||
+          countDecimals(totalMaterialQtyTonne) > 3
         ) {
-            showSnackbar(
-                'Please enter a valid Total material quantity laid (in tonne) with max 3 decimal places, value should be > 0 and <= 10000',
-                'error',
-            );
-            return false;
+          showSnackbar(
+            'Please enter a valid Total material quantity laid (in tonne) with max 3 decimal places, value should be > 0 and <= 10000',
+            'error',
+          );
+          return false;
         }
 
         // Validation for Total material qty in Sqm
@@ -1207,7 +1210,7 @@ export const Validates = (_v: any) => {
             isNaN(totalMaterialQtySqm) ||
             totalMaterialQtySqm <= 0 ||
             totalMaterialQtySqm > 100000 ||
-            layingAndCompactionData.totalMaterialQtySqm.split('.')[1]?.length > 3
+            countDecimals(totalMaterialQtySqm) > 3
         ) {
             showSnackbar(
                 'Please enter a valid Total material quantity in Sqm with max 3 decimal places, value should be > 0 and <= 100000',

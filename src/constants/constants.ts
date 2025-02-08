@@ -721,7 +721,7 @@ export const TEST_TYPES = {
   BC_MIX_GRADE_2: 'bc-mix-grade_2',
   DBM_MIX_GRADING_1: 'dbm-mix-grading-1',
   DBM_MIX_GRADING_2: 'dbm-mix-grading-2',
-  SOFTENING_POINT: 'softening-point',
+  SOFTENING_POINT: 'sofetning-point',
   FLASH_FIRE_POINTS: 'flash-and-fire-point',
   DUCTILITY_TEST: 'ductility-test',
   PENETRATION_TEST: 'penetration-test',

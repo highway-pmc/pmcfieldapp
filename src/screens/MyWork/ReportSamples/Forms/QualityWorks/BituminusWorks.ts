@@ -347,6 +347,7 @@ export const getTestSampleBCMixGradingGradeIObject = (sampleNum: any) => {
       title: 'Sample no',
       value: sampleNum,
     },
+    totalInGram: 0,
     details: {
       titles: ['Sieve Size', 'Weight retained in gm'],
       values: [

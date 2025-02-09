@@ -1814,6 +1814,51 @@ export const testSampleForm = (
                   </View>
                 ) : selectedTestSample.type === TEST_TYPES.PENETRATION_TEST ? (
                   <View>
+                    <View style={{flexDirection: 'column'}}>
+                      <Input
+                        label="Pouring Temperature (°C)"
+                        value={concreteSampleTestItems[0].pouringTemp}
+                        onChange={(value: any) =>
+                          handleInputChangeFineAggregate(
+                            concreteSampleTestItems[0],
+                            'pouringTemp',
+                            value,
+                          )
+                        }
+                        isRequired={true}
+                      />
+                    </View>
+
+                    <View style={{flexDirection: 'column'}}>
+                      <Input
+                        label="Period of Cooling in Atmosphere (minutes)"
+                        value={concreteSampleTestItems[0].periodCoolingTemp}
+                        onChange={(value: any) =>
+                          handleInputChangeFineAggregate(
+                            concreteSampleTestItems[0],
+                            'periodCoolingTemp',
+                            value,
+                          )
+                        }
+                        isRequired={true}
+                      />
+                    </View>
+
+                    <View style={{flexDirection: 'column'}}>
+                      <Input
+                        label="Period of Cooling in Water Bath (minutes)"
+                        value={concreteSampleTestItems[0].periodCoolingInWater}
+                        onChange={(value: any) =>
+                          handleInputChangeFineAggregate(
+                            concreteSampleTestItems[0],
+                            'periodCoolingInWater',
+                            value,
+                          )
+                        }
+                        isRequired={true}
+                      />
+                    </View>
+
                     {concreteSampleTestItems.map((item: any, index: any) => (
                       <View style={{flexDirection: 'row'}} key={index}>
                         <View style={{flexDirection: 'column'}}>
@@ -1894,6 +1939,55 @@ export const testSampleForm = (
                   </View>
                 ) : selectedTestSample.type === TEST_TYPES.DUCTILITY_TEST ? (
                   <View>
+                    <View style={{flexDirection: 'column'}}>
+                      <Input
+                        label="Period of Cooling in Air (min)"
+                        value={concreteSampleTestItems[0].pouringOfCoolingAir}
+                        onChange={(value: any) =>
+                          handleInputChangeFineAggregate(
+                            concreteSampleTestItems[0],
+                            'pouringOfCoolingAir',
+                            value,
+                          )
+                        }
+                        isRequired={true}
+                      />
+                    </View>
+
+                    <View style={{flexDirection: 'column'}}>
+                      <Input
+                        label="Period of Cooling in Water Bath Before Trimming (min)"
+                        value={
+                          concreteSampleTestItems[0].periodCoolintBeforeTrimming
+                        }
+                        onChange={(value: any) =>
+                          handleInputChangeFineAggregate(
+                            concreteSampleTestItems[0],
+                            'periodCoolintBeforeTrimming',
+                            value,
+                          )
+                        }
+                        isRequired={true}
+                      />
+                    </View>
+
+                    <View style={{flexDirection: 'column'}}>
+                      <Input
+                        label="Period of Cooling in Water Bath After Trimming (min)"
+                        value={
+                          concreteSampleTestItems[0].periodCoolingAfterTriming
+                        }
+                        onChange={(value: any) =>
+                          handleInputChangeFineAggregate(
+                            concreteSampleTestItems[0],
+                            'periodCoolingAfterTriming',
+                            value,
+                          )
+                        }
+                        isRequired={true}
+                      />
+                    </View>
+
                     {concreteSampleTestItems.map((item: any, index: any) => (
                       <View style={{flexDirection: 'row'}}>
                         <View style={{flexDirection: 'column'}}>
@@ -2088,6 +2182,21 @@ export const testSampleForm = (
                   </View>
                 ) : selectedTestSample.type === TEST_TYPES.SOFTENING_POINT ? (
                   <View>
+                    <View style={{flexDirection: 'column'}}>
+                      <Input
+                        label="Pouring Temp (C)"
+                        value={concreteSampleTestItems[0].pouringTemp}
+                        onChange={(value: any) =>
+                          handleInputChangeFineAggregate(
+                            concreteSampleTestItems[0],
+                            'pouringTemp',
+                            value,
+                          )
+                        }
+                        isRequired={true}
+                      />
+                    </View>
+
                     {concreteSampleTestItems.map((item: any, index: any) => (
                       <View style={{flexDirection: 'row'}}>
                         <View style={{flexDirection: 'column'}}>
@@ -2168,66 +2277,96 @@ export const testSampleForm = (
                   </View>
                 ) : selectedTestSample.type === TEST_TYPES.DBM_MIX_GRADING_2 ? (
                   <View>
+                    <View style={{flexDirection: 'column'}}>
+                      <Input
+                        label="Total weight of Sample in gm (T)"
+                        value={concreteSampleTestItems[0].totalInGram}
+                        onChange={(value: any) =>
+                          handleInputChangeFineAggregate(
+                            concreteSampleTestItems[0],
+                            'totalInGram',
+                            value,
+                          )
+                        }
+                        isRequired={true}
+                      />
+                    </View>
                     {concreteSampleTestItems.map((item: any, index: any) => (
-                      <View style={{flexDirection: 'row'}} key={index}>
-                        <View style={{flexDirection: 'column'}}>
-                          {item.details &&
-                            item.details.values.map(
-                              (value: any, indexDetails: number) => (
-                                <View
-                                  style={{flexDirection: 'row'}}
-                                  key={indexDetails}>
+                      <View>
+                        <View style={{flexDirection: 'row'}} key={index}>
+                          <View style={{flexDirection: 'column'}}>
+                            {item.details &&
+                              item.details.values.map(
+                                (value: any, indexDetails: number) => (
                                   <View
-                                    style={{
-                                      flexDirection: 'column',
-                                      width: 80,
-                                    }}>
-                                    {index === 0 && indexDetails === 0 ? (
-                                      <View style={{height: 40}}>
-                                        <Text style={{fontWeight: '700'}}>
-                                          {item.details.titles[0]}
-                                        </Text>
-                                      </View>
-                                    ) : null}
-                                    <Text
-                                      style={[
-                                        styles.textStyle2,
-                                        {textAlign: 'center'},
-                                      ]}>
-                                      {value.sieveSize}
-                                    </Text>
-                                  </View>
+                                    style={{flexDirection: 'row'}}
+                                    key={indexDetails}>
+                                    <View
+                                      style={{
+                                        flexDirection: 'column',
+                                        width: 80,
+                                      }}>
+                                      {index === 0 && indexDetails === 0 ? (
+                                        <View style={{height: 40}}>
+                                          <Text style={{fontWeight: '700'}}>
+                                            {item.details.titles[0]}
+                                          </Text>
+                                        </View>
+                                      ) : null}
+                                      <Text
+                                        style={[
+                                          styles.textStyle2,
+                                          {textAlign: 'center'},
+                                        ]}>
+                                        {value.sieveSize}
+                                      </Text>
+                                    </View>
 
-                                  <View
-                                    style={{
-                                      flexDirection: 'column',
-                                      width: 120,
-                                    }}>
-                                    {index === 0 && indexDetails === 0 ? (
-                                      <View style={{height: 40}}>
-                                        <Text style={{fontWeight: '700'}}>
-                                          {item.details.titles[1]}
-                                        </Text>
-                                      </View>
-                                    ) : null}
-                                    <CustomTextInput
-                                      rowItem={value}
-                                      tempProp={false}
-                                      styleName={styles.inputStyle3}
-                                      styles={styles}
-                                      fieldName={
-                                        'weightRetained'
-                                      }></CustomTextInput>
+                                    <View
+                                      style={{
+                                        flexDirection: 'column',
+                                        width: 120,
+                                      }}>
+                                      {index === 0 && indexDetails === 0 ? (
+                                        <View style={{height: 40}}>
+                                          <Text style={{fontWeight: '700'}}>
+                                            {item.details.titles[1]}
+                                          </Text>
+                                        </View>
+                                      ) : null}
+                                      <CustomTextInput
+                                        rowItem={value}
+                                        tempProp={false}
+                                        styleName={styles.inputStyle3}
+                                        styles={styles}
+                                        fieldName={
+                                          'weightRetained'
+                                        }></CustomTextInput>
+                                    </View>
                                   </View>
-                                </View>
-                              ),
-                            )}
+                                ),
+                              )}
+                          </View>
                         </View>
                       </View>
                     ))}
                   </View>
                 ) : selectedTestSample.type === TEST_TYPES.DBM_MIX_GRADING_1 ? (
                   <View>
+                    <View style={{flexDirection: 'column'}}>
+                      <Input
+                        label="Total weight of Sample in gm (T)"
+                        value={concreteSampleTestItems[0].totalInGram}
+                        onChange={(value: any) =>
+                          handleInputChangeFineAggregate(
+                            concreteSampleTestItems[0],
+                            'totalInGram',
+                            value,
+                          )
+                        }
+                        isRequired={true}
+                      />
+                    </View>
                     {concreteSampleTestItems.map((item: any, index: any) => (
                       <View key={index} style={{flexDirection: 'row'}}>
                         <View style={{flexDirection: 'column'}}>
@@ -2911,6 +3050,20 @@ export const testSampleForm = (
                 ) : selectedTestSample.type ===
                   TEST_TYPES.MICRO_SURFACING_GRADATION ? (
                   <View>
+                    <View style={{flexDirection: 'column'}}>
+                      <Input
+                        label="Total weight of Sample in gm (T)"
+                        value={concreteSampleTestItems[0].totalInGram}
+                        onChange={(value: any) =>
+                          handleInputChangeFineAggregate(
+                            concreteSampleTestItems[0],
+                            'totalInGram',
+                            value,
+                          )
+                        }
+                        isRequired={true}
+                      />
+                    </View>
                     {concreteSampleTestItems.map((item: any, index: number) => (
                       <View style={{flexDirection: 'row'}} key={index}>
                         <View style={{flexDirection: 'column'}}>
@@ -3642,7 +3795,7 @@ export const testSampleForm = (
                   <View>
                     <View style={{flexDirection: 'column'}}>
                       <Input
-                        label="Total weight of Sample in gm (T)"
+                        label="Total weight of Sample in gm "
                         value={concreteSampleTestItems[0].totalInGram}
                         onChange={(value: any) =>
                           handleInputChangeFineAggregate(
@@ -3908,11 +4061,11 @@ export const testSampleForm = (
                     <View style={{flexDirection: 'column'}}>
                       <Input
                         label="Total weight of Sample in gm (T)"
-                        value={concreteSampleTestItems[0].weightOfSample}
+                        value={concreteSampleTestItems[0].totalInGram}
                         onChange={(value: any) =>
                           handleInputChangeFineAggregate(
                             concreteSampleTestItems[0],
-                            'weightOfSample',
+                            'totalInGram',
                             value,
                           )
                         }
@@ -4999,6 +5152,21 @@ export const testSampleForm = (
                 TEST_MATERIALS_TYPES.BITUMEN &&
                 (selectedTestSample.type === TEST_TYPES.SOFTENING_POINT ? (
                   <View>
+                    <View style={{flexDirection: 'column'}}>
+                      <Input
+                        label="Pouring Temp (C)"
+                        value={concreteSampleTestItems[0].pouringTemp}
+                        onChange={(value: any) =>
+                          handleInputChangeFineAggregate(
+                            concreteSampleTestItems[0],
+                            'pouringTemp',
+                            value,
+                          )
+                        }
+                        isRequired={true}
+                      />
+                    </View>
+
                     {concreteSampleTestItems.map((item: any, index: any) => (
                       <View style={{flexDirection: 'row'}}>
                         <View style={{flexDirection: 'column'}}>
@@ -5177,6 +5345,55 @@ export const testSampleForm = (
                   </View>
                 ) : selectedTestSample.type === TEST_TYPES.DUCTILITY_TEST ? (
                   <View>
+                    <View style={{flexDirection: 'column'}}>
+                      <Input
+                        label="Period of Cooling in Air (min)"
+                        value={concreteSampleTestItems[0].pouringOfCoolingAir}
+                        onChange={(value: any) =>
+                          handleInputChangeFineAggregate(
+                            concreteSampleTestItems[0],
+                            'pouringOfCoolingAir',
+                            value,
+                          )
+                        }
+                        isRequired={true}
+                      />
+                    </View>
+
+                    <View style={{flexDirection: 'column'}}>
+                      <Input
+                        label="Period of Cooling in Water Bath Before Trimming (min)"
+                        value={
+                          concreteSampleTestItems[0].periodCoolintBeforeTrimming
+                        }
+                        onChange={(value: any) =>
+                          handleInputChangeFineAggregate(
+                            concreteSampleTestItems[0],
+                            'periodCoolintBeforeTrimming',
+                            value,
+                          )
+                        }
+                        isRequired={true}
+                      />
+                    </View>
+
+                    <View style={{flexDirection: 'column'}}>
+                      <Input
+                        label="Period of Cooling in Water Bath After Trimming (min)"
+                        value={
+                          concreteSampleTestItems[0].periodCoolingAfterTriming
+                        }
+                        onChange={(value: any) =>
+                          handleInputChangeFineAggregate(
+                            concreteSampleTestItems[0],
+                            'periodCoolingAfterTriming',
+                            value,
+                          )
+                        }
+                        isRequired={true}
+                      />
+                    </View>
+
                     {concreteSampleTestItems.map((item: any, index: any) => (
                       <View style={{flexDirection: 'row'}}>
                         <View style={{flexDirection: 'column'}}>
@@ -5273,6 +5490,51 @@ export const testSampleForm = (
                   </View>
                 ) : selectedTestSample.type === TEST_TYPES.PENETRATION_TEST ? (
                   <View>
+                    <View style={{flexDirection: 'column'}}>
+                      <Input
+                        label="Pouring Temperature (°C)"
+                        value={concreteSampleTestItems[0].pouringTemp}
+                        onChange={(value: any) =>
+                          handleInputChangeFineAggregate(
+                            concreteSampleTestItems[0],
+                            'pouringTemp',
+                            value,
+                          )
+                        }
+                        isRequired={true}
+                      />
+                    </View>
+
+                    <View style={{flexDirection: 'column'}}>
+                      <Input
+                        label="Period of Cooling in Atmosphere (minutes)"
+                        value={concreteSampleTestItems[0].periodCoolingTemp}
+                        onChange={(value: any) =>
+                          handleInputChangeFineAggregate(
+                            concreteSampleTestItems[0],
+                            'periodCoolingTemp',
+                            value,
+                          )
+                        }
+                        isRequired={true}
+                      />
+                    </View>
+
+                    <View style={{flexDirection: 'column'}}>
+                      <Input
+                        label="Period of Cooling in Water Bath (minutes)"
+                        value={concreteSampleTestItems[0].periodCoolingInWater}
+                        onChange={(value: any) =>
+                          handleInputChangeFineAggregate(
+                            concreteSampleTestItems[0],
+                            'periodCoolingInWater',
+                            value,
+                          )
+                        }
+                        isRequired={true}
+                      />
+                    </View>
+
                     {concreteSampleTestItems.map((item: any, index: any) => (
                       <View style={{flexDirection: 'row'}} key={index}>
                         <View style={{flexDirection: 'column'}}>
@@ -5457,7 +5719,7 @@ export const testSampleForm = (
                   <View>
                     <View style={{flexDirection: 'column'}}>
                       <Input
-                        label="Total weight of Sample in gm (T)"
+                        label="Total weight of Sample in gm"
                         value={concreteSampleTestItems[0].totalInGram}
                         onChange={(value: any) =>
                           handleInputChangeFineAggregate(

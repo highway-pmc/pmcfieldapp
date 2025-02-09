@@ -406,6 +406,7 @@ export const getTestSampleBCMixGradingGradeIIObject = (sampleNum: any) => {
       title: 'Sample no',
       value: sampleNum,
     },
+    totalInGram: 0,
     details: {
       titles: ['Sieve Size', 'Weight retained in gm'],
       values: [
@@ -460,6 +461,7 @@ export const getTestSampleDBMMixGradingGradeIObject = (sampleNum: any) => {
       title: 'Sample no',
       value: sampleNum,
     },
+    totalInGram: 0,
     details: {
       titles: ['Sieve Size', 'Weight retained in gm'],
       values: [
@@ -510,6 +512,7 @@ export const getTestSampleDBMMixGradingGradeIIObject = (sampleNum: any) => {
       title: 'Sample no',
       value: sampleNum,
     },
+    totalInGram: 0,
     details: {
       titles: ['Sieve Size', 'Weight retained in gm'],
       values: [
@@ -560,6 +563,7 @@ export const getTestSampleSofteningPointObject = (sampleNum: any) => {
       title: 'Sample no',
       value: sampleNum,
     },
+    pouringTemp: 0.0,
     details: {
       titles: [
         'Time in Minutes',
@@ -679,6 +683,9 @@ export const getTestSampleDuctilityTestObject = (sampleNum: any) => {
       title: 'Sample no',
       value: sampleNum,
     },
+    pouringOfCoolingAir: 0.0,
+    periodCoolintBeforeTrimming: 0.0,
+    periodCoolingAfterTriming: 0.0,
     details: {
       titles: ['Test Property', 'Test 1', 'Test 2', 'Test 3'],
       values: [
@@ -702,11 +709,24 @@ export const getTestSampleBituminousPenetrationTestObject = (
       title: 'Sample no',
       value: sampleNum,
     },
+    pouringTemp: 0.0,
+    periodCoolingTemp: 0.0,
+    periodCoolingInWater: 0.0,
     details: {
       titles: ['Test No.', 'Initial Dial Reading', 'Final Dial Reading'],
       values: [
         {
           testNumber: '1',
+          initialDialReading: 0.0,
+          finalDialReading: 0.0,
+        },
+        {
+          testNumber: '2',
+          initialDialReading: 0.0,
+          finalDialReading: 0.0,
+        },
+        {
+          testNumber: '2',
           initialDialReading: 0.0,
           finalDialReading: 0.0,
         },
@@ -788,6 +808,7 @@ export const getTestSampleGradationObject = (sampleNum: any) => {
       title: 'Sample no',
       value: sampleNum,
     },
+    totalInGram: 0,
     details: {
       titles: ['Sieve Size', 'Weight retained in gm'],
       values: [
@@ -828,7 +849,7 @@ export const getTestSampleGradationObject = (sampleNum: any) => {
   };
 };
 
-//Bituminus work -> Fine Aggregate -> Sand Equivalent 
+//Bituminus work -> Fine Aggregate -> Sand Equivalent
 export const getSandEquivalentObject = (sampleNum: any) => {
   return {
     sampleNo: {

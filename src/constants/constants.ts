@@ -663,6 +663,7 @@ export const TEST_CLASSIFICATION_TYPES = {
 export const TEST_WORK_CATEGORY_TYPES = {
   CONCRETE_STRUCTURE: 'concrete-structure',
   BITUMINOUS_WORKS: 'bituminous-works',
+  EARTH_WORKS: 'earth-works',
 };
 
 export const TEST_MATERIALS_TYPES = {
@@ -686,6 +687,8 @@ export const TEST_MATERIALS_TYPES = {
   MICRO_SURFACING: 'micro-surfacing',
   DBM_RAP_DBM: 'dbm-rap-dbm',
   BC: 'bc',
+  SOIL:'soil',
+  FLY_ASH:'fly-ash',
 };
 
 export const TEST_TYPES = {
@@ -730,6 +733,14 @@ export const TEST_TYPES = {
   MICRO_SURFACING_GRADATION: 'micro-surfacing-gradation',
   SAND_EQUIVALENT: 'sand-equivalent-test',
   PERCENTAGE_OF_FRACTURE_FACE: 'percentage-of-fracture-face',
+  //EarthWork
+  MOISTURE_CONTENT: 'moisture-content-prior-compaction',
+  FREE_SWELL_INDEX: 'free-swell-index-test',
+  GRAIN_SIZE_ANALYSIS: 'grain-size-analysis',
+  PROCTOR_DENSITY_TEST: 'procter-density-test',
+  FIELD_DRY_DENSITY: 'field-dry-density',
+  CBR_TEST: 'cbr-test',
+  PLASTICITY_INDEX: 'plasticity-index',
 };
 
 export const YES_NO_LIST = [

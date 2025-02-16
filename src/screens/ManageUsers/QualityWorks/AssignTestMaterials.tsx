@@ -292,6 +292,9 @@ const AssignTestMaterials = ({
           if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BITUMINOUS_WORKS) {
             routeName = "ProcurementsBitnumiousWork";
           }
+          else if(testWorkCategoryType===TEST_WORK_CATEGORY_TYPES.EARTH_WORKS){
+            routeName = "ProcurementsEarthWork";
+          }
           navigation.navigate(routeName, {
             testClassificationId: testClassificationId,
             testClassificationName: testClassificationName,

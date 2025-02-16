@@ -207,7 +207,11 @@ const SourceApprovals = ({
     nominalSize: '37.5mm', // 37.5mm / 26.5mm / 19mm / 13.2mm / 10mm / 20mm
     ratePerKG: 0.0, // (3 decimal, >0, 100000)
   });
-
+  // EarthWork
+  const [sourceDetailEarthWork, setSourceDetailEarthWork]: any ={
+    sourceApprovalId: '',
+    ratePerCum: 0,
+  }
   const [sourceDetailForm, setSourceDetailForm]: any =
     useState<FormSourceDetailState>({
       sourceApprovalId: '',
@@ -386,7 +390,12 @@ const SourceApprovals = ({
   ) => {
     setSourceDetailForm({...sourceDetailForm, [name]: value});
   };
-
+  const handleSourceDetailEarthWorkInputChange = (
+    name: keyof FormSourceDetailState,
+    value: string | number,
+  ) => {
+    setSourceDetailEarthWork({...sourceDetailEarthWork, [name]: value});
+  };
   const handleInputChange = (name: keyof FormState, value: string | number) => {
     let isValid = true;
     let message = '';
@@ -663,6 +672,17 @@ const SourceApprovals = ({
           showSnackbar('Unknown material type for Bituminous Works.', 'error');
           return false;
       }
+    }else if(testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EARTH_WORKS){
+      const ratePerCum = Number(sourceDetailEarthWork.ratePerCum);
+      if (
+        ratePerCum > 100000 ||
+        !/^\d+(\.\d{1,3})?$/.test(ratePerCum.toString())
+      ) {
+        showSnackbar(
+          'Rate per Cum must be less than 100,000 and up to 3 decimal places.',
+          'error',
+        );
+        return false;
     } else {
       // Validation for non-bituminous works
       const ratePerCum = Number(sourceDetailForm.ratePerCum);
@@ -753,6 +773,13 @@ const SourceApprovals = ({
           console.error('Unknown material type for Bituminous Works');
           return;
       }
+    }else if(testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EARTH_WORKS){
+      body = {
+        name: sourceDetailEarthWork.ratePerCum,
+        metaData: {
+          ratePerCum: Number(sourceDetailEarthWork.ratePerCum),
+        },
+      };
     } else {
       body = {
         name: sourceDetailForm[gradeField.name],
@@ -913,6 +940,9 @@ const SourceApprovals = ({
               // Default logic for non-bituminous works
               console.error('Material type Not Found');
           }
+        }else if(testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EARTH_WORKS){
+          editedObj.name = sourceDetailEarthWork.ratePerCum;
+          editedObj.metaData.ratePerCum = sourceDetailEarthWork.ratePerCum;
         } else {
           editedObj.name = sourceDetailForm[gradeField.name];
           editedObj.metaData[gradeField.name] =
@@ -1397,6 +1427,30 @@ const SourceApprovals = ({
           </View>
         );
       }
+    }else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BITUMINOUS_WORKS) {
+    }else if(testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EARTH_WORKS){
+      return (
+        <View style={styles.reportFields}>
+          <View>
+            <View>
+              <Input
+                label="Rate per cum"
+                value={sourceDetailEarthWork.ratePerCum}
+                onChange={(value: number) =>
+                  handleSourceDetailEarthWorkInputChange('ratePerCum', value)
+                }
+                isRequired={true}
+              />
+            </View>
+          </View>
+          <TouchableOpacity
+            style={styles.btnContainer}
+            onPress={addSourceDetailsSubmit}>
+            <Text style={styles.submitBtn}>Submit</Text>
+          </TouchableOpacity>
+        </View>
+      );
+
     } else {
       return (
         <View style={styles.reportFields}>

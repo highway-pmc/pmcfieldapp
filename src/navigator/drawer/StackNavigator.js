@@ -32,11 +32,12 @@ import AssignTestWorkCategory from "../../screens/ManageUsers/QualityWorks/Assig
 import AssignTestMaterials from "../../screens/ManageUsers/QualityWorks/AssignTestMaterials";
 import AssignTestTypes from "../../screens/ManageUsers/QualityWorks/AssignTestTypes";
 import SourceApprovals from "../../screens/ManageUsers/QualityWorks/SourceApprovals";
-import Procurements from "../../screens/ManageUsers/QualityWorks/Procurements";
+import Procurements from "../../screens/ManageUsers/QualityWorks/ProcurementsEarthWork";
 import ReportsDashboard from "../../screens/Reports/ReportDashboard";
 import ReportsFieldWork from "../../screens/Reports/ReportsFieldWork";
 import SelectTestWorkCategory from "../../screens/ManageUsers/QualityWorks/SelectTestWorkCategory";
 import ProcurementsBitnumiousWork from "../../screens/ManageUsers/QualityWorks/ProcurementsBitnumiousWork";
+import ProcurementsEarthWork from "../../screens/ManageUsers/QualityWorks/ProcurementsEarthWork";
 
 const Stack = createStackNavigator();
 
@@ -70,12 +71,41 @@ const MyTaskStackNavigator = () => {
 const MyQualityWorksStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
-      <Stack.Screen name="MyQualityWorks" component={MyQualityWorks} options={{headerShown: false}} />
-      <Stack.Screen name="SelectTestWorkCategory" component={SelectTestWorkCategory} options={{headerShown: false}} />
-      <Stack.Screen name="AssignTestMaterialsPurchage" component={AssignTestMaterials} options={{headerShown: false}} />
-      <Stack.Screen name="SourceApprovals" component={SourceApprovals} options={{headerShown: false}} />
-      <Stack.Screen name="Procurements" component={Procurements} options={{headerShown: false}} />
-      <Stack.Screen name="ProcurementsBitnumiousWork" component={ProcurementsBitnumiousWork} options={{headerShown: false}} />
+      <Stack.Screen
+        name="MyQualityWorks"
+        component={MyQualityWorks}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="SelectTestWorkCategory"
+        component={SelectTestWorkCategory}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="AssignTestMaterialsPurchage"
+        component={AssignTestMaterials}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="SourceApprovals"
+        component={SourceApprovals}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Procurements"
+        component={Procurements}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ProcurementsBitnumiousWork"
+        component={ProcurementsBitnumiousWork}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ProcurementsEarthWork"
+        component={ProcurementsEarthWork}
+        options={{headerShown: false}}
+      />
     </Stack.Navigator>
   );
 };

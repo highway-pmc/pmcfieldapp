@@ -208,10 +208,10 @@ const SourceApprovals = ({
     ratePerKG: 0.0, // (3 decimal, >0, 100000)
   });
   // EarthWork
-  const [sourceDetailEarthWork, setSourceDetailEarthWork]: any ={
+  const [sourceDetailEarthWork, setSourceDetailEarthWork]: any = {
     sourceApprovalId: '',
     ratePerCum: 0,
-  }
+  };
   const [sourceDetailForm, setSourceDetailForm]: any =
     useState<FormSourceDetailState>({
       sourceApprovalId: '',
@@ -672,7 +672,7 @@ const SourceApprovals = ({
           showSnackbar('Unknown material type for Bituminous Works.', 'error');
           return false;
       }
-    }else if(testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EARTH_WORKS){
+    } else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EARTH_WORKS) {
       const ratePerCum = Number(sourceDetailEarthWork.ratePerCum);
       if (
         ratePerCum > 100000 ||
@@ -683,24 +683,24 @@ const SourceApprovals = ({
           'error',
         );
         return false;
-    } else {
-      // Validation for non-bituminous works
-      const ratePerCum = Number(sourceDetailForm.ratePerCum);
-      if (
-        ratePerCum > 100000 ||
-        !/^\d+(\.\d{1,3})?$/.test(ratePerCum.toString())
-      ) {
-        showSnackbar(
-          'Rate per Cum must be less than 100,000 and up to 3 decimal places.',
-          'error',
-        );
-        return false;
+      } else {
+        // Validation for non-bituminous works
+        const ratePerCum = Number(sourceDetailForm.ratePerCum);
+        if (
+          ratePerCum > 100000 ||
+          !/^\d+(\.\d{1,3})?$/.test(ratePerCum.toString())
+        ) {
+          showSnackbar(
+            'Rate per Cum must be less than 100,000 and up to 3 decimal places.',
+            'error',
+          );
+          return false;
+        }
       }
+
+      return true;
     }
-
-    return true;
   };
-
   //Need to change function logic
   const addSourceDetailsSubmit = () => {
     if (!validateSourceDetail()) return;
@@ -773,7 +773,7 @@ const SourceApprovals = ({
           console.error('Unknown material type for Bituminous Works');
           return;
       }
-    }else if(testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EARTH_WORKS){
+    } else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EARTH_WORKS) {
       body = {
         name: sourceDetailEarthWork.ratePerCum,
         metaData: {
@@ -940,7 +940,9 @@ const SourceApprovals = ({
               // Default logic for non-bituminous works
               console.error('Material type Not Found');
           }
-        }else if(testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EARTH_WORKS){
+        } else if (
+          testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EARTH_WORKS
+        ) {
           editedObj.name = sourceDetailEarthWork.ratePerCum;
           editedObj.metaData.ratePerCum = sourceDetailEarthWork.ratePerCum;
         } else {
@@ -1427,8 +1429,7 @@ const SourceApprovals = ({
           </View>
         );
       }
-    }else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BITUMINOUS_WORKS) {
-    }else if(testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EARTH_WORKS){
+    } else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EARTH_WORKS) {
       return (
         <View style={styles.reportFields}>
           <View>
@@ -1450,7 +1451,6 @@ const SourceApprovals = ({
           </TouchableOpacity>
         </View>
       );
-
     } else {
       return (
         <View style={styles.reportFields}>
@@ -1507,86 +1507,99 @@ const SourceApprovals = ({
 
   const renderItem = ({item}: {item: any}) => (
     <>
-    <View style={[commonStyles.sourceApprovalsBox, {borderColor: getBorderColor(item.status)}]}>
-      <View style={commonStyles.boxRowWithBtn}>
-      {item.status === SOURCE_APPROVAL_STATUS.APPROVED && 
-      <View>
-        <Image style={commonStyles.actionTypeIcon}
-        source={require('./../../../images/Check_fill.png')} />
-      </View>
-      }
-      {item.status === SOURCE_APPROVAL_STATUS.REJECTED && 
-      <View>
-        <Image style={commonStyles.actionTypeIcon}
-        source={require('./../../../images/Close_round_fill.png')} />
-      </View>
-      }
-        <View style={commonStyles.sourceContent}>
-          <Text style={commonStyles.sourceContentSize}>{item.name}</Text>
-        </View>
-        <View style={commonStyles.editAddDeleteContainer}>
-        {item.status !== SOURCE_APPROVAL_STATUS.APPROVED && (
-          <>
-          <Image
-              style={commonStyles.editAddDeleteIcons}
-              onPress={() => handleAdd(item)}
-              source={require('./../../../images/plus.png')}
-            />
-            <Image
-              style={commonStyles.editAddDeleteIcons}
-              onPress={() => handleEdit(item)}
-              source={require('./../../../images/edit-source.png')}
-            />
-            <Image
-              style={commonStyles.editAddDeleteIcons}
-              onPress={() => handleDelete(item)}
-              source={require('./../../../images/delete.png')}
-            />
-            </>
+      <View
+        style={[
+          commonStyles.sourceApprovalsBox,
+          {borderColor: getBorderColor(item.status)},
+        ]}>
+        <View style={commonStyles.boxRowWithBtn}>
+          {item.status === SOURCE_APPROVAL_STATUS.APPROVED && (
+            <View>
+              <Image
+                style={commonStyles.actionTypeIcon}
+                source={require('./../../../images/Check_fill.png')}
+              />
+            </View>
           )}
-          {item.status === SOURCE_APPROVAL_STATUS.APPROVED && <Text style={commonStyles.approveText}>Approved</Text>}
-          {/* {item.status === SOURCE_APPROVAL_STATUS.REJECTED && <Text style={commonStyles.rejectText}>Rejected</Text>} */}
-        </View>
-      </View>
-      {item.status === SOURCE_APPROVAL_STATUS.PENDING && (
-      <>
-      <View style={commonStyles.approvalRejectedContainer}>
-        <TouchableOpacity onPress={() => onSourceStatusChanged(item, SOURCE_APPROVAL_STATUS.APPROVED)} 
-          style={commonStyles.subActionRow}>
-            <Image
+          {item.status === SOURCE_APPROVAL_STATUS.REJECTED && (
+            <View>
+              <Image
                 style={commonStyles.actionTypeIcon}
-                source={require('./../../../images/Check_fill.png')} /> 
-            <Text style={commonStyles.approveText}>
-                Approve
-            </Text>
-        </TouchableOpacity> 
-        <TouchableOpacity onPress={() => onSourceStatusChanged(item, SOURCE_APPROVAL_STATUS.REJECTED)} 
-          style={commonStyles.subActionRow}>
-          <Image
-            style={commonStyles.actionTypeIcon}
-            source={require('./../../../images/Close_round_fill.png')} />
-          <Text style={commonStyles.rejectText}>
-            Reject
-          </Text>
-        </TouchableOpacity>
-      </View>
-      </>
-      )}
-      {item.status === SOURCE_APPROVAL_STATUS.REJECTED && (
-      <>
-      <View style={commonStyles.approvalRejectedContainer}>
-        <View style={commonStyles.subActionRow}>
-            <Image
-                style={commonStyles.actionTypeIcon}
-                source={require('./../../../images/Check_fill.png')} /> 
-            <Text style={commonStyles.approveText}>
-                Approve
-            </Text>
+                source={require('./../../../images/Close_round_fill.png')}
+              />
+            </View>
+          )}
+          <View style={commonStyles.sourceContent}>
+            <Text style={commonStyles.sourceContentSize}>{item.name}</Text>
+          </View>
+          <View style={commonStyles.editAddDeleteContainer}>
+            {item.status !== SOURCE_APPROVAL_STATUS.APPROVED && (
+              <>
+                <Image
+                  style={commonStyles.editAddDeleteIcons}
+                  onPress={() => handleAdd(item)}
+                  source={require('./../../../images/plus.png')}
+                />
+                <Image
+                  style={commonStyles.editAddDeleteIcons}
+                  onPress={() => handleEdit(item)}
+                  source={require('./../../../images/edit-source.png')}
+                />
+                <Image
+                  style={commonStyles.editAddDeleteIcons}
+                  onPress={() => handleDelete(item)}
+                  source={require('./../../../images/delete.png')}
+                />
+              </>
+            )}
+            {item.status === SOURCE_APPROVAL_STATUS.APPROVED && (
+              <Text style={commonStyles.approveText}>Approved</Text>
+            )}
+            {/* {item.status === SOURCE_APPROVAL_STATUS.REJECTED && <Text style={commonStyles.rejectText}>Rejected</Text>} */}
+          </View>
         </View>
+        {item.status === SOURCE_APPROVAL_STATUS.PENDING && (
+          <>
+            <View style={commonStyles.approvalRejectedContainer}>
+              <TouchableOpacity
+                onPress={() =>
+                  onSourceStatusChanged(item, SOURCE_APPROVAL_STATUS.APPROVED)
+                }
+                style={commonStyles.subActionRow}>
+                <Image
+                  style={commonStyles.actionTypeIcon}
+                  source={require('./../../../images/Check_fill.png')}
+                />
+                <Text style={commonStyles.approveText}>Approve</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() =>
+                  onSourceStatusChanged(item, SOURCE_APPROVAL_STATUS.REJECTED)
+                }
+                style={commonStyles.subActionRow}>
+                <Image
+                  style={commonStyles.actionTypeIcon}
+                  source={require('./../../../images/Close_round_fill.png')}
+                />
+                <Text style={commonStyles.rejectText}>Reject</Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
+        {item.status === SOURCE_APPROVAL_STATUS.REJECTED && (
+          <>
+            <View style={commonStyles.approvalRejectedContainer}>
+              <View style={commonStyles.subActionRow}>
+                <Image
+                  style={commonStyles.actionTypeIcon}
+                  source={require('./../../../images/Check_fill.png')}
+                />
+                <Text style={commonStyles.approveText}>Approve</Text>
+              </View>
+            </View>
+          </>
+        )}
       </View>
-      </>
-      )}
-    </View>
     </>
   );
 
@@ -1623,7 +1636,10 @@ const SourceApprovals = ({
             <TouchableOpacity
               style={commonStyles.outLineBtn}
               onPress={() => handleAddSource()}>
-              <Image style={commonStyles.addSourceIcon} source={require('./../../../images/add-circle.png')} />
+              <Image
+                style={commonStyles.addSourceIcon}
+                source={require('./../../../images/add-circle.png')}
+              />
               <Text style={commonStyles.btnTextSize}>Add Source</Text>
             </TouchableOpacity>
           </View>
@@ -1737,12 +1753,11 @@ const SourceApprovals = ({
     </SafeAreaView>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 15,
-    backgroundColor: '#F1F6FF'
+    backgroundColor: '#F1F6FF',
   },
   ActionIcon: {
     width: 20,

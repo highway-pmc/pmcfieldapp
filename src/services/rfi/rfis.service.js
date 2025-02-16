@@ -63,6 +63,15 @@ export const fillRFIsDataChecklist = async (projectId, projectModuleId, rfiId, s
     });
 }
 
+export const fillRFIsDataChecklistForSampleTest = async (projectId, rfiId, status, body) => {
+    return apiService.postRequest(`v1/auth/projects/${projectId}/test-rfis/${rfiId}/status/${status}`, body).then((response) => {
+        return response;
+    }).catch((err) => {
+        const errorMessge = err.message || 'Unable to save check list.';
+        throw new Error(errorMessge);
+    });
+}
+
 export const generateRFIReportApi = async (projectId, projectModuleId, rfiId) => {
     return apiService.getRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/rfis/${rfiId}/report`).then((response) => {
         return response;

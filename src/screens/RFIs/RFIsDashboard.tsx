@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import { HeaderItems, WORK_TYPE } from "../../constants/constants"
 import RFIsRecents from './RFIsRecents';
+import RFIsRecentsMyQuality from './RFIsRecentsMyQuality';
 
 const RFIsDashboard = ({ route, navigation }: { route: any, navigation: any }) => {
 
@@ -48,7 +49,9 @@ const RFIsDashboard = ({ route, navigation }: { route: any, navigation: any }) =
         {activeTab === WORK_TYPE.SITE_WORK &&
           <RFIsRecents rfiType={rfiType}></RFIsRecents>
         }
-        {activeTab === WORK_TYPE.LAB_WORK && <Text>TBD</Text>}
+        {activeTab === WORK_TYPE.LAB_WORK &&
+          <RFIsRecentsMyQuality rfiType={rfiType}></RFIsRecentsMyQuality>
+        }
       </View>
 
     </View>

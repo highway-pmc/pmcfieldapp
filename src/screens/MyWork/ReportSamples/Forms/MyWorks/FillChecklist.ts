@@ -12,7 +12,7 @@ export const onFillChecklistData = (_v: any) => {
         case TASK_TYPES.FIXING_OF_BEARING_SLEEVES:
           if (!_v.imageObject?.fileData) {
             showSnackbar('Please upload an image file', 'error');
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -103,7 +103,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.BORING_OF_PILE:
           if (!_valdation.validateBoringOfPileData(_v.boringOfPileData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -118,7 +118,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.FLUSHING_OPERATIONS:
           if (!_valdation.validateFlushingOperationsData(_v.flushingOperationsData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -138,7 +138,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.CHIPPING_AND_REMOVAL_OF_CONCRETE_ABOVE_CUT_OFF_LEVEL:
           if (!_valdation.validateChippingAndRemovalData(_v.chippingAndRemovalOfConcreteData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -151,7 +151,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.STITCH_CONCRETE:
           if (!_valdation.validateConcreteData(_v.selectedTask?.name)) {
-            return;
+            return null;
           }
           _v.concreteData.forEach((item: any) => {
             delete item.key;
@@ -175,7 +175,7 @@ export const onFillChecklistData = (_v: any) => {
         case TASK_TYPES.PCC_LEVELLING_COURSE:
           const isDataValid = _valdation.validateConcreteData(_v.selectedTask?.name);
           if (!isDataValid) {
-            return;
+            return null;
           }
           _v.concreteData.forEach((item: any) => {
             delete item.key;
@@ -195,7 +195,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.DUMPING:
           if (!_valdation.validateDumpingData(_v.dumpingData)) {
-            return;
+            return null;
           }
   
           checkList = {
@@ -205,7 +205,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.GLUEING:
           if (!_valdation.validateGlueingData(_v.glueingData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -214,7 +214,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.TORQUING:
           if (!_valdation.validateDumpingData(_v.torquingData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -224,7 +224,7 @@ export const onFillChecklistData = (_v: any) => {
   
         case TASK_TYPES.GROUTING:
           if (!_valdation.validateGroutingData(_v.groutingData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -254,7 +254,7 @@ export const onFillChecklistData = (_v: any) => {
   
         case TASK_TYPES.CURING:
           if (!_valdation.validateCuringData(_v.curingData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -338,7 +338,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.PROCUREMENT_OF_STRUCTURAL_STEEL:
           if (!_valdation.validateProcurementOfSteelData(_v.procurementOfSteelData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -348,7 +348,7 @@ export const onFillChecklistData = (_v: any) => {
   
         case TASK_TYPES.TRANSPORTATION_OF_MATERIAL:
           if (!_valdation.validateTransportationData(_v.transportationData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -421,7 +421,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.BORING_OF_DIAPHRAGM:
           if (!_valdation.validateBoringOfDiaphragmData(_v.boringOfDiaphragmData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -440,7 +440,7 @@ export const onFillChecklistData = (_v: any) => {
               _v.strippingAndStoringTopSoilData,
             )
           ) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -472,7 +472,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.LAYING_AND_COMPACTION:
           if (!_valdation.validateLayingAndCompactionData(_v.layingAndCompactionData)) {
-            return;
+            return null;
           }
           console.log('Laying and compaction data', _v.layingAndCompactionData);
           checkList = {
@@ -482,7 +482,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.PIPE_LAYING_AND_JOINTING:
           if (!_valdation.validatePipeLayingAndJointingData(_v.pipeLayingAndJointingData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -491,7 +491,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.FIXING_OF_METAL_BEAM:
           if (!_valdation.validateFixingOfMetalBeamData(_v.fixingOfMetalBeamData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -500,7 +500,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.FIXING_VERTICAL_POST:
           if (!_valdation.validateFixingVerticalPostData(_v.fixingVerticalPostData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -510,7 +510,7 @@ export const onFillChecklistData = (_v: any) => {
   
         case TASK_TYPES.CUTTING_OF_JOINTS:
           if (!_valdation.validateCuttingOfJointsData(_v.cuttingOfJointsData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -519,7 +519,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.LAYING_OF_PAVER_BLOCK:
           if (!_valdation.validateLayingOfPaverBlockData(_v.layingOfPaverBlockData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -528,10 +528,10 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.LAYING_OF_DLC:
           if (!_valdation.validateLayingOfDlcData(_v.layingOfDlcTableData)) {
-            return;
+            return null;
           }
           if (!_valdation.validateLayingOfDLCData(_v.layingOfDLCData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -559,7 +559,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.TEXTURING:
           if (!_valdation.validateTexturingData(_v.texturingData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -568,7 +568,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.PLACING_OF_DOWEL:
           if (!_valdation.validatePlacingOfDowelData(_v.placingOfDowelData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -577,7 +577,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.COMPACTION:
           if (!_valdation.validateCompactionData(_v.compactionData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -586,7 +586,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.PLACING_OF_FILLER_BOARD:
           if (!_valdation.validatePlacingOfFillerBoardData(_v.placingOfFillerBoardData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -595,7 +595,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.SEALANT_FILING:
           if (!_valdation.validateSealantFilingData(_v.sealantFilingData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -604,7 +604,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.MILLING_OF_FLEXIBLE_PAVEMENT:
           if (!_valdation.validateMillingData(_v.millingData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -617,7 +617,7 @@ export const onFillChecklistData = (_v: any) => {
               _v.layingOfSeparationMembraneData,
             )
           ) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -626,7 +626,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.LAYING_OF_PAVEMENT_QUALITY_CONCRETE:
           if (!_valdation.validateLayingOfPQCData(_v.layingOfPQCData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -635,7 +635,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.BACKFILLING:
           if (!_valdation.validateBackfillingData(_v.backfillingData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -644,7 +644,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.BRICKS_WORK:
           if (!_valdation.validateBricksWorkData(_v.bricksWorkData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -653,7 +653,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.CUTTING_OF_SOIL:
           if (!_valdation.validateCuttingOfSoilData(_v.cuttingOfSoilData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -662,7 +662,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.FIXING_GEO_CELL:
           if (!_valdation.validateFixingGeoCellData(_v.fixingGeoCellData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -671,7 +671,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.FIXING_OF_MESH:
           if (!_valdation.validateFixingOfMeshData(_v.fixingOfMeshData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -680,7 +680,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.LAYING_OF_GRASS_TURF:
           if (!_valdation.validateLayingOfGrassTurfData(_v.layingOfGrassTurfData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -689,7 +689,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.LAYING_OF_TOP_SOIL:
           if (!_valdation.validateLayingOfTopSoilData(_v.layingOfTopSoilData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -698,7 +698,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.PLACING_AND_JOINTING_OF_CHUTE_MEMBERS:
           if (!_valdation.validateChuteMembersData(_v.chuteMembersData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -713,7 +713,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.PLANTING_GRASS:
           if (!_valdation.validateLayingOfGrassTurfData(_v.plantingGrassData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -722,7 +722,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.PLANTING_TREES:
           if (!_valdation.validatePlantingTreesData(_v.plantingTreesData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -731,7 +731,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.PREPARATION_OF_SOIL:
           if (!_valdation.validatePreparationOfSoilData(_v.preparationOfSoilData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -746,7 +746,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.WATERING:
           if (!_valdation.validateWateringData(_v.wateringData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -755,7 +755,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.PLANTATION:
           if (!_valdation.validatePlantationData(_v.plantationData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -764,7 +764,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.STONE_PITCHING:
           if (!_valdation.validateStonePitchingData(_v.stonePitchingData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -773,7 +773,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.FIXING_INVERTER_INSTALLATION:
           if (!_valdation.validateInverterInstallationData(_v.inverterInstallationData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -786,7 +786,7 @@ export const onFillChecklistData = (_v: any) => {
               _v.erectionOfDoublePoleStructureData,
             )
           ) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -795,7 +795,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.FIXING_OF_MC4_Y_CONNECTOR:
           if (!_valdation.validateFixingOfMeshData(_v.fixingOfMC4Data)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -804,7 +804,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.FIXING_OF_MMS:
           if (!_valdation.validateFixingOfMMSData(_v.fixingOfMMSData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -813,7 +813,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.FIXING_OF_MODULES:
           if (!_valdation.validateFixingOfModulesData(_v.fixingOfModulesData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -822,7 +822,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.LAYING_OF_CAUTION_TAPE:
           if (!_valdation.validateLayingCautionTapeData(_v.layingCautionTapeData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -831,7 +831,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.ROUTE_MARKING:
           if (!_valdation.validateRouteMarkingData(_v.routeMarkingData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -840,7 +840,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.BRICKS_LAYERING:
           if (!_valdation.validateBricksLayeringData(_v.bricksLayeringData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -855,7 +855,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.CABLE_TRENCH_DRESSING:
           if (!_valdation.validateCableTrenchDressingData(_v.cableTrenchDressingData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -864,7 +864,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.CONDUIT_LAYING:
           if (!_valdation.validateConduitLayingData(_v.conduitLayingData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -873,7 +873,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.CABLE_TRENCH_EXCAVATION:
           if (!_valdation.validateCableTrenchExcavationData(_v.cableTrenchExcavationData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -887,7 +887,7 @@ export const onFillChecklistData = (_v: any) => {
         case TASK_TYPES.FIXING_AND_INSTALLATION_OF_HT_PANEL:
         case TASK_TYPES.FIXING_AND_INSTALLATION_OF_TRANSFORMER:
           if (!_valdation.validateFixingAndInstallationData(_v.fixingAndInstallationData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -896,7 +896,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         // case TASK_TYPES.HT_PANEL_INSTALLATION:
         //   if (!_valdation.validateHtPanelInstallationData(htPanelInstallationData)) {
-        //     return;
+        //     return null;
         //   }
         //   checkList = {
         //     taskName: _v.selectedTask.name,
@@ -917,7 +917,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.FIXING_OF_PANELS:
           if (!_valdation.validateFixingOfPanelsData(_v.fixingOfPanelsData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -926,7 +926,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.ERECTION_OF_PRECAST_COLUMN:
           if (!_valdation.validateErectionPreCastColumnData(_v.erectionPreCastColumnData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -935,7 +935,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.ERECTION_OF_BUS_SHELTER:
           if (!_valdation.validateErectionOfBusShelterData(_v.erectionOfBusShelterData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -944,7 +944,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.ERECTION_OF_ANGLE_SECTION:
           if (!_valdation.validateErectionOfAngleSectionData(_v.erectionOfAngleSectionData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -953,7 +953,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.PLACING_OF_PRE_CAST_RCC_PANELS:
           if (!_valdation.validatePreCastRccPanelData(_v.preCastRccPanelData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -962,7 +962,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.PLACING_OF_CHAIN_LINK:
           if (!_valdation.validatePlacingChainLinkData(_v.placingChainLinkData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -971,7 +971,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.MORTAR_CHECKLIST:
           if (!_valdation.validateMortarChecklistData(_v.mortarChecklistData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -980,7 +980,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.FLOORING:
           if (!_valdation.validateFlooringData(_v.flooringData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -995,7 +995,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.BACKFILL:
           if (!_valdation.validateBackfillData(_v.backfillData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -1004,7 +1004,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.PLACEMENT_OF_SIGNAGE_SHEET:
           if (!_valdation.validatePlacementOfSignageSheetData(_v.placementOfSignageSheetData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -1015,7 +1015,7 @@ export const onFillChecklistData = (_v: any) => {
           if (
             !_valdation.validateTrafficImpactAttenuatorsData(_v.trafficImpactAttenuatorsData)
           ) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -1024,7 +1024,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.FIXING_OF_SPRING_POST:
           if (!_valdation.validateFixingOfSpringPostData(_v.fixingOfSpringPostData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -1033,7 +1033,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.FIXING_OF_SOLAR_ROAD_STUDS:
           if (!_valdation.validateFixingOfSolarRoadStudsData(_v.fixingOfSolarRoadStudsData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -1042,7 +1042,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.FIXING_OF_SOLAR_BLINKERS:
           if (!_valdation.validateFixingOfSolarBlinkersData(_v.fixingOfSolarBlinkersData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -1051,7 +1051,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.FIXING_OF_ROAD_STUDS:
           if (!_valdation.validateFixingOfRoadStudsData(_v.fixingOfRoadStudsData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -1060,7 +1060,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.FIXING_OF_ROAD_DELINEATORS:
           if (!_valdation.validateFixingOfRoadDelineatorsData(_v.fixingOfRoadDelineatorsData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -1069,7 +1069,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.FIXING_OF_OBJECT_MARKERS:
           if (!_valdation.validateFixingOfObjectMarkersData(_v.fixingOfObjectMarkersData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -1078,7 +1078,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.FIXING_OF_NOISE_BARRIER:
           if (!_valdation.validateFixingOfNoiseBarrierData(_v.fixingOfNoiseBarrierData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -1091,7 +1091,7 @@ export const onFillChecklistData = (_v: any) => {
               _v.fixingOfLEDTrafficBlinkersData,
             )
           ) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -1100,7 +1100,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.FIXING_OF_HAZARD_MARKERS:
           if (!_valdation.validateFixingOfHazardMarkersData(_v.fixingOfHazardMarkersData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -1113,7 +1113,7 @@ export const onFillChecklistData = (_v: any) => {
               _v.fixingOfFlexibleMedianMarkersData,
             )
           ) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -1122,7 +1122,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.FIXING_OF_CONVEX_MIRRORS:
           if (!_valdation.validateFixingOfConvexMirrorsData(_v.fixingOfConvexMirrorsData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -1131,7 +1131,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.FIXING_OF_ANTIGLARES:
           if (!_valdation.validateFixingOfAntiglaresData(_v.fixingOfAntiglaresData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -1140,7 +1140,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.ERECTION_OF_POLES:
           if (!_valdation.validateErectionOfPolesData(_v.erectionOfPolesData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -1149,7 +1149,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.FIXING_OF_ARMS:
           if (!_valdation.validateFixingOfArmsData(_v.fixingOfArmsData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -1158,7 +1158,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.INSTALLATION_OF_LED_LIGHTS:
           if (!_valdation.validateInstallationOfLEDLightsData(_v.installationOfLEDLightsData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -1167,7 +1167,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.LAYING_OF_FLEXIBLE_CABLE:
           if (!_valdation.validateLayingOfFlexibleCableData(_v.layingOfFlexibleCableData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -1176,7 +1176,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.LAYING_OF_LT_CABLE:
           if (!_valdation.validateLayingOfLTCableData(_v.layingOfLTCableData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -1185,7 +1185,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.FIXING_OF_STONE:
           if (!_valdation.validateFixingOfStoneData(_v.fixingOfStoneData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -1194,7 +1194,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.PLASTERING:
           if (!_valdation.validatePlasteringData(_v.plasteringData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -1203,7 +1203,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.PUTTY:
           if (!_valdation.validatePuttyData(_v.puttyData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -1212,7 +1212,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.HVAC_WORK:
           if (!_valdation.validateHvacWorkData(_v.hvacWorkData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -1221,7 +1221,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.CEILING_WORK:
           if (!_valdation.validateCeilingWorkData(_v.ceilingWorkData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -1248,7 +1248,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.GLASS_WORKS:
           if (!_valdation.validateGlassWorksData(_v.glassWorksData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -1257,7 +1257,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.ELECTRICAL_WORK:
           if (!_valdation.validateElectricalWorkData(_v.electricalWorkData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -1266,7 +1266,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.PLUMBING_WORK:
           if (!_valdation.validatePlumbingWorkData(_v.plumbingWorkData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -1275,7 +1275,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.FLOORING_WORK:
           if (!_valdation.validateFlooringWorkData(_v.flooringWorkData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -1284,7 +1284,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.EXCAVATION_OF_TRENCH:
           if (!_valdation.validateExcavationOfTrenchData(_v.excavationOfTrenchData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -1293,7 +1293,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.LAYING_OF_DUCT:
           if (!_valdation.validateLayingOfDuctData(_v.layingOfDuctData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -1302,7 +1302,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.HDD_CROSSING:
           if (!_valdation.validateHddCrossingData(_v.hddCrossingData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -1311,7 +1311,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.CONSTRUCTION_OF_CHAMBER:
           if (!_valdation.validateConstructionOfChamberData(_v.constructionOfChamberData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -1320,7 +1320,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.INSTALLATION_OF_EQUIPMENT:
           if (!_valdation.validateInstallationOfEquipmentData(_v.installationOfEquipmentData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -1331,7 +1331,7 @@ export const onFillChecklistData = (_v: any) => {
           if (
             !_valdation.validateInstallationOfSolarSystemData(_v.installationOfSolarSystemData)
           ) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -1344,7 +1344,7 @@ export const onFillChecklistData = (_v: any) => {
               _v.installationOfNetworkDevicesData,
             )
           ) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -1355,10 +1355,10 @@ export const onFillChecklistData = (_v: any) => {
           if (
             !_valdation.validateConstructionOfFoundationData(_v.constructionOfFoundationData)
           ) {
-            return;
+            return null;
           }
           if (!_valdation.validateFoundationData(_v.foundationData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -1368,10 +1368,10 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.CASTING_OF_BALLAST:
           if (!_valdation.validateCastingOfBallastData(_v.castingOfBallastData)) {
-            return;
+            return null;
           }
           if (!_valdation.validateBallastData(_v.ballastData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -1381,7 +1381,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.SAND_LAYER:
           if (!_valdation.validateSandLayerData(_v.sandLayerData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -1414,7 +1414,7 @@ export const onFillChecklistData = (_v: any) => {
   
         case TASK_TYPES.TEMPORARY_PRESTRESSING:
           if (!_valdation.validateTemporaryPrestressingData(_v.temporaryPrestressingData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,
@@ -1423,7 +1423,7 @@ export const onFillChecklistData = (_v: any) => {
           break;
         case TASK_TYPES.PRE_STRESSING:
           if (!_valdation.validatePrestressingData(_v.prestressingData)) {
-            return;
+            return null;
           }
           checkList = {
             taskName: _v.selectedTask.name,

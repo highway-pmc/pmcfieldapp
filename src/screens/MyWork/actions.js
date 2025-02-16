@@ -31,3 +31,8 @@ export const generateTestSampleReport = (payload) => ({
 export const clearMyWorksEvent = () => ({
     type: "CLEAR_MY_WORKS"
 });
+
+export const fillRFIsChecklistForTestSample = (payload) => ({
+    type: "TEST_SAMPLE_FILL_RFI_CHECK_LIST_REQUEST",
+    payload: payload
+});

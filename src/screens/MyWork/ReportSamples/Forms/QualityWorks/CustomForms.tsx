@@ -201,7 +201,7 @@ export const testSampleForm = (
   currentTestMaterialData = _currentTestMaterialData;
   selectedTestSample = _selectedTestSample;
   concreteSampleTestItems = _concreteSampleTestItems;
-  console.log('currentTestMaterialData', currentTestMaterialData);
+  console.log('currentTestMaterialData', JSON.stringify(currentTestMaterialData));
   console.log('selectedTestSample.type :', selectedTestSample.type);
   console.log('materialType', materialType);
   if (

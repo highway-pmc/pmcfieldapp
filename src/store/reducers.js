@@ -1223,6 +1223,26 @@ const MyWorkReducer = (state = myWorksState, action) => {
                 error: action.error,
                 loading: false,
             };
+        case "TEST_SAMPLE_FILL_RFI_CHECK_LIST_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "TEST_SAMPLE_FILL_RFI_CHECK_LIST_SUCCESS":
+            return {
+                ...state,
+                rfiChecklistSaved: action.response,
+                error: null,
+                loading: false,
+            };
+        case "TEST_SAMPLE_FILL_RFI_CHECK_LIST_FAILURE":
+            return {
+                ...state,
+                rfiChecklistSaved: null,
+                error: action.error,
+                loading: false,
+            };
         case "GET_MY_TESTS_REQUEST":
             return {
                 ...state,

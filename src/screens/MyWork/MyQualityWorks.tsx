@@ -26,12 +26,14 @@ import {
   TEST_SAMPLE_STATUS,
   TEST_SAMPLE_STATUS_LIST,
   TEST_TYPES,
+  TEST_WORK_CATEGORY_TYPES,
   TYPE_OF_CONCRETE_SURFACE_LIST,
   YES_NO_LIST,
 } from '../../constants/constants';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   clearMyWorksEvent,
+  fillRFIsChecklistForTestSample,
   generateTestSampleReport,
   getMyTests,
   updateTestSample,
@@ -80,12 +82,13 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
     myTests,
     testSampleUpdated,
     generatedTestSampleReport,
+    rfiChecklistSaved,
     loading,
     error,
   } = useSelector((state: any) => state.MyWorks);
   const [myTestsDataAll, setMyTestsDataAll]: any = useState([]);
   const [myTestsData, setMyTestsData]: any = useState([]);
-  const [currentTestWorkCategoryData, setCurrentTestWorkCategoryData] =
+  const [currentTestWorkCategoryData, setCurrentTestWorkCategoryData]: any =
     useState([]);
   const [currentTestMaterialsData, setCurrentTestMaterialsData] = useState([]);
   const [currentTestMaterialData, setCurrentTestMaterialData]: any = useState(
@@ -164,7 +167,15 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
       Alert.alert('Info', 'Sample updated');
       dispatch(clearMyWorksEvent());
     }
-  }, [myTests, testSampleUpdated, error]);
+
+    if (rfiChecklistSaved) {
+      setOpenPopup(false);
+      Alert.alert('RFIs checklist saved.');
+      setCurrentLevel(1);
+      dispatch(clearMyWorksEvent());
+      getMyWorksData();
+    }
+  }, [myTests, testSampleUpdated, rfiChecklistSaved, error]);
 
   // unmount
   useEffect(
@@ -209,6 +220,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
     testTypeIndex: number = -1,
   ) => {
     const testClassifData: any = myTestsData[testClassifIndex];
+    console.log('========================', testClassifData.type)
     if (isTestInventoryClassification(testClassifData.type)) {
       // TODO - will introduce type in db and use it iso Classification Name
       const testWorkCategory = testClassifData.testWorkCategoriesData[0];
@@ -609,8 +621,8 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
       testObservations.push(getWaterAbsorptionObject(1));
     }
       setSelectedTestSample(item);
-    setConcreteSampleTestItems(testObservations);
-    setOpenPopup(true);
+      setConcreteSampleTestItems(testObservations);
+      setOpenPopup(true);
   };
 
   const isValidTemperature = (value: any): boolean => {
@@ -674,245 +686,263 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
   };
 
   const onSubmitTestSample = (status: string) => {
-    const objSampleTest7thOr28thDay = Object.assign(
-      {},
-      formSampleTest7thOr28thDay,
-    );
-    objSampleTest7thOr28thDay.dateOfTesting = getDbDateFromDDMMYYYY(
-      objSampleTest7thOr28thDay.dateOfTesting,
-    );
-    // Temperature Validation
-    if (isValidTemperature(objSampleTest7thOr28thDay.roomTemperature)) {
-      objSampleTest7thOr28thDay.roomTemperature = Number(
-        objSampleTest7thOr28thDay.roomTemperature,
+    const testWorkCategoryDataType = currentTestWorkCategoryData.find((wc: any) => wc._id === currentTestMaterialData.testWorkCategoryId[0])?.type;
+    let sampleData = {};
+
+    if (testWorkCategoryDataType === TEST_WORK_CATEGORY_TYPES.CONCRETE_STRUCTURE) {
+      const objSampleTest7thOr28thDay = Object.assign(
+        {},
+        formSampleTest7thOr28thDay,
       );
-    } else {
-      return;
-    }
-    // Humidity Validation
-    if (isValidHumidity(objSampleTest7thOr28thDay.humidity)) {
-      objSampleTest7thOr28thDay.humidity = Number(
-        objSampleTest7thOr28thDay.humidity,
+      objSampleTest7thOr28thDay.dateOfTesting = getDbDateFromDDMMYYYY(
+        objSampleTest7thOr28thDay.dateOfTesting,
       );
-    } else {
-      return;
-    }
-
-    objSampleTest7thOr28thDay.observations = Object.assign(
-      [],
-      concreteSampleTestItems,
-    );
-    const sampleObservations: any =
-      objSampleTest7thOr28thDay.observations &&
-      objSampleTest7thOr28thDay.observations;
-
-    for (let i = 0; i < sampleObservations?.length; i++) {
-      const observations = sampleObservations[i];
-      observations['details']?.values.forEach((item: any) => {
-        if (
-          currentTestMaterialData.materialType ===
-            TEST_MATERIALS_TYPES.CONCRETE ||
-          selectedTestSample.type === TEST_TYPES.COMPRESSIVE_STRENGTH
-        ) {
+      // Temperature Validation
+      if (isValidTemperature(objSampleTest7thOr28thDay.roomTemperature)) {
+        objSampleTest7thOr28thDay.roomTemperature = Number(
+          objSampleTest7thOr28thDay.roomTemperature,
+        );
+      } else {
+        return;
+      }
+      // Humidity Validation
+      if (isValidHumidity(objSampleTest7thOr28thDay.humidity)) {
+        objSampleTest7thOr28thDay.humidity = Number(
+          objSampleTest7thOr28thDay.humidity,
+        );
+      } else {
+        return;
+      }
+  
+      objSampleTest7thOr28thDay.observations = Object.assign(
+        [],
+        concreteSampleTestItems,
+      );
+      const sampleObservations: any =
+        objSampleTest7thOr28thDay.observations &&
+        objSampleTest7thOr28thDay.observations;
+  
+      for (let i = 0; i < sampleObservations?.length; i++) {
+        const observations = sampleObservations[i];
+        observations['details']?.values.forEach((item: any) => {
           if (
-            !isValidNumber(item.wtCube, 'wtCube') ||
-            !isValidNumber(item.failureLoad, 'failureLoad')
-          )
-            return;
-          item.wtCube = Number(item.wtCube);
-          item.failureLoad = Number(item.failureLoad);
-        }
-
-        if (
-          currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CONCRETE
-        ) {
-          if (
-            !isValidNumber(item.testArea, 'testArea') ||
-            !isValidNumber(item.volOfCube, 'volOfCube')
-          )
-            return;
-          item.testArea = Number(item.testArea);
-          item.volOfCube = Number(item.volOfCube);
-        }
-        // Cement Check
-        if (
-          currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CEMENT
-        ) {
-          if (selectedTestSample.type === TEST_TYPES.SOUNDNESS) {
+            currentTestMaterialData.materialType ===
+              TEST_MATERIALS_TYPES.CONCRETE ||
+            selectedTestSample.type === TEST_TYPES.COMPRESSIVE_STRENGTH
+          ) {
             if (
-              !isValidNumber(
-                item.beforePuttingInBoilingWater,
-                'beforePuttingInBoilingWater',
-              ) ||
-              !isValidNumber(
-                item.afterPuttingInBoilingWater,
-                'afterPuttingInBoilingWater',
-              )
+              !isValidNumber(item.wtCube, 'wtCube') ||
+              !isValidNumber(item.failureLoad, 'failureLoad')
             )
               return;
-            item.beforePuttingInBoilingWater = Number(
-              item.beforePuttingInBoilingWater,
-            );
-            item.afterPuttingInBoilingWater = Number(
-              item.afterPuttingInBoilingWater,
-            );
-          } else if (
-            selectedTestSample.type ===
-            TEST_TYPES.FINENESS_CONSISTENCY_INITIAL_AND_FINAL_SETTING_TIME
+            item.wtCube = Number(item.wtCube);
+            item.failureLoad = Number(item.failureLoad);
+          }
+  
+          if (
+            currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CONCRETE
           ) {
-            if (i === 0) {
+            if (
+              !isValidNumber(item.testArea, 'testArea') ||
+              !isValidNumber(item.volOfCube, 'volOfCube')
+            )
+              return;
+            item.testArea = Number(item.testArea);
+            item.volOfCube = Number(item.volOfCube);
+          }
+          // Cement Check
+          if (
+            currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CEMENT
+          ) {
+            if (selectedTestSample.type === TEST_TYPES.SOUNDNESS) {
               if (
-                !isValidNumber(item.weightOfSample, 'weightOfSample') ||
                 !isValidNumber(
-                  item.weightOfCementRetained,
-                  'weightOfCementRetained',
+                  item.beforePuttingInBoilingWater,
+                  'beforePuttingInBoilingWater',
+                ) ||
+                !isValidNumber(
+                  item.afterPuttingInBoilingWater,
+                  'afterPuttingInBoilingWater',
                 )
               )
                 return;
-              item.weightOfSample = Number(item.weightOfSample);
-              item.weightOfCementRetained = Number(item.weightOfCementRetained);
-            } else if (i === 1) {
-              if (
-                !isValidNumber(item.weightOfCement, 'weightOfCement') ||
-                !isValidNumber(item.weightOfWater, 'weightOfWater') ||
-                !isValidNumber(
-                  item.penetrationOfPlunger,
-                  'penetrationOfPlunger',
+              item.beforePuttingInBoilingWater = Number(
+                item.beforePuttingInBoilingWater,
+              );
+              item.afterPuttingInBoilingWater = Number(
+                item.afterPuttingInBoilingWater,
+              );
+            } else if (
+              selectedTestSample.type ===
+              TEST_TYPES.FINENESS_CONSISTENCY_INITIAL_AND_FINAL_SETTING_TIME
+            ) {
+              if (i === 0) {
+                if (
+                  !isValidNumber(item.weightOfSample, 'weightOfSample') ||
+                  !isValidNumber(
+                    item.weightOfCementRetained,
+                    'weightOfCementRetained',
+                  )
                 )
-              )
-                return;
-              item.weightOfCement = Number(item.weightOfCement);
-              item.weightOfWater = Number(item.weightOfWater);
-              item.penetrationOfPlunger = Number(item.penetrationOfPlunger);
-            } else {
-              if (!isValidNumber(item.weightOfCement, 'weightOfCement')) return;
-              item.weightOfCement = Number(item.weightOfCement);
+                  return;
+                item.weightOfSample = Number(item.weightOfSample);
+                item.weightOfCementRetained = Number(item.weightOfCementRetained);
+              } else if (i === 1) {
+                if (
+                  !isValidNumber(item.weightOfCement, 'weightOfCement') ||
+                  !isValidNumber(item.weightOfWater, 'weightOfWater') ||
+                  !isValidNumber(
+                    item.penetrationOfPlunger,
+                    'penetrationOfPlunger',
+                  )
+                )
+                  return;
+                item.weightOfCement = Number(item.weightOfCement);
+                item.weightOfWater = Number(item.weightOfWater);
+                item.penetrationOfPlunger = Number(item.penetrationOfPlunger);
+              } else {
+                if (!isValidNumber(item.weightOfCement, 'weightOfCement')) return;
+                item.weightOfCement = Number(item.weightOfCement);
+              }
             }
           }
-        }
-        // Fine Aggregate checks
+          // Fine Aggregate checks
+          if (
+            currentTestMaterialData.materialType ===
+            TEST_MATERIALS_TYPES.FINE_AGGREGATE
+          ) {
+            if (selectedTestSample.type === TEST_TYPES.GRADATION) {
+              if (!isValidNumber(item.weightRetainedInGm, 'weightRetainedInGm'))
+                return;
+              item.weightRetainedInGm = Number(item.weightRetainedInGm);
+            } else if (
+              selectedTestSample.type === TEST_TYPES.NATURAL_MOISTURE_CONTENT ||
+              selectedTestSample.type ===
+                TEST_TYPES.SPECIFIC_GRAVITY_AND_WATER_ABSORPTION
+            ) {
+              if (!item.hide) {
+                if (
+                  !isValidNumber(item.test1, 'test1') ||
+                  !isValidNumber(item.test2, 'test2') ||
+                  !isValidNumber(item.test3, 'test3')
+                )
+                  return;
+                item.test1 = Number(item.test1);
+                item.test2 = Number(item.test2);
+                item.test3 = Number(item.test3);
+              }
+            }
+          }
+          // Coarse Aggregate Checks
+          if (
+            currentTestMaterialData.materialType ===
+            TEST_MATERIALS_TYPES.COARSE_AGGREGATE
+          ) {
+            if (selectedTestSample.type === TEST_TYPES.GRADATION) {
+              if (!isValidNumber(item.weightRetainedInGm, 'weightRetainedInGm'))
+                return;
+              item.weightRetainedInGm = Number(item.weightRetainedInGm);
+            } else if (
+              selectedTestSample.type === TEST_TYPES.LOS_ANGELES_ABRATION ||
+              selectedTestSample.type === TEST_TYPES.NATURAL_MOISTURE_CONTENT ||
+              selectedTestSample.type ===
+                TEST_TYPES.SPECIFIC_GRAVITY_AND_WATER_ABSORPTION ||
+              selectedTestSample.type === TEST_TYPES.AGGREGATE_IMPACT_VALUE
+            ) {
+              if (!item.hide) {
+                if (
+                  !isValidNumber(item.test1, 'test1') ||
+                  !isValidNumber(item.test2, 'test2') ||
+                  !isValidNumber(item.test2, 'test3')
+                )
+                  return;
+                item.test1 = Number(item.test1);
+                item.test2 = Number(item.test2);
+                item.test3 = Number(item.test3);
+              }
+            } else if (selectedTestSample.type === TEST_TYPES.FI_EI) {
+              if (
+                !isValidNumber(
+                  item.totalWeightOfAggregateRetained,
+                  'totalWeightOfAggregateRetained',
+                ) ||
+                !isValidNumber(
+                  item.weightPassingFlakinessGauge,
+                  'weightPassingFlakinessGauge',
+                ) ||
+                !isValidNumber(
+                  item.weightRetainedFlakinessGauge,
+                  'weightRetainedFlakinessGauge',
+                ) ||
+                !isValidNumber(
+                  item.weightRetainedElongationGauge,
+                  'weightRetainedElongationGauge',
+                )
+              )
+                return;
+              item.totalWeightOfAggregateRetained = Number(
+                item.totalWeightOfAggregateRetained,
+              );
+              item.weightPassingFlakinessGauge = Number(
+                item.weightPassingFlakinessGauge,
+              );
+              item.weightRetainedFlakinessGauge = Number(
+                item.weightRetainedFlakinessGauge,
+              );
+              item.weightRetainedElongationGauge = Number(
+                item.weightRetainedElongationGauge,
+              );
+            }
+          }
+        });
+  
         if (
           currentTestMaterialData.materialType ===
           TEST_MATERIALS_TYPES.FINE_AGGREGATE
         ) {
           if (selectedTestSample.type === TEST_TYPES.GRADATION) {
-            if (!isValidNumber(item.weightRetainedInGm, 'weightRetainedInGm'))
+            if (!isValidNumber(observations.weightOfSample, 'weightOfSample'))
               return;
-            item.weightRetainedInGm = Number(item.weightRetainedInGm);
-          } else if (
-            selectedTestSample.type === TEST_TYPES.NATURAL_MOISTURE_CONTENT ||
-            selectedTestSample.type ===
-              TEST_TYPES.SPECIFIC_GRAVITY_AND_WATER_ABSORPTION
-          ) {
-            if (!item.hide) {
-              if (
-                !isValidNumber(item.test1, 'test1') ||
-                !isValidNumber(item.test2, 'test2') ||
-                !isValidNumber(item.test3, 'test3')
-              )
-                return;
-              item.test1 = Number(item.test1);
-              item.test2 = Number(item.test2);
-              item.test3 = Number(item.test3);
-            }
+            observations.weightOfSample = Number(observations.weightOfSample);
           }
         }
-        // Coarse Aggregate Checks
+  
         if (
           currentTestMaterialData.materialType ===
           TEST_MATERIALS_TYPES.COARSE_AGGREGATE
         ) {
-          if (selectedTestSample.type === TEST_TYPES.GRADATION) {
-            if (!isValidNumber(item.weightRetainedInGm, 'weightRetainedInGm'))
+          if (i === 0 && selectedTestSample.type === TEST_TYPES.GRADATION) {
+            if (!isValidNumber(observations.weightOfSample, 'weightOfSample'))
               return;
-            item.weightRetainedInGm = Number(item.weightRetainedInGm);
-          } else if (
-            selectedTestSample.type === TEST_TYPES.LOS_ANGELES_ABRATION ||
-            selectedTestSample.type === TEST_TYPES.NATURAL_MOISTURE_CONTENT ||
-            selectedTestSample.type ===
-              TEST_TYPES.SPECIFIC_GRAVITY_AND_WATER_ABSORPTION ||
-            selectedTestSample.type === TEST_TYPES.AGGREGATE_IMPACT_VALUE
-          ) {
-            if (!item.hide) {
-              if (
-                !isValidNumber(item.test1, 'test1') ||
-                !isValidNumber(item.test2, 'test2') ||
-                !isValidNumber(item.test2, 'test3')
-              )
-                return;
-              item.test1 = Number(item.test1);
-              item.test2 = Number(item.test2);
-              item.test3 = Number(item.test3);
-            }
-          } else if (selectedTestSample.type === TEST_TYPES.FI_EI) {
-            if (
-              !isValidNumber(
-                item.totalWeightOfAggregateRetained,
-                'totalWeightOfAggregateRetained',
-              ) ||
-              !isValidNumber(
-                item.weightPassingFlakinessGauge,
-                'weightPassingFlakinessGauge',
-              ) ||
-              !isValidNumber(
-                item.weightRetainedFlakinessGauge,
-                'weightRetainedFlakinessGauge',
-              ) ||
-              !isValidNumber(
-                item.weightRetainedElongationGauge,
-                'weightRetainedElongationGauge',
-              )
-            )
-              return;
-            item.totalWeightOfAggregateRetained = Number(
-              item.totalWeightOfAggregateRetained,
-            );
-            item.weightPassingFlakinessGauge = Number(
-              item.weightPassingFlakinessGauge,
-            );
-            item.weightRetainedFlakinessGauge = Number(
-              item.weightRetainedFlakinessGauge,
-            );
-            item.weightRetainedElongationGauge = Number(
-              item.weightRetainedElongationGauge,
-            );
+            observations.weightOfSample = Number(observations.weightOfSample);
           }
         }
-      });
-
-      if (
-        currentTestMaterialData.materialType ===
-        TEST_MATERIALS_TYPES.FINE_AGGREGATE
-      ) {
-        if (selectedTestSample.type === TEST_TYPES.GRADATION) {
-          if (!isValidNumber(observations.weightOfSample, 'weightOfSample'))
-            return;
-          observations.weightOfSample = Number(observations.weightOfSample);
+  
+        if (
+          currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CEMENT
+        ) {
+          if (selectedTestSample.type === TEST_TYPES.COMPRESSIVE_STRENGTH) {
+            observations.dateOfTesting.value =
+              objSampleTest7thOr28thDay.dateOfTesting;
+          }
         }
       }
 
-      if (
-        currentTestMaterialData.materialType ===
-        TEST_MATERIALS_TYPES.COARSE_AGGREGATE
-      ) {
-        if (i === 0 && selectedTestSample.type === TEST_TYPES.GRADATION) {
-          if (!isValidNumber(observations.weightOfSample, 'weightOfSample'))
-            return;
-          observations.weightOfSample = Number(observations.weightOfSample);
-        }
-      }
-
-      if (
-        currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CEMENT
-      ) {
-        if (selectedTestSample.type === TEST_TYPES.COMPRESSIVE_STRENGTH) {
-          observations.dateOfTesting.value =
-            objSampleTest7thOr28thDay.dateOfTesting;
-        }
-      }
+      sampleData = objSampleTest7thOr28thDay;
     }
-
+    
     dispatch(
+      fillRFIsChecklistForTestSample({
+            projectId: loggedInUser.projectId,
+            rfiId: selectedTestSample._id,
+            status: status,
+            body: {
+              sampleData: sampleData,
+            },
+        }),
+    );
+
+    /*dispatch(
       generateTestSampleReport({
         // testRFIId: (selectedTestSample.type === TEST_TYPES.SOUNDNESS || currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE
         //   || currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE
@@ -920,10 +950,10 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
         projectId: loggedInUser.projectId,
         testRFIId: selectedTestSample._id,
         body: {
-          sampleData: objSampleTest7thOr28thDay,
+          sampleData: sampleData,
         },
       }),
-    );
+    );*/
   };
 
   useEffect(() => {
@@ -1579,7 +1609,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
 
                   <TouchableOpacity
                     style={styles.submitButton}
-                    onPress={() => onSubmitTestSample(RFI_STATUS.APPROVED)}>
+                    onPress={() => onSubmitTestSample(RFI_STATUS.IN_REVIEW)}>
                     <Text style={styles.submitButtonText}>Submit</Text>
                   </TouchableOpacity>
                 </View>

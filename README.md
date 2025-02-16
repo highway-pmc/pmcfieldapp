@@ -72,3 +72,7 @@ This is guide to set up PMC Field App Project.
    ```sh
    npm run android
    ```
+4. **Release apk**:
+   ```sh
+   cd android && ./gradlew assembleRelease
+   ```

@@ -509,10 +509,11 @@ export const Events = (_v: any) => {
             Alert.alert('Error', 'Recommendations is required.');
             return false;
         }
-        //return;
         let rfiSubmitDateTime = `${getDbDateFromDDMMYYYY(_v.rfiDate)} ${_v.rfiTime}:00`;
         const checkList = onFillChecklistData(_v);
-        
+        if (!checkList) {
+            return;
+        }
         console.log('checkList', checkList);
         _v.dispatch(
             fillRFIsChecklist({

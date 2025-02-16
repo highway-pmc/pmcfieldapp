@@ -32,7 +32,7 @@ import AssignTestWorkCategory from "../../screens/ManageUsers/QualityWorks/Assig
 import AssignTestMaterials from "../../screens/ManageUsers/QualityWorks/AssignTestMaterials";
 import AssignTestTypes from "../../screens/ManageUsers/QualityWorks/AssignTestTypes";
 import SourceApprovals from "../../screens/ManageUsers/QualityWorks/SourceApprovals";
-import Procurements from "../../screens/ManageUsers/QualityWorks/ProcurementsEarthWork";
+import Procurements from "../../screens/ManageUsers/QualityWorks/Procurements";
 import ReportsDashboard from "../../screens/Reports/ReportDashboard";
 import ReportsFieldWork from "../../screens/Reports/ReportsFieldWork";
 import SelectTestWorkCategory from "../../screens/ManageUsers/QualityWorks/SelectTestWorkCategory";

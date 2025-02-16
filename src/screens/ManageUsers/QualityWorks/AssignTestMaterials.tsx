@@ -282,7 +282,9 @@ const AssignTestMaterials = ({
         item.materialType ===
           TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING ||
         item.materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA ||
-        item.materialType === TEST_MATERIALS_TYPES.BITUMEN
+        item.materialType === TEST_MATERIALS_TYPES.BITUMEN ||
+        item.materialType === TEST_MATERIALS_TYPES.SOIL ||
+        item.materialType === TEST_MATERIALS_TYPES.FLY_ASH
       ) {
         if (
           testClassificationType ===

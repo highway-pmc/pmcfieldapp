@@ -208,10 +208,10 @@ const SourceApprovals = ({
     ratePerKG: 0.0, // (3 decimal, >0, 100000)
   });
   // EarthWork
-  const [sourceDetailEarthWork, setSourceDetailEarthWork]: any = {
+  const [sourceDetailEarthWork, setSourceDetailEarthWork] = useState({
     sourceApprovalId: '',
     ratePerCum: 0,
-  };
+  });
   const [sourceDetailForm, setSourceDetailForm]: any =
     useState<FormSourceDetailState>({
       sourceApprovalId: '',
@@ -1027,46 +1027,6 @@ const SourceApprovals = ({
     }
   }, [updatedSourceDetail, error]);
 
-  // useEffect(() => {
-  //   if (addedSourceDetail) {
-  //     setSourceApprovalDetails([addedSourceDetail, ...sourceApprovalDetails]);
-  //     setSourceDetailForm({
-  //       sourceApprovalId: selectedSource._id,
-  //       [gradeField.name]: '',
-  //       ratePerCum: 0,
-  //     });
-  //     onSuccess('Source Details Added Successfully');
-  //   } else if (error) {
-  //     showSnackbar(error, 'error');
-  //   }
-  // }, [addedSourceDetail, error]);
-  // // Need to ask what it do
-
-  // useEffect(() => {
-  //   if (updatedSourceDetail && selectedSourceDetail) {
-  //     const list = [...sourceApprovalDetails];
-  //     const editedObj = list.find(
-  //       (item: any) => item._id === selectedSourceDetail._id,
-  //     );
-  //     if (editedObj) {
-  //       editedObj.name = sourceDetailForm[gradeField.name];
-  //       editedObj.metaData[gradeField.name] = sourceDetailForm[gradeField.name];
-  //       editedObj.metaData.ratePerCum = sourceDetailForm.ratePerCum;
-  //       setSourceApprovalDetails(list);
-  //     }
-
-  //     setSourceDetailForm({
-  //       sourceApprovalId: selectedSource._id,
-  //       [gradeField.name]: '',
-  //       ratePerCum: 0,
-  //     });
-  //     onSuccess('Source Details Updated Successfully');
-  //     setSelectedSourceDetail(null);
-  //   } else if (error) {
-  //     showSnackbar(error, 'error');
-  //   }
-  // }, [updatedSourceDetail, error]);
-
   useEffect(() => {
     if (deletedSourceDetail) {
       setSourceApprovalDetails(
@@ -1753,6 +1713,7 @@ const SourceApprovals = ({
     </SafeAreaView>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

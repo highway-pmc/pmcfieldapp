@@ -663,7 +663,7 @@ export const TEST_CLASSIFICATION_TYPES = {
 export const TEST_WORK_CATEGORY_TYPES = {
   CONCRETE_STRUCTURE: 'concrete-structure',
   BITUMINOUS_WORKS: 'bituminous-works',
-  EARTH_WORKS: 'earth-works',
+  EARTH_WORKS: 'earth-work',
 };
 
 export const TEST_MATERIALS_TYPES = {

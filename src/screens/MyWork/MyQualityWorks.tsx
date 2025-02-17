@@ -220,7 +220,6 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
     testTypeIndex: number = -1,
   ) => {
     const testClassifData: any = myTestsData[testClassifIndex];
-    console.log('========================', testClassifData.type)
     if (isTestInventoryClassification(testClassifData.type)) {
       // TODO - will introduce type in db and use it iso Classification Name
       const testWorkCategory = testClassifData.testWorkCategoriesData[0];

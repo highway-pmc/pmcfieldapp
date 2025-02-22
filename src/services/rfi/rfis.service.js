@@ -36,6 +36,15 @@ export const getRFIs = async (projectId, status) => {
     });
 }
 
+export const getTestRFIs = async (projectId, status) => {
+    return apiService.getRequest(`v1/auth/projects/${projectId}/status/${status}/test-rfis`).then((response) => {
+        return response;
+    }).catch((err) => {
+        const errorMessge = err.message || 'Unable to get RFI.';
+        throw new Error(errorMessge);
+    });
+}
+
 export const getRFIsReports = async (projectId) => {
     return apiService.getRequest(`v1/auth/projects/${projectId}/rfis/reports`).then((response) => {
         return response;

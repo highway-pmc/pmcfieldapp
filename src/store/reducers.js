@@ -1497,6 +1497,26 @@ const RFIsReducer = (state = myWorksState, action) => {
                 error: action.error,
                 loading: false,
             };
+        case "GET_TEST_RFI_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "GET_TEST_RFI_SUCCESS":
+            return {
+                ...state,
+                rfiDataList: action.response,
+                error: null,
+                loading: false,
+            };
+        case "GET_TEST_RFI_FAILURE":
+            return {
+                ...state,
+                rfiDataList: null,
+                error: action.error,
+                loading: false,
+            };
         case "UPDATE_RFI_REQUEST":
             return {
                 ...state,

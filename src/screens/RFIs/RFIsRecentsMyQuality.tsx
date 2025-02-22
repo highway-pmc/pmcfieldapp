@@ -16,7 +16,7 @@ import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import React, {Fragment, useEffect, useState} from 'react';
 import {
-  actionGetRFIs,
+  actionGetTestRFIs,
   clearRFITasksEvent,
   generateRFIReport,
   updatedRFIs,
@@ -28,7 +28,7 @@ import {getDisplayDate, getDisplayTime} from '../../utils/Utils';
 const {height} = Dimensions.get('window');
 
 const RFIsRecentsMyQuality = (props: any) => {
-  const navigation = useNavigation();
+  const navigation: any = useNavigation();
 
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
   const {rfiDataList, rfiUpdated, reportGenerated, loading, error} =
@@ -49,14 +49,14 @@ const RFIsRecentsMyQuality = (props: any) => {
   useEffect(() => {
     if (focus == true) {
       setRfiData([]);
-      getRFIsData();
+      getTestRFIsData();
       setPdfSource(null);
     }
   }, [focus]);
 
-  const getRFIsData = () => {
+  const getTestRFIsData = () => {
     dispatch(
-      actionGetRFIs({
+      actionGetTestRFIs({
         projectId: loggedInUser.projectId,
         status:
           props.rfiType === RFIs_TYPE.GENERATE ? 'generated' : props.rfiType,
@@ -65,7 +65,7 @@ const RFIsRecentsMyQuality = (props: any) => {
   };
 
   useEffect(() => {
-    if (rfiDataList) {
+    if (rfiDataList) {  
       setRfiData(rfiDataList);
     }
 
@@ -131,33 +131,6 @@ const RFIsRecentsMyQuality = (props: any) => {
   };
 
   const onRFIAction = (status: string) => {
-    // if (status === RFI_STATUS.APPROVED) {
-    //   if (!rfiDate) {
-    //     Alert.alert('Error', 'Approval Date is required.');
-    //     return false;
-    //   }
-    // }
-
-    // let rfiSubmitDateTime = '';
-    // let rfiTime = '';
-    // if (rfiDate) {
-    //   if (timeFormat === 'PM') {
-    //     if (Number(hour) === 12) {
-    //       rfiTime = hour + ':' + minute;
-    //     } else {
-    //       rfiTime = (Number(hour) + 12) + ':' + minute;
-    //     }
-    //   } else {
-    //     if (Number(hour) === 12) {
-    //       rfiTime = '00:' + minute;
-    //     } else {
-    //       rfiTime = hour + ':' + minute;
-    //     }
-    //   }
-
-    //   rfiSubmitDateTime = rfiDate + ' ' + rfiTime + ":00"
-    // }
-
     dispatch(
       updatedRFIs({
         projectId: loggedInUser.projectId,
@@ -184,46 +157,7 @@ const RFIsRecentsMyQuality = (props: any) => {
     );
   };
 
-  const openCloseCalendar = () => {
-    setOpenCalendar(!openCalendar);
-    // if (!openCalendar) {
-    //   setLayoutHeight(DEFAULT_COMPONENT_HEIGHT + DEFAULT_CALENDAR_HEIGHT)
-    // } else {
-    //   setLayoutHeight(DEFAULT_COMPONENT_HEIGHT)
-    // }
-  };
   const calculatedHeight = height * 0.6;
-  // const getHours = () => {
-  //   let hours = [];
-  //   for (let i = 1; i <= 12; i++) {
-  //     hours.push({
-  //       label: i < 10 ? '0' + i : '' + i,
-  //       value: i < 10 ? '0' + i : '' + i
-  //     });
-  //   }
-  //   setHours(hours);
-  // }
-
-  // const getMins = () => {
-  //   let mins = [];
-  //   for (let i = 0; i < 60; i = i + 10) {
-  //     mins.push({
-  //       label: i < 10 ? '0' + i : '' + i,
-  //       value: i < 10 ? '0' + i : '' + i
-  //     });
-  //   }
-  //   setMinutes(mins);
-  // }
-
-  // const getTimeFormats = () => {
-  //   setTimeFormats([{
-  //     label: 'AM',
-  //     value: 'AM'
-  //   }, {
-  //     label: 'PM',
-  //     value: 'PM'
-  //   }]);
-  // }
 
   // Function to render each list item
   const renderItem = (rowData: any) => (
@@ -9164,20 +9098,20 @@ const RFIsRecentsMyQuality = (props: any) => {
                     {flexWrap: 'wrap', paddingBottom: 10},
                   ]}>
                   <Text style={styles.subHead}>
-                    {item.workAssignmentData.projectModule.name}
+                    {item.name}
                   </Text>
                   <Image
                     style={styles.ArrowIcon}
                     source={require('../../images/right-arrow-icon.png')}
                   />
                   <Text style={styles.subHead}>
-                    {item.workAssignmentData.segmentId?.name}
+                    {/* {item.workAssignmentData.segmentId?.name} */}
                   </Text>
                   <Image
                     style={styles.ArrowIcon}
                     source={require('../../images/right-arrow-icon.png')}
                   />
-                  {item.workAssignmentData.componentId ? (
+                  {item.workAssignmentData?.componentId ? (
                     <View style={styles.taskCategory}>
                       <Text style={styles.subHead}>
                         {item.workAssignmentData.componentId?.name}
@@ -9189,7 +9123,7 @@ const RFIsRecentsMyQuality = (props: any) => {
                     </View>
                   ) : null}
 
-                  {item.workAssignmentData.subComponentId ? (
+                  {item.workAssignmentData?.subComponentId ? (
                     <View style={styles.taskCategory}>
                       <Text style={styles.subHead}>
                         {item.workAssignmentData.subComponentId?.name}
@@ -9201,7 +9135,7 @@ const RFIsRecentsMyQuality = (props: any) => {
                     </View>
                   ) : null}
                   <Text style={[styles.subHead, styles.taskCount]}>
-                    {item.workAssignmentData.taskId?.displayName}
+                    {item.workAssignmentData?.taskId?.displayName}
                   </Text>
                 </View>
                 <View
@@ -9215,7 +9149,7 @@ const RFIsRecentsMyQuality = (props: any) => {
                       Generated Date
                     </Text>
                     <Text style={[styles.dateText, styles.subFontText]}>
-                      {getDisplayDate(item.rfiDateTime)}
+                      {/* {getDisplayDate(item.rfiDateTime)} */}
                     </Text>
                   </View>
                   <View>
@@ -9223,7 +9157,7 @@ const RFIsRecentsMyQuality = (props: any) => {
                       Generated Time
                     </Text>
                     <Text style={[styles.dateText, styles.subFontText]}>
-                      {getDisplayTime(item.rfiDateTime)}
+                      {/* {getDisplayTime(item.rfiDateTime)} */}
                     </Text>
                   </View>
                 </View>

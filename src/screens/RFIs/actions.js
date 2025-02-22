@@ -18,6 +18,11 @@ export const actionGetRFIs = (payload) => ({
     payload: payload
 });
 
+export const actionGetTestRFIs = (payload) => ({
+    type: "GET_TEST_RFI_REQUEST",
+    payload: payload
+});
+
 export const updatedRFIs = (payload) => ({
     type: "UPDATE_RFI_REQUEST",
     payload: payload

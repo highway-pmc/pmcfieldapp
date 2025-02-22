@@ -445,9 +445,7 @@ const ProcurementsEarthWork = ({
             <Input
               label="Qty (in cum)"
               value={'' + formSoil.qtyInCum}
-              onChange={(value: string) =>
-                handleInputChange(gradeField.name, value)
-              }
+              onChange={(value: string) => handleInputChange('qtyInCum', value)}
               isRequired={true}
             />
           </View>

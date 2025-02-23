@@ -210,7 +210,7 @@ const ProcurementsEarthWork = ({
       sourceApprovalDetailId: item.sourceApprovalDetailId,
       procurementDateTime: getDisplayDate(item.procurementDateTime),
       vehicleNo: item.vehicleNo,
-      qtyInCum: '' + item.metadata.qtyInCum,
+      qtyInCum: '' + item.metaData.qtyInCum,
       invoiceFile: item.invoiceFile,
     });
 
@@ -573,7 +573,7 @@ const ProcurementsEarthWork = ({
 
   const renderItem = ({item}: {item: any}) => (
     <View style={[styles.itemContainer]}>
-      <Text style={styles.itemText}>{item.lotNo}</Text>
+      <Text style={styles.itemText}>{item.sourceApprovalId.name}</Text>
       <View style={styles.iconContainer}>
         <Image
           style={styles.ActionIcon}

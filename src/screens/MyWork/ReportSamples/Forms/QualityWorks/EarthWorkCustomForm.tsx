@@ -219,8 +219,8 @@ export const testSampleFormEarthwork = (
             <Text style={styles.GenerateRFIFieldLabel}>Observations:</Text>
             <ScrollView style={styles.Width100} horizontal={true}>
               {/* Soil */}
-              {currentTestMaterialData.materialType ===
-                TEST_MATERIALS_TYPES.SOIL &&
+              {
+                selectedTestSample &&
                 (selectedTestSample.type === TEST_TYPES.FIELD_DRY_DENSITY ? (
                   <View>
                     {concreteSampleTestItems.map((item: any, index: any) => (
@@ -691,7 +691,7 @@ export const testSampleFormEarthwork = (
                       </View>
                     ))}
                   </View>
-                ) : selectedTestSample.type === TEST_TYPES.MOISTURE_CONTENT ? (
+                ) : (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.SOIL && selectedTestSample.type === TEST_TYPES.MOISTURE_CONTENT) ? (
                   <View>
                     {concreteSampleTestItems.map((item: any, index: number) => (
                       <View style={{flexDirection: 'row'}} key={index}>

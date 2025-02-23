@@ -3,29 +3,29 @@ export const getCBRTestSampleObject = (sampleNum: any) => {
   if (sampleNum === 1) {
     return {
       sampleNo: {
-        title: 'Sample no',
+        title: 'A) Moisture Content & Dry Density Determination',
         value: sampleNum,
       },
       details: {
         titles: [],
         values: [
           {
-            desc: 'Description',
-            mouldNoTitle1: 'Mould No.',
+            desc1: 'Description',
+            desc2: 'Mould No.',
             mouldNo1: 0.0,
-            mouldNoTitle2: 'Mould No.',
+            desc3: 'Mould No.',
             mouldNo2: 0.0,
-            mouldNoTitle3: 'Mould No.',
+            desc4: 'Mould No.',
             mouldNo3: 0.0,
           },
           {
-            desc: 'Condition of Sample (Before Soaking/ After Soaking)',
-            mouldNo1Before: 'Before',
-            mouldNo1After: 'After',
-            mouldNo2Before: 'Before',
-            mouldNo2After: 'After',
-            mouldNo3Before: 'Before',
-            mouldNo3After: 'After',
+            desc1: 'Condition of Sample (Before Soaking/ After Soaking)',
+            desc2: 'Before',
+            desc3: 'After',
+            desc4: 'Before',
+            desc5: 'After',
+            desc6: 'Before',
+            desc7: 'After',
           },
           {
             desc: 'No. of layers',
@@ -114,33 +114,33 @@ export const getCBRTestSampleObject = (sampleNum: any) => {
   } else if (sampleNum === 2) {
     return {
       sampleNo: {
-        title: 'Sample no',
+        title: 'B) Load - Penetration Test Data:',
         value: sampleNum,
       },
       details: {
         titles: [],
         values: [
           {
-            desc: 'Penetration (mm)',
-            mouldNoTitle1: 'Mould No.',
+            desc1: 'Penetration (mm)',
+            desc2: 'Mould No.',
             mouldNo1: 0.0,
-            mouldNoTitle2: 'Mould No.',
+            desc3: 'Mould No.',
             mouldNo2: 0.0,
-            mouldNoTitle3: 'Mould No.',
+            desc4: 'Mould No.',
             mouldNo3: 0.0,
           },
           {
-            desc: '',
-            mouldNo1ProvingRingReading: 'Proving Ring Reading',
-            mouldNo1CorrectedLoad: 'Corrected Load (Kg)',
-            mouldNo2ProvingRingReading: 'Proving Ring Reading',
-            mouldNo2CorrectedLoad: 'Corrected Load (Kg)',
-            mouldNo3ProvingRingReading:
+            desc1: '',
+            desc2: 'Proving Ring Reading',
+            desc3: 'Corrected Load (Kg)',
+            desc4: 'Proving Ring Reading',
+            desc5: 'Corrected Load (Kg)',
+            desc6:
               'Proving Ring ReadingProving Ring Reading',
-            mouldNo3CorrectedLoad: 'Corrected Load (Kg)',
+              desc7: 'Corrected Load (Kg)',
           },
           {
-            desc: '0.50',
+            desc1: '0.50',
             mouldNo1ProvingRingReading: 0.0,
             mouldNo1CorrectedLoad: '',
             mouldNo2ProvingRingReading: 0.0,
@@ -149,7 +149,7 @@ export const getCBRTestSampleObject = (sampleNum: any) => {
             mouldNo3CorrectedLoad: '',
           },
           {
-            desc: '1.00',
+            desc1: '1.00',
             mouldNo1ProvingRingReading: 0.0,
             mouldNo1CorrectedLoad: '',
             mouldNo2ProvingRingReading: 0.0,
@@ -158,7 +158,7 @@ export const getCBRTestSampleObject = (sampleNum: any) => {
             mouldNo3CorrectedLoad: '',
           },
           {
-            desc: '1.50',
+            desc1: '1.50',
             mouldNo1ProvingRingReading: 0.0,
             mouldNo1CorrectedLoad: '',
             mouldNo2ProvingRingReading: 0.0,
@@ -167,7 +167,7 @@ export const getCBRTestSampleObject = (sampleNum: any) => {
             mouldNo3CorrectedLoad: '',
           },
           {
-            desc: '2.00',
+            desc1: '2.00',
             mouldNo1ProvingRingReading: 0.0,
             mouldNo1CorrectedLoad: '',
             mouldNo2ProvingRingReading: 0.0,
@@ -176,7 +176,7 @@ export const getCBRTestSampleObject = (sampleNum: any) => {
             mouldNo3CorrectedLoad: '',
           },
           {
-            desc: '2.50',
+            desc1: '2.50',
             mouldNo1ProvingRingReading: 0.0,
             mouldNo1CorrectedLoad: '',
             mouldNo2ProvingRingReading: 0.0,
@@ -185,7 +185,7 @@ export const getCBRTestSampleObject = (sampleNum: any) => {
             mouldNo3CorrectedLoad: '',
           },
           {
-            desc: '3.00',
+            desc1: '3.00',
             mouldNo1ProvingRingReading: 0.0,
             mouldNo1CorrectedLoad: '',
             mouldNo2ProvingRingReading: 0.0,
@@ -194,7 +194,7 @@ export const getCBRTestSampleObject = (sampleNum: any) => {
             mouldNo3CorrectedLoad: '',
           },
           {
-            desc: '4.00',
+            desc1: '4.00',
             mouldNo1ProvingRingReading: 0.0,
             mouldNo1CorrectedLoad: '',
             mouldNo2ProvingRingReading: 0.0,
@@ -203,7 +203,7 @@ export const getCBRTestSampleObject = (sampleNum: any) => {
             mouldNo3CorrectedLoad: '',
           },
           {
-            desc: '5.00',
+            desc1: '5.00',
             mouldNo1ProvingRingReading: 0.0,
             mouldNo1CorrectedLoad: '',
             mouldNo2ProvingRingReading: 0.0,
@@ -212,7 +212,7 @@ export const getCBRTestSampleObject = (sampleNum: any) => {
             mouldNo3CorrectedLoad: '',
           },
           {
-            desc: '7.50',
+            desc1: '7.50',
             mouldNo1ProvingRingReading: 0.0,
             mouldNo1CorrectedLoad: '',
             mouldNo2ProvingRingReading: 0.0,
@@ -221,7 +221,7 @@ export const getCBRTestSampleObject = (sampleNum: any) => {
             mouldNo3CorrectedLoad: '',
           },
           {
-            desc: '10.00',
+            desc1: '10.00',
             mouldNo1ProvingRingReading: 0.0,
             mouldNo1CorrectedLoad: '',
             mouldNo2ProvingRingReading: 0.0,
@@ -230,7 +230,7 @@ export const getCBRTestSampleObject = (sampleNum: any) => {
             mouldNo3CorrectedLoad: '',
           },
           {
-            desc: '12.50',
+            desc1: '12.50',
             mouldNo1ProvingRingReading: 0.0,
             mouldNo1CorrectedLoad: '',
             mouldNo2ProvingRingReading: 0.0,

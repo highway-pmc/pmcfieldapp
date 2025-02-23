@@ -956,7 +956,33 @@ export const testSampleFormEarthwork = (
                       </View>
                     ))}
                   </View>
-                ) : null)}
+                ) : selectedTestSample.type === TEST_TYPES.CBR_TEST ? (
+                  <View>
+                    {concreteSampleTestItems.map((item: any, index: any) => (
+                      <View key={index} style={{flexDirection: 'row'}}>
+                        <View style={{flexDirection: 'column'}}>
+                          <View style={{height: 40}}>
+                            <Text style={{fontWeight: '700'}}>
+                              {item.sampleNo.title}
+                            </Text>
+                          </View>
+                          {item.details.values.map(
+                                (value: any, indexDetails: number) => (
+                                  <View
+                                    key={indexDetails}
+                                    style={{flexDirection: 'row'}}>
+                                      {
+                                        getObjectKeys(value, styles)
+                                      }                                
+                                  </View>
+                                ),
+                              )
+                            }
+                        </View>
+                      </View>
+                    ))}
+                  </View>
+                ): null)}
             </ScrollView>
           </View>
         </View>
@@ -1112,3 +1138,36 @@ const getRFIDataByWorkAssignmentId = (task: any) => {
   //   waId: task.workAssignmentId,
   // }));
 };
+
+const getObjectKeys = (item: any, styles: any): any => {
+  const keys = Object.keys(item);
+  const view = (
+    <View
+      style={{
+        flexDirection: 'row'
+      }}>
+        {
+          keys.map((keyName: any) => {
+            return keyName.indexOf('desc') != -1 ? (
+              <View style={{flexDirection: 'row', height: 40}} key={keyName}>
+                <Text style={{fontWeight: '700'}}>{item[keyName]}</Text>
+              </View>
+            ) : (
+              <View style={{flexDirection: 'row', height: 40}}>
+                <CustomTextInput
+                  rowItem={item}
+                  tempProp={false}
+                  styleName={styles.inputStyle4}
+                  styles={styles}
+                  fieldName={keyName}
+                  key={keyName}
+                />
+              </View>
+            );
+          })
+        }
+    </View>
+  )
+
+  return view;
+}

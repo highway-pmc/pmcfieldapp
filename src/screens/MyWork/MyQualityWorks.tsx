@@ -74,7 +74,7 @@ import {
   getTestSampleSofteningPointObject,
   getWaterAbsorptionObject,
 } from './ReportSamples/Forms/QualityWorks/BituminusWorks';
-import { getFieldDryDensityTestSampleObject, getFreeSwellIndexTestSampleObject, getGrainSizeAnalysisTestSampleObject, getMoistureContentTestSampleObject, getPlasticityIndexTestSampleObject, getProctorDensityTestSampleObject } from './ReportSamples/Forms/QualityWorks/Earthwork';
+import { getCBRTestSampleObject, getFieldDryDensityTestSampleObject, getFreeSwellIndexTestSampleObject, getGrainSizeAnalysisTestSampleObject, getMoistureContentTestSampleObject, getPlasticityIndexTestSampleObject, getProctorDensityTestSampleObject } from './ReportSamples/Forms/QualityWorks/Earthwork';
 import { testSampleFormEarthwork } from './ReportSamples/Forms/QualityWorks/EarthWorkCustomForm';
 const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
@@ -651,7 +651,8 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
     } else if (
       selectedTestSample.type == TEST_TYPES.CBR_TEST
     ) {
-      testObservations.push(getTestSampleDensityAfterCompactionObject(1));
+      testObservations.push(getCBRTestSampleObject(1));
+      testObservations.push(getCBRTestSampleObject(2));
     } else if (
       selectedTestSample.type == TEST_TYPES.PLASTICITY_INDEX
     ) {

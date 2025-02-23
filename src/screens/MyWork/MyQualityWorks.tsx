@@ -647,6 +647,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
       testObservations.push(getProctorDensityTestSampleObject(1));
     } else if (selectedTestSample.type == TEST_TYPES.FIELD_DRY_DENSITY) {
       testObservations.push(getFieldDryDensityTestSampleObject(1));
+      testObservations.push(getFieldDryDensityTestSampleObject(2));
     } else if (
       selectedTestSample.type == TEST_TYPES.CBR_TEST
     ) {
@@ -656,9 +657,9 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
     ) {
       testObservations.push(getPlasticityIndexTestSampleObject(1));
     }
-      setSelectedTestSample(item);
-      setConcreteSampleTestItems(testObservations);
-      setOpenPopup(true);
+    setSelectedTestSample(item);
+    setConcreteSampleTestItems(testObservations);
+    setOpenPopup(true);
   };
 
   const isValidTemperature = (value: any): boolean => {

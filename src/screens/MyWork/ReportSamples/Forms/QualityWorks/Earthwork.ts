@@ -524,62 +524,71 @@ export const getProctorDensityTestSampleObject = (sampleNum: any) => {
 
 //EarthWork->Soil->Sub Grade->Field Dry Density
 export const getFieldDryDensityTestSampleObject = (sampleNum: any) => {
-  return {
-    sampleNo: {
-      title: 'Sample no',
-      value: sampleNum,
-    },
-    details: {
-      titles: ['Description', 'Test 1', 'Test 2', 'Test 3'],
-      values: [
-        {
-          description: 'Weight of wet material from hole in gm (Ww)',
-          test1: 0,
-          test2: 0,
-          test3: 0,
-        },
-        {
-          description: 'Weight of sand + cylinder before puring (W1) in gm',
-          test1: 0,
-          test2: 0,
-          test3: 0,
-        },
-        {
-          description: 'Weight of sand + cylinder after puring (W2) in gm',
-          test1: 0,
-          test2: 0,
-          test3: 0,
-        },
-        {
-          description: 'Weight of Sand in cone (W3) in gm',
-          test1: 0,
-          test2: 0,
-          test3: 0,
-        },
-      ],
-    },
-    details2: {
-      titles: ['Description', 'Test 1', 'Test 2', 'Test 3'],
-      values: [
-        {
-          description: 'Water content container no',
-          test1: 0,
-          test2: 0,
-          test3: 0,
-        },
-        {
-          description: 'Weight of wet soil in gm (W5)',
-          test1: 0,
-          test2: 0,
-          test3: 0,
-        },
-        {
-          description: 'Weight of Dry Soil in gm (W6)',
-          test1: 0,
-          test2: 0,
-          test3: 0,
-        },
-      ],
-    },
-  };
+  if (sampleNum === 1) {
+    return {
+      sampleNo: {
+        title: 'Sample no',
+        value: sampleNum,
+      },
+      details: {
+        titles: ['Description', 'Test 1', 'Test 2', 'Test 3'],
+        values: [
+          {
+            description: 'Weight of wet material from hole in gm (Ww)',
+            test1: 0,
+            test2: 0,
+            test3: 0,
+          },
+          {
+            description: 'Weight of sand + cylinder before puring (W1) in gm',
+            test1: 0,
+            test2: 0,
+            test3: 0,
+          },
+          {
+            description: 'Weight of sand + cylinder after puring (W2) in gm',
+            test1: 0,
+            test2: 0,
+            test3: 0,
+          },
+          {
+            description: 'Weight of Sand in cone (W3) in gm',
+            test1: 0,
+            test2: 0,
+            test3: 0,
+          },
+        ],
+      }
+    };
+  } else if (sampleNum === 2) {
+    return {
+      sampleNo: {
+        title: 'Sample no',
+        value: sampleNum,
+      },
+      details: {
+        titles: ['Description', 'Test 1', 'Test 2', 'Test 3'],
+        values: [
+          {
+            description: 'Water content container no',
+            test1: 0,
+            test2: 0,
+            test3: 0,
+          },
+          {
+            description: 'Weight of wet soil in gm (W5)',
+            test1: 0,
+            test2: 0,
+            test3: 0,
+          },
+          {
+            description: 'Weight of Dry Soil in gm (W6)',
+            test1: 0,
+            test2: 0,
+            test3: 0,
+          },
+        ],
+      },
+    };
+  }
 };

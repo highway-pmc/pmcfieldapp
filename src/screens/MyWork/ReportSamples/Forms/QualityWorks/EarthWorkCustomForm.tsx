@@ -156,11 +156,8 @@ export const testSampleForm = (
   console.log('selectedTestSample.type :', selectedTestSample.type);
   console.log('materialType', materialType);
   if (
-    !materialType ||
-    materialType === TEST_MATERIALS_TYPES.CONCRETE ||
-    materialType === TEST_MATERIALS_TYPES.CEMENT ||
-    materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE ||
-    materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE
+    materialType===TEST_MATERIALS_TYPES.SOIL ||
+    materialType === TEST_MATERIALS_TYPES.FLY_ASH
   ) {
     return (
       <View>

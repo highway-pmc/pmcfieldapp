@@ -981,6 +981,7 @@ const RFIsRecentsMyQuality = (props: any) => {
 
                     <Text style={[styles.subHead, styles.taskCount]}>
                       {selectedRFI?.workAssignmentData?.taskId?.displayName}
+                      {selectedRFI?.name}
                     </Text>
                   </View>
                   <View

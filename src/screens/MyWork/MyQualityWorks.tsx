@@ -74,6 +74,8 @@ import {
   getTestSampleSofteningPointObject,
   getWaterAbsorptionObject,
 } from './ReportSamples/Forms/QualityWorks/BituminusWorks';
+import { getFieldDryDensityTestSampleObject, getFreeSwellIndexTestSampleObject, getGrainSizeAnalysisTestSampleObject, getMoistureContentTestSampleObject, getPlasticityIndexTestSampleObject, getProctorDensityTestSampleObject } from './ReportSamples/Forms/QualityWorks/Earthwork';
+import { testSampleFormEarthwork } from './ReportSamples/Forms/QualityWorks/EarthWorkCustomForm';
 const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
   const workType = PROJECT_TYPE.QUALITY_WORK;
@@ -394,6 +396,14 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
             setCurrentSubTestTypeRFIsData(testTypeData.testRFIsData);
             setSelectedTestSample(testTypeData);
             setCurrentLevel(6);
+          } else if (
+            testMateData.materialType === TEST_MATERIALS_TYPES.SOIL ||
+            testMateData.materialType === TEST_MATERIALS_TYPES.FLY_ASH
+          ) {
+            //testTypeData.materialType = TEST_MATERIALS_TYPES.SMA;
+            setCurrentSubTestTypeRFIsData(testTypeData.testRFIsData);
+            setSelectedTestSample(testTypeData);
+            setCurrentLevel(6);
           }
         }
       }
@@ -624,6 +634,33 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
       setOpenPopup(true);
   };
 
+  const onClickEarthworkSampleItem = (item: any) => {
+    const testObservations: any = [];
+    item.type = selectedTestSample.type;
+    if (selectedTestSample.type == TEST_TYPES.MOISTURE_CONTENT) {
+      testObservations.push(getMoistureContentTestSampleObject(1));
+    } else if (selectedTestSample.type == TEST_TYPES.FREE_SWELL_INDEX) {
+      testObservations.push(getFreeSwellIndexTestSampleObject(1));
+    } else if (selectedTestSample.type == TEST_TYPES.GRAIN_SIZE_ANALYSIS) {
+      testObservations.push(getGrainSizeAnalysisTestSampleObject(1));
+    } else if (selectedTestSample.type == TEST_TYPES.PROCTOR_DENSITY_TEST) {
+      testObservations.push(getProctorDensityTestSampleObject(1));
+    } else if (selectedTestSample.type == TEST_TYPES.FIELD_DRY_DENSITY) {
+      testObservations.push(getFieldDryDensityTestSampleObject(1));
+    } else if (
+      selectedTestSample.type == TEST_TYPES.CBR_TEST
+    ) {
+      testObservations.push(getTestSampleDensityAfterCompactionObject(1));
+    } else if (
+      selectedTestSample.type == TEST_TYPES.PLASTICITY_INDEX
+    ) {
+      testObservations.push(getPlasticityIndexTestSampleObject(1));
+    }
+      setSelectedTestSample(item);
+      setConcreteSampleTestItems(testObservations);
+      setOpenPopup(true);
+  };
+
   const isValidTemperature = (value: any): boolean => {
     const val = parseFloat(value.toString());
 
@@ -688,39 +725,39 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
     const testWorkCategoryDataType = currentTestWorkCategoryData.find((wc: any) => wc._id === currentTestMaterialData.testWorkCategoryId[0])?.type;
     let sampleData = {};
 
+    const objSampleTest7thOr28thDay = Object.assign(
+      {},
+      formSampleTest7thOr28thDay,
+    );
+    objSampleTest7thOr28thDay.dateOfTesting = getDbDateFromDDMMYYYY(
+      objSampleTest7thOr28thDay.dateOfTesting,
+    );
+    // Temperature Validation
+    if (isValidTemperature(objSampleTest7thOr28thDay.roomTemperature)) {
+      objSampleTest7thOr28thDay.roomTemperature = Number(
+        objSampleTest7thOr28thDay.roomTemperature,
+      );
+    } else {
+      return;
+    }
+    // Humidity Validation
+    if (isValidHumidity(objSampleTest7thOr28thDay.humidity)) {
+      objSampleTest7thOr28thDay.humidity = Number(
+        objSampleTest7thOr28thDay.humidity,
+      );
+    } else {
+      return;
+    }
+
+    objSampleTest7thOr28thDay.observations = Object.assign(
+      [],
+      concreteSampleTestItems,
+    );
+    const sampleObservations: any =
+      objSampleTest7thOr28thDay.observations &&
+      objSampleTest7thOr28thDay.observations;
+
     if (testWorkCategoryDataType === TEST_WORK_CATEGORY_TYPES.CONCRETE_STRUCTURE) {
-      const objSampleTest7thOr28thDay = Object.assign(
-        {},
-        formSampleTest7thOr28thDay,
-      );
-      objSampleTest7thOr28thDay.dateOfTesting = getDbDateFromDDMMYYYY(
-        objSampleTest7thOr28thDay.dateOfTesting,
-      );
-      // Temperature Validation
-      if (isValidTemperature(objSampleTest7thOr28thDay.roomTemperature)) {
-        objSampleTest7thOr28thDay.roomTemperature = Number(
-          objSampleTest7thOr28thDay.roomTemperature,
-        );
-      } else {
-        return;
-      }
-      // Humidity Validation
-      if (isValidHumidity(objSampleTest7thOr28thDay.humidity)) {
-        objSampleTest7thOr28thDay.humidity = Number(
-          objSampleTest7thOr28thDay.humidity,
-        );
-      } else {
-        return;
-      }
-  
-      objSampleTest7thOr28thDay.observations = Object.assign(
-        [],
-        concreteSampleTestItems,
-      );
-      const sampleObservations: any =
-        objSampleTest7thOr28thDay.observations &&
-        objSampleTest7thOr28thDay.observations;
-  
       for (let i = 0; i < sampleObservations?.length; i++) {
         const observations = sampleObservations[i];
         observations['details']?.values.forEach((item: any) => {
@@ -926,9 +963,18 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
           }
         }
       }
-
-      sampleData = objSampleTest7thOr28thDay;
+    } else if (testWorkCategoryDataType === TEST_WORK_CATEGORY_TYPES.BITUMINOUS_WORKS) {
+      if (
+        currentTestMaterialData.materialType ===
+        TEST_MATERIALS_TYPES.SMA
+      ) {
+        // 
+      }
     }
+
+    sampleData = objSampleTest7thOr28thDay;
+
+    console.log('======sampleData========', JSON.stringify(sampleData))
     
     dispatch(
       fillRFIsChecklistForTestSample({
@@ -1431,93 +1477,113 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
                     return true;
                   }
                 })
-                .map((item: any) =>
-                  currentTestMaterialData.materialType ===
-                    TEST_MATERIALS_TYPES.SMA ||
-                  currentTestMaterialData.materialType ===
-                    TEST_MATERIALS_TYPES.DBM_RAP_DBM ||
-                  currentTestMaterialData.materialType ===
-                    TEST_MATERIALS_TYPES.BC ||
-                  currentTestMaterialData.materialType ===
-                    TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING ||
-                  currentTestMaterialData.materialType ===
-                    TEST_MATERIALS_TYPES.BITUMEN ||
-                  currentTestMaterialData.materialType ===
-                    TEST_MATERIALS_TYPES.COARSE_AGGREGATE_DBM_BC ||
-                  currentTestMaterialData.materialType ===
-                    TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA ||
-                  currentTestMaterialData.materialType ===
-                    TEST_MATERIALS_TYPES.EMULSION ? (
-                    <TouchableOpacity
-                      style={getStyle(item)}
-                      onPress={() => onClickBitumenTestSampleItem(item)}>
-                      <View style={styles.leftContainer}>
-                        <Text style={styles.HeadText}>{item.name}</Text>
+                .map((item: any) => {
+                  if (
+                    currentTestMaterialData.materialType ===
+                      TEST_MATERIALS_TYPES.SMA ||
+                    currentTestMaterialData.materialType ===
+                      TEST_MATERIALS_TYPES.DBM_RAP_DBM ||
+                    currentTestMaterialData.materialType ===
+                      TEST_MATERIALS_TYPES.BC ||
+                    currentTestMaterialData.materialType ===
+                      TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING ||
+                    currentTestMaterialData.materialType ===
+                      TEST_MATERIALS_TYPES.BITUMEN ||
+                    currentTestMaterialData.materialType ===
+                      TEST_MATERIALS_TYPES.COARSE_AGGREGATE_DBM_BC ||
+                    currentTestMaterialData.materialType ===
+                      TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA ||
+                    currentTestMaterialData.materialType ===
+                      TEST_MATERIALS_TYPES.EMULSION
+                  ) {
+                    return (
+                      <TouchableOpacity
+                        style={getStyle(item)}
+                        onPress={() => onClickBitumenTestSampleItem(item)}>
+                        <View style={styles.leftContainer}>
+                          <Text style={styles.HeadText}>{item.name}</Text>
+                        </View>
+                      </TouchableOpacity>
+                    );
+                  } else if (
+                    currentTestMaterialData.materialType ===
+                      TEST_MATERIALS_TYPES.SOIL ||
+                    currentTestMaterialData.materialType ===
+                      TEST_MATERIALS_TYPES.FLY_ASH
+                  ) {
+                    return (
+                      <TouchableOpacity
+                        style={getStyle(item)}
+                        onPress={() => onClickEarthworkSampleItem(item)}>
+                        <View style={styles.leftContainer}>
+                          <Text style={styles.HeadText}>{item.name}</Text>
+                        </View>
+                      </TouchableOpacity>
+                    );
+                  } else {
+                    return (
+                      <View>
+                        <View
+                          style={
+                            item.sampleStatus != TEST_SAMPLE_STATUS.PREPARED && {
+                              borderColor: '#000',
+                              borderWidth: 1,
+                              borderRadius: 10,
+                              marginBottom: 10,
+                            }
+                          }>
+                          <TouchableOpacity
+                            style={getStyle(item)}
+                            disabled={
+                              item.sampleStatus !=
+                                TEST_SAMPLE_STATUS.PREPARED ||
+                              item.rfiStatus === RFI_STATUS.APPROVED
+                            }
+                            onPress={() => onClickTestSampleItem(item)}>
+                            <View style={styles.leftContainer}>
+                              <Text style={styles.HeadText}>{item.name}</Text>
+                            </View>
+                          </TouchableOpacity>
+                          {item.sampleStatus != TEST_SAMPLE_STATUS.PREPARED ? (
+                            <View
+                              style={{
+                                flexDirection: 'row',
+                                alignContent: 'center',
+                                alignItems: 'center',
+                              }}>
+                              <View style={[styles.SectionStyle, {width: 140}]}>
+                                <CustomDropdownPicker
+                                  items={TEST_SAMPLE_STATUS_LIST}
+                                  rowItem={item}
+                                  tempProp={true}
+                                  fieldName={'sampleStatus'}
+                                />
+                              </View>
+                              <View style={{height: 45}}>
+                                <CustomCalendarPicker
+                                  rowItem={item}
+                                  tempProp={true}
+                                  fieldName={'rfiDateTime'}></CustomCalendarPicker>
+                              </View>
+                              <View style={{height: 45, width: 100}}>
+                                <TouchableOpacity
+                                  style={[
+                                    styles.SubmitSample,
+                                    styles.StartBorder,
+                                  ]}
+                                  onPress={() => onUpdateTestSample(item)}>
+                                  <View style={styles.leftContainer}>
+                                    <Text style={styles.HeadText}>Submit</Text>
+                                  </View>
+                                </TouchableOpacity>
+                              </View>
+                            </View>
+                          ) : null}
+                        </View>
                       </View>
-                    </TouchableOpacity>
-                  ) : (
-                    <View>
-                      <View
-                        style={
-                          item.sampleStatus != TEST_SAMPLE_STATUS.PREPARED && {
-                            borderColor: '#000',
-                            borderWidth: 1,
-                            borderRadius: 10,
-                            marginBottom: 10,
-                          }
-                        }>
-                        <TouchableOpacity
-                          style={getStyle(item)}
-                          disabled={
-                            item.sampleStatus != TEST_SAMPLE_STATUS.PREPARED ||
-                            item.rfiStatus === RFI_STATUS.APPROVED
-                          }
-                          onPress={() => onClickTestSampleItem(item)}>
-                          <View style={styles.leftContainer}>
-                            <Text style={styles.HeadText}>{item.name}</Text>
-                          </View>
-                        </TouchableOpacity>
-                        {item.sampleStatus != TEST_SAMPLE_STATUS.PREPARED ? (
-                          <View
-                            style={{
-                              flexDirection: 'row',
-                              alignContent: 'center',
-                              alignItems: 'center',
-                            }}>
-                            <View style={[styles.SectionStyle, {width: 140}]}>
-                              <CustomDropdownPicker
-                                items={TEST_SAMPLE_STATUS_LIST}
-                                rowItem={item}
-                                tempProp={true}
-                                fieldName={'sampleStatus'}
-                              />
-                            </View>
-                            <View style={{height: 45}}>
-                              <CustomCalendarPicker
-                                rowItem={item}
-                                tempProp={true}
-                                fieldName={
-                                  'rfiDateTime'
-                                }></CustomCalendarPicker>
-                            </View>
-                            <View style={{height: 45, width: 100}}>
-                              <TouchableOpacity
-                                style={[
-                                  styles.SubmitSample,
-                                  styles.StartBorder,
-                                ]}
-                                onPress={() => onUpdateTestSample(item)}>
-                                <View style={styles.leftContainer}>
-                                  <Text style={styles.HeadText}>Submit</Text>
-                                </View>
-                              </TouchableOpacity>
-                            </View>
-                          </View>
-                        ) : null}
-                      </View>
-                    </View>
-                  ),
-                )}
+                    );
+                  }
+                })}
             </ScrollView>
           ) : (
             <Text>Sample not found.</Text>
@@ -1573,16 +1639,31 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
                   <Fragment>
                     <StatusBar barStyle="dark-content" />
                     <SafeAreaView>
-                      {selectedTestSample &&
-                        testSampleForm(
-                          styles,
-                          selectedTestSample?.materialType,
-                          formSampleTest7thOr28thDay,
-                          setFormSampleTest7thOr28thDay,
-                          currentTestMaterialData,
-                          selectedTestSample,
-                          concreteSampleTestItems,
-                        )}
+                      {
+                      selectedTestSample &&
+                      ((currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.SOIL ||
+                        currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.FLY_ASH
+                      ) ?
+                      testSampleFormEarthwork(
+                        styles,
+                        selectedTestSample?.materialType,
+                        formSampleTest7thOr28thDay,
+                        setFormSampleTest7thOr28thDay,
+                        currentTestMaterialData,
+                        selectedTestSample,
+                        concreteSampleTestItems,
+                      ) :
+                      testSampleForm(
+                        styles,
+                        selectedTestSample?.materialType,
+                        formSampleTest7thOr28thDay,
+                        setFormSampleTest7thOr28thDay,
+                        currentTestMaterialData,
+                        selectedTestSample,
+                        concreteSampleTestItems,
+                      )
+                      )
+                      }
                     </SafeAreaView>
                   </Fragment>
                 </ScrollView>

@@ -6472,6 +6472,18 @@ export const CustomForms = (_v: any) => {
                             </View>
                         ))}
 
+                        <Input
+                            label="Total qty spreaded (sqm)"
+                            value={''+_v.spreadingAndCompactionData.totalQtySpreaded}
+                            onChange={(value: any) =>
+                                _v.setSpreadingAndCompactionData((prevData: any) => ({
+                                    ...prevData,
+                                    totalQtySpreaded : value,
+                                }))
+                            }
+                            isRequired={true}
+                        />
+
                         <View>
                             <CalendarPicker
                                 label="Date"

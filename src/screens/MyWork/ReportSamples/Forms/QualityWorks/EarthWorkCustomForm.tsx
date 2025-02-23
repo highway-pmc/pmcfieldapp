@@ -138,7 +138,7 @@ let formSampleTest7thOr28thDay: any,
   selectedTestSample: any,
   concreteSampleTestItems: any;
 
-export const testSampleForm = (
+export const testSampleFormEarthwork = (
   styles: any,
   materialType: any,
   _formSampleTest7thOr28thDay: any,
@@ -152,15 +152,12 @@ export const testSampleForm = (
   currentTestMaterialData = _currentTestMaterialData;
   selectedTestSample = _selectedTestSample;
   concreteSampleTestItems = _concreteSampleTestItems;
-  console.log('currentTestMaterialData', currentTestMaterialData);
-  console.log('selectedTestSample.type :', selectedTestSample.type);
-  console.log('materialType', materialType);
+  console.log('Earthwork currentTestMaterialData', currentTestMaterialData);
+  console.log('Earthwork selectedTestSample.type :', selectedTestSample.type);
   if (
     !materialType ||
-    materialType === TEST_MATERIALS_TYPES.CONCRETE ||
-    materialType === TEST_MATERIALS_TYPES.CEMENT ||
-    materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE ||
-    materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE
+    materialType===TEST_MATERIALS_TYPES.SOIL ||
+    materialType === TEST_MATERIALS_TYPES.FLY_ASH
   ) {
     return (
       <View>
@@ -197,20 +194,6 @@ export const testSampleForm = (
               }
             />
           </View>
-          {currentTestMaterialData.materialType ===
-            TEST_MATERIALS_TYPES.COARSE_AGGREGATE &&
-            selectedTestSample.type === TEST_TYPES.LOS_ANGELES_ABRATION && (
-              <View style={{flexDirection: 'column'}}>
-                <DropdownPicker
-                  value={'' + formSampleTest7thOr28thDay.typeOfConcreteSurface}
-                  label="Test Conducted By"
-                  items={TYPE_OF_CONCRETE_SURFACE_LIST}
-                  onChange={(value: string) =>
-                    handleInputChange('typeOfConcreteSurface', value)
-                  }
-                />
-              </View>
-            )}
 
           <View style={{flexDirection: 'column'}}>
             <Input
@@ -237,8 +220,8 @@ export const testSampleForm = (
             <ScrollView style={styles.Width100} horizontal={true}>
               {/* Soil */}
               {currentTestMaterialData.materialType ===
-                (TEST_MATERIALS_TYPES.SOIL &&
-                selectedTestSample.type === TEST_TYPES.FIELD_DRY_DENSITY ? (
+                TEST_MATERIALS_TYPES.SOIL &&
+                (selectedTestSample.type === TEST_TYPES.FIELD_DRY_DENSITY ? (
                   <View>
                     {concreteSampleTestItems.map((item: any, index: number) => (
                       <View style={{flexDirection: 'row'}} key={index}>

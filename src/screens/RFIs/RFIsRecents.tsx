@@ -4208,6 +4208,10 @@ const RFIsRecents = (props: any) => {
             title: 'Any non-conformance/ noncompliance found',
             key: 'nonConformanceFound',
           },
+          {
+            title: 'Total qty spreaded (sqm)',
+            key: 'totalQtySpreaded',
+          },
         ];
 
         return (

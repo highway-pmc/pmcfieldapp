@@ -9100,43 +9100,7 @@ const RFIsRecentsMyQuality = (props: any) => {
                   <Text style={styles.subHead}>
                     {item.name}
                   </Text>
-                  <Image
-                    style={styles.ArrowIcon}
-                    source={require('../../images/right-arrow-icon.png')}
-                  />
-                  <Text style={styles.subHead}>
-                    {/* {item.workAssignmentData.segmentId?.name} */}
-                  </Text>
-                  <Image
-                    style={styles.ArrowIcon}
-                    source={require('../../images/right-arrow-icon.png')}
-                  />
-                  {item.workAssignmentData?.componentId ? (
-                    <View style={styles.taskCategory}>
-                      <Text style={styles.subHead}>
-                        {item.workAssignmentData.componentId?.name}
-                      </Text>
-                      <Image
-                        style={styles.ArrowIcon}
-                        source={require('../../images/right-arrow-icon.png')}
-                      />
-                    </View>
-                  ) : null}
-
-                  {item.workAssignmentData?.subComponentId ? (
-                    <View style={styles.taskCategory}>
-                      <Text style={styles.subHead}>
-                        {item.workAssignmentData.subComponentId?.name}
-                      </Text>
-                      <Image
-                        style={styles.ArrowIcon}
-                        source={require('../../images/right-arrow-icon.png')}
-                      />
-                    </View>
-                  ) : null}
-                  <Text style={[styles.subHead, styles.taskCount]}>
-                    {item.workAssignmentData?.taskId?.displayName}
-                  </Text>
+                  
                 </View>
                 <View
                   style={{
@@ -9149,7 +9113,7 @@ const RFIsRecentsMyQuality = (props: any) => {
                       Generated Date
                     </Text>
                     <Text style={[styles.dateText, styles.subFontText]}>
-                      {/* {getDisplayDate(item.rfiDateTime)} */}
+                      {getDisplayDate(item.rfiDateTime)}
                     </Text>
                   </View>
                   <View>

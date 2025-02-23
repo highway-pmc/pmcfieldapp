@@ -248,6 +248,7 @@ const ProcurementsEarthWork = ({
     if (!validateForm()) {
       return;
     }
+    
     if (!selectedProcurement) {
       dispatch(
         addProcurement({

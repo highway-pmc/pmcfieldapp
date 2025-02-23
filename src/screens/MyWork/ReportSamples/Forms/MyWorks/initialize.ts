@@ -945,6 +945,7 @@ export const initRfiData = (_v: any) => {
                     layerFreeFromSegregation: 'Y',
                     protectionOfFinishedSurfaceAvailable: 'Y',
                     nonConformanceFound: 'N',
+                    totalQtySpreaded: 0.0,
                 });
             }
             break;

@@ -212,7 +212,19 @@ const SourceApprovals = ({
     sourceApprovalId: '',
     ratePerCum: 0,
   });
-  
+  const [sourceDetailSubaseCTSB, setSourceDetailSubaseCTSB] = useState({
+    sourceApprovalId: '',
+    ratePerCum: 0,
+    omc: 0,
+    mdd: 0,
+    cementWeight: 0,
+  });
+  const [sourceDetailSubaseGSB, setSourceDetailSubaseGSB] = useState({
+    sourceApprovalId: '',
+    ratePerCum: 0,
+    omc: 0,
+    mdd: 0,
+  });
   const [sourceDetailForm, setSourceDetailForm]: any =
     useState<FormSourceDetailState>({
       sourceApprovalId: '',

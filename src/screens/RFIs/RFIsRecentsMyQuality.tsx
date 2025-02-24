@@ -812,6 +812,302 @@ const RFIsRecentsMyQuality = (props: any) => {
           ))}
         </View>
       );
+    } else if (selectedTestSample.type === TEST_TYPES.MOISTURE_CONTENT) {
+      return (
+        <View style={styles.observationTableContainer}>
+          {data.map((sample: any, sampleIndex: number) => (
+            <View key={sampleIndex}>
+              {/* Table Headers */}
+              <View style={styles.observationTableRow}>
+                {sample.details.titles.map((title: string, index: number) => (
+                  <View
+                    key={index}
+                    style={[
+                      styles.observationTableCell,
+                      index === 0
+                        ? styles.observationDescriptionColumn
+                        : styles.observationValueColumn,
+                    ]}>
+                    <Text style={styles.observationColumnHeader}>{title}</Text>
+                  </View>
+                ))}
+              </View>
+
+              {/* Table Data */}
+              {sample.details.values.map((row: any, rowIndex: number) => (
+                <View key={rowIndex} style={styles.observationTableRow}>
+                  <View
+                    style={[
+                      styles.observationTableCell,
+                      styles.observationDescriptionColumn,
+                    ]}>
+                    <Text>{row.description}</Text>
+                  </View>
+                  <View style={styles.observationValueColumn}>
+                    <Text>{row.test1}</Text>
+                  </View>
+                  <View style={styles.observationValueColumn}>
+                    <Text>{row.test2}</Text>
+                  </View>
+                  <View style={styles.observationValueColumn}>
+                    <Text>{row.test3}</Text>
+                  </View>
+                </View>
+              ))}
+            </View>
+          ))}
+        </View>
+      );
+    } else if (selectedTestSample.type === TEST_TYPES.FREE_SWELL_INDEX) {
+      return (
+        <View style={styles.observationTableContainer}>
+          {data.map((sample: any, sampleIndex: any) => (
+            <View key={sampleIndex}>
+              <View style={styles.observationTableRow}>
+                {sample.details.titles.map((title: any, index: any) => (
+                  <View
+                    key={index}
+                    style={[
+                      styles.observationTableCell,
+                      index === 0
+                        ? styles.observationDescriptionColumn
+                        : styles.observationValueColumn,
+                    ]}>
+                    <Text style={styles.observationColumnHeader}>{title}</Text>
+                  </View>
+                ))}
+              </View>
+
+              {sample.details.values.map((row: any, rowIndex: any) => (
+                <View key={rowIndex} style={styles.observationTableRow}>
+                  <View
+                    style={[
+                      styles.observationTableCell,
+                      styles.observationDescriptionColumn,
+                    ]}>
+                    <Text>{row.slNo}</Text>
+                  </View>
+                  <View style={styles.observationValueColumn}>
+                    <Text>{row.sampleLevelInWater}</Text>
+                  </View>
+                  <View style={styles.observationValueColumn}>
+                    <Text>{row.sampleLevelInKerosene}</Text>
+                  </View>
+                </View>
+              ))}
+            </View>
+          ))}
+        </View>
+      );
+    } else if (selectedTestSample.type === TEST_TYPES.GRAIN_SIZE_ANALYSIS) {
+      return (
+        <View style={styles.observationTableContainer}>
+          {data.map((sample: any, sampleIndex: number) => (
+            <View key={sampleIndex}>
+              {/* Sample Number */}
+              <Text style={styles.observationSampleNumberTitle}>
+                {sample.sampleNo.title}: {sample.sampleNo.value}
+              </Text>
+
+              {/* Table Headers */}
+              <View style={styles.observationTableRow}>
+                {sample.details.titles.map((title: string, index: number) => (
+                  <View
+                    key={index}
+                    style={[
+                      styles.observationTableCell,
+                      index === 0
+                        ? styles.observationDescriptionColumn
+                        : styles.observationValueColumn,
+                    ]}>
+                    <Text>{title}</Text>
+                  </View>
+                ))}
+              </View>
+
+              {/* Table Data */}
+              {sample.details.values.map((row: any, rowIndex: number) => (
+                <View key={rowIndex} style={styles.observationTableRow}>
+                  <View
+                    style={[
+                      styles.observationTableCell,
+                      styles.observationDescriptionColumn,
+                    ]}>
+                    <Text>{row.description}</Text>
+                  </View>
+                  <View style={styles.observationValueColumn}>
+                    <Text>{row.test1}</Text>
+                  </View>
+                  <View style={styles.observationValueColumn}>
+                    <Text>{row.test2}</Text>
+                  </View>
+                  <View style={styles.observationValueColumn}>
+                    <Text>{row.test3}</Text>
+                  </View>
+                  <View style={styles.observationValueColumn}>
+                    <Text>{row.test4}</Text>
+                  </View>
+                  <View style={styles.observationValueColumn}>
+                    <Text>{row.test5}</Text>
+                  </View>
+                  <View style={styles.observationValueColumn}>
+                    <Text>{row.test6}</Text>
+                  </View>
+                </View>
+              ))}
+            </View>
+          ))}
+        </View>
+      );
+    } else if (selectedTestSample.type === TEST_TYPES.PROCTOR_DENSITY_TEST) {
+      return (
+        <View style={styles.observationTableContainer}>
+          {data.map((sample: any, sampleIndex: number) => (
+            <View key={sampleIndex}>
+              {/* Table Headers */}
+              <View style={styles.observationTableRow}>
+                {sample.details.titles.map((title: string, index: number) => (
+                  <View
+                    key={index}
+                    style={[
+                      styles.observationTableCell,
+                      index === 0
+                        ? styles.observationDescriptionColumn
+                        : styles.observationValueColumn,
+                    ]}>
+                    <Text>{title}</Text>
+                  </View>
+                ))}
+              </View>
+
+              {/* Table Data */}
+              {sample.details.values.map((row: any, rowIndex: number) => (
+                <View key={rowIndex} style={styles.observationTableRow}>
+                  <View
+                    style={[
+                      styles.observationTableCell,
+                      styles.observationDescriptionColumn,
+                    ]}>
+                    <Text>{row.isSieveSize}</Text>
+                  </View>
+                  <View
+                    style={[
+                      styles.observationTableCell,
+                      styles.observationValueColumn,
+                    ]}>
+                    <Text>{row.weightRetained}</Text>
+                  </View>
+                </View>
+              ))}
+            </View>
+          ))}
+        </View>
+      );
+    } else if (selectedTestSample.type === TEST_TYPES.FIELD_DRY_DENSITY) {
+      return (
+        <View style={styles.observationTableContainer}>
+          {data.map((sample: any, sampleIndex: number) => (
+            <View key={sampleIndex}>
+              {/* Table Headers */}
+              <View style={styles.observationTableRow}>
+                {sample.details.titles.map((title: string, index: number) => (
+                  <View
+                    key={index}
+                    style={[
+                      styles.observationTableCell,
+                      index === 0
+                        ? styles.observationDescriptionColumn
+                        : styles.observationValueColumn,
+                    ]}>
+                    <Text>{title}</Text>
+                  </View>
+                ))}
+              </View>
+
+              {/* Table Data */}
+              {sample.details.values.map((row: any, rowIndex: number) => (
+                <View key={rowIndex} style={styles.observationTableRow}>
+                  <View
+                    style={[
+                      styles.observationTableCell,
+                      styles.observationDescriptionColumn,
+                    ]}>
+                    <Text>{row.description}</Text>
+                  </View>
+                  <View style={styles.observationValueColumn}>
+                    <Text>{row.test1}</Text>
+                  </View>
+                  <View style={styles.observationValueColumn}>
+                    <Text>{row.test2}</Text>
+                  </View>
+                  <View style={styles.observationValueColumn}>
+                    <Text>{row.test3}</Text>
+                  </View>
+                </View>
+              ))}
+            </View>
+          ))}
+        </View>
+      );
+    } else if (selectedTestSample.type === TEST_TYPES.PLASTICITY_INDEX) {
+      return (
+        <View style={styles.observationTableContainer}>
+          {data.map((sample: any, sampleIndex: number) => (
+            <View key={sampleIndex}>
+              {/* Table Headers */}
+              <View style={styles.observationTableRow}>
+                {sample.details.titles.map((title: string, index: number) => (
+                  <View
+                    key={index}
+                    style={[
+                      styles.observationTableCell,
+                      index === 0
+                        ? styles.observationDescriptionColumn
+                        : styles.observationValueColumn,
+                    ]}>
+                    <Text>{title}</Text>
+                  </View>
+                ))}
+              </View>
+
+              {/* Table Data */}
+              {sample.details.values.map((row: any, rowIndex: number) => (
+                <View key={rowIndex} style={styles.observationTableRow}>
+                  <View
+                    style={[
+                      styles.observationTableCell,
+                      styles.observationDescriptionColumn,
+                    ]}>
+                    <Text>{row.description}</Text>
+                  </View>
+                  <View style={styles.observationValueColumn}>
+                    <Text>{row.l1}</Text>
+                  </View>
+                  <View style={styles.observationValueColumn}>
+                    <Text>{row.ll2}</Text>
+                  </View>
+                  <View style={styles.observationValueColumn}>
+                    <Text>{row.ll3}</Text>
+                  </View>
+                  <View style={styles.observationValueColumn}>
+                    <Text>{row.ll4}</Text>
+                  </View>
+                  {row.pl1 && (
+                    <View style={styles.observationValueColumn}>
+                      <Text>{row.pl1}</Text>
+                    </View>
+                  )}
+                  {row.pl2 && (
+                    <View style={styles.observationValueColumn}>
+                      <Text>{row.pl2}</Text>
+                    </View>
+                  )}
+                </View>
+              ))}
+            </View>
+          ))}
+        </View>
+      );
     }
   };
 

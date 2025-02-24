@@ -47,6 +47,7 @@ export const getCTSBGrationTestSampleObject = (sampleNum: any) => {
 };
 
 //CTSB-Water Absorption
+//GSB-Water Absorption
 export const getWaterAbsorptionObject = (sampleNum: any) => {
   return {
     sampleNo: {
@@ -81,6 +82,7 @@ export const getWaterAbsorptionObject = (sampleNum: any) => {
   };
 };
 //CTSB-Aterberrg Limit
+//GSB-Aterberrg Limit
 export const getGrainSizeAnalysisTestSampleObject = (sampleNum: any) => {
   return {
     sampleNo: {
@@ -149,6 +151,7 @@ export const getGrainSizeAnalysisTestSampleObject = (sampleNum: any) => {
 };
 
 //CSTB-AIV
+//GSB-AIV
 export const getTestSampleAIVObject = (sampleNum: any) => {
   return {
     sampleNo: {
@@ -447,6 +450,7 @@ export const getCBRTestSampleObject = (sampleNum: any) => {
   }
 };
 //CSTB-Density After Compaction/Field Dry Density
+//GSB-Density After Compaction/Field Dry Density
 export const getDensitAfterCompactionTestSampleObject = (sampleNum: any) => {
   if (sampleNum === 1) {
     return {
@@ -517,6 +521,7 @@ export const getDensitAfterCompactionTestSampleObject = (sampleNum: any) => {
   }
 };
 //CSTB-Moisture Content
+//GSB-Moisture Content
 export const getMoistureContentTestSampleObject = (sampleNum: any) => {
   return {
     sampleNo: {

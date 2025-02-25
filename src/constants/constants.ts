@@ -744,13 +744,13 @@ export const TEST_TYPES = {
   MOISTURE_CONTENT: 'moisture-content-prior-compaction',
   FREE_SWELL_INDEX: 'free-swell-index-test',
   GRAIN_SIZE_ANALYSIS: 'grain-size-analysis',
-  PROCTOR_DENSITY_TEST: 'procter-density-test',
+  PROCTOR_DENSITY_TEST: 'proctor-density-test',
   FIELD_DRY_DENSITY: 'field-dry-density',
   CBR_TEST: 'cbr-test',
   PLASTICITY_INDEX: 'plasticity-index',
   //SubBase && Base_SubBase
   ATTERBEG_LIMIT_TEST: 'atterberg-limit-test',
-  GRADING_OF_AGGREGATE: 'grading-aggregate',//doubt
+  GRADING_OF_AGGREGATE: 'grading-aggregate',
 };
 
 export const YES_NO_LIST = [

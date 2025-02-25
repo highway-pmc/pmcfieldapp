@@ -156,8 +156,8 @@ export const testSampleFormSubBase = (
   console.log('Earthwork selectedTestSample.type :', selectedTestSample.type);
   if (
     !materialType ||
-    materialType === TEST_MATERIALS_TYPES.SOIL ||
-    materialType === TEST_MATERIALS_TYPES.FLY_ASH
+    materialType === TEST_MATERIALS_TYPES.GSB ||
+    materialType === TEST_MATERIALS_TYPES.CTSB
   ) {
     return (
       <View>

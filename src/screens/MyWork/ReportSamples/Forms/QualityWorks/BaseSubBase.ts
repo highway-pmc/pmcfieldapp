@@ -1,5 +1,5 @@
 //Coarse Aggregate - WMM - FI & EI
-export const getTestSampleFIEIObject = (sampleNum: any) => {
+export const getTestSampleFIEIObjectBSB = (sampleNum: any) => {
   return {
     sampleNo: {
       title: 'Sample no',
@@ -82,7 +82,7 @@ export const getTestSampleFIEIObject = (sampleNum: any) => {
   };
 };
 //Coarse Aggregate - WMM - AIV(D)
-export const getTestSampleAIVObject = (sampleNum: any) => {
+export const getTestSampleAIVObjectBSB = (sampleNum: any) => {
   return {
     sampleNo: {
       title: 'Sample no',
@@ -117,7 +117,7 @@ export const getTestSampleAIVObject = (sampleNum: any) => {
   };
 };
 //Fine Aggregate-WMM-Aterberrg Limit(D)
-export const getGrainSizeAnalysisTestSampleObject = (sampleNum: any) => {
+export const getGrainSizeAnalysisTestSampleObjectBSB = (sampleNum: any) => {
   return {
     sampleNo: {
       title: 'Sample no',
@@ -184,7 +184,7 @@ export const getGrainSizeAnalysisTestSampleObject = (sampleNum: any) => {
   };
 };
 //WMM-Gration(D)
-export const getCTSBGrationTestSampleObject = (sampleNum: any) => {
+export const getCTSBGrationTestSampleObjectBSB = (sampleNum: any) => {
   return {
     sampleNo: {
       title: 'Sample no',
@@ -231,7 +231,7 @@ export const getCTSBGrationTestSampleObject = (sampleNum: any) => {
   };
 };
 //WMM-Water Absorption(D)
-export const getWaterAbsorptionObject = (sampleNum: any) => {
+export const getWaterAbsorptionObjectBSB = (sampleNum: any) => {
   return {
     sampleNo: {
       title: 'Sample no',
@@ -265,7 +265,7 @@ export const getWaterAbsorptionObject = (sampleNum: any) => {
   };
 };
 //WMM - Field Dry Density(D)
-export const getDensitAfterCompactionTestSampleObject = (sampleNum: any) => {
+export const getFieldDryDensitySampleObjectBSB = (sampleNum: any) => {
   if (sampleNum === 1) {
     return {
       sampleNo: {
@@ -335,7 +335,7 @@ export const getDensitAfterCompactionTestSampleObject = (sampleNum: any) => {
   }
 };
 //WMM - Proctor Density Test
-export const getProctorDensityTestSampleObject = (sampleNum: any) => {
+export const getProctorDensityTestSampleObjectBSB = (sampleNum: any) => {
   return {
     sampleNo: {
       title: 'Sample no',

@@ -284,7 +284,13 @@ const AssignTestMaterials = ({
         item.materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA ||
         item.materialType === TEST_MATERIALS_TYPES.BITUMEN ||
         item.materialType === TEST_MATERIALS_TYPES.SOIL ||
-        item.materialType === TEST_MATERIALS_TYPES.FLY_ASH
+        item.materialType === TEST_MATERIALS_TYPES.FLY_ASH ||
+
+        item.materialType === TEST_MATERIALS_TYPES.GSB ||
+        item.materialType === TEST_MATERIALS_TYPES.CTSB ||
+        item.materialType === TEST_MATERIALS_TYPES.WMM ||
+        item.materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE_WMM ||
+        item.materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE_WMM
       ) {
         if (
           testClassificationType ===
@@ -294,7 +300,10 @@ const AssignTestMaterials = ({
           if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BITUMINOUS_WORKS) {
             routeName = "ProcurementsBitnumiousWork";
           }
-          else if(testWorkCategoryType===TEST_WORK_CATEGORY_TYPES.EARTH_WORKS){
+          else if(testWorkCategoryType===TEST_WORK_CATEGORY_TYPES.EARTH_WORKS ||
+            testWorkCategoryType===TEST_WORK_CATEGORY_TYPES.SUB_BASE ||
+            testWorkCategoryType===TEST_WORK_CATEGORY_TYPES.BASE_SUB_BASE
+          ){
             routeName = "ProcurementsEarthWork";
           }
           navigation.navigate(routeName, {

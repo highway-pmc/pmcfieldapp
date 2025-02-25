@@ -1,5 +1,5 @@
 //CTSB-Gration
-export const getCTSBGrationTestSampleObject = (sampleNum: any) => {
+export const getCTSBGrationTestSampleObjectSB = (sampleNum: any) => {
   return {
     sampleNo: {
       title: 'Sample no',
@@ -48,7 +48,7 @@ export const getCTSBGrationTestSampleObject = (sampleNum: any) => {
 
 //CTSB-Water Absorption
 //GSB-Water Absorption (D)
-export const getWaterAbsorptionObject = (sampleNum: any) => {
+export const getWaterAbsorptionObjectSB = (sampleNum: any) => {
   return {
     sampleNo: {
       title: 'Sample no',
@@ -83,7 +83,7 @@ export const getWaterAbsorptionObject = (sampleNum: any) => {
 };
 //CTSB-Aterberrg Limit
 //GSB-Aterberrg Limit
-export const getGrainSizeAnalysisTestSampleObject = (sampleNum: any) => {
+export const getGrainSizeAnalysisTestSampleObjectSB = (sampleNum: any) => {
   return {
     sampleNo: {
       title: 'Sample no',
@@ -152,7 +152,7 @@ export const getGrainSizeAnalysisTestSampleObject = (sampleNum: any) => {
 
 //CSTB-AIV
 //GSB-AIV(D)
-export const getTestSampleAIVObject = (sampleNum: any) => {
+export const getTestSampleAIVObjectSB = (sampleNum: any) => {
   return {
     sampleNo: {
       title: 'Sample no',
@@ -205,7 +205,7 @@ export const getTestSampleAIVObject = (sampleNum: any) => {
   };
 };
 //CSTB-CBR  (Doubt)
-export const getCBRTestSampleObject = (sampleNum: any) => {
+export const getCBRTestSampleObjectSB = (sampleNum: any) => {
   if (sampleNum === 1) {
     return {
       sampleNo: {
@@ -451,7 +451,7 @@ export const getCBRTestSampleObject = (sampleNum: any) => {
 };
 //CSTB-Density After Compaction/Field Dry Density
 //GSB-Density After Compaction/Field Dry Density(D)
-export const getDensitAfterCompactionTestSampleObject = (sampleNum: any) => {
+export const getFieldDryDensityTestSampleObjectSB = (sampleNum: any) => {
   if (sampleNum === 1) {
     return {
       sampleNo: {
@@ -522,7 +522,7 @@ export const getDensitAfterCompactionTestSampleObject = (sampleNum: any) => {
 };
 //CSTB-Moisture Content
 //GSB-Moisture Content(D)
-export const getMoistureContentTestSampleObject = (sampleNum: any) => {
+export const getMoistureContentTestSampleObjectSB = (sampleNum: any) => {
   return {
     sampleNo: {
       title: 'Sample no',

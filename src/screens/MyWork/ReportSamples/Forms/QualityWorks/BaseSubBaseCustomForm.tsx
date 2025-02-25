@@ -138,7 +138,7 @@ let formSampleTest7thOr28thDay: any,
   selectedTestSample: any,
   concreteSampleTestItems: any;
 
-export const testSampleFormSubBase = (
+export const testSampleFormBaseSubBase = (
   styles: any,
   materialType: any,
   _formSampleTest7thOr28thDay: any,
@@ -156,8 +156,9 @@ export const testSampleFormSubBase = (
   console.log('Earthwork selectedTestSample.type :', selectedTestSample.type);
   if (
     !materialType ||
-    materialType === TEST_MATERIALS_TYPES.SOIL ||
-    materialType === TEST_MATERIALS_TYPES.FLY_ASH
+    materialType === TEST_MATERIALS_TYPES.WMM ||
+    materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE_WMM ||
+    materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE_WMM
   ) {
     return (
       <View>

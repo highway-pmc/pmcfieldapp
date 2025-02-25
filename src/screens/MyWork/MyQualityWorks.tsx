@@ -408,6 +408,17 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
             setCurrentSubTestTypeRFIsData(testTypeData.testRFIsData);
             setSelectedTestSample(testTypeData);
             setCurrentLevel(6);
+          } else if (
+            testMateData.materialType === TEST_MATERIALS_TYPES.GSB ||
+            testMateData.materialType === TEST_MATERIALS_TYPES.CTSB ||
+            testMateData.materialType === TEST_MATERIALS_TYPES.WMM ||
+            testMateData.materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE_WMM ||
+            testMateData.materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE_WMM
+          ) {
+            //testTypeData.materialType = TEST_MATERIALS_TYPES.SMA;
+            setCurrentSubTestTypeRFIsData(testTypeData.testRFIsData);
+            setSelectedTestSample(testTypeData);
+            setCurrentLevel(6);
           }
         }
       }

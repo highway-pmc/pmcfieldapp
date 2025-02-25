@@ -407,7 +407,19 @@ const SourceApprovals = ({
     name: keyof FormSourceDetailState,
     value: string | number,
   ) => {
-    setSourceDetailEarthWork({...sourceDetailEarthWork, [name]: value});
+    setSourceDetailSubaseCTSB({...sourceDetailSubaseCTSB, [name]: value});
+  };
+  const handleSourceDetailSubBaseGSBInputChange = (
+    name: string,
+    value: string | number,
+  ) => {
+    setSourceDetailSubaseGSB({...sourceDetailSubaseGSB, [name]: value});
+  };
+  const handleSourceDetailSubBaseCTSBInputChange = (
+    name: string,
+    value: string | number,
+  ) => {
+    setSourceDetailSubaseCTSB({...sourceDetailSubaseCTSB, [name]: value});
   };
   const handleInputChange = (name: keyof FormState, value: string | number) => {
     let isValid = true;
@@ -685,7 +697,12 @@ const SourceApprovals = ({
           showSnackbar('Unknown material type for Bituminous Works.', 'error');
           return false;
       }
-    } else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EARTH_WORKS) {
+    } else if (
+      testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EARTH_WORKS ||
+      (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BASE_SUB_BASE &&
+        (TEST_MATERIALS_TYPES.COARSE_AGGREGATE_WMM === materialType ||
+          TEST_MATERIALS_TYPES.FINE_AGGREGATE_WMM === materialType))
+    ) {
       const ratePerCum = Number(sourceDetailEarthWork.ratePerCum);
       if (
         ratePerCum > 100000 ||
@@ -696,22 +713,103 @@ const SourceApprovals = ({
           'error',
         );
         return false;
-      } else {
-        // Validation for non-bituminous works
-        const ratePerCum = Number(sourceDetailForm.ratePerCum);
+      }
+      return true;
+    } else if (
+      testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.SUB_BASE ||
+      testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BASE_SUB_BASE
+    ) {
+      if (TEST_MATERIALS_TYPES.CTSB === materialType) {
+        const ratePerCum = Number(sourceDetailSubaseCTSB.ratePerCum);
         if (
-          ratePerCum > 100000 ||
-          !/^\d+(\.\d{1,3})?$/.test(ratePerCum.toString())
+          ratePerCum >= 100000 ||
+          !/^\d+(\.\d{1,2})?$/.test(ratePerCum.toString())
         ) {
           showSnackbar(
-            'Rate per Cum must be less than 100,000 and up to 3 decimal places.',
+            'Rate per Cum must be less than 100,000 and up to 2 decimal places.',
             'error',
           );
           return false;
         }
-      }
 
-      return true;
+        const omc = Number(sourceDetailSubaseCTSB.omc);
+        if (omc >= 100000 || !/^\d+(\.\d{1,2})?$/.test(omc.toString())) {
+          showSnackbar(
+            'OMC must be less than 100,000 and up to 2 decimal places.',
+            'error',
+          );
+          return false;
+        }
+
+        const mdd = Number(sourceDetailSubaseCTSB.mdd);
+        if (mdd >= 100000 || !/^\d+(\.\d{1,2})?$/.test(mdd.toString())) {
+          showSnackbar(
+            'MDD must be less than 100,000 and up to 2 decimal places.',
+            'error',
+          );
+          return false;
+        }
+
+        const cementWeight = Number(sourceDetailSubaseCTSB.cementWeight);
+        if (
+          cementWeight >= 100000 ||
+          !/^\d+(\.\d{1,2})?$/.test(cementWeight.toString())
+        ) {
+          showSnackbar(
+            'Cement Weight must be less than 100,000 and up to 2 decimal places.',
+            'error',
+          );
+          return false;
+        }
+      } else if (
+        TEST_MATERIALS_TYPES.GSB === materialType ||
+        TEST_MATERIALS_TYPES.WMM === materialType
+      ) {
+        const ratePerCum = Number(sourceDetailSubaseGSB.ratePerCum);
+        if (
+          ratePerCum >= 100000 ||
+          !/^\d+(\.\d{1,2})?$/.test(ratePerCum.toString())
+        ) {
+          showSnackbar(
+            'Rate per Cum must be less than 100,000 and up to 2 decimal places.',
+            'error',
+          );
+          return false;
+        }
+
+        const omc = Number(sourceDetailSubaseGSB.omc);
+        if (omc >= 100000 || !/^\d+(\.\d{1,2})?$/.test(omc.toString())) {
+          showSnackbar(
+            'OMC must be less than 100,000 and up to 2 decimal places.',
+            'error',
+          );
+          return false;
+        }
+
+        const mdd = Number(sourceDetailSubaseGSB.mdd);
+        if (mdd >= 100000 || !/^\d+(\.\d{1,2})?$/.test(mdd.toString())) {
+          showSnackbar(
+            'MDD must be less than 100,000 and up to 2 decimal places.',
+            'error',
+          );
+          return false;
+        }
+
+        return true;
+      }
+    } else {
+      // Validation for non-bituminous works
+      const ratePerCum = Number(sourceDetailForm.ratePerCum);
+      if (
+        ratePerCum > 100000 ||
+        !/^\d+(\.\d{1,3})?$/.test(ratePerCum.toString())
+      ) {
+        showSnackbar(
+          'Rate per Cum must be less than 100,000 and up to 3 decimal places.',
+          'error',
+        );
+        return false;
+      }
     }
   };
   //Need to change function logic
@@ -786,13 +884,45 @@ const SourceApprovals = ({
           console.error('Unknown material type for Bituminous Works');
           return;
       }
-    } else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EARTH_WORKS) {
+    } else if (
+      testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EARTH_WORKS ||
+      (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BASE_SUB_BASE &&
+        (TEST_MATERIALS_TYPES.COARSE_AGGREGATE_WMM === materialType ||
+          TEST_MATERIALS_TYPES.FINE_AGGREGATE_WMM === materialType))
+    ) {
       body = {
         name: sourceDetailEarthWork.ratePerCum,
         metaData: {
           ratePerCum: Number(sourceDetailEarthWork.ratePerCum),
         },
       };
+    } else if (
+      testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.SUB_BASE ||
+      testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BASE_SUB_BASE
+    ) {
+      if (TEST_MATERIALS_TYPES.CTSB === materialType) {
+        body = {
+          name: sourceDetailSubaseCTSB.ratePerCum,
+          metaData: {
+            ratePerCum: Number(sourceDetailSubaseCTSB.ratePerCum),
+            omc: Number(sourceDetailSubaseCTSB.omc),
+            mdd: Number(sourceDetailSubaseCTSB.mdd),
+            cementWeight: Number(sourceDetailSubaseCTSB.cementWeight),
+          },
+        };
+      } else if (
+        TEST_MATERIALS_TYPES.GSB === materialType ||
+        TEST_MATERIALS_TYPES.WMM === materialType
+      ) {
+        body = {
+          name: sourceDetailSubaseGSB.ratePerCum,
+          metaData: {
+            ratePerCum: Number(sourceDetailSubaseGSB.ratePerCum),
+            omc: Number(sourceDetailSubaseGSB.omc),
+            mdd: Number(sourceDetailSubaseGSB.mdd),
+          },
+        };
+      }
     } else {
       body = {
         name: sourceDetailForm[gradeField.name],
@@ -954,10 +1084,33 @@ const SourceApprovals = ({
               console.error('Material type Not Found');
           }
         } else if (
-          testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EARTH_WORKS
+          testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EARTH_WORKS ||
+          (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BASE_SUB_BASE &&
+            (TEST_MATERIALS_TYPES.COARSE_AGGREGATE_WMM === materialType ||
+              TEST_MATERIALS_TYPES.FINE_AGGREGATE_WMM === materialType))
         ) {
           editedObj.name = sourceDetailEarthWork.ratePerCum;
           editedObj.metaData.ratePerCum = sourceDetailEarthWork.ratePerCum;
+        } else if (
+          testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.SUB_BASE ||
+          testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BASE_SUB_BASE
+        ) {
+          if (TEST_MATERIALS_TYPES.CTSB === materialType) {
+            editedObj.name = sourceDetailSubaseCTSB.ratePerCum;
+            editedObj.metaData.ratePerCum = sourceDetailSubaseCTSB.ratePerCum;
+            editedObj.metaData.omc = sourceDetailSubaseCTSB.omc;
+            editedObj.metaData.mdd = sourceDetailSubaseCTSB.mdd;
+            editedObj.metaData.cementWeight =
+              sourceDetailSubaseCTSB.cementWeight;
+          } else if (
+            TEST_MATERIALS_TYPES.GSB === materialType ||
+            TEST_MATERIALS_TYPES.WMM === materialType
+          ) {
+            editedObj.name = sourceDetailSubaseGSB.ratePerCum;
+            editedObj.metaData.ratePerCum = sourceDetailSubaseGSB.ratePerCum;
+            editedObj.metaData.omc = sourceDetailSubaseGSB.omc;
+            editedObj.metaData.mdd = sourceDetailSubaseGSB.mdd;
+          }
         } else {
           editedObj.name = sourceDetailForm[gradeField.name];
           editedObj.metaData[gradeField.name] =
@@ -1402,7 +1555,12 @@ const SourceApprovals = ({
           </View>
         );
       }
-    } else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EARTH_WORKS) {
+    } else if (
+      testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EARTH_WORKS ||
+      (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BASE_SUB_BASE &&
+        (TEST_MATERIALS_TYPES.COARSE_AGGREGATE_WMM === materialType ||
+          TEST_MATERIALS_TYPES.FINE_AGGREGATE_WMM === materialType))
+    ) {
       return (
         <View style={styles.reportFields}>
           <View>
@@ -1424,6 +1582,114 @@ const SourceApprovals = ({
           </TouchableOpacity>
         </View>
       );
+    } else if (
+      testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.SUB_BASE ||
+      testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BASE_SUB_BASE
+    ) {
+      if (TEST_MATERIALS_TYPES.CTSB === materialType) {
+        return (
+          <View style={styles.reportFields}>
+            <View>
+              <View>
+                <Input
+                  label="Rate per cum"
+                  value={sourceDetailSubaseCTSB.ratePerCum}
+                  onChange={(value: number) =>
+                    handleSourceDetailSubBaseCTSBInputChange(
+                      'ratePerCum',
+                      value,
+                    )
+                  }
+                  isRequired={true}
+                />
+              </View>
+              <View>
+                <Input
+                  label="OMC"
+                  value={sourceDetailSubaseCTSB.omc}
+                  onChange={(value: number) =>
+                    handleSourceDetailSubBaseCTSBInputChange('omc', value)
+                  }
+                  isRequired={true}
+                />
+              </View>
+              <View>
+                <Input
+                  label="MDD"
+                  value={sourceDetailSubaseCTSB.mdd}
+                  onChange={(value: number) =>
+                    handleSourceDetailSubBaseCTSBInputChange('mdd', value)
+                  }
+                  isRequired={true}
+                />
+              </View>
+              <View>
+                <Input
+                  label="Cement Weight"
+                  value={sourceDetailSubaseCTSB.cementWeight}
+                  onChange={(value: number) =>
+                    handleSourceDetailSubBaseCTSBInputChange(
+                      'cementWeight',
+                      value,
+                    )
+                  }
+                  isRequired={true}
+                />
+              </View>
+            </View>
+            <TouchableOpacity
+              style={styles.btnContainer}
+              onPress={addSourceDetailsSubmit}>
+              <Text style={styles.submitBtn}>Submit</Text>
+            </TouchableOpacity>
+          </View>
+        );
+      } else if (
+        TEST_MATERIALS_TYPES.GSB === materialType ||
+        TEST_MATERIALS_TYPES.WMM === materialType
+      ) {
+        return (
+          <View style={styles.reportFields}>
+            <View>
+              <View>
+                <Input
+                  label="Rate per cum"
+                  value={sourceDetailSubaseGSB.ratePerCum}
+                  onChange={(value: number) =>
+                    handleSourceDetailSubBaseGSBInputChange('ratePerCum', value)
+                  }
+                  isRequired={true}
+                />
+              </View>
+              <View>
+                <Input
+                  label="OMC"
+                  value={sourceDetailSubaseGSB.omc}
+                  onChange={(value: number) =>
+                    handleSourceDetailSubBaseGSBInputChange('omc', value)
+                  }
+                  isRequired={true}
+                />
+              </View>
+              <View>
+                <Input
+                  label="MDD"
+                  value={sourceDetailSubaseGSB.mdd}
+                  onChange={(value: number) =>
+                    handleSourceDetailSubBaseGSBInputChange('mdd', value)
+                  }
+                  isRequired={true}
+                />
+              </View>
+            </View>
+            <TouchableOpacity
+              style={styles.btnContainer}
+              onPress={addSourceDetailsSubmit}>
+              <Text style={styles.submitBtn}>Submit</Text>
+            </TouchableOpacity>
+          </View>
+        );
+      }
     } else {
       return (
         <View style={styles.reportFields}>

@@ -219,7 +219,201 @@ export const testSampleFormSubBase = (
             <Text style={styles.GenerateRFIFieldLabel}>Observations:</Text>
             <ScrollView style={styles.Width100} horizontal={true}>
               {currentTestMaterialData.materialType &&
-                (selectedTestSample.type === TEST_TYPES.FIELD_DRY_DENSITY ? (
+                (selectedTestSample.type ===
+                TEST_TYPES.WATER_ABSORPTION_OF_AGGREGATES ? (
+                  <View>
+                    {concreteSampleTestItems.map((item: any, index: number) => (
+                      <View style={{flexDirection: 'row'}} key={index}>
+                        <View style={{flexDirection: 'column'}}>
+                          {item.details &&
+                            item.details.values.map(
+                              (value: any, indexDetails: number) => (
+                                <View
+                                  style={{flexDirection: 'row'}}
+                                  key={indexDetails}>
+                                  <View
+                                    style={{
+                                      flexDirection: 'column',
+                                      width: 200,
+                                    }}>
+                                    {index === 0 && indexDetails === 0 ? (
+                                      <View style={{height: 40}}>
+                                        <Text style={{fontWeight: '700'}}>
+                                          {item.details.titles[0]}
+                                        </Text>
+                                      </View>
+                                    ) : null}
+                                    <Text
+                                      style={[
+                                        styles.textStyle2,
+                                        {textAlign: 'center'},
+                                      ]}>
+                                      {value.testProperty}
+                                    </Text>
+                                  </View>
+
+                                  <View
+                                    style={{
+                                      flexDirection: 'column',
+                                      width: 120,
+                                    }}>
+                                    {index === 0 && indexDetails === 0 ? (
+                                      <View style={{height: 40}}>
+                                        <Text style={{fontWeight: '700'}}>
+                                          {item.details.titles[1]}
+                                        </Text>
+                                      </View>
+                                    ) : null}
+                                    <CustomTextInput
+                                      rowItem={value}
+                                      tempProp={false}
+                                      styleName={styles.inputStyle3}
+                                      styles={styles}
+                                      fieldName={'test1'}></CustomTextInput>
+                                  </View>
+
+                                  <View
+                                    style={{
+                                      flexDirection: 'column',
+                                      width: 120,
+                                    }}>
+                                    {index === 0 && indexDetails === 0 ? (
+                                      <View style={{height: 40}}>
+                                        <Text style={{fontWeight: '700'}}>
+                                          {item.details.titles[2]}
+                                        </Text>
+                                      </View>
+                                    ) : null}
+                                    <CustomTextInput
+                                      rowItem={value}
+                                      tempProp={false}
+                                      styleName={styles.inputStyle3}
+                                      styles={styles}
+                                      fieldName={'test2'}></CustomTextInput>
+                                  </View>
+
+                                  <View
+                                    style={{
+                                      flexDirection: 'column',
+                                      width: 120,
+                                    }}>
+                                    {index === 0 && indexDetails === 0 ? (
+                                      <View style={{height: 40}}>
+                                        <Text style={{fontWeight: '700'}}>
+                                          {item.details.titles[3]}
+                                        </Text>
+                                      </View>
+                                    ) : null}
+                                    <CustomTextInput
+                                      rowItem={value}
+                                      tempProp={false}
+                                      styleName={styles.inputStyle3}
+                                      styles={styles}
+                                      fieldName={'test3'}></CustomTextInput>
+                                  </View>
+                                </View>
+                              ),
+                            )}
+                        </View>
+                      </View>
+                    ))}
+                  </View>
+                ) : selectedTestSample.type ===
+                  TEST_TYPES.AGGREGATE_IMPACT_VALUE ? (
+                  <View>
+                    {concreteSampleTestItems.map((item: any, index: any) => (
+                      <View style={{flexDirection: 'row'}}>
+                        <View style={{flexDirection: 'column'}}>
+                          {item.details &&
+                            item.details.values
+                              .filter((value: any) => !value.hide)
+                              .map((value: any, indexDetails: number) => (
+                                <View style={{flexDirection: 'row'}}>
+                                  <View
+                                    style={{
+                                      flexDirection: 'column',
+                                      width: 80,
+                                    }}>
+                                    {index === 0 && indexDetails === 0 ? (
+                                      <View style={{height: 40}}>
+                                        <Text style={{fontWeight: '700'}}>
+                                          {item.details.titles[0]}
+                                        </Text>
+                                      </View>
+                                    ) : null}
+                                    <Text
+                                      style={[
+                                        styles.textStyle2,
+                                        {textAlign: 'center'},
+                                      ]}>
+                                      {value.description}
+                                    </Text>
+                                  </View>
+
+                                  <View
+                                    style={{
+                                      flexDirection: 'column',
+                                      width: 120,
+                                    }}>
+                                    {index === 0 && indexDetails === 0 ? (
+                                      <View style={{height: 40}}>
+                                        <Text style={{fontWeight: '700'}}>
+                                          {item.details.titles[1]}
+                                        </Text>
+                                      </View>
+                                    ) : null}
+                                    <CustomTextInput
+                                      rowItem={value}
+                                      tempProp={false}
+                                      styleName={styles.inputStyle3}
+                                      styles={styles}
+                                      fieldName={'test1'}></CustomTextInput>
+                                  </View>
+                                  <View
+                                    style={{
+                                      flexDirection: 'column',
+                                      width: 120,
+                                    }}>
+                                    {index === 0 && indexDetails === 0 ? (
+                                      <View style={{height: 40}}>
+                                        <Text style={{fontWeight: '700'}}>
+                                          {item.details.titles[2]}
+                                        </Text>
+                                      </View>
+                                    ) : null}
+                                    <CustomTextInput
+                                      rowItem={value}
+                                      tempProp={false}
+                                      styleName={styles.inputStyle3}
+                                      styles={styles}
+                                      fieldName={'test2'}></CustomTextInput>
+                                  </View>
+                                  <View
+                                    style={{
+                                      flexDirection: 'column',
+                                      width: 120,
+                                    }}>
+                                    {index === 0 && indexDetails === 0 ? (
+                                      <View style={{height: 40}}>
+                                        <Text style={{fontWeight: '700'}}>
+                                          {item.details.titles[3]}
+                                        </Text>
+                                      </View>
+                                    ) : null}
+                                    <CustomTextInput
+                                      rowItem={value}
+                                      tempProp={false}
+                                      styleName={styles.inputStyle3}
+                                      styles={styles}
+                                      fieldName={'test3'}></CustomTextInput>
+                                  </View>
+                                </View>
+                              ))}
+                        </View>
+                      </View>
+                    ))}
+                  </View>
+                ) : selectedTestSample.type === TEST_TYPES.FIELD_DRY_DENSITY ? (
                   <View>
                     {concreteSampleTestItems.map((item: any, index: any) => (
                       <View key={index} style={{flexDirection: 'row'}}>
@@ -418,277 +612,6 @@ export const testSampleFormSubBase = (
                       </View>
                     ))}
                   </View>
-                ) : selectedTestSample.type === TEST_TYPES.FREE_SWELL_INDEX ? (
-                  <View>
-                    <View style={{flexDirection: 'column'}}>
-                      {concreteSampleTestItems.map((item: any, index: any) => (
-                        <View style={{flexDirection: 'row'}} key={index}>
-                          <View style={{flexDirection: 'column', width: 80}}>
-                            {index === 0 ? (
-                              <View style={{height: 40}}>
-                                <Text style={{fontWeight: '700'}}>
-                                  {item.details.titles[0]}
-                                </Text>
-                              </View>
-                            ) : null}
-                            <Text
-                              style={[
-                                styles.textStyle2,
-                                {textAlign: 'center'},
-                              ]}>
-                              {item.details.values[index].slNo}
-                            </Text>
-                          </View>
-
-                          <View style={{flexDirection: 'column', width: 150}}>
-                            {index === 0 ? (
-                              <View style={{height: 40}}>
-                                <Text style={{fontWeight: '700'}}>
-                                  {item.details.titles[1]}
-                                </Text>
-                              </View>
-                            ) : null}
-                            <CustomTextInput
-                              rowItem={item.details.values[index]}
-                              tempProp={false}
-                              styleName={styles.inputStyle4}
-                              styles={styles}
-                              fieldName={'sampleLevelInWater'}
-                            />
-                          </View>
-
-                          <View style={{flexDirection: 'column', width: 150}}>
-                            {index === 0 ? (
-                              <View style={{height: 40}}>
-                                <Text style={{fontWeight: '700'}}>
-                                  {item.details.titles[2]}
-                                </Text>
-                              </View>
-                            ) : null}
-                            <CustomTextInput
-                              rowItem={item.details.values[index]}
-                              tempProp={false}
-                              styleName={styles.inputStyle4}
-                              styles={styles}
-                              fieldName={'sampleLevelInKerosene'}
-                            />
-                          </View>
-                        </View>
-                      ))}
-                    </View>
-                  </View>
-                ) : selectedTestSample.type ===
-                  TEST_TYPES.PROCTOR_DENSITY_TEST ? (
-                  <View>
-                    {concreteSampleTestItems.map((item: any, index: number) => (
-                      <View style={{flexDirection: 'row'}} key={index}>
-                        <View style={{flexDirection: 'column'}}>
-                          {item.details &&
-                            item.details.values.map(
-                              (value: any, indexDetails: number) => (
-                                <View
-                                  style={{flexDirection: 'row'}}
-                                  key={indexDetails}>
-                                  <View
-                                    style={{
-                                      flexDirection: 'column',
-                                      width: 200,
-                                    }}>
-                                    {index === 0 && indexDetails === 0 ? (
-                                      <View style={{height: 40}}>
-                                        <Text style={{fontWeight: '700'}}>
-                                          {item.details.titles[0]}
-                                        </Text>
-                                      </View>
-                                    ) : null}
-                                    <Text
-                                      style={[
-                                        styles.textStyle2,
-                                        {textAlign: 'center'},
-                                      ]}>
-                                      {value.description}
-                                    </Text>
-                                  </View>
-
-                                  <View
-                                    style={{
-                                      flexDirection: 'column',
-                                      width: 120,
-                                    }}>
-                                    {index === 0 && indexDetails === 0 ? (
-                                      <View style={{height: 40}}>
-                                        <Text style={{fontWeight: '700'}}>
-                                          {item.details.titles[1]}
-                                        </Text>
-                                      </View>
-                                    ) : null}
-                                    <CustomTextInput
-                                      rowItem={value}
-                                      tempProp={false}
-                                      styleName={styles.inputStyle3}
-                                      styles={styles}
-                                      fieldName={'test1'}></CustomTextInput>
-                                  </View>
-
-                                  <View
-                                    style={{
-                                      flexDirection: 'column',
-                                      width: 120,
-                                    }}>
-                                    {index === 0 && indexDetails === 0 ? (
-                                      <View style={{height: 40}}>
-                                        <Text style={{fontWeight: '700'}}>
-                                          {item.details.titles[2]}
-                                        </Text>
-                                      </View>
-                                    ) : null}
-                                    <CustomTextInput
-                                      rowItem={value}
-                                      tempProp={false}
-                                      styleName={styles.inputStyle3}
-                                      styles={styles}
-                                      fieldName={'test2'}></CustomTextInput>
-                                  </View>
-
-                                  <View
-                                    style={{
-                                      flexDirection: 'column',
-                                      width: 120,
-                                    }}>
-                                    {index === 0 && indexDetails === 0 ? (
-                                      <View style={{height: 40}}>
-                                        <Text style={{fontWeight: '700'}}>
-                                          {item.details.titles[3]}
-                                        </Text>
-                                      </View>
-                                    ) : null}
-                                    <CustomTextInput
-                                      rowItem={value}
-                                      tempProp={false}
-                                      styleName={styles.inputStyle3}
-                                      styles={styles}
-                                      fieldName={'test3'}></CustomTextInput>
-                                  </View>
-
-                                  <View
-                                    style={{
-                                      flexDirection: 'column',
-                                      width: 120,
-                                    }}>
-                                    {index === 0 && indexDetails === 0 ? (
-                                      <View style={{height: 40}}>
-                                        <Text style={{fontWeight: '700'}}>
-                                          {item.details.titles[4]}
-                                        </Text>
-                                      </View>
-                                    ) : null}
-                                    <CustomTextInput
-                                      rowItem={value}
-                                      tempProp={false}
-                                      styleName={styles.inputStyle3}
-                                      styles={styles}
-                                      fieldName={'test4'}></CustomTextInput>
-                                  </View>
-
-                                  <View
-                                    style={{
-                                      flexDirection: 'column',
-                                      width: 120,
-                                    }}>
-                                    {index === 0 && indexDetails === 0 ? (
-                                      <View style={{height: 40}}>
-                                        <Text style={{fontWeight: '700'}}>
-                                          {item.details.titles[5]}
-                                        </Text>
-                                      </View>
-                                    ) : null}
-                                    <CustomTextInput
-                                      rowItem={value}
-                                      tempProp={false}
-                                      styleName={styles.inputStyle3}
-                                      styles={styles}
-                                      fieldName={'test5'}></CustomTextInput>
-                                  </View>
-
-                                  <View
-                                    style={{
-                                      flexDirection: 'column',
-                                      width: 120,
-                                    }}>
-                                    {index === 0 && indexDetails === 0 ? (
-                                      <View style={{height: 40}}>
-                                        <Text style={{fontWeight: '700'}}>
-                                          {item.details.titles[6]}
-                                        </Text>
-                                      </View>
-                                    ) : null}
-                                    <CustomTextInput
-                                      rowItem={value}
-                                      tempProp={false}
-                                      styleName={styles.inputStyle3}
-                                      styles={styles}
-                                      fieldName={'test6'}></CustomTextInput>
-                                  </View>
-                                </View>
-                              ),
-                            )}
-                        </View>
-                      </View>
-                    ))}
-                  </View>
-                ) : selectedTestSample.type ===
-                  TEST_TYPES.GRAIN_SIZE_ANALYSIS ? (
-                  <View>
-                    {concreteSampleTestItems.map((item: any, index: any) => (
-                      <View style={{flexDirection: 'row'}} key={index}>
-                        <View style={{flexDirection: 'column'}}>
-                          {item.details.values.map(
-                            (value: any, indexDetails: number) => (
-                              <View
-                                style={{flexDirection: 'row'}}
-                                key={indexDetails}>
-                                <View
-                                  style={{flexDirection: 'column', width: 80}}>
-                                  {index === 0 && indexDetails === 0 ? (
-                                    <View style={{height: 40}}>
-                                      <Text style={{fontWeight: '700'}}>
-                                        {item.details.titles[0]}
-                                      </Text>
-                                    </View>
-                                  ) : null}
-                                  <Text
-                                    style={[
-                                      styles.textStyle2,
-                                      {textAlign: 'center'},
-                                    ]}>
-                                    {value.isSieveSize}
-                                  </Text>
-                                </View>
-
-                                <View
-                                  style={{flexDirection: 'column', width: 150}}>
-                                  {index === 0 && indexDetails === 0 ? (
-                                    <View style={{height: 40}}>
-                                      <Text style={{fontWeight: '700'}}>
-                                        {item.details.titles[1]}
-                                      </Text>
-                                    </View>
-                                  ) : null}
-                                  <CustomTextInput
-                                    rowItem={value}
-                                    tempProp={false}
-                                    styleName={styles.inputStyle4}
-                                    styles={styles}
-                                    fieldName={'weightRetained'}
-                                  />
-                                </View>
-                              </View>
-                            ),
-                          )}
-                        </View>
-                      </View>
-                    ))}
-                  </View>
                 ) : selectedTestSample.type === TEST_TYPES.MOISTURE_CONTENT ? (
                   <View>
                     {concreteSampleTestItems.map((item: any, index: number) => (
@@ -790,7 +713,10 @@ export const testSampleFormSubBase = (
                       </View>
                     ))}
                   </View>
-                ) : selectedTestSample.type === TEST_TYPES.PLASTICITY_INDEX ? (
+                ) : selectedTestSample.type ===
+                    TEST_TYPES.GRADING_OF_AGGREGATE &&
+                  currentTestMaterialData.materialType ===
+                    TEST_MATERIALS_TYPES.CTSB ? (
                   <View>
                     {concreteSampleTestItems.map((item: any, index: number) => (
                       <View style={{flexDirection: 'row'}} key={index}>
@@ -818,7 +744,7 @@ export const testSampleFormSubBase = (
                                         styles.textStyle2,
                                         {textAlign: 'center'},
                                       ]}>
-                                      {value.description}
+                                      {value.isSieveSize}
                                     </Text>
                                   </View>
 
@@ -839,113 +765,9 @@ export const testSampleFormSubBase = (
                                       tempProp={false}
                                       styleName={styles.inputStyle3}
                                       styles={styles}
-                                      fieldName={'l1'}
-                                    />
-                                  </View>
-
-                                  <View
-                                    style={{
-                                      flexDirection: 'column',
-                                      width: 120,
-                                    }}>
-                                    {index === 0 && indexDetails === 0 ? (
-                                      <View style={{height: 40}}>
-                                        <Text style={{fontWeight: '700'}}>
-                                          {item.details.titles[2]}
-                                        </Text>
-                                      </View>
-                                    ) : null}
-                                    <CustomTextInput
-                                      rowItem={value}
-                                      tempProp={false}
-                                      styleName={styles.inputStyle3}
-                                      styles={styles}
-                                      fieldName={'ll2'}
-                                    />
-                                  </View>
-
-                                  <View
-                                    style={{
-                                      flexDirection: 'column',
-                                      width: 120,
-                                    }}>
-                                    {index === 0 && indexDetails === 0 ? (
-                                      <View style={{height: 40}}>
-                                        <Text style={{fontWeight: '700'}}>
-                                          {item.details.titles[3]}
-                                        </Text>
-                                      </View>
-                                    ) : null}
-                                    <CustomTextInput
-                                      rowItem={value}
-                                      tempProp={false}
-                                      styleName={styles.inputStyle3}
-                                      styles={styles}
-                                      fieldName={'ll3'}
-                                    />
-                                  </View>
-
-                                  <View
-                                    style={{
-                                      flexDirection: 'column',
-                                      width: 120,
-                                    }}>
-                                    {index === 0 && indexDetails === 0 ? (
-                                      <View style={{height: 40}}>
-                                        <Text style={{fontWeight: '700'}}>
-                                          {item.details.titles[4]}
-                                        </Text>
-                                      </View>
-                                    ) : null}
-                                    <CustomTextInput
-                                      rowItem={value}
-                                      tempProp={false}
-                                      styleName={styles.inputStyle3}
-                                      styles={styles}
-                                      fieldName={'ll4'}
-                                    />
-                                  </View>
-
-                                  <View
-                                    style={{
-                                      flexDirection: 'column',
-                                      width: 120,
-                                    }}>
-                                    {index === 0 && indexDetails === 0 ? (
-                                      <View style={{height: 40}}>
-                                        <Text style={{fontWeight: '700'}}>
-                                          {item.details.titles[5]}
-                                        </Text>
-                                      </View>
-                                    ) : null}
-                                    <CustomTextInput
-                                      rowItem={value}
-                                      tempProp={false}
-                                      styleName={styles.inputStyle3}
-                                      styles={styles}
-                                      fieldName={'pl1'}
-                                    />
-                                  </View>
-
-                                  <View
-                                    style={{
-                                      flexDirection: 'column',
-                                      width: 120,
-                                    }}>
-                                    {index === 0 && indexDetails === 0 ? (
-                                      <View style={{height: 40}}>
-                                        <Text style={{fontWeight: '700'}}>
-                                          {item.details.titles[6]}
-                                        </Text>
-                                      </View>
-                                    ) : null}
-                                    <CustomTextInput
-                                      rowItem={value}
-                                      tempProp={false}
-                                      styleName={styles.inputStyle3}
-                                      styles={styles}
-                                      fieldName={'pl2'}
-                                    />
+                                      fieldName={
+                                        'weightRetained'
+                                      }></CustomTextInput>
                                   </View>
                                 </View>
                               ),
@@ -954,22 +776,52 @@ export const testSampleFormSubBase = (
                       </View>
                     ))}
                   </View>
-                ) : selectedTestSample.type === TEST_TYPES.CBR_TEST ? (
+                ) : selectedTestSample.type ===
+                  TEST_TYPES.ATTERBEG_LIMIT_TEST ? (
                   <View>
                     {concreteSampleTestItems.map((item: any, index: any) => (
-                      <View key={index} style={{flexDirection: 'row'}}>
+                      <View style={{flexDirection: 'row'}} key={index}>
                         <View style={{flexDirection: 'column'}}>
-                          <View style={{height: 40}}>
-                            <Text style={{fontWeight: '700'}}>
-                              {item.sampleNo.title}
-                            </Text>
-                          </View>
                           {item.details.values.map(
                             (value: any, indexDetails: number) => (
                               <View
-                                key={indexDetails}
-                                style={{flexDirection: 'row'}}>
-                                {getObjectKeys(value, styles)}
+                                style={{flexDirection: 'row'}}
+                                key={indexDetails}>
+                                <View
+                                  style={{flexDirection: 'column', width: 80}}>
+                                  {index === 0 && indexDetails === 0 ? (
+                                    <View style={{height: 40}}>
+                                      <Text style={{fontWeight: '700'}}>
+                                        {item.details.titles[0]}
+                                      </Text>
+                                    </View>
+                                  ) : null}
+                                  <Text
+                                    style={[
+                                      styles.textStyle2,
+                                      {textAlign: 'center'},
+                                    ]}>
+                                    {value.isSieveSize}
+                                  </Text>
+                                </View>
+
+                                <View
+                                  style={{flexDirection: 'column', width: 150}}>
+                                  {index === 0 && indexDetails === 0 ? (
+                                    <View style={{height: 40}}>
+                                      <Text style={{fontWeight: '700'}}>
+                                        {item.details.titles[1]}
+                                      </Text>
+                                    </View>
+                                  ) : null}
+                                  <CustomTextInput
+                                    rowItem={value}
+                                    tempProp={false}
+                                    styleName={styles.inputStyle4}
+                                    styles={styles}
+                                    fieldName={'weightRetained'}
+                                  />
+                                </View>
                               </View>
                             ),
                           )}

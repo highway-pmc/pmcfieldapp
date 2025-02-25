@@ -81,7 +81,7 @@ export const getTestSampleFIEIObject = (sampleNum: any) => {
     },
   };
 };
-//Coarse Aggregate - WMM - AIV
+//Coarse Aggregate - WMM - AIV(D)
 export const getTestSampleAIVObject = (sampleNum: any) => {
   return {
     sampleNo: {
@@ -116,7 +116,7 @@ export const getTestSampleAIVObject = (sampleNum: any) => {
     },
   };
 };
-//Fine Aggregate-WMM-Aterberrg Limit
+//Fine Aggregate-WMM-Aterberrg Limit(D)
 export const getGrainSizeAnalysisTestSampleObject = (sampleNum: any) => {
   return {
     sampleNo: {
@@ -183,7 +183,7 @@ export const getGrainSizeAnalysisTestSampleObject = (sampleNum: any) => {
     },
   };
 };
-//WMM-Gration
+//WMM-Gration(D)
 export const getCTSBGrationTestSampleObject = (sampleNum: any) => {
   return {
     sampleNo: {
@@ -230,7 +230,7 @@ export const getCTSBGrationTestSampleObject = (sampleNum: any) => {
     },
   };
 };
-//WMM-Water Absorption
+//WMM-Water Absorption(D)
 export const getWaterAbsorptionObject = (sampleNum: any) => {
   return {
     sampleNo: {
@@ -264,7 +264,7 @@ export const getWaterAbsorptionObject = (sampleNum: any) => {
     },
   };
 };
-//WMM - Field Dry Density
+//WMM - Field Dry Density(D)
 export const getDensitAfterCompactionTestSampleObject = (sampleNum: any) => {
   if (sampleNum === 1) {
     return {

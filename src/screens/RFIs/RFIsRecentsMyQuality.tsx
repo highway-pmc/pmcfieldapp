@@ -23,8 +23,8 @@ import React, {Fragment, useEffect, useState} from 'react';
 import {
   actionGetTestRFIs,
   clearRFITasksEvent,
-  generateRFIReport,
-  updatedRFIs,
+  generateTestRFIReport,
+  updatedTestRFIs,
 } from './actions';
 import LoadingAnimation from '../Common/LoadingAnimation';
 import Pdf from 'react-native-pdf';
@@ -137,9 +137,8 @@ const RFIsRecentsMyQuality = (props: any) => {
 
   const onRFIAction = (status: string) => {
     dispatch(
-      updatedRFIs({
+      updatedTestRFIs({
         projectId: loggedInUser.projectId,
-        projectModuleId: selectedRFI?.projectModuleId,
         rfiId: selectedRFI._id,
         status: status,
         body: {
@@ -154,9 +153,8 @@ const RFIsRecentsMyQuality = (props: any) => {
 
   const onGenerateReport = () => {
     dispatch(
-      generateRFIReport({
+      generateTestRFIReport({
         projectId: loggedInUser.projectId,
-        projectModuleId: selectedRFI?.projectModuleId,
         rfiId: selectedRFI._id,
       }),
     );
@@ -1424,49 +1422,7 @@ const RFIsRecentsMyQuality = (props: any) => {
                       styles.taskCategory,
                       {flexWrap: 'wrap', paddingBottom: 20, paddingTop: 10},
                     ]}>
-                    <Text style={styles.subHead}>
-                      {selectedRFI?.workAssignmentData?.projectModule?.name}
-                    </Text>
-                    <Image
-                      style={styles.ArrowIcon}
-                      source={require('../../images/right-arrow-icon.png')}
-                    />
-                    <Text style={styles.subHead}>
-                      {selectedRFI?.workAssignmentData?.segmentId?.name}
-                    </Text>
-                    <Image
-                      style={styles.ArrowIcon}
-                      source={require('../../images/right-arrow-icon.png')}
-                    />
-                    {selectedRFI?.workAssignmentData?.componentId ? (
-                      <View style={styles.taskCategory}>
-                        <Text style={styles.subHead}>
-                          {selectedRFI?.workAssignmentData?.componentId?.name}
-                        </Text>
-                        <Image
-                          style={styles.ArrowIcon}
-                          source={require('../../images/right-arrow-icon.png')}
-                        />
-                      </View>
-                    ) : null}
-
-                    {selectedRFI?.workAssignmentData?.subComponentId ? (
-                      <View style={styles.taskCategory}>
-                        <Text style={styles.subHead}>
-                          {
-                            selectedRFI?.workAssignmentData?.subComponentId
-                              ?.name
-                          }
-                        </Text>
-                        <Image
-                          style={styles.ArrowIcon}
-                          source={require('../../images/right-arrow-icon.png')}
-                        />
-                      </View>
-                    ) : null}
-
                     <Text style={[styles.subHead, styles.taskCount]}>
-                      {selectedRFI?.workAssignmentData?.taskId?.displayName}
                       {selectedRFI?.name}
                     </Text>
                   </View>

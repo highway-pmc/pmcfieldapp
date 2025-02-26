@@ -440,7 +440,7 @@ const SourceApprovals = ({
     name: string,
     value: string | number,
   ) => {
-    setSourceDetailSubaseCTSB({...sourceDetailSubaseCTSB, [name]: value});
+    setSourceDetailEarthWork({...sourceDetailEarthWork, [name]: value});
   };
   const handleSourceDetailSubBaseGSBInputChange = (
     name: string,
@@ -738,9 +738,7 @@ const SourceApprovals = ({
     ) {
       console.log('Enter EarthWork Validation');
       const ratePerCum = Number(sourceDetailEarthWork.ratePerCum);
-      if (
-        ratePerCum >= 100000
-      ) {
+      if (ratePerCum >= 100000) {
         showSnackbar(
           'Rate per Cum must be less than 100,000 and up to 3 decimal places.', // Matches validation logic
           'error',
@@ -796,6 +794,7 @@ const SourceApprovals = ({
           );
           return false;
         }
+        return true;
       } else if (
         TEST_MATERIALS_TYPES.GSB === materialType ||
         TEST_MATERIALS_TYPES.WMM === materialType
@@ -834,7 +833,7 @@ const SourceApprovals = ({
       }
     } else {
       // Validation for non-bituminous works
-      
+
       const ratePerCum = Number(sourceDetailForm.ratePerCum);
       if (
         ratePerCum > 100000 ||
@@ -926,6 +925,7 @@ const SourceApprovals = ({
         (TEST_MATERIALS_TYPES.COARSE_AGGREGATE_WMM === materialType ||
           TEST_MATERIALS_TYPES.FINE_AGGREGATE_WMM === materialType))
     ) {
+      console.log(sourceDetailEarthWork.ratePerCum);
       body = {
         name: sourceDetailEarthWork.ratePerCum,
         metaData: {
@@ -938,6 +938,7 @@ const SourceApprovals = ({
       testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BASE_SUB_BASE
     ) {
       if (TEST_MATERIALS_TYPES.CTSB === materialType) {
+        console.log("Enter CTSB")
         body = {
           name: sourceDetailSubaseCTSB.ratePerCum,
           metaData: {
@@ -971,7 +972,7 @@ const SourceApprovals = ({
     }
 
     if (selectedSourceDetail === null) {
-      console.log('Enter EarthWork Submission body 2');
+      console.log('Submission body 1');
       dispatch(
         addSourceDetail({
           projectId: loggedInUser.projectId,
@@ -980,7 +981,7 @@ const SourceApprovals = ({
         }),
       );
     } else {
-      console.log('Enter EarthWork Submission body 3');
+      console.log('Submission body 2');
       dispatch(
         updateSourceDetail({
           projectId: loggedInUser.projectId,
@@ -1070,7 +1071,7 @@ const SourceApprovals = ({
         if (TEST_MATERIALS_TYPES.CTSB === materialType) {
           setSourceDetailSubaseCTSB({
             sourceApprovalId: selectedSource._id,
-            ratePerCum:0,
+            ratePerCum: 0,
             omc: 0,
             mdd: 0,
             cementWeight: 0,

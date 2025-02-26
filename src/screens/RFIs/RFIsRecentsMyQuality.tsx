@@ -675,7 +675,7 @@ const RFIsRecentsMyQuality = (props: any) => {
             <View key={sampleIndex}>
               {/* Sample Number */}
               <Text style={styles.observationSampleNumberTitle}>
-                {sample.sampleNo.title}: {sample.sampleNo.value}
+                {sample.sampleNo.value}
               </Text>
 
               {/* Table Headers */}
@@ -1102,6 +1102,196 @@ const RFIsRecentsMyQuality = (props: any) => {
                       <Text>{row.pl2}</Text>
                     </View>
                   )}
+                </View>
+              ))}
+            </View>
+          ))}
+        </View>
+      );
+    } else if (selectedTestSample.type === TEST_TYPES.ATTERBEG_LIMIT_TEST) {
+      return (
+        <View style={styles.observationTableContainer}>
+          {data.map((sample: any, sampleIndex: number) => (
+            <View key={sampleIndex}>
+              {/* Table Headers */}
+              <View style={styles.observationTableRow}>
+                {sample.details.titles.map((title: string, index: number) => (
+                  <View
+                    key={index}
+                    style={[
+                      styles.observationTableCell,
+                      index === 0
+                        ? styles.observationDescriptionColumn
+                        : styles.observationValueColumn,
+                    ]}>
+                    <Text style={styles.observationColumnHeader}>{title}</Text>
+                  </View>
+                ))}
+              </View>
+
+              {/* Table Data */}
+              {sample.details.values.map((row: any, rowIndex: number) => (
+                <View key={rowIndex} style={styles.observationTableRow}>
+                  <View
+                    style={[
+                      styles.observationTableCell,
+                      styles.observationDescriptionColumn,
+                    ]}>
+                    <Text>{row.description}</Text>
+                  </View>
+                  {/* Dynamically map all values */}
+                  {Object.keys(row)
+                    .filter(key => key !== 'description') // Exclude description field
+                    .map((key, index) => (
+                      <View key={index} style={styles.observationValueColumn}>
+                        <Text>{row[key]}</Text>
+                      </View>
+                    ))}
+                </View>
+              ))}
+            </View>
+          ))}
+        </View>
+      );
+    } else if (selectedTestSample.type === TEST_TYPES.GRADING_OF_AGGREGATE) {
+      return (
+        <View style={styles.observationTableContainer}>
+          {data.map((sample: any, sampleIndex: number) => (
+            <View key={sampleIndex}>
+              {/* Sample Number */}
+              <Text style={styles.observationSampleNumberTitle}>
+                {sample.sampleNo.title}: {sample.sampleNo.value}
+              </Text>
+
+              {/* Total Weight */}
+              <Text style={styles.observationSampleNumberTitle}>
+                Total in Gram: {sample.totalInGram}
+              </Text>
+
+              {/* Table Headers */}
+              <View style={styles.observationTableRow}>
+                {sample.details.titles.map((title: string, index: number) => (
+                  <View
+                    key={index}
+                    style={[
+                      styles.observationTableCell,
+                      index === 0
+                        ? styles.observationDescriptionColumn
+                        : styles.observationValueColumn,
+                    ]}>
+                    <Text style={styles.observationColumnHeader}>{title}</Text>
+                  </View>
+                ))}
+              </View>
+
+              {/* Table Data */}
+              {sample.details.values.map((row: any, rowIndex: number) => (
+                <View key={rowIndex} style={styles.observationTableRow}>
+                  <View
+                    style={[
+                      styles.observationTableCell,
+                      styles.observationDescriptionColumn,
+                    ]}>
+                    <Text>{row.isSieveSize}</Text>
+                  </View>
+                  <View style={styles.observationValueColumn}>
+                    <Text>{row.weightRetained}</Text>
+                  </View>
+                </View>
+              ))}
+            </View>
+          ))}
+        </View>
+      );
+    } else if (selectedTestSample.type === TEST_TYPES.FI_EI) {
+      return (
+        <View style={styles.observationTableContainer}>
+          {data.map((sample: any, sampleIndex: number) => (
+            <View key={sampleIndex}>
+              {/* Table Headers */}
+              <View style={styles.observationTableRow}>
+                {sample.details.titles.map((title: string, index: number) => (
+                  <View
+                    key={index}
+                    style={[
+                      styles.observationTableCell,
+                      index === 0
+                        ? styles.observationDescriptionColumn
+                        : styles.observationValueColumn,
+                    ]}>
+                    <Text style={styles.observationColumnHeader}>{title}</Text>
+                  </View>
+                ))}
+              </View>
+
+              {/* Table Data */}
+              {sample.details.values.map((row: any, rowIndex: number) => (
+                <View key={rowIndex} style={styles.observationTableRow}>
+                  <View
+                    style={[
+                      styles.observationTableCell,
+                      styles.observationDescriptionColumn,
+                    ]}>
+                    <Text>{row.sizeFractionOfAggregatePassing}</Text>
+                  </View>
+                  <View style={styles.observationTableCell}>
+                    <Text>{row.sizeFractionOfAggregateRetained}</Text>
+                  </View>
+                  <View style={styles.observationTableCell}>
+                    <Text>{row.totalWeightOfAggregateRetained}</Text>
+                  </View>
+                  <View style={styles.observationTableCell}>
+                    <Text>{row.weightPassingOnFlakinessGauge}</Text>
+                  </View>
+                  <View style={styles.observationTableCell}>
+                    <Text>{row.weightRetainedOnElongationGauge}</Text>
+                  </View>
+                </View>
+              ))}
+            </View>
+          ))}
+        </View>
+      );
+    } else if (selectedTestSample.type === TEST_TYPES.AGGREGATE_IMPACT_VALUE) {
+      return (
+        <View style={styles.observationTableContainer}>
+          {data.map((sample: any, sampleIndex: number) => (
+            <View key={sampleIndex}>
+              {/* Table Headers */}
+              <View style={styles.observationTableRow}>
+                {sample.details.titles.map((title: string, index: number) => (
+                  <View
+                    key={index}
+                    style={[
+                      styles.observationTableCell,
+                      index === 0
+                        ? styles.observationDescriptionColumn
+                        : styles.observationValueColumn,
+                    ]}>
+                    <Text style={styles.observationColumnHeader}>{title}</Text>
+                  </View>
+                ))}
+              </View>
+
+              {/* Table Data */}
+              {sample.details.values.map((row: any, rowIndex: number) => (
+                <View key={rowIndex} style={styles.observationTableRow}>
+                  <View
+                    style={[
+                      styles.observationTableCell,
+                      styles.observationDescriptionColumn,
+                    ]}>
+                    <Text>{row.description}</Text>
+                  </View>
+                  <View style={styles.observationTableCell}>
+                    <Text>{row.test1}</Text>
+                  </View>
+                  <View style={styles.observationTableCell}>
+                    <Text>{row.test2}</Text>
+                  </View>
+                  <View style={styles.observationTableCell}>
+                    <Text>{row.test3}</Text>
+                  </View>
                 </View>
               ))}
             </View>

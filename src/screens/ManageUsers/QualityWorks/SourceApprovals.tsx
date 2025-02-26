@@ -334,6 +334,39 @@ const SourceApprovals = ({
           });
           break;
       }
+    } else if (
+      testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EARTH_WORKS ||
+      (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BASE_SUB_BASE &&
+        (TEST_MATERIALS_TYPES.COARSE_AGGREGATE_WMM === materialType ||
+          TEST_MATERIALS_TYPES.FINE_AGGREGATE_WMM === materialType))
+    ) {
+      setSourceDetailEarthWork({
+        sourceApprovalId: item._id,
+        ratePerCum: item.metaData?.ratePerCum,
+      });
+    } else if (
+      testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.SUB_BASE ||
+      testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BASE_SUB_BASE
+    ) {
+      if (TEST_MATERIALS_TYPES.CTSB === materialType) {
+        setSourceDetailSubaseCTSB({
+          sourceApprovalId: item._id,
+          ratePerCum: item.metaData?.ratePerCum,
+          omc: item.metaData?.omc,
+          mdd: item.metaData?.mdd,
+          cementWeight: item.metaData?.cementWeight,
+        });
+      } else if (
+        TEST_MATERIALS_TYPES.GSB === materialType ||
+        TEST_MATERIALS_TYPES.WMM === materialType
+      ) {
+        setSourceDetailSubaseGSB({
+          sourceApprovalId: item._id,
+          ratePerCum: item.metaData?.ratePerCum,
+          omc: item.metaData?.omc,
+          mdd: item.metaData?.mdd,
+        });
+      }
     } else {
       setSourceDetailForm({
         sourceApprovalId: item._id,
@@ -404,10 +437,10 @@ const SourceApprovals = ({
     setSourceDetailForm({...sourceDetailForm, [name]: value});
   };
   const handleSourceDetailEarthWorkInputChange = (
-    name: keyof FormSourceDetailState,
+    name: string,
     value: string | number,
   ) => {
-    setSourceDetailSubaseCTSB({...sourceDetailSubaseCTSB, [name]: value});
+    setSourceDetailEarthWork({...sourceDetailEarthWork, [name]: value});
   };
   const handleSourceDetailSubBaseGSBInputChange = (
     name: string,
@@ -703,17 +736,17 @@ const SourceApprovals = ({
         (TEST_MATERIALS_TYPES.COARSE_AGGREGATE_WMM === materialType ||
           TEST_MATERIALS_TYPES.FINE_AGGREGATE_WMM === materialType))
     ) {
+      console.log('Enter EarthWork Validation');
       const ratePerCum = Number(sourceDetailEarthWork.ratePerCum);
-      if (
-        ratePerCum > 100000 ||
-        !/^\d+(\.\d{1,3})?$/.test(ratePerCum.toString())
-      ) {
+      if (ratePerCum >= 100000) {
         showSnackbar(
-          'Rate per Cum must be less than 100,000 and up to 3 decimal places.',
+          'Rate per Cum must be less than 100,000 and up to 3 decimal places.', // Matches validation logic
           'error',
         );
         return false;
       }
+
+      console.log('EarthWork Validation Passed');
       return true;
     } else if (
       testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.SUB_BASE ||
@@ -761,6 +794,7 @@ const SourceApprovals = ({
           );
           return false;
         }
+        return true;
       } else if (
         TEST_MATERIALS_TYPES.GSB === materialType ||
         TEST_MATERIALS_TYPES.WMM === materialType
@@ -799,6 +833,7 @@ const SourceApprovals = ({
       }
     } else {
       // Validation for non-bituminous works
+
       const ratePerCum = Number(sourceDetailForm.ratePerCum);
       if (
         ratePerCum > 100000 ||
@@ -890,17 +925,20 @@ const SourceApprovals = ({
         (TEST_MATERIALS_TYPES.COARSE_AGGREGATE_WMM === materialType ||
           TEST_MATERIALS_TYPES.FINE_AGGREGATE_WMM === materialType))
     ) {
+      console.log(sourceDetailEarthWork.ratePerCum);
       body = {
         name: sourceDetailEarthWork.ratePerCum,
         metaData: {
           ratePerCum: Number(sourceDetailEarthWork.ratePerCum),
         },
       };
+      console.log('Enter EarthWork Submission body');
     } else if (
       testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.SUB_BASE ||
       testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BASE_SUB_BASE
     ) {
       if (TEST_MATERIALS_TYPES.CTSB === materialType) {
+        console.log("Enter CTSB")
         body = {
           name: sourceDetailSubaseCTSB.ratePerCum,
           metaData: {
@@ -934,6 +972,7 @@ const SourceApprovals = ({
     }
 
     if (selectedSourceDetail === null) {
+      console.log('Submission body 1');
       dispatch(
         addSourceDetail({
           projectId: loggedInUser.projectId,
@@ -942,6 +981,7 @@ const SourceApprovals = ({
         }),
       );
     } else {
+      console.log('Submission body 2');
       dispatch(
         updateSourceDetail({
           projectId: loggedInUser.projectId,
@@ -1014,6 +1054,39 @@ const SourceApprovals = ({
           default:
             console.warn(`Unknown material type: ${materialType}`);
         }
+      } else if (
+        testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EARTH_WORKS ||
+        (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BASE_SUB_BASE &&
+          (TEST_MATERIALS_TYPES.COARSE_AGGREGATE_WMM === materialType ||
+            TEST_MATERIALS_TYPES.FINE_AGGREGATE_WMM === materialType))
+      ) {
+        setSourceDetailEarthWork({
+          sourceApprovalId: selectedSource._id,
+          ratePerCum: 0,
+        });
+      } else if (
+        testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.SUB_BASE ||
+        testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BASE_SUB_BASE
+      ) {
+        if (TEST_MATERIALS_TYPES.CTSB === materialType) {
+          setSourceDetailSubaseCTSB({
+            sourceApprovalId: selectedSource._id,
+            ratePerCum: 0,
+            omc: 0,
+            mdd: 0,
+            cementWeight: 0,
+          });
+        } else if (
+          TEST_MATERIALS_TYPES.GSB === materialType ||
+          TEST_MATERIALS_TYPES.WMM === materialType
+        ) {
+          setSourceDetailSubaseGSB({
+            sourceApprovalId: selectedSource._id,
+            ratePerCum: 0,
+            omc: 0,
+            mdd: 0,
+          });
+        }
       } else {
         setSourceDetailForm({
           sourceApprovalId: selectedSource._id,
@@ -1073,7 +1146,7 @@ const SourceApprovals = ({
               break;
 
             case TEST_MATERIALS_TYPES.EMULSION:
-              editedObj.name = sourceDetailForm.nominalSize;
+              editedObj.name = emulsion.gradeOfEmulsion;
               editedObj.metaData.gradeOfEmulsion = emulsion.gradeOfEmulsion;
               editedObj.metaData.ratePerMT = emulsion.ratePerMT;
               editedObj.metaData.emulsionBrand = emulsion.emulsionBrand;
@@ -1178,6 +1251,39 @@ const SourceApprovals = ({
           default:
             console.warn(`Unknown material type: ${materialType}`);
         }
+      } else if (
+        testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EARTH_WORKS ||
+        (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BASE_SUB_BASE &&
+          (TEST_MATERIALS_TYPES.COARSE_AGGREGATE_WMM === materialType ||
+            TEST_MATERIALS_TYPES.FINE_AGGREGATE_WMM === materialType))
+      ) {
+        setSourceDetailEarthWork({
+          sourceApprovalId: selectedSource._id,
+          ratePerCum: 0,
+        });
+      } else if (
+        testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.SUB_BASE ||
+        testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BASE_SUB_BASE
+      ) {
+        if (TEST_MATERIALS_TYPES.CTSB === materialType) {
+          setSourceDetailSubaseCTSB({
+            sourceApprovalId: selectedSource._id,
+            ratePerCum: 0,
+            omc: 0,
+            mdd: 0,
+            cementWeight: 0,
+          });
+        } else if (
+          TEST_MATERIALS_TYPES.GSB === materialType ||
+          TEST_MATERIALS_TYPES.WMM === materialType
+        ) {
+          setSourceDetailSubaseGSB({
+            sourceApprovalId: selectedSource._id,
+            ratePerCum: 0,
+            omc: 0,
+            mdd: 0,
+          });
+        }
       } else {
         setSourceDetailForm({
           sourceApprovalId: selectedSource._id,
@@ -1268,6 +1374,39 @@ const SourceApprovals = ({
 
         default:
           console.warn(`Unknown material type: ${materialType}`);
+      }
+    } else if (
+      testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EARTH_WORKS ||
+      (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BASE_SUB_BASE &&
+        (TEST_MATERIALS_TYPES.COARSE_AGGREGATE_WMM === materialType ||
+          TEST_MATERIALS_TYPES.FINE_AGGREGATE_WMM === materialType))
+    ) {
+      setSourceDetailEarthWork({
+        sourceApprovalId: item.sourceApprovalId,
+        ratePerCum: item.metaData?.ratePerCum,
+      });
+    } else if (
+      testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.SUB_BASE ||
+      testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BASE_SUB_BASE
+    ) {
+      if (TEST_MATERIALS_TYPES.CTSB === materialType) {
+        setSourceDetailSubaseCTSB({
+          sourceApprovalId: item.sourceApprovalId,
+          ratePerCum: item.metaData?.ratePerCum,
+          omc: item.metaData?.omc,
+          mdd: item.metaData?.mdd,
+          cementWeight: item.metaData?.cementWeight,
+        });
+      } else if (
+        TEST_MATERIALS_TYPES.GSB === materialType ||
+        TEST_MATERIALS_TYPES.WMM === materialType
+      ) {
+        setSourceDetailSubaseGSB({
+          sourceApprovalId: item.sourceApprovalId,
+          ratePerCum: item.metaData?.ratePerCum,
+          omc: item.metaData?.omc,
+          mdd: item.metaData?.mdd,
+        });
       }
     } else {
       setSourceDetailForm({

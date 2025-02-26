@@ -1,6 +1,6 @@
 
 import { put, takeLatest } from 'redux-saga/effects';
-import { fillRFIsDataChecklist, generateRFI, generateRFIReportApi, getRFITaskUsersData, getRFITasksData, getRFIs, getTestRFIs } from '../../services/rfi/rfis.service';
+import { fillRFIsDataChecklist, fillTestRFIsDataChecklist, generateRFI, generateRFIReportApi, generateTestSampleReportApi, getRFITaskUsersData, getRFITasksData, getRFIs, getTestRFIs } from '../../services/rfi/rfis.service';
 
 function* getRFITasks({ payload }) {
     try {
@@ -56,12 +56,30 @@ function* updateRFIs({ payload }) {
     }
 }
 
+function* updateTestRFIs({ payload }) {
+    try {
+        const response = yield (fillTestRFIsDataChecklist(payload.projectId, payload.rfiId, payload.status, payload.body));
+        yield put({ type: "UPDATE_TEST_RFI_SUCCESS", response });
+    } catch (error) {
+        yield put({ type: "UPDATE_TEST_RFI_FAILURE", error: error.message });
+    }
+}
+
 function* generateRFIReport({ payload }) {
     try {
         const response = yield (generateRFIReportApi(payload.projectId, payload.projectModuleId, payload.rfiId));
         yield put({ type: "GENERATE_REPORT_SUCCESS", response });
     } catch (error) {
         yield put({ type: "GENERATE_REPORT_FAILURE", error: error.message });
+    }
+}
+
+function* generateTestRFIReport({ payload }) {
+    try {
+        const response = yield (generateTestSampleReportApi(payload.projectId, payload.rfiId));
+        yield put({ type: "GENERATE_TEST_REPORT_SUCCESS", response });
+    } catch (error) {
+        yield put({ type: "GENERATE_TEST_REPORT_FAILURE", error: error.message });
     }
 }
 
@@ -72,5 +90,7 @@ export default function* myRFISScreenSaga() {
     yield takeLatest("GET_RFI_REQUEST", getRFIData);
     yield takeLatest("GET_TEST_RFI_REQUEST", getTestRFIData);
     yield takeLatest("UPDATE_RFI_REQUEST", updateRFIs);
+    yield takeLatest("UPDATE_TEST_RFI_REQUEST", updateTestRFIs);
     yield takeLatest("GENERATE_REPORT_REQUEST", generateRFIReport);
+    yield takeLatest("GENERATE_TEST_REPORT_REQUEST", generateTestRFIReport);
 }

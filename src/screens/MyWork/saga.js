@@ -59,7 +59,7 @@ function* updateTestSample({ payload }) {
 
 function* generateTestSampleReport({ payload }) {
     try {
-        const response = yield (generateTestSampleReportApi(payload.projectId, payload.testRFIId, payload.body));
+        const response = yield (generateTestSampleReportApi(payload.projectId, payload.testRFIId));
         yield put({ type: "GENERATE_TEST_SAMPLE_REPORT_SUCCESS", response });
     } catch (error) {
         yield put({ type: "GENERATE_TEST_SAMPLE_REPORT_FAILURE", error: error.message });

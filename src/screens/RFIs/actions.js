@@ -28,8 +28,18 @@ export const updatedRFIs = (payload) => ({
     payload: payload
 });
 
+export const updatedTestRFIs = (payload) => ({
+    type: "UPDATE_TEST_RFI_REQUEST",
+    payload: payload
+});
+
 export const generateRFIReport = (payload) => ({
     type: "GENERATE_REPORT_REQUEST",
+    payload: payload
+});
+
+export const generateTestRFIReport = (payload) => ({
+    type: "GENERATE_TEST_REPORT_REQUEST",
     payload: payload
 });
 

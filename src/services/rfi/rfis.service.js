@@ -72,6 +72,15 @@ export const fillRFIsDataChecklist = async (projectId, projectModuleId, rfiId, s
     });
 }
 
+export const fillTestRFIsDataChecklist = async (projectId, rfiId, status, body) => {
+    return apiService.postRequest(`v1/auth/projects/${projectId}/test-rfis/${rfiId}/status/${status}`, body).then((response) => {
+        return response;
+    }).catch((err) => {
+        const errorMessge = err.message || 'Unable to save check list.';
+        throw new Error(errorMessge);
+    });
+}
+
 export const fillRFIsDataChecklistForSampleTest = async (projectId, rfiId, status, body) => {
     return apiService.postRequest(`v1/auth/projects/${projectId}/test-rfis/${rfiId}/status/${status}`, body).then((response) => {
         return response;
@@ -91,7 +100,7 @@ export const generateRFIReportApi = async (projectId, projectModuleId, rfiId) =>
 }
 
 export const updateTestSampleAPi = async (projectId, id, body) => {
-    return apiService.patchRequest(`v1/auth/projects/${projectId}/testsample/${id}/`, body).then((response) => {
+    return apiService.patchRequest(`v1/auth/projects/${projectId}/testsample/${id}`, body).then((response) => {
         return response;
     }).catch((err) => {
         const errorMessge = err.message || 'Unable to update test sample.';
@@ -99,8 +108,8 @@ export const updateTestSampleAPi = async (projectId, id, body) => {
     });
 }
 
-export const generateTestSampleReportApi = async (projectId, testRFIId, body) => {
-    return apiService.postRequest(`v1/auth/projects/${projectId}/test-rfis/${testRFIId}/report`, body).then((response) => {
+export const generateTestSampleReportApi = async (projectId, testRFIId) => {
+    return apiService.getRequest(`v1/auth/projects/${projectId}/test-rfis/${testRFIId}/report`).then((response) => {
         return response;
     }).catch((err) => {
         const errorMessge = err.message || 'Unable to generate report.';

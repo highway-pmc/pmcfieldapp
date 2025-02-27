@@ -1746,7 +1746,7 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
                     <StatusBar barStyle="dark-content" />
                     <SafeAreaView>
                       {
-                        selectedTestSample &&
+                        (selectedTestSample && concreteSampleTestItems.length > 0) &&
                         ((currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.SOIL ||
                           currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.FLY_ASH
                         ) ?

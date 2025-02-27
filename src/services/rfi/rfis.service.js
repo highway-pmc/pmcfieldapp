@@ -109,7 +109,7 @@ export const updateTestSampleAPi = async (projectId, id, body) => {
 }
 
 export const generateTestSampleReportApi = async (projectId, testRFIId) => {
-    return apiService.getRequest(`v1/auth/projects/${projectId}/test-rfis/${testRFIId}/report`).then((response) => {
+    return apiService.postRequest(`v1/auth/projects/${projectId}/test-rfis/${testRFIId}/report`, {}).then((response) => {
         return response;
     }).catch((err) => {
         const errorMessge = err.message || 'Unable to generate report.';

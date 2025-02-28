@@ -13,8 +13,8 @@ import {
   StatusBar,
   SafeAreaView,
 } from 'react-native';
-import React, { Fragment, useEffect, useState } from 'react';
-import { useIsFocused } from '@react-navigation/native';
+import React, {Fragment, useEffect, useState} from 'react';
+import {useIsFocused} from '@react-navigation/native';
 import {
   HeaderItems,
   PROJECT_TYPE,
@@ -30,7 +30,7 @@ import {
   TYPE_OF_CONCRETE_SURFACE_LIST,
   YES_NO_LIST,
 } from '../../constants/constants';
-import { useDispatch, useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {
   clearMyWorksEvent,
   fillRFIsChecklistForTestSample,
@@ -43,9 +43,9 @@ import {
   getDbDateFromDDMMYYYY,
   isTestInventoryClassification,
 } from '../../utils/Utils';
-import { useSnackbar } from '../../context/SnackbarContext';
+import {useSnackbar} from '../../context/SnackbarContext';
 import commonStyles from '../Common/commonStyles';
-import { CARD_COLORS_ARRAY, CARD_ICONS } from '../Common/CommonConstantsTypes';
+import {CARD_COLORS_ARRAY, CARD_ICONS} from '../Common/CommonConstantsTypes';
 import {
   getTestSampleCementCoarseAggregateObject,
   getTestSampleCementCompressiveStrengthObject,
@@ -74,13 +74,37 @@ import {
   getTestSampleSofteningPointObject,
   getWaterAbsorptionObject,
 } from './ReportSamples/Forms/QualityWorks/BituminusWorks';
-import { getCBRTestSampleObject, getFieldDryDensityTestSampleObject, getFreeSwellIndexTestSampleObject, getGrainSizeAnalysisTestSampleObject, getMoistureContentTestSampleObject, getPlasticityIndexTestSampleObject, getProctorDensityTestSampleObject } from './ReportSamples/Forms/QualityWorks/Earthwork';
-import { testSampleFormEarthwork } from './ReportSamples/Forms/QualityWorks/EarthWorkCustomForm';
-import { testSampleFormSubBase } from './ReportSamples/Forms/QualityWorks/SubBaseCustomForm';
-import { testSampleFormBaseSubBase } from './ReportSamples/Forms/QualityWorks/BaseSubBaseCustomForm';
-import { getCBRTestSampleObjectSB, getCTSBGrationTestSampleObjectSB, getFieldDryDensityTestSampleObjectSB, getGrainSizeAnalysisTestSampleObjectSB, getMoistureContentTestSampleObjectSB, getTestSampleAIVObjectSB, getWaterAbsorptionObjectSB } from './ReportSamples/Forms/QualityWorks/SubBase';
-import { getCTSBGrationTestSampleObjectBSB, getFieldDryDensitySampleObjectBSB, getGrainSizeAnalysisTestSampleObjectBSB, getProctorDensityTestSampleObjectBSB, getTestSampleAIVObjectBSB, getTestSampleFIEIObjectBSB, getWaterAbsorptionObjectBSB } from './ReportSamples/Forms/QualityWorks/BaseSubBase';
-const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) => {
+import {
+  getCBRTestSampleObject,
+  getFieldDryDensityTestSampleObject,
+  getFreeSwellIndexTestSampleObject,
+  getGrainSizeAnalysisTestSampleObject,
+  getMoistureContentTestSampleObject,
+  getPlasticityIndexTestSampleObject,
+  getProctorDensityTestSampleObject,
+} from './ReportSamples/Forms/QualityWorks/Earthwork';
+import {testSampleFormEarthwork} from './ReportSamples/Forms/QualityWorks/EarthWorkCustomForm';
+import {testSampleFormSubBase} from './ReportSamples/Forms/QualityWorks/SubBaseCustomForm';
+import {testSampleFormBaseSubBase} from './ReportSamples/Forms/QualityWorks/BaseSubBaseCustomForm';
+import {
+  getCBRTestSampleObjectSB,
+  getCTSBGrationTestSampleObjectSB,
+  getFieldDryDensityTestSampleObjectSB,
+  getGrainSizeAnalysisTestSampleObjectSB,
+  getMoistureContentTestSampleObjectSB,
+  getTestSampleAIVObjectSB,
+  getWaterAbsorptionObjectSB,
+} from './ReportSamples/Forms/QualityWorks/SubBase';
+import {
+  getCTSBGrationTestSampleObjectBSB,
+  getFieldDryDensitySampleObjectBSB,
+  getGrainSizeAnalysisTestSampleObjectBSB,
+  getProctorDensityTestSampleObjectBSB,
+  getTestSampleAIVObjectBSB,
+  getTestSampleFIEIObjectBSB,
+  getWaterAbsorptionObjectBSB,
+} from './ReportSamples/Forms/QualityWorks/BaseSubBase';
+const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
   const workType = PROJECT_TYPE.QUALITY_WORK;
 
@@ -127,7 +151,7 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
 
   const dispatch = useDispatch();
   const focus = useIsFocused();
-  const { showSnackbar } = useSnackbar();
+  const {showSnackbar} = useSnackbar();
   useEffect(() => {
     if (focus == true) {
       const eventEmitter = new NativeEventEmitter();
@@ -345,7 +369,7 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
             } else if (
               testTypeData.type === TEST_TYPES.SOUNDNESS ||
               testTypeData.type ===
-              TEST_TYPES.FINENESS_CONSISTENCY_INITIAL_AND_FINAL_SETTING_TIME
+                TEST_TYPES.FINENESS_CONSISTENCY_INITIAL_AND_FINAL_SETTING_TIME
             ) {
               setCurrentSubTestTypeRFIsData(testTypeData.testRFIsData);
               setCurrentLevel(6);
@@ -388,12 +412,12 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
             testMateData.materialType === TEST_MATERIALS_TYPES.DBM_RAP_DBM ||
             testMateData.materialType === TEST_MATERIALS_TYPES.BC ||
             testMateData.materialType ===
-            TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING ||
+              TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING ||
             testMateData.materialType === TEST_MATERIALS_TYPES.BITUMEN ||
             testMateData.materialType ===
-            TEST_MATERIALS_TYPES.COARSE_AGGREGATE_DBM_BC ||
+              TEST_MATERIALS_TYPES.COARSE_AGGREGATE_DBM_BC ||
             testMateData.materialType ===
-            TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA ||
+              TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA ||
             testMateData.materialType === TEST_MATERIALS_TYPES.EMULSION
           ) {
             //testTypeData.materialType = TEST_MATERIALS_TYPES.SMA;
@@ -412,8 +436,10 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
             testMateData.materialType === TEST_MATERIALS_TYPES.GSB ||
             testMateData.materialType === TEST_MATERIALS_TYPES.CTSB ||
             testMateData.materialType === TEST_MATERIALS_TYPES.WMM ||
-            testMateData.materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE_WMM ||
-            testMateData.materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE_WMM
+            testMateData.materialType ===
+              TEST_MATERIALS_TYPES.FINE_AGGREGATE_WMM ||
+            testMateData.materialType ===
+              TEST_MATERIALS_TYPES.COARSE_AGGREGATE_WMM
           ) {
             //testTypeData.materialType = TEST_MATERIALS_TYPES.SMA;
             setCurrentSubTestTypeRFIsData(testTypeData.testRFIsData);
@@ -521,7 +547,7 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
   };
 
   const onClickTestSampleItem = (item: any) => {
-    const testObservations: any = [];
+    let testObservations: any = [];
     item.type = selectedTestSample.type;
     if (
       currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CONCRETE ||
@@ -530,7 +556,7 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
       if (item.testCategory) {
         if (
           currentTestMaterialData.materialType ===
-          TEST_MATERIALS_TYPES.CONCRETE &&
+            TEST_MATERIALS_TYPES.CONCRETE &&
           !item.workChecklistSubmitted
         ) {
           Alert.alert('Error', 'Checklist of this sample yet to be submitted.');
@@ -549,6 +575,7 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
     if (
       currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CONCRETE
     ) {
+      //Doubt
       item.materialType = TEST_MATERIALS_TYPES.CONCRETE;
       // if (!item.workChecklistSubmitted) {
       //   Alert.alert('Error', 'Checklist of this sample yet to be submitted.')
@@ -568,17 +595,30 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
     ) {
       item.materialType = TEST_MATERIALS_TYPES.CEMENT;
       if (selectedTestSample.type === TEST_TYPES.COMPRESSIVE_STRENGTH) {
+        //Doubt
         testObservations.push(getTestSampleCementCompressiveStrengthObject(1));
         testObservations[0].ageInDays.value = item.testCategory;
       } else if (selectedTestSample.type === TEST_TYPES.SOUNDNESS) {
-        testObservations.push(getTestSampleCementSoundnessObject(1));
+        if (item?.metaData?.observations) {
+          testObservations = item?.metaData?.observations;
+        } else testObservations.push(getTestSampleCementSoundnessObject(1));
       } else if (
         selectedTestSample.type ===
         TEST_TYPES.FINENESS_CONSISTENCY_INITIAL_AND_FINAL_SETTING_TIME
       ) {
-        testObservations.push(getTestSampleCementInitialFinalSettingObject(1));
-        testObservations.push(getTestSampleCementInitialFinalSettingObject(2));
-        testObservations.push(getTestSampleCementInitialFinalSettingObject(3));
+        if (item?.metaData?.observations) {
+          testObservations = item?.metaData?.observations;
+        } else {
+          testObservations.push(
+            getTestSampleCementInitialFinalSettingObject(1),
+          );
+          testObservations.push(
+            getTestSampleCementInitialFinalSettingObject(2),
+          );
+          testObservations.push(
+            getTestSampleCementInitialFinalSettingObject(3),
+          );
+        }
       }
     } else if (
       currentTestMaterialData.materialType ===
@@ -597,12 +637,22 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
         getTestSampleCementCoarseAggregateObject(1, selectedTestSample.type),
       );
       if (selectedTestSample.type === TEST_TYPES.GRADATION) {
-        testObservations.push(
-          getTestSampleCementCoarseAggregateObject(2, selectedTestSample.type),
-        );
-        testObservations.push(
-          getTestSampleCementCoarseAggregateObject(3, selectedTestSample.type),
-        );
+        if (item?.metaData?.observations) {
+          testObservations = item?.metaData?.observations;
+        } else {
+          testObservations.push(
+            getTestSampleCementCoarseAggregateObject(
+              2,
+              selectedTestSample.type,
+            ),
+          );
+          testObservations.push(
+            getTestSampleCementCoarseAggregateObject(
+              3,
+              selectedTestSample.type,
+            ),
+          );
+        }
       }
     }
     setSelectedTestSample(item);
@@ -611,38 +661,69 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
   };
 
   const onClickBitumenTestSampleItem = (item: any) => {
-    const testObservations: any = [];
+    let testObservations: any = [];
     item.type = selectedTestSample.type;
+    console.log('Testing ========', item);
     if (selectedTestSample.type == TEST_TYPES.MIX_GRADING) {
-      testObservations.push(getTestSampleBCMixGradingGradeIObject(1));
+      if (item?.metaData?.observations) {
+        testObservations = item?.metaData?.observations;
+      } else testObservations.push(getTestSampleBCMixGradingGradeIObject(1));
     } else if (selectedTestSample.type == TEST_TYPES.FLASH_FIRE_POINTS) {
-      testObservations.push(getTestSampleFlashFirePointsObject(1));
+      if (item?.metaData?.observations) {
+        testObservations = item?.metaData?.observations;
+      } else testObservations.push(getTestSampleFlashFirePointsObject(1));
     } else if (selectedTestSample.type == TEST_TYPES.BINDER_CONTENT) {
-      testObservations.push(getTestSampleBinderContentObject(1));
+      if (item?.metaData?.observations) {
+        testObservations = item?.metaData?.observations;
+      } else testObservations.push(getTestSampleBinderContentObject(1));
     } else if (selectedTestSample.type == TEST_TYPES.FI_EI) {
-      testObservations.push(getTestSampleFIEIObject(1));
+      if (item?.metaData?.observations) {
+        testObservations = item?.metaData?.observations;
+      } else testObservations.push(getTestSampleFIEIObject(1));
     } else if (selectedTestSample.type == TEST_TYPES.AGGREGATE_IMPACT_VALUE) {
-      testObservations.push(getTestSampleAIVObject(1));
+      if (item?.metaData?.observations) {
+        testObservations = item?.metaData?.observations;
+      } else testObservations.push(getTestSampleAIVObject(1));
     } else if (
       selectedTestSample.type == TEST_TYPES.DENSITY_OF_COMPACTED_LAYER
     ) {
-      testObservations.push(getTestSampleDensityAfterCompactionObject(1));
+      if (item?.metaData?.observations) {
+        testObservations = item?.metaData?.observations;
+      } else
+        testObservations.push(getTestSampleDensityAfterCompactionObject(1));
     } else if (
       selectedTestSample.type == TEST_TYPES.STABILITY_AND_VOID_ANALYSIS
     ) {
-      testObservations.push(getTestSampleBCStabilityAndVoidAnalysisObject(1));
+      if (item?.metaData?.observations) {
+        testObservations = item?.metaData?.observations;
+      } else
+        testObservations.push(getTestSampleBCStabilityAndVoidAnalysisObject(1));
     } else if (
       selectedTestSample.type == TEST_TYPES.STABILITY_AND_VOID_ANALYSIS
     ) {
-      testObservations.push(getTestSampleBCStabilityAndVoidAnalysisObject(1));
+      if (item?.metaData?.observations) {
+        testObservations = item?.metaData?.observations;
+      } else
+        testObservations.push(getTestSampleBCStabilityAndVoidAnalysisObject(1));
     } else if (selectedTestSample.type == TEST_TYPES.SOFTENING_POINT) {
-      testObservations.push(getTestSampleSofteningPointObject(1));
+      if (item?.metaData?.observations) {
+        testObservations = item?.metaData?.observations;
+      } else testObservations.push(getTestSampleSofteningPointObject(1));
     } else if (selectedTestSample.type == TEST_TYPES.DUCTILITY_TEST) {
-      testObservations.push(getTestSampleDuctilityTestObject(1));
+      if (item?.metaData?.observations) {
+        testObservations = item?.metaData?.observations;
+      } else testObservations.push(getTestSampleDuctilityTestObject(1));
     } else if (selectedTestSample.type == TEST_TYPES.PENETRATION_TEST) {
-      testObservations.push(getTestSampleBituminousPenetrationTestObject(1));
-    } else if (selectedTestSample.type == TEST_TYPES.WATER_ABSORPTION_OF_AGGREGATES) {
-      testObservations.push(getWaterAbsorptionObject(1));
+      if (item?.metaData?.observations) {
+        testObservations = item?.metaData?.observations;
+      } else
+        testObservations.push(getTestSampleBituminousPenetrationTestObject(1));
+    } else if (
+      selectedTestSample.type == TEST_TYPES.WATER_ABSORPTION_OF_AGGREGATES
+    ) {
+      if (item?.metaData?.observations) {
+        testObservations = item?.metaData?.observations;
+      } else testObservations.push(getWaterAbsorptionObject(1));
     }
     setSelectedTestSample(item);
     setConcreteSampleTestItems(testObservations);
@@ -650,28 +731,42 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
   };
 
   const onClickEarthworkSampleItem = (item: any) => {
-    const testObservations: any = [];
+    let testObservations: any = [];
     item.type = selectedTestSample.type;
     if (selectedTestSample.type == TEST_TYPES.MOISTURE_CONTENT) {
-      testObservations.push(getMoistureContentTestSampleObject(1));
+      if (item?.metaData?.observations) {
+        testObservations = item?.metaData?.observations;
+      } else testObservations.push(getMoistureContentTestSampleObject(1));
     } else if (selectedTestSample.type == TEST_TYPES.FREE_SWELL_INDEX) {
-      testObservations.push(getFreeSwellIndexTestSampleObject(1));
+      if (item?.metaData?.observations) {
+        testObservations = item?.metaData?.observations;
+      } else testObservations.push(getFreeSwellIndexTestSampleObject(1));
     } else if (selectedTestSample.type == TEST_TYPES.GRAIN_SIZE_ANALYSIS) {
-      testObservations.push(getGrainSizeAnalysisTestSampleObject(1));
+      if (item?.metaData?.observations) {
+        testObservations = item?.metaData?.observations;
+      } else testObservations.push(getGrainSizeAnalysisTestSampleObject(1));
     } else if (selectedTestSample.type == TEST_TYPES.PROCTOR_DENSITY_TEST) {
-      testObservations.push(getProctorDensityTestSampleObject(1));
+      if (item?.metaData?.observations) {
+        testObservations = item?.metaData?.observations;
+      } else testObservations.push(getProctorDensityTestSampleObject(1));
     } else if (selectedTestSample.type == TEST_TYPES.FIELD_DRY_DENSITY) {
-      testObservations.push(getFieldDryDensityTestSampleObject(1));
-      testObservations.push(getFieldDryDensityTestSampleObject(2));
-    } else if (
-      selectedTestSample.type == TEST_TYPES.CBR_TEST
-    ) {
-      testObservations.push(getCBRTestSampleObject(1));
-      testObservations.push(getCBRTestSampleObject(2));
-    } else if (
-      selectedTestSample.type == TEST_TYPES.PLASTICITY_INDEX
-    ) {
-      testObservations.push(getPlasticityIndexTestSampleObject(1));
+      if (item?.metaData?.observations) {
+        testObservations = item?.metaData?.observations;
+      } else {
+        testObservations.push(getFieldDryDensityTestSampleObject(1));
+        testObservations.push(getFieldDryDensityTestSampleObject(2));
+      }
+    } else if (selectedTestSample.type == TEST_TYPES.CBR_TEST) {
+      if (item?.metaData?.observations) {
+        testObservations = item?.metaData?.observations;
+      } else {
+        testObservations.push(getCBRTestSampleObject(1));
+        testObservations.push(getCBRTestSampleObject(2));
+      }
+    } else if (selectedTestSample.type == TEST_TYPES.PLASTICITY_INDEX) {
+      if (item?.metaData?.observations) {
+        testObservations = item?.metaData?.observations;
+      } else testObservations.push(getPlasticityIndexTestSampleObject(1));
     }
     setSelectedTestSample(item);
     setConcreteSampleTestItems(testObservations);
@@ -679,28 +774,42 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
   };
 
   const onClickSubBaseSampleItem = (item: any) => {
-    const testObservations: any = [];
+    let testObservations: any = [];
     item.type = selectedTestSample.type;
     if (selectedTestSample.type == TEST_TYPES.GRADING_OF_AGGREGATE) {
-      testObservations.push(getCTSBGrationTestSampleObjectSB(1));
+      if (item?.metaData?.observations) {
+        testObservations = item?.metaData?.observations;
+      } else testObservations.push(getCTSBGrationTestSampleObjectSB(1));
     } else if (selectedTestSample.type == TEST_TYPES.WATER_ABSORPTION) {
-      testObservations.push(getWaterAbsorptionObjectSB(1));
+      if (item?.metaData?.observations) {
+        testObservations = item?.metaData?.observations;
+      } else testObservations.push(getWaterAbsorptionObjectSB(1));
     } else if (selectedTestSample.type == TEST_TYPES.ATTERBEG_LIMIT_TEST) {
-      testObservations.push(getGrainSizeAnalysisTestSampleObjectSB(1));
+      if (item?.metaData?.observations) {
+        testObservations = item?.metaData?.observations;
+      } else testObservations.push(getGrainSizeAnalysisTestSampleObjectSB(1));
     } else if (selectedTestSample.type == TEST_TYPES.AGGREGATE_IMPACT_VALUE) {
-      testObservations.push(getTestSampleAIVObjectSB(1));
+      if (item?.metaData?.observations) {
+        testObservations = item?.metaData?.observations;
+      } else testObservations.push(getTestSampleAIVObjectSB(1));
     } else if (selectedTestSample.type == TEST_TYPES.FIELD_DRY_DENSITY) {
-      testObservations.push(getFieldDryDensityTestSampleObjectSB(1));
-      testObservations.push(getFieldDryDensityTestSampleObjectSB(2));
-    } else if (
-      selectedTestSample.type == TEST_TYPES.CBR_TEST
-    ) {
-      testObservations.push(getCBRTestSampleObjectSB(1));
-      testObservations.push(getCBRTestSampleObjectSB(2));
-    } else if (
-      selectedTestSample.type == TEST_TYPES.MOISTURE_CONTENT
-    ) {
-      testObservations.push(getMoistureContentTestSampleObjectSB(1));
+      if (item?.metaData?.observations) {
+        testObservations = item?.metaData?.observations;
+      } else {
+        testObservations.push(getFieldDryDensityTestSampleObjectSB(1));
+        testObservations.push(getFieldDryDensityTestSampleObjectSB(2));
+      }
+    } else if (selectedTestSample.type == TEST_TYPES.CBR_TEST) {
+      if (item?.metaData?.observations) {
+        testObservations = item?.metaData?.observations;
+      } else {
+        testObservations.push(getCBRTestSampleObjectSB(1));
+        testObservations.push(getCBRTestSampleObjectSB(2));
+      }
+    } else if (selectedTestSample.type == TEST_TYPES.MOISTURE_CONTENT) {
+      if (item?.metaData?.observations) {
+        testObservations = item?.metaData?.observations;
+      } else testObservations.push(getMoistureContentTestSampleObjectSB(1));
     }
     setSelectedTestSample(item);
     setConcreteSampleTestItems(testObservations);
@@ -708,27 +817,39 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
   };
 
   const onClickBaseSubBaseSampleItem = (item: any) => {
-    const testObservations: any = [];
+    let testObservations: any = [];
     item.type = selectedTestSample.type;
     if (selectedTestSample.type == TEST_TYPES.GRADING_OF_AGGREGATE) {
-      testObservations.push(getCTSBGrationTestSampleObjectBSB(1));
+      if (item?.metaData?.observations) {
+        testObservations = item?.metaData?.observations;
+      } else testObservations.push(getCTSBGrationTestSampleObjectBSB(1));
     } else if (selectedTestSample.type == TEST_TYPES.WATER_ABSORPTION) {
-      testObservations.push(getWaterAbsorptionObjectBSB(1));
+      if (item?.metaData?.observations) {
+        testObservations = item?.metaData?.observations;
+      } else testObservations.push(getWaterAbsorptionObjectBSB(1));
     } else if (selectedTestSample.type == TEST_TYPES.ATTERBEG_LIMIT_TEST) {
-      testObservations.push(getGrainSizeAnalysisTestSampleObjectBSB(1));
+      if (item?.metaData?.observations) {
+        testObservations = item?.metaData?.observations;
+      } else testObservations.push(getGrainSizeAnalysisTestSampleObjectBSB(1));
     } else if (selectedTestSample.type == TEST_TYPES.AGGREGATE_IMPACT_VALUE) {
-      testObservations.push(getTestSampleAIVObjectBSB(1));
+      if (item?.metaData?.observations) {
+        testObservations = item?.metaData?.observations;
+      } else testObservations.push(getTestSampleAIVObjectBSB(1));
     } else if (selectedTestSample.type == TEST_TYPES.FIELD_DRY_DENSITY) {
-      testObservations.push(getFieldDryDensitySampleObjectBSB(1));
-      testObservations.push(getFieldDryDensitySampleObjectBSB(2));
-    } else if (
-      selectedTestSample.type == TEST_TYPES.FI_EI
-    ) {
-      testObservations.push(getTestSampleFIEIObjectBSB(1));
-    } else if (
-      selectedTestSample.type == TEST_TYPES.PROCTOR_DENSITY_TEST
-    ) {
-      testObservations.push(getProctorDensityTestSampleObjectBSB(1));
+      if (item?.metaData?.observations) {
+        testObservations = item?.metaData?.observations;
+      } else {
+        testObservations.push(getFieldDryDensitySampleObjectBSB(1));
+        testObservations.push(getFieldDryDensitySampleObjectBSB(2));
+      }
+    } else if (selectedTestSample.type == TEST_TYPES.FI_EI) {
+      if (item?.metaData?.observations) {
+        testObservations = item?.metaData?.observations;
+      } else testObservations.push(getTestSampleFIEIObjectBSB(1));
+    } else if (selectedTestSample.type == TEST_TYPES.PROCTOR_DENSITY_TEST) {
+      if (item?.metaData?.observations) {
+        testObservations = item?.metaData?.observations;
+      } else testObservations.push(getProctorDensityTestSampleObjectBSB(1));
     }
     setSelectedTestSample(item);
     setConcreteSampleTestItems(testObservations);
@@ -796,7 +917,9 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
   };
 
   const onSubmitTestSample = (status: string) => {
-    const testWorkCategoryDataType = currentTestWorkCategoryData.find((wc: any) => wc._id === currentTestMaterialData.testWorkCategoryId[0])?.type;
+    const testWorkCategoryDataType = currentTestWorkCategoryData.find(
+      (wc: any) => wc._id === currentTestMaterialData.testWorkCategoryId[0],
+    )?.type;
     let sampleData = {};
 
     const objSampleTest7thOr28thDay = Object.assign(
@@ -831,13 +954,15 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
       objSampleTest7thOr28thDay.observations &&
       objSampleTest7thOr28thDay.observations;
 
-    if (testWorkCategoryDataType === TEST_WORK_CATEGORY_TYPES.CONCRETE_STRUCTURE) {
+    if (
+      testWorkCategoryDataType === TEST_WORK_CATEGORY_TYPES.CONCRETE_STRUCTURE
+    ) {
       for (let i = 0; i < sampleObservations?.length; i++) {
         const observations = sampleObservations[i];
         observations['details']?.values.forEach((item: any) => {
           if (
             currentTestMaterialData.materialType ===
-            TEST_MATERIALS_TYPES.CONCRETE ||
+              TEST_MATERIALS_TYPES.CONCRETE ||
             selectedTestSample.type === TEST_TYPES.COMPRESSIVE_STRENGTH
           ) {
             if (
@@ -850,7 +975,8 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
           }
 
           if (
-            currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CONCRETE
+            currentTestMaterialData.materialType ===
+            TEST_MATERIALS_TYPES.CONCRETE
           ) {
             if (
               !isValidNumber(item.testArea, 'testArea') ||
@@ -896,7 +1022,9 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
                 )
                   return;
                 item.weightOfSample = Number(item.weightOfSample);
-                item.weightOfCementRetained = Number(item.weightOfCementRetained);
+                item.weightOfCementRetained = Number(
+                  item.weightOfCementRetained,
+                );
               } else if (i === 1) {
                 if (
                   !isValidNumber(item.weightOfCement, 'weightOfCement') ||
@@ -911,7 +1039,8 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
                 item.weightOfWater = Number(item.weightOfWater);
                 item.penetrationOfPlunger = Number(item.penetrationOfPlunger);
               } else {
-                if (!isValidNumber(item.weightOfCement, 'weightOfCement')) return;
+                if (!isValidNumber(item.weightOfCement, 'weightOfCement'))
+                  return;
                 item.weightOfCement = Number(item.weightOfCement);
               }
             }
@@ -928,7 +1057,7 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
             } else if (
               selectedTestSample.type === TEST_TYPES.NATURAL_MOISTURE_CONTENT ||
               selectedTestSample.type ===
-              TEST_TYPES.SPECIFIC_GRAVITY_AND_WATER_ABSORPTION
+                TEST_TYPES.SPECIFIC_GRAVITY_AND_WATER_ABSORPTION
             ) {
               if (!item.hide) {
                 if (
@@ -956,7 +1085,7 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
               selectedTestSample.type === TEST_TYPES.LOS_ANGELES_ABRATION ||
               selectedTestSample.type === TEST_TYPES.NATURAL_MOISTURE_CONTENT ||
               selectedTestSample.type ===
-              TEST_TYPES.SPECIFIC_GRAVITY_AND_WATER_ABSORPTION ||
+                TEST_TYPES.SPECIFIC_GRAVITY_AND_WATER_ABSORPTION ||
               selectedTestSample.type === TEST_TYPES.AGGREGATE_IMPACT_VALUE
             ) {
               if (!item.hide) {
@@ -1037,18 +1166,17 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
           }
         }
       }
-    } else if (testWorkCategoryDataType === TEST_WORK_CATEGORY_TYPES.BITUMINOUS_WORKS) {
-      if (
-        currentTestMaterialData.materialType ===
-        TEST_MATERIALS_TYPES.SMA
-      ) {
-        // 
+    } else if (
+      testWorkCategoryDataType === TEST_WORK_CATEGORY_TYPES.BITUMINOUS_WORKS
+    ) {
+      if (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.SMA) {
+        //
       }
     }
 
     sampleData = objSampleTest7thOr28thDay;
 
-    console.log('======sampleData========', JSON.stringify(sampleData))
+    console.log('======sampleData========', JSON.stringify(sampleData));
 
     dispatch(
       fillRFIsChecklistForTestSample({
@@ -1130,7 +1258,7 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
             horizontal={true}
             style={styles.scrollView}>
             {breadcrumbData.map((item: any, index) => (
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 {index == 0 ? (
                   <Text
                     style={styles.BreadcrumbPrevTextUnderline}
@@ -1189,41 +1317,41 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
       <ScrollView showsVerticalScrollIndicator={false} style={styles.Height100}>
         {currentLevel === 0
           ? myTestsDataAll.map((testClassificationItem: any, index: number) => (
-            <TouchableOpacity
-              style={[
-                styles.MyWorkCard,
-                { backgroundColor: colors[index % colors.length] },
-              ]}
-              onPress={() => onMyTestClick(testClassificationItem)}>
-              <View style={styles.TaskDetails}>
-                <Text style={styles.HeadingText}>
-                  {testClassificationItem.name}
-                </Text>
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={styles.SubHeadingText}>Assigned:</Text>
-                  <Text style={[styles.SubHeadingText, styles.SubActive]}>
+              <TouchableOpacity
+                style={[
+                  styles.MyWorkCard,
+                  {backgroundColor: colors[index % colors.length]},
+                ]}
+                onPress={() => onMyTestClick(testClassificationItem)}>
+                <View style={styles.TaskDetails}>
+                  <Text style={styles.HeadingText}>
                     {testClassificationItem.name}
                   </Text>
+                  <View style={{flexDirection: 'row'}}>
+                    <Text style={styles.SubHeadingText}>Assigned:</Text>
+                    <Text style={[styles.SubHeadingText, styles.SubActive]}>
+                      {testClassificationItem.name}
+                    </Text>
+                  </View>
                 </View>
-              </View>
-              <View style={commonStyles.iconsStyle}>
-                {imageMap.length && (
+                <View style={commonStyles.iconsStyle}>
+                  {imageMap.length && (
+                    <Image
+                      source={imageMap[index % imageMap.length]}
+                      style={commonStyles.image}
+                    />
+                  )}
+                </View>
+                <View style={commonStyles.rightStyle}>
                   <Image
-                    source={imageMap[index % imageMap.length]}
-                    style={commonStyles.image}
+                    style={commonStyles.CloseIcon}
+                    source={require('./../../images/right-arrow.png')}
                   />
-                )}
-              </View>
-              <View style={commonStyles.rightStyle}>
-                <Image
-                  style={commonStyles.CloseIcon}
-                  source={require('./../../images/right-arrow.png')}
-                />
-              </View>
-            </TouchableOpacity>
-          ))
+                </View>
+              </TouchableOpacity>
+            ))
           : currentLevel === 1
-            ? myTestsData.map(
+          ? myTestsData.map(
               (testClassificationItem: any, testClassificationIndex: number) =>
                 testClassificationItem.assignmentLevel === 1 ? (
                   <TouchableOpacity
@@ -1245,7 +1373,7 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
                       <Text style={styles.HeadingText}>
                         {testClassificationItem.name}
                       </Text>
-                      <View style={{ flexDirection: 'row' }}>
+                      <View style={{flexDirection: 'row'}}>
                         <Text style={styles.SubHeadingText}>Assigned:</Text>
                         <Text style={[styles.SubHeadingText, styles.SubActive]}>
                           {testClassificationItem.name}
@@ -1293,11 +1421,11 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
                             <Text style={styles.HeadingText}>
                               {testClassificationItem.name}
                             </Text>
-                            <View style={{ flexDirection: 'row' }}>
+                            <View style={{flexDirection: 'row'}}>
                               <Text style={styles.SubHeadingText}>
                                 Assigned:
                               </Text>
-                              <View style={{ flexDirection: 'row' }}>
+                              <View style={{flexDirection: 'row'}}>
                                 <Text
                                   style={[
                                     styles.SubHeadingText,
@@ -1351,7 +1479,7 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
                                   <Text style={styles.HeadingText}>
                                     {testClassificationItem.name}
                                   </Text>
-                                  <View style={{ flexDirection: 'row' }}>
+                                  <View style={{flexDirection: 'row'}}>
                                     <Text style={styles.SubHeadingText}>
                                       Assigned:
                                     </Text>
@@ -1372,7 +1500,7 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
                                     <Image
                                       source={
                                         imageMap[
-                                        testMateIndex % imageMap.length
+                                          testMateIndex % imageMap.length
                                         ]
                                       }
                                       style={commonStyles.image}
@@ -1396,7 +1524,7 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
                                         {
                                           backgroundColor:
                                             colors[
-                                            testTypeIndex % colors.length
+                                              testTypeIndex % colors.length
                                             ],
                                         },
                                       ]}
@@ -1414,7 +1542,7 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
                                         <Text style={styles.HeadingText}>
                                           {testClassificationItem.name}
                                         </Text>
-                                        <View style={{ flexDirection: 'row' }}>
+                                        <View style={{flexDirection: 'row'}}>
                                           <Text style={styles.SubHeadingText}>
                                             Assigned:
                                           </Text>
@@ -1438,7 +1566,7 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
                                           <Image
                                             source={
                                               imageMap[
-                                              testTypeIndex % imageMap.length
+                                                testTypeIndex % imageMap.length
                                               ]
                                             }
                                             style={commonStyles.image}
@@ -1460,51 +1588,51 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
                   )
                 ),
             )
-            : null}
+          : null}
         {currentLevel === 2
           ? currentTestWorkCategoryData && currentTestWorkCategoryData.length
             ? currentTestWorkCategoryData
-              .filter((subSeg: any) => {
-                if (searchText && subSeg.name) {
-                  return subSeg.name
-                    .toLowerCase()
-                    .includes(searchText.toLowerCase());
-                } else {
-                  return true;
-                }
-              })
-              .map((item: any, index) => (
-                <TouchableOpacity
-                  style={getStyle(item)}
-                  onPress={() => onClickNested(3, item)}>
-                  <View style={styles.leftContainer}>
-                    <Text style={styles.HeadText}>{item.name}</Text>
-                  </View>
-                </TouchableOpacity>
-              ))
+                .filter((subSeg: any) => {
+                  if (searchText && subSeg.name) {
+                    return subSeg.name
+                      .toLowerCase()
+                      .includes(searchText.toLowerCase());
+                  } else {
+                    return true;
+                  }
+                })
+                .map((item: any, index) => (
+                  <TouchableOpacity
+                    style={getStyle(item)}
+                    onPress={() => onClickNested(3, item)}>
+                    <View style={styles.leftContainer}>
+                      <Text style={styles.HeadText}>{item.name}</Text>
+                    </View>
+                  </TouchableOpacity>
+                ))
             : tasksListing(currentTestTypesData, searchText, getStyle, styles)
           : null}
         {currentLevel === 3
           ? currentTestMaterialsData && currentTestMaterialsData.length
             ? currentTestMaterialsData
-              .filter((testMate: any) => {
-                if (searchText && testMate.name) {
-                  return testMate.name
-                    .toLowerCase()
-                    .includes(searchText.toLowerCase());
-                } else {
-                  return true;
-                }
-              })
-              .map((item: any, index) => (
-                <TouchableOpacity
-                  style={getStyle(item)}
-                  onPress={() => onClickNested(4, item)}>
-                  <View style={styles.leftContainer}>
-                    <Text style={styles.HeadText}>{item.name}</Text>
-                  </View>
-                </TouchableOpacity>
-              ))
+                .filter((testMate: any) => {
+                  if (searchText && testMate.name) {
+                    return testMate.name
+                      .toLowerCase()
+                      .includes(searchText.toLowerCase());
+                  } else {
+                    return true;
+                  }
+                })
+                .map((item: any, index) => (
+                  <TouchableOpacity
+                    style={getStyle(item)}
+                    onPress={() => onClickNested(4, item)}>
+                    <View style={styles.leftContainer}>
+                      <Text style={styles.HeadText}>{item.name}</Text>
+                    </View>
+                  </TouchableOpacity>
+                ))
             : tasksListing(currentTestTypesData, searchText, getStyle, styles)
           : null}
         {currentLevel === 4
@@ -1512,32 +1640,32 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
           : null}
         {currentLevel === 5 && currentSubTestTypesData?.length
           ? currentSubTestTypesData
-            .filter((subTestType: any) => {
-              if (searchText && subTestType.name) {
-                return subTestType.name
-                  .toLowerCase()
-                  .includes(searchText.toLowerCase());
-              } else {
-                return true;
-              }
-            })
-            .map((item: any) => (
-              <TouchableOpacity
-                style={getStyle(item)}
-                onPress={() => onClickNested(6, item)}>
-                <View style={styles.leftContainer}>
-                  <Text style={styles.HeadText}>{item.name}</Text>
-                </View>
-              </TouchableOpacity>
-            ))
+              .filter((subTestType: any) => {
+                if (searchText && subTestType.name) {
+                  return subTestType.name
+                    .toLowerCase()
+                    .includes(searchText.toLowerCase());
+                } else {
+                  return true;
+                }
+              })
+              .map((item: any) => (
+                <TouchableOpacity
+                  style={getStyle(item)}
+                  onPress={() => onClickNested(6, item)}>
+                  <View style={styles.leftContainer}>
+                    <Text style={styles.HeadText}>{item.name}</Text>
+                  </View>
+                </TouchableOpacity>
+              ))
           : ((currentTestMaterialData.materialType ===
-            TEST_MATERIALS_TYPES.CONCRETE &&
-            selectedTestSample?.type === TEST_TYPES.CUBE_TEST) ||
-            (currentTestMaterialData.materialType ===
-              TEST_MATERIALS_TYPES.CEMENT &&
-              selectedTestSample?.type ===
-              TEST_TYPES.COMPRESSIVE_STRENGTH)) &&
-          tasksListing(currentTestTypesData, searchText, getStyle, styles)}
+              TEST_MATERIALS_TYPES.CONCRETE &&
+              selectedTestSample?.type === TEST_TYPES.CUBE_TEST) ||
+              (currentTestMaterialData.materialType ===
+                TEST_MATERIALS_TYPES.CEMENT &&
+                selectedTestSample?.type ===
+                  TEST_TYPES.COMPRESSIVE_STRENGTH)) &&
+            tasksListing(currentTestTypesData, searchText, getStyle, styles)}
         {currentLevel === 6 ? (
           currentSubTestTypeRFIsData?.length ? (
             <ScrollView style={styles.Height100}>
@@ -1554,21 +1682,21 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
                 .map((item: any) => {
                   if (
                     currentTestMaterialData.materialType ===
-                    TEST_MATERIALS_TYPES.SMA ||
+                      TEST_MATERIALS_TYPES.SMA ||
                     currentTestMaterialData.materialType ===
-                    TEST_MATERIALS_TYPES.DBM_RAP_DBM ||
+                      TEST_MATERIALS_TYPES.DBM_RAP_DBM ||
                     currentTestMaterialData.materialType ===
-                    TEST_MATERIALS_TYPES.BC ||
+                      TEST_MATERIALS_TYPES.BC ||
                     currentTestMaterialData.materialType ===
-                    TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING ||
+                      TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING ||
                     currentTestMaterialData.materialType ===
-                    TEST_MATERIALS_TYPES.BITUMEN ||
+                      TEST_MATERIALS_TYPES.BITUMEN ||
                     currentTestMaterialData.materialType ===
-                    TEST_MATERIALS_TYPES.COARSE_AGGREGATE_DBM_BC ||
+                      TEST_MATERIALS_TYPES.COARSE_AGGREGATE_DBM_BC ||
                     currentTestMaterialData.materialType ===
-                    TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA ||
+                      TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA ||
                     currentTestMaterialData.materialType ===
-                    TEST_MATERIALS_TYPES.EMULSION
+                      TEST_MATERIALS_TYPES.EMULSION
                   ) {
                     return (
                       <TouchableOpacity
@@ -1581,9 +1709,9 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
                     );
                   } else if (
                     currentTestMaterialData.materialType ===
-                    TEST_MATERIALS_TYPES.SOIL ||
+                      TEST_MATERIALS_TYPES.SOIL ||
                     currentTestMaterialData.materialType ===
-                    TEST_MATERIALS_TYPES.FLY_ASH
+                      TEST_MATERIALS_TYPES.FLY_ASH
                   ) {
                     return (
                       <TouchableOpacity
@@ -1596,9 +1724,9 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
                     );
                   } else if (
                     currentTestMaterialData.materialType ===
-                    TEST_MATERIALS_TYPES.GSB ||
+                      TEST_MATERIALS_TYPES.GSB ||
                     currentTestMaterialData.materialType ===
-                    TEST_MATERIALS_TYPES.CTSB
+                      TEST_MATERIALS_TYPES.CTSB
                   ) {
                     return (
                       <TouchableOpacity
@@ -1611,11 +1739,11 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
                     );
                   } else if (
                     currentTestMaterialData.materialType ===
-                    TEST_MATERIALS_TYPES.WMM ||
+                      TEST_MATERIALS_TYPES.WMM ||
                     currentTestMaterialData.materialType ===
-                    TEST_MATERIALS_TYPES.FINE_AGGREGATE_WMM ||
+                      TEST_MATERIALS_TYPES.FINE_AGGREGATE_WMM ||
                     currentTestMaterialData.materialType ===
-                    TEST_MATERIALS_TYPES.COARSE_AGGREGATE_WMM
+                      TEST_MATERIALS_TYPES.COARSE_AGGREGATE_WMM
                   ) {
                     return (
                       <TouchableOpacity
@@ -1631,7 +1759,8 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
                       <View>
                         <View
                           style={
-                            item.sampleStatus != TEST_SAMPLE_STATUS.PREPARED && {
+                            item.sampleStatus !=
+                              TEST_SAMPLE_STATUS.PREPARED && {
                               borderColor: '#000',
                               borderWidth: 1,
                               borderRadius: 10,
@@ -1642,7 +1771,7 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
                             style={getStyle(item)}
                             disabled={
                               item.sampleStatus !=
-                              TEST_SAMPLE_STATUS.PREPARED ||
+                                TEST_SAMPLE_STATUS.PREPARED ||
                               item.rfiStatus === RFI_STATUS.APPROVED
                             }
                             onPress={() => onClickTestSampleItem(item)}>
@@ -1657,7 +1786,7 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
                                 alignContent: 'center',
                                 alignItems: 'center',
                               }}>
-                              <View style={[styles.SectionStyle, { width: 140 }]}>
+                              <View style={[styles.SectionStyle, {width: 140}]}>
                                 <CustomDropdownPicker
                                   items={TEST_SAMPLE_STATUS_LIST}
                                   rowItem={item}
@@ -1665,13 +1794,15 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
                                   fieldName={'sampleStatus'}
                                 />
                               </View>
-                              <View style={{ height: 45 }}>
+                              <View style={{height: 45}}>
                                 <CustomCalendarPicker
                                   rowItem={item}
                                   tempProp={true}
-                                  fieldName={'rfiDateTime'}></CustomCalendarPicker>
+                                  fieldName={
+                                    'rfiDateTime'
+                                  }></CustomCalendarPicker>
                               </View>
-                              <View style={{ height: 45, width: 100 }}>
+                              <View style={{height: 45, width: 100}}>
                                 <TouchableOpacity
                                   style={[
                                     styles.SubmitSample,
@@ -1745,52 +1876,58 @@ const MyQualityWork = ({ route, navigation }: { route: any; navigation: any }) =
                   <Fragment>
                     <StatusBar barStyle="dark-content" />
                     <SafeAreaView>
-                      {
-                        (selectedTestSample && concreteSampleTestItems.length > 0) &&
-                        ((currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.SOIL ||
-                          currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.FLY_ASH
-                        ) ?
-                          testSampleFormEarthwork(
-                            styles,
-                            selectedTestSample?.materialType,
-                            formSampleTest7thOr28thDay,
-                            setFormSampleTest7thOr28thDay,
-                            currentTestMaterialData,
-                            selectedTestSample,
-                            concreteSampleTestItems,
-                          ) : (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.GSB ||
-                            currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CTSB
-                          ) ?
-                            testSampleFormSubBase(styles,
+                      {selectedTestSample &&
+                        concreteSampleTestItems.length > 0 &&
+                        (currentTestMaterialData.materialType ===
+                          TEST_MATERIALS_TYPES.SOIL ||
+                        currentTestMaterialData.materialType ===
+                          TEST_MATERIALS_TYPES.FLY_ASH
+                          ? testSampleFormEarthwork(
+                              styles,
                               selectedTestSample?.materialType,
                               formSampleTest7thOr28thDay,
                               setFormSampleTest7thOr28thDay,
                               currentTestMaterialData,
                               selectedTestSample,
-                              concreteSampleTestItems)
-                            : (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.WMM ||
-                              currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE_WMM ||
-                              currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE_WMM
-                            ) ?
-                              testSampleFormBaseSubBase(styles,
-                                selectedTestSample?.materialType,
-                                formSampleTest7thOr28thDay,
-                                setFormSampleTest7thOr28thDay,
-                                currentTestMaterialData,
-                                selectedTestSample,
-                                concreteSampleTestItems)
-                              :
-                              testSampleForm(
-                                styles,
-                                selectedTestSample?.materialType,
-                                formSampleTest7thOr28thDay,
-                                setFormSampleTest7thOr28thDay,
-                                currentTestMaterialData,
-                                selectedTestSample,
-                                concreteSampleTestItems,
-                              )
-                        )
-                      }
+                              concreteSampleTestItems,
+                            )
+                          : currentTestMaterialData.materialType ===
+                              TEST_MATERIALS_TYPES.GSB ||
+                            currentTestMaterialData.materialType ===
+                              TEST_MATERIALS_TYPES.CTSB
+                          ? testSampleFormSubBase(
+                              styles,
+                              selectedTestSample?.materialType,
+                              formSampleTest7thOr28thDay,
+                              setFormSampleTest7thOr28thDay,
+                              currentTestMaterialData,
+                              selectedTestSample,
+                              concreteSampleTestItems,
+                            )
+                          : currentTestMaterialData.materialType ===
+                              TEST_MATERIALS_TYPES.WMM ||
+                            currentTestMaterialData.materialType ===
+                              TEST_MATERIALS_TYPES.FINE_AGGREGATE_WMM ||
+                            currentTestMaterialData.materialType ===
+                              TEST_MATERIALS_TYPES.COARSE_AGGREGATE_WMM
+                          ? testSampleFormBaseSubBase(
+                              styles,
+                              selectedTestSample?.materialType,
+                              formSampleTest7thOr28thDay,
+                              setFormSampleTest7thOr28thDay,
+                              currentTestMaterialData,
+                              selectedTestSample,
+                              concreteSampleTestItems,
+                            )
+                          : testSampleForm(
+                              styles,
+                              selectedTestSample?.materialType,
+                              formSampleTest7thOr28thDay,
+                              setFormSampleTest7thOr28thDay,
+                              currentTestMaterialData,
+                              selectedTestSample,
+                              concreteSampleTestItems,
+                            ))}
                     </SafeAreaView>
                   </Fragment>
                 </ScrollView>
@@ -1870,7 +2007,7 @@ const styles = StyleSheet.create({
     marginHorizontal: -20,
     backgroundColor: '#fff',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10 },
+    shadowOffset: {width: 0, height: 10},
     shadowOpacity: 0.25,
     shadowRadius: 10,
     // Shadow for Android
@@ -2111,7 +2248,7 @@ const styles = StyleSheet.create({
     minHeight: 100,
     position: 'relative',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10 },
+    shadowOffset: {width: 0, height: 10},
     shadowOpacity: 0.25,
     shadowRadius: 20,
     elevation: 5,
@@ -2277,7 +2414,7 @@ const styles = StyleSheet.create({
     // alignItems: 'center',
     marginTop: 10,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10 },
+    shadowOffset: {width: 0, height: 10},
     shadowOpacity: 0.5,
     shadowRadius: 10,
     // Shadow for Android
@@ -2326,7 +2463,7 @@ const styles = StyleSheet.create({
     height: 45,
     borderRadius: 8,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.2,
     shadowRadius: 3,
     elevation: 3,

@@ -883,3 +883,96 @@ export const getSandEquivalentObject = (sampleNum: any) => {
 };
 
 //Bituminus work -> Fine Aggregate -> Plasticity index
+export const getPlasticityIndexTestSampleObject = (sampleNum: any) => {
+  return {
+    sampleNo: {
+      title: 'Sample no',
+      value: sampleNum,
+    },
+    details: {
+      titles: [
+        'Determination No',
+        'Liquid Limit 1',
+        'Liquid Limit 2',
+        'Liquid Limit 3',
+        'Liquid Limit 4',
+        'Plastic Limit 1',
+        'Plastic Limit 2',
+      ],
+      values: [
+        {
+          description: 'Container no.',
+          l1: 0.0,
+          ll2: 0.0,
+          ll3: 0.0,
+          ll4: 0.0,
+          pl1: 0.0,
+          pl2: 0.0,
+        },
+        {
+          description: 'Empty Wt.of Container (W1) gm',
+          l1: 0.0,
+          ll2: 0.0,
+          ll3: 0.0,
+          ll4: 0.0,
+          pl1: 0.0,
+          pl2: 0.0,
+        },
+        {
+          description: 'Wt.of Container and Wet Soil (W2) gm',
+          l1: 0.0,
+          ll2: 0.0,
+          ll3: 0.0,
+          ll4: 0.0,
+          pl1: 0.0,
+          pl2: 0.0,
+        },
+        {
+          description: 'Wt.of Container and Dry Soil (W3) gm',
+          l1: 0.0,
+          ll2: 0.0,
+          ll3: 0.0,
+          ll4: 0.0,
+          pl1: 0.0,
+          pl2: 0.0,
+        },
+        {
+          description: 'Wt. of Moisture (W4= W2-W3) gm',
+          l1: 0.0,
+          ll2: 0.0,
+          ll3: 0.0,
+          ll4: 0.0,
+          pl1: 0.0,
+          pl2: 0.0,
+        },
+        {
+          description: 'Wt. of dry material (W5= W3-W1) gm',
+          l1: 0.0,
+          ll2: 0.0,
+          ll3: 0.0,
+          ll4: 0.0,
+          pl1: 0.0,
+          pl2: 0.0,
+        },
+        {
+          description: 'Moisture Content w = 100 x W4/W5 %',
+          l1: 0.0,
+          ll2: 0.0,
+          ll3: 0.0,
+          ll4: 0.0,
+          pl1: 0.0,
+          pl2: 0.0,
+        },
+        {
+          description: 'No. of blows',
+          l1: 0.0,
+          ll2: 0.0,
+          ll3: 0.0,
+          ll4: 0.0,
+          pl1: 0.0,
+          pl2: 0.0,
+        },
+      ],
+    },
+  };
+};

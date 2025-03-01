@@ -883,7 +883,7 @@ export const getSandEquivalentObject = (sampleNum: any) => {
 };
 
 //Bituminus work -> Fine Aggregate -> Plasticity index
-export const getPlasticityIndexTestSampleObject = (sampleNum: any) => {
+export const getPlasticityIndexTestSampleObjectBW = (sampleNum: any) => {
   return {
     sampleNo: {
       title: 'Sample no',

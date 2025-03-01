@@ -62,6 +62,7 @@ import {
   testSampleForm,
 } from './ReportSamples/Forms/QualityWorks/CustomForms';
 import {
+  getPlasticityIndexTestSampleObjectBW,
   getTestSampleAIVObject,
   getTestSampleBCMixGradingGradeIObject,
   getTestSampleBCStabilityAndVoidAnalysisObject,
@@ -724,6 +725,10 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
       if (item?.metaData?.observations) {
         testObservations = item?.metaData?.observations;
       } else testObservations.push(getWaterAbsorptionObject(1));
+    } else if (selectedTestSample.type == TEST_TYPES.PLASTICITY_INDEX) {
+      if (item?.metaData?.observations) {
+        testObservations = item?.metaData?.observations;
+      } else testObservations.push(getPlasticityIndexTestSampleObjectBW(1));
     }
     setSelectedTestSample(item);
     setConcreteSampleTestItems(testObservations);

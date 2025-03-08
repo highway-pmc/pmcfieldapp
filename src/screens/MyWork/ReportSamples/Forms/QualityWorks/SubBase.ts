@@ -458,6 +458,12 @@ export const getFieldDryDensityTestSampleObjectSB = (sampleNum: any) => {
         title: 'Sample no',
         value: sampleNum,
       },
+      otherInfo: {
+        bulkDensitySand: 0.0,
+        testPitChainage: 0.0,
+        offsetCentreLine: 0.0,
+        sideLhsRhs: '',
+      },
       details: {
         titles: ['Description', 'Test 1', 'Test 2', 'Test 3'],
         values: [
@@ -528,6 +534,9 @@ export const getMoistureContentTestSampleObjectSB = (sampleNum: any) => {
       title: 'Sample no',
       value: sampleNum,
     },
+    otherInfo: {
+      methodUsed: '',
+    },
     details: {
       titles: ['Description', 'Test 1', 'Test 2', 'Test 3'],
       values: [
@@ -551,12 +560,6 @@ export const getMoistureContentTestSampleObjectSB = (sampleNum: any) => {
         },
         {
           description: 'Weight of container + weight Dry Soil in gm (W4)',
-          test1: 0,
-          test2: 0,
-          test3: 0,
-        },
-        {
-          description: 'Weight of water in gm(W6)= (W3-W5)',
           test1: 0,
           test2: 0,
           test3: 0,

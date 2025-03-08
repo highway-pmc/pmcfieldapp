@@ -135,9 +135,8 @@ export const getCBRTestSampleObject = (sampleNum: any) => {
             desc3: 'Corrected Load (Kg)',
             desc4: 'Proving Ring Reading',
             desc5: 'Corrected Load (Kg)',
-            desc6:
-              'Proving Ring ReadingProving Ring Reading',
-              desc7: 'Corrected Load (Kg)',
+            desc6: 'Proving Ring ReadingProving Ring Reading',
+            desc7: 'Corrected Load (Kg)',
           },
           {
             desc1: '0.50',
@@ -341,6 +340,9 @@ export const getMoistureContentTestSampleObject = (sampleNum: any) => {
       title: 'Sample no',
       value: sampleNum,
     },
+    otherInfo: {
+      methodUsed: '',
+    },
     details: {
       titles: ['Description', 'Test 1', 'Test 2', 'Test 3'],
       values: [
@@ -452,6 +454,9 @@ export const getProctorDensityTestSampleObject = (sampleNum: any) => {
       title: 'Sample no',
       value: sampleNum,
     },
+    otherInfo: {
+      proposedHeightEmbankment: 0.0,
+    },
     details: {
       titles: [
         'Description',
@@ -538,6 +543,12 @@ export const getFieldDryDensityTestSampleObject = (sampleNum: any) => {
       sampleNo: {
         title: 'Sample no',
         value: 'a) Field Density',
+      },
+      otherInfo: {
+        bulkDensitySand: 0.0,
+        testPitChainage: 0.0,
+        offsetCentreLine: 0.0,
+        sideLhsRhs: '',
       },
       details: {
         titles: ['Description', 'Test 1', 'Test 2', 'Test 3'],

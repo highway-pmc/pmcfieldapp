@@ -424,6 +424,70 @@ export const testSampleFormBaseSubBase = (
                               {item.sampleNo.value}
                             </Text>
                           </View>
+                          <Input
+                            label="Bulk Density of sand (Ys) in gmm/cc"
+                            value={
+                              concreteSampleTestItems[0].otherInfo
+                                .bulkDensitySand
+                            }
+                            onChange={(value: any) =>
+                              handleInputChangeFineAggregate(
+                                concreteSampleTestItems[0].otherInfo,
+                                'bulkDensitySand',
+                                value,
+                              )
+                            }
+                            isRequired={true}
+                          />
+                          <Input
+                            label="Test Pit chainage"
+                            value={
+                              concreteSampleTestItems[0].otherInfo
+                                .testPitChainage
+                            }
+                            onChange={(value: any) =>
+                              handleInputChangeFineAggregate(
+                                concreteSampleTestItems[0].otherInfo,
+                                'testPitChainage',
+                                value,
+                              )
+                            }
+                            isRequired={true}
+                          />
+                          <DropdownPicker
+                            label="Nominal Size"
+                            items={[
+                              {label: 'Select', value: ''},
+                              {label: 'LHS', value: 'LHS'},
+                              {label: 'RHS', value: 'RHS'},
+                            ]}
+                            value={
+                              concreteSampleTestItems[0].otherInfo.sideLhsRhs
+                            }
+                            onChange={(value: string) =>
+                              handleInputChangeFineAggregate(
+                                concreteSampleTestItems[0].otherInfo,
+                                'bulkDensitySand',
+                                value,
+                              )
+                            }
+                          />
+                          <Input
+                            label="Offset from Centre line (m)"
+                            value={
+                              concreteSampleTestItems[0].otherInfo
+                                .offsetCentreLine
+                            }
+                            onChange={(value: any) =>
+                              handleInputChangeFineAggregate(
+                                concreteSampleTestItems[0].otherInfo,
+                                'offsetCentreLine',
+                                value,
+                              )
+                            }
+                            isRequired={true}
+                          />
+
                           {index === 0
                             ? item.details.values.map(
                                 (value: any, indexDetails: number) => (
@@ -733,6 +797,21 @@ export const testSampleFormBaseSubBase = (
                     {concreteSampleTestItems.map((item: any, index: number) => (
                       <View style={{flexDirection: 'row'}} key={index}>
                         <View style={{flexDirection: 'column'}}>
+                          <Input
+                            label="Proposed Height of Embankment (m)"
+                            value={
+                              concreteSampleTestItems[0].otherInfo
+                                .proposedHeightEmbankment
+                            }
+                            onChange={(value: any) =>
+                              handleInputChangeFineAggregate(
+                                concreteSampleTestItems[0].otherInfo,
+                                'proposedHeightEmbankment',
+                                value,
+                              )
+                            }
+                            isRequired={true}
+                          />
                           {item.details &&
                             item.details.values.map(
                               (value: any, indexDetails: number) => (

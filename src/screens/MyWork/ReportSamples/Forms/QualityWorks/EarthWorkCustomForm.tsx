@@ -219,8 +219,7 @@ export const testSampleFormEarthwork = (
             <Text style={styles.GenerateRFIFieldLabel}>Observations:</Text>
             <ScrollView style={styles.Width100} horizontal={true}>
               {/* Soil */}
-              {
-                selectedTestSample &&
+              {selectedTestSample &&
                 (selectedTestSample.type === TEST_TYPES.FIELD_DRY_DENSITY ? (
                   <View>
                     {concreteSampleTestItems.map((item: any, index: any) => (
@@ -231,6 +230,70 @@ export const testSampleFormEarthwork = (
                               {item.sampleNo.value}
                             </Text>
                           </View>
+                          <Input
+                            label="Bulk Density of sand (Ys) in gmm/cc"
+                            value={
+                              concreteSampleTestItems[0].otherInfo
+                                .bulkDensitySand
+                            }
+                            onChange={(value: any) =>
+                              handleInputChangeFineAggregate(
+                                concreteSampleTestItems[0].otherInfo,
+                                'bulkDensitySand',
+                                value,
+                              )
+                            }
+                            isRequired={true}
+                          />
+                          <Input
+                            label="Test Pit chainage"
+                            value={
+                              concreteSampleTestItems[0].otherInfo
+                                .testPitChainage
+                            }
+                            onChange={(value: any) =>
+                              handleInputChangeFineAggregate(
+                                concreteSampleTestItems[0].otherInfo,
+                                'testPitChainage',
+                                value,
+                              )
+                            }
+                            isRequired={true}
+                          />
+                          <DropdownPicker
+                            label="Nominal Size"
+                            items={[
+                              {label: 'Select', value: ''},
+                              {label: 'LHS', value: 'LHS'},
+                              {label: 'RHS', value: 'RHS'},
+                            ]}
+                            value={
+                              concreteSampleTestItems[0].otherInfo.sideLhsRhs
+                            }
+                            onChange={(value: string) =>
+                              handleInputChangeFineAggregate(
+                                concreteSampleTestItems[0].otherInfo,
+                                'bulkDensitySand',
+                                value,
+                              )
+                            }
+                          />
+                          <Input
+                            label="Offset from Centre line (m)"
+                            value={
+                              concreteSampleTestItems[0].otherInfo
+                                .offsetCentreLine
+                            }
+                            onChange={(value: any) =>
+                              handleInputChangeFineAggregate(
+                                concreteSampleTestItems[0].otherInfo,
+                                'offsetCentreLine',
+                                value,
+                              )
+                            }
+                            isRequired={true}
+                          />
+
                           {index === 0
                             ? item.details.values.map(
                                 (value: any, indexDetails: number) => (
@@ -485,6 +548,21 @@ export const testSampleFormEarthwork = (
                     {concreteSampleTestItems.map((item: any, index: number) => (
                       <View style={{flexDirection: 'row'}} key={index}>
                         <View style={{flexDirection: 'column'}}>
+                          <Input
+                            label="Proposed Height of Embankment (m)"
+                            value={
+                              concreteSampleTestItems[0].otherInfo
+                                .proposedHeightEmbankment
+                            }
+                            onChange={(value: any) =>
+                              handleInputChangeFineAggregate(
+                                concreteSampleTestItems[0].otherInfo,
+                                'proposedHeightEmbankment',
+                                value,
+                              )
+                            }
+                            isRequired={true}
+                          />
                           {item.details &&
                             item.details.values.map(
                               (value: any, indexDetails: number) => (
@@ -691,11 +769,32 @@ export const testSampleFormEarthwork = (
                       </View>
                     ))}
                   </View>
-                ) : (currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.SOIL && selectedTestSample.type === TEST_TYPES.MOISTURE_CONTENT) ? (
+                ) : currentTestMaterialData.materialType ===
+                    TEST_MATERIALS_TYPES.SOIL &&
+                  selectedTestSample.type === TEST_TYPES.MOISTURE_CONTENT ? (
                   <View>
                     {concreteSampleTestItems.map((item: any, index: number) => (
                       <View style={{flexDirection: 'row'}} key={index}>
                         <View style={{flexDirection: 'column'}}>
+                          <DropdownPicker
+                            label="Type"
+                            items={[
+                              {label: 'Select', value: ''},
+                              {
+                                label: 'Calcium Carbide',
+                                value: 'Calcium Carbide',
+                              },
+                              {label: 'Oven dried', value: 'Oven dried'},
+                            ]}
+                            value={concreteSampleTestItems[0].otherInfo.grade}
+                            onChange={(value: string) =>
+                              handleInputChangeFineAggregate(
+                                concreteSampleTestItems[0].otherInfo,
+                                'methodUsed',
+                                value,
+                              )
+                            }
+                          />
                           {item.details &&
                             item.details.values.map(
                               (value: any, indexDetails: number) => (
@@ -967,22 +1066,19 @@ export const testSampleFormEarthwork = (
                             </Text>
                           </View>
                           {item.details.values.map(
-                                (value: any, indexDetails: number) => (
-                                  <View
-                                    key={indexDetails}
-                                    style={{flexDirection: 'row'}}>
-                                      {
-                                        getObjectKeys(value, styles)
-                                      }                                
-                                  </View>
-                                ),
-                              )
-                            }
+                            (value: any, indexDetails: number) => (
+                              <View
+                                key={indexDetails}
+                                style={{flexDirection: 'row'}}>
+                                {getObjectKeys(value, styles)}
+                              </View>
+                            ),
+                          )}
                         </View>
                       </View>
                     ))}
                   </View>
-                ): null)}
+                ) : null)}
             </ScrollView>
           </View>
         </View>
@@ -1144,30 +1240,28 @@ const getObjectKeys = (item: any, styles: any): any => {
   const view = (
     <View
       style={{
-        flexDirection: 'row'
+        flexDirection: 'row',
       }}>
-        {
-          keys.map((keyName: any) => {
-            return keyName.indexOf('desc') != -1 ? (
-              <View style={{flexDirection: 'row', height: 40}} key={keyName}>
-                <Text style={{fontWeight: '700'}}>{item[keyName]}</Text>
-              </View>
-            ) : (
-              <View style={{flexDirection: 'row', height: 40}}>
-                <CustomTextInput
-                  rowItem={item}
-                  tempProp={false}
-                  styleName={styles.inputStyle4}
-                  styles={styles}
-                  fieldName={keyName}
-                  key={keyName}
-                />
-              </View>
-            );
-          })
-        }
+      {keys.map((keyName: any) => {
+        return keyName.indexOf('desc') != -1 ? (
+          <View style={{flexDirection: 'row', height: 40}} key={keyName}>
+            <Text style={{fontWeight: '700'}}>{item[keyName]}</Text>
+          </View>
+        ) : (
+          <View style={{flexDirection: 'row', height: 40}}>
+            <CustomTextInput
+              rowItem={item}
+              tempProp={false}
+              styleName={styles.inputStyle4}
+              styles={styles}
+              fieldName={keyName}
+              key={keyName}
+            />
+          </View>
+        );
+      })}
     </View>
-  )
+  );
 
   return view;
-}
+};

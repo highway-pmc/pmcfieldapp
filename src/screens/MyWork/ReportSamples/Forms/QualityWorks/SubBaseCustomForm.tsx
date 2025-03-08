@@ -422,6 +422,69 @@ export const testSampleFormSubBase = (
                             <Text style={{fontWeight: '700'}}>
                               {item.sampleNo.value}
                             </Text>
+                            <Input
+                              label="Bulk Density of sand (Ys) in gmm/cc"
+                              value={
+                                concreteSampleTestItems[0].otherInfo
+                                  .bulkDensitySand
+                              }
+                              onChange={(value: any) =>
+                                handleInputChangeFineAggregate(
+                                  concreteSampleTestItems[0].otherInfo,
+                                  'bulkDensitySand',
+                                  value,
+                                )
+                              }
+                              isRequired={true}
+                            />
+                            <Input
+                              label="Test Pit chainage"
+                              value={
+                                concreteSampleTestItems[0].otherInfo
+                                  .testPitChainage
+                              }
+                              onChange={(value: any) =>
+                                handleInputChangeFineAggregate(
+                                  concreteSampleTestItems[0].otherInfo,
+                                  'testPitChainage',
+                                  value,
+                                )
+                              }
+                              isRequired={true}
+                            />
+                            <DropdownPicker
+                              label="Side (LHS/RHS)"
+                              items={[
+                                {label: 'Select', value: ''},
+                                {label: 'LHS', value: 'LHS'},
+                                {label: 'RHS', value: 'RHS'},
+                              ]}
+                              value={
+                                concreteSampleTestItems[0].otherInfo.sideLhsRhs
+                              }
+                              onChange={(value: string) =>
+                                handleInputChangeFineAggregate(
+                                  concreteSampleTestItems[0].otherInfo,
+                                  'bulkDensitySand',
+                                  value,
+                                )
+                              }
+                            />
+                            <Input
+                              label="Offset from Centre line (m)"
+                              value={
+                                concreteSampleTestItems[0].otherInfo
+                                  .offsetCentreLine
+                              }
+                              onChange={(value: any) =>
+                                handleInputChangeFineAggregate(
+                                  concreteSampleTestItems[0].otherInfo,
+                                  'offsetCentreLine',
+                                  value,
+                                )
+                              }
+                              isRequired={true}
+                            />
                           </View>
                           {index === 0
                             ? item.details.values.map(
@@ -721,6 +784,25 @@ export const testSampleFormSubBase = (
                     {concreteSampleTestItems.map((item: any, index: number) => (
                       <View style={{flexDirection: 'row'}} key={index}>
                         <View style={{flexDirection: 'column'}}>
+                          <DropdownPicker
+                            label="Type"
+                            items={[
+                              {label: 'Select', value: ''},
+                              {
+                                label: 'Calcium Carbide',
+                                value: 'Calcium Carbide',
+                              },
+                              {label: 'Oven dried', value: 'Oven dried'},
+                            ]}
+                            value={concreteSampleTestItems[0].otherInfo.grade}
+                            onChange={(value: string) =>
+                              handleInputChangeFineAggregate(
+                                concreteSampleTestItems[0].otherInfo,
+                                'methodUsed ',
+                                value,
+                              )
+                            }
+                          />
                           {item.details &&
                             item.details.values.map(
                               (value: any, indexDetails: number) => (

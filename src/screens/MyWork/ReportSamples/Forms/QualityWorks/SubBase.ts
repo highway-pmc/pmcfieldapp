@@ -500,6 +500,9 @@ export const getFieldDryDensityTestSampleObjectSB = (sampleNum: any) => {
         title: 'Sample no',
         value: sampleNum,
       },
+      otherInfo: {
+        methodUsed: '',
+      },
       details: {
         titles: ['Description', 'Test 1', 'Test 2', 'Test 3'],
         values: [

@@ -123,6 +123,7 @@ export const getGrainSizeAnalysisTestSampleObjectBSB = (sampleNum: any) => {
       title: 'Sample no',
       value: sampleNum,
     },
+    
     details: {
       titles: [
         'Determination No',
@@ -313,6 +314,9 @@ export const getFieldDryDensitySampleObjectBSB = (sampleNum: any) => {
       sampleNo: {
         title: 'Sample no',
         value: sampleNum,
+      },
+      otherInfo: {
+        methodUsed: '',
       },
       details: {
         titles: ['Description', 'Test 1', 'Test 2', 'Test 3'],

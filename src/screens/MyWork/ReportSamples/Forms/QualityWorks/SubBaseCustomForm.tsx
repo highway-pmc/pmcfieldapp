@@ -794,7 +794,9 @@ export const testSampleFormSubBase = (
                               },
                               {label: 'Oven dried', value: 'Oven dried'},
                             ]}
-                            value={concreteSampleTestItems[0].otherInfo.grade}
+                            value={
+                              concreteSampleTestItems[0].otherInfo.methodUsed
+                            }
                             onChange={(value: string) =>
                               handleInputChangeFineAggregate(
                                 concreteSampleTestItems[0].otherInfo,

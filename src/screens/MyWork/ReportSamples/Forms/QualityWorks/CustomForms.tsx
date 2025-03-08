@@ -1055,13 +1055,15 @@ export const testSampleForm = (
                                 label: 'Calcium Carbide',
                                 value: 'Calcium Carbide',
                               },
-                              {label: 'Oven dried', value: 'Oven dried'},
+                              {label: 'Oven Dried', value: 'Oven Dried'},
                             ]}
-                            value={concreteSampleTestItems[0].otherInfo.grade}
+                            value={
+                              concreteSampleTestItems[0].otherInfo.methodUsed
+                            }
                             onChange={(value: string) =>
                               handleInputChangeFineAggregate(
                                 concreteSampleTestItems[0].otherInfo,
-                                'type',
+                                'methodUsed',
                                 value,
                               )
                             }
@@ -1551,11 +1553,13 @@ export const testSampleForm = (
                               },
                               {label: 'Oven dried', value: 'Oven dried'},
                             ]}
-                            value={concreteSampleTestItems[0].otherInfo.grade}
+                            value={
+                              concreteSampleTestItems[0].otherInfo.methodUsed
+                            }
                             onChange={(value: string) =>
                               handleInputChangeFineAggregate(
                                 concreteSampleTestItems[0].otherInfo,
-                                'type',
+                                'methodUsed',
                                 value,
                               )
                             }

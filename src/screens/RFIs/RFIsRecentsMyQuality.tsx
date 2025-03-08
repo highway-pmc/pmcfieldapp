@@ -926,9 +926,8 @@ const RFIsRecentsMyQuality = (props: any) => {
         <View style={styles.observationTableContainer}>
           {data.map((sample: any, sampleIndex: number) => (
             <View key={sampleIndex}>
-              {/* Sample Number */}
               <Text style={styles.observationSampleNumberTitle}>
-                {sample.sampleNo.title}: {sample.sampleNo.value}
+                Total in Gram: {sample.totalInGram}
               </Text>
 
               {/* Table Headers */}

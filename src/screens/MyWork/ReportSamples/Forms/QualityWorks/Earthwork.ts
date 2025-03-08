@@ -293,6 +293,7 @@ export const getGrainSizeAnalysisTestSampleObject = (sampleNum: any) => {
       title: 'Sample no',
       value: sampleNum,
     },
+    totalInGram: 0,
     details: {
       titles: ['IS Sieve Size (mm)', 'Weight Retained in gm'],
       values: [
@@ -585,6 +586,9 @@ export const getFieldDryDensityTestSampleObject = (sampleNum: any) => {
       sampleNo: {
         title: 'Sample no',
         value: 'b) Moisture Content',
+      },
+      otherInfo: {
+        methodUsed: '',
       },
       details: {
         titles: ['Description', 'Test 1', 'Test 2', 'Test 3'],

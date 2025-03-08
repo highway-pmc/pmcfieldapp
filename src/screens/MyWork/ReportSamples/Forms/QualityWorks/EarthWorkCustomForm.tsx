@@ -722,6 +722,18 @@ export const testSampleFormEarthwork = (
                     {concreteSampleTestItems.map((item: any, index: any) => (
                       <View style={{flexDirection: 'row'}} key={index}>
                         <View style={{flexDirection: 'column'}}>
+                          <Input
+                            label="Total weight of Sample in gm (T)"
+                            value={concreteSampleTestItems[0].totalInGram}
+                            onChange={(value: any) =>
+                              handleInputChangeFineAggregate(
+                                concreteSampleTestItems[0],
+                                'totalInGram',
+                                value,
+                              )
+                            }
+                            isRequired={true}
+                          />
                           {item.details.values.map(
                             (value: any, indexDetails: number) => (
                               <View
@@ -786,7 +798,9 @@ export const testSampleFormEarthwork = (
                               },
                               {label: 'Oven dried', value: 'Oven dried'},
                             ]}
-                            value={concreteSampleTestItems[0].otherInfo.grade}
+                            value={
+                              concreteSampleTestItems[0].otherInfo.methodUsed
+                            }
                             onChange={(value: string) =>
                               handleInputChangeFineAggregate(
                                 concreteSampleTestItems[0].otherInfo,

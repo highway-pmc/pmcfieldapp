@@ -571,3 +571,259 @@ export const getMoistureContentTestSampleObjectSB = (sampleNum: any) => {
     },
   };
 };
+
+//GSB-Gration
+export const getGrationGradeITestSampleObjectSB = (sampleNum: any) => {
+  return {
+    sampleNo: {
+      title: 'Sample no',
+      value: sampleNum,
+    },
+    otherInfo: {
+      gradeOfGSB: 'Grade I',
+    },
+    totalInGram: 0,
+    details: {
+      titles: ['Sieve Size', 'Weight Retained in gm'],
+      values: [
+        {
+          isSieveSize: '75.00 mm',
+          weightRetained: 0,
+        },
+        {
+          isSieveSize: '53.00 mm',
+          weightRetained: 0,
+        },
+        {
+          isSieveSize: '26.50 mm',
+          weightRetained: 0,
+        },
+        {
+          isSieveSize: '9.50 mm',
+          weightRetained: 0,
+        },
+        {
+          isSieveSize: '4.75 mm',
+          weightRetained: 0,
+        },
+        {
+          isSieveSize: '2.36 mm',
+          weightRetained: 0,
+        },
+        {
+          isSieveSize: '0.425 mm',
+          weightRetained: 0,
+        },
+        {
+          isSieveSize: '0.075 mm',
+          weightRetained: 0,
+        },
+      ],
+    },
+  };
+};
+export const getGrationGradeIITestSampleObjectSB = (sampleNum: any) => {
+  return {
+    sampleNo: {
+      title: 'Sample no',
+      value: sampleNum,
+    },
+    otherInfo: {
+      gradeOfGSB: 'Grade II',
+    },
+    totalInGram: 0,
+    details: {
+      titles: ['Sieve Size', 'Weight Retained in gm'],
+      values: [
+        {
+          isSieveSize: '53.00 mm',
+          weightRetained: 0,
+        },
+        {
+          isSieveSize: '26.50 mm',
+          weightRetained: 0,
+        },
+        {
+          isSieveSize: '9.50 mm',
+          weightRetained: 0,
+        },
+        {
+          isSieveSize: '4.75 mm',
+          weightRetained: 0,
+        },
+        {
+          isSieveSize: '2.36 mm',
+          weightRetained: 0,
+        },
+        {
+          isSieveSize: '0.425 mm',
+          weightRetained: 0,
+        },
+        {
+          isSieveSize: '0.075 mm',
+          weightRetained: 0,
+        },
+      ],
+    },
+  };
+};
+export const getGrationGradeIIITestSampleObjectSB = (sampleNum: any) => {
+  return {
+    sampleNo: {
+      title: 'Sample no',
+      value: sampleNum,
+    },
+    otherInfo: {
+      gradeOfGSB: 'Grade III',
+    },
+    totalInGram: 0,
+    details: {
+      titles: ['Sieve Size', 'Weight Retained in gm'],
+      values: [
+        {
+          isSieveSize: '53.00 mm',
+          weightRetained: 0,
+        },
+        {
+          isSieveSize: '26.50 mm',
+          weightRetained: 0,
+        },
+        {
+          isSieveSize: '4.75 mm',
+          weightRetained: 0,
+        },
+        {
+          isSieveSize: '0.075 mm',
+          weightRetained: 0,
+        },
+      ],
+    },
+  };
+};
+export const getGrationGradeIVTestSampleObjectSB = (sampleNum: any) => {
+  return {
+    sampleNo: {
+      title: 'Sample no',
+      value: sampleNum,
+    },
+    otherInfo: {
+      gradeOfGSB: 'Grade IV',
+    },
+    totalInGram: 0,
+    details: {
+      titles: ['Sieve Size', 'Weight Retained in gm'],
+      values: [
+        {
+          isSieveSize: '53.00 mm',
+          weightRetained: 0,
+        },
+        {
+          isSieveSize: '26.50 mm',
+          weightRetained: 0,
+        },
+        {
+          isSieveSize: '4.75 mm',
+          weightRetained: 0,
+        },
+        {
+          isSieveSize: '0.075 mm',
+          weightRetained: 0,
+        },
+      ],
+    },
+  };
+};
+export const getGrationGradeVTestSampleObjectSB = (sampleNum: any) => {
+  return {
+    sampleNo: {
+      title: 'Sample no',
+      value: sampleNum,
+    },
+    otherInfo: {
+      gradeOfGSB: 'Grade V',
+    },
+    totalInGram: 0,
+    details: {
+      titles: ['Sieve Size', 'Weight Retained in gm'],
+      values: [
+        {
+          isSieveSize: '75.00 mm',
+          weightRetained: 0,
+        },
+        {
+          isSieveSize: '53.00 mm',
+          weightRetained: 0,
+        },
+        {
+          isSieveSize: '26.50 mm',
+          weightRetained: 0,
+        },
+        {
+          isSieveSize: '9.50 mm',
+          weightRetained: 0,
+        },
+        {
+          isSieveSize: '4.75 mm',
+          weightRetained: 0,
+        },
+        {
+          isSieveSize: '2.36 mm',
+          weightRetained: 0,
+        },
+        {
+          isSieveSize: '0.85 mm',
+          weightRetained: 0,
+        },
+        {
+          isSieveSize: '0.425 mm',
+          weightRetained: 0,
+        },
+      ],
+    },
+  };
+};
+export const getGrationGradeVITestSampleObjectSB = (sampleNum: any) => {
+  return {
+    sampleNo: {
+      title: 'Sample no',
+      value: sampleNum,
+    },
+    otherInfo: {
+      gradeOfGSB: 'Grade VI',
+    },
+    totalInGram: 0,
+    details: {
+      titles: ['Sieve Size', 'Weight Retained in gm'],
+      values: [
+        {
+          isSieveSize: '53.00 mm',
+          weightRetained: 0,
+        },
+        {
+          isSieveSize: '26.50 mm',
+          weightRetained: 0,
+        },
+        {
+          isSieveSize: '9.50 mm',
+          weightRetained: 0,
+        },
+        {
+          isSieveSize: '4.75 mm',
+          weightRetained: 0,
+        },
+        {
+          isSieveSize: '2.36 mm',
+          weightRetained: 0,
+        },
+        {
+          isSieveSize: '0.425 mm',
+          weightRetained: 0,
+        },
+        {
+          isSieveSize: '0.075 mm',
+          weightRetained: 0,
+        },
+      ],
+    },
+  };
+};

@@ -13,6 +13,8 @@ import {
 } from '../../../../../constants/constants';
 import CalendarPicker from '../../../../../components/UI/CalenderPicker';
 import Input from '../../../../../components/UI/Input';
+import {set} from 'date-fns';
+import {getGrationGradeIIITestSampleObjectSB, getGrationGradeIITestSampleObjectSB, getGrationGradeITestSampleObjectSB, getGrationGradeIVTestSampleObjectSB, getGrationGradeVITestSampleObjectSB, getGrationGradeVTestSampleObjectSB} from './SubBase';
 
 export const CustomDropdownPicker = ({
   items,
@@ -152,8 +154,36 @@ export const testSampleFormSubBase = (
   currentTestMaterialData = _currentTestMaterialData;
   selectedTestSample = _selectedTestSample;
   concreteSampleTestItems = _concreteSampleTestItems;
-  console.log('Earthwork currentTestMaterialData', currentTestMaterialData);
-  console.log('Earthwork selectedTestSample.type :', selectedTestSample.type);
+  const [grade, setGrade] = useState('Grade I');
+  const [testItemGsb, setTestItemGsb]=useState([]);
+  const handleInputChangeFineAggregate = (
+    item: any,
+    name: any,
+    value: string | number | [],
+  ) => {
+    if (name == 'gradeOfGSB') {
+      setGrade(value);
+      const testobserbationGSB=[];
+      if (grade == 'Grade I') {
+        testobserbationGSB.push(getGrationGradeITestSampleObjectSB(1));
+      } else if (grade == 'Grade II') {
+        testobserbationGSB.push(getGrationGradeIITestSampleObjectSB(1));
+      } else if (grade == 'Grade III') {
+        testobserbationGSB.push(getGrationGradeIIITestSampleObjectSB(1));
+      } else if (grade == 'Grade IV') {
+        testobserbationGSB.push(getGrationGradeIVTestSampleObjectSB(1));
+      } else if (grade == 'Grade V') {
+        testobserbationGSB.push(getGrationGradeVTestSampleObjectSB(1));
+      } else if (grade == 'Grade VI') {
+        testobserbationGSB.push(getGrationGradeVITestSampleObjectSB(1));
+      }
+    } else {
+      item[name] = value;
+      setFormSampleTest7thOr28thDay({...formSampleTest7thOr28thDay});
+    }
+  };
+  //console.log('Earthwork currentTestMaterialData', currentTestMaterialData);
+  //console.log('Earthwork selectedTestSample.type :', selectedTestSample.type);
   if (
     !materialType ||
     materialType === TEST_MATERIALS_TYPES.GSB ||
@@ -422,6 +452,69 @@ export const testSampleFormSubBase = (
                             <Text style={{fontWeight: '700'}}>
                               {item.sampleNo.value}
                             </Text>
+                            <Input
+                              label="Bulk Density of sand (Ys) in gmm/cc"
+                              value={
+                                concreteSampleTestItems[0].otherInfo
+                                  .bulkDensitySand
+                              }
+                              onChange={(value: any) =>
+                                handleInputChangeFineAggregate(
+                                  concreteSampleTestItems[0].otherInfo,
+                                  'bulkDensitySand',
+                                  value,
+                                )
+                              }
+                              isRequired={true}
+                            />
+                            <Input
+                              label="Test Pit chainage"
+                              value={
+                                concreteSampleTestItems[0].otherInfo
+                                  .testPitChainage
+                              }
+                              onChange={(value: any) =>
+                                handleInputChangeFineAggregate(
+                                  concreteSampleTestItems[0].otherInfo,
+                                  'testPitChainage',
+                                  value,
+                                )
+                              }
+                              isRequired={true}
+                            />
+                            <DropdownPicker
+                              label="Side (LHS/RHS)"
+                              items={[
+                                {label: 'Select', value: ''},
+                                {label: 'LHS', value: 'LHS'},
+                                {label: 'RHS', value: 'RHS'},
+                              ]}
+                              value={
+                                concreteSampleTestItems[0].otherInfo.sideLhsRhs
+                              }
+                              onChange={(value: string) =>
+                                handleInputChangeFineAggregate(
+                                  concreteSampleTestItems[0].otherInfo,
+                                  'bulkDensitySand',
+                                  value,
+                                )
+                              }
+                            />
+                            <Input
+                              label="Offset from Centre line (m)"
+                              value={
+                                concreteSampleTestItems[0].otherInfo
+                                  .offsetCentreLine
+                              }
+                              onChange={(value: any) =>
+                                handleInputChangeFineAggregate(
+                                  concreteSampleTestItems[0].otherInfo,
+                                  'offsetCentreLine',
+                                  value,
+                                )
+                              }
+                              isRequired={true}
+                            />
                           </View>
                           {index === 0
                             ? item.details.values.map(
@@ -617,6 +710,27 @@ export const testSampleFormSubBase = (
                     {concreteSampleTestItems.map((item: any, index: number) => (
                       <View style={{flexDirection: 'row'}} key={index}>
                         <View style={{flexDirection: 'column'}}>
+                          <DropdownPicker
+                            label="Type"
+                            items={[
+                              {label: 'Select', value: ''},
+                              {
+                                label: 'Calcium Carbide',
+                                value: 'Calcium Carbide',
+                              },
+                              {label: 'Oven dried', value: 'Oven dried'},
+                            ]}
+                            value={
+                              concreteSampleTestItems[0].otherInfo.methodUsed
+                            }
+                            onChange={(value: string) =>
+                              handleInputChangeFineAggregate(
+                                concreteSampleTestItems[0].otherInfo,
+                                'methodUsed ',
+                                value,
+                              )
+                            }
+                          />
                           {item.details &&
                             item.details.values.map(
                               (value: any, indexDetails: number) => (
@@ -830,6 +944,108 @@ export const testSampleFormSubBase = (
                     ))}
                   </View>
                 ) : null)}
+
+              {currentTestMaterialData.materialType ===
+                TEST_MATERIALS_TYPES.GSB &&
+                selectedTestSample.type === TEST_TYPES.GRADING_OF_AGGREGATE && (
+                  <View>
+                    {testItemGsb.map((item: any, index: number) => (
+                      <View style={{flexDirection: 'row'}} key={index}>
+                        <View style={{flexDirection: 'column'}}>
+                          <DropdownPicker
+                            label="Type"
+                            items={[
+                              {label: 'Select', value: ''},
+                              {
+                                label: 'Grade I',
+                                value: 'Grade I',
+                              },
+                              {
+                                label: 'Grade II',
+                                value: 'Grade II',
+                              },
+                              {
+                                label: 'Grade III',
+                                value: 'Grade III',
+                              },
+                              {
+                                label: 'Grade IV',
+                                value: 'Grade IV',
+                              },
+                              {
+                                label: 'Grade V',
+                                value: 'Grade V',
+                              },
+                              {
+                                label: 'Grade VI',
+                                value: 'Grade VI',
+                              },
+                            ]}
+                            value={grade}
+                            onChange={(value: string) =>
+                              handleInputChangeFineAggregate(
+                                grade,
+                                'gradeOfGSB',
+                                value,
+                              )
+                            }
+                          />
+                          {item.details &&
+                            item.details.values.map(
+                              (value: any, indexDetails: number) => (
+                                <View
+                                  style={{flexDirection: 'row'}}
+                                  key={indexDetails}>
+                                  <View
+                                    style={{
+                                      flexDirection: 'column',
+                                      width: 200,
+                                    }}>
+                                    {index === 0 && indexDetails === 0 ? (
+                                      <View style={{height: 40}}>
+                                        <Text style={{fontWeight: '700'}}>
+                                          {item.details.titles[0]}
+                                        </Text>
+                                      </View>
+                                    ) : null}
+                                    <Text
+                                      style={[
+                                        styles.textStyle2,
+                                        {textAlign: 'center'},
+                                      ]}>
+                                      {value.isSieveSize}
+                                    </Text>
+                                  </View>
+
+                                  <View
+                                    style={{
+                                      flexDirection: 'column',
+                                      width: 120,
+                                    }}>
+                                    {index === 0 && indexDetails === 0 ? (
+                                      <View style={{height: 40}}>
+                                        <Text style={{fontWeight: '700'}}>
+                                          {item.details.titles[1]}
+                                        </Text>
+                                      </View>
+                                    ) : null}
+                                    <CustomTextInput
+                                      rowItem={value}
+                                      tempProp={false}
+                                      styleName={styles.inputStyle3}
+                                      styles={styles}
+                                      fieldName={
+                                        'weightRetained'
+                                      }></CustomTextInput>
+                                  </View>
+                                </View>
+                              ),
+                            )}
+                        </View>
+                      </View>
+                    ))}
+                  </View>
+                )}
             </ScrollView>
           </View>
         </View>
@@ -966,15 +1182,6 @@ const handleInputChange = (
     ...formSampleTest7thOr28thDay,
     [name]: value,
   });
-};
-
-const handleInputChangeFineAggregate = (
-  item: any,
-  name: any,
-  value: string | number | [],
-) => {
-  item[name] = value;
-  setFormSampleTest7thOr28thDay({...formSampleTest7thOr28thDay});
 };
 
 const getRFIDataByWorkAssignmentId = (task: any) => {

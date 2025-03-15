@@ -217,9 +217,9 @@ const RFIsRecentsMyQuality = (props: any) => {
     const selectedTestSample = selectedRFI.testTypeId;
 
     const data = selectedRFI.metaData.observations;
-    console.log(selectedTestSample.type);
-    console.log(data);
-    console.log(typeof data);
+    // console.log(selectedTestSample.type);
+    // console.log(data);
+    // console.log(typeof data);
     if (selectedTestSample.type === TEST_TYPES.BINDER_CONTENT) {
       return (
         <View style={styles.observationTableContainer}>
@@ -228,6 +228,16 @@ const RFIsRecentsMyQuality = (props: any) => {
               {/* <Text style={styles.observationSampleNumberTitle}>
                 {sample.sampleNo.title}: {sample.sampleNo.value}
               </Text> */}
+              <Text style={styles.observationSampleNumberTitle}>
+                Grade of Bitumen:
+                {sample.otherInfo.gradeOfBitumen}
+              </Text>
+              <Text style={styles.observationSampleNumberTitle}>
+                Source of Bitumen: {sample.otherInfo.sourceOfBitumen}
+              </Text>
+              <Text style={styles.observationSampleNumberTitle}>
+                Source of Aggregate: {sample.otherInfo.sourceOfAggregate}
+              </Text>
               <View style={styles.observationTableRow}>
                 {sample.details.titles.map((title: any, index: any) => (
                   <View
@@ -365,6 +375,9 @@ const RFIsRecentsMyQuality = (props: any) => {
           {data.map((sample: any, sampleIndex: any) => (
             <View key={sampleIndex}>
               <Text style={styles.observationSampleNumberTitle}>
+                Type: {sample.otherInfo.type}
+              </Text>
+              <Text style={styles.observationSampleNumberTitle}>
                 Total in Gram: {sample.totalInGram}
               </Text>
 
@@ -454,7 +467,7 @@ const RFIsRecentsMyQuality = (props: any) => {
             <View key={sampleIndex}>
               {/* Sample Number */}
               <Text style={styles.observationSampleNumberTitle}>
-                {sample.sampleNo.title}: {sample.sampleNo.value}
+                Grade of Bitumen:{sample.otherInfo.gradeOfBitumen}
               </Text>
 
               {/* Additional properties */}
@@ -512,10 +525,12 @@ const RFIsRecentsMyQuality = (props: any) => {
           {data.map((sample: any, sampleIndex: number) => (
             <View key={sampleIndex}>
               {/* Sample Number */}
-              <Text style={styles.observationSampleNumberTitle}>
+              {/* <Text style={styles.observationSampleNumberTitle}>
                 {sample.sampleNo.title}: {sample.sampleNo.value}
+              </Text> */}
+              <Text style={styles.observationSampleNumberTitle}>
+                Grade of Bitumen:{sample.otherInfo.gradeOfBitumen}
               </Text>
-
               {/* Additional properties */}
               <Text style={styles.observationSampleNumberTitle}>
                 Pouring of Cooling Air: {sample.pouringOfCoolingAir}
@@ -575,6 +590,9 @@ const RFIsRecentsMyQuality = (props: any) => {
         <View style={styles.observationTableContainer}>
           {data.map((sample: any, sampleIndex: number) => (
             <View key={sampleIndex}>
+              <Text style={styles.observationSampleNumberTitle}>
+                Grade of Bitumen:{sample.otherInfo.gradeOfBitumen}
+              </Text>
               {/* Table Headers */}
               <View style={styles.observationTableRow}>
                 {sample.details.titles.map((title: string, index: number) => (
@@ -621,6 +639,9 @@ const RFIsRecentsMyQuality = (props: any) => {
         <View style={styles.observationTableContainer}>
           {data.map((sample: any, sampleIndex: number) => (
             <View key={sampleIndex}>
+              <Text style={styles.observationSampleNumberTitle}>
+                Grade of Bitumen:{sample.otherInfo.gradeOfBitumen}
+              </Text>
               {/* Pouring Temperature */}
               <Text style={styles.observationSampleNumberTitle}>
                 Pouring Temperature: {sample.pouringTemp}
@@ -815,6 +836,9 @@ const RFIsRecentsMyQuality = (props: any) => {
         <View style={styles.observationTableContainer}>
           {data.map((sample: any, sampleIndex: number) => (
             <View key={sampleIndex}>
+              <Text style={styles.observationSampleNumberTitle}>
+                Type of Method Used :{sample.otherInfo.methodUsed}
+              </Text>
               {/* Table Headers */}
               <View style={styles.observationTableRow}>
                 {sample.details.titles.map((title: string, index: number) => (
@@ -902,9 +926,8 @@ const RFIsRecentsMyQuality = (props: any) => {
         <View style={styles.observationTableContainer}>
           {data.map((sample: any, sampleIndex: number) => (
             <View key={sampleIndex}>
-              {/* Sample Number */}
               <Text style={styles.observationSampleNumberTitle}>
-                {sample.sampleNo.title}: {sample.sampleNo.value}
+                Total in Gram: {sample.totalInGram}
               </Text>
 
               {/* Table Headers */}
@@ -962,6 +985,10 @@ const RFIsRecentsMyQuality = (props: any) => {
         <View style={styles.observationTableContainer}>
           {data.map((sample: any, sampleIndex: number) => (
             <View key={sampleIndex}>
+              <Text style={styles.observationSampleNumberTitle}>
+                Proposed Height of Embankment (m) :
+                {sample.otherInfo.proposedHeightEmbankment}
+              </Text>
               {/* Table Headers */}
               <View style={styles.observationTableRow}>
                 {sample.details.titles.map((title: string, index: number) => (
@@ -1006,6 +1033,19 @@ const RFIsRecentsMyQuality = (props: any) => {
         <View style={styles.observationTableContainer}>
           {data.map((sample: any, sampleIndex: number) => (
             <View key={sampleIndex}>
+              <Text style={styles.observationSampleNumberTitle}>
+                Bulk Density of sand (Ys) in gmm/cc:
+                {sample.otherInfo.bulkDensitySand}
+              </Text>
+              <Text style={styles.observationSampleNumberTitle}>
+                Test Pit chainage: {sample.otherInfo.testPitChainage}
+              </Text>
+              <Text style={styles.observationSampleNumberTitle}>
+                Side (LHS/RHS): {sample.otherInfo.sideLhsRhs}
+              </Text>
+              <Text style={styles.observationSampleNumberTitle}>
+                Offset from Centre line (m): {sample.otherInfo.offsetCentreLine}
+              </Text>
               {/* Table Headers */}
               <View style={styles.observationTableRow}>
                 {sample.details.titles.map((title: string, index: number) => (

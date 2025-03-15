@@ -123,6 +123,7 @@ export const getGrainSizeAnalysisTestSampleObjectBSB = (sampleNum: any) => {
       title: 'Sample no',
       value: sampleNum,
     },
+    
     details: {
       titles: [
         'Determination No',
@@ -272,6 +273,12 @@ export const getFieldDryDensitySampleObjectBSB = (sampleNum: any) => {
         title: 'Sample no',
         value: sampleNum,
       },
+      otherInfo: {
+        bulkDensitySand: 0.0,
+        testPitChainage: 0.0,
+        offsetCentreLine: 0.0,
+        sideLhsRhs: '',
+      },
       details: {
         titles: ['Description', 'Test 1', 'Test 2', 'Test 3'],
         values: [
@@ -308,6 +315,9 @@ export const getFieldDryDensitySampleObjectBSB = (sampleNum: any) => {
         title: 'Sample no',
         value: sampleNum,
       },
+      otherInfo: {
+        methodUsed: '',
+      },
       details: {
         titles: ['Description', 'Test 1', 'Test 2', 'Test 3'],
         values: [
@@ -335,11 +345,15 @@ export const getFieldDryDensitySampleObjectBSB = (sampleNum: any) => {
   }
 };
 //WMM - Proctor Density Test
+//Proposed Height of Embankment (m)
 export const getProctorDensityTestSampleObjectBSB = (sampleNum: any) => {
   return {
     sampleNo: {
       title: 'Sample no',
       value: sampleNum,
+    },
+    otherInfo: {
+      proposedHeightEmbankment: 0.0,
     },
     details: {
       titles: [
@@ -419,4 +433,3 @@ export const getProctorDensityTestSampleObjectBSB = (sampleNum: any) => {
     },
   };
 };
-

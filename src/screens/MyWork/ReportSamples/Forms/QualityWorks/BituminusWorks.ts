@@ -154,6 +154,11 @@ export const getTestSampleBinderContentObject = (sampleNum: any) => {
       title: 'Sample no',
       value: sampleNum,
     },
+    otherInfo: {
+      gradeOfBitumen: '',
+      sourceOfBitumen: '',
+      sourceOfAggregate: '',
+    },
     details: {
       titles: ['Description', 'Test 1', 'Test 2', 'Test 3'],
       values: [
@@ -348,6 +353,11 @@ export const getTestSampleBCMixGradingGradeIObject = (sampleNum: any) => {
       value: sampleNum,
     },
     totalInGram: 0,
+    otherInfo: {
+      sourceOfAggregate: '',
+      grade: '',
+      nominalMaximumParticleSize: '',
+    },
     details: {
       titles: ['Sieve Size', 'Weight retained in gm'],
       values: [
@@ -407,6 +417,11 @@ export const getTestSampleBCMixGradingGradeIIObject = (sampleNum: any) => {
       value: sampleNum,
     },
     totalInGram: 0,
+    otherInfo: {
+      sourceOfAggregate: '',
+      grade: '',
+      nominalMaximumParticleSize: '',
+    },
     details: {
       titles: ['Sieve Size', 'Weight retained in gm'],
       values: [
@@ -462,6 +477,11 @@ export const getTestSampleDBMMixGradingGradeIObject = (sampleNum: any) => {
       value: sampleNum,
     },
     totalInGram: 0,
+    otherInfo: {
+      sourceOfAggregate: '',
+      grade: '',
+      nominalMaximumParticleSize: '',
+    },
     details: {
       titles: ['Sieve Size', 'Weight retained in gm'],
       values: [
@@ -513,6 +533,11 @@ export const getTestSampleDBMMixGradingGradeIIObject = (sampleNum: any) => {
       value: sampleNum,
     },
     totalInGram: 0,
+    otherInfo: {
+      sourceOfAggregate: '',
+      grade: '',
+      nominalMaximumParticleSize: '',
+    },
     details: {
       titles: ['Sieve Size', 'Weight retained in gm'],
       values: [
@@ -564,6 +589,9 @@ export const getTestSampleSofteningPointObject = (sampleNum: any) => {
       value: sampleNum,
     },
     pouringTemp: 0.0,
+    otherInfo: {
+      gradeOfBitumen: '',
+    },
     details: {
       titles: [
         'Time in Minutes',
@@ -657,6 +685,9 @@ export const getTestSampleFlashFirePointsObject = (sampleNum: any) => {
       title: 'Sample no',
       value: sampleNum,
     },
+    otherInfo: {
+      gradeOfBitumen: '',
+    },
     details: {
       titles: ['Test Property', 'Test 1', 'Test 2', 'Test 3'],
       values: [
@@ -686,6 +717,9 @@ export const getTestSampleDuctilityTestObject = (sampleNum: any) => {
     pouringOfCoolingAir: 0.0,
     periodCoolintBeforeTrimming: 0.0,
     periodCoolingAfterTriming: 0.0,
+    otherInfo: {
+      gradeOfBitumen: '',
+    },
     details: {
       titles: ['Test Property', 'Test 1', 'Test 2', 'Test 3'],
       values: [
@@ -712,6 +746,9 @@ export const getTestSampleBituminousPenetrationTestObject = (
     pouringTemp: 0.0,
     periodCoolingTemp: 0.0,
     periodCoolingInWater: 0.0,
+    otherInfo: {
+      gradeOfBitumen: '',
+    },
     details: {
       titles: ['Test No.', 'Initial Dial Reading', 'Final Dial Reading'],
       values: [
@@ -809,6 +846,9 @@ export const getTestSampleGradationObject = (sampleNum: any) => {
       value: sampleNum,
     },
     totalInGram: 0,
+    otherInfo: {
+      type: '',
+    },
     details: {
       titles: ['Sieve Size', 'Weight retained in gm'],
       values: [
@@ -855,6 +895,9 @@ export const getSandEquivalentObject = (sampleNum: any) => {
     sampleNo: {
       title: 'Sample no',
       value: sampleNum,
+    },
+    otherInfo: {
+      sourceOfAggregate: '',
     },
     details: {
       titles: ['Description', 'Trial 1', 'Trial 2', 'Trial 3'],

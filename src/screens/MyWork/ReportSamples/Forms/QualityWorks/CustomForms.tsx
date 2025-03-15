@@ -201,7 +201,10 @@ export const testSampleForm = (
   currentTestMaterialData = _currentTestMaterialData;
   selectedTestSample = _selectedTestSample;
   concreteSampleTestItems = _concreteSampleTestItems;
-  console.log('currentTestMaterialData', JSON.stringify(currentTestMaterialData));
+  console.log(
+    'currentTestMaterialData',
+    JSON.stringify(currentTestMaterialData),
+  );
   console.log('selectedTestSample.type :', selectedTestSample.type);
   console.log('materialType', materialType);
   if (
@@ -954,6 +957,22 @@ export const testSampleForm = (
                 (selectedTestSample.type === TEST_TYPES.GRADATION ? (
                   <View>
                     <View style={{flexDirection: 'column'}}>
+                      <DropdownPicker
+                        label="Type"
+                        items={[
+                          {label: 'Select', value: ''},
+                          {label: 'TYPE II (4-6 mm)', value: 'TYPEII'},
+                          {label: 'TYPE III (6-8 mm)', value: 'TYPEIII'},
+                        ]}
+                        value={concreteSampleTestItems[0].otherInfo?.type || ''}
+                        onChange={(value: string) =>
+                          handleInputChangeFineAggregate(
+                            concreteSampleTestItems[0].otherInfo,
+                            'type',
+                            value,
+                          )
+                        }
+                      />
                       <Input
                         label="Total weight of Sample in gm (T)"
                         value={concreteSampleTestItems[0].weightOfSample}
@@ -1028,6 +1047,27 @@ export const testSampleForm = (
                     {concreteSampleTestItems.map((item: any, index: any) => (
                       <View style={{flexDirection: 'row'}}>
                         <View style={{flexDirection: 'column'}}>
+                          <DropdownPicker
+                            label="Type"
+                            items={[
+                              {label: 'Select', value: ''},
+                              {
+                                label: 'Calcium Carbide',
+                                value: 'Calcium Carbide',
+                              },
+                              {label: 'Oven Dried', value: 'Oven Dried'},
+                            ]}
+                            value={
+                              concreteSampleTestItems[0].otherInfo.methodUsed
+                            }
+                            onChange={(value: string) =>
+                              handleInputChangeFineAggregate(
+                                concreteSampleTestItems[0].otherInfo,
+                                'methodUsed',
+                                value,
+                              )
+                            }
+                          />
                           {item.details &&
                             item.details.values
                               .filter((value: any) => !value.hide)
@@ -1218,6 +1258,22 @@ export const testSampleForm = (
                 (selectedTestSample.type === TEST_TYPES.GRADATION ? (
                   <View>
                     <View style={{flexDirection: 'column'}}>
+                      <DropdownPicker
+                        label="Type"
+                        items={[
+                          {label: 'Select', value: ''},
+                          {label: 'TYPE II (4-6 mm)', value: 'TYPEII'},
+                          {label: 'TYPE III (6-8 mm)', value: 'TYPEIII'},
+                        ]}
+                        value={concreteSampleTestItems[0].otherInfo.grade}
+                        onChange={(value: string) =>
+                          handleInputChangeFineAggregate(
+                            concreteSampleTestItems[0].otherInfo,
+                            'type',
+                            value,
+                          )
+                        }
+                      />
                       <Input
                         label="Total weight of Sample in gm (T)"
                         value={concreteSampleTestItems[0].weightOfSample}
@@ -1487,6 +1543,27 @@ export const testSampleForm = (
                     {concreteSampleTestItems.map((item: any, index: any) => (
                       <View style={{flexDirection: 'row'}}>
                         <View style={{flexDirection: 'column'}}>
+                          <DropdownPicker
+                            label="Type"
+                            items={[
+                              {label: 'Select', value: ''},
+                              {
+                                label: 'Calcium Carbide',
+                                value: 'Calcium Carbide',
+                              },
+                              {label: 'Oven dried', value: 'Oven dried'},
+                            ]}
+                            value={
+                              concreteSampleTestItems[0].otherInfo.methodUsed
+                            }
+                            onChange={(value: string) =>
+                              handleInputChangeFineAggregate(
+                                concreteSampleTestItems[0].otherInfo,
+                                'methodUsed',
+                                value,
+                              )
+                            }
+                          />
                           {item.details &&
                             item.details.values
                               .filter((value: any) => !value.hide)
@@ -1815,6 +1892,26 @@ export const testSampleForm = (
                 ) : selectedTestSample.type === TEST_TYPES.PENETRATION_TEST ? (
                   <View>
                     <View style={{flexDirection: 'column'}}>
+                      <DropdownPicker
+                        label="Grade of Bitumen"
+                        items={[
+                          {label: 'Select', value: ''},
+                          {label: 'VG40', value: 'VG40'},
+                          {label: 'VG30', value: 'VG30'},
+                          {label: 'VG20', value: 'VG20'},
+                          {label: 'VG10', value: 'VG10'},
+                        ]}
+                        value={
+                          concreteSampleTestItems[0].otherInfo.gradeOfBitumen
+                        }
+                        onChange={(value: string) =>
+                          handleInputChangeFineAggregate(
+                            concreteSampleTestItems[0].otherInfo,
+                            'gradeOfBitumen',
+                            value,
+                          )
+                        }
+                      />
                       <Input
                         label="Pouring Temperature (°C)"
                         value={concreteSampleTestItems[0].pouringTemp}
@@ -1940,6 +2037,26 @@ export const testSampleForm = (
                 ) : selectedTestSample.type === TEST_TYPES.DUCTILITY_TEST ? (
                   <View>
                     <View style={{flexDirection: 'column'}}>
+                      <DropdownPicker
+                        label="Grade of Bitumen"
+                        items={[
+                          {label: 'Select', value: ''},
+                          {label: 'VG40', value: 'VG40'},
+                          {label: 'VG30', value: 'VG30'},
+                          {label: 'VG20', value: 'VG20'},
+                          {label: 'VG10', value: 'VG10'},
+                        ]}
+                        value={
+                          concreteSampleTestItems[0].otherInfo.gradeOfBitumen
+                        }
+                        onChange={(value: string) =>
+                          handleInputChangeFineAggregate(
+                            concreteSampleTestItems[0].otherInfo,
+                            'gradeOfBitumen',
+                            value,
+                          )
+                        }
+                      />
                       <Input
                         label="Period of Cooling in Air (min)"
                         value={concreteSampleTestItems[0].pouringOfCoolingAir}
@@ -2087,6 +2204,27 @@ export const testSampleForm = (
                     {concreteSampleTestItems.map((item: any, index: any) => (
                       <View style={{flexDirection: 'row'}} key={index}>
                         <View style={{flexDirection: 'column'}}>
+                          <DropdownPicker
+                            label="Grade of Bitumen"
+                            items={[
+                              {label: 'Select', value: ''},
+                              {label: 'VG40', value: 'VG40'},
+                              {label: 'VG30', value: 'VG30'},
+                              {label: 'VG20', value: 'VG20'},
+                              {label: 'VG10', value: 'VG10'},
+                            ]}
+                            value={
+                              concreteSampleTestItems[0].otherInfo
+                                .gradeOfBitumen
+                            }
+                            onChange={(value: string) =>
+                              handleInputChangeFineAggregate(
+                                concreteSampleTestItems[0].otherInfo,
+                                'gradeOfBitumen',
+                                value,
+                              )
+                            }
+                          />
                           {item.details &&
                             item.details.values
                               .filter((value: any) => !value.hide)
@@ -2183,6 +2321,26 @@ export const testSampleForm = (
                 ) : selectedTestSample.type === TEST_TYPES.SOFTENING_POINT ? (
                   <View>
                     <View style={{flexDirection: 'column'}}>
+                      <DropdownPicker
+                        label="Grade of Bitumen"
+                        items={[
+                          {label: 'Select', value: ''},
+                          {label: 'VG40', value: 'VG40'},
+                          {label: 'VG30', value: 'VG30'},
+                          {label: 'VG20', value: 'VG20'},
+                          {label: 'VG10', value: 'VG10'},
+                        ]}
+                        value={
+                          concreteSampleTestItems[0].otherInfo.gradeOfBitumen
+                        }
+                        onChange={(value: string) =>
+                          handleInputChangeFineAggregate(
+                            concreteSampleTestItems[0].otherInfo,
+                            'gradeOfBitumen',
+                            value,
+                          )
+                        }
+                      />
                       <Input
                         label="Pouring Temp (C)"
                         value={concreteSampleTestItems[0].pouringTemp}
@@ -2278,6 +2436,22 @@ export const testSampleForm = (
                 ) : selectedTestSample.type === TEST_TYPES.DBM_MIX_GRADING_2 ? (
                   <View>
                     <View style={{flexDirection: 'column'}}>
+                      <DropdownPicker
+                        label="Grade"
+                        items={[
+                          {label: 'Select', value: ''},
+                          {label: 'Grade I', value: 'Grade I'},
+                          {label: 'Grade II', value: 'Grade II'},
+                        ]}
+                        value={concreteSampleTestItems[0].otherInfo.grade}
+                        onChange={(value: string) =>
+                          handleInputChangeFineAggregate(
+                            concreteSampleTestItems[0].otherInfo,
+                            'grade',
+                            value,
+                          )
+                        }
+                      />
                       <Input
                         label="Total weight of Sample in gm (T)"
                         value={concreteSampleTestItems[0].totalInGram}
@@ -2354,6 +2528,22 @@ export const testSampleForm = (
                 ) : selectedTestSample.type === TEST_TYPES.DBM_MIX_GRADING_1 ? (
                   <View>
                     <View style={{flexDirection: 'column'}}>
+                      <DropdownPicker
+                        label="Grade"
+                        items={[
+                          {label: 'Select', value: ''},
+                          {label: 'Grade I', value: 'GradeI'},
+                          {label: 'Grade II', value: 'GradeII'},
+                        ]}
+                        value={concreteSampleTestItems[0].otherInfo.grade}
+                        onChange={(value: string) =>
+                          handleInputChangeFineAggregate(
+                            concreteSampleTestItems[0].otherInfo,
+                            'grade',
+                            value,
+                          )
+                        }
+                      />
                       <Input
                         label="Total weight of Sample in gm (T)"
                         value={concreteSampleTestItems[0].totalInGram}
@@ -2642,6 +2832,29 @@ export const testSampleForm = (
                     {concreteSampleTestItems.map((item: any, index: number) => (
                       <View style={{flexDirection: 'row'}} key={index}>
                         <View style={{flexDirection: 'column'}}>
+                          <DropdownPicker
+                            label="Grade of Bitumen"
+                            items={[
+                              {label: 'Select', value: ''},
+                              {label: 'VG40', value: 'VG40'},
+                              {label: 'VG30', value: 'VG30'},
+                              {label: 'VG20', value: 'VG20'},
+                              {label: 'VG10', value: 'VG10'},
+                            ]}
+                            value={
+                              concreteSampleTestItems[0].otherInfo
+                                .gradeOfBitumen
+                            }
+                            onChange={(value: string) =>
+                              handleInputChangeFineAggregate(
+                                concreteSampleTestItems[0].otherInfo,
+                                'gradeOfBitumen',
+                                value,
+                              )
+                            }
+                          />
+                          {/*  observations.sample1.otherInfo.sourceOfBitumen
+                               observations.sample1.otherInfo.sourceOfAggregate */}
                           {item.details &&
                             item.details.values.map(
                               (value: any, indexDetails: number) => (
@@ -3051,6 +3264,22 @@ export const testSampleForm = (
                   TEST_TYPES.MICRO_SURFACING_GRADATION ? (
                   <View>
                     <View style={{flexDirection: 'column'}}>
+                      <DropdownPicker
+                        label="Type"
+                        items={[
+                          {label: 'Select', value: ''},
+                          {label: 'TYPE II (4-6 mm)', value: 'TYPEII'},
+                          {label: 'TYPE III (6-8 mm)', value: 'TYPEIII'},
+                        ]}
+                        value={concreteSampleTestItems[0].otherInfo.grade}
+                        onChange={(value: string) =>
+                          handleInputChangeFineAggregate(
+                            concreteSampleTestItems[0].otherInfo,
+                            'type',
+                            value,
+                          )
+                        }
+                      />
                       <Input
                         label="Total weight of Sample in gm (T)"
                         value={concreteSampleTestItems[0].totalInGram}
@@ -3230,6 +3459,24 @@ export const testSampleForm = (
                 (selectedTestSample.type === TEST_TYPES.MIX_GRADING ? (
                   <View>
                     <View style={{flexDirection: 'column'}}>
+                      <DropdownPicker
+                        label="Grade"
+                        items={[
+                          {label: 'Select', value: ''},
+                          {label: 'Grade I', value: 'Grade I'},
+                          {label: 'Grade II', value: 'Grade II'},
+                        ]}
+                        value={
+                          concreteSampleTestItems[0].otherInfo?.grade || ''
+                        }
+                        onChange={(value: string) =>
+                          handleInputChangeFineAggregate(
+                            concreteSampleTestItems[0].otherInfo,
+                            'grade',
+                            value,
+                          )
+                        }
+                      />
                       <Input
                         label="Total weight of Sample in gm (T)"
                         value={concreteSampleTestItems[0].totalInGram}
@@ -3324,6 +3571,27 @@ export const testSampleForm = (
                     {concreteSampleTestItems.map((item: any, index: number) => (
                       <View style={{flexDirection: 'row'}} key={index}>
                         <View style={{flexDirection: 'column'}}>
+                          <DropdownPicker
+                            label="Grade of Bitumen"
+                            items={[
+                              {label: 'Select', value: ''},
+                              {label: 'VG40', value: 'VG40'},
+                              {label: 'VG30', value: 'VG30'},
+                              {label: 'VG20', value: 'VG20'},
+                              {label: 'VG10', value: 'VG10'},
+                            ]}
+                            value={
+                              concreteSampleTestItems[0].otherInfo
+                                .gradeOfBitumen
+                            }
+                            onChange={(value: string) =>
+                              handleInputChangeFineAggregate(
+                                concreteSampleTestItems[0].otherInfo,
+                                'gradeOfBitumen',
+                                value,
+                              )
+                            }
+                          />
                           {item.details &&
                             item.details.values.map(
                               (value: any, indexDetails: number) => (
@@ -3595,6 +3863,27 @@ export const testSampleForm = (
                     {concreteSampleTestItems.map((item: any, index: number) => (
                       <View style={{flexDirection: 'row'}} key={index}>
                         <View style={{flexDirection: 'column'}}>
+                          <DropdownPicker
+                            label="Grade of Bitumen"
+                            items={[
+                              {label: 'Select', value: ''},
+                              {label: 'VG40', value: 'VG40'},
+                              {label: 'VG30', value: 'VG30'},
+                              {label: 'VG20', value: 'VG20'},
+                              {label: 'VG10', value: 'VG10'},
+                            ]}
+                            value={
+                              concreteSampleTestItems[0].otherInfo
+                                .gradeOfBitumen
+                            }
+                            onChange={(value: string) =>
+                              handleInputChangeFineAggregate(
+                                concreteSampleTestItems[0].otherInfo,
+                                'gradeOfBitumen',
+                                value,
+                              )
+                            }
+                          />
                           {item.details &&
                             item.details.values.map(
                               (value: any, indexDetails: number) => (
@@ -3698,6 +3987,27 @@ export const testSampleForm = (
                     {concreteSampleTestItems.map((item: any, index: number) => (
                       <View style={{flexDirection: 'row'}} key={index}>
                         <View style={{flexDirection: 'column'}}>
+                          <DropdownPicker
+                            label="Grade of Bitumen"
+                            items={[
+                              {label: 'Select', value: ''},
+                              {label: 'VG40', value: 'VG40'},
+                              {label: 'VG30', value: 'VG30'},
+                              {label: 'VG20', value: 'VG20'},
+                              {label: 'VG10', value: 'VG10'},
+                            ]}
+                            value={
+                              concreteSampleTestItems[0].otherInfo
+                                .gradeOfBitumen
+                            }
+                            onChange={(value: string) =>
+                              handleInputChangeFineAggregate(
+                                concreteSampleTestItems[0].otherInfo,
+                                'gradeOfBitumen',
+                                value,
+                              )
+                            }
+                          />
                           {item.details &&
                             item.details.values.map(
                               (value: any, indexDetails: number) => (
@@ -3794,6 +4104,24 @@ export const testSampleForm = (
                 ) : selectedTestSample.type === TEST_TYPES.MIX_GRADING ? (
                   <View>
                     <View style={{flexDirection: 'column'}}>
+                      <DropdownPicker
+                        label="Grade"
+                        items={[
+                          {label: 'Select', value: ''},
+                          {label: 'Grade I', value: 'GradeI'},
+                          {label: 'Grade II', value: 'GradeII'},
+                        ]}
+                        value={
+                          concreteSampleTestItems[0].otherInfo?.grade || ''
+                        }
+                        onChange={(value: string) =>
+                          handleInputChangeFineAggregate(
+                            concreteSampleTestItems[0].otherInfo,
+                            'grade',
+                            value,
+                          )
+                        }
+                      />
                       <Input
                         label="Total weight of Sample in gm "
                         value={concreteSampleTestItems[0].totalInGram}
@@ -4059,6 +4387,22 @@ export const testSampleForm = (
                 (selectedTestSample.type === TEST_TYPES.GRADATION ? (
                   <View>
                     <View style={{flexDirection: 'column'}}>
+                      <DropdownPicker
+                        label="Type"
+                        items={[
+                          {label: 'Select', value: ''},
+                          {label: 'TYPE II (4-6 mm)', value: 'TYPEII'},
+                          {label: 'TYPE III (6-8 mm)', value: 'TYPEIII'},
+                        ]}
+                        value={concreteSampleTestItems[0].otherInfo.grade}
+                        onChange={(value: string) =>
+                          handleInputChangeFineAggregate(
+                            concreteSampleTestItems[0].otherInfo,
+                            'type',
+                            value,
+                          )
+                        }
+                      />
                       <Input
                         label="Total weight of Sample in gm (T)"
                         value={concreteSampleTestItems[0].totalInGram}
@@ -5153,6 +5497,26 @@ export const testSampleForm = (
                 (selectedTestSample.type === TEST_TYPES.SOFTENING_POINT ? (
                   <View>
                     <View style={{flexDirection: 'column'}}>
+                      <DropdownPicker
+                        label="Grade of Bitumen"
+                        items={[
+                          {label: 'Select', value: ''},
+                          {label: 'VG40', value: 'VG40'},
+                          {label: 'VG30', value: 'VG30'},
+                          {label: 'VG20', value: 'VG20'},
+                          {label: 'VG10', value: 'VG10'},
+                        ]}
+                        value={
+                          concreteSampleTestItems[0].otherInfo.gradeOfBitumen
+                        }
+                        onChange={(value: string) =>
+                          handleInputChangeFineAggregate(
+                            concreteSampleTestItems[0].otherInfo,
+                            'gradeOfBitumen',
+                            value,
+                          )
+                        }
+                      />
                       <Input
                         label="Pouring Temp (C)"
                         value={concreteSampleTestItems[0].pouringTemp}
@@ -5250,6 +5614,27 @@ export const testSampleForm = (
                     {concreteSampleTestItems.map((item: any, index: any) => (
                       <View style={{flexDirection: 'row'}} key={index}>
                         <View style={{flexDirection: 'column'}}>
+                          <DropdownPicker
+                            label="Grade of Bitumen"
+                            items={[
+                              {label: 'Select', value: ''},
+                              {label: 'VG40', value: 'VG40'},
+                              {label: 'VG30', value: 'VG30'},
+                              {label: 'VG20', value: 'VG20'},
+                              {label: 'VG10', value: 'VG10'},
+                            ]}
+                            value={
+                              concreteSampleTestItems[0].otherInfo
+                                .gradeOfBitumen
+                            }
+                            onChange={(value: string) =>
+                              handleInputChangeFineAggregate(
+                                concreteSampleTestItems[0].otherInfo,
+                                'gradeOfBitumen',
+                                value,
+                              )
+                            }
+                          />
                           {item.details &&
                             item.details.values
                               .filter((value: any) => !value.hide)
@@ -5346,6 +5731,26 @@ export const testSampleForm = (
                 ) : selectedTestSample.type === TEST_TYPES.DUCTILITY_TEST ? (
                   <View>
                     <View style={{flexDirection: 'column'}}>
+                      <DropdownPicker
+                        label="Grade of Bitumen"
+                        items={[
+                          {label: 'Select', value: ''},
+                          {label: 'VG40', value: 'VG40'},
+                          {label: 'VG30', value: 'VG30'},
+                          {label: 'VG20', value: 'VG20'},
+                          {label: 'VG10', value: 'VG10'},
+                        ]}
+                        value={
+                          concreteSampleTestItems[0].otherInfo.gradeOfBitumen
+                        }
+                        onChange={(value: string) =>
+                          handleInputChangeFineAggregate(
+                            concreteSampleTestItems[0].otherInfo,
+                            'gradeOfBitumen',
+                            value,
+                          )
+                        }
+                      />
                       <Input
                         label="Period of Cooling in Air (min)"
                         value={concreteSampleTestItems[0].pouringOfCoolingAir}
@@ -5491,6 +5896,26 @@ export const testSampleForm = (
                 ) : selectedTestSample.type === TEST_TYPES.PENETRATION_TEST ? (
                   <View>
                     <View style={{flexDirection: 'column'}}>
+                      <DropdownPicker
+                        label="Grade of Bitumen"
+                        items={[
+                          {label: 'Select', value: ''},
+                          {label: 'VG40', value: 'VG40'},
+                          {label: 'VG30', value: 'VG30'},
+                          {label: 'VG20', value: 'VG20'},
+                          {label: 'VG10', value: 'VG10'},
+                        ]}
+                        value={
+                          concreteSampleTestItems[0].otherInfo.gradeOfBitumen
+                        }
+                        onChange={(value: string) =>
+                          handleInputChangeFineAggregate(
+                            concreteSampleTestItems[0].otherInfo,
+                            'gradeOfBitumen',
+                            value,
+                          )
+                        }
+                      />
                       <Input
                         label="Pouring Temperature (°C)"
                         value={concreteSampleTestItems[0].pouringTemp}
@@ -5622,6 +6047,27 @@ export const testSampleForm = (
                     {concreteSampleTestItems.map((item: any, index: number) => (
                       <View style={{flexDirection: 'row'}} key={index}>
                         <View style={{flexDirection: 'column'}}>
+                          <DropdownPicker
+                            label="Grade of Bitumen"
+                            items={[
+                              {label: 'Select', value: ''},
+                              {label: 'VG40', value: 'VG40'},
+                              {label: 'VG30', value: 'VG30'},
+                              {label: 'VG20', value: 'VG20'},
+                              {label: 'VG10', value: 'VG10'},
+                            ]}
+                            value={
+                              concreteSampleTestItems[0].otherInfo
+                                .gradeOfBitumen
+                            }
+                            onChange={(value: string) =>
+                              handleInputChangeFineAggregate(
+                                concreteSampleTestItems[0].otherInfo,
+                                'gradeOfBitumen',
+                                value,
+                              )
+                            }
+                          />
                           {item.details &&
                             item.details.values.map(
                               (value: any, indexDetails: number) => (
@@ -5718,6 +6164,22 @@ export const testSampleForm = (
                 ) : selectedTestSample.type === TEST_TYPES.MIX_GRADING ? (
                   <View>
                     <View style={{flexDirection: 'column'}}>
+                      <DropdownPicker
+                        label="Grade"
+                        items={[
+                          {label: 'Select', value: ''},
+                          {label: 'Grade I', value: 'GradeI'},
+                          {label: 'Grade II', value: 'GradeII'},
+                        ]}
+                        value={concreteSampleTestItems[0].otherInfo.grade}
+                        onChange={(value: string) =>
+                          handleInputChangeFineAggregate(
+                            concreteSampleTestItems[0].otherInfo,
+                            'grade',
+                            value,
+                          )
+                        }
+                      />
                       <Input
                         label="Total weight of Sample in gm"
                         value={concreteSampleTestItems[0].totalInGram}

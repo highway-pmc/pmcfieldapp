@@ -751,6 +751,24 @@ export const TEST_TYPES = {
   //SubBase && Base_SubBase
   ATTERBEG_LIMIT_TEST: 'atterberg-limit-test',
   GRADING_OF_AGGREGATE: 'grading-aggregate',
+  //Bearing
+  ULTRASONIC_TEST: 'ultra-sonic-test',
+  SURFACE_FINISH_OF_SS_PLATE: 'surface-finish-of-s.s.-plate',
+  PISTON_ROUGHNESS: 'piston-roughness',
+  PHYSICAL_VISUAL_DIMENSIONS: 'physical-visual-and-dimensions-test',
+  PAINT_THICKNESS_TEST: 'paint-thickness',
+  COMPRESSION_VERTICAL_LOAD: 'compression-vertical-load-test',
+  COMBINED_VERTICAL_HORIZONTAL_LOAD:
+    'combined-vertical-and-horizontal-load-test',
+  CHROME_THICKNESS_TEST: 'chrome-thickness',
+  //Expansion Joint
+  ANCHORAGE_PULL_OUT_TEST: 'anchorage-pull-out-test',
+  DERBIS_EXPULSION_TEST: 'debris-expulsion-test',
+  DYE_PENETRATION_TEST: 'dye-penetration-test',
+  PONDING_TEST: 'ponding-test',
+  SEAL_PULL_TEST: 'seal-pull-test',
+  CYCLIC_MOTION_TEST: 'cyclic-motion-test',
+  VISUAL_DIMENSION_TEST: 'visual-and-dimension-test',
 };
 
 export const YES_NO_LIST = [

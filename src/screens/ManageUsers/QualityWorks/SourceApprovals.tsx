@@ -207,6 +207,32 @@ const SourceApprovals = ({
     nominalSize: '37.5mm', // 37.5mm / 26.5mm / 19mm / 13.2mm / 10mm / 20mm
     ratePerKG: 0.0, // (3 decimal, >0, 100000)
   });
+  // Reinforcement
+  const [sourceDetailReinforcement, setSourceDetailReinforcement] = useState({
+    sourceApprovalId: 'Fe 415',
+    ratePerMT: 0,
+    brand: '',
+    grade: '',
+  });
+  // Structure Steel
+  const [sourceDetailStructureSteel, setSourceDetailStructureSteel] = useState({
+    sourceApprovalId: '',
+    ratePerMT: 0,
+    brand: '',
+    grade: '',
+  });
+  // Expansion Joint
+  const [sourceDetailExpansionJoint, setSourceDetailExpansionJoint] = useState({
+    sourceApprovalId: '',
+    ratePerMTR: 0,
+    brand: 'MS',
+  });
+  // Bearing
+  const [sourceDetailBearing, setSourceDetailBearing] = useState({
+    sourceApprovalId: '',
+    ratePerMTR: 0,
+    brand: 'MS',
+  });
   // EarthWork
   const [sourceDetailEarthWork, setSourceDetailEarthWork] = useState({
     sourceApprovalId: '',
@@ -938,7 +964,7 @@ const SourceApprovals = ({
       testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BASE_SUB_BASE
     ) {
       if (TEST_MATERIALS_TYPES.CTSB === materialType) {
-        console.log("Enter CTSB")
+        console.log('Enter CTSB');
         body = {
           name: sourceDetailSubaseCTSB.ratePerCum,
           metaData: {

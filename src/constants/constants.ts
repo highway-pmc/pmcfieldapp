@@ -666,6 +666,9 @@ export const TEST_WORK_CATEGORY_TYPES = {
   EARTH_WORKS: 'earth-work',
   SUB_BASE: 'sub-base',
   BASE_SUB_BASE: 'base-sub-base',
+  STEEL: '',
+  BEARING: '',
+  EXPANSION_JOINT: '',
 };
 
 export const TEST_MATERIALS_TYPES = {

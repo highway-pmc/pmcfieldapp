@@ -86,7 +86,7 @@ const ProcurementsEarthWork = ({
     qtyInTonne: '',
     invoiceFile: '',
     lotNo: '',
-    grade: 'elastomeric-bearing',
+    type: 'elastomeric-bearing',
   });
 
   const [data, setData]: any = useState([]);
@@ -180,7 +180,7 @@ const ProcurementsEarthWork = ({
       qtyInTonne: '',
       invoiceFile: '',
       lotNo: '',
-      grade: 'elastomeric-bearing',
+      type: 'elastomeric-bearing',
     });
     setOpenProcurementPopup(true);
   };
@@ -220,7 +220,7 @@ const ProcurementsEarthWork = ({
       invoiceFile: item.invoiceFile,
       qtyInTonne: '' + item.qtyInTonne,
       lotNo: item.lotNo,
-      grade: item.grade,
+      type: item.type,
     });
 
     setOpenProcurementPopup(true);
@@ -278,7 +278,7 @@ const ProcurementsEarthWork = ({
         sourceApprovals.find((x: any) => x._id === value)
           ?.sourceApprovalDetails,
       );
-    } else if (name === 'grade') {
+    } else if (name === 'type') {
       const filteredData = sourceApprovals.filter(
         (s: any) =>
           s.sourceApprovalDetails &&
@@ -307,7 +307,7 @@ const ProcurementsEarthWork = ({
       metaData: {
         qtyInTonne: Number(formSoil.qtyInTonne),
         lotNo: formSoil.lotNo,
-        grade: formSoil.grade,
+        type: formSoil.type,
       },
     };
 
@@ -498,8 +498,8 @@ const ProcurementsEarthWork = ({
             <DropdownPicker
               label="Nominal Size"
               items={BEARING_TYPE_LIST}
-              value={formSoil.grade}
-              onChange={(value: string) => handleInputChange('grade', value)}
+              value={formSoil.type}
+              onChange={(value: string) => handleInputChange('type', value)}
             />
           </View>
           <View>

@@ -704,29 +704,30 @@ export const testSampleFormEarthwork = (
                       isRequired={true}
                     />
                     <Input
-                      label="Pressure Gauge Reading (Calculated) (Kg/cm²)"
+                      label="Pressure Gauge Reading Actual Vertical (Kg/cm²)"
                       value={
                         concreteSampleTestItems[0]
-                          .pressureGaugeReadingCalculated
+                          .pressureGaugeReadingActualVertical
                       }
                       onChange={(value: any) =>
                         handleInputChangeFineAggregate(
                           concreteSampleTestItems[0],
-                          'pressureGaugeReadingCalculated',
+                          'pressureGaugeReadingActualVertical',
                           value,
                         )
                       }
                       isRequired={true}
                     />
                     <Input
-                      label="Pressure Gauge Reading (Actual) (Kg/cm²) (D)"
+                      label="Pressure Gauge Reading Actual Horizontal (Kg/cm²) (D)"
                       value={
-                        concreteSampleTestItems[0].pressureGaugeReadingActual
+                        concreteSampleTestItems[0]
+                          .pressureGaugeReadingActualHorizontal
                       }
                       onChange={(value: any) =>
                         handleInputChangeFineAggregate(
                           concreteSampleTestItems[0],
-                          'pressureGaugeReadingActual',
+                          'pressureGaugeReadingActualHorizontal',
                           value,
                         )
                       }

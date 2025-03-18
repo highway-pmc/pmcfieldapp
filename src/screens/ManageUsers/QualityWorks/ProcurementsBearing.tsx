@@ -511,7 +511,7 @@ const ProcurementsEarthWork = ({
           </View>
           <View>
             <Input
-              label="Qty (in cum)"
+              label="Qty (in Tonne)"
               value={'' + formSoil.qtyInTonne}
               onChange={(value: string) =>
                 handleInputChange('qtyInTonne', value)

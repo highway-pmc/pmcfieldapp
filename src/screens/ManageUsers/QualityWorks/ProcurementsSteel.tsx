@@ -275,34 +275,68 @@ const ProcurementsEarthWork = ({
 
     // Validate qtyInTonne (>0, up to 3 decimal places, max limit 1000)
     const qtyRegex = /^\d{0,4}(\.\d{1,3})?$/;
-    if (
-      !qtyRegex.test(formSoil.qtyInTonne) ||
-      Number(formSoil.qtyInTonne) <= 0 ||
-      Number(formSoil.qtyInTonne) > 1000
-    ) {
-      isValid = false;
-      errorMessage =
-        'Quantity in Tonne must be greater than 0, up to 3 decimal places, and not exceed 1000.';
-    }
+    if (materialType === TEST_MATERIALS_TYPES.REINFORCEMENT) {
+      if (
+        !qtyRegex.test(steelRForm.qtyInTonne) ||
+        Number(steelRForm.qtyInTonne) <= 0 ||
+        Number(steelRForm.qtyInTonne) > 1000
+      ) {
+        isValid = false;
+        errorMessage =
+          'Quantity in Tonne must be greater than 0, up to 3 decimal places, and not exceed 1000.';
+      }
 
-    // Validate lotNo (>0, integer, max limit 1000)
-    if (
-      !/^\d+$/.test(formSoil.lotNo) ||
-      Number(formSoil.lotNo) <= 0 ||
-      Number(formSoil.lotNo) > 1000
-    ) {
-      isValid = false;
-      errorMessage =
-        'Lot Number must be a positive integer and not exceed 1000.';
-    }
+      // Validate lotNo (>0, integer, max limit 1000)
+      if (
+        !/^\d+$/.test(steelRForm.lotNo) ||
+        Number(steelRForm.lotNo) <= 0 ||
+        Number(steelRForm.lotNo) > 1000
+      ) {
+        isValid = false;
+        errorMessage =
+          'Lot Number must be a positive integer and not exceed 1000.';
+      }
 
-    // Validate invoiceFile (should be image/pdf)
-    if (
-      formSoil.invoiceFile &&
-      !/\.(jpg|jpeg|png|pdf)$/i.test(formSoil.invoiceFile.name)
-    ) {
-      isValid = false;
-      errorMessage = 'Only JPG, PNG, or PDF files are allowed for the invoice.';
+      // Validate invoiceFile (should be image/pdf)
+      if (
+        steelRForm.invoiceFile &&
+        !/\.(jpg|jpeg|png|pdf)$/i.test(steelRForm.invoiceFile.name)
+      ) {
+        isValid = false;
+        errorMessage =
+          'Only JPG, PNG, or PDF files are allowed for the invoice.';
+      }
+    } else {
+      if (
+        !qtyRegex.test(formSoil.qtyInTonne) ||
+        Number(formSoil.qtyInTonne) <= 0 ||
+        Number(formSoil.qtyInTonne) > 1000
+      ) {
+        isValid = false;
+        errorMessage =
+          'Quantity in Tonne must be greater than 0, up to 3 decimal places, and not exceed 1000.';
+      }
+
+      // Validate lotNo (>0, integer, max limit 1000)
+      if (
+        !/^\d+$/.test(formSoil.lotNo) ||
+        Number(formSoil.lotNo) <= 0 ||
+        Number(formSoil.lotNo) > 1000
+      ) {
+        isValid = false;
+        errorMessage =
+          'Lot Number must be a positive integer and not exceed 1000.';
+      }
+
+      // Validate invoiceFile (should be image/pdf)
+      if (
+        formSoil.invoiceFile &&
+        !/\.(jpg|jpeg|png|pdf)$/i.test(formSoil.invoiceFile.name)
+      ) {
+        isValid = false;
+        errorMessage =
+          'Only JPG, PNG, or PDF files are allowed for the invoice.';
+      }
     }
 
     if (!isValid) {

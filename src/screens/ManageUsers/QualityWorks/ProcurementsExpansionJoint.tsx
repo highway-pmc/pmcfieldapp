@@ -497,7 +497,7 @@ const ProcurementsEarthWork = ({
         <View>
           <View>
             <DropdownPicker
-              label="Nominal Size"
+              label="Type"
               items={EXPANSION_JOINT_TYPE_LIST}
               value={formSoil.type}
               onChange={(value: string) => handleInputChange('type', value)}

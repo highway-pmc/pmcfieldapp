@@ -496,7 +496,7 @@ const ProcurementsEarthWork = ({
         <View>
           <View>
             <DropdownPicker
-              label="Nominal Size"
+              label="Type"
               items={BEARING_TYPE_LIST}
               value={formSoil.type}
               onChange={(value: string) => handleInputChange('type', value)}

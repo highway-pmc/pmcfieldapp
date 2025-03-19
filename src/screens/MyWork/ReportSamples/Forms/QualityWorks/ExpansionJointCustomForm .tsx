@@ -1042,6 +1042,19 @@ export const testSampleFormEarthwork = (
                       }
                       isRequired={true}
                     />
+
+                    <Input
+                      label="Drawing Number"
+                      value={concreteSampleTestItems[0].otherInfo.testDuration}
+                      onChange={(value: any) =>
+                        handleInputChangeFineAggregate(
+                          concreteSampleTestItems[0].otherInfo,
+                          'testDuration',
+                          value,
+                        )
+                      }
+                      isRequired={true}
+                    />
                     {concreteSampleTestItems.map((item: any, index: number) => (
                       <View style={{flexDirection: 'row'}} key={index}>
                         <View style={{flexDirection: 'column'}}>

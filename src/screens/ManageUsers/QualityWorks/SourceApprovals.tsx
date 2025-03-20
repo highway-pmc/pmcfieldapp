@@ -16,8 +16,13 @@ import {useDispatch, useSelector} from 'react-redux';
 import Input from '../../../components/UI/Input';
 import {useIsFocused} from '@react-navigation/native';
 import {
+  BEARING_TYPE_LIST,
   CEMENT_GRADE_LIST,
   CONCRETE_GRADE_LIST,
+  DIAMETER_REINFORCEMENT,
+  EXPANSION_JOINT_TYPE_LIST,
+  GRADE_REINFORCEMENT,
+  GRADE_STRUCTURE_STEEL,
   HeaderItems,
   SOURCE_APPROVAL_STATUS,
   TEST_MATERIALS_TYPES,
@@ -212,26 +217,27 @@ const SourceApprovals = ({
     sourceApprovalId: 'Fe 415',
     ratePerMT: 0,
     brand: '',
-    grade: '',
+    grade: 'Fe 415',
+    diameter: '8',
   });
   // Structure Steel
   const [sourceDetailStructureSteel, setSourceDetailStructureSteel] = useState({
     sourceApprovalId: '',
     ratePerMT: 0,
     brand: '',
-    grade: '',
+    grade: 'MS',
   });
   // Expansion Joint
   const [sourceDetailExpansionJoint, setSourceDetailExpansionJoint] = useState({
     sourceApprovalId: '',
     ratePerMTR: 0,
-    brand: 'MS',
+    type: 'reinforced-elastomeric-joint',
   });
   // Bearing
   const [sourceDetailBearing, setSourceDetailBearing] = useState({
     sourceApprovalId: '',
     ratePerMTR: 0,
-    brand: 'MS',
+    type: 'elastomeric-bearing',
   });
   // EarthWork
   const [sourceDetailEarthWork, setSourceDetailEarthWork] = useState({
@@ -393,6 +399,41 @@ const SourceApprovals = ({
           mdd: item.metaData?.mdd,
         });
       }
+    } else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BEARING) {
+      setSourceDetailBearing({
+        sourceApprovalId: item._id,
+        ratePerMTR: item.metaData?.ratePerMTR,
+        type: item.metaData?.type,
+      });
+    } else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.STEEL) {
+      switch (materialType) {
+        case TEST_MATERIALS_TYPES.REINFORCEMENT:
+          setSourceDetailReinforcement({
+            sourceApprovalId: item._id,
+            ratePerMT: item.metaData?.ratePerMT,
+            brand: item.metaData?.brand,
+            grade: item.metaData?.grade,
+            diameter: item.metaData?.diameter,
+          });
+          break;
+
+        case TEST_MATERIALS_TYPES.STRUCTURAL_STEEL:
+          setSourceDetailStructureSteel({
+            sourceApprovalId: item._id,
+            ratePerMT: item.metaData?.ratePerMT,
+            brand: item.metaData?.brand,
+            grade: item.metaData?.grade,
+          });
+          break;
+      }
+    } else if (
+      testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EXPANSION_JOINT
+    ) {
+      setSourceDetailExpansionJoint({
+        sourceApprovalId: item._id,
+        ratePerMTR: item.metaData?.ratePerMTR,
+        type: item.metaData?.type,
+      });
     } else {
       setSourceDetailForm({
         sourceApprovalId: item._id,
@@ -461,6 +502,36 @@ const SourceApprovals = ({
     value: string | number,
   ) => {
     setSourceDetailForm({...sourceDetailForm, [name]: value});
+  };
+  const handleSourceDetailBearinInputChange = (
+    name: string,
+    value: string | number,
+  ) => {
+    setSourceDetailBearing({...sourceDetailBearing, [name]: value});
+  };
+  const handleSourceDetailExpansionJointInputChange = (
+    name: string,
+    value: string | number,
+  ) => {
+    setSourceDetailExpansionJoint({
+      ...sourceDetailExpansionJoint,
+      [name]: value,
+    });
+  };
+  const handleSourceDetailReinforcementInputChange = (
+    name: string,
+    value: string | number,
+  ) => {
+    setSourceDetailReinforcement({...sourceDetailReinforcement, [name]: value});
+  };
+  const handleSourceDetailStructureSteelInputChange = (
+    name: string,
+    value: string | number,
+  ) => {
+    setSourceDetailStructureSteel({
+      ...sourceDetailStructureSteel,
+      [name]: value,
+    });
   };
   const handleSourceDetailEarthWorkInputChange = (
     name: string,
@@ -857,6 +928,66 @@ const SourceApprovals = ({
 
         return true;
       }
+    } else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BEARING) {
+      const ratePerMTRBearing = Number(sourceDetailBearing.ratePerMTR);
+      if (
+        ratePerMTRBearing > 100000 ||
+        !/^\d+(\.\d{1,3})?$/.test(ratePerMTRBearing.toString())
+      ) {
+        showSnackbar(
+          'Rate per MTR must be less than 100,000 and up to 3 decimal places.',
+          'error',
+        );
+        return false;
+      }
+    } else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.STEEL) {
+      switch (materialType) {
+        case TEST_MATERIALS_TYPES.REINFORCEMENT:
+          const ratePerMT = Number(sourceDetailReinforcement.ratePerMT);
+          if (
+            ratePerMT > 100000 ||
+            !/^\d+(\.\d{1,3})?$/.test(ratePerMT.toString())
+          ) {
+            showSnackbar(
+              'Rate per MT must be less than 100,000 and up to 3 decimal places.',
+              'error',
+            );
+            return false;
+          }
+          break;
+
+        case TEST_MATERIALS_TYPES.STRUCTURAL_STEEL:
+          const ratePerMTStructuralSteel = Number(
+            sourceDetailStructureSteel.ratePerMT,
+          );
+          if (
+            ratePerMTStructuralSteel > 100000 ||
+            !/^\d+(\.\d{1,3})?$/.test(ratePerMTStructuralSteel.toString())
+          ) {
+            showSnackbar(
+              'Rate per MT must be less than 100,000 and up to 3 decimal places.',
+              'error',
+            );
+            return false;
+          }
+          break;
+      }
+    } else if (
+      testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EXPANSION_JOINT
+    ) {
+      const ratePerMTRExpansionJoint = Number(
+        sourceDetailExpansionJoint.ratePerMTR,
+      );
+      if (
+        ratePerMTRExpansionJoint > 100000 ||
+        !/^\d+(\.\d{1,3})?$/.test(ratePerMTRExpansionJoint.toString())
+      ) {
+        showSnackbar(
+          'Rate per MTR must be less than 100,000 and up to 3 decimal places.',
+          'error',
+        );
+        return false;
+      }
     } else {
       // Validation for non-bituminous works
 
@@ -987,6 +1118,49 @@ const SourceApprovals = ({
           },
         };
       }
+    } else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BEARING) {
+      body = {
+        name: sourceDetailBearing.type,
+        metaData: {
+          ratePerMTR: Number(sourceDetailBearing.ratePerMTR),
+          type: sourceDetailBearing.type,
+        },
+      };
+    } else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.STEEL) {
+      switch (materialType) {
+        case TEST_MATERIALS_TYPES.REINFORCEMENT:
+          body = {
+            name: sourceDetailReinforcement.grade,
+            metaData: {
+              ratePerMT: Number(sourceDetailReinforcement.ratePerMT),
+              brand: sourceDetailReinforcement.brand,
+              grade: sourceDetailReinforcement.grade,
+              diameter: sourceDetailReinforcement.diameter,
+            },
+          };
+          break;
+
+        case TEST_MATERIALS_TYPES.STRUCTURAL_STEEL:
+          body = {
+            name: sourceDetailStructureSteel.grade,
+            metaData: {
+              ratePerMT: Number(sourceDetailStructureSteel.ratePerMT),
+              brand: sourceDetailStructureSteel.brand,
+              grade: sourceDetailStructureSteel.grade,
+            },
+          };
+          break;
+      }
+    } else if (
+      testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EXPANSION_JOINT
+    ) {
+      body = {
+        name: sourceDetailExpansionJoint.type,
+        metaData: {
+          ratePerMTR: Number(sourceDetailExpansionJoint.ratePerMTR),
+          type: sourceDetailExpansionJoint.type,
+        },
+      };
     } else {
       body = {
         name: sourceDetailForm[gradeField.name],
@@ -1113,6 +1287,42 @@ const SourceApprovals = ({
             mdd: 0,
           });
         }
+      } else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BEARING) {
+        setSourceDetailBearing({
+          sourceApprovalId: selectedSource._id,
+          ratePerMTR: 0.0,
+          type: 'elastomeric-bearing',
+        });
+      } else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.STEEL) {
+        switch (materialType) {
+          case TEST_MATERIALS_TYPES.REINFORCEMENT:
+            setSourceDetailReinforcement({
+              sourceApprovalId: selectedSource._id,
+              ratePerMT: 0.0,
+              brand: '',
+              grade: 'Fe 415',
+              diameter: '8',
+            });
+            break;
+
+          case TEST_MATERIALS_TYPES.STRUCTURAL_STEEL:
+            setSourceDetailStructureSteel({
+              sourceApprovalId: selectedSource._id,
+              ratePerMT: 0.0,
+              brand: '',
+
+              grade: 'MS',
+            });
+            break;
+        }
+      } else if (
+        testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EXPANSION_JOINT
+      ) {
+        setSourceDetailExpansionJoint({
+          sourceApprovalId: selectedSource._id,
+          ratePerMTR: 0.0,
+          type: 'reinforced-elastomeric-joint',
+        });
       } else {
         setSourceDetailForm({
           sourceApprovalId: selectedSource._id,
@@ -1210,6 +1420,41 @@ const SourceApprovals = ({
             editedObj.metaData.omc = sourceDetailSubaseGSB.omc;
             editedObj.metaData.mdd = sourceDetailSubaseGSB.mdd;
           }
+        } else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BEARING) {
+          editedObj.name = sourceDetailBearing.type;
+          editedObj.metaData.ratePerMTR = Number(
+            sourceDetailBearing.ratePerMTR,
+          );
+          editedObj.metaData.type = sourceDetailBearing.type;
+        } else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.STEEL) {
+          switch (materialType) {
+            case TEST_MATERIALS_TYPES.REINFORCEMENT:
+              editedObj.name = sourceDetailReinforcement.grade;
+              editedObj.metaData.ratePerMT = Number(
+                sourceDetailReinforcement.ratePerMT,
+              );
+              editedObj.metaData.brand = sourceDetailReinforcement.brand;
+              editedObj.metaData.grade = sourceDetailReinforcement.grade;
+              editedObj.metaData.diameter = sourceDetailReinforcement.diameter;
+              break;
+
+            case TEST_MATERIALS_TYPES.STRUCTURAL_STEEL:
+              editedObj.name = sourceDetailStructureSteel.grade;
+              editedObj.metaData.ratePerMT = Number(
+                sourceDetailStructureSteel.ratePerMT,
+              );
+              editedObj.metaData.brand = sourceDetailStructureSteel.brand;
+              editedObj.metaData.grade = sourceDetailStructureSteel.grade;
+              break;
+          }
+        } else if (
+          testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EXPANSION_JOINT
+        ) {
+          editedObj.name = sourceDetailExpansionJoint.type;
+          editedObj.metaData.ratePerMTR = Number(
+            sourceDetailExpansionJoint.ratePerMTR,
+          );
+          editedObj.metaData.type = sourceDetailExpansionJoint.type;
         } else {
           editedObj.name = sourceDetailForm[gradeField.name];
           editedObj.metaData[gradeField.name] =
@@ -1310,6 +1555,41 @@ const SourceApprovals = ({
             mdd: 0,
           });
         }
+      } else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BEARING) {
+        setSourceDetailBearing({
+          sourceApprovalId: selectedSource._id,
+          ratePerMTR: 0.0,
+          type: 'elastomeric-bearing',
+        });
+      } else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.STEEL) {
+        switch (materialType) {
+          case TEST_MATERIALS_TYPES.REINFORCEMENT:
+            setSourceDetailReinforcement({
+              sourceApprovalId: selectedSource._id,
+              ratePerMT: 0.0,
+              brand: '',
+              grade: 'Fe 415',
+              diameter: '8',
+            });
+            break;
+
+          case TEST_MATERIALS_TYPES.STRUCTURAL_STEEL:
+            setSourceDetailStructureSteel({
+              sourceApprovalId: selectedSource._id,
+              ratePerMT: 0.0,
+              brand: '',
+              grade: 'MS',
+            });
+            break;
+        }
+      } else if (
+        testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EXPANSION_JOINT
+      ) {
+        setSourceDetailExpansionJoint({
+          sourceApprovalId: selectedSource._id,
+          ratePerMTR: 0.0,
+          type: 'reinforced-elastomeric-joint',
+        });
       } else {
         setSourceDetailForm({
           sourceApprovalId: selectedSource._id,
@@ -1434,6 +1714,41 @@ const SourceApprovals = ({
           mdd: item.metaData?.mdd,
         });
       }
+    } else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BEARING) {
+      setSourceDetailBearing({
+        sourceApprovalId: item.sourceApprovalId,
+        ratePerMTR: item.metaData?.ratePerMTR,
+        type: item.metaData?.type,
+      });
+    } else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.STEEL) {
+      switch (materialType) {
+        case TEST_MATERIALS_TYPES.REINFORCEMENT:
+          setSourceDetailReinforcement({
+            sourceApprovalId: item.sourceApprovalId,
+            ratePerMT: item.metaData?.ratePerMT,
+            brand: item.metaData?.brand,
+            grade: item.metaData?.grade,
+            diameter: item.metaData?.diameter,
+          });
+          break;
+
+        case TEST_MATERIALS_TYPES.STRUCTURAL_STEEL:
+          setSourceDetailStructureSteel({
+            sourceApprovalId: item.sourceApprovalId,
+            ratePerMT: item.metaData?.ratePerMT,
+            brand: item.metaData?.brand,
+            grade: item.metaData?.grade,
+          });
+          break;
+      }
+    } else if (
+      testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EXPANSION_JOINT
+    ) {
+      setSourceDetailExpansionJoint({
+        sourceApprovalId: item.sourceApprovalId,
+        ratePerMTR: item.metaData?.ratePerMTR,
+        type: item.metaData?.type,
+      });
     } else {
       setSourceDetailForm({
         [gradeField.name]: item.metaData?.[gradeField.name],
@@ -1855,6 +2170,181 @@ const SourceApprovals = ({
           </View>
         );
       }
+    } else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BEARING) {
+      return (
+        <View style={styles.reportFields}>
+          <View>
+            <Input
+              label="Rate per MTR"
+              value={sourceDetailBearing.ratePerMTR}
+              onChange={(value: number) =>
+                handleSourceDetailBearinInputChange('ratePerMTR', value)
+              }
+              isRequired={true}
+              keyboardType="numeric"
+            />
+            <View>
+              <DropdownPicker
+                label="Type"
+                value={sourceDetailBearing.type}
+                items={BEARING_TYPE_LIST}
+                onChange={(value: string) =>
+                  handleSourceDetailBearinInputChange('type', value)
+                }
+              />
+            </View>
+          </View>
+          <TouchableOpacity
+            style={styles.btnContainer}
+            onPress={addSourceDetailsSubmit}>
+            <Text style={styles.submitBtn}>Submit</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    } else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.STEEL) {
+      switch (materialType) {
+        case TEST_MATERIALS_TYPES.REINFORCEMENT:
+          return (
+            <View style={styles.reportFields}>
+              <View>
+                <DropdownPicker
+                  label="Grade"
+                  value={sourceDetailReinforcement.grade}
+                  items={GRADE_REINFORCEMENT}
+                  onChange={(value: string) =>
+                    handleSourceDetailReinforcementInputChange('grade', value)
+                  }
+                />
+              </View>
+              <View>
+                <DropdownPicker
+                  label="Diameter"
+                  value={sourceDetailReinforcement.diameter}
+                  items={DIAMETER_REINFORCEMENT}
+                  onChange={(value: string) =>
+                    handleSourceDetailReinforcementInputChange(
+                      'diameter',
+                      value,
+                    )
+                  }
+                />
+              </View>
+              <View>
+                <Input
+                  label="Rate per MT"
+                  value={sourceDetailReinforcement.ratePerMT}
+                  onChange={(value: number) =>
+                    handleSourceDetailReinforcementInputChange(
+                      'ratePerMT',
+                      value,
+                    )
+                  }
+                  isRequired={true}
+                  keyboardType="numeric"
+                />
+              </View>
+              <View>
+                <Input
+                  label="Brand"
+                  value={sourceDetailReinforcement.brand}
+                  onChange={(value: string) =>
+                    handleSourceDetailReinforcementInputChange('brand', value)
+                  }
+                  isRequired={true}
+                />
+              </View>
+
+              <TouchableOpacity
+                style={styles.btnContainer}
+                onPress={addSourceDetailsSubmit}>
+                <Text style={styles.submitBtn}>Submit</Text>
+              </TouchableOpacity>
+            </View>
+          );
+          break;
+
+        case TEST_MATERIALS_TYPES.STRUCTURAL_STEEL:
+          return (
+            <View style={styles.reportFields}>
+              <View>
+                <View>
+                  <DropdownPicker
+                    label="Grade"
+                    value={sourceDetailStructureSteel.grade}
+                    items={GRADE_STRUCTURE_STEEL}
+                    onChange={(value: string) =>
+                      handleSourceDetailStructureSteelInputChange(
+                        'grade',
+                        value,
+                      )
+                    }
+                  />
+                </View>
+                <Input
+                  label="Rate per MT"
+                  value={sourceDetailStructureSteel.ratePerMT}
+                  onChange={(value: number) =>
+                    handleSourceDetailStructureSteelInputChange(
+                      'ratePerMT',
+                      value,
+                    )
+                  }
+                  isRequired={true}
+                  keyboardType="numeric"
+                />
+              </View>
+              <View>
+                <Input
+                  label="Brand"
+                  value={sourceDetailStructureSteel.brand}
+                  onChange={(value: string) =>
+                    handleSourceDetailStructureSteelInputChange('brand', value)
+                  }
+                  isRequired={true}
+                />
+              </View>
+
+              <TouchableOpacity
+                style={styles.btnContainer}
+                onPress={addSourceDetailsSubmit}>
+                <Text style={styles.submitBtn}>Submit</Text>
+              </TouchableOpacity>
+            </View>
+          );
+          break;
+      }
+    } else if (
+      testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EXPANSION_JOINT
+    ) {
+      return (
+        <View style={styles.reportFields}>
+          <View>
+            <Input
+              label="Rate per MTR"
+              value={sourceDetailExpansionJoint.ratePerMTR}
+              onChange={(value: number) =>
+                handleSourceDetailExpansionJointInputChange('ratePerMTR', value)
+              }
+              isRequired={true}
+              keyboardType="numeric"
+            />
+            <DropdownPicker
+              label="Brand"
+              value={sourceDetailExpansionJoint.type}
+              items={EXPANSION_JOINT_TYPE_LIST}
+              onChange={(value: string) =>
+                handleSourceDetailExpansionJointInputChange('type', value)
+              }
+            />
+          </View>
+
+          <TouchableOpacity
+            style={styles.btnContainer}
+            onPress={addSourceDetailsSubmit}>
+            <Text style={styles.submitBtn}>Submit</Text>
+          </TouchableOpacity>
+        </View>
+      );
     } else {
       return (
         <View style={styles.reportFields}>

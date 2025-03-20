@@ -110,6 +110,7 @@ const ProcurementsEarthWork = ({
 
   useEffect(() => {
     if (sourceApprovalsByStatus) {
+      console.log('=======', JSON.stringify(sourceApprovalsByStatus));
       setSourceApprovals(sourceApprovalsByStatus);
     } else if (error) {
       showSnackbar(error, 'error');
@@ -248,7 +249,7 @@ const ProcurementsEarthWork = ({
     if (!validateForm()) {
       return;
     }
-    
+
     if (!selectedProcurement) {
       dispatch(
         addProcurement({

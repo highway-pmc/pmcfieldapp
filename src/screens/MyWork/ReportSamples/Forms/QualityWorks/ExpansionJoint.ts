@@ -13,12 +13,12 @@ export const getAnchoragePullOutTestSampleObject = (sampleNum: any) => {
     effectiveRamArea: '',
     appliedPressure: '',
     details: {
-      titles: ['Sl. No.', 'COMPONENT', 'VALUE (in µm)'],
+      titles: ['Sl. No.', 'Observation', 'Acceptance'],
       values: [
         {
           slNo: '1',
-          component: '',
-          value: 'Y',
+          observation: '',
+          acceptance: 'Y',
         },
       ],
     },
@@ -35,6 +35,7 @@ export const getCyclicMotionTestSampleObject = (sampleNum: any) => {
     otherInfo: {
       drawingNumber: '',
     },
+    testDuration: '',
     detailsObs: {
       titles: ['', 'From', 'To'],
       values: [
@@ -51,12 +52,12 @@ export const getCyclicMotionTestSampleObject = (sampleNum: any) => {
       ],
     },
     details: {
-      titles: ['Sl. No.', 'COMPONENT', 'VALUE (in µm)'],
+      titles: ['Sl. No.', 'Observation', 'Acceptance'],
       values: [
         {
           slNo: '1',
-          component: '',
-          value: 'Y',
+          observation: '',
+          acceptance: 'Y',
         },
       ],
     },
@@ -73,11 +74,11 @@ export const getDebrisExpulsionTestSampleObject = (sampleNum: any) => {
     otherInfo: {
       drawingNumber: '',
     },
-    weightOfDebrisFilled: '',
-    weightOfDebrisExpelled: '',
-    actualWeightOfDebris: '',
-    numberOfCycleRuns: '',
-    isDebrisExpulsion: '',
+    weightOfDebrisFilled: 0.0,
+    weightOfDebrisExpelled: 0.0,
+    actualWeightOfDebris: 0.0,
+    numberOfCycleRuns: 0.0,
+    isDebrisExpulsion: 0.0,
   };
 };
 
@@ -207,7 +208,7 @@ export const getVisualDimensionTestSampleObject = (sampleNum: any) => {
         },
       ],
     },
-    
+
     welding: '',
     surfaceFinish: '',
     strightness: '',

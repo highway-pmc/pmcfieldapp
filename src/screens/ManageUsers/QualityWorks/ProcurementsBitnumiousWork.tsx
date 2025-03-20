@@ -103,17 +103,18 @@ const ProcurementsBitnumiousWork = ({
   });
 
   // Details_CoarseAggregate_SMA Form
-  const [detailsCoarseAggregateSMA, setDetailsCoarseAggregateSMA]: any = useState({
-    sourceApprovalId: '',
-    sourceApprovalDetailId: '',
-    nominalSize: '', // 37.5mm / 26.5mm / 19mm / 13.2mm
-    vehicleNo: [],
-    qtyInKg: '', // >0, up to 3 decimals, max limit 20
-    qtyInCum: '',
-    uploadWeightSlip: '', // Image or PDF
-    procurementDateTime: '',
-    lotNo: '',
-  });
+  const [detailsCoarseAggregateSMA, setDetailsCoarseAggregateSMA]: any =
+    useState({
+      sourceApprovalId: '',
+      sourceApprovalDetailId: '',
+      nominalSize: '', // 37.5mm / 26.5mm / 19mm / 13.2mm
+      vehicleNo: [],
+      qtyInKg: '', // >0, up to 3 decimals, max limit 20
+      qtyInCum: '',
+      uploadWeightSlip: '', // Image or PDF
+      procurementDateTime: '',
+      lotNo: '',
+    });
 
   // Details_CoarseAggregate_MicroSurfacing Form
   const [
@@ -160,7 +161,9 @@ const ProcurementsBitnumiousWork = ({
   const [data, setData]: any = useState([]);
 
   const [sourceApprovals, setSourceApprovals]: any[] = useState([]);
-  const [sourceApprovalsFiltered, setSourceApprovalsFiltered]: any = useState([]);
+  const [sourceApprovalsFiltered, setSourceApprovalsFiltered]: any = useState(
+    [],
+  );
   const [sourceApprovalDetails, setSourceApprovalDetails] = useState([]);
 
   if (useIsFocused()) {
@@ -205,7 +208,7 @@ const ProcurementsBitnumiousWork = ({
       getProcurements({
         projectId: loggedInUser.projectId,
         testMaterialId: testMaterialId,
-        testWorkCategoryType: testWorkCategoryType
+        testWorkCategoryType: testWorkCategoryType,
       }),
     );
 
@@ -399,7 +402,7 @@ const ProcurementsBitnumiousWork = ({
     setVehicleNos(item.vehicleNo || []);
 
     if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BITUMINOUS_WORKS) {
-      console.log('=====MetaData====',item.metaData.qtyInKg)
+      console.log('=====MetaData====', item.metaData.qtyInKg);
       switch (materialType) {
         case TEST_MATERIALS_TYPES.FINE_AGGREGATE:
           setDetailsFineAggregate({
@@ -666,7 +669,13 @@ const ProcurementsBitnumiousWork = ({
           ?.sourceApprovalDetails,
       );
     } else if (field === 'nominalSize' || field === 'gradeOfBitumen') {
-      const filteredData = sourceApprovals.filter((s: any) => s.sourceApprovalDetails && s.sourceApprovalDetails.find((sd: any)=> sd.metaData && sd.metaData[field] === value));
+      const filteredData = sourceApprovals.filter(
+        (s: any) =>
+          s.sourceApprovalDetails &&
+          s.sourceApprovalDetails.find(
+            (sd: any) => sd.metaData && sd.metaData[field] === value,
+          ),
+      );
       setSourceApprovalsFiltered(filteredData);
     }
   };
@@ -766,7 +775,7 @@ const ProcurementsBitnumiousWork = ({
             testMaterialId: testMaterialId,
             body: {
               sourceApprovalId:
-              detailsCoarseAggregateMicroSurfacing.sourceApprovalId,
+                detailsCoarseAggregateMicroSurfacing.sourceApprovalId,
               sourceApprovalDetailId:
                 detailsCoarseAggregateMicroSurfacing.sourceApprovalDetailId,
               vehicleNo: vehicleNos.length
@@ -785,11 +794,17 @@ const ProcurementsBitnumiousWork = ({
               },
             },
           };
-          console.log('====COARSE_AGGREGATE_MICRO_SURFACING====', JSON.stringify(materialSpecificFields))
+          console.log(
+            '====COARSE_AGGREGATE_MICRO_SURFACING====',
+            JSON.stringify(materialSpecificFields),
+          );
           break;
 
         case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA:
-          console.log('====detailsCoarseAggregateSMA====', JSON.stringify(detailsCoarseAggregateSMA))
+          console.log(
+            '====detailsCoarseAggregateSMA====',
+            JSON.stringify(detailsCoarseAggregateSMA),
+          );
           materialSpecificFields = {
             projectId: loggedInUser.projectId,
             testMaterialId: testMaterialId,
@@ -1875,9 +1890,9 @@ const ProcurementsBitnumiousWork = ({
     label: string,
     field: string,
     detail: string,
-    data: any = sourceApprovals
+    data: any = sourceApprovals,
   ) => {
-    const options = [{name: 'Select', _id: ''}].concat(data)
+    const options = [{name: 'Select', _id: ''}].concat(data);
     return (
       <View style={styles.inputContainer}>
         <Text style={styles.label}>{label}</Text>
@@ -1900,9 +1915,8 @@ const ProcurementsBitnumiousWork = ({
             }
             style={styles.picker}
             onValueChange={itemValue => {
-                handleInputChangeBituminousWork(field, itemValue, detail)
-              }
-            }>
+              handleInputChangeBituminousWork(field, itemValue, detail);
+            }}>
             {options.map((option, index) => (
               <Picker.Item key={index} label={option.name} value={option._id} />
             ))}

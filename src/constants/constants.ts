@@ -666,9 +666,9 @@ export const TEST_WORK_CATEGORY_TYPES = {
   EARTH_WORKS: 'earth-work',
   SUB_BASE: 'sub-base',
   BASE_SUB_BASE: 'base-sub-base',
-  STEEL: '',
-  BEARING: '',
-  EXPANSION_JOINT: '',
+  STEEL: 'steel',
+  BEARING: 'bearing',
+  EXPANSION_JOINT: 'expansion-joints',
 };
 
 export const TEST_MATERIALS_TYPES = {
@@ -699,6 +699,10 @@ export const TEST_MATERIALS_TYPES = {
   COARSE_AGGREGATE_WMM: 'coarse-aggregate-wmm',
   FINE_AGGREGATE_WMM: 'fine-aggregate-wmm',
   WMM: 'wmm',
+  STRUCTURAL_STEEL: ' structural-steel',
+  BEARING: 'bearing',
+  EXPANSION_JOINT: 'expansion-joints',
+  REINFORCEMENT: 'reinforcement',
 };
 
 export const TEST_TYPES = {
@@ -788,7 +792,144 @@ export const YES_NO_LIST = [
     value: 'NA',
   },
 ];
-
+export const BEARING_TYPE_LIST = [
+  {
+    label: 'Elastomeric Bearing',
+    value: 'elastomeric-bearing',
+  },
+  {
+    label: 'Pot Bearing - Free',
+    value: 'pot-bearing-free',
+  },
+  {
+    label: 'Pot Bearing - Fixed',
+    value: 'pot-bearing-fixed',
+  },
+  {
+    label: 'Pot Bearing - Lateral Guided',
+    value: 'pot-bearing-lateral-guided',
+  },
+  {
+    label: 'Pot Bearing - Horizontal Guided',
+    value: 'pot-bearing-horizontal-guided',
+  },
+  {
+    label: 'Spherical Bearing - Free',
+    value: 'spherical-bearing-free',
+  },
+  {
+    label: 'Spherical Bearing - Fixed',
+    value: 'spherical-bearing-fixed',
+  },
+  {
+    label: 'Spherical Bearing - Lateral Guided',
+    value: 'spherical-bearing-lateral-guided',
+  },
+  {
+    label: 'Spherical Bearing - Horizontal Guided',
+    value: 'spherical-bearing-horizontal-guided',
+  },
+];
+export const EXPANSION_JOINT_TYPE_LIST = [
+  {
+    label: 'Reinforced Elastomeric Joint',
+    value: 'reinforced-elastomeric-joint',
+  },
+  {
+    label: 'Single Strip Seal Joint',
+    value: 'single-strip-seal-joint',
+  },
+  {
+    label: 'Single Box Seal Joint',
+    value: 'single-box-seal-joint',
+  },
+  {
+    label: 'Modular Strip Seal Expansion Joints',
+    value: 'modular-strip-seal-expansion-joints',
+  },
+  {
+    label: 'Modular Box Seal Expansion Joints',
+    value: 'modular-box-seal-expansion-joints',
+  },
+  {
+    label: 'Asphaltic Plug Joint',
+    value: 'asphaltic-plug-joint',
+  },
+  {
+    label: 'Compression Seal Joint',
+    value: 'compression-seal-joint',
+  },
+];
+export const DIAMETER_REINFORCEMENT = [
+  {
+    label: '8',
+    value: '8',
+  },
+  {
+    label: '10',
+    value: '10',
+  },
+  {
+    label: '12',
+    value: '12',
+  },
+  {
+    label: '16',
+    value: '16',
+  },
+  {
+    label: '20',
+    value: '20',
+  },
+  {
+    label: '25',
+    value: '25',
+  },
+  {
+    label: '32',
+    value: '32',
+  },
+  {
+    label: '36',
+    value: '36',
+  },
+];
+export const GRADE_REINFORCEMENT = [
+  {
+    label: 'Fe 415',
+    value: 'Fe 415',
+  },
+  {
+    label: 'Fe 500',
+    value: 'Fe 500',
+  },
+  {
+    label: 'Fe 500 D',
+    value: 'Fe 500 D',
+  },
+  {
+    label: 'Fe 550 D',
+    value: 'Fe 550 D',
+  },
+  {
+    label: 'Fe 600',
+    value: 'Fe 600',
+  },
+];
+export const GRADE_STRUCTURE_STEEL = [
+  {
+    label: 'MS',
+    value: 'MS',
+  },
+  {
+    label: 'E 350',
+    value: 'E 350',
+  },
+  {
+    label: 'E450',
+    value: 'E450',
+  },
+];
 export const YES_NO_NA_LIST = [
   {
     label: 'Yes',

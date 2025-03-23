@@ -145,7 +145,7 @@ export const getSealPullTestSampleObject = (sampleNum: any) => {
       drawingNumber: '',
     },
     actualExtensionBefore: 0.0,
-    sealNotSlip: 'Y',
+    //sealNotSlip: 'Y',
     details: {
       titles: ['', 'From', 'To'],
       values: [

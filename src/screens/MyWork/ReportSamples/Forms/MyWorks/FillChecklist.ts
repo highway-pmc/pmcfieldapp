@@ -631,6 +631,7 @@ export const onFillChecklistData = (_v: any) => {
           checkList = {
             taskName: _v.selectedTask.name,
             layingOfPQCData: _v.layingOfPQCData,
+            pqcData: _v.pqcData,
           };
           break;
         case TASK_TYPES.BACKFILLING:

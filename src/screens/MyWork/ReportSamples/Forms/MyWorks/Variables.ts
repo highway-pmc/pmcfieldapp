@@ -187,6 +187,15 @@ export const Variables = () => {
             key: Guid.create(),
         },
     ]);
+    const [pqcData, setPqcData]: any = useState([
+      {
+        vehicleNo: '',
+        totalPqc:'',
+        startTime: '',
+        finishTime: '',
+        key: Guid.create(),
+      },
+    ]);
     //GLUEING
     const [glueingData, setGlueingData]: any = useState([
         {
@@ -2647,6 +2656,13 @@ export const Variables = () => {
         newData.splice(prevIndex, 1);
         setConcreteData(newData);
     };
+    const deleteItemPQC = (rowMap: any, rowKey: any) => {
+      closeRow(rowMap, rowKey);
+      const newData = [...pqcData];
+      const prevIndex = pqcData.findIndex(item => item.key === rowKey);
+      newData.splice(prevIndex, 1);
+      setPqcData(newData);
+    };
     const deleteTorquingItem = (rowMap: any, rowKey: any) => {
         closeRow(rowMap, rowKey);
         const newData = [...torquingData];
@@ -2911,6 +2927,7 @@ export const Variables = () => {
         boringOfPileData, setBoringOfPileData,
         chippingAndRemovalOfConcreteData, setChippingAndRemovalOfConcreteData,
         concreteData, setConcreteData,
+        pqcData,setPqcData,
         dumpingData, setDumpingData,
         glueingData, setGlueingData,
         foundationData, setFoundationData,

@@ -423,7 +423,7 @@ export const testSampleFormEarthwork = (
                       }
                       isRequired={true}
                     />
-                    <DropdownPicker
+                    {/* <DropdownPicker
                       label="Is debris expulsion more than 75% weight of debris filled in joint within 25 cycles?"
                       value={
                         concreteSampleTestItems[0].testLoadTimesOfDesignSLS
@@ -439,7 +439,7 @@ export const testSampleFormEarthwork = (
                           value,
                         )
                       }
-                    />
+                    /> */}
                   </View>
                 ) : selectedTestSample.type ===
                   TEST_TYPES.DYE_PENETRATION_TEST ? (
@@ -804,7 +804,7 @@ export const testSampleFormEarthwork = (
                       }
                       isRequired={true}
                     />
-                    <DropdownPicker
+                    {/* <DropdownPicker
                       label="The seal should not slip not slip before 150% of maximum rated design movement."
                       value={concreteSampleTestItems[0].sealNotSlip}
                       items={[
@@ -818,7 +818,7 @@ export const testSampleFormEarthwork = (
                           value,
                         )
                       }
-                    />
+                    /> */}
                   </View>
                 ) : selectedTestSample.type ===
                   TEST_TYPES.VISUAL_DIMENSION_TEST ? (

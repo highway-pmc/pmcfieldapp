@@ -23,6 +23,18 @@ export const Events = (_v: any) => {
             },
         ]);
     };
+    const onAddMorePQC=()=>{
+        _v.setPQCData([
+          ..._v.PQCData,
+          {
+            vehicleNo: '',
+            totalPqc: '',
+            startTime: '',
+            finishTime: '',
+            key: Guid.create(),
+          },
+        ]);
+    }
     const onAddMoreTorquing = () => {
         _v.setTorquingData([
             ..._v.torquingData,
@@ -562,15 +574,16 @@ export const Events = (_v: any) => {
     };
 
     return {
-        onAddMoreConcrete,
-        onAddMoreTorquing,
-        onAddMoreDumping,
-        getStyle,
-        onClick,
-        onClickNested,
-        onFillChecklist,
-        onSegmentTypeClick,
-        getRFIDataByWorkAssignmentId
-    }
+      onAddMoreConcrete,
+      onAddMoreTorquing,
+      onAddMoreDumping,
+      getStyle,
+      onClick,
+      onClickNested,
+      onFillChecklist,
+      onSegmentTypeClick,
+      getRFIDataByWorkAssignmentId,
+      onAddMorePQC,
+    };
 
 }

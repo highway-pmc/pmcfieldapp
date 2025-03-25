@@ -255,7 +255,47 @@ const RFIsRecents = (props: any) => {
       </View>
     </View>
   );
-
+  const renderItemPqc = (rowData: any) => (
+    <View style={{flexDirection: 'column', gap: 5}}>
+      {rowData.index === 0 && (
+        <View style={styles.headerRow}>
+          <Text style={styles.headerCell}>Sl. No.</Text>
+          <Text style={styles.headerCell}>Last 4 digits of Vehicle No.</Text>
+          <Text style={styles.headerCell}>Total qty of PQC in cum</Text>
+          <Text style={styles.headerCell}>Laying start time</Text>
+          <Text style={styles.headerCell}>Laying end time</Text>
+        </View>
+      )}
+      <View style={styles.row}>
+        <Text style={styles.cell}>{rowData.index + 1}</Text>
+        <Text style={styles.cell}>{rowData.item.vehicleNo}</Text>
+        <Text style={styles.cell}>{rowData.item.totalPqc}</Text>
+        <Text style={styles.cell}>{rowData.item.startTime}</Text>
+        <Text style={styles.cell}>{rowData.item.finishTime}</Text>
+      </View>
+    </View>
+  );
+  const renderSectionHeaderPqc = (rowData: any) => {
+    return (
+      <View>
+        <View>
+          <Text>TM No.</Text>
+        </View>
+        <View>
+          <Text>Last 4 digits of Vehicle No.</Text>
+        </View>
+        <View>
+          <Text>Total qty of PQC in cum</Text>
+        </View>
+        <View>
+          <Text>Laying start time</Text>
+        </View>
+        <View>
+          <Text>Laying end time</Text>
+        </View>
+      </View>
+    );
+  };
   const renderSectionHeader = (rowData: any) => {
     return (
       <View>
@@ -5334,6 +5374,17 @@ const RFIsRecents = (props: any) => {
                 </Text>
               </View>
             ))}
+            <ScrollView horizontal={true}>
+              <View style={{flexDirection: 'column'}}>
+                {
+                  <SwipeListView
+                    data={selectedRFI?.metaData.pqcData}
+                    renderItem={renderItemPqc}
+                    renderSectionHeader={renderSectionHeaderPqc}
+                  />
+                }
+              </View>
+            </ScrollView>
           </View>
         );
       case TASK_TYPES.BACKFILLING:

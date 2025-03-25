@@ -35,6 +35,7 @@ import {
   getSourceApprovalsByStatus,
   updateProcurement,
 } from '../actions';
+import ImagePicker from 'react-native-image-picker';
 import CustomAlert from '../../Common/CustomAlert';
 import {
   getDbDate,
@@ -75,7 +76,6 @@ const ProcurementsEarthWork = ({
   const [selectedProcurement, setSelectedProcurement]: any = useState(null);
   const [confirmationAlert, setConfirmationAlert] = useState(false);
   const [gradeField, setGradeField]: any = useState({});
-
   const [vehicleNos, setVehicleNos]: any = useState([]);
   //use state for Bearing
   const [formSoil, setFormSoil]: any = useState({
@@ -86,6 +86,7 @@ const ProcurementsEarthWork = ({
     vehicleNoTemp: '',
     qtyInMtr: '',
     invoiceFile: '',
+    mtcUpload:'',
     lotNo: '',
     type: 'reinforced-elastomeric-joint',
   });
@@ -407,7 +408,8 @@ const ProcurementsEarthWork = ({
   };
 
   const [fileRes, setFileRes]: any = useState(null);
-
+  // Mtc Code
+  const [mtcFile,setMtcFile]:any=useState(null);
   const onDocumentPress = async () => {
     try {
       const result: any = await DocumentPicker.pick({
@@ -426,6 +428,7 @@ const ProcurementsEarthWork = ({
       }
     }
   };
+  
   const renderSourceDetailsPickerBearing = (
     label: string,
     field: string,
@@ -490,7 +493,55 @@ const ProcurementsEarthWork = ({
       showSnackbar('File size should not exceed 4 MB');
     }
   };
+  const launchCamera = () => {
+    let options = {
+      includeBase64: true,
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+    ImagePicker.launchCamera(options, (response: any) => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        Alert.alert(response.customButton);
+      } else {
+        const responseImage = response.assets?.length
+          ? response.assets[0]
+          : response.assets
+          ? response.assets
+          : response;
 
+        _v.setImageObject({
+          filePath: responseImage,
+          fileData: responseImage.base64,
+          fileUri: responseImage.uri,
+        });
+      }
+    });
+  };
+  const onDocumentPressMtc = async () => {
+    try {
+      const result: any = await DocumentPicker.pick({
+        type: [DocumentPicker.types.images, DocumentPicker.types.pdf],
+        allowMultiSelection: false,
+      });
+      const res = result[0];
+      console.log('==res===', res);
+      setMtcFile(res);
+    } catch (err) {
+      console.log('======err2===', err);
+      if (DocumentPicker.isCancel(err)) {
+        showSnackbar('No document selected');
+      } else {
+        throw err;
+      }
+    }
+  };
   const addProcurementsForm = () => {
     return (
       <View style={styles.reportFields}>
@@ -567,6 +618,15 @@ const ProcurementsEarthWork = ({
               onChange={(value: string) => handleInputChange('lotNo', value)}
               isRequired={true}
             />
+          </View>
+          <View>
+            <Text>Upload MTC</Text>
+            <TouchableOpacity onPress={launchCamera}>
+              <Text>Camera</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={onDocumentPressMtc}>
+              <Text>Upload MTC</Text>
+            </TouchableOpacity>
           </View>
           <View style={{flexDirection: 'column'}}>
             <View

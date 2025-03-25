@@ -336,8 +336,11 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
           testTypeData.testRFIsData?.forEach((rfi: any) => {
             rfi.type = testTypeData.type;
           });
-          if (testMateData.materialType === TEST_MATERIALS_TYPES.CONCRETE) {
-            if (testTypeData.type === TEST_SAMPLE_CONCRETE_CATEGORY.CORE_TEST) {
+          if (testMateData.materialType === TEST_MATERIALS_TYPES.CONCRETE ||
+            testMateData.materialType === TEST_MATERIALS_TYPES.DLC ||
+            testMateData.materialType === TEST_MATERIALS_TYPES.PQC
+          ) {
+            if (testTypeData.type === TEST_TYPES.CORE_TEST) {
               setCurrentTestTypesData([]);
               testTypeData.materialType = TEST_MATERIALS_TYPES.CONCRETE; // TEMP - TODO
               setSelectedTestSample(testTypeData);
@@ -347,8 +350,9 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
               setConcreteSampleTestItems(testObservations);
               setOpenPopup(true);
             } else if (testTypeData.type === TEST_TYPES.CUBE_TEST) {
+              console.log('============ CUBE_TEST ======= ', JSON.stringify(testTypeData));
               setCurrentTestTypesData([]);
-              testTypeData.materialType = TEST_MATERIALS_TYPES.CONCRETE; // TEMP - TODO
+              testTypeData.materialType = testMateData.materialType; // TEMP - TODO
               setSelectedTestSample(testTypeData);
               if (testTypeData.subTestTypes?.length) {
                 setTimeout(() => {
@@ -955,7 +959,8 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
       objSampleTest7thOr28thDay.observations;
 
     if (
-      testWorkCategoryDataType === TEST_WORK_CATEGORY_TYPES.CONCRETE_STRUCTURE
+      testWorkCategoryDataType === TEST_WORK_CATEGORY_TYPES.CONCRETE_STRUCTURE ||
+      testWorkCategoryDataType === TEST_WORK_CATEGORY_TYPES.CONCRETE_RIGID_PAVEMENT
     ) {
       for (let i = 0; i < sampleObservations?.length; i++) {
         const observations = sampleObservations[i];
@@ -1662,9 +1667,14 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
               TEST_MATERIALS_TYPES.CONCRETE &&
               selectedTestSample?.type === TEST_TYPES.CUBE_TEST) ||
               (currentTestMaterialData.materialType ===
-                TEST_MATERIALS_TYPES.CEMENT &&
+                TEST_MATERIALS_TYPES.CEMENT && 
                 selectedTestSample?.type ===
-                  TEST_TYPES.COMPRESSIVE_STRENGTH)) &&
+                  TEST_TYPES.COMPRESSIVE_STRENGTH) ||
+                  ((currentTestMaterialData.materialType ===
+                    TEST_MATERIALS_TYPES.DLC || currentTestMaterialData.materialType ===
+                    TEST_MATERIALS_TYPES.PQC) &&
+                    selectedTestSample?.type ===
+                      TEST_TYPES.CUBE_TEST)) &&
             tasksListing(currentTestTypesData, searchText, getStyle, styles)}
         {currentLevel === 6 ? (
           currentSubTestTypeRFIsData?.length ? (

@@ -662,6 +662,7 @@ export const TEST_CLASSIFICATION_TYPES = {
 
 export const TEST_WORK_CATEGORY_TYPES = {
   CONCRETE_STRUCTURE: 'concrete-structure',
+  CONCRETE_RIGID_PAVEMENT: 'concrete-rigid-pavement',
   BITUMINOUS_WORKS: 'bituminous-works',
   EARTH_WORKS: 'earth-work',
   SUB_BASE: 'sub-base',
@@ -703,11 +704,14 @@ export const TEST_MATERIALS_TYPES = {
   BEARING: 'bearing',
   EXPANSION_JOINT: 'expansion-joints',
   REINFORCEMENT: 'reinforcement',
+  DLC: 'dlc',
+  PQC: 'pqc',
 };
 
 export const TEST_TYPES = {
   CORE_TEST: 'core-test',
   CUBE_TEST: 'cube-test',
+  FLEXURAL_STRENGTH: 'flexural-strength',
   SLUMP_TEST: 'slump-test',
   UPV_TEST: 'upv-test',
   REBOUND_HAMMER_TEST: 'rebound-hammer-test',

@@ -776,6 +776,8 @@ export const TEST_TYPES = {
   SEAL_PULL_TEST: 'seal-pull-test',
   CYCLIC_MOTION_TEST: 'cyclic-motion-test',
   VISUAL_DIMENSION_TEST: 'visual-and-dimension-test',
+  //Concrete Rigid Pavement
+  FLEXURAL_STRENGTH_TEST: '',
 };
 
 export const YES_NO_LIST = [

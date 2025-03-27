@@ -145,6 +145,33 @@ const commonStyles = StyleSheet.create({
         fontWeight: '400',
         color: '#DD0302'
     },
+    //RFI' LAB Test Toggle CSS
+    toggleContainer: {
+        flexDirection: "row",
+        backgroundColor: "#fff",
+        borderRadius: 10,
+        padding: 5,
+        alignSelf: "center",
+        marginBottom: 10,
+      },
+      toggleButton: {
+        flex: 1,
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        alignItems: "center",
+        borderRadius: 8,
+      },
+      activeToggleButton: {
+        backgroundColor: "#007BFF",
+      },
+      toggleText: {
+        fontSize: 16,
+        color: "#333",
+      },
+      activeToggleText: {
+        color: "#fff",
+        fontWeight: "bold",
+      },
 });
 
 export default commonStyles;

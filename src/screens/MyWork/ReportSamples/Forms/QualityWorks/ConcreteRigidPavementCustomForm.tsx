@@ -152,8 +152,6 @@ export const testSampleFormEarthwork = (
   currentTestMaterialData = _currentTestMaterialData;
   selectedTestSample = _selectedTestSample;
   concreteSampleTestItems = _concreteSampleTestItems;
-  console.log('Earthwork currentTestMaterialData', currentTestMaterialData);
-  console.log('Earthwork selectedTestSample.type :', selectedTestSample.type);
   if (!materialType) {
     return (
       <View>
@@ -216,7 +214,7 @@ export const testSampleFormEarthwork = (
             <ScrollView style={styles.Width100} horizontal={true}>
               {selectedTestSample &&
                 (selectedTestSample.type ===
-                TEST_TYPES.FLEXURAL_STRENGTH_TEST ? (
+                TEST_TYPES.FLEXURAL_STRENGTH ? (
                   <View>
                     <CalendarPicker
                       label="Date of Testing"

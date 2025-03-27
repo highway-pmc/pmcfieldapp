@@ -4,15 +4,16 @@ import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import { HeaderItems, PROJECT_TYPE, RFIs_TYPE, USER_CATEGORY_DISPLAY, WORK_TYPE } from "../../constants/constants"
 import RFIsStructureTaskListing from './RFIsStructureTaskListing';
 
-const RFIsUserCategorySelection = ({ route, navigation }: { route: any, navigation: any }) => {
+const RFIsGenerateMyQuality = ({ route, navigation }: { route: any, navigation: any }) => {
 
-  const { rfiType } = route.params;
+  const { rfiType, testType } = route.params;
 
   const [activeTab, setActiveTab] = useState(USER_CATEGORY_DISPLAY.STRUCTURE);
 
   const focus = useIsFocused();
   useEffect(() => {
     if (focus == true) {
+      console.log('===============', testType);
       const eventEmitter = new NativeEventEmitter();
 
 
@@ -121,4 +122,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RFIsUserCategorySelection
+export default RFIsGenerateMyQuality

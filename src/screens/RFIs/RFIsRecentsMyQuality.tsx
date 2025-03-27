@@ -174,6 +174,8 @@ const RFIsRecentsMyQuality = (props: any) => {
     typeOfConcreteSurface: '',
   });
 
+  const [selectedTestType, setSelectedTestType] = useState("field-lab-test");
+
   const renderdata = (selectedRFI: any) => {
     return (
       <>
@@ -1340,35 +1342,36 @@ const RFIsRecentsMyQuality = (props: any) => {
     }
   };
 
-  const LabWorkDropDown = () => {
-    const [selected, setSelected] = useState("labTest");
+  // const LabWorkDropDown = () => {
+    
 
-    return (
+  //   return (
+      
+  //   );
+  // }
+
+  return (
+    <View>
       <View style={commonStyles.toggleContainer}>
         <TouchableOpacity
-          style={[commonStyles.toggleButton, selected === "labTest" && commonStyles.activeToggleButton]}
-          onPress={() => setSelected("labTest")}
+          style={[commonStyles.toggleButton, selectedTestType === "field-lab-test" && commonStyles.activeToggleButton]}
+          onPress={() => setSelectedTestType("field-lab-test")}
         >
-          <Text style={[commonStyles.toggleText, selected === "labTest" && commonStyles.activeToggleText]}>
+          <Text style={[commonStyles.toggleText, selectedTestType === "field-lab-test" && commonStyles.activeToggleText]}>
             Lab Test
           </Text>
         </TouchableOpacity>
   
         <TouchableOpacity
-          style={[commonStyles.toggleButton, selected === "thirdParty" && commonStyles.activeToggleButton]}
-          onPress={() => setSelected("thirdParty")}
+          style={[commonStyles.toggleButton, selectedTestType === "third-party-lab-test" && commonStyles.activeToggleButton]}
+          onPress={() => setSelectedTestType("third-party-lab-test")}
         >
-          <Text style={[commonStyles.toggleText, selected === "thirdParty" && commonStyles.activeToggleText]}>
+          <Text style={[commonStyles.toggleText, selectedTestType === "third-party-lab-test" && commonStyles.activeToggleText]}>
             Third Party Test 
           </Text>
         </TouchableOpacity>
       </View>
-    );
-  }
 
-  return (
-    <View>
-      <LabWorkDropDown />
       <Text style={styles.headerText}> Recent {getRFIType()} RFI's</Text>
       <View style={styles.recentWorkContainer}>
         <View style={styles.recentWorkHead}>
@@ -1440,19 +1443,20 @@ const RFIsRecentsMyQuality = (props: any) => {
             )}
           </ScrollView>
         </View>
-        {/* {props.rfiType === RFIs_TYPE.GENERATE && (
+        {props.rfiType === RFIs_TYPE.GENERATE && (
           <View style={styles.footerButton}>
             <TouchableOpacity
               style={styles.btnCta}
               onPress={() =>
-                navigation.navigate('RFIsUserCategorySelection', {
+                navigation.navigate('RFIsGenerateMyQuality', {
                   rfiType: props.rfiType,
+                  testType: selectedTestType
                 })
               }>
               <Text style={styles.btnCtaText}>Generate RFI's</Text>
             </TouchableOpacity>
           </View>
-        )} */}
+        )}
       </View>
 
       <Modal

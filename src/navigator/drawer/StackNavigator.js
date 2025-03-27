@@ -25,7 +25,7 @@ import PHAssignedComponents from "../../screens/MyWorkProjectHead/PHAssignedComp
 import PHAssignedSegments from "../../screens/MyWorkProjectHead/PHAssignedSegments";
 import MyWorkType from "../../screens/MyWork/MyWorkType";
 import RFIsDashboard from "../../screens/RFIs/RFIsDashboard";
-import RFIsUserCategorySelection from "../../screens/RFIs/RFIsUserCategorySelection";
+import RFIsGenerateMyWork from "../../screens/RFIs/RFIsGenerateMyWork";
 import SubComponentsList from "../../screens/ManageUsers/SubComponentsList";
 import MyQualityWorks from "../../screens/MyWork/MyQualityWorks";
 import AssignTestWorkCategory from "../../screens/ManageUsers/QualityWorks/AssignTestWorkCategory";
@@ -38,6 +38,7 @@ import ReportsFieldWork from "../../screens/Reports/ReportsFieldWork";
 import SelectTestWorkCategory from "../../screens/ManageUsers/QualityWorks/SelectTestWorkCategory";
 import ProcurementsBitnumiousWork from "../../screens/ManageUsers/QualityWorks/ProcurementsBitnumiousWork";
 import ProcurementsEarthWork from "../../screens/ManageUsers/QualityWorks/ProcurementsEarthWork";
+import RFIsGenerateMyQuality from "../../screens/RFIs/RFIsGenerateMyQuality";
 
 const Stack = createStackNavigator();
 
@@ -173,7 +174,8 @@ const RFIsStackNavigator = () => {
     <Stack.Navigator screenOptions={screenOptionStyle}>
       <Stack.Screen name="RFIsHome" component={RFIsHome} options={{headerShown: false}} />
       <Stack.Screen name="RFIsDashboard" component={RFIsDashboard} options={{headerShown: false}} />
-      <Stack.Screen name="RFIsUserCategorySelection" component={RFIsUserCategorySelection} options={{headerShown: false}} />
+      <Stack.Screen name="RFIsGenerateMyWork" component={RFIsGenerateMyWork} options={{headerShown: false}} />
+      <Stack.Screen name="RFIsGenerateMyQuality" component={RFIsGenerateMyQuality} options={{headerShown: false}} />
     </Stack.Navigator>
   );
 };

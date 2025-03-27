@@ -9306,7 +9306,7 @@ const RFIsRecents = (props: any) => {
             <TouchableOpacity
               style={styles.btnCta}
               onPress={() =>
-                navigation.navigate('RFIsUserCategorySelection', {
+                navigation.navigate('RFIsGenerateMyWork', {
                   rfiType: props.rfiType,
                 })
               }>

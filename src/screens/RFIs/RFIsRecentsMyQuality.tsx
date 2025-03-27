@@ -1359,7 +1359,7 @@ const RFIsRecentsMyQuality = (props: any) => {
           onPress={() => setSelected("thirdParty")}
         >
           <Text style={[commonStyles.toggleText, selected === "thirdParty" && commonStyles.activeToggleText]}>
-            Third party test 
+            Third Party Test 
           </Text>
         </TouchableOpacity>
       </View>

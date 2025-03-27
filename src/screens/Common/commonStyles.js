@@ -170,7 +170,7 @@ const commonStyles = StyleSheet.create({
       },
       activeToggleText: {
         color: "#fff",
-        fontWeight: "bold",
+        fontWeight: "500",
       },
 });
 

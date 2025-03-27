@@ -229,11 +229,40 @@ export const testSampleFormEarthwork = (
                         )
                       }
                     />
-                    {/*TODO Sampled By
-                      Concessionaire/ Jointly
-                    Test Conducted By
-                      Concessionaire/ Jointly
-                    */}
+                    <DropdownPicker
+                      label="Sampled By"
+                      value={
+                        concreteSampleTestItems[0].testLoadTimesOfDesignSLS
+                      }
+                      items={[
+                        {label: 'Concessionaire', value: 'Concessionaire'},
+                        {label: 'Jointly', value: 'Jointly'},
+                      ]}
+                      onChange={(value: any) =>
+                        handleInputChangeFineAggregate(
+                          concreteSampleTestItems[0],
+                          'sampledBy',
+                          value,
+                        )
+                      }
+                    />
+                    <DropdownPicker
+                      label="Test Conducted By"
+                      value={
+                        concreteSampleTestItems[0].testLoadTimesOfDesignSLS
+                      }
+                      items={[
+                        {label: 'Concessionaire', value: 'Concessionaire'},
+                        {label: 'Jointly', value: 'Jointly'},
+                      ]}
+                      onChange={(value: any) =>
+                        handleInputChangeFineAggregate(
+                          concreteSampleTestItems[0],
+                          'testConductedBy',
+                          value,
+                        )
+                      }
+                    />
                     <Input
                       label="Humidity"
                       value={concreteSampleTestItems[0].humidity}

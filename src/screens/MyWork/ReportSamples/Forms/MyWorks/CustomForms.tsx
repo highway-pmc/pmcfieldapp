@@ -8569,6 +8569,17 @@ export const CustomForms = (_v: any) => {
 
         return (
           <View>
+            <DropdownPicker
+              value={_v.layingOfPQCData.grade}
+              label="Grade of Concreate"
+              items={CONCRETE_GRADE_LIST}
+              onChange={(value: any) =>
+                _v.setLayingOfPQCData((prevData: any) => ({
+                  ...prevData,
+                  grade: value,
+                }))
+              }
+            />
             {layingOfPQCProperties.map(property => (
               <View style={{flexDirection: 'column'}} key={property.key}>
                 <DropdownPicker
@@ -8632,6 +8643,7 @@ export const CustomForms = (_v: any) => {
               }
               isRequired={true}
             />
+
             <View style={styles.MainContainer}>
               <ScrollView
                 id="scrollViewConcrete"

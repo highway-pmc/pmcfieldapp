@@ -1269,6 +1269,7 @@ export const Variables = () => {
     });
 
     const [layingOfPQCData, setLayingOfPQCData]: any = useState({
+        grade:'M20',
         trailPatchApproved: 'Y',
         mixDesignApproved: 'Y',
         dlcLayerApproved: 'Y',

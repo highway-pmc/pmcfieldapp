@@ -5271,6 +5271,11 @@ const RFIsRecents = (props: any) => {
         const layingOfPQCProperties = [
           {
             title:
+              'Grade of Concreate',
+            key: 'grade',
+          },
+          {
+            title:
               'Is the trail patch done and approved by the Engineer In Charge?',
             key: 'trailPatchApproved',
           },

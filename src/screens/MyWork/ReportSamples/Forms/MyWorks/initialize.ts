@@ -1303,6 +1303,7 @@ export const initRfiData = (_v: any) => {
         _v.setPqcData(rfiData.metaData.pqcData);
       } else {
         _v.setLayingOfPQCData({
+          grade: 'M20',
           trailPatchApproved: 'Y',
           mixDesignApproved: 'Y',
           dlcLayerApproved: 'Y',

@@ -131,21 +131,23 @@ export const styles = StyleSheet.create({
     },
     //Start Work
     StartWorkCard: {
-      backgroundColor: '#fff',
-      borderWidth: 1,
-      borderStyle: 'solid',
-      borderRadius: 12,
       flexDirection: 'row',
-      justifyContent: 'space-between',
-      gap: 15,
-      padding: 15,
       alignItems: 'center',
+      justifyContent: 'space-between',
+      backgroundColor: '#fff',
+      borderRadius: 16,
+      paddingVertical: 10,
+      paddingHorizontal: 15,
       marginBottom: 15,
+      borderWidth: 1,
+      borderColor: '#BECADA',
+      borderStyle: 'solid'
     },
     StartWorkCardDisabled: {
       backgroundColor: '#fff',
       borderWidth: 1,
       borderStyle: 'solid',
+      borderColor: '#BECADA' ,
       borderRadius: 12,
       flexDirection: 'row',
       justifyContent: 'space-between',
@@ -153,10 +155,11 @@ export const styles = StyleSheet.create({
       padding: 15,
       alignItems: 'center',
       marginBottom: 15,
-      opacity: 0.5,
+      opacity: 0.7,
     },
     leftContainer: {
       flexDirection: 'column',
+      maxWidth: '80%',
     },
     HeadText: {
       fontSize: 14,
@@ -255,16 +258,22 @@ export const styles = StyleSheet.create({
   
     //MyWork Card
     MyWorkCard: {
-      backgroundColor: '#CCD6E7',
-      borderRadius: 12,
+      flexDirection: 'column',
+      alignItems: 'flex-start',
       justifyContent: 'flex-start',
+      backgroundColor: '#fff',
+      borderRadius: 16,
+      paddingVertical: 10,
+      paddingBottom: 15,
+      paddingHorizontal: 20,
       marginBottom: 15,
-      position: 'relative',
+      borderWidth: 1,
+      borderColor: '#BECADA',
+      borderStyle: 'solid'
     },
     ContentContainer: {
-      paddingVertical: 10,
-      paddingBottom: 20,
-      paddingHorizontal: 20,
+        paddingVertical: 0,
+        paddingHorizontal: 0,
     },
     CompleteWork: {
       borderWidth: 1,
@@ -564,4 +573,5 @@ export const styles = StyleSheet.create({
       width: 20,
       height: 20,
     },
+
   });

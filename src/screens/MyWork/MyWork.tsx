@@ -58,6 +58,7 @@ import { styles } from './ReportSamples/Forms/MyWorks/Styles';
 import { Variables } from './ReportSamples/Forms/MyWorks/Variables';
 import { Events } from './ReportSamples/Forms/MyWorks/Events';
 import { CustomForms } from './ReportSamples/Forms/MyWorks/CustomForms';
+import commonStyles from '../Common/commonStyles';
 
 const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
 
@@ -227,7 +228,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                   }>
                   <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
                   <View style={styles.TaskDetails}>
-                    <Text style={styles.SubHeadingText}>Assigned:</Text>
+                    <Text style={[styles.SubHeadingText, styles.BoldText]}>Assigned:</Text>
                     <Text style={[styles.SubHeadingText, styles.SubActive]}>
                       {projModuleItem.name}
                     </Text>

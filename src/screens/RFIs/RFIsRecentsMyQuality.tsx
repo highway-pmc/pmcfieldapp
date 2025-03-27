@@ -31,6 +31,7 @@ import Pdf from 'react-native-pdf';
 import {SwipeListView} from 'react-native-swipe-list-view';
 import {getDisplayDate, getDisplayTime} from '../../utils/Utils';
 const {height} = Dimensions.get('window');
+import commonStyles from '../Common/commonStyles';
 
 const RFIsRecentsMyQuality = (props: any) => {
   const navigation: any = useNavigation();
@@ -1339,8 +1340,35 @@ const RFIsRecentsMyQuality = (props: any) => {
     }
   };
 
+  const LabWorkDropDown = () => {
+    const [selected, setSelected] = useState("labTest");
+
+    return (
+      <View style={commonStyles.toggleContainer}>
+        <TouchableOpacity
+          style={[commonStyles.toggleButton, selected === "labTest" && commonStyles.activeToggleButton]}
+          onPress={() => setSelected("labTest")}
+        >
+          <Text style={[commonStyles.toggleText, selected === "labTest" && commonStyles.activeToggleText]}>
+            Lab Test
+          </Text>
+        </TouchableOpacity>
+  
+        <TouchableOpacity
+          style={[commonStyles.toggleButton, selected === "thirdParty" && commonStyles.activeToggleButton]}
+          onPress={() => setSelected("thirdParty")}
+        >
+          <Text style={[commonStyles.toggleText, selected === "thirdParty" && commonStyles.activeToggleText]}>
+            Third Party Test 
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
   return (
     <View>
+      <LabWorkDropDown />
       <Text style={styles.headerText}> Recent {getRFIType()} RFI's</Text>
       <View style={styles.recentWorkContainer}>
         <View style={styles.recentWorkHead}>

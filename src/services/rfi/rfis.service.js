@@ -134,3 +134,12 @@ export const getTestSampleReportsForLoggedinUserApi = async (projectId) => {
         throw new Error(errorMessge);
     });
 }
+
+export const postLabTestRFI = async (projectId, testType, body) => {
+    return apiService.postRequest(`v1/auth/projects/${projectId}/${testType}/rfis-manual`, body).then((response) => {
+        return response;
+    }).catch((err) => {
+        const errorMessge = err.message || 'Unable to generate RFI`s.';
+        throw new Error(errorMessge);
+    });
+}

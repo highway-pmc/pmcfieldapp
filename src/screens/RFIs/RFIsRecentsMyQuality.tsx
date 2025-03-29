@@ -1408,7 +1408,7 @@ const RFIsRecentsMyQuality = (props: any) => {
                         Generated Time
                       </Text>
                       <Text style={[styles.dateText, styles.subFontText]}>
-                        {/* {getDisplayTime(item.rfiDateTime)} */}
+                        {getDisplayTime(item.rfiDateTime)}
                       </Text>
                     </View>
                   </View>

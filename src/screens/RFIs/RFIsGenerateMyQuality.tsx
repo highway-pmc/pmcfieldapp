@@ -8,12 +8,16 @@ import CalendarPicker from '../../components/UI/CalenderPicker';
 import TimePicker from '../../components/UI/TimePicker';
 import { getDbDateFromDDMMYYYY } from '../../utils/Utils';
 import { useSnackbar } from '../../context/SnackbarContext';
+import { useDispatch, useSelector } from 'react-redux';
+import { clearRFITasksEvent, generateLABTestRFIReport } from './actions';
+import { useIsFocused } from '@react-navigation/native';
 
 const RFIsGenerateMyQuality = ({ route, navigation }: { route: any, navigation: any }) => {
   const { rfiType, testType, projectId } = route?.params || {};
   const { height } = Dimensions.get('window');
   const calculatedHeight = height * 0.75;
   const { showSnackbar } = useSnackbar();
+  const focus = useIsFocused();
 
   interface MaterialData {
     materialTypeData?: any[];
@@ -29,6 +33,8 @@ const RFIsGenerateMyQuality = ({ route, navigation }: { route: any, navigation: 
     const [selectedSubTestTypeData, setSelectedSubTestTypeData] = useState<MaterialData>({});
     const [rfiDate, setRFIDate] = useState('');
     const [rfiTime, setRFITime] = useState('');
+    const dispatch = useDispatch();
+    const {labTestRfiGenerated, loading, error} = useSelector((state: any) => state.RFIs);
     
     useEffect(() => {
       const testTypeData = async () => {
@@ -87,29 +93,25 @@ const RFIsGenerateMyQuality = ({ route, navigation }: { route: any, navigation: 
           rfiDateTime: `${getDbDateFromDDMMYYYY(rfiDate)} ${rfiTime}:00`,
         }
       } 
-      try {
-        const responseOfFileUpload = await fetch(`${appConfig.API_URL}/v1/auth/projects/${projectId}/${testType}/rfis-manual`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'multipart/formSoil-data',
-            Authorization: appConfig.getToken(),
-          },
-          body: payload,
-        });
-        if (responseOfFileUpload.status == 200) {
-          let responseInJs = await responseOfFileUpload.json();
+
+      dispatch(
+        generateLABTestRFIReport({
+              projectId: projectId,
+              testType: testType,
+              body: payload
+            }),
+          );
+    }
+
+    useEffect(() => {
+        if (labTestRfiGenerated) {
           showSnackbar('RFI`s Generate  Succesfull');
-          setSelectedMaterialTypeData({});
-          setSelectedTestTypeData({});
-          setSelectedSubTestTypeData({});
-        } else {
+          dispatch(clearRFITasksEvent());
+          onReset();
+        } else if (error) {
           showSnackbar('RFI`s Generate Failed');
         }
-      } catch (err) {
-        showSnackbar('RFI`s Generate Failed');
-        console.log(err, 'error in RFI`s Generate');
-      }
-    }
+      }, [labTestRfiGenerated, error]);
 
     const onReset = () => {
         setRFIDate('');

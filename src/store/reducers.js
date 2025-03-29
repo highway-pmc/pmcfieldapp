@@ -1585,7 +1585,28 @@ const RFIsReducer = (state = myWorksState, action) => {
                 rfiDataList: null,
                 rfiUpdated: null,
                 reportdownloaded: null,
+                labTestRfiGenerated: null,
                 error: null,
+                loading: false,
+            };
+        case "GENERATE_LAB_TEST_RFI_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "GENERATE_LAB_TEST_RFI_SUCCESS":
+            return {
+                ...state,
+                labTestRfiGenerated: action.response,
+                error: null,
+                loading: false,
+            };
+        case "GENERATE_LAB_TEST_RFI_FAILURE":
+            return {
+                ...state,
+                labTestRfiGenerated: null,
+                error: action.error,
                 loading: false,
             };
         default:

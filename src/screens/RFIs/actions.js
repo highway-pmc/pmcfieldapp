@@ -46,3 +46,8 @@ export const generateTestRFIReport = (payload) => ({
 export const clearRFITasksEvent = () => ({
     type: "CLEAR_RFI_REQUEST"
 });
+
+export const generateLABTestRFIReport = (payload) => ({
+    type: "GENERATE_LAB_TEST_RFI_REQUEST",
+    payload: payload
+});

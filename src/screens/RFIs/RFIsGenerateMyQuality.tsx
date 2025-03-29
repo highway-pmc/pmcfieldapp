@@ -11,6 +11,7 @@ import { useSnackbar } from '../../context/SnackbarContext';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearRFITasksEvent, generateLABTestRFIReport } from './actions';
 import { useIsFocused } from '@react-navigation/native';
+import LoadingAnimation from '../Common/LoadingAnimation';
 
 const RFIsGenerateMyQuality = ({ route, navigation }: { route: any, navigation: any }) => {
   const { rfiType, testType, projectId } = route?.params || {};
@@ -116,6 +117,7 @@ const RFIsGenerateMyQuality = ({ route, navigation }: { route: any, navigation: 
     const onReset = () => {
         setRFIDate('');
         setRFITime('');
+        handleCategorySelect({});
         setSelectedMaterialTypeData({});
         setSelectedTestTypeData({});
         setSelectedSubTestTypeData({});
@@ -125,6 +127,7 @@ const RFIsGenerateMyQuality = ({ route, navigation }: { route: any, navigation: 
   return (
     <View style={styles.recentWorkContainer}>
       <Text style={styles.headerText}>{testType === 'field-lab-test' ? 'Lab Test' : 'Third Party Test'}</Text>
+      
         <ScrollView
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false} style={[
@@ -165,18 +168,21 @@ const RFIsGenerateMyQuality = ({ route, navigation }: { route: any, navigation: 
               <TimePicker label="Time" value={rfiTime} onChange={(time) => setRFITime(time)} />
             </View>
         </ScrollView> 
-        <View style={styles.footerButton}>
-            <TouchableOpacity
-              style={styles.btnCtaOutline}
-              onPress={onReset}>
-              <Text style={styles.btnCtaTextOutline}>Reset</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.btnCta}
-              onPress={onGenerateRFI}>
-              <Text style={styles.btnCtaText}>Generate</Text>
-            </TouchableOpacity>
-        </View>
+        {!loading &&
+          <View style={styles.footerButton}>
+              <TouchableOpacity
+                style={styles.btnCtaOutline}
+                onPress={onReset}>
+                <Text style={styles.btnCtaTextOutline}>Reset</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.btnCta}
+                onPress={onGenerateRFI}>
+                <Text style={styles.btnCtaText}>Generate</Text>
+              </TouchableOpacity>
+          </View>
+        }
+        <LoadingAnimation loading={loading}></LoadingAnimation>
       </View>
   )
 }

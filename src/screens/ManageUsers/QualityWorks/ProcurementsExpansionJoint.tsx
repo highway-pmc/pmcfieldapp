@@ -620,6 +620,8 @@ const ProcurementsEarthWork = ({
             />
           </View>
           <View>
+            {/*TODO*/}
+            {/*add button here so that user can upload file or capture image*/}
             <Text>Upload MTC</Text>
             <TouchableOpacity onPress={launchCamera}>
               <Text>Camera</Text>

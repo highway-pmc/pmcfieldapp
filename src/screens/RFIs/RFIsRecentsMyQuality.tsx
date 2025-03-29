@@ -32,6 +32,8 @@ import {SwipeListView} from 'react-native-swipe-list-view';
 import {getDisplayDate, getDisplayTime} from '../../utils/Utils';
 const {height} = Dimensions.get('window');
 import commonStyles from '../Common/commonStyles';
+import appConfig from '../../common/app.config';
+import CustomSelectDropdown from '../Common/CustomSelectDropdown';
 
 const RFIsRecentsMyQuality = (props: any) => {
   const navigation: any = useNavigation();
@@ -161,7 +163,7 @@ const RFIsRecentsMyQuality = (props: any) => {
     );
   };
 
-  const calculatedHeight = height * 0.6;
+  const calculatedHeight = height * 0.51;
   // Rfi
 
   const [sampleTestItems, setSampleTestItems]: any[] = useState([]);
@@ -1342,16 +1344,8 @@ const RFIsRecentsMyQuality = (props: any) => {
     }
   };
 
-  // const LabWorkDropDown = () => {
-    
-
-  //   return (
-      
-  //   );
-  // }
-
   return (
-    <View>
+    <>
       <View style={commonStyles.toggleContainer}>
         <TouchableOpacity
           style={[commonStyles.toggleButton, selectedTestType === "field-lab-test" && commonStyles.activeToggleButton]}
@@ -1373,90 +1367,85 @@ const RFIsRecentsMyQuality = (props: any) => {
       </View>
 
       <Text style={styles.headerText}> Recent {getRFIType()} RFI's</Text>
-      <View style={styles.recentWorkContainer}>
-        <View style={styles.recentWorkHead}>
-          <Text style={styles.headerText}>
-            Recent RFI's (<Text style={styles.taskCount}>{rfiData.length}</Text>
-            )
-          </Text>
-        </View>
-        <View
-          style={[
-            props.rfiType === RFIs_TYPE.GENERATE
-              ? styles.recentWorkContent
-              : styles.recentWorkContentHeight100,
-            {height: calculatedHeight},
-          ]}>
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}>
-            {rfiData.map((item: any, index) => (
-              <TouchableOpacity
-                style={styles.recentWorkCard}
-                onPress={() => onSelectRFI(item)}>
-                <View
-                  style={[
-                    styles.taskCategory,
-                    {flexWrap: 'wrap', paddingBottom: 10},
-                  ]}>
-                  <Text style={styles.subHead}>{item.name}</Text>
-                </View>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                  }}>
-                  <View>
-                    <Text style={[styles.dateText, styles.fontBold]}>
-                      Generated Date
-                    </Text>
-                    <Text style={[styles.dateText, styles.subFontText]}>
-                      {getDisplayDate(item.rfiDateTime)}
-                    </Text>
+      <View style={styles.alignmentVertical}>
+        <View style={styles.recentWorkContainer}>
+          <View style={styles.recentWorkHead}>
+            <Text style={styles.headerText}>
+              Recent RFI's (<Text style={styles.taskCount}>{rfiData.length}</Text>
+              )
+            </Text>
+          </View>
+            <ScrollView showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false} style={[ props.rfiType === RFIs_TYPE.GENERATE ? styles.recentWorkContent : styles.recentWorkContentHeight100,
+              {height: calculatedHeight},
+            ]}>
+              {rfiData.map((item: any, index) => (
+                <TouchableOpacity
+                  style={styles.recentWorkCard}
+                  onPress={() => onSelectRFI(item)}>
+                  <View
+                    style={[
+                      styles.taskCategory,
+                      {flexWrap: 'wrap', paddingBottom: 10},
+                    ]}>
+                    <Text style={styles.subHead}>{item.name}</Text>
                   </View>
-                  <View>
-                    <Text style={[styles.dateText, styles.fontBold]}>
-                      Generated Time
-                    </Text>
-                    <Text style={[styles.dateText, styles.subFontText]}>
-                      {/* {getDisplayTime(item.rfiDateTime)} */}
-                    </Text>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}>
+                    <View>
+                      <Text style={[styles.dateText, styles.fontBold]}>
+                        Generated Date
+                      </Text>
+                      <Text style={[styles.dateText, styles.subFontText]}>
+                        {getDisplayDate(item.rfiDateTime)}
+                      </Text>
+                    </View>
+                    <View>
+                      <Text style={[styles.dateText, styles.fontBold]}>
+                        Generated Time
+                      </Text>
+                      <Text style={[styles.dateText, styles.subFontText]}>
+                        {/* {getDisplayTime(item.rfiDateTime)} */}
+                      </Text>
+                    </View>
                   </View>
-                </View>
-              </TouchableOpacity>
-            ))}
+                </TouchableOpacity>
+              ))}
 
-            {!rfiData.length && !loading && (
-              <View style={styles.noDataContainer}>
-                <Image
-                  style={styles.noDataImage}
-                  source={require('../../images/no-data-found.png')}
-                />
-                <Text style={styles.noDataHeadText}>
-                  No {getRFIType()} RFI's
-                </Text>
-                <Text style={styles.noDataSubText}>
-                  There is no {getRFIType()?.toLowerCase()} RFI's
-                </Text>
-              </View>
-            )}
-          </ScrollView>
+              {!rfiData.length && !loading && (
+                <View style={styles.noDataContainer}>
+                  <Image
+                    style={styles.noDataImage}
+                    source={require('../../images/no-data-found.png')}
+                  />
+                  <Text style={styles.noDataHeadText}>
+                    No {getRFIType()} RFI's
+                  </Text>
+                  <Text style={styles.noDataSubText}>
+                    There is no {getRFIType()?.toLowerCase()} RFI's
+                  </Text>
+                </View>
+              )}
+            </ScrollView>
         </View>
         {props.rfiType === RFIs_TYPE.GENERATE && (
-          <View style={styles.footerButton}>
-            <TouchableOpacity
-              style={styles.btnCta}
-              onPress={() =>
-                navigation.navigate('RFIsGenerateMyQuality', {
-                  rfiType: props.rfiType,
-                  testType: selectedTestType
-                })
-              }>
-              <Text style={styles.btnCtaText}>Generate RFI's</Text>
-            </TouchableOpacity>
-          </View>
-        )}
+            <View style={styles.footerButton}>
+              <TouchableOpacity
+                style={styles.btnCta}
+                onPress={() =>
+                  navigation.navigate('RFIsGenerateMyQuality', {
+                    rfiType: props.rfiType,
+                    testType: selectedTestType,
+                    projectId: loggedInUser.projectId,
+                  })
+                }>
+                <Text style={styles.btnCtaText}>Generate RFI's</Text>
+              </TouchableOpacity>
+            </View>
+          )}
       </View>
 
       <Modal
@@ -1614,7 +1603,7 @@ const RFIsRecentsMyQuality = (props: any) => {
       </Modal>
 
       <LoadingAnimation loading={loading}></LoadingAnimation>
-    </View>
+    </>
   );
 };
 
@@ -1682,12 +1671,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
   },
+  alignmentVertical: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+  },
   recentWorkContainer: {
     flexDirection: 'column',
     backgroundColor: '#fff',
     borderRadius: 12,
     marginTop: 15,
-    height: '80%',
   },
   recentWorkHead: {
     flexDirection: 'row',
@@ -1700,11 +1693,9 @@ const styles = StyleSheet.create({
   },
   recentWorkContent: {
     padding: 20,
-    height: '90%',
   },
   recentWorkContentHeight100: {
     padding: 20,
-    height: '100%',
   },
   recentWorkCard: {
     backgroundColor: '#fff',

@@ -9219,7 +9219,7 @@ const RFIsRecents = (props: any) => {
                     {flexWrap: 'wrap', paddingBottom: 10},
                   ]}>
                   <Text style={styles.subHead}>
-                    {item.workAssignmentData.projectModule.name}
+                    {item.workAssignmentData.projectModule?.name}
                   </Text>
                   <Image
                     style={styles.ArrowIcon}

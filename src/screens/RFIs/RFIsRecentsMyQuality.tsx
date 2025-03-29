@@ -183,34 +183,34 @@ const RFIsRecentsMyQuality = (props: any) => {
       <>
         <View style={{flexDirection: 'column', marginBottom: 10}}>
           <Text style={styles.GenerateRFIFieldLabel}>Date of Testing</Text>
-          <Text>{selectedRFI?.metaData.dateOfTesting}</Text>
+          <Text>{selectedRFI?.metaData?.dateOfTesting}</Text>
         </View>
-        {selectedRFI.metaData.sampleBy !== '' && (
+        {selectedRFI.metaData?.sampleBy && (
           <View style={{flexDirection: 'column', marginBottom: 10}}>
             <Text style={styles.GenerateRFIFieldLabel}>Sample By</Text>
-            <Text>{selectedRFI?.metaData.sampleBy}</Text>
+            <Text>{selectedRFI?.metaData?.sampleBy}</Text>
           </View>
         )}
-        {selectedRFI.metaData.testConductedBy !== '' && (
+        {selectedRFI.metaData?.testConductedBy && (
           <View style={{flexDirection: 'column', marginBottom: 10}}>
             <Text style={styles.GenerateRFIFieldLabel}>Test Conducted By</Text>
-            <Text>{selectedRFI?.metaData.testConductedBy}</Text>
+            <Text>{selectedRFI?.metaData?.testConductedBy}</Text>
           </View>
         )}
         <View style={{flexDirection: 'column', marginBottom: 10}}>
           <Text style={styles.GenerateRFIFieldLabel}>Room Temperature</Text>
-          <Text>{selectedRFI?.metaData.roomTemperature}</Text>
+          <Text>{selectedRFI?.metaData?.roomTemperature}</Text>
         </View>
         <View style={{flexDirection: 'column', marginBottom: 10}}>
           <Text style={styles.GenerateRFIFieldLabel}>Humidity</Text>
-          <Text>{selectedRFI?.metaData.humidity}</Text>
+          <Text>{selectedRFI?.metaData?.humidity}</Text>
         </View>
-        {selectedRFI.metaData.typeOfConcreteSurface !== '' && (
+        {selectedRFI.metaData?.typeOfConcreteSurface && (
           <View style={{flexDirection: 'column', marginBottom: 10}}>
             <Text style={styles.GenerateRFIFieldLabel}>
               Type Of Concrete Surface
             </Text>
-            <Text>{selectedRFI?.metaData.typeOfConcreteSurface}</Text>
+            <Text>{selectedRFI?.metaData?.typeOfConcreteSurface}</Text>
           </View>
         )}
       </>
@@ -221,10 +221,7 @@ const RFIsRecentsMyQuality = (props: any) => {
   const taskForm = (selectedRFI: any) => {
     const selectedTestSample = selectedRFI.testTypeId;
 
-    const data = selectedRFI.metaData.observations;
-    // console.log(selectedTestSample.type);
-    // console.log(data);
-    // console.log(typeof data);
+    const data = selectedRFI.metaData?.observations;
     if (selectedTestSample.type === TEST_TYPES.BINDER_CONTENT) {
       return (
         <View style={styles.observationTableContainer}>

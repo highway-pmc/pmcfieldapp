@@ -20,6 +20,7 @@ import {
   PROJECT_TYPE,
   RFI_STATUS,
   SAMPLE_BY_LIST,
+  TEST_CLASSIFICATION_TYPES,
   TEST_CONDUCTED_BY_LIST,
   TEST_MATERIALS_TYPES,
   TEST_SAMPLE_CONCRETE_CATEGORY,
@@ -332,6 +333,8 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
 
         if (testTypeIndex != -1) {
           testTypeData = testMateData.testTypesData[testTypeIndex];
+          testTypeData.testClassificationType = testClassifData.type;
+
           breadCrumb[3].name = testTypeData.name;
           testTypeData.testRFIsData?.forEach((rfi: any) => {
             rfi.type = testTypeData.type;
@@ -350,7 +353,6 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
               setConcreteSampleTestItems(testObservations);
               setOpenPopup(true);
             } else if (testTypeData.type === TEST_TYPES.CUBE_TEST) {
-              console.log('============ CUBE_TEST ======= ', JSON.stringify(testTypeData));
               setCurrentTestTypesData([]);
               testTypeData.materialType = testMateData.materialType; // TEMP - TODO
               setSelectedTestSample(testTypeData);
@@ -446,6 +448,10 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
               TEST_MATERIALS_TYPES.COARSE_AGGREGATE_WMM
           ) {
             //testTypeData.materialType = TEST_MATERIALS_TYPES.SMA;
+            setCurrentSubTestTypeRFIsData(testTypeData.testRFIsData);
+            setSelectedTestSample(testTypeData);
+            setCurrentLevel(6);
+          } else {
             setCurrentSubTestTypeRFIsData(testTypeData.testRFIsData);
             setSelectedTestSample(testTypeData);
             setCurrentLevel(6);
@@ -553,6 +559,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
   const onClickTestSampleItem = (item: any) => {
     let testObservations: any = [];
     item.type = selectedTestSample.type;
+    item.testClassificationType = selectedTestSample.testClassificationType;
     if (
       currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CONCRETE ||
       currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CEMENT
@@ -659,6 +666,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
         }
       }
     }
+
     setSelectedTestSample(item);
     setConcreteSampleTestItems(testObservations);
     setOpenPopup(true);
@@ -667,7 +675,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
   const onClickBitumenTestSampleItem = (item: any) => {
     let testObservations: any = [];
     item.type = selectedTestSample.type;
-    console.log('Testing ========', item);
+    item.testClassificationType = selectedTestSample.testClassificationType;
     if (selectedTestSample.type == TEST_TYPES.MIX_GRADING) {
       if (item?.metaData?.observations) {
         testObservations = item?.metaData?.observations;
@@ -737,6 +745,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
   const onClickEarthworkSampleItem = (item: any) => {
     let testObservations: any = [];
     item.type = selectedTestSample.type;
+    item.testClassificationType = selectedTestSample.testClassificationType;
     if (selectedTestSample.type == TEST_TYPES.MOISTURE_CONTENT) {
       if (item?.metaData?.observations) {
         testObservations = item?.metaData?.observations;
@@ -780,6 +789,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
   const onClickSubBaseSampleItem = (item: any) => {
     let testObservations: any = [];
     item.type = selectedTestSample.type;
+    item.testClassificationType = selectedTestSample.testClassificationType;
     if (selectedTestSample.type == TEST_TYPES.GRADING_OF_AGGREGATE) {
       if (item?.metaData?.observations) {
         testObservations = item?.metaData?.observations;
@@ -823,6 +833,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
   const onClickBaseSubBaseSampleItem = (item: any) => {
     let testObservations: any = [];
     item.type = selectedTestSample.type;
+    item.testClassificationType = selectedTestSample.testClassificationType;
     if (selectedTestSample.type == TEST_TYPES.GRADING_OF_AGGREGATE) {
       if (item?.metaData?.observations) {
         testObservations = item?.metaData?.observations;
@@ -1180,8 +1191,6 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
     }
 
     sampleData = objSampleTest7thOr28thDay;
-
-    console.log('======sampleData========', JSON.stringify(sampleData));
 
     dispatch(
       fillRFIsChecklistForTestSample({
@@ -1833,7 +1842,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
                 })}
             </ScrollView>
           ) : (
-            <Text>Sample not found.</Text>
+            <Text>Sample/RFI not found.</Text>
           ) //tasksListing()
         ) : null}
         {/* No Data Found */}
@@ -1887,6 +1896,10 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
                     <StatusBar barStyle="dark-content" />
                     <SafeAreaView>
                       {selectedTestSample &&
+                      (selectedTestSample?.testClassificationType == TEST_CLASSIFICATION_TYPES.THIRD_PARTY_LAB_TEST) ? 
+                        (
+                          <Text>Third party test form {selectedTestSample?.testClassificationType}</Text>
+                        ) :
                         concreteSampleTestItems.length > 0 &&
                         (currentTestMaterialData.materialType ===
                           TEST_MATERIALS_TYPES.SOIL ||
@@ -1929,7 +1942,8 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
                               selectedTestSample,
                               concreteSampleTestItems,
                             )
-                          : testSampleForm(
+                          : 
+                            testSampleForm(
                               styles,
                               selectedTestSample?.materialType,
                               formSampleTest7thOr28thDay,
@@ -1937,7 +1951,8 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
                               currentTestMaterialData,
                               selectedTestSample,
                               concreteSampleTestItems,
-                            ))}
+                            )
+                            )}
                     </SafeAreaView>
                   </Fragment>
                 </ScrollView>

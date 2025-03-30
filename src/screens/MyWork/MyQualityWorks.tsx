@@ -106,6 +106,7 @@ import {
   getWaterAbsorptionObjectBSB,
 } from './ReportSamples/Forms/QualityWorks/BaseSubBase';
 import { thirdPartySampleTest } from './ReportSamples/Forms/QualityWorks/ThirdPartyCustomForm';
+import CustomSelectDropdown from '../Common/CustomSelectDropdown';
 const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
   const workType = PROJECT_TYPE.QUALITY_WORK;
@@ -154,6 +155,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
   const dispatch = useDispatch();
   const focus = useIsFocused();
   const {showSnackbar} = useSnackbar();
+  const [selectedValues, setSelectedValues] = useState({name: "Source Approvals", type: "source-approvals"});
   useEffect(() => {
     if (focus == true) {
       const eventEmitter = new NativeEventEmitter();
@@ -167,16 +169,32 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
       setCurrentSubTestTypesData([]);
       setCurrentSubTestTypeRFIsData([]);
       setBreadcrumbData([]);
-      getMyWorksData();
       setSearchText('');
     }
   }, [focus]);
 
-  const getMyWorksData = () => {
+  const approvalTypeArray = [
+    {name: "Source Approvals", type: "source-approvals"},
+    {name: "Procurement Details", type: "procurement-details"},
+    {name: "Field Lab Test", type: "field-lab-test"},
+    {name: "Third Party Lab Test", type: "third-party-lab-test"}
+    ]
+
+  const handleApprovalType = (selectedOption: any) => {
+    setSelectedValues(selectedOption);
+    getMyWorksData(selectedOption?.type);
+  };
+
+  useEffect(() => {
+    getMyWorksData(selectedValues?.type);
+  },[selectedValues])
+
+  const getMyWorksData = (selectedType: any) => {
     dispatch(
       getMyTests({
         projectId: loggedInUser.projectId,
         workType: workType,
+        selectedType: selectedType
       }),
     );
   };
@@ -205,7 +223,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
       Alert.alert('RFIs checklist saved.');
       setCurrentLevel(1);
       dispatch(clearMyWorksEvent());
-      getMyWorksData();
+      getMyWorksData(selectedValues?.type);
     }
   }, [myTests, testSampleUpdated, rfiChecklistSaved, error]);
 
@@ -1264,6 +1282,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
 
   const colors = CARD_COLORS_ARRAY;
   const imageMap: any = CARD_ICONS;
+
   return (
     <View style={styles.Container}>
       {breadcrumbData.length ? (
@@ -1308,6 +1327,16 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
           </View>
         )
       )}
+
+  <View style={styles.qualityDropDown}>
+      <CustomSelectDropdown 
+      label='Selected Type' 
+      data={approvalTypeArray} 
+      selectedValue={selectedValues}
+      onSelect={(selectedOption: any) => handleApprovalType(selectedOption)} 
+      /> 
+  </View>
+
       {currentLevel !== 0 && currentLevel !== 1 && currentLevel !== 4 ? (
         <View style={styles.SearchBox}>
           <Image
@@ -2534,6 +2563,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  qualityDropDown: {
+    backgroundColor: '#fff', 
+    paddingHorizontal: 15, 
+    paddingVertical: 7, 
+    borderRadius: 12,
+  }
 });
 
 export default MyQualityWork;

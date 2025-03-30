@@ -9,8 +9,8 @@ export const getMyWorksData = async (projectId, workType) => {
     });
 }
 
-export const getMyTestsData = async (projectId, workType) => {
-    return apiService.getRequest(`v1/auth/projects/${projectId}/users/${workType}/my-tests`).then((response) => {
+export const getMyTestsData = async (projectId, workType, selectedType) => {
+    return apiService.getRequest(`v1/auth/projects/${projectId}/users/${workType}/my-tests?type=${selectedType}`).then((response) => {
         return response;
     }).catch((err) => {
         const errorMessge = err.message || 'Unable to get my tests.';

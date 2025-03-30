@@ -41,7 +41,7 @@ function* fillRFIsChecklistForSampleTest({ payload }) {
 
 function* getMyTests({ payload }) {
     try {
-        const response = yield (getMyTestsData(payload.projectId, payload.workType));
+        const response = yield (getMyTestsData(payload.projectId, payload.workType, payload.selectedType));
         yield put({ type: "GET_MY_TESTS_SUCCESS", response });
     } catch (error) {
         yield put({ type: "GET_MY_TESTS_FAILURE", error: error.message });

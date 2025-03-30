@@ -44,7 +44,7 @@ import DocumentPicker from 'react-native-document-picker';
 import appConfig from '../../../common/app.config';
 import DropdownPicker from '../../../components/UI/DropdownPicker';
 
-const ProcurementsEarthWork = ({
+const ProcurementsBearings = ({
   route,
   navigation,
 }: {
@@ -1026,4 +1026,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProcurementsEarthWork;
+export default ProcurementsBearings;

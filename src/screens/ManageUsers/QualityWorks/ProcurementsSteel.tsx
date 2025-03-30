@@ -45,7 +45,7 @@ import DocumentPicker from 'react-native-document-picker';
 import appConfig from '../../../common/app.config';
 import DropdownPicker from '../../../components/UI/DropdownPicker';
 
-const ProcurementsEarthWork = ({
+const ProcurementsSteel = ({
   route,
   navigation,
 }: {
@@ -1258,4 +1258,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProcurementsEarthWork;
+export default ProcurementsSteel;

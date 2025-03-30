@@ -290,7 +290,14 @@ const AssignTestMaterials = ({
         item.materialType === TEST_MATERIALS_TYPES.CTSB ||
         item.materialType === TEST_MATERIALS_TYPES.WMM ||
         item.materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE_WMM ||
-        item.materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE_WMM
+        item.materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE_WMM ||
+
+        item.materialType === TEST_MATERIALS_TYPES.STRANDS ||
+        item.materialType === TEST_MATERIALS_TYPES.SHEATHING_DUCT ||
+
+        testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BEARING ||
+        testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EXPANSION_JOINT ||
+        testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.STEEL
       ) {
         if (
           testClassificationType ===
@@ -301,10 +308,18 @@ const AssignTestMaterials = ({
             routeName = "ProcurementsBitnumiousWork";
           }
           else if(testWorkCategoryType===TEST_WORK_CATEGORY_TYPES.EARTH_WORKS ||
-            testWorkCategoryType===TEST_WORK_CATEGORY_TYPES.SUB_BASE ||
-            testWorkCategoryType===TEST_WORK_CATEGORY_TYPES.BASE_SUB_BASE
+            testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.SUB_BASE ||
+            testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BASE_SUB_BASE
           ){
             routeName = "ProcurementsEarthWork";
+          } else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BEARING) {
+            routeName = "ProcurementsBearings";
+          } else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EXPANSION_JOINT) {
+            routeName = "ProcurementsExpansionJoints";
+          } else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.STEEL) {
+            routeName = "ProcurementsSteel";
+          } else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.PRESTRESSING) {
+            routeName = "ProcurementsPrestressing";
           }
           navigation.navigate(routeName, {
             testClassificationId: testClassificationId,

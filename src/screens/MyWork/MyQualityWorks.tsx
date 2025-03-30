@@ -105,7 +105,7 @@ import {
   getTestSampleFIEIObjectBSB,
   getWaterAbsorptionObjectBSB,
 } from './ReportSamples/Forms/QualityWorks/BaseSubBase';
-import { thirdPartySampleTest } from './ReportSamples/Forms/QualityWorks/ThirdPartyCustomForm';
+import { thirdPartySampleTest } from './ReportSamples/Forms/QualityWorks/ThirdPartyLabTestCustomForm';
 import CustomSelectDropdown from '../Common/CustomSelectDropdown';
 const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);

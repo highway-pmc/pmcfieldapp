@@ -105,6 +105,7 @@ import {
   getTestSampleFIEIObjectBSB,
   getWaterAbsorptionObjectBSB,
 } from './ReportSamples/Forms/QualityWorks/BaseSubBase';
+import { thirdPartySampleTest } from './ReportSamples/Forms/QualityWorks/ThirdPartyCustomForm';
 const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
   const workType = PROJECT_TYPE.QUALITY_WORK;
@@ -1897,9 +1898,16 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
                     <SafeAreaView>
                       {selectedTestSample &&
                       (selectedTestSample?.testClassificationType == TEST_CLASSIFICATION_TYPES.THIRD_PARTY_LAB_TEST) ? 
-                        (
-                          <Text>Third party test form {selectedTestSample?.testClassificationType}</Text>
-                        ) :
+                        thirdPartySampleTest(
+                          styles,
+                          selectedTestSample?.materialType,
+                          formSampleTest7thOr28thDay,
+                          setFormSampleTest7thOr28thDay,
+                          currentTestMaterialData,
+                          selectedTestSample,
+                          concreteSampleTestItems,
+                        )
+                        :
                         concreteSampleTestItems.length > 0 &&
                         (currentTestMaterialData.materialType ===
                           TEST_MATERIALS_TYPES.SOIL ||

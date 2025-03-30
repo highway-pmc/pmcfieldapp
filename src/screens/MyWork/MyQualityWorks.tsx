@@ -105,8 +105,9 @@ import {
   getTestSampleFIEIObjectBSB,
   getWaterAbsorptionObjectBSB,
 } from './ReportSamples/Forms/QualityWorks/BaseSubBase';
-import { thirdPartySampleTest } from './ReportSamples/Forms/QualityWorks/ThirdPartyCustomForm';
+import {thirdPartySampleTest} from './ReportSamples/Forms/QualityWorks/ThirdPartyLabTestCustomForm';
 import CustomSelectDropdown from '../Common/CustomSelectDropdown';
+import {getThirdPartyTestSampleObject} from './ReportSamples/Forms/QualityWorks/ThirdPartyTest';
 const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
   const workType = PROJECT_TYPE.QUALITY_WORK;
@@ -155,7 +156,10 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
   const dispatch = useDispatch();
   const focus = useIsFocused();
   const {showSnackbar} = useSnackbar();
-  const [selectedValues, setSelectedValues] = useState({name: "Source Approvals", type: "source-approvals"});
+  const [selectedValues, setSelectedValues] = useState({
+    name: 'Source Approvals',
+    type: 'source-approvals',
+  });
   useEffect(() => {
     if (focus == true) {
       const eventEmitter = new NativeEventEmitter();
@@ -174,11 +178,11 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
   }, [focus]);
 
   const approvalTypeArray = [
-    {name: "Source Approvals", type: "source-approvals"},
-    {name: "Procurement Details", type: "procurement-details"},
-    {name: "Field Lab Test", type: "field-lab-test"},
-    {name: "Third Party Lab Test", type: "third-party-lab-test"}
-    ]
+    {name: 'Source Approvals', type: 'source-approvals'},
+    {name: 'Procurement Details', type: 'procurement-details'},
+    {name: 'Field Lab Test', type: 'field-lab-test'},
+    {name: 'Third Party Lab Test', type: 'third-party-lab-test'},
+  ];
 
   const handleApprovalType = (selectedOption: any) => {
     setSelectedValues(selectedOption);
@@ -187,14 +191,14 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
 
   useEffect(() => {
     getMyWorksData(selectedValues?.type);
-  },[selectedValues])
+  }, [selectedValues]);
 
   const getMyWorksData = (selectedType: any) => {
     dispatch(
       getMyTests({
         projectId: loggedInUser.projectId,
         workType: workType,
-        selectedType: selectedType
+        selectedType: selectedType,
       }),
     );
   };
@@ -358,7 +362,8 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
           testTypeData.testRFIsData?.forEach((rfi: any) => {
             rfi.type = testTypeData.type;
           });
-          if (testMateData.materialType === TEST_MATERIALS_TYPES.CONCRETE ||
+          if (
+            testMateData.materialType === TEST_MATERIALS_TYPES.CONCRETE ||
             testMateData.materialType === TEST_MATERIALS_TYPES.DLC ||
             testMateData.materialType === TEST_MATERIALS_TYPES.PQC
           ) {
@@ -580,6 +585,13 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
     item.type = selectedTestSample.type;
     item.testClassificationType = selectedTestSample.testClassificationType;
     if (
+      selectedTestSample.testClassificationType ===
+      TEST_CLASSIFICATION_TYPES.THIRD_PARTY_LAB_TEST
+    ) {
+      onClickSampleThirdPartyItem(item);
+      return;
+    }
+    if (
       currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CONCRETE ||
       currentTestMaterialData.materialType === TEST_MATERIALS_TYPES.CEMENT
     ) {
@@ -760,7 +772,17 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
     setConcreteSampleTestItems(testObservations);
     setOpenPopup(true);
   };
-
+  const onClickSampleThirdPartyItem = (item: any) => {
+    let testObservations: any = [];
+    item.type = selectedTestSample.type;
+    // item.testClassificationType = selectedTestSample.testClassificationType;
+    if (item?.metaData?.observations) {
+      testObservations = item?.metaData?.observations;
+    } else testObservations.push(getThirdPartyTestSampleObject(1));
+    setSelectedTestSample(item);
+    setConcreteSampleTestItems(testObservations);
+    setOpenPopup(true);
+  };
   const onClickEarthworkSampleItem = (item: any) => {
     let testObservations: any = [];
     item.type = selectedTestSample.type;
@@ -989,8 +1011,10 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
       objSampleTest7thOr28thDay.observations;
 
     if (
-      testWorkCategoryDataType === TEST_WORK_CATEGORY_TYPES.CONCRETE_STRUCTURE ||
-      testWorkCategoryDataType === TEST_WORK_CATEGORY_TYPES.CONCRETE_RIGID_PAVEMENT
+      testWorkCategoryDataType ===
+        TEST_WORK_CATEGORY_TYPES.CONCRETE_STRUCTURE ||
+      testWorkCategoryDataType ===
+        TEST_WORK_CATEGORY_TYPES.CONCRETE_RIGID_PAVEMENT
     ) {
       for (let i = 0; i < sampleObservations?.length; i++) {
         const observations = sampleObservations[i];
@@ -1327,18 +1351,20 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
           </View>
         )
       )}
-{currentLevel === 0 && (
-  <View style={{paddingHorizontal: 10}}>
-  <View style={styles.qualityDropDown}>
-      <CustomSelectDropdown 
-      label='Selected Type' 
-      data={approvalTypeArray} 
-      selectedValue={selectedValues}
-      onSelect={(selectedOption: any) => handleApprovalType(selectedOption)} 
-      /> 
-  </View>
-  </View>
-)}
+      {currentLevel === 0 && (
+        <View style={{paddingHorizontal: 10}}>
+          <View style={styles.qualityDropDown}>
+            <CustomSelectDropdown
+              label="Selected Type"
+              data={approvalTypeArray}
+              selectedValue={selectedValues}
+              onSelect={(selectedOption: any) =>
+                handleApprovalType(selectedOption)
+              }
+            />
+          </View>
+        </View>
+      )}
 
       {currentLevel !== 0 && currentLevel !== 1 && currentLevel !== 4 ? (
         <View style={styles.SearchBox}>
@@ -1709,14 +1735,13 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
               TEST_MATERIALS_TYPES.CONCRETE &&
               selectedTestSample?.type === TEST_TYPES.CUBE_TEST) ||
               (currentTestMaterialData.materialType ===
-                TEST_MATERIALS_TYPES.CEMENT && 
-                selectedTestSample?.type ===
-                  TEST_TYPES.COMPRESSIVE_STRENGTH) ||
-                  ((currentTestMaterialData.materialType ===
-                    TEST_MATERIALS_TYPES.DLC || currentTestMaterialData.materialType ===
-                    TEST_MATERIALS_TYPES.PQC) &&
-                    selectedTestSample?.type ===
-                      TEST_TYPES.CUBE_TEST)) &&
+                TEST_MATERIALS_TYPES.CEMENT &&
+                selectedTestSample?.type === TEST_TYPES.COMPRESSIVE_STRENGTH) ||
+              ((currentTestMaterialData.materialType ===
+                TEST_MATERIALS_TYPES.DLC ||
+                currentTestMaterialData.materialType ===
+                  TEST_MATERIALS_TYPES.PQC) &&
+                selectedTestSample?.type === TEST_TYPES.CUBE_TEST)) &&
             tasksListing(currentTestTypesData, searchText, getStyle, styles)}
         {currentLevel === 6 ? (
           currentSubTestTypeRFIsData?.length ? (
@@ -1929,70 +1954,68 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
                     <StatusBar barStyle="dark-content" />
                     <SafeAreaView>
                       {selectedTestSample &&
-                      (selectedTestSample?.testClassificationType == TEST_CLASSIFICATION_TYPES.THIRD_PARTY_LAB_TEST) ? 
-                        thirdPartySampleTest(
-                          styles,
-                          selectedTestSample?.materialType,
-                          formSampleTest7thOr28thDay,
-                          setFormSampleTest7thOr28thDay,
-                          currentTestMaterialData,
-                          selectedTestSample,
-                          concreteSampleTestItems,
-                        )
-                        :
-                        concreteSampleTestItems.length > 0 &&
-                        (currentTestMaterialData.materialType ===
-                          TEST_MATERIALS_TYPES.SOIL ||
-                        currentTestMaterialData.materialType ===
-                          TEST_MATERIALS_TYPES.FLY_ASH
-                          ? testSampleFormEarthwork(
-                              styles,
-                              selectedTestSample?.materialType,
-                              formSampleTest7thOr28thDay,
-                              setFormSampleTest7thOr28thDay,
-                              currentTestMaterialData,
-                              selectedTestSample,
-                              concreteSampleTestItems,
-                            )
-                          : currentTestMaterialData.materialType ===
-                              TEST_MATERIALS_TYPES.GSB ||
-                            currentTestMaterialData.materialType ===
-                              TEST_MATERIALS_TYPES.CTSB
-                          ? testSampleFormSubBase(
-                              styles,
-                              selectedTestSample?.materialType,
-                              formSampleTest7thOr28thDay,
-                              setFormSampleTest7thOr28thDay,
-                              currentTestMaterialData,
-                              selectedTestSample,
-                              concreteSampleTestItems,
-                            )
-                          : currentTestMaterialData.materialType ===
-                              TEST_MATERIALS_TYPES.WMM ||
-                            currentTestMaterialData.materialType ===
-                              TEST_MATERIALS_TYPES.FINE_AGGREGATE_WMM ||
-                            currentTestMaterialData.materialType ===
-                              TEST_MATERIALS_TYPES.COARSE_AGGREGATE_WMM
-                          ? testSampleFormBaseSubBase(
-                              styles,
-                              selectedTestSample?.materialType,
-                              formSampleTest7thOr28thDay,
-                              setFormSampleTest7thOr28thDay,
-                              currentTestMaterialData,
-                              selectedTestSample,
-                              concreteSampleTestItems,
-                            )
-                          : 
-                            testSampleForm(
-                              styles,
-                              selectedTestSample?.materialType,
-                              formSampleTest7thOr28thDay,
-                              setFormSampleTest7thOr28thDay,
-                              currentTestMaterialData,
-                              selectedTestSample,
-                              concreteSampleTestItems,
-                            )
-                            )}
+                      selectedTestSample?.testClassificationType ==
+                        TEST_CLASSIFICATION_TYPES.THIRD_PARTY_LAB_TEST
+                        ? thirdPartySampleTest(
+                            styles,
+                            selectedTestSample?.materialType,
+                            formSampleTest7thOr28thDay,
+                            setFormSampleTest7thOr28thDay,
+                            currentTestMaterialData,
+                            selectedTestSample,
+                            concreteSampleTestItems,
+                          )
+                        : concreteSampleTestItems.length > 0 &&
+                          (currentTestMaterialData.materialType ===
+                            TEST_MATERIALS_TYPES.SOIL ||
+                          currentTestMaterialData.materialType ===
+                            TEST_MATERIALS_TYPES.FLY_ASH
+                            ? testSampleFormEarthwork(
+                                styles,
+                                selectedTestSample?.materialType,
+                                formSampleTest7thOr28thDay,
+                                setFormSampleTest7thOr28thDay,
+                                currentTestMaterialData,
+                                selectedTestSample,
+                                concreteSampleTestItems,
+                              )
+                            : currentTestMaterialData.materialType ===
+                                TEST_MATERIALS_TYPES.GSB ||
+                              currentTestMaterialData.materialType ===
+                                TEST_MATERIALS_TYPES.CTSB
+                            ? testSampleFormSubBase(
+                                styles,
+                                selectedTestSample?.materialType,
+                                formSampleTest7thOr28thDay,
+                                setFormSampleTest7thOr28thDay,
+                                currentTestMaterialData,
+                                selectedTestSample,
+                                concreteSampleTestItems,
+                              )
+                            : currentTestMaterialData.materialType ===
+                                TEST_MATERIALS_TYPES.WMM ||
+                              currentTestMaterialData.materialType ===
+                                TEST_MATERIALS_TYPES.FINE_AGGREGATE_WMM ||
+                              currentTestMaterialData.materialType ===
+                                TEST_MATERIALS_TYPES.COARSE_AGGREGATE_WMM
+                            ? testSampleFormBaseSubBase(
+                                styles,
+                                selectedTestSample?.materialType,
+                                formSampleTest7thOr28thDay,
+                                setFormSampleTest7thOr28thDay,
+                                currentTestMaterialData,
+                                selectedTestSample,
+                                concreteSampleTestItems,
+                              )
+                            : testSampleForm(
+                                styles,
+                                selectedTestSample?.materialType,
+                                formSampleTest7thOr28thDay,
+                                setFormSampleTest7thOr28thDay,
+                                currentTestMaterialData,
+                                selectedTestSample,
+                                concreteSampleTestItems,
+                              ))}
                     </SafeAreaView>
                   </Fragment>
                 </ScrollView>
@@ -2567,12 +2590,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   qualityDropDown: {
-    backgroundColor: '#fff', 
-    paddingHorizontal: 15, 
-    paddingVertical: 7, 
+    backgroundColor: '#fff',
+    paddingHorizontal: 15,
+    paddingVertical: 7,
     borderRadius: 12,
     marginBottom: 15,
-  }
+  },
 });
 
 export default MyQualityWork;

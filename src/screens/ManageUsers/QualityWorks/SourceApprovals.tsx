@@ -47,6 +47,7 @@ import CustomAlert from '../../Common/CustomAlert';
 import DropdownPicker from '../../../components/UI/DropdownPicker';
 import {number} from 'prop-types';
 import commonStyles from '../../Common/commonStyles';
+import {set} from 'date-fns';
 
 const SourceApprovals = ({
   route,
@@ -257,6 +258,21 @@ const SourceApprovals = ({
     omc: 0,
     mdd: 0,
   });
+  //Pre stressing
+  const [sourceDetailSheatingDuct, setSourceDetailSheatingDuct] = useState({
+    sourceApprovalId: '',
+    ratePerMTR: 0,
+    brand: '',
+    dia: '50',
+    type: 'Mild steel',
+  });
+  const [sourceDetailStrands, setSourceDetailStrands] = useState({
+    sourceApprovalId: '',
+    ratePerMTR: 0,
+    brand: '',
+    dia: '9.5',
+    class: '1',
+  });
   const [sourceDetailForm, setSourceDetailForm]: any =
     useState<FormSourceDetailState>({
       sourceApprovalId: '',
@@ -434,6 +450,24 @@ const SourceApprovals = ({
         ratePerMTR: item.metaData?.ratePerMTR,
         type: item.metaData?.type,
       });
+    } else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.PRESTRESSING) {
+      if (materialType === TEST_MATERIALS_TYPES.SHEATHING_DUCT) {
+        setSourceDetailSheatingDuct({
+          sourceApprovalId: item._id,
+          ratePerMTR: item.metaData?.ratePerMTR,
+          brand: item.metaData?.brand,
+          dia: item.metaData?.dia,
+          type: item.metaData?.type,
+        });
+      } else {
+        setSourceDetailStrands({
+          sourceApprovalId: item._id,
+          ratePerMTR: item.metaData?.ratePerMTR,
+          brand: item.metaData?.brand,
+          dia: item.metaData?.dia,
+          class: item.metaData?.class,
+        });
+      }
     } else {
       setSourceDetailForm({
         sourceApprovalId: item._id,
@@ -455,9 +489,17 @@ const SourceApprovals = ({
         return 'gray';
     }
   };
-
+  const handleStrandsInputChange = (name: string, value: string | number) => {
+    setSourceDetailStrands({...sourceDetailStrands, [name]: value});
+  };
+  const handleSheathingductInputChange = (
+    name: string,
+    value: string | number,
+  ) => {
+    setSourceDetailSheatingDuct({...sourceDetailSheatingDuct, [name]: value});
+  };
   const handleFineAggregateInputChange = (
-    name: keyof typeof fineAggregate,
+    name: string,
     value: string | number,
   ) => {
     setFineAggregate({...fineAggregate, [name]: value});
@@ -988,6 +1030,36 @@ const SourceApprovals = ({
         );
         return false;
       }
+    } else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.PRESTRESSING) {
+      console.log('Click Registered Material Type: ', materialType);
+      if (materialType === TEST_MATERIALS_TYPES.SHEATHING_DUCT) {
+        const ratePerMTRSheathingDuct = Number(
+          sourceDetailSheatingDuct.ratePerMTR,
+        );
+        if (
+          ratePerMTRSheathingDuct > 100000 ||
+          !/^\d+(\.\d{1,3})?$/.test(ratePerMTRSheathingDuct.toString())
+        ) {
+          showSnackbar(
+            'Rate per MTR must be less than 100,000 and up to 3 decimal places.',
+            'error',
+          );
+          console.log('Click Registered Material Type: ', materialType);
+          return false;
+        }
+      } else {
+        const ratePerMTRStrands = Number(sourceDetailStrands.ratePerMTR);
+        if (
+          ratePerMTRStrands > 100000 ||
+          !/^\d+(\.\d{1,3})?$/.test(ratePerMTRStrands.toString())
+        ) {
+          showSnackbar(
+            'Rate per MTR must be less than 100,000 and up to 3 decimal places.',
+            'error',
+          );
+          return false;
+        }
+      }
     } else {
       // Validation for non-bituminous works
 
@@ -1008,7 +1080,7 @@ const SourceApprovals = ({
   const addSourceDetailsSubmit = () => {
     if (!validateSourceDetail()) return;
     let body;
-
+    console.log('Click Registered On Add Surce: ', materialType);
     if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BITUMINOUS_WORKS) {
       switch (materialType) {
         case TEST_MATERIALS_TYPES.FINE_AGGREGATE:
@@ -1161,6 +1233,28 @@ const SourceApprovals = ({
           type: sourceDetailExpansionJoint.type,
         },
       };
+    } else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.PRESTRESSING) {
+      if (materialType === TEST_MATERIALS_TYPES.SHEATHING_DUCT) {
+        body = {
+          name: sourceDetailSheatingDuct.type,
+          metaData: {
+            ratePerMTR: Number(sourceDetailSheatingDuct.ratePerMTR),
+            brand: sourceDetailSheatingDuct.brand,
+            dia: sourceDetailSheatingDuct.dia,
+            type: sourceDetailSheatingDuct.type,
+          },
+        };
+      } else {
+        body = {
+          name: sourceDetailStrands.class,
+          metaData: {
+            ratePerMTR: Number(sourceDetailStrands.ratePerMTR),
+            brand: sourceDetailStrands.brand,
+            dia: sourceDetailStrands.dia,
+            class: sourceDetailStrands.class,
+          },
+        };
+      }
     } else {
       body = {
         name: sourceDetailForm[gradeField.name],
@@ -1323,6 +1417,26 @@ const SourceApprovals = ({
           ratePerMTR: 0.0,
           type: 'reinforced-elastomeric-joint',
         });
+      } else if (
+        testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.PRESTRESSING
+      ) {
+        if (materialType === TEST_MATERIALS_TYPES.SHEATHING_DUCT) {
+          setSourceDetailSheatingDuct({
+            sourceApprovalId: selectedSource._id,
+            ratePerMTR: 0.0,
+            brand: '',
+            dia: '50',
+            type: 'MILD steel',
+          });
+        } else {
+          setSourceDetailStrands({
+            sourceApprovalId: selectedSource._id,
+            ratePerMTR: 0.0,
+            brand: '',
+            dia: '.5',
+            class: '1',
+          });
+        }
       } else {
         setSourceDetailForm({
           sourceApprovalId: selectedSource._id,
@@ -1455,6 +1569,26 @@ const SourceApprovals = ({
             sourceDetailExpansionJoint.ratePerMTR,
           );
           editedObj.metaData.type = sourceDetailExpansionJoint.type;
+        } else if (
+          testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.PRESTRESSING
+        ) {
+          if (materialType === TEST_MATERIALS_TYPES.SHEATHING_DUCT) {
+            editedObj.name = sourceDetailSheatingDuct.type;
+            editedObj.metaData.ratePerMTR = Number(
+              sourceDetailSheatingDuct.ratePerMTR,
+            );
+            editedObj.metaData.brand = sourceDetailSheatingDuct.brand;
+            editedObj.metaData.dia = sourceDetailSheatingDuct.dia;
+            editedObj.metaData.type = sourceDetailSheatingDuct.type;
+          } else {
+            editedObj.name = sourceDetailStrands.class;
+            editedObj.metaData.ratePerMTR = Number(
+              sourceDetailStrands.ratePerMTR,
+            );
+            editedObj.metaData.brand = sourceDetailStrands.brand;
+            editedObj.metaData.dia = sourceDetailStrands.dia;
+            editedObj.metaData.class = sourceDetailStrands.class;
+          }
         } else {
           editedObj.name = sourceDetailForm[gradeField.name];
           editedObj.metaData[gradeField.name] =
@@ -1590,6 +1724,26 @@ const SourceApprovals = ({
           ratePerMTR: 0.0,
           type: 'reinforced-elastomeric-joint',
         });
+      } else if (
+        testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.PRESTRESSING
+      ) {
+        if (materialType === TEST_MATERIALS_TYPES.SHEATHING_DUCT) {
+          setSourceDetailSheatingDuct({
+            sourceApprovalId: selectedSource._id,
+            ratePerMTR: 0.0,
+            brand: '',
+            dia: '50',
+            type: 'MILD steel',
+          });
+        } else {
+          setSourceDetailStrands({
+            sourceApprovalId: selectedSource._id,
+            ratePerMTR: 0.0,
+            brand: '',
+            dia: '9.5',
+            class: '1',
+          });
+        }
       } else {
         setSourceDetailForm({
           sourceApprovalId: selectedSource._id,
@@ -1749,6 +1903,24 @@ const SourceApprovals = ({
         ratePerMTR: item.metaData?.ratePerMTR,
         type: item.metaData?.type,
       });
+    } else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.PRESTRESSING) {
+      if (materialType === TEST_MATERIALS_TYPES.SHEATHING_DUCT) {
+        setSourceDetailSheatingDuct({
+          sourceApprovalId: item._id,
+          ratePerMTR: item.metaData?.ratePerMTR,
+          brand: item.metaData?.brand,
+          dia: item.metaData?.dia,
+          type: item.metaData?.type,
+        });
+      } else {
+        setSourceDetailStrands({
+          sourceApprovalId: item._id,
+          ratePerMTR: item.metaData?.ratePerMTR,
+          brand: item.metaData?.brand,
+          dia: item.metaData?.dia,
+          class: item.metaData?.class,
+        });
+      }
     } else {
       setSourceDetailForm({
         [gradeField.name]: item.metaData?.[gradeField.name],
@@ -2345,6 +2517,172 @@ const SourceApprovals = ({
           </TouchableOpacity>
         </View>
       );
+    } else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.PRESTRESSING) {
+      if (materialType === TEST_MATERIALS_TYPES.SHEATHING_DUCT) {
+        return (
+          <View style={styles.reportFields}>
+            <View>
+              <DropdownPicker
+                label="Dia"
+                value={sourceDetailSheatingDuct.dia}
+                items={[
+                  {
+                    label: '50',
+                    value: '50',
+                  },
+                  {
+                    label: '75',
+                    value: '75',
+                  },
+                  {
+                    label: '85',
+                    value: '85',
+                  },
+                  {
+                    label: '100',
+                    value: '100',
+                  },
+                  {
+                    label: '125',
+                    value: '125',
+                  },
+                  {
+                    label: '130',
+                    value: '130',
+                  },
+                ]}
+                onChange={(value: string) =>
+                  handleSheathingductInputChange('dia', value)
+                }
+              />
+            </View>
+            <View>
+              <DropdownPicker
+                label="Type"
+                value={sourceDetailSheatingDuct.type}
+                items={[
+                  {
+                    label: 'Mild steel',
+                    value: 'Mild steel',
+                  },
+                  {
+                    label: 'HDPE',
+                    value: 'HDPE',
+                  },
+                ]}
+                onChange={(value: string) =>
+                  handleSheathingductInputChange('dia', value)
+                }
+              />
+            </View>
+            <View>
+              <Input
+                label="Rate per MTR"
+                value={sourceDetailSheatingDuct.ratePerMTR}
+                onChange={(value: number) =>
+                  handleSheathingductInputChange('ratePerMTR', value)
+                }
+                isRequired={true}
+                keyboardType="numeric"
+              />
+            </View>
+            <View>
+              <Input
+                label="Brand"
+                value={sourceDetailSheatingDuct.brand}
+                onChange={(value: string) =>
+                  handleSheathingductInputChange('brand', value)
+                }
+                isRequired={true}
+              />
+            </View>
+
+            <TouchableOpacity
+              style={styles.btnContainer}
+              onPress={addSourceDetailsSubmit}>
+              <Text style={styles.submitBtn}>Submit</Text>
+            </TouchableOpacity>
+          </View>
+        );
+      } else {
+        return (
+          <View style={styles.reportFields}>
+            <View>
+              <DropdownPicker
+                label="Dia"
+                value={sourceDetailStrands.dia}
+                items={[
+                  {
+                    label: '9.5',
+                    value: '9.5',
+                  },
+                  {
+                    label: '11.1',
+                    value: '11.1',
+                  },
+                  {
+                    label: '12.7',
+                    value: '12.7',
+                  },
+                  {
+                    label: '15.2',
+                    value: '15.2',
+                  },
+                ]}
+                onChange={(value: string) =>
+                  handleStrandsInputChange('dia', value)
+                }
+              />
+            </View>
+            <View>
+              <DropdownPicker
+                label="Class"
+                value={sourceDetailStrands.class}
+                items={[
+                  {
+                    label: '1',
+                    value: '1',
+                  },
+                  {
+                    label: '2',
+                    value: '2',
+                  },
+                ]}
+                onChange={(value: string) =>
+                  handleStrandsInputChange('class', value)
+                }
+              />
+            </View>
+            <View>
+              <Input
+                label="Rate per MTR"
+                value={sourceDetailStrands.ratePerMTR}
+                onChange={(value: number) =>
+                  handleStrandsInputChange('ratePerMTR', value)
+                }
+                isRequired={true}
+                keyboardType="numeric"
+              />
+            </View>
+            <View>
+              <Input
+                label="Brand"
+                value={sourceDetailStrands.brand}
+                onChange={(value: string) =>
+                  handleStrandsInputChange('brand', value)
+                }
+                isRequired={true}
+              />
+            </View>
+
+            <TouchableOpacity
+              style={styles.btnContainer}
+              onPress={addSourceDetailsSubmit}>
+              <Text style={styles.submitBtn}>Submit</Text>
+            </TouchableOpacity>
+          </View>
+        );
+      }
     } else {
       return (
         <View style={styles.reportFields}>

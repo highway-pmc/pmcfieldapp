@@ -176,10 +176,10 @@ const ProcurementsPrestressing = ({
     if (index != -1) {
       vehicleNos.splice(index, 1);
       setVehicleNos([...vehicleNos]);
-      if (materialType === TEST_MATERIALS_TYPES.REINFORCEMENT) {
-        setSteelRForm({...steelRForm});
+      if (materialType === TEST_MATERIALS_TYPES.STRANDS) {
+        setStrandsData({...strandsData});
       } else {
-        setFormSoil({...formSoil});
+        setSheathingDuctData({...sheathingDuctData});
       }
     }
   };
@@ -188,7 +188,7 @@ const ProcurementsPrestressing = ({
     setSelectedProcurement(null);
     setSourceApprovalDetails([]);
     setVehicleNos([]);
-    if (materialType === TEST_MATERIALS_TYPES.REINFORCEMENT) {
+    if (materialType === TEST_MATERIALS_TYPES.STRANDS) {
       setStrandsData({
         sourceApprovalId: '',
         sourceApprovalDetailId: '',
@@ -608,7 +608,7 @@ const ProcurementsPrestressing = ({
   };
 
   const addProcurementsForm = () => {
-    if (materialType === TEST_MATERIALS_TYPES.REINFORCEMENT) {
+    if (materialType === TEST_MATERIALS_TYPES.STRANDS) {
       return (
         <View style={styles.reportFields}>
           <View>
@@ -631,7 +631,7 @@ const ProcurementsPrestressing = ({
             </View>
             <View>
               <DropdownPicker
-                label="Class"
+                label="Dia"
                 items={[
                   {
                     label: '9.5',

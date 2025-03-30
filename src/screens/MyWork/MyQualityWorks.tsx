@@ -1327,7 +1327,8 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
           </View>
         )
       )}
-
+{currentLevel === 0 && (
+  <View style={{paddingHorizontal: 10}}>
   <View style={styles.qualityDropDown}>
       <CustomSelectDropdown 
       label='Selected Type' 
@@ -1336,6 +1337,8 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
       onSelect={(selectedOption: any) => handleApprovalType(selectedOption)} 
       /> 
   </View>
+  </View>
+)}
 
       {currentLevel !== 0 && currentLevel !== 1 && currentLevel !== 4 ? (
         <View style={styles.SearchBox}>
@@ -2568,6 +2571,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15, 
     paddingVertical: 7, 
     borderRadius: 12,
+    marginBottom: 15,
   }
 });
 

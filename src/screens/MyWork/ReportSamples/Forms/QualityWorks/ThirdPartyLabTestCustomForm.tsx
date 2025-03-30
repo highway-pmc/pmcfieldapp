@@ -140,7 +140,7 @@ let formSampleTest7thOr28thDay: any,
   selectedTestSample: any,
   concreteSampleTestItems: any;
 
-export const testSampleFormEarthwork = (
+export const thirdPartySampleTest = (
   styles: any,
   materialType: any,
   _formSampleTest7thOr28thDay: any,
@@ -183,7 +183,8 @@ export const testSampleFormEarthwork = (
           concreteSampleTestItems[0].sampleData,
           'base64Image',
           responseImage,
-        );}
+        );
+      }
     });
   };
   const onDocumentPress = async () => {
@@ -206,11 +207,7 @@ export const testSampleFormEarthwork = (
       }
     }
   };
-  if (
-    !materialType ||
-    materialType === TEST_MATERIALS_TYPES.SOIL ||
-    materialType === TEST_MATERIALS_TYPES.FLY_ASH
-  ) {
+  if (!materialType) {
     return (
       <View>
         <View

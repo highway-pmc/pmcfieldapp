@@ -706,6 +706,8 @@ export const TEST_MATERIALS_TYPES = {
   REINFORCEMENT: 'reinforcement',
   DLC: 'dlc',
   PQC: 'pqc',
+  PRESTRESSING_DUCT: 'pre-stressing-duct',
+  STRANDS: 'strands',
 };
 
 export const TEST_TYPES = {

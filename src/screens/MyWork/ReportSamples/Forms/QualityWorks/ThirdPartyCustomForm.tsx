@@ -165,9 +165,17 @@ export const testSampleFormBaseSubBase = (
     dateOfTesting: '',
     sampleBy: '',
     file: null,
+    recommendation: '',
+    result: '',
   });
   const [fileRes, setFileRes]: any = useState(null);
   const {showSnackbar} = useSnackbar();
+  const handleInputChange = (name: string, value: string | number | []) => {
+    setThirdParty({
+      ...thirdParty,
+      [name]: value,
+    });
+  };
   const launchCamera = () => {
     let options = {
       includeBase64: true,
@@ -225,43 +233,6 @@ export const testSampleFormBaseSubBase = (
             paddingBottom: 40,
             paddingTop: 10,
           }}>
-          {/* <View style={{flexDirection: 'column'}}>
-            <CalendarPicker
-              label="Date of Sampling"
-              value={formSampleTest7thOr28thDay.dateOfTesting}
-              onChange={date => handleInputChange('dateOfTesting', date)}
-            />
-          </View>
-          <View style={{flexDirection: 'column'}}>
-            <CalendarPicker
-              label="Date of Testing"
-              value={formSampleTest7thOr28thDay.dateOfTesting}
-              onChange={date => handleInputChange('dateOfTesting', date)}
-            />
-          </View>
-
-          <View style={{flexDirection: 'column'}}>
-            <DropdownPicker
-              value={formSampleTest7thOr28thDay.sampleBy}
-              label="Sampled By"
-              items={[
-                {
-                  label: 'Concessionaire',
-                  value: 'Concessionaire',
-                },
-                {
-                  label: 'Jointly',
-                  value: 'Jointly',
-                },
-                {
-                  label: 'Jointly',
-                  value: 'Jointly',
-                },
-              ]}
-              onChange={(value: string) => handleInputChange('sampleBy', value)}
-            />
-          </View> */}
-
           <View style={{flexDirection: 'column'}}>
             <CalendarPicker
               label="Date of Sampling"
@@ -299,7 +270,6 @@ export const testSampleFormBaseSubBase = (
             />
           </View>
 
-          
           {/* File Upload Buttons */}
           <View
             style={{
@@ -348,6 +318,31 @@ export const testSampleFormBaseSubBase = (
               <Text>Selected File: {fileRes.name || 'Image Captured'}</Text>
             </View>
           )}
+          <View style={{flexDirection: 'column'}}>
+            <DropdownPicker
+              value={thirdParty.sampleBy}
+              label="Result"
+              items={[
+                {
+                  label: 'Pass',
+                  value: 'Pass',
+                },
+                {
+                  label: 'Fail',
+                  value: 'Fail',
+                },
+              ]}
+              onChange={(value: string) => handleInputChange('result', value)}
+            />
+          </View>
+          <Input
+            label="Recommendation"
+            value={thirdParty.recommendation}
+            onChange={(value: string) =>
+              handleInputChange('recommendation', value)
+            }
+            isRequired={true}
+          />
         </View>
       </View>
     );
@@ -472,9 +467,10 @@ export type FormSampleTest7thOr28thDayState = {
   humidity: number;
   typeOfConcreteSurface?: string;
   observations?: any[];
+  result?: string;
 };
 
-const handleInputChange = (
+const handleInputChangeOld = (
   name: keyof FormSampleTest7thOr28thDayState,
   value: string | number | [],
 ) => {

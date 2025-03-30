@@ -488,9 +488,11 @@ const ProcurementsEarthWork = ({
   }, [deletedProcurement, error]);
 
   const onAddVehicle = () => {
-    const vehicleNoTemp = formSoil.vehicleNoTemp.trim();
+    const vehicleNoTemp =
+      materialType === TEST_MATERIALS_TYPES.REINFORCEMENT
+        ? steelRForm.vehicleNoTemp.trim()
+        : formSoil.vehicleNoTemp.trim();
     const vehicleNoRegex = /^\d{4}$/;
-
     if (vehicleNoTemp && vehicleNoRegex.test(vehicleNoTemp)) {
       if (!vehicleNos) {
         setVehicleNos([]);

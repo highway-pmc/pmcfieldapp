@@ -2571,7 +2571,7 @@ const SourceApprovals = ({
                   },
                 ]}
                 onChange={(value: string) =>
-                  handleSheathingductInputChange('dia', value)
+                  handleSheathingductInputChange('type', value)
                 }
               />
             </View>

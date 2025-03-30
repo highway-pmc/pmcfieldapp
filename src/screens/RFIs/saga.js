@@ -1,6 +1,6 @@
 
 import { put, takeLatest } from 'redux-saga/effects';
-import { fillRFIsDataChecklist, fillTestRFIsDataChecklist, generateRFI, generateRFIReportApi, generateTestSampleReportApi, getRFITaskUsersData, getRFITasksData, getRFIs, getTestRFIs, postLabTestRFI } from '../../services/rfi/rfis.service';
+import { fillRFIsDataChecklist, fillTestRFIsDataChecklist, generateRFI, generateRFIReportApi, generateTestSampleReportApi, getQualityMasterApi, getRFITaskUsersData, getRFITasksData, getRFIs, getTestRFIs, postLabTestRFI } from '../../services/rfi/rfis.service';
 
 function* getRFITasks({ payload }) {
     try {
@@ -92,6 +92,15 @@ function* generateLabTestRFIReport({ payload }) {
     }
 }
 
+function* getQualityMaster({ payload }) {
+    try {
+        const response = yield (getQualityMasterApi(payload.testType));
+        yield put({ type: "GET_QUALITY_MASTER_SUCCESS", response });
+    } catch (error) {
+        yield put({ type: "GET_QUALITY_MASTER_FAILURE", error: error.message });
+    }
+}
+
 export default function* myRFISScreenSaga() {
     yield takeLatest("GET_RFI_TASKS_REQUEST", getRFITasks);
     yield takeLatest("GET_RFI_TASK_USERS_REQUEST", getRFITaskUsers);
@@ -103,4 +112,5 @@ export default function* myRFISScreenSaga() {
     yield takeLatest("GENERATE_REPORT_REQUEST", generateRFIReport);
     yield takeLatest("GENERATE_TEST_REPORT_REQUEST", generateTestRFIReport);
     yield takeLatest("GENERATE_LAB_TEST_RFI_REQUEST", generateLabTestRFIReport);
+    yield takeLatest("GET_QUALITY_MASTER_REQUEST", getQualityMaster);
 }

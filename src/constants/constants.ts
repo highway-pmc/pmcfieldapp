@@ -668,8 +668,9 @@ export const TEST_WORK_CATEGORY_TYPES = {
   SUB_BASE: 'sub-base',
   BASE_SUB_BASE: 'base-sub-base',
   STEEL: 'steel',
-  BEARING: 'bearing',
+  BEARING: 'bearings',
   EXPANSION_JOINT: 'expansion-joints',
+  PRESTRESSING: 'prestressing',
 };
 
 export const TEST_MATERIALS_TYPES = {
@@ -706,7 +707,7 @@ export const TEST_MATERIALS_TYPES = {
   REINFORCEMENT: 'reinforcement',
   DLC: 'dlc',
   PQC: 'pqc',
-  PRESTRESSING_DUCT: 'pre-stressing-duct',
+  SHEATHING_DUCT: 'sheathing-duct',
   STRANDS: 'strands',
 };
 

@@ -39,6 +39,10 @@ import SelectTestWorkCategory from "../../screens/ManageUsers/QualityWorks/Selec
 import ProcurementsBitnumiousWork from "../../screens/ManageUsers/QualityWorks/ProcurementsBitnumiousWork";
 import ProcurementsEarthWork from "../../screens/ManageUsers/QualityWorks/ProcurementsEarthWork";
 import RFIsGenerateMyQuality from "../../screens/RFIs/RFIsGenerateMyQuality";
+import ProcurementsBearings from "../../screens/ManageUsers/QualityWorks/ProcurementsBearing";
+import ProcurementsSteel from "../../screens/ManageUsers/QualityWorks/ProcurementsSteel";
+import ProcurementsExpansionJoints from "../../screens/ManageUsers/QualityWorks/ProcurementsExpansionJoint";
+import ProcurementsPrestressing from "../../screens/ManageUsers/QualityWorks/ProcurementsPreStressing";
 
 const Stack = createStackNavigator();
 
@@ -105,6 +109,26 @@ const MyQualityWorksStackNavigator = () => {
       <Stack.Screen
         name="ProcurementsEarthWork"
         component={ProcurementsEarthWork}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ProcurementsBearings"
+        component={ProcurementsBearings}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ProcurementsSteel"
+        component={ProcurementsSteel}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ProcurementsExpansionJoints"
+        component={ProcurementsExpansionJoints}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ProcurementsPrestressing"
+        component={ProcurementsPrestressing}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

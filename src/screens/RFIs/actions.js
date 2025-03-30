@@ -51,3 +51,8 @@ export const generateLABTestRFIReport = (payload) => ({
     type: "GENERATE_LAB_TEST_RFI_REQUEST",
     payload: payload
 });
+
+export const getQualityMasterList = (payload) => ({
+    type: "GET_QUALITY_MASTER_REQUEST",
+    payload: payload
+});

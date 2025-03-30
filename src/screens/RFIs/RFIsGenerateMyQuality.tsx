@@ -9,7 +9,7 @@ import TimePicker from '../../components/UI/TimePicker';
 import { getDbDateFromDDMMYYYY } from '../../utils/Utils';
 import { useSnackbar } from '../../context/SnackbarContext';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearRFITasksEvent, generateLABTestRFIReport } from './actions';
+import { clearRFITasksEvent, generateLABTestRFIReport, getQualityMasterList } from './actions';
 import { useIsFocused } from '@react-navigation/native';
 import LoadingAnimation from '../Common/LoadingAnimation';
 
@@ -21,13 +21,14 @@ const RFIsGenerateMyQuality = ({ route, navigation }: { route: any, navigation: 
   const focus = useIsFocused();
 
   interface MaterialData {
+    testWorkCategoryData?: [],
     materialTypeData?: any[];
     testTypeData?: any[];
     subTestTypes?: any[];
     _id?: any,
     testCategory?: string
   }
-    const [labTestDropdownData, setLabTestDropdownData] = useState([]);
+    const [labTestDropdownData, setLabTestDropdownData] = useState<MaterialData>({});
     const [selectedValues, setSelectedValues] = useState<MaterialData>({});
     const [selectedMaterialTypeData, setSelectedMaterialTypeData] = useState<MaterialData>({});
     const [selectedTestTypeData, setSelectedTestTypeData] = useState<MaterialData>({});
@@ -35,31 +36,16 @@ const RFIsGenerateMyQuality = ({ route, navigation }: { route: any, navigation: 
     const [rfiDate, setRFIDate] = useState('');
     const [rfiTime, setRFITime] = useState('');
     const dispatch = useDispatch();
-    const {labTestRfiGenerated, loading, error} = useSelector((state: any) => state.RFIs);
+    const {labTestRfiGenerated, qualityMasterListing, loading, error} = useSelector((state: any) => state.RFIs);
     
     useEffect(() => {
-      const testTypeData = async () => {
-        setSelectedValues({});
-        setSelectedMaterialTypeData({});
-        setSelectedTestTypeData({});
-        await fetch(`${appConfig.API_URL}/v1/auth/qualityMasterData?type=${testType}`, {
-                  method: 'get',
-                  headers: {
-                    'Content-Type': 'multipart/form-data',
-                    Authorization: appConfig.getToken(),
-                  },
-                }).then((response) => response.json()).then((res) => {
-                  if (res.code === 200) {
-                    setLabTestDropdownData(res?.data?.testWorkCategoryData);
-                  } else {
-  
-                  }
-                });
+      dispatch(getQualityMasterList({testType: testType}));
+      if (qualityMasterListing?.testWorkCategoryData?.length) {
+        setLabTestDropdownData(qualityMasterListing?.testWorkCategoryData);
       }
-      testTypeData();
       setRFIDate('');
       setRFITime('');
-    }, [testType]);
+    }, [testType, labTestDropdownData]);
   
     const handleCategorySelect = (selectedOption: any) => {
       setSelectedValues(selectedOption);
@@ -137,11 +123,12 @@ const RFIsGenerateMyQuality = ({ route, navigation }: { route: any, navigation: 
             {height: calculatedHeight},
           ]}>
             <View style={styles.innerScrollView}>
+            {qualityMasterListing?.testWorkCategoryData?.length &&
               <CustomSelectDropdown label='Category'
-              data={labTestDropdownData}
+              data={qualityMasterListing?.testWorkCategoryData}
               selectedValue={selectedValues}
               onSelect={(selectedOption: any) => handleCategorySelect(selectedOption)} />
-
+            }
               {selectedValues.materialTypeData?.length && 
                 <CustomSelectDropdown label='Material Type'
                 data={selectedValues?.materialTypeData}

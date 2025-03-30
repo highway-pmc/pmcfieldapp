@@ -143,3 +143,12 @@ export const postLabTestRFI = async (projectId, testType, body) => {
         throw new Error(errorMessge);
     });
 }
+
+export const getQualityMasterApi = async (testType) => {
+    return apiService.getRequest(`v1/auth/qualityMasterData?type=${testType}`).then((response) => {
+        return response;
+    }).catch((err) => {
+        const errorMessge = err.message || 'Unable to get Quality Master.';
+        throw new Error(errorMessge);
+    });
+}

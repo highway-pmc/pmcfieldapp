@@ -1586,6 +1586,7 @@ const RFIsReducer = (state = myWorksState, action) => {
                 rfiUpdated: null,
                 reportdownloaded: null,
                 labTestRfiGenerated: null,
+                qualityMasterListing: null,
                 error: null,
                 loading: false,
             };
@@ -1606,6 +1607,26 @@ const RFIsReducer = (state = myWorksState, action) => {
             return {
                 ...state,
                 labTestRfiGenerated: null,
+                error: action.error,
+                loading: false,
+            };
+        case "GET_QUALITY_MASTER_REQUEST":
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            };
+        case "GET_QUALITY_MASTER_SUCCESS":
+            return {
+                ...state,
+                qualityMasterListing: action.response,
+                error: null,
+                loading: false,
+            };
+        case "GET_QUALITY_MASTER_FAILURE":
+            return {
+                ...state,
+                qualityMasterListing: null,
                 error: action.error,
                 loading: false,
             };

@@ -1060,6 +1060,7 @@ const SourceApprovals = ({
           return false;
         }
       }
+      return true;
     } else {
       // Validation for non-bituminous works
 
@@ -1245,6 +1246,8 @@ const SourceApprovals = ({
           },
         };
       } else {
+        console.log('Enter Strands');
+        console.log(sourceDetailStrands.class);
         body = {
           name: sourceDetailStrands.class,
           metaData: {
@@ -1264,7 +1267,7 @@ const SourceApprovals = ({
         },
       };
     }
-
+    console.log('Submission body: ', body);
     if (selectedSourceDetail === null) {
       console.log('Submission body 1');
       dispatch(
@@ -2571,7 +2574,7 @@ const SourceApprovals = ({
                   },
                 ]}
                 onChange={(value: string) =>
-                  handleSheathingductInputChange('dia', value)
+                  handleSheathingductInputChange('type', value)
                 }
               />
             </View>

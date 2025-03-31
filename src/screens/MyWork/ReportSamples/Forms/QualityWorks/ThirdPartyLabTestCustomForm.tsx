@@ -5,6 +5,7 @@ import {Text, TouchableOpacity, View, Image, ScrollView, Alert} from 'react-nati
 import {
   RFI_STATUS,
   SAMPLE_BY_LIST,
+  SAMPLE_BY_LIST_THIRD_PARTY,
   TEST_CONDUCTED_BY_LIST,
   TEST_MATERIALS_TYPES,
   TEST_TYPES,
@@ -154,8 +155,8 @@ export const thirdPartySampleTest = (
   currentTestMaterialData = _currentTestMaterialData;
   selectedTestSample = _selectedTestSample;
   concreteSampleTestItems = _concreteSampleTestItems;
-  console.log('Earthwork currentTestMaterialData', currentTestMaterialData);
-  console.log('Earthwork selectedTestSample.type :', selectedTestSample.type);
+  console.log('thirdPartySampleTest currentTestMaterialData', currentTestMaterialData);
+  console.log('thirdPartySampleTest selectedTestSample.type :', selectedTestSample.type);
   const {showSnackbar} = useSnackbar();
   const launchCamera = () => {
     let options = {
@@ -180,7 +181,7 @@ export const thirdPartySampleTest = (
           ? response.assets
           : response;
         handleInputChangeFineAggregate(
-          concreteSampleTestItems[0].sampleData,
+          concreteSampleTestItems[0]?.sampleData,
           'base64Image',
           responseImage,
         );
@@ -195,7 +196,7 @@ export const thirdPartySampleTest = (
       });
       const res = result[0];
       handleInputChangeFineAggregate(
-        concreteSampleTestItems[0].sampleData,
+        concreteSampleTestItems[0]?.sampleData,
         'base64Image',
         res,
       );
@@ -225,109 +226,32 @@ export const thirdPartySampleTest = (
           </View>
 
           <View style={{flexDirection: 'column'}}>
+            <CalendarPicker
+              label="Date of Sampling"
+              value={formSampleTest7thOr28thDay.dateOfSampling}
+              onChange={date => handleInputChange('dateOfSampling', date)}
+            />
+          </View>
+
+          <View style={{flexDirection: 'column'}}>
             <DropdownPicker
               value={formSampleTest7thOr28thDay.sampleBy}
               label="Sampled By"
-              items={SAMPLE_BY_LIST}
+              items={SAMPLE_BY_LIST_THIRD_PARTY}
               onChange={(value: string) => handleInputChange('sampleBy', value)}
             />
           </View>
 
-          <View style={{flexDirection: 'column'}}>
-            <DropdownPicker
-              value={formSampleTest7thOr28thDay.testConductedBy}
-              label="Test Conducted By"
-              items={TEST_CONDUCTED_BY_LIST}
-              onChange={(value: string) =>
-                handleInputChange('testConductedBy', value)
-              }
-            />
-          </View>
-
-          <View style={{flexDirection: 'column'}}>
-            <Input
-              label="Room Temperature/ Atmospheric Temperature (in C)"
-              value={'' + formSampleTest7thOr28thDay.roomTemperature}
-              onChange={(value: string) =>
-                handleInputChange('roomTemperature', value)
-              }
-              isRequired={true}
-            />
-          </View>
-
-          <View style={{flexDirection: 'column'}}>
-            <Input
-              label="Humidity in %"
-              value={'' + formSampleTest7thOr28thDay.humidity}
-              onChange={(value: string) => handleInputChange('humidity', value)}
-              isRequired={true}
-            />
-          </View>
 
           <View style={{flexDirection: 'column'}}>
             <Text style={styles.GenerateRFIFieldLabel}>Observations:</Text>
-            <ScrollView style={styles.Width100} horizontal={true}>
+            <ScrollView horizontal={true}>
               <View
                 style={{
                   flexDirection: 'column',
                   paddingBottom: 40,
                   paddingTop: 10,
                 }}>
-                <View style={{flexDirection: 'column'}}>
-                  <CalendarPicker
-                    label="Date of Sampling"
-                    value={concreteSampleTestItems[0].sampleData.dateOfSampling}
-                    onChange={(value: any) =>
-                      handleInputChangeFineAggregate(
-                        concreteSampleTestItems[0].sampleData,
-                        'dateOfSampling',
-                        value,
-                      )
-                    }
-                  />
-                </View>
-                <View style={{flexDirection: 'column'}}>
-                  <CalendarPicker
-                    label="Date of Testing"
-                    value={concreteSampleTestItems[0].sampleData.dateOfTesting}
-                    onChange={(value: any) =>
-                      handleInputChangeFineAggregate(
-                        concreteSampleTestItems[0].sampleData,
-                        'dateOfTesting',
-                        value,
-                      )
-                    }
-                  />
-                </View>
-
-                <View style={{flexDirection: 'column'}}>
-                  <DropdownPicker
-                    value={concreteSampleTestItems[0].sampleData.sampleBy}
-                    label="Sampled By"
-                    items={[
-                      {
-                        label: 'Concessionaire',
-                        value: 'Concessionaire',
-                      },
-                      {
-                        label: 'Jointly',
-                        value: 'Jointly',
-                      },
-                      {
-                        label: 'Jointly',
-                        value: 'Jointly',
-                      },
-                    ]}
-                    onChange={(value: any) =>
-                      handleInputChangeFineAggregate(
-                        concreteSampleTestItems[0].sampleData,
-                        'sampleBy',
-                        value,
-                      )
-                    }
-                  />
-                </View>
-
                 {/* File Upload Buttons */}
                 <View
                   style={{
@@ -371,18 +295,18 @@ export const thirdPartySampleTest = (
                 </View>
 
                 {/* Optional: Display selected file name */}
-                {concreteSampleTestItems[0].sampleData.base64Image && (
+                {concreteSampleTestItems[0]?.sampleData.base64Image && (
                   <View style={{marginTop: 10, alignItems: 'center'}}>
                     <Text>
                       Selected File:{' '}
-                      {concreteSampleTestItems[0].sampleData.base64Image ||
+                      {concreteSampleTestItems[0]?.sampleData.base64Image ||
                         'Image Captured'}
                     </Text>
                   </View>
                 )}
                 <View style={{flexDirection: 'column'}}>
                   <DropdownPicker
-                    value={concreteSampleTestItems[0].sampleData.result}
+                    value={concreteSampleTestItems[0]?.sampleData.result}
                     label="Result"
                     items={[
                       {
@@ -396,7 +320,7 @@ export const thirdPartySampleTest = (
                     ]}
                     onChange={(value: any) =>
                       handleInputChangeFineAggregate(
-                        concreteSampleTestItems[0].sampleData,
+                        concreteSampleTestItems[0]?.sampleData,
                         'result',
                         value,
                       )
@@ -405,10 +329,10 @@ export const thirdPartySampleTest = (
                 </View>
                 <Input
                   label="Recommendation"
-                  value={concreteSampleTestItems[0].additionalData.comments}
+                  value={concreteSampleTestItems[0]?.additionalData.comments}
                   onChange={(value: any) =>
                     handleInputChangeFineAggregate(
-                      concreteSampleTestItems[0].sampleData,
+                      concreteSampleTestItems[0]?.sampleData,
                       'comments',
                       value,
                     )
@@ -424,118 +348,10 @@ export const thirdPartySampleTest = (
   }
 };
 
-export const tasksListing = (
-  currentTestTypesData: any,
-  searchText: any,
-  getStyle: any,
-  styles: any,
-) => {
-  return currentTestTypesData
-    .filter((task: any) => {
-      if (searchText && task.name) {
-        return task.name.toLowerCase().includes(searchText.toLowerCase());
-      } else {
-        return true;
-      }
-    })
-    .map((item: any, index: any) => (
-      <View style={getStyle(item)}>
-        <View style={styles.leftContainer}>
-          <Text style={styles.HeadText}>{item.name}</Text>
-          {/* <Text style={styles.MyWorkSubHead}>Sub Text</Text> */}
-        </View>
-        {item.rfiStatus === RFI_STATUS.GENERATED ? (
-          <TouchableOpacity
-            style={[styles.MyWorkCta, styles.StartBorder]}
-            onPress={() => {
-              getRFIDataByWorkAssignmentId(item);
-            }}>
-            <Image
-              style={styles.WorkIcon}
-              source={require('../../../../../images/play-icon.png')}
-            />
-            <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>
-              Start
-            </Text>
-          </TouchableOpacity>
-        ) : null}
-
-        {item.rfiStatus === RFI_STATUS.RE_GENERATED ? (
-          <TouchableOpacity
-            style={[styles.MyWorkCta, styles.StartBorder]}
-            onPress={() => {
-              getRFIDataByWorkAssignmentId(item);
-            }}>
-            <Image
-              style={styles.WorkIcon}
-              source={require('../../../../../images/play-icon.png')}
-            />
-            <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>
-              Re-start
-            </Text>
-          </TouchableOpacity>
-        ) : null}
-
-        {item.rfiStatus === RFI_STATUS.REJECTED ||
-        item.rfiStatus === RFI_STATUS.CANCELLED ? (
-          <TouchableOpacity
-            style={[styles.MyWorkCta, styles.StartRejectBorder]}>
-            {/* <Image style={styles.WorkIcon} source={require('../../../../../images/play-icon.png')} /> */}
-            <Text style={[styles.CtaStartText, styles.CtaRejectTextColor]}>
-              {item.rfiStatus === RFI_STATUS.CANCELLED
-                ? 'Cancelled'
-                : 'Rejected'}
-            </Text>
-          </TouchableOpacity>
-        ) : null}
-
-        {item.rfiStatus === RFI_STATUS.IN_PROGRESS ? (
-          <TouchableOpacity
-            style={[styles.MyWorkCta, styles.StartInProgressBorder]}
-            onPress={() => {
-              getRFIDataByWorkAssignmentId(item);
-            }}>
-            <Image
-              style={styles.WorkIcon}
-              source={require('../../../../../images/inprogress.png')}
-            />
-            <Text style={[styles.CtaStartText, styles.CtaInProgressTextColor]}>
-              In Progress
-            </Text>
-          </TouchableOpacity>
-        ) : null}
-
-        {item.rfiStatus === RFI_STATUS.IN_REVIEW ? (
-          <TouchableOpacity
-            style={[styles.MyWorkCta, styles.StartReviewBorder]}>
-            <Image
-              style={styles.WorkIcon}
-              source={require('../../../../../images/review-icon.png')}
-            />
-            <Text style={[styles.CtaStartText, styles.CtaReviewTextColor]}>
-              Under Review
-            </Text>
-          </TouchableOpacity>
-        ) : null}
-
-        {item.rfiStatus === RFI_STATUS.APPROVED ? (
-          <TouchableOpacity
-            style={[styles.MyWorkCta, styles.StartCompleteBorder]}>
-            <Image
-              style={styles.WorkIcon}
-              source={require('../../../../../images/complete-icon.png')}
-            />
-            <Text style={[styles.CtaStartText, styles.CtaCompleteTextColor]}>
-              Completed
-            </Text>
-          </TouchableOpacity>
-        ) : null}
-      </View>
-    ));
-};
 
 export type FormSampleTest7thOr28thDayState = {
   dateOfTesting: string;
+  dateOfSampling: string;
   sampleBy: string;
   testConductedBy: string;
   roomTemperature: number;

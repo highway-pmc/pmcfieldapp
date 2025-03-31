@@ -392,10 +392,10 @@ const ProcurementsPrestressing = ({
         vehicleNo: vehicleNos.length
           ? vehicleNos
           : [strandsData.vehicleNo || ''],
-        invoiceFile: strandsData.invoiceFile,
+        uploadWeightSlip: strandsData.invoiceFile,
+        lotNo: strandsData.lotNo,
         metaData: {
           qtyInMTR: Number(strandsData.qtyInMTR),
-          lotNo: strandsData.lotNo,
           class: strandsData.class,
           dia: strandsData.dia,
         },
@@ -410,16 +410,24 @@ const ProcurementsPrestressing = ({
         vehicleNo: vehicleNos.length
           ? vehicleNos
           : [sheathingDuctData.vehicleNo || ''],
-        invoiceFile: sheathingDuctData.invoiceFile,
+        uploadWeightSlip: sheathingDuctData.invoiceFile,
+        lotNo: sheathingDuctData.lotNo,
         metaData: {
           qtyInMTR: Number(sheathingDuctData.qtyInMTR),
-          lotNo: sheathingDuctData.lotNo,
           type: sheathingDuctData.type,
           dia: sheathingDuctData.dia,
         },
       };
     }
-
+    // console.log('===procurementData===', procurementData);
+    // console.log(
+    //   '=strandsData==procurementData===',
+    //   strandsData.sourceApprovalId,
+    // );
+    // console.log(
+    //   '==sheathingDuctData=procurementData===',
+    //   sheathingDuctData.sourceApprovalId,
+    // );
     if (!selectedProcurement) {
       dispatch(
         addProcurement({
@@ -495,8 +503,8 @@ const ProcurementsPrestressing = ({
   const onAddVehicle = () => {
     const vehicleNoTemp =
       materialType === TEST_MATERIALS_TYPES.STRANDS
-        ? strandsData.vehicleNoTemp.trim()
-        : sheathingDuctData.vehicleNoTemp.trim();
+        ? strandsData.vehicleNoTemp
+        : sheathingDuctData.vehicleNoTemp;
     const vehicleNoRegex = /^\d{4}$/;
 
     if (vehicleNoTemp && vehicleNoRegex.test(vehicleNoTemp)) {

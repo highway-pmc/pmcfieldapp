@@ -177,6 +177,7 @@ function* addSourceDetail({ payload }) {
         const response = yield (addSourceDetailApi(payload.projectId, payload.sourceApprovalId, payload.body));
         yield put({ type: SOURCE_APPROVALS.ADD_SOURCE_APPROVAL_DETAIL_SUCCESS, response });
     } catch (error) {
+        console.log('===error===',error)
         yield put({ type: SOURCE_APPROVALS.ADD_SOURCE_APPROVAL_DETAIL_FAILURE, error: error.message });
     }
 }
@@ -215,6 +216,7 @@ function* addProcurement({ payload }) {
         const response = yield (addProcurementApi(payload.projectId, payload.testWorkCategoryType, payload.testMaterialId, payload.body));
         yield put({ type: PROCUREMENTS.ADD_PROCUREMENT_SUCCESS, response });
     } catch (error) {
+        console.log('===error===',error)
         yield put({ type: PROCUREMENTS.ADD_PROCUREMENT_FAILURE, error: error.message });
     }
 }

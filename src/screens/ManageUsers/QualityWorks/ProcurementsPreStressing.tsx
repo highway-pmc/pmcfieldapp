@@ -382,7 +382,7 @@ const ProcurementsPrestressing = ({
       return;
     }
     let procurementData = {};
-    if (materialType === TEST_MATERIALS_TYPES.REINFORCEMENT) {
+    if (materialType === TEST_MATERIALS_TYPES.STRANDS) {
       procurementData = {
         sourceApprovalId: strandsData.sourceApprovalId,
         sourceApprovalDetailId: strandsData.sourceApprovalDetailId,
@@ -419,15 +419,15 @@ const ProcurementsPrestressing = ({
         },
       };
     }
-    // console.log('===procurementData===', procurementData);
-    // console.log(
-    //   '=strandsData==procurementData===',
-    //   strandsData.sourceApprovalId,
-    // );
-    // console.log(
-    //   '==sheathingDuctData=procurementData===',
-    //   sheathingDuctData.sourceApprovalId,
-    // );
+    console.log('===procurementData===', procurementData);
+    console.log(
+      '=strandsData==procurementData===',
+      strandsData.sourceApprovalId,
+    );
+    console.log(
+      '==sheathingDuctData=procurementData===',
+      sheathingDuctData.sourceApprovalId,
+    );
     if (!selectedProcurement) {
       dispatch(
         addProcurement({
@@ -634,7 +634,7 @@ const ProcurementsPrestressing = ({
                   },
                 ]}
                 value={strandsData.class}
-                onChange={(value: string) => handleInputChange('grade', value)}
+                onChange={(value: string) => handleInputChange('class', value)}
               />
             </View>
             <View>

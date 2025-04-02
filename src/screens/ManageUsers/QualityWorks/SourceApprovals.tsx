@@ -716,159 +716,145 @@ const SourceApprovals = ({
   };
   const validateSourceDetail = () => {
     if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BITUMINOUS_WORKS) {
-      switch (materialType) {
-        case TEST_MATERIALS_TYPES.FINE_AGGREGATE: {
-          const ratePerKG = Number(fineAggregate.ratePerKG);
-          if (
-            ratePerKG > 100000 ||
-            !/^\d+(\.\d{1,3})?$/.test(ratePerKG.toString())
-          ) {
-            showSnackbar(
-              'Rate per KG must be less than 100,000 and up to 3 decimal places.',
-              'error',
-            );
-            return false;
-          }
-          break;
-        }
-
-        case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_DBM_BC: {
-          const ratePerKG = Number(coarseAggregateDBMBC.ratePerKG);
-          if (
-            ratePerKG > 100000 ||
-            !/^\d+(\.\d{1,3})?$/.test(ratePerKG.toString())
-          ) {
-            showSnackbar(
-              'Rate per KG must be less than 100,000 and up to 3 decimal places.',
-              'error',
-            );
-            return false;
-          }
-          if (
-            !['37.5mm', '26.5mm', '19mm', '13.2mm', '10mm', '20mm'].includes(
-              coarseAggregateDBMBC.nominalSize,
-            )
-          ) {
-            showSnackbar(
-              'Invalid nominal size for Coarse Aggregate (DBM/BC).',
-              'error',
-            );
-            return false;
-          }
-          break;
-        }
-
-        case TEST_MATERIALS_TYPES.BITUMEN: {
-          const ratePerMT = Number(bitumen.ratePerMT);
-          if (
-            ratePerMT > 100000 ||
-            !/^\d+(\.\d{1,3})?$/.test(ratePerMT.toString())
-          ) {
-            showSnackbar(
-              'Rate per MT must be less than 100,000 and up to 3 decimal places.',
-              'error',
-            );
-            return false;
-          }
-          if (!['VG 30', 'VG 40', 'PMB'].includes(bitumen.gradeOfBitumen)) {
-            showSnackbar('Invalid grade of Bitumen.', 'error');
-            return false;
-          }
-          if (bitumen.bitumenBrand.length > 100) {
-            showSnackbar(
-              'Bitumen Brand must be less than 100 characters.',
-              'error',
-            );
-            return false;
-          }
-          break;
-        }
-
-        case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING: {
-          const ratePerKG = Number(coarseAggregateMicro.ratePerKG);
-          if (
-            ratePerKG > 100000 ||
-            !/^\d+(\.\d{1,3})?$/.test(ratePerKG.toString())
-          ) {
-            showSnackbar(
-              'Rate per KG must be less than 100,000 and up to 3 decimal places.',
-              'error',
-            );
-            return false;
-          }
-          if (
-            !['37.5mm', '26.5mm', '19mm', '13.2mm'].includes(
-              coarseAggregateMicro.nominalSize,
-            )
-          ) {
-            showSnackbar(
-              'Invalid nominal size for Coarse Aggregate (Micro Surfacing).',
-              'error',
-            );
-            return false;
-          }
-          break;
-        }
-
-        case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA: {
-          const ratePerKG = Number(coarseAggregateSMA.ratePerKG);
-          if (
-            ratePerKG > 100000 ||
-            !/^\d+(\.\d{1,3})?$/.test(ratePerKG.toString())
-          ) {
-            showSnackbar(
-              'Rate per KG must be less than 100,000 and up to 3 decimal places.',
-              'error',
-            );
-            return false;
-          }
-          if (
-            !['37.5mm', '26.5mm', '19mm', '13.2mm'].includes(
-              coarseAggregateSMA.nominalSize,
-            )
-          ) {
-            showSnackbar(
-              'Invalid nominal size for Coarse Aggregate (SMA).',
-              'error',
-            );
-            return false;
-          }
-          break;
-        }
-
-        case TEST_MATERIALS_TYPES.EMULSION: {
-          const ratePerMT = Number(emulsion.ratePerMT);
-          if (
-            ratePerMT > 100000 ||
-            !/^\d+(\.\d{1,3})?$/.test(ratePerMT.toString())
-          ) {
-            showSnackbar(
-              'Rate per MT must be less than 100,000 and up to 3 decimal places.',
-              'error',
-            );
-            return false;
-          }
-          if (emulsion.gradeOfEmulsion.length > 100) {
-            showSnackbar(
-              'Grade of Emulsion must be less than 100 characters.',
-              'error',
-            );
-            return false;
-          }
-          if (emulsion.emulsionBrand.length > 100) {
-            showSnackbar(
-              'Emulsion Brand must be less than 100 characters.',
-              'error',
-            );
-            return false;
-          }
-          break;
-        }
-
-        default:
-          showSnackbar('Unknown material type for Bituminous Works.', 'error');
+      if (materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE) {
+        const ratePerKG = Number(fineAggregate.ratePerKG);
+        if (
+          ratePerKG > 100000 ||
+          !/^\d+(\.\d{1,3})?$/.test(ratePerKG.toString())
+        ) {
+          showSnackbar(
+            'Rate per KG must be less than 100,000 and up to 3 decimal places.',
+            'error',
+          );
           return false;
+        }
+      } else if (
+        materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE_DBM_BC
+      ) {
+        const ratePerKG = Number(coarseAggregateDBMBC.ratePerKG);
+        if (
+          ratePerKG > 100000 ||
+          !/^\d+(\.\d{1,3})?$/.test(ratePerKG.toString())
+        ) {
+          showSnackbar(
+            'Rate per KG must be less than 100,000 and up to 3 decimal places.',
+            'error',
+          );
+          return false;
+        }
+        if (
+          !['37.5mm', '26.5mm', '19mm', '13.2mm', '10mm', '20mm'].includes(
+            coarseAggregateDBMBC.nominalSize,
+          )
+        ) {
+          showSnackbar(
+            'Invalid nominal size for Coarse Aggregate (DBM/BC).',
+            'error',
+          );
+          return false;
+        }
+      } else if (materialType === TEST_MATERIALS_TYPES.BITUMEN) {
+        const ratePerMT = Number(bitumen.ratePerMT);
+        if (
+          ratePerMT > 100000 ||
+          !/^\d+(\.\d{1,3})?$/.test(ratePerMT.toString())
+        ) {
+          showSnackbar(
+            'Rate per MT must be less than 100,000 and up to 3 decimal places.',
+            'error',
+          );
+          return false;
+        }
+        if (!['VG 30', 'VG 40', 'PMB'].includes(bitumen.gradeOfBitumen)) {
+          showSnackbar('Invalid grade of Bitumen.', 'error');
+          return false;
+        }
+        if (bitumen.bitumenBrand.length > 100) {
+          showSnackbar(
+            'Bitumen Brand must be less than 100 characters.',
+            'error',
+          );
+          return false;
+        }
+      } else if (
+        materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING
+      ) {
+        const ratePerKG = Number(coarseAggregateMicro.ratePerKG);
+        if (
+          ratePerKG > 100000 ||
+          !/^\d+(\.\d{1,3})?$/.test(ratePerKG.toString())
+        ) {
+          showSnackbar(
+            'Rate per KG must be less than 100,000 and up to 3 decimal places.',
+            'error',
+          );
+          return false;
+        }
+        if (
+          !['37.5mm', '26.5mm', '19mm', '13.2mm'].includes(
+            coarseAggregateMicro.nominalSize,
+          )
+        ) {
+          showSnackbar(
+            'Invalid nominal size for Coarse Aggregate (Micro Surfacing).',
+            'error',
+          );
+          return false;
+        }
+      } else if (materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA) {
+        const ratePerKG = Number(coarseAggregateSMA.ratePerKG);
+        if (
+          ratePerKG > 100000 ||
+          !/^\d+(\.\d{1,3})?$/.test(ratePerKG.toString())
+        ) {
+          showSnackbar(
+            'Rate per KG must be less than 100,000 and up to 3 decimal places.',
+            'error',
+          );
+          return false;
+        }
+        if (
+          !['37.5mm', '26.5mm', '19mm', '13.2mm'].includes(
+            coarseAggregateSMA.nominalSize,
+          )
+        ) {
+          showSnackbar(
+            'Invalid nominal size for Coarse Aggregate (SMA).',
+            'error',
+          );
+          return false;
+        }
+      } else if (materialType === TEST_MATERIALS_TYPES.EMULSION) {
+        const ratePerMT = Number(emulsion.ratePerMT);
+        if (
+          ratePerMT > 100000 ||
+          !/^\d+(\.\d{1,3})?$/.test(ratePerMT.toString())
+        ) {
+          showSnackbar(
+            'Rate per MT must be less than 100,000 and up to 3 decimal places.',
+            'error',
+          );
+          return false;
+        }
+        if (emulsion.gradeOfEmulsion.length > 100) {
+          showSnackbar(
+            'Grade of Emulsion must be less than 100 characters.',
+            'error',
+          );
+          return false;
+        }
+        if (emulsion.emulsionBrand.length > 100) {
+          showSnackbar(
+            'Emulsion Brand must be less than 100 characters.',
+            'error',
+          );
+          return false;
+        }
+      } else {
+        showSnackbar('Unknown material type for Bituminous Works.', 'error');
+        return false;
       }
+      return true;
     } else if (
       testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EARTH_WORKS ||
       (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BASE_SUB_BASE &&
@@ -982,41 +968,41 @@ const SourceApprovals = ({
         );
         return false;
       }
+      return true;
     } else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.STEEL) {
-      switch (materialType) {
-        case TEST_MATERIALS_TYPES.REINFORCEMENT:
-          const ratePerMT = Number(sourceDetailReinforcement.ratePerMT);
-          if (
-            ratePerMT > 100000 ||
-            !/^\d+(\.\d{1,3})?$/.test(ratePerMT.toString())
-          ) {
-            showSnackbar(
-              'Rate per MT must be less than 100,000 and up to 3 decimal places.',
-              'error',
-            );
-            return false;
-          }
-          break;
-
-        case TEST_MATERIALS_TYPES.STRUCTURAL_STEEL:
-          const ratePerMTStructuralSteel = Number(
-            sourceDetailStructureSteel.ratePerMT,
+      console.log('Entered Material :', materialType);
+      if (materialType === TEST_MATERIALS_TYPES.REINFORCEMENT) {
+        const ratePerMT = Number(sourceDetailReinforcement.ratePerMT);
+        if (
+          ratePerMT > 100000 ||
+          !/^\d+(\.\d{1,3})?$/.test(ratePerMT.toString())
+        ) {
+          showSnackbar(
+            'Rate per MT must be less than 100,000 and up to 3 decimal places.',
+            'error',
           );
-          if (
-            ratePerMTStructuralSteel > 100000 ||
-            !/^\d+(\.\d{1,3})?$/.test(ratePerMTStructuralSteel.toString())
-          ) {
-            showSnackbar(
-              'Rate per MT must be less than 100,000 and up to 3 decimal places.',
-              'error',
-            );
-            return false;
-          }
-          break;
+          return false;
+        }
+      } else if (materialType === TEST_MATERIALS_TYPES.STRUCTURAL_STEEL) {
+        const ratePerMTStructuralSteel = Number(
+          sourceDetailStructureSteel.ratePerMT,
+        );
+        if (
+          ratePerMTStructuralSteel > 100000 ||
+          !/^\d+(\.\d{1,3})?$/.test(ratePerMTStructuralSteel.toString())
+        ) {
+          showSnackbar(
+            'Rate per MT must be less than 100,000 and up to 3 decimal places.',
+            'error',
+          );
+          return false;
+        }
       }
+      return true;
     } else if (
       testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EXPANSION_JOINT
     ) {
+      console.log('Click Registered Material Type: ', materialType);
       const ratePerMTRExpansionJoint = Number(
         sourceDetailExpansionJoint.ratePerMTR,
       );
@@ -1030,6 +1016,7 @@ const SourceApprovals = ({
         );
         return false;
       }
+      return true;
     } else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.PRESTRESSING) {
       console.log('Click Registered Material Type: ', materialType);
       if (materialType === TEST_MATERIALS_TYPES.SHEATHING_DUCT) {
@@ -1091,6 +1078,7 @@ const SourceApprovals = ({
               ratePerKG: Number(fineAggregate.ratePerKG),
             },
           };
+
           break;
 
         case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_DBM_BC:
@@ -1200,29 +1188,25 @@ const SourceApprovals = ({
         },
       };
     } else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.STEEL) {
-      switch (materialType) {
-        case TEST_MATERIALS_TYPES.REINFORCEMENT:
-          body = {
-            name: sourceDetailReinforcement.grade,
-            metaData: {
-              ratePerMT: Number(sourceDetailReinforcement.ratePerMT),
-              brand: sourceDetailReinforcement.brand,
-              grade: sourceDetailReinforcement.grade,
-              diameter: sourceDetailReinforcement.diameter,
-            },
-          };
-          break;
-
-        case TEST_MATERIALS_TYPES.STRUCTURAL_STEEL:
-          body = {
-            name: sourceDetailStructureSteel.grade,
-            metaData: {
-              ratePerMT: Number(sourceDetailStructureSteel.ratePerMT),
-              brand: sourceDetailStructureSteel.brand,
-              grade: sourceDetailStructureSteel.grade,
-            },
-          };
-          break;
+      if (materialType === TEST_MATERIALS_TYPES.REINFORCEMENT) {
+        body = {
+          name: sourceDetailReinforcement.grade,
+          metaData: {
+            ratePerMT: Number(sourceDetailReinforcement.ratePerMT),
+            brand: sourceDetailReinforcement.brand,
+            grade: sourceDetailReinforcement.grade,
+            diameter: sourceDetailReinforcement.diameter,
+          },
+        };
+      } else {
+        body = {
+          name: sourceDetailStructureSteel.grade,
+          metaData: {
+            ratePerMT: Number(sourceDetailStructureSteel.ratePerMT),
+            brand: sourceDetailStructureSteel.brand,
+            grade: sourceDetailStructureSteel.grade,
+          },
+        };
       }
     } else if (
       testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EXPANSION_JOINT
@@ -1436,7 +1420,7 @@ const SourceApprovals = ({
             sourceApprovalId: selectedSource._id,
             ratePerMTR: 0.0,
             brand: '',
-            dia: '.5',
+            dia: '9.5',
             class: '1',
           });
         }
@@ -2377,116 +2361,103 @@ const SourceApprovals = ({
         </View>
       );
     } else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.STEEL) {
-      switch (materialType) {
-        case TEST_MATERIALS_TYPES.REINFORCEMENT:
-          return (
-            <View style={styles.reportFields}>
+      if (materialType === TEST_MATERIALS_TYPES.REINFORCEMENT) {
+        return (
+          <View style={styles.reportFields}>
+            <View>
+              <DropdownPicker
+                label="Grade"
+                value={sourceDetailReinforcement.grade}
+                items={GRADE_REINFORCEMENT}
+                onChange={(value: string) =>
+                  handleSourceDetailReinforcementInputChange('grade', value)
+                }
+              />
+            </View>
+            <View>
+              <DropdownPicker
+                label="Diameter"
+                value={sourceDetailReinforcement.diameter}
+                items={DIAMETER_REINFORCEMENT}
+                onChange={(value: string) =>
+                  handleSourceDetailReinforcementInputChange('diameter', value)
+                }
+              />
+            </View>
+            <View>
+              <Input
+                label="Rate per MT"
+                value={sourceDetailReinforcement.ratePerMT}
+                onChange={(value: number) =>
+                  handleSourceDetailReinforcementInputChange('ratePerMT', value)
+                }
+                isRequired={true}
+                keyboardType="numeric"
+              />
+            </View>
+            <View>
+              <Input
+                label="Brand"
+                value={sourceDetailReinforcement.brand}
+                onChange={(value: string) =>
+                  handleSourceDetailReinforcementInputChange('brand', value)
+                }
+                isRequired={true}
+              />
+            </View>
+
+            <TouchableOpacity
+              style={styles.btnContainer}
+              onPress={addSourceDetailsSubmit}>
+              <Text style={styles.submitBtn}>Submit</Text>
+            </TouchableOpacity>
+          </View>
+        );
+      } else {
+        return (
+          <View style={styles.reportFields}>
+            <View>
               <View>
                 <DropdownPicker
                   label="Grade"
-                  value={sourceDetailReinforcement.grade}
-                  items={GRADE_REINFORCEMENT}
+                  value={sourceDetailStructureSteel.grade}
+                  items={GRADE_STRUCTURE_STEEL}
                   onChange={(value: string) =>
-                    handleSourceDetailReinforcementInputChange('grade', value)
+                    handleSourceDetailStructureSteelInputChange('grade', value)
                   }
                 />
               </View>
-              <View>
-                <DropdownPicker
-                  label="Diameter"
-                  value={sourceDetailReinforcement.diameter}
-                  items={DIAMETER_REINFORCEMENT}
-                  onChange={(value: string) =>
-                    handleSourceDetailReinforcementInputChange(
-                      'diameter',
-                      value,
-                    )
-                  }
-                />
-              </View>
-              <View>
-                <Input
-                  label="Rate per MT"
-                  value={sourceDetailReinforcement.ratePerMT}
-                  onChange={(value: number) =>
-                    handleSourceDetailReinforcementInputChange(
-                      'ratePerMT',
-                      value,
-                    )
-                  }
-                  isRequired={true}
-                  keyboardType="numeric"
-                />
-              </View>
-              <View>
-                <Input
-                  label="Brand"
-                  value={sourceDetailReinforcement.brand}
-                  onChange={(value: string) =>
-                    handleSourceDetailReinforcementInputChange('brand', value)
-                  }
-                  isRequired={true}
-                />
-              </View>
-
-              <TouchableOpacity
-                style={styles.btnContainer}
-                onPress={addSourceDetailsSubmit}>
-                <Text style={styles.submitBtn}>Submit</Text>
-              </TouchableOpacity>
+              <Input
+                label="Rate per MT"
+                value={sourceDetailStructureSteel.ratePerMT}
+                onChange={(value: number) =>
+                  handleSourceDetailStructureSteelInputChange(
+                    'ratePerMT',
+                    value,
+                  )
+                }
+                isRequired={true}
+                keyboardType="numeric"
+              />
             </View>
-          );
-          break;
-
-        case TEST_MATERIALS_TYPES.STRUCTURAL_STEEL:
-          return (
-            <View style={styles.reportFields}>
-              <View>
-                <View>
-                  <DropdownPicker
-                    label="Grade"
-                    value={sourceDetailStructureSteel.grade}
-                    items={GRADE_STRUCTURE_STEEL}
-                    onChange={(value: string) =>
-                      handleSourceDetailStructureSteelInputChange(
-                        'grade',
-                        value,
-                      )
-                    }
-                  />
-                </View>
-                <Input
-                  label="Rate per MT"
-                  value={sourceDetailStructureSteel.ratePerMT}
-                  onChange={(value: number) =>
-                    handleSourceDetailStructureSteelInputChange(
-                      'ratePerMT',
-                      value,
-                    )
-                  }
-                  isRequired={true}
-                  keyboardType="numeric"
-                />
-              </View>
-              <View>
-                <Input
-                  label="Brand"
-                  value={sourceDetailStructureSteel.brand}
-                  onChange={(value: string) =>
-                    handleSourceDetailStructureSteelInputChange('brand', value)
-                  }
-                  isRequired={true}
-                />
-              </View>
-
-              <TouchableOpacity
-                style={styles.btnContainer}
-                onPress={addSourceDetailsSubmit}>
-                <Text style={styles.submitBtn}>Submit</Text>
-              </TouchableOpacity>
+            <View>
+              <Input
+                label="Brand"
+                value={sourceDetailStructureSteel.brand}
+                onChange={(value: string) =>
+                  handleSourceDetailStructureSteelInputChange('brand', value)
+                }
+                isRequired={true}
+              />
             </View>
-          );
-          break;
+
+            <TouchableOpacity
+              style={styles.btnContainer}
+              onPress={addSourceDetailsSubmit}>
+              <Text style={styles.submitBtn}>Submit</Text>
+            </TouchableOpacity>
+          </View>
+        );
       }
     } else if (
       testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EXPANSION_JOINT

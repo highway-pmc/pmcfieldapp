@@ -18,7 +18,9 @@ import {useIsFocused} from '@react-navigation/native';
 import {
   BEARING_TYPE_LIST,
   CONCRETE_GRADE_LIST,
+  DIAMETER_REINFORCEMENT,
   GRADE_REINFORCEMENT,
+  GRADE_STRUCTURE_STEEL,
   HeaderItems,
   SOURCE_APPROVAL_STATUS,
   TEST_MATERIALS_TYPES,
@@ -391,9 +393,9 @@ const ProcurementsSteel = ({
           ? vehicleNos
           : [steelRForm.vehicleNo || ''],
         invoiceFile: steelRForm.invoiceFile,
+        lotNo: steelRForm.lotNo,
         metaData: {
           qtyInTonne: Number(steelRForm.qtyInTonne),
-          lotNo: steelRForm.lotNo,
           grade: steelRForm.grade,
           diameter: steelRForm.diameter,
         },
@@ -407,9 +409,9 @@ const ProcurementsSteel = ({
         ),
         vehicleNo: vehicleNos.length ? vehicleNos : [formSoil.vehicleNo || ''],
         invoiceFile: formSoil.invoiceFile,
+        lotNo: formSoil.lotNo,
         metaData: {
           qtyInTonne: Number(formSoil.qtyInTonne),
-          lotNo: formSoil.lotNo,
           grade: formSoil.grade,
         },
       };
@@ -609,15 +611,15 @@ const ProcurementsSteel = ({
               <DropdownPicker
                 label="Grade"
                 items={GRADE_REINFORCEMENT}
-                value={formSoil.grade}
+                value={steelRForm.grade}
                 onChange={(value: string) => handleInputChange('grade', value)}
               />
             </View>
             <View>
               <DropdownPicker
                 label="Diameter"
-                items={GRADE_REINFORCEMENT}
-                value={formSoil.grade}
+                items={DIAMETER_REINFORCEMENT}
+                value={steelRForm.diameter}
                 onChange={(value: string) =>
                   handleInputChange('diameter', value)
                 }
@@ -634,7 +636,7 @@ const ProcurementsSteel = ({
             <View>
               <Input
                 label="Qty (in Tonne)"
-                value={'' + formSoil.qtyInTonne}
+                value={'' + steelRForm.qtyInTonne}
                 onChange={(value: string) =>
                   handleInputChange('qtyInTonne', value)
                 }
@@ -644,7 +646,7 @@ const ProcurementsSteel = ({
             <View>
               <CalendarPicker
                 label="Date"
-                value={formSoil.procurementDateTime}
+                value={steelRForm.procurementDateTime}
                 onChange={date =>
                   handleInputChange('procurementDateTime', date)
                 }
@@ -661,7 +663,7 @@ const ProcurementsSteel = ({
                 <View style={{width: '70%'}}>
                   <Input
                     label="Vehicle no."
-                    value={formSoil.vehicleNoTemp}
+                    value={steelRForm.vehicleNoTemp}
                     onChange={(value: string) =>
                       handleInputChange('vehicleNoTemp', value)
                     }
@@ -688,7 +690,7 @@ const ProcurementsSteel = ({
             <View>
               <Input
                 label="Lot Number"
-                value={'' + formSoil.lotNo}
+                value={'' + steelRForm.lotNo}
                 onChange={(value: string) => handleInputChange('lotNo', value)}
                 isRequired={true}
               />
@@ -726,7 +728,7 @@ const ProcurementsSteel = ({
             <View>
               <DropdownPicker
                 label="Nominal Size"
-                items={GRADE_REINFORCEMENT}
+                items={GRADE_STRUCTURE_STEEL}
                 value={formSoil.grade}
                 onChange={(value: string) => handleInputChange('grade', value)}
               />

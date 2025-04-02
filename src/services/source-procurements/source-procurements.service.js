@@ -98,6 +98,7 @@ export const getProcurementsApi = async (projectId, testWorkCategoryType, testMa
 }
 
 export const addProcurementApi = async (projectId, testWorkCategoryType, testMaterialId, body) => {
+    
     return apiService.postRequest(`v1/auth/projects/${projectId}/test-work-category/${testWorkCategoryType}/test-material/${testMaterialId}/procurements`, body).then((response) => {
         return response;
     }).catch((err) => {

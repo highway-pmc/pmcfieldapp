@@ -1062,6 +1062,7 @@ const SourceApprovals = ({
         );
         return false;
       }
+      return true;
     }
   };
   //Need to change function logic

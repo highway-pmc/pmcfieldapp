@@ -351,9 +351,9 @@ const ProcurementsPrestressing = ({
   const handleInputChange = (name: string, value: string | number | []) => {
     let isValid = true;
     let errorMessage = '';
-    if (materialType === TEST_MATERIALS_TYPES.REINFORCEMENT) {
+    if (materialType === TEST_MATERIALS_TYPES.STRANDS) {
       setStrandsData({...strandsData, [name]: value});
-    } else {
+    } else if (materialType === TEST_MATERIALS_TYPES.SHEATHING_DUCT) {
       setSheathingDuctData({...sheathingDuctData, [name]: value});
     }
 

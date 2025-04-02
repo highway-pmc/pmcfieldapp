@@ -963,6 +963,21 @@ export const SAMPLE_BY_LIST = [
   },
 ];
 
+export const SAMPLE_BY_LIST_THIRD_PARTY = [
+  {
+    label: 'Concessionaire',
+    value: 'Concessionaire',
+  },
+  {
+    label: 'Jointly',
+    value: 'Jointly',
+  },
+  {
+    label: 'Third Party',
+    value: 'Third Party',
+  },
+];
+
 export const TEST_CONDUCTED_BY_LIST = [
   {
     label: 'Concessionaire',

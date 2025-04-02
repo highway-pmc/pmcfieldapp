@@ -978,13 +978,40 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
     )?.type;
     let sampleData = {};
 
-    const objSampleTest7thOr28thDay = Object.assign(
+    const objSampleTest7thOr28thDay: any = Object.assign(
       {},
       formSampleTest7thOr28thDay,
     );
     objSampleTest7thOr28thDay.dateOfTesting = getDbDateFromDDMMYYYY(
       objSampleTest7thOr28thDay.dateOfTesting,
     );
+
+    if (selectedTestSample.testClassificationType === TEST_CLASSIFICATION_TYPES.THIRD_PARTY_LAB_TEST) {
+      objSampleTest7thOr28thDay.dateOfSampling = getDbDateFromDDMMYYYY(
+        objSampleTest7thOr28thDay.dateOfSampling,
+      );
+
+      objSampleTest7thOr28thDay.result = concreteSampleTestItems[0].result
+
+      //objSampleTest7thOr28thDay.base64Image = "" // TODO
+
+      dispatch(
+        fillRFIsChecklistForTestSample({
+          projectId: loggedInUser.projectId,
+          rfiId: selectedTestSample._id,
+          status: status,
+          body: {
+            sampleData: objSampleTest7thOr28thDay,
+            additionalData: {
+              comments: concreteSampleTestItems[0].comments
+            }
+          },
+        }),
+      );
+
+      return;
+    }
+    
     // Temperature Validation
     if (isValidTemperature(objSampleTest7thOr28thDay.roomTemperature)) {
       objSampleTest7thOr28thDay.roomTemperature = Number(

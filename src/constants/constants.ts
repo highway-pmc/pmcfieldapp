@@ -701,7 +701,7 @@ export const TEST_MATERIALS_TYPES = {
   COARSE_AGGREGATE_WMM: 'coarse-aggregate-wmm',
   FINE_AGGREGATE_WMM: 'fine-aggregate-wmm',
   WMM: 'wmm',
-  STRUCTURAL_STEEL: ' structural-steel',
+  STRUCTURAL_STEEL: 'structural-steel',
   BEARING: 'bearing',
   EXPANSION_JOINT: 'expansion-joints',
   REINFORCEMENT: 'reinforcement',

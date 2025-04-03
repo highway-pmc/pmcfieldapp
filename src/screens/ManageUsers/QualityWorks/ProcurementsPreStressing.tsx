@@ -176,10 +176,10 @@ const ProcurementsPrestressing = ({
     if (index != -1) {
       vehicleNos.splice(index, 1);
       setVehicleNos([...vehicleNos]);
-      if (materialType === TEST_MATERIALS_TYPES.REINFORCEMENT) {
-        setSteelRForm({...steelRForm});
+      if (materialType === TEST_MATERIALS_TYPES.STRANDS) {
+        setStrandsData({...strandsData});
       } else {
-        setFormSoil({...formSoil});
+        setSheathingDuctData({...sheathingDuctData});
       }
     }
   };
@@ -188,7 +188,7 @@ const ProcurementsPrestressing = ({
     setSelectedProcurement(null);
     setSourceApprovalDetails([]);
     setVehicleNos([]);
-    if (materialType === TEST_MATERIALS_TYPES.REINFORCEMENT) {
+    if (materialType === TEST_MATERIALS_TYPES.STRANDS) {
       setStrandsData({
         sourceApprovalId: '',
         sourceApprovalDetailId: '',
@@ -351,9 +351,9 @@ const ProcurementsPrestressing = ({
   const handleInputChange = (name: string, value: string | number | []) => {
     let isValid = true;
     let errorMessage = '';
-    if (materialType === TEST_MATERIALS_TYPES.REINFORCEMENT) {
+    if (materialType === TEST_MATERIALS_TYPES.STRANDS) {
       setStrandsData({...strandsData, [name]: value});
-    } else {
+    } else if (materialType === TEST_MATERIALS_TYPES.SHEATHING_DUCT) {
       setSheathingDuctData({...sheathingDuctData, [name]: value});
     }
 
@@ -382,7 +382,7 @@ const ProcurementsPrestressing = ({
       return;
     }
     let procurementData = {};
-    if (materialType === TEST_MATERIALS_TYPES.REINFORCEMENT) {
+    if (materialType === TEST_MATERIALS_TYPES.STRANDS) {
       procurementData = {
         sourceApprovalId: strandsData.sourceApprovalId,
         sourceApprovalDetailId: strandsData.sourceApprovalDetailId,
@@ -392,10 +392,10 @@ const ProcurementsPrestressing = ({
         vehicleNo: vehicleNos.length
           ? vehicleNos
           : [strandsData.vehicleNo || ''],
-        invoiceFile: strandsData.invoiceFile,
+        uploadWeightSlip: strandsData.invoiceFile,
+        lotNo: strandsData.lotNo,
         metaData: {
           qtyInMTR: Number(strandsData.qtyInMTR),
-          lotNo: strandsData.lotNo,
           class: strandsData.class,
           dia: strandsData.dia,
         },
@@ -410,16 +410,24 @@ const ProcurementsPrestressing = ({
         vehicleNo: vehicleNos.length
           ? vehicleNos
           : [sheathingDuctData.vehicleNo || ''],
-        invoiceFile: sheathingDuctData.invoiceFile,
+        uploadWeightSlip: sheathingDuctData.invoiceFile,
+        lotNo: sheathingDuctData.lotNo,
         metaData: {
           qtyInMTR: Number(sheathingDuctData.qtyInMTR),
-          lotNo: sheathingDuctData.lotNo,
           type: sheathingDuctData.type,
           dia: sheathingDuctData.dia,
         },
       };
     }
-
+    console.log('===procurementData===', procurementData);
+    console.log(
+      '=strandsData==procurementData===',
+      strandsData.sourceApprovalId,
+    );
+    console.log(
+      '==sheathingDuctData=procurementData===',
+      sheathingDuctData.sourceApprovalId,
+    );
     if (!selectedProcurement) {
       dispatch(
         addProcurement({
@@ -495,8 +503,8 @@ const ProcurementsPrestressing = ({
   const onAddVehicle = () => {
     const vehicleNoTemp =
       materialType === TEST_MATERIALS_TYPES.STRANDS
-        ? strandsData.vehicleNoTemp.trim()
-        : sheathingDuctData.vehicleNoTemp.trim();
+        ? strandsData.vehicleNoTemp
+        : sheathingDuctData.vehicleNoTemp;
     const vehicleNoRegex = /^\d{4}$/;
 
     if (vehicleNoTemp && vehicleNoRegex.test(vehicleNoTemp)) {
@@ -608,7 +616,7 @@ const ProcurementsPrestressing = ({
   };
 
   const addProcurementsForm = () => {
-    if (materialType === TEST_MATERIALS_TYPES.REINFORCEMENT) {
+    if (materialType === TEST_MATERIALS_TYPES.STRANDS) {
       return (
         <View style={styles.reportFields}>
           <View>
@@ -626,12 +634,12 @@ const ProcurementsPrestressing = ({
                   },
                 ]}
                 value={strandsData.class}
-                onChange={(value: string) => handleInputChange('grade', value)}
+                onChange={(value: string) => handleInputChange('class', value)}
               />
             </View>
             <View>
               <DropdownPicker
-                label="Class"
+                label="Dia"
                 items={[
                   {
                     label: '9.5',

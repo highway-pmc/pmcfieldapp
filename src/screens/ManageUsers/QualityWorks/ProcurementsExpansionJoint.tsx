@@ -306,9 +306,10 @@ const ProcurementsExpansionJoints = ({
       procurementDateTime: getDbDateFromDDMMYYYY(formSoil.procurementDateTime),
       vehicleNo: vehicleNos.length ? vehicleNos : [formSoil.vehicleNo || ''],
       invoiceFile: formSoil.invoiceFile,
+      lotNo: formSoil.lotNo,
       metaData: {
         qtyInMtr: Number(formSoil.qtyInMtr),
-        lotNo: formSoil.lotNo,
+
         type: formSoil.type,
       },
     };

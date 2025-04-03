@@ -304,9 +304,10 @@ const ProcurementsBearings = ({
       procurementDateTime: getDbDateFromDDMMYYYY(formSoil.procurementDateTime),
       vehicleNo: vehicleNos.length ? vehicleNos : [formSoil.vehicleNo || ''],
       invoiceFile: formSoil.invoiceFile,
+      lotNo: formSoil.lotNo,
       metaData: {
         qtyInTonne: Number(formSoil.qtyInTonne),
-        lotNo: formSoil.lotNo,
+
         type: formSoil.type,
       },
     };

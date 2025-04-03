@@ -28,6 +28,7 @@ import RFIsDashboard from "../../screens/RFIs/RFIsDashboard";
 import RFIsGenerateMyWork from "../../screens/RFIs/RFIsGenerateMyWork";
 import SubComponentsList from "../../screens/ManageUsers/SubComponentsList";
 import MyQualityWorks from "../../screens/MyWork/MyQualityWorks";
+import MixDesign from "../../screens/MyWork/MixDesign";
 import AssignTestWorkCategory from "../../screens/ManageUsers/QualityWorks/AssignTestWorkCategory";
 import AssignTestMaterials from "../../screens/ManageUsers/QualityWorks/AssignTestMaterials";
 import AssignTestTypes from "../../screens/ManageUsers/QualityWorks/AssignTestTypes";
@@ -134,7 +135,17 @@ const MyQualityWorksStackNavigator = () => {
     </Stack.Navigator>
   );
 };
-
+const MixDesignStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen
+        name="MixDesign"
+        component={MixDesign}
+        options={{headerShown: false}}
+      />
+    </Stack.Navigator>
+  );
+};
 const ManageUsersStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
@@ -228,5 +239,18 @@ const ChangePasswordStackNavigator = () => {
   );
 };
 
-export { MyWorkStackNavigator, MyWorkPHStackNavigator, MyTaskStackNavigator, MyQualityWorksStackNavigator, ManageUsersStackNavigator, NotificationsStackNavigator,
-  ProgressStackNavigator, ReportsStackNavigator, RFIsStackNavigator, ProfileStackNavigator, ProjectInfoStackNavigator, ChangePasswordStackNavigator };
+export {
+  MyWorkStackNavigator,
+  MyWorkPHStackNavigator,
+  MyTaskStackNavigator,
+  MixDesignStackNavigator,
+  MyQualityWorksStackNavigator,
+  ManageUsersStackNavigator,
+  NotificationsStackNavigator,
+  ProgressStackNavigator,
+  ReportsStackNavigator,
+  RFIsStackNavigator,
+  ProfileStackNavigator,
+  ProjectInfoStackNavigator,
+  ChangePasswordStackNavigator,
+};

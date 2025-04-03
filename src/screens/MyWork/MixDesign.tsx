@@ -1,3 +1,4 @@
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -5,22 +6,18 @@ import {
   ScrollView,
   TouchableOpacity,
   Dimensions,
+  TextInput,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
 import {RFIs_TYPE} from '../../constants/constants';
-
 import CustomSelectDropdown from '../Common/CustomSelectDropdown';
-import appConfig from '../../common/app.config';
 import CalendarPicker from '../../components/UI/CalenderPicker';
 import TimePicker from '../../components/UI/TimePicker';
-import {getDbDateFromDDMMYYYY} from '../../utils/Utils';
 import {useSnackbar} from '../../context/SnackbarContext';
 import {useDispatch, useSelector} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
 import LoadingAnimation from '../Common/LoadingAnimation';
 
-const MixDesign = ({route, navigation}: {route: any; navigation: any}) => {
-  const {rfiType, testType, projectId} = route?.params || {};
+const MixDesign = ({route}: {route: any}) => {
   const {height} = Dimensions.get('window');
   const calculatedHeight = height * 0.75;
   const {showSnackbar} = useSnackbar();
@@ -34,6 +31,7 @@ const MixDesign = ({route, navigation}: {route: any; navigation: any}) => {
     _id?: any;
     testCategory?: string;
   }
+
   const [labTestDropdownData, setLabTestDropdownData] = useState<MaterialData>(
     {},
   );
@@ -47,17 +45,11 @@ const MixDesign = ({route, navigation}: {route: any; navigation: any}) => {
   const [rfiDate, setRFIDate] = useState('');
   const [rfiTime, setRFITime] = useState('');
   const dispatch = useDispatch();
-  const {labTestRfiGenerated, qualityMasterListing, loading, error} =
-    useSelector((state: any) => state.RFIs);
+  const {qualityMasterListing, loading} = useSelector(
+    (state: any) => state.RFIs,
+  );
 
-  useEffect(() => {
-    dispatch(getQualityMasterList({testType: testType}));
-    if (qualityMasterListing?.testWorkCategoryData?.length) {
-      setLabTestDropdownData(qualityMasterListing?.testWorkCategoryData);
-    }
-    setRFIDate('');
-    setRFITime('');
-  }, [testType, labTestDropdownData]);
+  useEffect(() => {}, []);
 
   const handleCategorySelect = (selectedOption: any) => {
     setSelectedValues(selectedOption);
@@ -80,116 +72,87 @@ const MixDesign = ({route, navigation}: {route: any; navigation: any}) => {
   const handleSubTestTypeSelect = (selectedOption: any) => {
     setSelectedSubTestTypeData(selectedOption);
   };
+  const renderMixDesign = () => {
+    return (
+      <View style={styles.mixDesignContainer}>
+        <View style={styles.inputContainer}>
+          <Text style={styles.inputLabel}>
+            Total qty of DBM/RAP DBM in Kg considered for composition
+          </Text>
+          <View style={styles.inputWrapper}>
+            <TextInput
+              style={styles.input}
+              placeholder=">0, 3 dec, max limit 10000"
+              keyboardType="numeric"
+              placeholderTextColor="#999"
+            />
+          </View>
+        </View>
 
-  const onGenerateRFI = async () => {
-    const payload: any = {
-      sampleData: {
-        testWorkCategoryId: selectedValues?._id,
-        testMaterialId: selectedMaterialTypeData?._id,
-        testTypeId: selectedTestTypeData?._id,
-        testCategory: selectedSubTestTypeData?.testCategory,
-        rfiDateTime: `${getDbDateFromDDMMYYYY(rfiDate)} ${rfiTime}:00`,
-      },
-    };
+        <View style={styles.tableContainer}>
+          <View style={styles.tableHeader}>
+            <Text style={[styles.tableHeaderCell, {flex: 2}]}>
+              Description of Material
+            </Text>
+            <Text style={[styles.tableHeaderCell, {flex: 2}]}>
+              Source of Material
+            </Text>
+            <Text style={[styles.tableHeaderCell, {flex: 1}]}>Qty in Kg</Text>
+          </View>
 
-    dispatch(
-      generateLABTestRFIReport({
-        projectId: projectId,
-        testType: testType,
-        body: payload,
-      }),
+          <View style={styles.tableRow}>
+            <Text style={[styles.tableCell, {flex: 2}]}>Bitumen</Text>
+            <View style={[styles.tableCellDropdown, {flex: 2}]}>
+              <CustomSelectDropdown
+                label="Source of the corresponding material with type"
+                data={[]}
+                selectedValue=""
+                onSelect={() => {}}
+              />
+            </View>
+            <View style={[styles.tableCellInput, {flex: 1}]}>
+              <TextInput
+                value=""
+                style={styles.qtyInput}
+                placeholder=">0, 3 dec, max limit 10000"
+                keyboardType="numeric"
+                placeholderTextColor="#999"
+              />
+            </View>
+          </View>
+        </View>
+      </View>
     );
   };
-
-  useEffect(() => {
-    if (labTestRfiGenerated) {
-      showSnackbar('RFI`s Generate  Succesfull');
-      dispatch(clearRFITasksEvent());
-      onReset();
-    } else if (error) {
-      showSnackbar('RFI`s Generate Failed');
-    }
-  }, [labTestRfiGenerated, error]);
-
   const onReset = () => {
     setRFIDate('');
     setRFITime('');
     handleCategorySelect({});
-    setSelectedMaterialTypeData({});
-    setSelectedTestTypeData({});
-    setSelectedSubTestTypeData({});
   };
 
   return (
     <View style={styles.recentWorkContainer}>
-      <Text style={styles.headerText}>
-        {testType === 'field-lab-test' ? 'Lab Test' : 'Third Party Test'}
-      </Text>
-
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
-        style={[
-          rfiType === RFIs_TYPE.GENERATE
-            ? styles.recentWorkContent
-            : styles.recentWorkContentHeight100,
-          {height: calculatedHeight},
-        ]}>
+      <ScrollView>
         <View style={styles.innerScrollView}>
-          {qualityMasterListing?.testWorkCategoryData?.length && (
-            <CustomSelectDropdown
-              label="Category"
-              data={qualityMasterListing?.testWorkCategoryData}
-              selectedValue={selectedValues}
-              onSelect={(selectedOption: any) =>
-                handleCategorySelect(selectedOption)
-              }
-            />
-          )}
-          {selectedValues.materialTypeData?.length && (
-            <CustomSelectDropdown
-              label="Material Type"
-              data={selectedValues?.materialTypeData}
-              selectedValue={selectedMaterialTypeData}
-              onSelect={(selectedOption: any) =>
-                handleMaterialTypeSelect(selectedOption)
-              }
-            />
-          )}
-
-          {selectedMaterialTypeData.testTypeData?.length && (
-            <CustomSelectDropdown
-              label="Test Type"
-              data={selectedMaterialTypeData?.testTypeData}
-              selectedValue={selectedTestTypeData}
-              onSelect={(selectedOption: any) =>
-                handleTestTypeSelect(selectedOption)
-              }
-            />
-          )}
-
-          {selectedTestTypeData.subTestTypes?.length && (
-            <CustomSelectDropdown
-              label="Sub Test Type"
-              data={selectedTestTypeData?.subTestTypes}
-              selectedValue={selectedSubTestTypeData}
-              onSelect={(selectedOption: any) =>
-                handleSubTestTypeSelect(selectedOption)
-              }
-            />
-          )}
-
-          <CalendarPicker
-            label="Date of RFI's"
-            value={rfiDate}
-            onChange={date => setRFIDate(date)}
+          <CustomSelectDropdown
+            label="Category"
+            data={qualityMasterListing?.testWorkCategoryData}
+            selectedValue={selectedValues}
+            onSelect={handleCategorySelect}
           />
-
-          <TimePicker
-            label="Time"
-            value={rfiTime}
-            onChange={time => setRFITime(time)}
+          <CustomSelectDropdown
+            label="Material Type"
+            data={selectedValues?.materialTypeData}
+            selectedValue={selectedMaterialTypeData}
+            onSelect={handleMaterialTypeSelect}
           />
+          <CustomSelectDropdown
+            label="Test Type"
+            data={selectedMaterialTypeData?.testTypeData}
+            selectedValue={selectedTestTypeData}
+            onSelect={handleTestTypeSelect}
+          />
+          {renderMixDesign()}
         </View>
       </ScrollView>
       {!loading && (
@@ -197,12 +160,9 @@ const MixDesign = ({route, navigation}: {route: any; navigation: any}) => {
           <TouchableOpacity style={styles.btnCtaOutline} onPress={onReset}>
             <Text style={styles.btnCtaTextOutline}>Reset</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.btnCta} onPress={onGenerateRFI}>
-            <Text style={styles.btnCtaText}>Generate</Text>
-          </TouchableOpacity>
         </View>
       )}
-      <LoadingAnimation loading={loading}></LoadingAnimation>
+      <LoadingAnimation loading={loading} />
     </View>
   );
 };
@@ -214,16 +174,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 20,
   },
-  recentWorkContent: {
-    paddingHorizontal: 20,
-    flexDirection: 'column',
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    marginTop: 10,
-  },
-  recentWorkContentHeight100: {
-    padding: 20,
-  },
   innerScrollView: {
     paddingBottom: 10,
     paddingTop: 15,
@@ -233,26 +183,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     backgroundColor: '#fff',
     marginTop: 15,
-    marginHorizontal: -20,
     height: 78,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 10,
   },
-  btnCta: {
-    borderRadius: 30,
-    backgroundColor: '#1C58C0',
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-    minWidth: 130,
-  },
   btnCtaOutline: {
     borderRadius: 30,
     borderWidth: 1,
-    borderStyle: 'solid',
     borderColor: '#1C58C0',
     backgroundColor: '#fff',
     paddingHorizontal: 30,
@@ -266,15 +205,75 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '500',
   },
-  btnCtaText: {
-    color: '#fff',
+  mixDesignContainer: {
+    marginTop: 15,
+  },
+  inputContainer: {
+    marginBottom: 20,
+  },
+  inputLabel: {
     fontSize: 14,
     fontWeight: '500',
+    marginBottom: 8,
+    color: '#333',
   },
-  headerText: {
-    color: '#000',
-    fontSize: 16,
-    fontWeight: '500',
+  inputWrapper: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 8,
+    paddingHorizontal: 10,
+  },
+  input: {
+    height: 40,
+    fontSize: 14,
+  },
+  tableContainer: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 8,
+    overflow: 'hidden',
+    marginBottom: 20,
+  },
+  tableHeader: {
+    flexDirection: 'row',
+    backgroundColor: '#f5f5f5',
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+  },
+  tableHeaderCell: {
+    fontWeight: '600',
+    fontSize: 14,
+    color: '#333',
+  },
+  tableRow: {
+    flexDirection: 'row',
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+    alignItems: 'center',
+  },
+  tableCell: {
+    fontSize: 14,
+    color: '#333',
+    paddingRight: 5,
+  },
+  tableCellDropdown: {
+    paddingHorizontal: 5,
+  },
+  tableCellInput: {
+    paddingLeft: 5,
+  },
+  qtyInput: {
+    height: 40,
+    fontSize: 14,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 6,
+    paddingHorizontal: 8,
+  },
+  materialDropdown: {
+    width: '100%',
   },
 });
 

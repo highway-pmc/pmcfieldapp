@@ -8,7 +8,7 @@ import {
   Dimensions,
   TextInput,
 } from 'react-native';
-import {RFIs_TYPE} from '../../constants/constants';
+import {RFIs_TYPE, SAMPLE_BY_LIST} from '../../constants/constants';
 import CustomSelectDropdown from '../Common/CustomSelectDropdown';
 import CalendarPicker from '../../components/UI/CalenderPicker';
 import TimePicker from '../../components/UI/TimePicker';
@@ -16,6 +16,7 @@ import {useSnackbar} from '../../context/SnackbarContext';
 import {useDispatch, useSelector} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
 import LoadingAnimation from '../Common/LoadingAnimation';
+import {Input} from 'react-native-elements';
 
 const MixDesign = ({route}: {route: any}) => {
   const {height} = Dimensions.get('window');
@@ -42,8 +43,10 @@ const MixDesign = ({route}: {route: any}) => {
     useState<MaterialData>({});
   const [selectedSubTestTypeData, setSelectedSubTestTypeData] =
     useState<MaterialData>({});
-  const [rfiDate, setRFIDate] = useState('');
-  const [rfiTime, setRFITime] = useState('');
+  const [dateOfSampling, setDateOfSampling] = useState('');
+  const [dateOfTesting, setDateOfTesting] = useState('');
+  const [sampleBy, setSampleBy] = useState('');
+  const [mixDesignConductedBy, setMixDesignConductedBy] = useState('');
   const dispatch = useDispatch();
   const {qualityMasterListing, loading} = useSelector(
     (state: any) => state.RFIs,
@@ -80,7 +83,8 @@ const MixDesign = ({route}: {route: any}) => {
             Total qty of DBM/RAP DBM in Kg considered for composition
           </Text>
           <View style={styles.inputWrapper}>
-            <TextInput
+            <Input
+              value=""
               style={styles.input}
               placeholder=">0, 3 dec, max limit 10000"
               keyboardType="numeric"
@@ -94,7 +98,7 @@ const MixDesign = ({route}: {route: any}) => {
             <Text style={[styles.tableHeaderCell, {flex: 2}]}>
               Description of Material
             </Text>
-            <Text style={[styles.tableHeaderCell, {flex: 2}]}>
+            <Text style={[styles.tableHeaderCell, {flex: 3}]}>
               Source of Material
             </Text>
             <Text style={[styles.tableHeaderCell, {flex: 1}]}>Qty in Kg</Text>
@@ -102,7 +106,27 @@ const MixDesign = ({route}: {route: any}) => {
 
           <View style={styles.tableRow}>
             <Text style={[styles.tableCell, {flex: 2}]}>Bitumen</Text>
-            <View style={[styles.tableCellDropdown, {flex: 2}]}>
+            <View style={[styles.tableCellDropdown, {flex: 3}]}>
+              <CustomSelectDropdown
+                label="Source of material"
+                data={[]}
+                selectedValue=""
+                onSelect={() => {}}
+              />
+            </View>
+            <View style={[styles.tableCellInput, {flex: 1}]}>
+              <TextInput
+                value=""
+                style={styles.qtyInput}
+                placeholder=">0, 3 dec, max limit 10000"
+                keyboardType="numeric"
+                placeholderTextColor="#999"
+              />
+            </View>
+          </View>
+          <View style={styles.tableRow}>
+            <Text style={[styles.tableCell, {flex: 2}]}>Bitumen</Text>
+            <View style={[styles.tableCellDropdown, {flex: 3}]}>
               <CustomSelectDropdown
                 label="Source of material"
                 data={[]}
@@ -124,9 +148,8 @@ const MixDesign = ({route}: {route: any}) => {
       </View>
     );
   };
+  const handleInputChange = (value: string) => {};
   const onReset = () => {
-    setRFIDate('');
-    setRFITime('');
     handleCategorySelect({});
   };
 
@@ -134,6 +157,40 @@ const MixDesign = ({route}: {route: any}) => {
     <View style={styles.recentWorkContainer}>
       <ScrollView>
         <View style={styles.innerScrollView}>
+          <View>
+            <CalendarPicker
+              label="Date of sampling"
+              value={dateOfSampling}
+              onChange={(value: any) => {
+                setDateOfSampling(value);
+              }}
+            />
+
+            <CalendarPicker
+              label="Date of sampling"
+              value={dateOfTesting}
+              onChange={(value: any) => {
+                setDateOfTesting(value);
+              }}
+            />
+            <CustomSelectDropdown
+              label="Sampled By"
+              data={SAMPLE_BY_LIST}
+              selectedValue={sampleBy}
+              onSelect={(value: any) => {
+                setSampleBy(value);
+              }}
+            />
+            <CustomSelectDropdown
+              label="Conducted By"
+              data={SAMPLE_BY_LIST}
+              selectedValue={mixDesignConductedBy}
+              onSelect={(value: any) => {
+                setMixDesignConductedBy(value);
+              }}
+            />
+          </View>
+
           <CustomSelectDropdown
             label="Category"
             data={qualityMasterListing?.testWorkCategoryData}

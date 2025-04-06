@@ -58,13 +58,13 @@ const MixDesign = ({route}: {route: any}) => {
     setSelectedSubTestTypeData({});
   };
 
-  const handleMaterialTypeSelect = (selectedOption: any) => {
+  const handleMixDesignTypeSelect = (selectedOption: any) => {
     setSelectedMaterialTypeData(selectedOption);
     setSelectedTestTypeData({});
     setSelectedSubTestTypeData({});
   };
 
-  const handleTestTypeSelect = (selectedOption: any) => {
+  const handleMixDesignTypeCateorySelect = (selectedOption: any) => {
     setSelectedTestTypeData(selectedOption);
     setSelectedSubTestTypeData({});
   };
@@ -104,7 +104,7 @@ const MixDesign = ({route}: {route: any}) => {
             <Text style={[styles.tableCell, {flex: 2}]}>Bitumen</Text>
             <View style={[styles.tableCellDropdown, {flex: 2}]}>
               <CustomSelectDropdown
-                label="Source of the corresponding material with type"
+                label="Source of material"
                 data={[]}
                 selectedValue=""
                 onSelect={() => {}}
@@ -141,16 +141,16 @@ const MixDesign = ({route}: {route: any}) => {
             onSelect={handleCategorySelect}
           />
           <CustomSelectDropdown
-            label="Material Type"
+            label="Mix Design Type"
             data={selectedValues?.materialTypeData}
             selectedValue={selectedMaterialTypeData}
-            onSelect={handleMaterialTypeSelect}
+            onSelect={handleMixDesignTypeSelect}
           />
           <CustomSelectDropdown
-            label="Test Type"
+            label="Mix Design Type Category"
             data={selectedMaterialTypeData?.testTypeData}
             selectedValue={selectedTestTypeData}
-            onSelect={handleTestTypeSelect}
+            onSelect={handleMixDesignTypeCateorySelect}
           />
           {renderMixDesign()}
         </View>

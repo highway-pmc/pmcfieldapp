@@ -78,7 +78,7 @@ const DrawerNavigator = () => {
         }}
       />
       <Drawer.Screen
-        name="MyQualityWorks"
+        name="MixDesign"
         component={MixDesignStackNavigator}
         options={{
           headerShown: false,

@@ -1,6 +1,6 @@
 // Snackbar.js
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Image, Modal} from 'react-native';
 
 const Snackbar = ({message, type, icon, visible, onClose}) => {
   if (!visible) {
@@ -34,6 +34,7 @@ const Snackbar = ({message, type, icon, visible, onClose}) => {
   };
 
   return (
+    <Modal visible={visible} transparent animationType="fade">
     <View style={[styles.container, getBackgroundColor()]}>
       <View style={styles.content}>
         <Image source={getIconSource()} style={styles.icon} />
@@ -43,11 +44,14 @@ const Snackbar = ({message, type, icon, visible, onClose}) => {
         <Image source={require('../../images/close.png')} style={styles.icon} />
       </TouchableOpacity> */}
     </View>
+    </Modal>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    zIndex: 9999,
+    elevation: 5,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -57,14 +61,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 40,
     right: 10,
-    zIndex: 9999,
-    minWidth: 250,
+    minWidth: 280,
     maxWidth: '90%', // Adjust the width to fit the content dynamically
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.8,
     shadowRadius: 2,
-    elevation: 5,
   },
   content: {
     flexDirection: 'row',

@@ -9,7 +9,7 @@ import {
   Image
 } from "react-native";
 
-const CustomSelectDropdown = ({ label, data, selectedValue, onSelect }) => {
+const CustomSelectDropdown = ({ label, data, selectedValue, onSelect, itemTypeOf = 'object' }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleSelect = (item) => {
@@ -27,12 +27,12 @@ const CustomSelectDropdown = ({ label, data, selectedValue, onSelect }) => {
         onPress={() => setModalVisible(true)}
       >
         <Text style={styles.selectedText} numberOfLines={1}>
-          {selectedValue?.name ? selectedValue?.name : "Select an option"}
+          {itemTypeOf === 'string' ? selectedValue || 'Select an option' : selectedValue?.name || "Select an option"}
         </Text>
         <Image
-                          style={styles.CloseIcon}
-                          source={require('./../../images/right-arrow.png')}
-                        />
+          style={styles.CloseIcon}
+          source={require('./../../images/right-arrow.png')}
+        />
       </TouchableOpacity>
 
       {/* Dropdown Modal */}
@@ -43,18 +43,39 @@ const CustomSelectDropdown = ({ label, data, selectedValue, onSelect }) => {
           onPress={() => setModalVisible(false)}
         >
           <View style={styles.modalContainer}>
-            <FlatList
-              data={data}
-              keyExtractor={(item) => item._id}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  style={styles.item}
-                  onPress={() => handleSelect(item)}
-                >
-                  <Text style={styles.itemText}>{item.name}</Text>
-                </TouchableOpacity>
-              )}
-            />
+            {
+              (itemTypeOf === 'string') ?
+                (
+                  <FlatList
+                    data={data}
+                    keyExtractor={(item) => item}
+                    renderItem={({ item }) => (
+                      <TouchableOpacity
+                        style={styles.item}
+                        onPress={() => handleSelect(item)}
+                      >
+                        <Text style={styles.itemText}>{item}</Text>
+                      </TouchableOpacity>
+                    )}
+                  />
+                )
+                :
+                (
+                  <FlatList
+                    data={data}
+                    keyExtractor={(item) => item._id}
+                    renderItem={({ item }) => (
+                      <TouchableOpacity
+                        style={styles.item}
+                        onPress={() => handleSelect(item)}
+                      >
+                        <Text style={styles.itemText}>{item.name}</Text>
+                      </TouchableOpacity>
+                    )}
+                  />
+                )
+            }
+
           </View>
         </TouchableOpacity>
       </Modal>

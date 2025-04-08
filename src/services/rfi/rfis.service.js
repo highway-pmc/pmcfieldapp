@@ -153,14 +153,14 @@ export const getQualityMasterApi = async (testType) => {
     });
 }
 
-export const getMixDesignApi = async (
-  testWorkCategoryId,
-  testWorkCategorytype,
-  materialTypeId,
+export const getMixDesignFormInfoApi = async (
+  projectId,
+  testWorkCategoryType,
+  testMaterialId,
 ) => {
   return apiService
     .getRequest(
-      `v1/auth/projects/${testWorkCategoryId}/test-work-category/${testWorkCategorytype}/test-material/${materialTypeId}/mix-design-info`,
+      `v1/auth/projects/${projectId}/test-work-category/${testWorkCategoryType}/test-material/${testMaterialId}/mix-design-info`,
     )
     .then(response => {
       return response;
@@ -170,3 +170,23 @@ export const getMixDesignApi = async (
       throw new Error(errorMessge);
     });
 };
+
+export const saveMixDesignFormInfoApi = async (
+    projectId,
+    testWorkCategoryType,
+    testMaterialId,
+    body
+  ) => {
+    return apiService
+      .postRequest(
+        `v1/auth/projects/${projectId}/test-work-category/${testWorkCategoryType}/test-material/${testMaterialId}/mix-designs`,
+        body
+      )
+      .then(response => {
+        return response;
+      })
+      .catch(err => {
+        const errorMessge = err.message || 'Unable to save Mix design.';
+        throw new Error(errorMessge);
+      });
+  };

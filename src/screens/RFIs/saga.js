@@ -6,12 +6,13 @@ import {
   generateRFIReportApi,
   generateTestSampleReportApi,
   getQualityMasterApi,
-  getMixDesignApi,
+  getMixDesignFormInfoApi,
   getRFITaskUsersData,
   getRFITasksData,
   getRFIs,
   getTestRFIs,
   postLabTestRFI,
+  saveMixDesignFormInfoApi,
 } from '../../services/rfi/rfis.service';
 
 function* getRFITasks({payload}) {
@@ -149,16 +150,30 @@ function* getQualityMaster({payload}) {
   }
 }
 
-function* getMixDesign({payload}) {
+function* getMixDesignFormInfo({payload}) {
   try {
-    const response = yield getMixDesignApi(
-      payload.testWorkCategoryId,
-      payload.testWorkCategorytype,
-      payload.materialTypeId
+    const response = yield getMixDesignFormInfoApi(
+      payload.projectId,
+      payload.testWorkCategoryType,
+      payload.testMaterialId
     );
-    yield put({type: 'GET_MIX_DESIGN_SUCCESS', response});
+    yield put({type: 'GET_MIX_DESIGN_FORM_INFO_SUCCESS', response});
   } catch (error) {
-    yield put({type: 'GET_MIX_DESIGN_FAILURE', error: error.message});
+    yield put({type: 'GET_MIX_DESIGN_FORM_INFO_FAILURE', error: error.message});
+  }
+}
+
+function* saveMixDesignFormInfo({payload}) {
+  try {
+    const response = yield saveMixDesignFormInfoApi(
+      payload.projectId,
+      payload.testWorkCategoryType,
+      payload.testMaterialId,
+      payload.body,
+    );
+    yield put({type: 'SAVE_MIX_DESIGN_FORM_INFO_SUCCESS', response});
+  } catch (error) {
+    yield put({type: 'SAVE_MIX_DESIGN_FORM_INFO_FAILURE', error: error.message});
   }
 }
 
@@ -174,5 +189,6 @@ export default function* myRFISScreenSaga() {
   yield takeLatest('GENERATE_TEST_REPORT_REQUEST', generateTestRFIReport);
   yield takeLatest('GENERATE_LAB_TEST_RFI_REQUEST', generateLabTestRFIReport);
   yield takeLatest('GET_QUALITY_MASTER_REQUEST', getQualityMaster);
-  yield takeLatest('GET_MIX_DESIGN_REQUEST', getMixDesign);
+  yield takeLatest('GET_MIX_DESIGN_FORM_INFO_REQUEST', getMixDesignFormInfo);
+  yield takeLatest('SAVE_MIX_DESIGN_FORM_INFO_REQUEST', saveMixDesignFormInfo);
 }

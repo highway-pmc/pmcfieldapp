@@ -7,6 +7,7 @@ import {
   generateTestSampleReportApi,
   getQualityMasterApi,
   getMixDesignFormInfoApi,
+  getMixDesignListInfoApi,
   getRFITaskUsersData,
   getRFITasksData,
   getRFIs,
@@ -162,7 +163,18 @@ function* getMixDesignFormInfo({payload}) {
     yield put({type: 'GET_MIX_DESIGN_FORM_INFO_FAILURE', error: error.message});
   }
 }
-
+function* getMixDesignListInfo({payload}) {
+  try {
+    const response = yield getMixDesignListInfoApi(
+      payload.projectId,
+      payload.testWorkCategoryType,
+      payload.testMaterialId,
+    );
+    yield put({type: 'GET_MIX_DESIGN_LIST_INFO_SUCCESS', response});
+  } catch (error) {
+    yield put({type: 'GET_MIX_DESIGN_LIST_INFO_FAILURE', error: error.message});
+  }
+}
 function* saveMixDesignFormInfo({payload}) {
   try {
     const response = yield saveMixDesignFormInfoApi(
@@ -191,4 +203,5 @@ export default function* myRFISScreenSaga() {
   yield takeLatest('GET_QUALITY_MASTER_REQUEST', getQualityMaster);
   yield takeLatest('GET_MIX_DESIGN_FORM_INFO_REQUEST', getMixDesignFormInfo);
   yield takeLatest('SAVE_MIX_DESIGN_FORM_INFO_REQUEST', saveMixDesignFormInfo);
+  yield takeLatest('GET_MIX_DESIGN_LIST_INFO_REQUEST', getMixDesignListInfo);
 }

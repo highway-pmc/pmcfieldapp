@@ -190,3 +190,21 @@ export const saveMixDesignFormInfoApi = async (
         throw new Error(errorMessge);
       });
   };
+//http://localhost:4000/v1/auth/projects/669ba9f0e3b37a3b66e221ef/test-work-category/sub-base/test-material/67bb73db5fa264d1da3cc824/mix-designs
+export const getMixDesignListInfoApi = async (
+  projectId,
+  testWorkCategoryType,
+  testMaterialId,
+) => {
+  return apiService
+    .getRequest(
+      `v1/auth/projects/${projectId}/test-work-category/${testWorkCategoryType}/test-material/${testMaterialId}/mix-designs`,
+    )
+    .then(response => {
+      return response;
+    })
+    .catch(err => {
+      const errorMessge = err.message || 'Unable to get Quality Master.';
+      throw new Error(errorMessge);
+    });
+};

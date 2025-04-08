@@ -1417,263 +1417,283 @@ const RFIsReportsReducer = (state = myWorksState, action) => {
 
 const RFIsReducer = (state = myWorksState, action) => {
     switch (action.type) {
-        case 'GET_RFI_TASKS_REQUEST':
-            return {
-                ...state,
-                error: null,
-                loading: true,
-            };
-        case 'GET_RFI_TASKS_SUCCESS':
-            return {
-                ...state,
-                rfisTasks: action.response,
-                error: null,
-                loading: false,
-            };
-        case 'GET_RFI_TASKS_FAILURE':
-            return {
-                ...state,
-                rfisTasks: null,
-                error: action.error,
-                loading: false,
-            };
-        case 'GET_RFI_TASK_USERS_REQUEST':
-            return {
-                ...state,
-                error: null,
-                loading: true,
-            };
-        case 'GET_RFI_TASK_USERS_SUCCESS':
-            return {
-                ...state,
-                taskUsers: action.response,
-                error: null,
-                loading: false,
-            };
-        case 'GET_RFI_TASK_USERS_FAILURE':
-            return {
-                ...state,
-                taskUsers: null,
-                error: action.error,
-                loading: false,
-            };
-        case 'GENERATE_RFI_REQUEST':
-            return {
-                ...state,
-                error: null,
-                loading: true,
-            };
-        case 'GENERATE_RFI_SUCCESS':
-            return {
-                ...state,
-                rfiGenerated: action.response,
-                error: null,
-                loading: false,
-            };
-        case 'GENERATE_RFI_FAILURE':
-            return {
-                ...state,
-                rfiGenerated: null,
-                error: action.error,
-                loading: false,
-            };
-        case 'GET_RFI_REQUEST':
-            return {
-                ...state,
-                error: null,
-                loading: true,
-            };
-        case 'GET_RFI_SUCCESS':
-            return {
-                ...state,
-                rfiDataList: action.response,
-                error: null,
-                loading: false,
-            };
-        case 'GET_RFI_FAILURE':
-            return {
-                ...state,
-                rfiDataList: null,
-                error: action.error,
-                loading: false,
-            };
-        case 'GET_TEST_RFI_REQUEST':
-            return {
-                ...state,
-                error: null,
-                loading: true,
-            };
-        case 'GET_TEST_RFI_SUCCESS':
-            return {
-                ...state,
-                rfiDataList: action.response,
-                error: null,
-                loading: false,
-            };
-        case 'GET_TEST_RFI_FAILURE':
-            return {
-                ...state,
-                rfiDataList: null,
-                error: action.error,
-                loading: false,
-            };
-        case 'UPDATE_RFI_REQUEST':
-            return {
-                ...state,
-                error: null,
-                rfiUpdated: null,
-                loading: true,
-            };
-        case 'UPDATE_RFI_SUCCESS':
-            return {
-                ...state,
-                rfiUpdated: action.response,
-                error: null,
-                loading: false,
-            };
-        case 'UPDATE_RFI_FAILURE':
-            return {
-                ...state,
-                rfiUpdated: null,
-                error: action.error,
-                loading: false,
-            };
-        case 'UPDATE_TEST_RFI_REQUEST':
-            return {
-                ...state,
-                rfiUpdated: null,
-                error: null,
-                loading: true,
-            };
-        case 'UPDATE_TEST_RFI_SUCCESS':
-            return {
-                ...state,
-                rfiUpdated: action.response,
-                error: null,
-                loading: false,
-            };
-        case 'UPDATE_TEST_RFI_FAILURE':
-            return {
-                ...state,
-                rfiUpdated: null,
-                error: action.error,
-                loading: false,
-            };
-        case 'DOWNLOAD_REPORT_REQUEST':
-            return {
-                ...state,
-                error: null,
-                loading: true,
-            };
-        case 'DOWNLOAD_REPORT_SUCCESS':
-            return {
-                ...state,
-                reportdownloaded: action.response,
-                error: null,
-                loading: false,
-            };
-        case 'DOWNLOAD_REPORT_FAILURE':
-            return {
-                ...state,
-                reportdownloaded: null,
-                error: action.error,
-                loading: false,
-            };
-        case 'CLEAR_RFI_REQUEST':
-            return {
-                ...state,
-                rfiDataList: null,
-                rfiUpdated: null,
-                reportdownloaded: null,
-                labTestRfiGenerated: null,
-                qualityMasterListing: null,
-                qualityMixDesignFormInfo: null,
-                savedMixDesignFormInfo: null,
-                error: null,
-                loading: false,
-            };
-        case 'GENERATE_LAB_TEST_RFI_REQUEST':
-            return {
-                ...state,
-                error: null,
-                loading: true,
-            };
-        case 'GENERATE_LAB_TEST_RFI_SUCCESS':
-            return {
-                ...state,
-                labTestRfiGenerated: action.response,
-                error: null,
-                loading: false,
-            };
-        case 'GENERATE_LAB_TEST_RFI_FAILURE':
-            return {
-                ...state,
-                labTestRfiGenerated: null,
-                error: action.error,
-                loading: false,
-            };
-        case 'GET_QUALITY_MASTER_REQUEST':
-            return {
-                ...state,
-                error: null,
-                loading: true,
-            };
-        case 'GET_QUALITY_MASTER_SUCCESS':
-            return {
-                ...state,
-                qualityMasterListing: action.response,
-                error: null,
-                loading: false,
-            };
-        case 'GET_QUALITY_MASTER_FAILURE':
-            return {
-                ...state,
-                qualityMasterListing: null,
-                error: action.error,
-                loading: false,
-            };
-        case 'GET_MIX_DESIGN_FORM_INFO_REQUEST':
-            return {
-                ...state,
-                error: null,
-                loading: true,
-            };
-        case 'GET_MIX_DESIGN_FORM_INFO_SUCCESS':
-            return {
-                ...state,
-                qualityMixDesignFormInfo: action.response,
-                error: null,
-                loading: false,
-            };
-        case 'GET_MIX_DESIGN_FORM_INFO_FAILURE':
-            return {
-                ...state,
-                qualityMixDesignFormInfo: null,
-                error: action.error,
-                loading: false,
-            };
-        case 'SAVE_MIX_DESIGN_FORM_INFO_REQUEST':
-            return {
-                ...state,
-                error: null,
-                loading: true,
-            };
-        case 'SAVE_MIX_DESIGN_FORM_INFO_SUCCESS':
-            return {
-                ...state,
-                savedMixDesignFormInfo: action.response,
-                error: null,
-                loading: false,
-            };
-        case 'SAVE_MIX_DESIGN_FORM_INFO_FAILURE':
-            return {
-                ...state,
-                savedMixDesignFormInfo: null,
-                error: action.error,
-                loading: false,
-            };
-        default:
-            return state;
+      case 'GET_RFI_TASKS_REQUEST':
+        return {
+          ...state,
+          error: null,
+          loading: true,
+        };
+      case 'GET_RFI_TASKS_SUCCESS':
+        return {
+          ...state,
+          rfisTasks: action.response,
+          error: null,
+          loading: false,
+        };
+      case 'GET_RFI_TASKS_FAILURE':
+        return {
+          ...state,
+          rfisTasks: null,
+          error: action.error,
+          loading: false,
+        };
+      case 'GET_RFI_TASK_USERS_REQUEST':
+        return {
+          ...state,
+          error: null,
+          loading: true,
+        };
+      case 'GET_RFI_TASK_USERS_SUCCESS':
+        return {
+          ...state,
+          taskUsers: action.response,
+          error: null,
+          loading: false,
+        };
+      case 'GET_RFI_TASK_USERS_FAILURE':
+        return {
+          ...state,
+          taskUsers: null,
+          error: action.error,
+          loading: false,
+        };
+      case 'GENERATE_RFI_REQUEST':
+        return {
+          ...state,
+          error: null,
+          loading: true,
+        };
+      case 'GENERATE_RFI_SUCCESS':
+        return {
+          ...state,
+          rfiGenerated: action.response,
+          error: null,
+          loading: false,
+        };
+      case 'GENERATE_RFI_FAILURE':
+        return {
+          ...state,
+          rfiGenerated: null,
+          error: action.error,
+          loading: false,
+        };
+      case 'GET_RFI_REQUEST':
+        return {
+          ...state,
+          error: null,
+          loading: true,
+        };
+      case 'GET_RFI_SUCCESS':
+        return {
+          ...state,
+          rfiDataList: action.response,
+          error: null,
+          loading: false,
+        };
+      case 'GET_RFI_FAILURE':
+        return {
+          ...state,
+          rfiDataList: null,
+          error: action.error,
+          loading: false,
+        };
+      case 'GET_TEST_RFI_REQUEST':
+        return {
+          ...state,
+          error: null,
+          loading: true,
+        };
+      case 'GET_TEST_RFI_SUCCESS':
+        return {
+          ...state,
+          rfiDataList: action.response,
+          error: null,
+          loading: false,
+        };
+      case 'GET_TEST_RFI_FAILURE':
+        return {
+          ...state,
+          rfiDataList: null,
+          error: action.error,
+          loading: false,
+        };
+      case 'UPDATE_RFI_REQUEST':
+        return {
+          ...state,
+          error: null,
+          rfiUpdated: null,
+          loading: true,
+        };
+      case 'UPDATE_RFI_SUCCESS':
+        return {
+          ...state,
+          rfiUpdated: action.response,
+          error: null,
+          loading: false,
+        };
+      case 'UPDATE_RFI_FAILURE':
+        return {
+          ...state,
+          rfiUpdated: null,
+          error: action.error,
+          loading: false,
+        };
+      case 'UPDATE_TEST_RFI_REQUEST':
+        return {
+          ...state,
+          rfiUpdated: null,
+          error: null,
+          loading: true,
+        };
+      case 'UPDATE_TEST_RFI_SUCCESS':
+        return {
+          ...state,
+          rfiUpdated: action.response,
+          error: null,
+          loading: false,
+        };
+      case 'UPDATE_TEST_RFI_FAILURE':
+        return {
+          ...state,
+          rfiUpdated: null,
+          error: action.error,
+          loading: false,
+        };
+      case 'DOWNLOAD_REPORT_REQUEST':
+        return {
+          ...state,
+          error: null,
+          loading: true,
+        };
+      case 'DOWNLOAD_REPORT_SUCCESS':
+        return {
+          ...state,
+          reportdownloaded: action.response,
+          error: null,
+          loading: false,
+        };
+      case 'DOWNLOAD_REPORT_FAILURE':
+        return {
+          ...state,
+          reportdownloaded: null,
+          error: action.error,
+          loading: false,
+        };
+      case 'CLEAR_RFI_REQUEST':
+        return {
+          ...state,
+          rfiDataList: null,
+          rfiUpdated: null,
+          reportdownloaded: null,
+          labTestRfiGenerated: null,
+          qualityMasterListing: null,
+          qualityMixDesignFormInfo: null,
+          savedMixDesignFormInfo: null,
+          error: null,
+          loading: false,
+        };
+      case 'GENERATE_LAB_TEST_RFI_REQUEST':
+        return {
+          ...state,
+          error: null,
+          loading: true,
+        };
+      case 'GENERATE_LAB_TEST_RFI_SUCCESS':
+        return {
+          ...state,
+          labTestRfiGenerated: action.response,
+          error: null,
+          loading: false,
+        };
+      case 'GENERATE_LAB_TEST_RFI_FAILURE':
+        return {
+          ...state,
+          labTestRfiGenerated: null,
+          error: action.error,
+          loading: false,
+        };
+      case 'GET_QUALITY_MASTER_REQUEST':
+        return {
+          ...state,
+          error: null,
+          loading: true,
+        };
+      case 'GET_QUALITY_MASTER_SUCCESS':
+        return {
+          ...state,
+          qualityMasterListing: action.response,
+          error: null,
+          loading: false,
+        };
+      case 'GET_QUALITY_MASTER_FAILURE':
+        return {
+          ...state,
+          qualityMasterListing: null,
+          error: action.error,
+          loading: false,
+        };
+      case 'GET_MIX_DESIGN_FORM_INFO_REQUEST':
+        return {
+          ...state,
+          error: null,
+          loading: true,
+        };
+      case 'GET_MIX_DESIGN_FORM_INFO_SUCCESS':
+        return {
+          ...state,
+          qualityMixDesignFormInfo: action.response,
+          error: null,
+          loading: false,
+        };
+      case 'GET_MIX_DESIGN_FORM_INFO_FAILURE':
+        return {
+          ...state,
+          qualityMixDesignFormInfo: null,
+          error: action.error,
+          loading: false,
+        };
+      case 'SAVE_MIX_DESIGN_FORM_INFO_REQUEST':
+        return {
+          ...state,
+          error: null,
+          loading: true,
+        };
+      case 'SAVE_MIX_DESIGN_FORM_INFO_SUCCESS':
+        return {
+          ...state,
+          savedMixDesignFormInfo: action.response,
+          error: null,
+          loading: false,
+        };
+      case 'SAVE_MIX_DESIGN_FORM_INFO_FAILURE':
+        return {
+          ...state,
+          savedMixDesignListInfo: null,
+          error: action.error,
+          loading: false,
+        };
+      case 'GET_MIX_DESIGN_LIST_INFO_REQUEST':
+        return {
+          ...state,
+          error: null,
+          loading: true,
+        };
+      case 'GET_MIX_DESIGN_LIST_INFO_SUCCESS':
+        return {
+          ...state,
+          qualityMixDesignListInfo: action.response,
+          error: null,
+          loading: false,
+        };
+      case 'GET_MIX_DESIGN_LIST_INFO_FAILURE':
+        return {
+          ...state,
+          qualityMixDesignListInfo: null,
+          error: action.error,
+          loading: false,
+        };
+      default:
+        return state;
     }
 }
 

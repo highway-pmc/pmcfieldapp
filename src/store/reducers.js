@@ -1589,6 +1589,7 @@ const RFIsReducer = (state = myWorksState, action) => {
           qualityMasterListing: null,
           qualityMixDesignFormInfo: null,
           savedMixDesignFormInfo: null,
+          qualityMixDesignListInfo: null,
           error: null,
           loading: false,
         };

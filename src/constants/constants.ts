@@ -44,6 +44,8 @@ export const HeaderItems = {
   assignTestTypes: {showBack: true, title: 'Assign Test Types'},
   sourceApprovals: {showBack: true, title: 'Source Approvals'},
   procurements: {showBack: true, title: 'Procurements'},
+  mixDesignListing: {showBack: false, title: 'Mix Design'},
+  mixDesignInfo: {showBack: true, title: 'Mix Design'},
 };
 
 export const UserRoles = {
@@ -100,7 +102,7 @@ export const Dashboard_MENU = [
     iconMenu: require('./../images/menu/mywork-icon.png'),
     title: 'Mix Design',
     subTitle: 'Mix Design',
-    route: 'MixDesign',
+    route: 'MixDesignList',
     permissions: ['project-head', 'quality-head'],
     categories: ['quality-work'],
   },

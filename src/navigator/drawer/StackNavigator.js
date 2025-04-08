@@ -140,13 +140,14 @@ const MixDesignStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
       <Stack.Screen
-        name="MixDesign"
-        component={MixDesign}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
         name="MixDesignList"
         component={MixDesignList}
+        options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name="MixDesign"
+        component={MixDesign}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

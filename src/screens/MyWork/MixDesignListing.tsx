@@ -1,147 +1,87 @@
 import React, {useEffect, useState} from 'react';
 import {
   View,
-  Text,
   StyleSheet,
   ScrollView,
-  TouchableOpacity,
   Dimensions,
-  TextInput,
+  Text,
+  TouchableOpacity,
+  NativeEventEmitter,
 } from 'react-native';
-import {
-  RFIs_TYPE,
-  SAMPLE_BY_LIST,
-  TEST_CONDUCTED_BY_LIST,
-} from '../../constants/constants';
 import CustomSelectDropdown from '../Common/CustomSelectDropdown';
-import CalendarPicker from '../../components/UI/CalenderPicker';
-import TimePicker from '../../components/UI/TimePicker';
 import {useSnackbar} from '../../context/SnackbarContext';
 import {useDispatch, useSelector} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
 import LoadingAnimation from '../Common/LoadingAnimation';
 import {
   getQualityMasterList,
-  getMixDesignFormInfo,
-  saveMixDesignFormInfo,
   clearRFITasksEvent,
   getMixDesignListInfo,
 } from '../RFIs/actions';
-import appConfig from '../../common/app.config';
-import {set} from 'date-fns';
-import DropdownPicker from '../../components/UI/DropdownPicker';
-import Input from '../../components/UI/Input';
-import {getDbDateFromDDMMYYYY} from '../../utils/Utils';
+import { HeaderItems } from '../../constants/constants';
 
-const MixDesignList = ({route}: {route: any}) => {
+const MixDesignList = ({navigation, route}: {navigation: any, route: any}) => {
   const {height} = Dimensions.get('window');
   const calculatedHeight = height * 0.75;
   const {showSnackbar} = useSnackbar();
   const focus = useIsFocused();
 
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-
   const [selectedTestCategoryData, setSelectedTestCategoryData] = useState<any>(
     {},
   );
-  const [selectedMaterialTypeData, setSelectedMaterialTypeData] = useState<any>(
-    {},
-  );
-  const [
-    selectedMaterialTypeCategoryData,
-    setSelectedMaterialTypeCategoryData,
-  ] = useState<any>('');
-  const [dateOfSampling, setDateOfSampling] = useState('');
-  const [dateOfTesting, setDateOfTesting] = useState('');
-  const [totalQty, setTotalQty] = useState('');
-  const [sampleBy, setSampleBy] = useState('Concessionaire');
-  const [mixDesignConductedBy, setMixDesignConductedBy] =
-    useState('Concessionaire');
-  const [qualityMixDesignFormInfoData, setQualityMixDesignFormInfoData]: any =
-    useState(null);
   const dispatch = useDispatch();
 
   const {
-    savedMixDesignFormInfo,
     qualityMasterListing,
-    qualityMixDesignFormInfo,
-    loading,
     qualityMixDesignListInfo,
+    loading,
     error,
   } = useSelector((state: any) => state.RFIs);
 
+  if (useIsFocused()) {
+    const eventEmitter = new NativeEventEmitter();
+    eventEmitter.emit('headerEvent', HeaderItems.mixDesignListing);
+  }
+  
   useEffect(() => {
     if (focus == true) {
       dispatch(clearRFITasksEvent());
       dispatch(getQualityMasterList({testType: 'mix-design'}));
-      setDateOfSampling('');
-      setDateOfTesting('');
-      setTotalQty('');
-      setSampleBy('Concessionaire');
-      setMixDesignConductedBy('Concessionaire');
-      setSelectedTestCategoryData(null);
-      setSelectedMaterialTypeData(null);
-      setSelectedMaterialTypeCategoryData('');
-      setQualityMixDesignFormInfoData(null);
     }
   }, [focus]);
 
   useEffect(() => {
-    if (savedMixDesignFormInfo) {
-      showSnackbar('Data saved Succesfull');
-    }
-    if (qualityMixDesignFormInfo) {
-      setQualityMixDesignFormInfoData(qualityMixDesignFormInfo);
-    }
+   
     if (error) {
       showSnackbar('Unable to saveMix design data');
       console.log('=======ERROR=======', error);
     }
-  }, [savedMixDesignFormInfo, qualityMixDesignFormInfo, error]);
+  }, [error]);
 
   const handleCategorySelect = (selectedOption: any) => {
     setSelectedTestCategoryData({...selectedOption});
-    setSelectedMaterialTypeData(null);
     handleFormData(selectedOption);
-  };
-
-  const handleMixDesignTypeSelect = (selectedOption: any) => {
-    setSelectedMaterialTypeData({...selectedOption});
-    setSelectedMaterialTypeCategoryData('');
-    // setTimeout(() => {
-    //   handleFormData();
-    // });
-  };
-
-  const handleMixDesignTypeCateorySelect = (selectedOption: any) => {
-    setSelectedMaterialTypeCategoryData(selectedOption);
-    dispatch(
-      getMixDesignListInfo({
-        projectId: loggedInUser.projectId,
-        testWorkCategoryType: selectedOption.type,
-        testMaterialId: selectedMaterialTypeData?._id || 'NA',
-      }),
-    );
-    console.log('==== Info Fetched ===', qualityMixDesignListInfo);
   };
 
   const handleFormData = async (testCategoryData: any) => {
     dispatch(
-      getMixDesignFormInfo({
+      getMixDesignListInfo({
         projectId: loggedInUser.projectId,
         testWorkCategoryType: testCategoryData.type,
-        testMaterialId: selectedMaterialTypeData?._id || 'NA',
+        testMaterialId: 'NA',
       }),
     );
-  };
-
-  const renderMixDesignList = () => {
-    return <View style={styles.mixDesignContainer}></View>;
   };
 
   return (
     <View style={styles.recentWorkContainer}>
       <ScrollView>
+        <TouchableOpacity style={styles.btnCtaOutline} onPress={() => {
+          navigation.navigate("MixDesign")
+        }}>
+          <Text style={styles.btnCtaTextOutline}>Add mix design</Text>
+        </TouchableOpacity>
         <View style={styles.innerScrollView}>
           <CustomSelectDropdown
             label="Test Category"
@@ -149,21 +89,14 @@ const MixDesignList = ({route}: {route: any}) => {
             selectedValue={selectedTestCategoryData}
             onSelect={handleCategorySelect}
           />
-          <CustomSelectDropdown
-            label="Mix Design Type"
-            data={selectedTestCategoryData?.materialTypeData}
-            selectedValue={selectedMaterialTypeData}
-            onSelect={handleMixDesignTypeSelect}
-          />
-          <CustomSelectDropdown
-            label="Mix Design Type Category"
-            data={selectedMaterialTypeData?.category}
-            selectedValue={selectedMaterialTypeCategoryData}
-            itemTypeOf="string"
-            onSelect={handleMixDesignTypeCateorySelect}
-          />
-          {qualityMixDesignFormInfoData?.length && renderMixDesignList()}
         </View>
+        {
+          qualityMixDesignListInfo?.map((item: any, index: number) => {
+            return (
+              <Text>{item.name}</Text>
+            )
+          })
+        }
       </ScrollView>
       <LoadingAnimation loading={loading} />
     </View>

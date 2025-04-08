@@ -68,6 +68,6 @@ export const saveMixDesignFormInfo = (payload) => ({
 });
 
 export const getMixDesignListInfo = payload => ({
-  type: 'GET_MIX_DESIGN_FORM_INFO_REQUEST',
+  type: 'GET_MIX_DESIGN_LIST_INFO_REQUEST',
   payload: payload,
 });

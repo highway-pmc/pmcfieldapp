@@ -7,8 +7,9 @@ import {
   TouchableOpacity,
   Dimensions,
   TextInput,
+  NativeEventEmitter,
 } from 'react-native';
-import { RFIs_TYPE, SAMPLE_BY_LIST, TEST_CONDUCTED_BY_LIST } from '../../constants/constants';
+import { HeaderItems, RFIs_TYPE, SAMPLE_BY_LIST, TEST_CONDUCTED_BY_LIST } from '../../constants/constants';
 import CustomSelectDropdown from '../Common/CustomSelectDropdown';
 import CalendarPicker from '../../components/UI/CalenderPicker';
 import TimePicker from '../../components/UI/TimePicker';
@@ -23,7 +24,7 @@ import DropdownPicker from '../../components/UI/DropdownPicker';
 import Input from '../../components/UI/Input';
 import { getDbDateFromDDMMYYYY } from '../../utils/Utils';
 
-const MixDesign = ({ route }: { route: any }) => {
+const MixDesign = ({ navigation, route }: { navigation: any, route: any }) => {
   const { height } = Dimensions.get('window');
   const calculatedHeight = height * 0.75;
   const { showSnackbar } = useSnackbar();
@@ -52,6 +53,11 @@ const MixDesign = ({ route }: { route: any }) => {
     error,
   } = useSelector((state: any) => state.RFIs);
 
+  if (useIsFocused()) {
+    const eventEmitter = new NativeEventEmitter();
+    eventEmitter.emit('headerEvent', HeaderItems.mixDesignInfo);
+  }
+    
   useEffect(() => {
     if (focus == true) {
       dispatch(clearRFITasksEvent());
@@ -72,6 +78,9 @@ const MixDesign = ({ route }: { route: any }) => {
   useEffect(() => {
     if (savedMixDesignFormInfo) {
       showSnackbar('Data saved Succesfull');
+      setTimeout(() => {
+        navigation.navigate("MixDesignList")
+      }, 3000)
     }
     if (qualityMixDesignFormInfo) {
       setQualityMixDesignFormInfoData(qualityMixDesignFormInfo);

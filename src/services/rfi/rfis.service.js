@@ -152,3 +152,21 @@ export const getQualityMasterApi = async (testType) => {
         throw new Error(errorMessge);
     });
 }
+
+export const getMixDesignApi = async (
+  testWorkCategoryId,
+  testWorkCategorytype,
+  materialTypeId,
+) => {
+  return apiService
+    .getRequest(
+      `v1/auth/projects/${testWorkCategoryId}/test-work-category/${testWorkCategorytype}/test-material/${materialTypeId}/mix-design-info`,
+    )
+    .then(response => {
+      return response;
+    })
+    .catch(err => {
+      const errorMessge = err.message || 'Unable to get Quality Master.';
+      throw new Error(errorMessge);
+    });
+};

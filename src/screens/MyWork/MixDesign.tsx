@@ -17,6 +17,9 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
 import LoadingAnimation from '../Common/LoadingAnimation';
 import {Input} from 'react-native-elements';
+import {getQualityMasterList, getMixDesignList} from '../RFIs/actions';
+import appConfig from '../../common/app.config';
+import {set} from 'date-fns';
 
 const MixDesign = ({route}: {route: any}) => {
   const {height} = Dimensions.get('window');
@@ -31,6 +34,8 @@ const MixDesign = ({route}: {route: any}) => {
     subTestTypes?: any[];
     _id?: any;
     testCategory?: string;
+    category?: any[]; // Added category property
+    type?: string; // Added type property
   }
 
   const [labTestDropdownData, setLabTestDropdownData] = useState<MaterialData>(
@@ -48,32 +53,62 @@ const MixDesign = ({route}: {route: any}) => {
   const [sampleBy, setSampleBy] = useState('');
   const [mixDesignConductedBy, setMixDesignConductedBy] = useState('');
   const dispatch = useDispatch();
-  const {qualityMasterListing, loading} = useSelector(
-    (state: any) => state.RFIs,
-  );
+  const [data, setData] = useState<any>();
+  const {
+    labTestRfiGenerated,
+    qualityMasterListing,
+    qualityMixDesignListing,
+    loading,
+    error,
+  } = useSelector((state: any) => state.RFIs);
 
-  useEffect(() => {}, []);
+  //id for url
+  const [idCategorySelected, setIdCategorySelected] = useState('');
+  const [idTypeSelected, setIdTypeSelected] = useState('');
+  useEffect(() => {
+    dispatch(getQualityMasterList({testType: 'mix-design'}));
+    if (qualityMasterListing?.testWorkCategoryData?.length) {
+      setLabTestDropdownData(qualityMasterListing);
+    }
+    console.log('===Mix-Design====', labTestDropdownData);
+  }, [labTestDropdownData]);
 
   const handleCategorySelect = (selectedOption: any) => {
     setSelectedValues(selectedOption);
+    setIdCategorySelected(selectedOption?._id);
     setSelectedMaterialTypeData({});
     setSelectedTestTypeData({});
     setSelectedSubTestTypeData({});
+
+    //console.log('===Mix-Design-Category====', selectedOption);
   };
 
   const handleMixDesignTypeSelect = (selectedOption: any) => {
     setSelectedMaterialTypeData(selectedOption);
+    setIdTypeSelected(selectedOption?._id);
     setSelectedTestTypeData({});
     setSelectedSubTestTypeData({});
+
+    // console.log('===Mix-Design-Type====', selectedOption);
   };
 
   const handleMixDesignTypeCateorySelect = (selectedOption: any) => {
     setSelectedTestTypeData(selectedOption);
     setSelectedSubTestTypeData({});
+    //console.log('===Mix-Design-Type-Category====', selectedOption);
+    handleFormData();
   };
-
-  const handleSubTestTypeSelect = (selectedOption: any) => {
-    setSelectedSubTestTypeData(selectedOption);
+  //http://localhost:4000/v1/auth/projects/669ba9f0e3b37a3b66e221ef/test-work-category/sub-base/test-material/67bb73db5fa264d1da3cc824/mix-design-info
+  const handleFormData = async () => {
+   // let url = `${appConfig.API_URL}/v1/auth/projects/${selectedValues._id}/test-work-category/${selectedValues.type}/test-material/${selectedMaterialTypeData._id}/mix-design-info`;
+    dispatch(
+      getMixDesignList({
+        testWorkCategoryId: selectedValues._id,
+        testWorkCategorytype: selectedValues.type,
+        materialTypeId: selectedMaterialTypeData._id,
+      }),
+    );
+    //todo
   };
   const renderMixDesign = () => {
     return (
@@ -205,7 +240,7 @@ const MixDesign = ({route}: {route: any}) => {
           />
           <CustomSelectDropdown
             label="Mix Design Type Category"
-            data={selectedMaterialTypeData?.testTypeData}
+            data={selectedMaterialTypeData?.category}
             selectedValue={selectedTestTypeData}
             onSelect={handleMixDesignTypeCateorySelect}
           />

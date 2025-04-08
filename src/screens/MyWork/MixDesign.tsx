@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -9,40 +9,57 @@ import {
   TextInput,
   NativeEventEmitter,
 } from 'react-native';
-import { HeaderItems, RFIs_TYPE, SAMPLE_BY_LIST, TEST_CONDUCTED_BY_LIST } from '../../constants/constants';
+import {
+  HeaderItems,
+  RFIs_TYPE,
+  SAMPLE_BY_LIST,
+  TEST_CONDUCTED_BY_LIST,
+} from '../../constants/constants';
 import CustomSelectDropdown from '../Common/CustomSelectDropdown';
 import CalendarPicker from '../../components/UI/CalenderPicker';
 import TimePicker from '../../components/UI/TimePicker';
-import { useSnackbar } from '../../context/SnackbarContext';
-import { useDispatch, useSelector } from 'react-redux';
-import { useIsFocused } from '@react-navigation/native';
+import {useSnackbar} from '../../context/SnackbarContext';
+import {useDispatch, useSelector} from 'react-redux';
+import {useIsFocused} from '@react-navigation/native';
 import LoadingAnimation from '../Common/LoadingAnimation';
-import { getQualityMasterList, getMixDesignFormInfo, saveMixDesignFormInfo, clearRFITasksEvent } from '../RFIs/actions';
+import {
+  getQualityMasterList,
+  getMixDesignFormInfo,
+  saveMixDesignFormInfo,
+  clearRFITasksEvent,
+} from '../RFIs/actions';
 import appConfig from '../../common/app.config';
-import { set } from 'date-fns';
+import {set} from 'date-fns';
 import DropdownPicker from '../../components/UI/DropdownPicker';
 import Input from '../../components/UI/Input';
-import { getDbDateFromDDMMYYYY } from '../../utils/Utils';
+import {getDbDateFromDDMMYYYY} from '../../utils/Utils';
 
-const MixDesign = ({ navigation, route }: { navigation: any, route: any }) => {
-  const { height } = Dimensions.get('window');
+const MixDesign = ({navigation, route}: {navigation: any; route: any}) => {
+  const {height} = Dimensions.get('window');
   const calculatedHeight = height * 0.75;
-  const { showSnackbar } = useSnackbar();
+  const {showSnackbar} = useSnackbar();
   const focus = useIsFocused();
 
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
 
-  const [selectedTestCategoryData, setSelectedTestCategoryData] = useState<any>({});
-  const [selectedMaterialTypeData, setSelectedMaterialTypeData] =
-    useState<any>({});
-  const [selectedMaterialTypeCategoryData, setSelectedMaterialTypeCategoryData] =
-    useState<any>('');
+  const [selectedTestCategoryData, setSelectedTestCategoryData] = useState<any>(
+    {},
+  );
+  const [selectedMaterialTypeData, setSelectedMaterialTypeData] = useState<any>(
+    {},
+  );
+  const [
+    selectedMaterialTypeCategoryData,
+    setSelectedMaterialTypeCategoryData,
+  ] = useState<any>('');
   const [dateOfSampling, setDateOfSampling] = useState('');
-  const [dateOfTesting, setDateOfTesting] = useState('');
   const [totalQty, setTotalQty] = useState('');
   const [sampleBy, setSampleBy] = useState('Concessionaire');
-  const [mixDesignConductedBy, setMixDesignConductedBy] = useState('Concessionaire');
-  const [qualityMixDesignFormInfoData, setQualityMixDesignFormInfoData]: any = useState(null);
+  const [mixDesignConductedBy, setMixDesignConductedBy] =
+    useState('Concessionaire');
+  const [qualityMixDesignFormInfoData, setQualityMixDesignFormInfoData]: any =
+    useState(null);
+  const [recommend, setRecommend] = useState<any>();
   const dispatch = useDispatch();
 
   const {
@@ -57,13 +74,12 @@ const MixDesign = ({ navigation, route }: { navigation: any, route: any }) => {
     const eventEmitter = new NativeEventEmitter();
     eventEmitter.emit('headerEvent', HeaderItems.mixDesignInfo);
   }
-    
+
   useEffect(() => {
     if (focus == true) {
       dispatch(clearRFITasksEvent());
-      dispatch(getQualityMasterList({ testType: 'mix-design' }));
+      dispatch(getQualityMasterList({testType: 'mix-design'}));
       setDateOfSampling('');
-      setDateOfTesting('');
       setTotalQty('');
       setSampleBy('Concessionaire');
       setMixDesignConductedBy('Concessionaire');
@@ -74,33 +90,33 @@ const MixDesign = ({ navigation, route }: { navigation: any, route: any }) => {
     }
   }, [focus]);
 
-
   useEffect(() => {
     if (savedMixDesignFormInfo) {
       showSnackbar('Data saved Succesfull');
       setTimeout(() => {
-        navigation.navigate("MixDesignList")
-      }, 3000)
+        navigation.navigate('MixDesignListing');
+      }, 3000);
     }
     if (qualityMixDesignFormInfo) {
       setQualityMixDesignFormInfoData(qualityMixDesignFormInfo);
     }
     if (error) {
       showSnackbar('Unable to saveMix design data');
-      console.log('=======ERROR=======', error)
+      console.log('=======ERROR=======', error);
     }
   }, [savedMixDesignFormInfo, qualityMixDesignFormInfo, error]);
-
 
   const handleCategorySelect = (selectedOption: any) => {
     setSelectedTestCategoryData({...selectedOption});
     setSelectedMaterialTypeData(null);
     handleFormData(selectedOption);
+    console.log('======', selectedOption);
   };
 
   const handleMixDesignTypeSelect = (selectedOption: any) => {
     setSelectedMaterialTypeData({...selectedOption});
     setSelectedMaterialTypeCategoryData('');
+    console.log('======', selectedOption);
     // setTimeout(() => {
     //   handleFormData();
     // });
@@ -108,6 +124,7 @@ const MixDesign = ({ navigation, route }: { navigation: any, route: any }) => {
 
   const handleMixDesignTypeCateorySelect = (selectedOption: any) => {
     setSelectedMaterialTypeCategoryData(selectedOption);
+    console.log('======', selectedOption);
   };
 
   const handleFormData = async (testCategoryData: any) => {
@@ -123,7 +140,7 @@ const MixDesign = ({ navigation, route }: { navigation: any, route: any }) => {
   const handleSourceSelect = (item: any, selectedOption: any) => {
     item.selectedSource = selectedOption;
 
-    setQualityMixDesignFormInfoData([...qualityMixDesignFormInfoData])
+    setQualityMixDesignFormInfoData([...qualityMixDesignFormInfoData]);
   };
 
   const handleInputChange = (item: any, value: string, fieldName: string) => {
@@ -139,16 +156,27 @@ const MixDesign = ({ navigation, route }: { navigation: any, route: any }) => {
         _id: item._id,
         materialType: item.materialType,
         name: item.name,
-        selectedSource: item.selectedSource ? {
-          _id: item.selectedSource._id,
-          name: item.selectedSource.name
-        } : null,
+        selectedSource: item.selectedSource
+          ? {
+              _id: item.selectedSource._id,
+              name: item.selectedSource.name,
+            }
+          : null,
         qty: item.qty,
       });
     });
 
-    console.log('===============', selectedTestCategoryData, selectedMaterialTypeData, selectedMaterialTypeCategoryData);
-    if (!selectedTestCategoryData || !selectedMaterialTypeData || !selectedMaterialTypeCategoryData) {
+    console.log(
+      '===============',
+      selectedTestCategoryData,
+      selectedMaterialTypeData,
+      selectedMaterialTypeCategoryData,
+    );
+    if (
+      !selectedTestCategoryData ||
+      !selectedMaterialTypeData ||
+      !selectedMaterialTypeCategoryData
+    ) {
       return;
     }
 
@@ -159,38 +187,35 @@ const MixDesign = ({ navigation, route }: { navigation: any, route: any }) => {
         testWorkCategoryType: selectedTestCategoryData?.type,
         testMaterialId: selectedMaterialTypeData?._id,
         body: {
-          name: 'Mix Design', // TODO
-          comments: '', // TODO
+          name: `${selectedTestCategoryData.name}-${selectedMaterialTypeData.name}-${selectedMaterialTypeCategoryData}`,
+          comments: recommend,
           mixDesignData: {
             dateOfSampling: getDbDateFromDDMMYYYY(dateOfSampling),
-            dateOfTesting: getDbDateFromDDMMYYYY(dateOfTesting),
             sampleBy: sampleBy,
             conductedBy: mixDesignConductedBy,
             materialCategory: selectedMaterialTypeCategoryData,
             totalQty: totalQty,
             materialsData: materialsData,
-          }
-        }
+          },
+        },
       }),
     );
   };
-
 
   const renderMixDesign = () => {
     return (
       <View style={styles.mixDesignContainer}>
         <View style={styles.inputContainer}>
           <Text style={styles.inputLabel}>
-            Total qty of {selectedMaterialTypeData?.name} in Kg considered for composition
+            Total qty of {selectedMaterialTypeData?.name} in Kg considered for
+            composition
           </Text>
           <View style={styles.inputWrapper}>
             <Input
               value={totalQty}
               style={styles.input}
               label=">0, 3 dec, max limit 10000"
-              onChange={(value: string) =>
-                setTotalQty(value)
-              }
+              onChange={(value: string) => setTotalQty(value)}
               isRequired={true}
             />
           </View>
@@ -198,30 +223,31 @@ const MixDesign = ({ navigation, route }: { navigation: any, route: any }) => {
 
         <View style={styles.tableContainer}>
           <View style={styles.tableHeader}>
-            <Text style={[styles.tableHeaderCell, { flex: 2 }]}>
+            <Text style={[styles.tableHeaderCell, {flex: 2}]}>
               Description of Material
             </Text>
-            <Text style={[styles.tableHeaderCell, { flex: 3 }]}>
+            <Text style={[styles.tableHeaderCell, {flex: 3}]}>
               Source of Material
             </Text>
-            <Text style={[styles.tableHeaderCell, { flex: 1 }]}>Qty in Kg</Text>
+            <Text style={[styles.tableHeaderCell, {flex: 1}]}>Qty in Kg</Text>
           </View>
 
-          {
-            qualityMixDesignFormInfoData?.map((item: any, index: number) => {
-              return (
-                <View key={index} style={styles.tableRow}>
-                  <Text style={[styles.tableCell, { flex: 2 }]}>{item.name}</Text>
-                  <View style={[styles.tableCellDropdown, { flex: 3 }]}>
-                    <CustomSelectDropdown
-                      label=""
-                      data={item.sourceApprovals}
-                      selectedValue={item.selectedSource}
-                      onSelect={(selectedItem: any) => handleSourceSelect(item, selectedItem)}
-                    />
-                  </View>
-                  <View style={[styles.tableCellInput, { flex: 1 }]}>
-                    {/* <TextInput
+          {qualityMixDesignFormInfoData?.map((item: any, index: number) => {
+            return (
+              <View key={index} style={styles.tableRow}>
+                <Text style={[styles.tableCell, {flex: 2}]}>{item.name}</Text>
+                <View style={[styles.tableCellDropdown, {flex: 3}]}>
+                  <CustomSelectDropdown
+                    label=""
+                    data={item.sourceApprovals}
+                    selectedValue={item.selectedSource}
+                    onSelect={(selectedItem: any) =>
+                      handleSourceSelect(item, selectedItem)
+                    }
+                  />
+                </View>
+                <View style={[styles.tableCellInput, {flex: 1}]}>
+                  {/* <TextInput
                       value={item.selectedQty}
                       style={styles.qtyInput}
                       placeholder=">0, 3 dec, max limit 10000"
@@ -229,19 +255,26 @@ const MixDesign = ({ navigation, route }: { navigation: any, route: any }) => {
                       placeholderTextColor="#999"
                     /> */}
 
-                    <Input
-                      label=""
-                      value={item.qty}
-                      onChange={(value: string) =>
-                        handleInputChange(item, value, 'qty')
-                      }
-                    />
-                  </View>
+                  <Input
+                    label=""
+                    value={item.qty}
+                    onChange={(value: string) =>
+                      handleInputChange(item, value, 'qty')
+                    }
+                  />
                 </View>
-              );
-            })
-
-          }
+              </View>
+            );
+          })}
+          <View style={styles.inputWrapper}>
+            <Input
+              value={recommend}
+              style={styles.input}
+              label=">0, 3 dec, max limit 10000"
+              onChange={(value: string) => setRecommend(value)}
+              isRequired={true}
+            />
+          </View>
         </View>
       </View>
     );
@@ -257,14 +290,6 @@ const MixDesign = ({ navigation, route }: { navigation: any, route: any }) => {
               value={dateOfSampling}
               onChange={(value: any) => {
                 setDateOfSampling(value);
-              }}
-            />
-
-            <CalendarPicker
-              label="Date of sampling"
-              value={dateOfTesting}
-              onChange={(value: any) => {
-                setDateOfTesting(value);
               }}
             />
             <DropdownPicker

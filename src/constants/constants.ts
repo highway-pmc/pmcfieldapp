@@ -102,7 +102,7 @@ export const Dashboard_MENU = [
     iconMenu: require('./../images/menu/mywork-icon.png'),
     title: 'Mix Design',
     subTitle: 'Mix Design',
-    route: 'MixDesignList',
+    route: 'MixDesignListing',
     permissions: ['project-head', 'quality-head'],
     categories: ['quality-work'],
   },

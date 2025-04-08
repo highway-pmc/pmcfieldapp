@@ -7,6 +7,7 @@ import {
   Text,
   TouchableOpacity,
   NativeEventEmitter,
+  Image,
 } from 'react-native';
 import CustomSelectDropdown from '../Common/CustomSelectDropdown';
 import {useSnackbar} from '../../context/SnackbarContext';
@@ -18,9 +19,9 @@ import {
   clearRFITasksEvent,
   getMixDesignListInfo,
 } from '../RFIs/actions';
-import { HeaderItems } from '../../constants/constants';
+import {HeaderItems} from '../../constants/constants';
 
-const MixDesignList = ({navigation, route}: {navigation: any, route: any}) => {
+const MixDesignListing = ({navigation, route}: {navigation: any; route: any}) => {
   const {height} = Dimensions.get('window');
   const calculatedHeight = height * 0.75;
   const {showSnackbar} = useSnackbar();
@@ -32,18 +33,14 @@ const MixDesignList = ({navigation, route}: {navigation: any, route: any}) => {
   );
   const dispatch = useDispatch();
 
-  const {
-    qualityMasterListing,
-    qualityMixDesignListInfo,
-    loading,
-    error,
-  } = useSelector((state: any) => state.RFIs);
+  const {qualityMasterListing, qualityMixDesignListInfo, loading, error} =
+    useSelector((state: any) => state.RFIs);
 
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();
     eventEmitter.emit('headerEvent', HeaderItems.mixDesignListing);
   }
-  
+
   useEffect(() => {
     if (focus == true) {
       dispatch(clearRFITasksEvent());
@@ -52,7 +49,6 @@ const MixDesignList = ({navigation, route}: {navigation: any, route: any}) => {
   }, [focus]);
 
   useEffect(() => {
-   
     if (error) {
       showSnackbar('Unable to saveMix design data');
       console.log('=======ERROR=======', error);
@@ -72,14 +68,17 @@ const MixDesignList = ({navigation, route}: {navigation: any, route: any}) => {
         testMaterialId: 'NA',
       }),
     );
+    console.log('======qualityMixDesign=======', qualityMixDesignListInfo);
   };
 
   return (
     <View style={styles.recentWorkContainer}>
       <ScrollView>
-        <TouchableOpacity style={styles.btnCtaOutline} onPress={() => {
-          navigation.navigate("MixDesign")
-        }}>
+        <TouchableOpacity
+          style={styles.btnCtaOutline}
+          onPress={() => {
+            navigation.navigate('MixDesign');
+          }}>
           <Text style={styles.btnCtaTextOutline}>Add mix design</Text>
         </TouchableOpacity>
         <View style={styles.innerScrollView}>
@@ -90,13 +89,37 @@ const MixDesignList = ({navigation, route}: {navigation: any, route: any}) => {
             onSelect={handleCategorySelect}
           />
         </View>
-        {
-          qualityMixDesignListInfo?.map((item: any, index: number) => {
-            return (
-              <Text>{item.name}</Text>
-            )
-          })
-        }
+        {qualityMixDesignListInfo?.map((item: any, index: number) => {
+          return (
+            <>
+              <View style={[styles.itemContainerSourceDetailList]}>
+                <Text style={styles.itemText}>{item.name}</Text>
+                <View style={styles.iconContainer}>
+                  {/* <TouchableOpacity onPress={() => console.log('Edit')}>
+                    <Image
+                      style={styles.ActionIcon}
+                      tintColor={'#333'}
+                      source={require('./../../../images/edit.png')}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => console.log('Trash')}>
+                    <Image
+                      style={styles.ActionIcon}
+                      tintColor={'#333'}
+                      source={require('./../../../images/trash.png')}
+                    />
+                  </TouchableOpacity>
+                  <Image
+                    style={styles.ActionIcon}
+                    tintColor={'#333'}
+                    onPress={() => handleSourceDetailDelete(item)}
+                    source={require('./../../../images/trash.png')}
+                  /> */}
+                </View>
+              </View>
+            </>
+          );
+        })}
       </ScrollView>
       <LoadingAnimation loading={loading} />
     </View>
@@ -104,6 +127,47 @@ const MixDesignList = ({navigation, route}: {navigation: any, route: any}) => {
 };
 
 const styles = StyleSheet.create({
+  ActionIcon: {
+    width: 20,
+    height: 20,
+  },
+  // container: {
+  //     flex: 1,
+  //     paddingTop: 40,
+  //     paddingHorizontal: 20,
+  //   },
+  itemContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 10,
+    marginVertical: 2,
+    backgroundColor: '#f9f9f9',
+    borderRadius: 4,
+    borderLeftWidth: 8,
+  },
+  itemContainerSourceDetailList: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 10,
+    marginVertical: 2,
+    backgroundColor: '#f9f9f9',
+  },
+  itemText: {
+    fontSize: 14,
+    maxWidth: 200,
+  },
+  iconContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    width: 110,
+  },
+  icon: {
+    margin: 0,
+    padding: 0,
+  },
   recentWorkContainer: {
     display: 'flex',
     flexDirection: 'column',
@@ -213,4 +277,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MixDesignList;
+export default MixDesignListing;

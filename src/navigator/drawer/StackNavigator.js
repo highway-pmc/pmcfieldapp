@@ -29,7 +29,7 @@ import RFIsGenerateMyWork from "../../screens/RFIs/RFIsGenerateMyWork";
 import SubComponentsList from "../../screens/ManageUsers/SubComponentsList";
 import MyQualityWorks from "../../screens/MyWork/MyQualityWorks";
 import MixDesign from "../../screens/MyWork/MixDesign";
-import MixDesignList from '../../screens/MyWork/MixDesignListing';
+import MixDesignListing from '../../screens/MyWork/MixDesignListing';
 import AssignTestWorkCategory from "../../screens/ManageUsers/QualityWorks/AssignTestWorkCategory";
 import AssignTestMaterials from "../../screens/ManageUsers/QualityWorks/AssignTestMaterials";
 import AssignTestTypes from "../../screens/ManageUsers/QualityWorks/AssignTestTypes";
@@ -140,8 +140,8 @@ const MixDesignStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
       <Stack.Screen
-        name="MixDesignList"
-        component={MixDesignList}
+        name="MixDesignListing"
+        component={MixDesignListing}
         options={{headerShown: false}}
       />
 

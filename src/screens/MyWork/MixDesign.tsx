@@ -214,7 +214,7 @@ const MixDesign = ({navigation, route}: {navigation: any; route: any}) => {
             <Input
               value={totalQty}
               style={styles.input}
-              label=">0, 3 dec, max limit 10000"
+              label=""
               onChange={(value: string) => setTotalQty(value)}
               isRequired={true}
             />
@@ -267,10 +267,11 @@ const MixDesign = ({navigation, route}: {navigation: any; route: any}) => {
             );
           })}
           <View style={styles.inputWrapper}>
+            <Text style={styles.inputLabel}>Recommendation</Text>
             <Input
               value={recommend}
               style={styles.input}
-              label=">0, 3 dec, max limit 10000"
+              label=""
               onChange={(value: string) => setRecommend(value)}
               isRequired={true}
             />

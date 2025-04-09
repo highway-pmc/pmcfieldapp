@@ -21,7 +21,13 @@ import {
 } from '../RFIs/actions';
 import {HeaderItems} from '../../constants/constants';
 
-const MixDesignListing = ({navigation, route}: {navigation: any; route: any}) => {
+const MixDesignListing = ({
+  navigation,
+  route,
+}: {
+  navigation: any;
+  route: any;
+}) => {
   const {height} = Dimensions.get('window');
   const calculatedHeight = height * 0.75;
   const {showSnackbar} = useSnackbar();
@@ -95,26 +101,20 @@ const MixDesignListing = ({navigation, route}: {navigation: any; route: any}) =>
               <View style={[styles.itemContainerSourceDetailList]}>
                 <Text style={styles.itemText}>{item.name}</Text>
                 <View style={styles.iconContainer}>
-                  {/* <TouchableOpacity onPress={() => console.log('Edit')}>
+                  <TouchableOpacity onPress={() => console.log('Edit')}>
                     <Image
                       style={styles.ActionIcon}
                       tintColor={'#333'}
-                      source={require('./../../../images/edit.png')}
+                      source={require('./../../images/edit.png')}
                     />
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => console.log('Trash')}>
                     <Image
                       style={styles.ActionIcon}
                       tintColor={'#333'}
-                      source={require('./../../../images/trash.png')}
+                      source={require('./../../images/trash.png')}
                     />
                   </TouchableOpacity>
-                  <Image
-                    style={styles.ActionIcon}
-                    tintColor={'#333'}
-                    onPress={() => handleSourceDetailDelete(item)}
-                    source={require('./../../../images/trash.png')}
-                  /> */}
                 </View>
               </View>
             </>

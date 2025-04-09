@@ -1,19 +1,36 @@
-import React, { useEffect, useState } from 'react';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import React, {useEffect, useState} from 'react';
+import {createDrawerNavigator} from '@react-navigation/drawer';
 import Main from './Main';
 import CustomDrawer from './CustomDrawer';
-import { ChangePasswordStackNavigator, ManageUsersStackNavigator, MyTaskStackNavigator, MyQualityWorksStackNavigator, MyWorkPHStackNavigator, MyWorkStackNavigator, ProfileStackNavigator, ProgressStackNavigator, ProjectInfoStackNavigator, RFIsStackNavigator, ReportsStackNavigator, MixDesignStackNavigator } from './StackNavigator';
+import {
+  ChangePasswordStackNavigator,
+  ManageUsersStackNavigator,
+  MyTaskStackNavigator,
+  MyQualityWorksStackNavigator,
+  MyWorkPHStackNavigator,
+  MyWorkStackNavigator,
+  ProfileStackNavigator,
+  ProgressStackNavigator,
+  ProjectInfoStackNavigator,
+  RFIsStackNavigator,
+  ReportsStackNavigator,
+  MixDesignStackNavigator,
+} from './StackNavigator';
 import ForgotPasswordStep3 from '../../screens/ForgotPassword/Step3';
-import { useSelector } from 'react-redux';
-import { ROLES } from '../../constants/constants';
+import {useSelector} from 'react-redux';
+import {ROLES} from '../../constants/constants';
 const Drawer = createDrawerNavigator();
 const DrawerNavigator = () => {
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
   const [projectHead, setProjectHead] = useState(false);
 
   useEffect(() => {
-    if(loggedInUser.roles) {
-      if (loggedInUser.roles.split(',').find((role: any) => role === ROLES.PROJECT_HEAD)) {
+    if (loggedInUser.roles) {
+      if (
+        loggedInUser.roles
+          .split(',')
+          .find((role: any) => role === ROLES.PROJECT_HEAD)
+      ) {
         setProjectHead(true);
       }
     }
@@ -78,7 +95,7 @@ const DrawerNavigator = () => {
         }}
       />
       <Drawer.Screen
-        name="MixDesign"
+        name="MixDesignListing"
         component={MixDesignStackNavigator}
         options={{
           headerShown: false,

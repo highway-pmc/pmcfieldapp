@@ -2834,7 +2834,7 @@ const SourceApprovals = ({
     <SafeAreaView style={styles.container}>
       <View>
         <View style={styles.reportFields}>
-          <View>
+          <View style={commonStyles.detailsSection}>
             <Text style={styles.AssignRoleText}>
               {testWorkCategoryName + ' > ' + testMaterialName}
             </Text>

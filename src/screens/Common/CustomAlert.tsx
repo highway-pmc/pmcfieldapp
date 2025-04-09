@@ -47,7 +47,7 @@ const CustomAlert = (props: any) => {
                             &&
                             <TouchableOpacity
                                 onPress={onOkButtonPress}
-                                style={styles.alertMessageButtonStyle} >
+                                style={[styles.alertMessageButtonStyle, styles.okButton]} >
                                 <Text style={styles.alertMessageButtonTextStyle}>{props.okButtonText}</Text>
                             </TouchableOpacity>
                         }
@@ -89,77 +89,62 @@ const styles = StyleSheet.create({
     },
     mainContainer: {
         flexDirection: 'column',
-        height: '25%',
         width: '90%',
-        justifyContent: 'center',
+        justifyContent: 'space-between',
         alignItems: 'center',
         backgroundColor: '#FFF',
-        // borderWidth: 2,
-        // borderColor: '#FF0000',
         borderRadius: 10,
-        padding: 4,
+        padding: 10,
     },
     topPart: {
-        flex: 0.5,
-        width: '100%',
         flexDirection: 'row',
         alignItems: 'center',
-        // borderWidth: 1,
-        // borderColor: '#00FF00',
+        justifyContent: 'center',
         paddingHorizontal: 2,
         paddingVertical: 4
     },
     middlePart: {
-        flex: 1,
-        width: '100%',
-        // borderWidth: 1,
-        // borderColor: '#FF6600',
-        padding: 4,
+        paddingHorizontal: 10,
+        paddingVertical: 20,
         color: '#333333',
         fontSize: 16,
         marginVertical: 2
     },
     bottomPart: {
-        flex: 0.5,
-        width: '100%',
-        // borderWidth: 1,
-        // borderColor: '#0066FF',
         flexDirection: 'row',
-        padding: 4,
+        paddingBottom: 5,
+        gap: 20,
         justifyContent: 'space-evenly'
     },
     alertIconStyle: {
-        // borderWidth: 1,
-        // borderColor: '#cc00cc',
         height: 35,
         width: 35,
     },
     alertTitleTextStyle: {
-        flex: 1,
-        // textAlign: 'justify',
         color: "#333333",
         fontSize: 18,
         fontWeight: 'bold',
-        // borderWidth: 1,
-        // borderColor: '#660066',
         padding: 2,
         marginHorizontal: 2
     },
     alertMessageTextStyle: {
         color: '#333333',
-        // textAlign: 'justify',
         fontSize: 16,
         paddingHorizontal: 6,
         paddingVertical: 2,
     },
     alertMessageButtonStyle: {
-        width: '30%',
-        paddingHorizontal: 6,
-        marginVertical: 4,
-        borderRadius: 10,
+        minWidth: 120,
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        marginVertical: 10,
+        borderRadius: 30,
         backgroundColor: '#1C58C0',
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    okButton: {
+        backgroundColor: '#5eab4b'
     },
     alertMessageButtonTextStyle: {
         fontSize: 14,

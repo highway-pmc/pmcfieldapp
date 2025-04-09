@@ -86,6 +86,7 @@ const commonStyles = StyleSheet.create({
         backgroundColor: '#fff',
         borderWidth: 1,
         borderColor: '#BECADA',
+        borderStyle: 'solid',
         borderRadius: 6,
         marginBottom: 12
     },
@@ -171,6 +172,55 @@ const commonStyles = StyleSheet.create({
       activeToggleText: {
         color: "#fff",
         fontWeight: "500",
+      },
+
+      //Procurements Css
+
+      procurementsInnerContainer: {
+        flex: 1, 
+        paddingBottom: 15
+      },
+      addMoreVichleContainer: {
+        flexDirection: 'row',
+        width: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: 10,
+      },
+      vichleWth: {
+        width: '65%'
+      },
+      paadingTop: {
+        paddingTop: 3
+      },
+      detailsSection: {
+        backgroundColor: '#fff',
+        borderRadius: 16,
+        paddingVertical: 20,
+        paddingHorizontal: 20,
+        marginBottom: 15,
+        borderWidth: 1,
+        borderColor: '#BECADA',
+        borderStyle: 'solid'
+      },
+      btnAddVehicle: {
+        fontSize: 12,
+        borderRadius: 25,
+        borderWidth: 1,
+        borderColor: '#1d7dea',
+        color: '#1d7dea',
+        paddingVertical: 11,
+        paddingHorizontal: 15,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+        margin: 'auto',
+      },
+      add_vehicle: {
+        borderRadius: 4,
+        display: 'flex',
       },
 });
 

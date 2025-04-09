@@ -49,7 +49,8 @@ const SelectTestWorkCategory = ({ route, navigation }: { route: any, navigation:
           }}
         />
       </View> */}
-      <ScrollView style={styles.Height100}>
+      <ScrollView showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}>
         {testWorkCategoriesData.map((item: any, index: any) => (
           <View style={styles.UserCategory}>
             <View style={styles.FlexRowCenter}>
@@ -176,21 +177,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: '#fff',
+    borderRadius: 16,
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+    marginBottom: 15,
     borderWidth: 1,
     borderColor: '#BECADA',
-    borderStyle: 'solid',
-    borderRadius: 6,
-    paddingHorizontal: 15,
-    paddingVertical: 15,
-    marginBottom: 20,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+    borderStyle: 'solid'
   },
   checkbox: {
     transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }],

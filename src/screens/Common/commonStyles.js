@@ -222,6 +222,34 @@ const commonStyles = StyleSheet.create({
         borderRadius: 4,
         display: 'flex',
       },
+      flatListContainer: {
+        backgroundColor: '#ffffff',
+        borderWidth: 1,
+        borderColor: '#999',
+        borderRadius: 16,
+        overflow: 'hidden'
+      },
+      itemContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingVertical: 15,
+        paddingHorizontal: 15,
+        backgroundColor: '#f9f9f9',
+        borderBottomWidth: 1,
+        borderBottomColor: '#999'
+      },
+      itemText: {
+        fontSize: 14,
+        maxWidth: 200,
+      },
+      iconContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        gap: 10,
+
+      }
 });
 
 export default commonStyles;

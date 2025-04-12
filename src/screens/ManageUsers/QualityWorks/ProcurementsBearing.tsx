@@ -10,6 +10,7 @@ import {
   ScrollView,
   FlatList,
   Alert,
+  Dimensions,
 } from 'react-native';
 import {useSnackbar} from '../../../context/SnackbarContext';
 import {useDispatch, useSelector} from 'react-redux';
@@ -43,6 +44,7 @@ import {
 import DocumentPicker from 'react-native-document-picker';
 import appConfig from '../../../common/app.config';
 import DropdownPicker from '../../../components/UI/DropdownPicker';
+import commonStyles from '../../Common/commonStyles';
 
 const ProcurementsBearings = ({
   route,
@@ -490,107 +492,111 @@ const ProcurementsBearings = ({
       showSnackbar('File size should not exceed 4 MB');
     }
   };
+  const { height } = Dimensions.get('window');
+  const calculatedHeight = height * 0.75;
+  const calculatedFlatListHeight = height * 0.72;
 
   const addProcurementsForm = () => {
     return (
       <View style={styles.reportFields}>
-        <View>
-          <View>
-            <DropdownPicker
-              label="Type"
-              items={BEARING_TYPE_LIST}
-              value={formSoil.type}
-              onChange={(value: string) => handleInputChange('type', value)}
-            />
-          </View>
-          <View>
-            {renderSourceDetailsPickerBearing(
-              'Source Detail',
-              'sourceApprovalId',
-              sourceApprovalsFiltered,
-            )}
-          </View>
-          <View>
-            <Input
-              label="Qty (in Tonne)"
-              value={'' + formSoil.qtyInTonne}
-              onChange={(value: string) =>
-                handleInputChange('qtyInTonne', value)
-              }
-              isRequired={true}
-            />
-          </View>
-          <View>
-            <CalendarPicker
-              label="Date"
-              value={formSoil.procurementDateTime}
-              onChange={date => handleInputChange('procurementDateTime', date)}
-            />
-          </View>
-          <View>
-            <View
-              style={{
-                flexDirection: 'row',
-                width: '100%',
-                display: 'flex',
-                gap: 10,
-              }}>
-              <View style={{width: '70%'}}>
-                <Input
-                  label="Vehicle no."
-                  value={formSoil.vehicleNoTemp}
-                  onChange={(value: string) =>
-                    handleInputChange('vehicleNoTemp', value)
-                  }
-                />
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          style={[{height: calculatedHeight}]}>
+          <View style={commonStyles.procurementsInnerContainer}>
+            <View>
+              <DropdownPicker
+                label="Type"
+                items={BEARING_TYPE_LIST}
+                value={formSoil.type}
+                onChange={(value: string) => handleInputChange('type', value)}
+              />
+            </View>
+            <View>
+              {renderSourceDetailsPickerBearing(
+                'Source Detail',
+                'sourceApprovalId',
+                sourceApprovalsFiltered,
+              )}
+            </View>
+            <View>
+              <Input
+                label="Qty (in Tonne)"
+                value={'' + formSoil.qtyInTonne}
+                onChange={(value: string) =>
+                  handleInputChange('qtyInTonne', value)
+                }
+                isRequired={true}
+              />
+            </View>
+            <View>
+              <CalendarPicker
+                label="Date"
+                value={formSoil.procurementDateTime}
+                onChange={date =>
+                  handleInputChange('procurementDateTime', date)
+                }
+              />
+            </View>
+            <View>
+              <View style={commonStyles.addMoreVichleContainer}>
+                <View style={commonStyles.vichleWth}>
+                  <Input
+                    label="Vehicle no."
+                    value={formSoil.vehicleNoTemp}
+                    onChange={(value: string) =>
+                      handleInputChange('vehicleNoTemp', value)
+                    }
+                  />
+                </View>
+                <View style={commonStyles.paadingTop}>
+                  <TouchableOpacity
+                    style={commonStyles.add_vehicle}
+                    onPress={onAddVehicle}>
+                    <Text style={commonStyles.btnAddVehicle}>Add Vehicle</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-              <View style={{justifyContent: 'center'}}>
+              <View style={{maxHeight: 400}}>
+                <ScrollView>
+                  <FlatList
+                    data={vehicleNos}
+                    renderItem={renderAddedVehicleItem}
+                    keyExtractor={item => item}
+                  />
+                </ScrollView>
+              </View>
+            </View>
+            <View>
+              <Input
+                label="Lot Number"
+                value={'' + formSoil.lotNo}
+                onChange={(value: string) => handleInputChange('lotNo', value)}
+                isRequired={true}
+              />
+            </View>
+            <View style={{flexDirection: 'column'}}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
                 <TouchableOpacity
-                  style={styles.add_vehicle}
-                  onPress={onAddVehicle}>
-                  <Text style={styles.btnAddVehicle}>Add Vehicle</Text>
+                  style={styles.upload_container}
+                  onPress={onDocumentPress}>
+                  <Text style={styles.uploadBtn}>Upload Invoice</Text>
                 </TouchableOpacity>
+                {fileRes && <Text>{fileRes.name}</Text>}
               </View>
-            </View>
-            <View style={{maxHeight: 400}}>
-              <ScrollView>
-                <FlatList
-                  data={vehicleNos}
-                  renderItem={renderAddedVehicleItem}
-                  keyExtractor={item => item}
-                />
-              </ScrollView>
+              {selectedProcurement?.invoiceFile && (
+                <Image
+                  source={{uri: selectedProcurement.invoiceFile}}
+                  style={{width: 300, height: 200}}></Image>
+              )}
             </View>
           </View>
-          <View>
-            <Input
-              label="Lot Number"
-              value={'' + formSoil.lotNo}
-              onChange={(value: string) => handleInputChange('lotNo', value)}
-              isRequired={true}
-            />
-          </View>
-          <View style={{flexDirection: 'column'}}>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <TouchableOpacity
-                style={styles.upload_container}
-                onPress={onDocumentPress}>
-                <Text style={styles.uploadBtn}>Upload Invoice</Text>
-              </TouchableOpacity>
-              {fileRes && <Text>{fileRes.name}</Text>}
-            </View>
-            {selectedProcurement?.invoiceFile && (
-              <Image
-                source={{uri: selectedProcurement.invoiceFile}}
-                style={{width: 300, height: 200}}></Image>
-            )}
-          </View>
-        </View>
+        </ScrollView>
         <TouchableOpacity style={styles.btnContainer} onPress={handleSubmit}>
           <Text style={styles.submitBtn}>Submit</Text>
         </TouchableOpacity>
@@ -651,9 +657,9 @@ const ProcurementsBearings = ({
   };
 
   const renderItem = ({item}: {item: any}) => (
-    <View style={[styles.itemContainer]}>
-      <Text style={styles.itemText}>{item.sourceApprovalId.name}</Text>
-      <View style={styles.iconContainer}>
+    <View style={[commonStyles.itemContainer]}>
+      <Text style={commonStyles.itemText}>{item.sourceApprovalId.name}</Text>
+      <View style={commonStyles.iconContainer}>
         <Image
           style={styles.ActionIcon}
           tintColor={'#333'}
@@ -688,25 +694,33 @@ const ProcurementsBearings = ({
     <SafeAreaView style={styles.container}>
       <View>
         <View style={styles.reportFields}>
-          <View>
+          <View style={commonStyles.detailsSection}>
             <Text style={styles.AssignRoleText}>
               {testWorkCategoryName + ' > ' + testMaterialName}
             </Text>
           </View>
-          <View>
+          <View style={commonStyles.rightAlignBtn}>
             <TouchableOpacity
-              style={styles.btnContainer}
+              style={commonStyles.outLineBtn}
               onPress={() => onAddProcurement()}>
-              <Text style={styles.submitBtn}>Add/Edit procurement</Text>
+              <Image
+                style={commonStyles.addSourceIcon}
+                source={require('./../../../images/add-circle.png')}
+              />
+              <Text style={commonStyles.btnTextSize}>Add/Edit procurement</Text>
             </TouchableOpacity>
           </View>
           <View>
-            <ScrollView>
-              <FlatList
-                data={data}
-                renderItem={renderItem}
-                keyExtractor={item => item.id}
-              />
+            <ScrollView howsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            style={[{height: calculatedFlatListHeight}]}>
+              <View style={commonStyles.flatListContainer}>
+                <FlatList
+                  data={data}
+                  renderItem={renderItem}
+                  keyExtractor={item => item.id}
+                />
+              </View>
             </ScrollView>
           </View>
         </View>
@@ -737,9 +751,7 @@ const ProcurementsBearings = ({
                 </TouchableOpacity>
               </View>
               <View style={styles.ModalInnerContainer}>
-                <ScrollView style={{paddingTop: 10, height: '85%'}}>
-                  {addProcurementsForm()}
-                </ScrollView>
+                {addProcurementsForm()}
               </View>
             </View>
           </View>
@@ -774,14 +786,7 @@ const styles = StyleSheet.create({
   //     paddingTop: 40,
   //     paddingHorizontal: 20,
   //   },
-  itemContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 10,
-    marginVertical: 2,
-    backgroundColor: '#f9f9f9',
-  },
+  
   itemContainerVehicleList: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -933,10 +938,11 @@ const styles = StyleSheet.create({
     },
   },
   btnContainer: {
+    paddingVertical: 7,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    marginTop: 15,
+    alignItems: 'center',
   },
   saveBtn: {
     fontSize: 14,

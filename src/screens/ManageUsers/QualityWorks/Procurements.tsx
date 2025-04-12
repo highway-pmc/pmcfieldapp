@@ -636,9 +636,9 @@ const Procurements = ({route, navigation}: {route: any; navigation: any}) => {
   };
 
   const renderItem = ({item}: {item: any}) => (
-    <View style={[styles.itemContainer]}>
-      <Text style={styles.itemText}>{item.lotNo}</Text>
-      <View style={styles.iconContainer}>
+    <View style={[commonStyles.itemContainer]}>
+      <Text style={commonStyles.itemText}>{item.sourceApprovalId.name}</Text>
+      <View style={commonStyles.iconContainer}>
         <Image
           style={styles.ActionIcon}
           tintColor={'#333'}
@@ -671,6 +671,7 @@ const Procurements = ({route, navigation}: {route: any; navigation: any}) => {
 
   const { height } = Dimensions.get('window');
     const calculatedHeight = height * 0.75;
+    const calculatedFlatListHeight = height * 0.72;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -693,12 +694,16 @@ const Procurements = ({route, navigation}: {route: any; navigation: any}) => {
             </TouchableOpacity>
           </View>
           <View>
-            <ScrollView>
-              <FlatList
-                data={data}
-                renderItem={renderItem}
-                keyExtractor={item => item.id}
-              />
+          <ScrollView howsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            style={[{height: calculatedFlatListHeight}]}>
+              <View style={commonStyles.flatListContainer}>
+                <FlatList
+                  data={data}
+                  renderItem={renderItem}
+                  keyExtractor={item => item.id}
+                />
+              </View>
             </ScrollView>
           </View>
         </View>

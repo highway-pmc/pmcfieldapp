@@ -3,7 +3,7 @@ import {
   getEquipmentCalibrationDataApi,
   saveEquipmentCalibrationFormInfoApi,
   getEquipmentCalibrationListInfoApi,
-} from '../../services/equipment/equipment.service';
+} from '../../../../services/equipment/equipment.service';
 
 function* getEquipmentCalibrationData() {
   try {

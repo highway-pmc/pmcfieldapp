@@ -2,7 +2,7 @@ import apiService from '../api.service';
 
 export const getEquipmentCalibrationDataApi = async () => {
   return apiService
-    .getRequest(`/v1/auth/equipmentmasterdata?type=equipment-calibration`)
+    .getRequest(`v1/auth/equipmentmasterdata?type=equipment-calibration`)
     .then(response => {
       console.log('response', response);
       return response;

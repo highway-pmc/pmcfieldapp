@@ -198,7 +198,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
       getMyTests({
         projectId: loggedInUser.projectId,
         workType: workType,
-        selectedType: selectedType,
+        selectedType: selectedType || '',
       }),
     );
   };

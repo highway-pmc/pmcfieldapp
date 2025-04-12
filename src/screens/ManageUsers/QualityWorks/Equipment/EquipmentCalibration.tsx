@@ -55,7 +55,7 @@ const EquipmentCalibration = ({
   const [
     selectedMaterialTypeCategoryData,
     setSelectedMaterialTypeCategoryData,
-  ] = useState<any>('');
+  ] = useState<any>({});
   const [dateOfCalibration, setDateOfCalibration] = useState('');
   const [nextDateOfCalibration, setNextDateOfCalibration] = useState('');
   const [
@@ -233,21 +233,20 @@ const EquipmentCalibration = ({
 
           <CustomSelectDropdown
             label="Equipment Category"
-            data={equipmentCalibrationFormInfoData?.testWorkCategoryData}
+            data={equipmentCalibrationFormInfoData}
             selectedValue={selectedTestCategoryData}
             onSelect={handleCategorySelect}
           />
           <CustomSelectDropdown
             label="Equipment type"
-            data={selectedTestCategoryData?.materialTypeData}
+            data={selectedTestCategoryData?.equipmentTypeData}
             selectedValue={selectedMaterialTypeData}
             onSelect={handleMixDesignTypeSelect}
           />
           <CustomSelectDropdown
             label="Sub Type"
-            data={selectedMaterialTypeData?.category}
+            data={selectedMaterialTypeData?.subTypes}
             selectedValue={selectedMaterialTypeCategoryData}
-            itemTypeOf="string"
             onSelect={handleMixDesignTypeCateorySelect}
           />
         </View>

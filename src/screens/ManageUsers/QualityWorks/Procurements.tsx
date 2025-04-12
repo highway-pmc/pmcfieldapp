@@ -965,7 +965,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignContent: 'center',
     marginTop: 10,
-    width: 210,
+    maxWidth: 300,
   },
   uploadBtn: {
     borderRadius: 33,

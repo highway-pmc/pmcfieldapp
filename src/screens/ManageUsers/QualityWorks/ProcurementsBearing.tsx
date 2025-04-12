@@ -658,7 +658,7 @@ const ProcurementsBearings = ({
 
   const renderItem = ({item}: {item: any}) => (
     <View style={[commonStyles.itemContainer]}>
-      <Text style={commonStyles.itemText}>{item.sourceApprovalId.name}</Text>
+      <Text style={commonStyles.itemText}>{item.lotNo}</Text>
       <View style={commonStyles.iconContainer}>
         <Image
           style={styles.ActionIcon}
@@ -974,7 +974,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignContent: 'center',
     marginTop: 10,
-    width: 210,
+    maxWidth: 300,
   },
   uploadBtn: {
     borderRadius: 33,

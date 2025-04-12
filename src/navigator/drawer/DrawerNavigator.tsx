@@ -15,6 +15,7 @@ import {
   RFIsStackNavigator,
   ReportsStackNavigator,
   MixDesignStackNavigator,
+  EquipmentStackNavigator,
 } from './StackNavigator';
 import ForgotPasswordStep3 from '../../screens/ForgotPassword/Step3';
 import {useSelector} from 'react-redux';
@@ -97,6 +98,13 @@ const DrawerNavigator = () => {
       <Drawer.Screen
         name="MixDesignListing"
         component={MixDesignStackNavigator}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Drawer.Screen
+        name="EquipmentCalibration"
+        component={EquipmentStackNavigator}
         options={{
           headerShown: false,
         }}

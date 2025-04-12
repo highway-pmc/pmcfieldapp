@@ -9,25 +9,20 @@ import {
   NativeEventEmitter,
   Image,
 } from 'react-native';
-import CustomSelectDropdown from '../Common/CustomSelectDropdown';
-import {useSnackbar} from '../../context/SnackbarContext';
+import CustomSelectDropdown from '../../../Common/CustomSelectDropdown';
+import {useSnackbar} from '../../../../context/SnackbarContext';
 import {useDispatch, useSelector} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
-import LoadingAnimation from '../Common/LoadingAnimation';
-import {
-  getQualityMasterList,
-  clearRFITasksEvent,
-  getMixDesignListInfo,
-} from '../RFIs/actions';
-import {HeaderItems} from '../../constants/constants';
+import LoadingAnimation from '../../../Common/LoadingAnimation';
+import {getEquipmentsCalibrationListing} from './actions';
+import {HeaderItems} from '../../../../constants/constants';
 
-const EquipmentCallibration = ({
+const EquipmentCalibrationListing = ({
   navigation,
   route,
 }: {
   navigation: any;
   route: any;
-  
 }) => {
   const {height} = Dimensions.get('window');
   const calculatedHeight = height * 0.75;
@@ -40,8 +35,13 @@ const EquipmentCallibration = ({
   );
   const dispatch = useDispatch();
 
-  const {qualityMasterListing, qualityMixDesignListInfo, loading, error} =
-    useSelector((state: any) => state.RFIs);
+  const {
+    qualityMasterListing,
+    equipmentsCalibrationData,
+    equipmentsCalibrationListing,
+    loading,
+    error,
+  } = useSelector((state: any) => state.EquipmentsCalibration);
 
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();
@@ -50,8 +50,6 @@ const EquipmentCallibration = ({
 
   useEffect(() => {
     if (focus == true) {
-      dispatch(clearRFITasksEvent());
-      dispatch(getQualityMasterList({testType: 'mix-design'}));
     }
   }, [focus]);
 
@@ -69,13 +67,13 @@ const EquipmentCallibration = ({
 
   const handleFormData = async (testCategoryData: any) => {
     dispatch(
-      getMixDesignListInfo({
+      getEquipmentsCalibrationListing({
         projectId: loggedInUser.projectId,
         testWorkCategoryType: testCategoryData.type,
         testMaterialId: 'NA',
       }),
     );
-    console.log('======qualityMixDesign=======', qualityMixDesignListInfo);
+    console.log('======qualityMixDesign=======', equipmentsCalibrationListing);
   };
 
   return (
@@ -84,9 +82,11 @@ const EquipmentCallibration = ({
         <TouchableOpacity
           style={styles.btnCtaOutline}
           onPress={() => {
-            navigation.navigate('MixDesign');
+            navigation.navigate('EquipmentCalibration');
           }}>
-          <Text style={styles.btnCtaTextOutline}>Add mix design</Text>
+          <Text style={styles.btnCtaTextOutline}>
+            Add Equipment Calibartion{' '}
+          </Text>
         </TouchableOpacity>
         <View style={styles.innerScrollView}>
           <CustomSelectDropdown
@@ -96,7 +96,7 @@ const EquipmentCallibration = ({
             onSelect={handleCategorySelect}
           />
         </View>
-        {qualityMixDesignListInfo?.map((item: any, index: number) => {
+        {equipmentsCalibrationListing?.map((item: any, index: number) => {
           return (
             <>
               <View style={[styles.itemContainerSourceDetailList]}>
@@ -106,14 +106,14 @@ const EquipmentCallibration = ({
                     <Image
                       style={styles.ActionIcon}
                       tintColor={'#333'}
-                      source={require('./../../images/edit.png')}
+                      source={require('./../../../../images/edit.png')}
                     />
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => console.log('Trash')}>
                     <Image
                       style={styles.ActionIcon}
                       tintColor={'#333'}
-                      source={require('./../../images/trash.png')}
+                      source={require('./../../../../images/trash.png')}
                     />
                   </TouchableOpacity>
                 </View>
@@ -278,4 +278,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EquipmentCallibration;
+export default EquipmentCalibrationListing;

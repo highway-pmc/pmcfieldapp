@@ -48,7 +48,7 @@ function* saveMixDesignFormInfo({payload}) {
   }
 }
 
-export default function* myRFISScreenSaga() {
+export default function* equipmentCalibrationScreenSaga() {
   yield takeLatest(
     'GET_EQUIPMENTS_CALIBRATION_LISTING_REQUEST',
     getEquipmentCalibrationListInfo,

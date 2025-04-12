@@ -12,6 +12,7 @@ import dashboardScreenSaga from '../screens/Dashboard/saga';
 import myRFISScreenSaga from '../screens/RFIs/saga';
 import myReportsScreenSaga from '../screens/Reports/saga';
 import testAssignmentScreenSaga from '../screens/ManageUsers/QualityWorks/saga';
+import equipmentCalibrationScreenSaga from '../screens/ManageUsers/QualityWorks/Equipment/saga';
 
 function* rootSaga() {
     yield all([
@@ -28,6 +29,7 @@ function* rootSaga() {
         myRFISScreenSaga(),
         myReportsScreenSaga(),
         testAssignmentScreenSaga(),
+        equipmentCalibrationScreenSaga()
       ])
 }
 

@@ -8,9 +8,9 @@ import {
 function* getEquipmentCalibrationData() {
   try {
     const response = yield getEquipmentCalibrationDataApi();
-    yield put({type: 'GET_MIX_DESIGN_FORM_INFO_SUCCESS', response});
+    yield put({type: 'GET_EQUIPMENTS_CALIBRATION_DATA_SUCCESS', response});
   } catch (error) {
-    yield put({type: 'GET_MIX_DESIGN_FORM_INFO_FAILURE', error: error.message});
+    yield put({type: 'GET_EQUIPMENTS_CALIBRATION_DATA_FAILURE', error: error.message});
   }
 }
 function* getEquipmentCalibrationListInfo({payload}) {
@@ -20,10 +20,10 @@ function* getEquipmentCalibrationListInfo({payload}) {
       payload.testWorkCategoryType,
       payload.testEquipmentTypeId,
     );
-    yield put({type: 'GET_EQUIPMENTS_CALIBRATION_DATA_SUCCESS', response});
+    yield put({type: 'GET_EQUIPMENTS_CALIBRATION_LISTING_SUCCESS', response});
   } catch (error) {
     yield put({
-      type: 'GET_EQUIPMENTS_CALIBRATION_DATA_FAILURE',
+      type: 'GET_EQUIPMENTS_CALIBRATION_LISTING_FAILURE',
       error: error.message,
     });
   }

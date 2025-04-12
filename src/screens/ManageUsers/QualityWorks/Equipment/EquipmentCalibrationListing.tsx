@@ -45,7 +45,7 @@ const EquipmentCalibrationListing = ({
 
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();
-    eventEmitter.emit('headerEvent', HeaderItems.mixDesignListing);
+    eventEmitter.emit('headerEvent', HeaderItems.equipmentListing);
   }
 
   useEffect(() => {

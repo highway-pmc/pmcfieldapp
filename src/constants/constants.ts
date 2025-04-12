@@ -44,6 +44,10 @@ export const HeaderItems = {
   assignTestTypes: {showBack: true, title: 'Assign Test Types'},
   sourceApprovals: {showBack: true, title: 'Source Approvals'},
   procurements: {showBack: true, title: 'Procurements'},
+  mixDesignListing: {showBack: false, title: 'Mix Design'},
+  mixDesignInfo: {showBack: true, title: 'Mix Design'},
+  equipmentListing: {showBack: false, title: 'Equipment'},
+  equipmentInfo: {showBack: true, title: 'Equipment Calibration'},
 };
 
 export const UserRoles = {
@@ -98,13 +102,33 @@ export const Dashboard_MENU = [
     id: '3',
     icon: require('./../images/dashboard/my-work-icon.png'),
     iconMenu: require('./../images/menu/mywork-icon.png'),
+    title: 'Mix Design',
+    subTitle: 'Mix Design',
+    route: 'MixDesignListing',
+    permissions: ['project-head', 'quality-head'],
+    categories: ['quality-work'],
+  },
+  {
+    id: '4',
+    icon: require('./../images/dashboard/my-work-icon.png'),
+    iconMenu: require('./../images/menu/mywork-icon.png'),
+    title: 'Equipment Calibration',
+    subTitle: 'Equipment',
+    route: 'EquipmentCalibrationListing',
+    permissions: ['project-head', 'quality-head'],
+    categories: ['quality-work'],
+  },
+  {
+    id: '5',
+    icon: require('./../images/dashboard/my-work-icon.png'),
+    iconMenu: require('./../images/menu/mywork-icon.png'),
     title: 'My Task',
     subTitle: 'Check your task',
     route: 'MyTask',
     permissions: [],
   },
   {
-    id: '4',
+    id: '6',
     icon: require('./../images/dashboard/manage-user-icon.png'),
     iconMenu: require('./../images/menu/manage-icon.png'),
     title: 'Manage User',
@@ -119,7 +143,7 @@ export const Dashboard_MENU = [
     ],
   },
   {
-    id: '5',
+    id: '7',
     icon: require('./../images/dashboard/manage-rfi-icon.png'),
     iconMenu: require('./../images/menu/manage-rfi-icom.png'),
     title: 'Manage RFIs',
@@ -134,7 +158,7 @@ export const Dashboard_MENU = [
     ],
   },
   {
-    id: '6',
+    id: '8',
     icon: require('./../images/dashboard/my-work-icon.png'),
     iconMenu: require('./../images/menu/mywork-icon.png'),
     title: 'Project Info',
@@ -150,7 +174,7 @@ export const Dashboard_MENU = [
     ],
   },
   {
-    id: '7',
+    id: '9',
     icon: require('./../images/dashboard/progress-icon.png'),
     iconMenu: require('./../images/menu/progress-dash-icon.png'),
     title: 'Progress Dashboard',
@@ -166,7 +190,7 @@ export const Dashboard_MENU = [
     ],
   },
   {
-    id: '8',
+    id: '10',
     icon: require('./../images/dashboard/report-list-icon.png'),
     iconMenu: require('./../images/menu/report-menu-icon.png'),
     title: 'Report',

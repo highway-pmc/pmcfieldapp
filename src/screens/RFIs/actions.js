@@ -56,3 +56,18 @@ export const getQualityMasterList = (payload) => ({
     type: "GET_QUALITY_MASTER_REQUEST",
     payload: payload
 });
+
+export const getMixDesignFormInfo = (payload) => ({
+    type: "GET_MIX_DESIGN_FORM_INFO_REQUEST",
+    payload: payload
+});
+
+export const saveMixDesignFormInfo = (payload) => ({
+    type: "SAVE_MIX_DESIGN_FORM_INFO_REQUEST",
+    payload: payload
+});
+
+export const getMixDesignListInfo = payload => ({
+  type: 'GET_MIX_DESIGN_LIST_INFO_REQUEST',
+  payload: payload,
+});

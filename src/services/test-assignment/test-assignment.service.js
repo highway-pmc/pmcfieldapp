@@ -89,3 +89,4 @@ export const testTypesAssignToUsersApi = async (projectId, testClassificationId,
         throw new Error(errorMessge);
     });
 }
+

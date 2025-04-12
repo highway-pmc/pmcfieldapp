@@ -25,6 +25,7 @@ export const saveEquipmentCalibrationFormInfoApi = async (
       body,
     )
     .then(response => {
+      console.log('response', response);
       return response;
     })
     .catch(err => {

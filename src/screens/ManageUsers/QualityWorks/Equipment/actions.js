@@ -9,6 +9,6 @@ export const getEquipmentsCalibrationData = payload => ({
 });
 
 export const saveEquipmentsCalibrationdInfo = payload => ({
-  type: 'SAVE_EQUIPMENTS_CALIBRATION_INFO_REQUEST',
+  type: 'SAVE_EQUIPMENTS_CALIBRATION_FORM_INFO_REQUEST',
   payload: payload,
 });

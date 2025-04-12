@@ -46,7 +46,7 @@ export const HeaderItems = {
   procurements: {showBack: true, title: 'Procurements'},
   mixDesignListing: {showBack: false, title: 'Mix Design'},
   mixDesignInfo: {showBack: true, title: 'Mix Design'},
-  equipmentListing: {showBack: false, title: 'Equipment Calibration'},
+  equipmentListing: {showBack: false, title: 'Equipment'},
   equipmentInfo: {showBack: true, title: 'Equipment Calibration'},
 };
 
@@ -114,7 +114,7 @@ export const Dashboard_MENU = [
     iconMenu: require('./../images/menu/mywork-icon.png'),
     title: 'Equipment Calibration',
     subTitle: 'Equipment',
-    route: 'EquipmentCalibration',
+    route: 'EquipmentCalibrationListing',
     permissions: ['project-head', 'quality-head'],
     categories: ['quality-work'],
   },

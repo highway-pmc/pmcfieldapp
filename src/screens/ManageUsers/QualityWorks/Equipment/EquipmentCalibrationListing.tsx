@@ -14,7 +14,10 @@ import {useSnackbar} from '../../../../context/SnackbarContext';
 import {useDispatch, useSelector} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
 import LoadingAnimation from '../../../Common/LoadingAnimation';
-import {getEquipmentsCalibrationListing} from './actions';
+import {
+  getEquipmentsCalibrationData,
+  getEquipmentsCalibrationListing,
+} from './actions';
 import {HeaderItems} from '../../../../constants/constants';
 
 const EquipmentCalibrationListing = ({
@@ -36,13 +39,15 @@ const EquipmentCalibrationListing = ({
   const dispatch = useDispatch();
 
   const {
-    qualityMasterListing,
     equipmentsCalibrationData,
     equipmentsCalibrationListing,
     loading,
     error,
   } = useSelector((state: any) => state.EquipmentsCalibration);
-
+  const [
+    equipmentCalibrationFormInfoData,
+    setEquipmentCalibrationFormInfoData,
+  ]: any = useState(null);
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();
     eventEmitter.emit('headerEvent', HeaderItems.equipmentListing);
@@ -50,6 +55,7 @@ const EquipmentCalibrationListing = ({
 
   useEffect(() => {
     if (focus == true) {
+      dispatch(getEquipmentsCalibrationData());
     }
   }, [focus]);
 
@@ -57,6 +63,10 @@ const EquipmentCalibrationListing = ({
     if (error) {
       showSnackbar('Unable to saveMix design data');
       console.log('=======ERROR=======', error);
+    }
+    if (equipmentsCalibrationData) {
+      setEquipmentCalibrationFormInfoData(equipmentsCalibrationData);
+      console.log('=====', equipmentsCalibrationData);
     }
   }, [error]);
 
@@ -70,10 +80,10 @@ const EquipmentCalibrationListing = ({
       getEquipmentsCalibrationListing({
         projectId: loggedInUser.projectId,
         testWorkCategoryType: testCategoryData.type,
-        testMaterialId: 'NA',
+        testEquipmentTypeId: 'NA',
       }),
     );
-    console.log('======qualityMixDesign=======', equipmentsCalibrationListing);
+    console.log('============', equipmentsCalibrationListing);
   };
 
   return (
@@ -82,6 +92,7 @@ const EquipmentCalibrationListing = ({
         <TouchableOpacity
           style={styles.btnCtaOutline}
           onPress={() => {
+            console.log('Add Equipment Calibration');
             navigation.navigate('EquipmentCalibration');
           }}>
           <Text style={styles.btnCtaTextOutline}>
@@ -91,7 +102,7 @@ const EquipmentCalibrationListing = ({
         <View style={styles.innerScrollView}>
           <CustomSelectDropdown
             label="Test Category"
-            data={qualityMasterListing?.testWorkCategoryData}
+            data={equipmentCalibrationFormInfoData}
             selectedValue={selectedTestCategoryData}
             onSelect={handleCategorySelect}
           />

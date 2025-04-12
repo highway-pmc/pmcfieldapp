@@ -62,11 +62,12 @@ const EquipmentCalibration = ({
     equipmentCalibrationFormInfoData,
     setEquipmentCalibrationFormInfoData,
   ]: any = useState(null);
-  const [recommend, setRecommend] = useState<any>();
+  const [calibrationDoneBy, setCalibrationDoneBy] = useState<any>();
   const dispatch = useDispatch();
 
   const {
     error,
+    loading,
     savedEquipmentsCalibrationFormInfo,
     equipmentsCalibrationData,
   } = useSelector((state: any) => state.EquipmentsCalibration);
@@ -111,11 +112,12 @@ const EquipmentCalibration = ({
   const handleCategorySelect = (selectedOption: any) => {
     setSelectedTestCategoryData({...selectedOption});
     setSelectedMaterialTypeData(null);
+    setSelectedMaterialTypeCategoryData(null);
   };
 
   const handleMixDesignTypeSelect = (selectedOption: any) => {
     setSelectedMaterialTypeData({...selectedOption});
-    setSelectedMaterialTypeCategoryData('');
+    setSelectedMaterialTypeCategoryData(null);
     console.log('======', selectedOption);
   };
 
@@ -128,66 +130,9 @@ const EquipmentCalibration = ({
     item[fieldName] = value;
   };
 
-  // const onSubmit = () => {
-  //   const materialsData: any = [];
-  //   qualityMixDesignFormInfoData.forEach((item: any) => {
-  //     console.log('selectedSource', item.selectedSource);
-  //     console.log('selectedMaterialQty', item.qty);
-  //     materialsData.push({
-  //       _id: item._id,
-  //       materialType: item.materialType,
-  //       name: item.name,
-  //       selectedSource: item.selectedSource
-  //         ? {
-  //             _id: item.selectedSource._id,
-  //             name: item.selectedSource.name,
-  //           }
-  //         : null,
-  //       qty: item.qty,
-  //     });
-  //   });
-
-  //   console.log(
-  //     '===============',
-  //     selectedTestCategoryData,
-  //     selectedMaterialTypeData,
-  //     selectedMaterialTypeCategoryData,
-  //   );
-  //   if (
-  //     !selectedTestCategoryData ||
-  //     !selectedMaterialTypeData ||
-  //     !selectedMaterialTypeCategoryData
-  //   ) {
-  //     return;
-  //   }
-
-  //   // save mix design data
-  //   dispatch(
-  //     saveMixDesignFormInfo({
-  //       projectId: loggedInUser.projectId,
-  //       testWorkCategoryType: selectedTestCategoryData?.type,
-  //       testMaterialId: selectedMaterialTypeData?._id,
-  //       body: {
-  //         name: `${selectedTestCategoryData.name}-${selectedMaterialTypeData.name}-${selectedMaterialTypeCategoryData}`,
-  //         comments: recommend,
-  //         mixDesignData: {
-  //           dateOfCalibration: getDbDateFromDDMMYYYY(dateOfCalibration),
-  //           nextDateOfCalibration: getDbDateFromDDMMYYYY(nextDateOfCalibration),
-  //           materialCategory: selectedMaterialTypeCategoryData,
-  //           materialsData: materialsData,
-  //         },
-  //       },
-  //     }),
-  //   );
-  // };
   const onSubmit = () => {
-    const materialsData: any = [];
-
-    if (
-      !selectedTestCategoryData ||
-      !selectedMaterialTypeData ||
-      !selectedMaterialTypeCategoryData
-    ) {
+    console.log('=======Submit========');
+    if (!selectedTestCategoryData || !selectedMaterialTypeData) {
       return;
     }
 
@@ -197,14 +142,14 @@ const EquipmentCalibration = ({
         projectId: loggedInUser.projectId,
         testWorkCategoryType: selectedTestCategoryData?.type,
         testEquipmentTypeId: selectedMaterialTypeData?._id,
+        testEquipmentSubTypeId: selectedMaterialTypeCategoryData?._id,
         body: {
           name: `${selectedTestCategoryData.name}`,
-          comments: recommend,
           equipmentCalibrationData: {
             dateOfCalibration: getDbDateFromDDMMYYYY(dateOfCalibration),
             nextDateOfCalibration: getDbDateFromDDMMYYYY(nextDateOfCalibration),
-            materialCategory: selectedMaterialTypeCategoryData,
-            materialsData: materialsData,
+            subType: selectedMaterialTypeCategoryData,
+            calibrationDoneBy: calibrationDoneBy,
           },
         },
       }),
@@ -243,12 +188,24 @@ const EquipmentCalibration = ({
             selectedValue={selectedMaterialTypeData}
             onSelect={handleMixDesignTypeSelect}
           />
-          <CustomSelectDropdown
-            label="Sub Type"
-            data={selectedMaterialTypeData?.subTypes}
-            selectedValue={selectedMaterialTypeCategoryData}
-            onSelect={handleMixDesignTypeCateorySelect}
-          />
+          {selectedMaterialTypeData?.subTypes?.length > 0 && (
+            <CustomSelectDropdown
+              label="Sub Type"
+              data={selectedMaterialTypeData?.subTypes}
+              selectedValue={selectedMaterialTypeCategoryData}
+              onSelect={handleMixDesignTypeCateorySelect}
+            />
+          )}
+          <View style={styles.inputWrapper}>
+            <Text style={styles.inputLabel}>Calibration Done By</Text>
+            <Input
+              value={calibrationDoneBy}
+              style={styles.input}
+              label=""
+              onChange={(value: string) => setCalibrationDoneBy(value)}
+              isRequired={true}
+            />
+          </View>
         </View>
 
         <TouchableOpacity style={styles.btnCtaOutline}>
@@ -261,7 +218,7 @@ const EquipmentCalibration = ({
           </TouchableOpacity>
         </View>
       </ScrollView>
-      
+      <LoadingAnimation loading={loading} />
     </View>
   );
 };
@@ -317,7 +274,6 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   inputWrapper: {
-    borderWidth: 1,
     borderColor: '#ddd',
     borderRadius: 8,
     paddingHorizontal: 10,

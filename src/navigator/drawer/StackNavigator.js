@@ -47,7 +47,8 @@ import ProcurementsSteel from '../../screens/ManageUsers/QualityWorks/Procuremen
 import ProcurementsExpansionJoints from '../../screens/ManageUsers/QualityWorks/ProcurementsExpansionJoint';
 import ProcurementsPrestressing from '../../screens/ManageUsers/QualityWorks/ProcurementsPreStressing';
 import EquipmentCalibrationListing from '../../screens/ManageUsers/QualityWorks/Equipment/EquipmentCalibrationListing';
-
+import Equipment from '../../screens/ManageUsers/QualityWorks/Equipment/EquipmentAdd';
+import EquipmentListing from '../../screens/ManageUsers/QualityWorks/Equipment/EquipmentListing';
 const Stack = createStackNavigator();
 
 const screenOptionStyle = {
@@ -170,6 +171,16 @@ const EquipmentStackNavigator = () => {
       <Stack.Screen
         name="EquipmentCalibrationListing"
         component={EquipmentCalibrationListing}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Equipment"
+        component={Equipment}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="EquipmentListing"
+        component={EquipmentListing}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

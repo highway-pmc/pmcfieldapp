@@ -48,6 +48,8 @@ export const HeaderItems = {
   mixDesignInfo: {showBack: true, title: 'Mix Design'},
   equipmentListing: {showBack: false, title: 'Equipment'},
   equipmentInfo: {showBack: true, title: 'Equipment Calibration'},
+  equipmentCalibrationListing: {showBack: false, title: 'Equipment'},
+  equipmentCalibrationInfo: {showBack: true, title: 'Equipment Calibration'},
 };
 
 export const UserRoles = {
@@ -112,9 +114,9 @@ export const Dashboard_MENU = [
     id: '4',
     icon: require('./../images/dashboard/my-work-icon.png'),
     iconMenu: require('./../images/menu/mywork-icon.png'),
-    title: 'Equipment Calibration',
+    title: 'Equipment',
     subTitle: 'Equipment',
-    route: 'EquipmentCalibrationListing',
+    route: 'EquipmentListing',
     permissions: ['project-head', 'quality-head'],
     categories: ['quality-work'],
   },

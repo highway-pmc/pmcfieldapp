@@ -1,8 +1,8 @@
 import apiService from '../api.service';
 
-export const getEquipmentCalibrationDataApi = async () => {
+export const getEquipmentMasterDataApi = async () => {
   return apiService
-    .getRequest(`v1/auth/equipmentmasterdata?type=equipment-calibration`)
+    .getRequest(`v1/auth/equipmentmasterdata?type=equipments`)
     .then(response => {
       console.log('response', response);
       return response;
@@ -13,17 +13,54 @@ export const getEquipmentCalibrationDataApi = async () => {
     });
 };
 
+export const getEquipmentsDataApi = async (projectId, testWorkCategoryType) => {
+  return apiService
+    .getRequest(
+      `v1/auth/projects/${projectId}/test-equipment-category/${testWorkCategoryType}/test-equipment-type/NA/equipments`,
+    )
+    .then(response => {
+      console.log('response', response);
+      return response;
+    })
+    .catch(err => {
+      const errorMessge = err.message || 'Unable to get Equipments Data.';
+      throw new Error(errorMessge);
+    });
+};
 export const saveEquipmentCalibrationFormInfoApi = async (
   projectId,
-  testWorkCategoryType,
-  testEquipmentTypeId,
+  testEquipmentId,
   body,
 ) => {
   return apiService
     .postRequest(
-      `v1/auth/projects/${projectId}/test-equipment-category/${testWorkCategoryType}/test-equipment/${testEquipmentTypeId}/equipment-calibration`,
+      `v1/auth/projects/${projectId}/equipment/${testEquipmentId}/equipment-calibration`,
       body,
     )
+    .then(response => {
+      console.log('response', response);
+      return response;
+    })
+    .catch(err => {
+      const errorMessge = err.message || 'Unable to save Mix design.';
+      throw new Error(errorMessge);
+    });
+};
+export const saveEquipmentFormInfoApi = async (
+  projectId,
+  testEquipmentCategory,
+  testEquipmentTypeId,
+  body,
+) => {
+  console.log(
+    `Path :  v1/auth/projects/${projectId}/test-equipment-category/${testEquipmentCategory}/test-equipment-type/${testEquipmentTypeId}/equipments`,
+  );
+  return apiService
+    .postRequest(
+      `v1/auth/projects/${projectId}/test-equipment-category/${testEquipmentCategory}/test-equipment-type/${testEquipmentTypeId}/equipments`,
+      body,
+    )
+    
     .then(response => {
       console.log('response', response);
       return response;

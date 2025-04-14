@@ -23,8 +23,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
 import LoadingAnimation from '../../../Common/LoadingAnimation';
 import {
-  getEquipmentsCalibrationData,
-  saveEquipmentsCalibrationdInfo,
+  getEquipmentsMasterData,
+  saveEquipmentsCalibrationInfo,
 } from './actions';
 import appConfig from '../../../../common/app.config';
 import {set} from 'date-fns';
@@ -69,7 +69,7 @@ const EquipmentCalibration = ({
     error,
     loading,
     savedEquipmentsCalibrationFormInfo,
-    equipmentsCalibrationData,
+    equipmentsMasterData,
   } = useSelector((state: any) => state.EquipmentsCalibration);
 
   if (useIsFocused()) {
@@ -79,7 +79,7 @@ const EquipmentCalibration = ({
 
   useEffect(() => {
     if (focus == true) {
-      dispatch(getEquipmentsCalibrationData());
+      dispatch(getEquipmentsMasterData());
       setDateOfCalibration('');
       setNextDateOfCalibration('');
       setSelectedTestCategoryData(null);
@@ -99,15 +99,15 @@ const EquipmentCalibration = ({
         navigation.navigate('EquipmentCalibrationListing');
       }, 3000);
     }
-    if (equipmentsCalibrationData) {
-      setEquipmentCalibrationFormInfoData(equipmentsCalibrationData);
-      console.log('=====', equipmentsCalibrationData);
+    if (equipmentsMasterData) {
+      setEquipmentCalibrationFormInfoData(equipmentsMasterData);
+      console.log('=====', equipmentsMasterData);
     }
     if (error) {
       showSnackbar('Unable to saveMix design data');
       console.log('=======ERROR=======', error);
     }
-  }, [savedEquipmentsCalibrationFormInfo, equipmentsCalibrationData, error]);
+  }, [savedEquipmentsCalibrationFormInfo, equipmentsMasterData, error]);
 
   const handleCategorySelect = (selectedOption: any) => {
     setSelectedTestCategoryData({...selectedOption});
@@ -138,7 +138,7 @@ const EquipmentCalibration = ({
 
     // save mix design data
     dispatch(
-      saveEquipmentsCalibrationdInfo({
+      saveEquipmentsCalibrationInfo({
         projectId: loggedInUser.projectId,
         testWorkCategoryType: selectedTestCategoryData?.type,
         testEquipmentTypeId: selectedMaterialTypeData?._id,

@@ -15,7 +15,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
 import LoadingAnimation from '../../../Common/LoadingAnimation';
 import {
-  getEquipmentsCalibrationData,
+  getEquipmentsMasterData,
   getEquipmentsCalibrationListing,
 } from './actions';
 import {HeaderItems} from '../../../../constants/constants';
@@ -38,12 +38,8 @@ const EquipmentListing = ({
   );
   const dispatch = useDispatch();
 
-  const {
-    equipmentsCalibrationData,
-    equipmentsCalibrationListing,
-    loading,
-    error,
-  } = useSelector((state: any) => state.EquipmentsCalibration);
+  const {equipmentsMasterData, equipmentsCalibrationListing, loading, error} =
+    useSelector((state: any) => state.EquipmentsCalibration);
   const [
     equipmentCalibrationFormInfoData,
     setEquipmentCalibrationFormInfoData,
@@ -55,7 +51,7 @@ const EquipmentListing = ({
 
   useEffect(() => {
     if (focus == true) {
-      dispatch(getEquipmentsCalibrationData());
+      dispatch(getEquipmentsMasterData());
     }
   }, [focus]);
 
@@ -64,9 +60,9 @@ const EquipmentListing = ({
       showSnackbar('Unable to saveMix design data');
       console.log('=======ERROR=======', error);
     }
-    if (equipmentsCalibrationData) {
-      setEquipmentCalibrationFormInfoData(equipmentsCalibrationData);
-      console.log('=====', equipmentsCalibrationData);
+    if (equipmentsMasterData) {
+      setEquipmentCalibrationFormInfoData(equipmentsMasterData);
+      console.log('=====', equipmentsMasterData);
     }
   }, [error]);
 
@@ -79,7 +75,7 @@ const EquipmentListing = ({
     dispatch(
       getEquipmentsCalibrationListing({
         projectId: loggedInUser.projectId,
-        testWorkCategoryType: testCategoryData.type,
+        testEquipmentCategory: testCategoryData.type,
         testEquipmentTypeId: 'NA',
       }),
     );
@@ -96,7 +92,7 @@ const EquipmentListing = ({
             navigation.navigate('Equipment');
           }}>
           <Text style={styles.btnCtaTextOutline}>
-            Add Equipment Calibartion{' '}
+            Add Equipment {' '}
           </Text>
         </TouchableOpacity>
         <View style={styles.innerScrollView}>

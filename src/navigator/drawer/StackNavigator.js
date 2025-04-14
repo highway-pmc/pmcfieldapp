@@ -164,13 +164,8 @@ const EquipmentStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
       <Stack.Screen
-        name="EquipmentCalibration"
-        component={EquipmentCalibration}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="EquipmentCalibrationListing"
-        component={EquipmentCalibrationListing}
+        name="EquipmentListing"
+        component={EquipmentListing}
         options={{headerShown: false}}
       />
       <Stack.Screen
@@ -179,8 +174,13 @@ const EquipmentStackNavigator = () => {
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="EquipmentListing"
-        component={EquipmentListing}
+        name="EquipmentCalibration"
+        component={EquipmentCalibration}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="EquipmentCalibrationListing"
+        component={EquipmentCalibrationListing}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

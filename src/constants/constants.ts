@@ -47,9 +47,9 @@ export const HeaderItems = {
   mixDesignListing: {showBack: false, title: 'Mix Design'},
   mixDesignInfo: {showBack: true, title: 'Mix Design'},
   equipmentListing: {showBack: false, title: 'Equipment'},
-  equipmentInfo: {showBack: true, title: 'Equipment Calibration'},
+  equipmentInfo: {showBack: true, title: 'Equipment '},
   equipmentCalibrationListing: {showBack: false, title: 'Equipment'},
-  equipmentCalibrationInfo: {showBack: true, title: 'Equipment Calibration'},
+  equipmentCalibrationInfo: {showBack: true, title: 'Equipment'},
 };
 
 export const UserRoles = {

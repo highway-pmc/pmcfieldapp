@@ -103,7 +103,7 @@ const DrawerNavigator = () => {
         }}
       />
       <Drawer.Screen
-        name="EquipmentCalibrationListing"
+        name="EquipmentListing"
         component={EquipmentStackNavigator}
         options={{
           headerShown: false,

@@ -1938,23 +1938,43 @@ const EquimentCalibrationReducer = (state = sourceApprovalsState, action) => {
         error: action.error,
         loading: false,
       };
-    case 'GET_EQUIPMENTS_CALIBRATION_DATA_REQUEST':
+    case 'GET_EQUIPMENTS_MASTER_DATA_REQUEST':
       return {
         ...state,
         error: null,
         loading: true,
       };
-    case 'GET_EQUIPMENTS_CALIBRATION_DATA_SUCCESS':
+    case 'GET_EQUIPMENTS_MASTER_DATA_SUCCESS':
       return {
         ...state,
-        equipmentsCalibrationData: action.response,
+        equipmentsMasterData: action.response,
         error: null,
         loading: false,
       };
-    case 'GET_EQUIPMENTS_CALIBRATION_DATA_FAILURE':
+    case 'GET_EQUIPMENTS_MASTER_DATA_FAILURE':
       return {
         ...state,
-        equipmentsCalibrationData: null,
+        equipmentsMasterData: null,
+        error: action.error,
+        loading: false,
+      };
+    case 'GET_EQUIPMENTS_LIST_DATA_REQUEST':
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case 'GET_EQUIPMENTS_LIST_DATA_SUCCESS':
+      return {
+        ...state,
+        equipmentsListData: action.response,
+        error: null,
+        loading: false,
+      };
+    case 'GET_EQUIPMENTS_LIST_DATA_FAILURE':
+      return {
+        ...state,
+        equipmentsListData: null,
         error: action.error,
         loading: false,
       };
@@ -1972,6 +1992,26 @@ const EquimentCalibrationReducer = (state = sourceApprovalsState, action) => {
         loading: false,
       };
     case 'SAVE_EQUIPMENTS_CALIBRATION_FORM_INFO_FAILURE':
+      return {
+        ...state,
+        savedEquipmentsCalibrationListInfo: null,
+        error: action.error,
+        loading: false,
+      };
+    case 'SAVE_EQUIPMENTS_FORM_INFO_REQUEST':
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case 'SAVE_EQUIPMENTS_FORM_INFO_SUCCESS':
+      return {
+        ...state,
+        savedEquipmentsCalibrationFormInfo: action.response,
+        error: null,
+        loading: false,
+      };
+    case 'SAVE_EQUIPMENTS_FORM_INFO_FAILURE':
       return {
         ...state,
         savedEquipmentsCalibrationListInfo: null,

@@ -22,10 +22,7 @@ import {useSnackbar} from '../../../../context/SnackbarContext';
 import {useDispatch, useSelector} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
 import LoadingAnimation from '../../../Common/LoadingAnimation';
-import {
-  getEquipmentsMasterData,
-  saveEquipmentsInfo,
-} from './actions';
+import {getEquipmentsMasterData, saveEquipmentsInfo} from './actions';
 import appConfig from '../../../../common/app.config';
 import {set} from 'date-fns';
 import DropdownPicker from '../../../../components/UI/DropdownPicker';
@@ -57,6 +54,7 @@ const EquipmentAdd = ({navigation, route}: {navigation: any; route: any}) => {
   ]: any = useState(null);
   const [make, setMake] = useState<any>('');
   const [modelNumber, setModelNumber] = useState<any>('');
+  const [name,setName]=useState('');
   const dispatch = useDispatch();
 
   const {
@@ -129,8 +127,6 @@ const EquipmentAdd = ({navigation, route}: {navigation: any; route: any}) => {
       return;
     }
 
-    //add Equipment Data
-    //TODO
     dispatch(
       saveEquipmentsInfo({
         projectId: loggedInUser.projectId,
@@ -138,12 +134,12 @@ const EquipmentAdd = ({navigation, route}: {navigation: any; route: any}) => {
         testEquipmentTypeId: selectedMaterialTypeData?._id,
         testEquipmentSubTypeId: selectedMaterialTypeCategoryData?._id,
         body: {
-          name: `${selectedTestCategoryData.name}`,
+          name: name,
           dateOfPurchase: getDbDateFromDDMMYYYY(dateOfPurchase),
-          equipmentCalibrationData: {
+          make: make,
+          modelNo: modelNumber,
+          additionalData: {
             subType: selectedMaterialTypeCategoryData,
-            make: make,
-            modelNumber: modelNumber,
           },
         },
       }),
@@ -180,6 +176,16 @@ const EquipmentAdd = ({navigation, route}: {navigation: any; route: any}) => {
               setDateOfPurchase(value);
             }}
           />
+          <View style={styles.inputWrapper}>
+            <Text style={styles.inputLabel}>Name </Text>
+            <Input
+              value={name}
+              style={styles.input}
+              label=""
+              onChange={(value: string) => setName(value)}
+              isRequired={true}
+            />
+          </View>
           <View style={styles.inputWrapper}>
             <Text style={styles.inputLabel}>Make </Text>
             <Input
@@ -272,10 +278,10 @@ const styles = StyleSheet.create({
   inputWrapper: {
     borderColor: '#ddd',
     borderRadius: 8,
-    paddingHorizontal: 10,
+
   },
   input: {
-    height: 40,
+    height: 38,
     fontSize: 14,
   },
   tableContainer: {

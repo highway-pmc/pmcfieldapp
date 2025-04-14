@@ -33,101 +33,65 @@ const EquipmentListing = ({
   const focus = useIsFocused();
 
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const [selectedTestCategoryData, setSelectedTestCategoryData] = useState<any>(
-    {},
-  );
+
   const dispatch = useDispatch();
 
   const {equipmentsMasterData, equipmentsCalibrationListing, loading, error} =
     useSelector((state: any) => state.EquipmentsCalibration);
-  const [
-    equipmentCalibrationFormInfoData,
-    setEquipmentCalibrationFormInfoData,
-  ]: any = useState(null);
+  const [equipmentInfoData, setEquipmentInfoData] = useState([]);
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();
     eventEmitter.emit('headerEvent', HeaderItems.equipmentListing);
   }
-
+  //const getEquipmentList
   useEffect(() => {
-    if (focus == true) {
-      dispatch(getEquipmentsMasterData());
-    }
-  }, [focus]);
-
+    dispatch(getEquipmentsMasterData());
+  }, []);
+  const navigateToListOfEquipment = (item: any) => {
+    console.log("==Params==",item);
+    navigation.navigate('EquipmentCalibrationListing', {
+      testEquipmentCategoryId: item._id,
+      testEquipmentCategoryName: item.name,
+    });
+  };
   useEffect(() => {
     if (error) {
       showSnackbar('Unable to saveMix design data');
       console.log('=======ERROR=======', error);
     }
     if (equipmentsMasterData) {
-      setEquipmentCalibrationFormInfoData(equipmentsMasterData);
+      setEquipmentInfoData(equipmentsMasterData);
       console.log('=====', equipmentsMasterData);
     }
   }, [error]);
-
-  const handleCategorySelect = (selectedOption: any) => {
-    setSelectedTestCategoryData({...selectedOption});
-    handleFormData(selectedOption);
-  };
-
-  const handleFormData = async (testCategoryData: any) => {
-    dispatch(
-      getEquipmentsCalibrationListing({
-        projectId: loggedInUser.projectId,
-        testEquipmentCategory: testCategoryData.type,
-        testEquipmentTypeId: 'NA',
-      }),
-    );
-    console.log('============', equipmentsCalibrationListing);
-  };
-
+  // Show loader until the equipmentsMasterData is loaded
+  if (!equipmentsMasterData || loading) {
+    return <LoadingAnimation loading={true} />;
+  }
   return (
     <View style={styles.recentWorkContainer}>
+      <TouchableOpacity
+        style={styles.btnCtaOutline}
+        onPress={() => {
+          console.log('Add Equipment');
+          navigation.navigate('Equipment');
+        }}>
+        <Text style={styles.btnCtaTextOutline}>Add Equipment </Text>
+      </TouchableOpacity>
       <ScrollView>
-        <TouchableOpacity
-          style={styles.btnCtaOutline}
-          onPress={() => {
-            console.log('Add Equipment Calibration');
-            navigation.navigate('Equipment');
-          }}>
-          <Text style={styles.btnCtaTextOutline}>
-            Add Equipment {' '}
-          </Text>
-        </TouchableOpacity>
         <View style={styles.innerScrollView}>
-          <CustomSelectDropdown
-            label="Test Category"
-            data={equipmentCalibrationFormInfoData}
-            selectedValue={selectedTestCategoryData}
-            onSelect={handleCategorySelect}
-          />
-        </View>
-        {equipmentsCalibrationListing?.map((item: any, index: number) => {
-          return (
-            <>
-              <View style={[styles.itemContainerSourceDetailList]}>
-                <Text style={styles.itemText}>{item.name}</Text>
-                <View style={styles.iconContainer}>
-                  <TouchableOpacity onPress={() => console.log('Edit')}>
-                    <Image
-                      style={styles.ActionIcon}
-                      tintColor={'#333'}
-                      source={require('./../../../../images/edit.png')}
-                    />
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => console.log('Trash')}>
-                    <Image
-                      style={styles.ActionIcon}
-                      tintColor={'#333'}
-                      source={require('./../../../../images/trash.png')}
-                    />
-                  </TouchableOpacity>
+          {equipmentsMasterData &&
+            equipmentsMasterData.map((item: any, index: any) => (
+              <TouchableOpacity
+                key={index}
+                onPress={() => navigateToListOfEquipment(item)}
+                style={styles.equipmentCard}>
+                <View style={styles.equipmentCardContent}>
+                  <Text style={styles.equipmentName}>{item.name}</Text>
                 </View>
-              </View>
-            </>
-          );
-        })}
+              </TouchableOpacity>
+            ))}
+        </View>
       </ScrollView>
       <LoadingAnimation loading={loading} />
     </View>
@@ -282,6 +246,32 @@ const styles = StyleSheet.create({
   },
   materialDropdown: {
     width: '100%',
+  },
+  equipmentCard: {
+    backgroundColor: '#ffffff',
+    borderRadius: 12,
+    marginVertical: 8,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 1},
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  equipmentCardContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 20,
+  },
+  equipmentName: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#333333',
+  },
+  equipmentCount: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#333333',
   },
 });
 

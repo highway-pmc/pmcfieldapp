@@ -37,12 +37,11 @@ function* getEquipmentsListData({payload}) {
   try {
     const response = yield getEquipmentsDataApi(
       payload.projectId,
-      payload.testWorkCategoryType,
     );
-    yield put({type: 'GET_EQUIPMENTS_CALIBRATION_LISTING_SUCCESS', response});
+    yield put({type: 'GET_EQUIPMENTS_LIST_DATA_SUCCESS', response});
   } catch (error) {
     yield put({
-      type: 'GET_EQUIPMENTS_CALIBRATION_LISTING_FAILURE',
+      type: 'GET_EQUIPMENTS_LIST_DATA_FAILURE',
       error: error.message,
     });
   }

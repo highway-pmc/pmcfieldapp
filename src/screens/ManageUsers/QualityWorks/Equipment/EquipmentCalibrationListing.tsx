@@ -8,17 +8,18 @@ import {
   TouchableOpacity,
   NativeEventEmitter,
   Image,
+  Modal,
 } from 'react-native';
 import CustomSelectDropdown from '../../../Common/CustomSelectDropdown';
 import {useSnackbar} from '../../../../context/SnackbarContext';
 import {useDispatch, useSelector} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
 import LoadingAnimation from '../../../Common/LoadingAnimation';
-import {
-  getEquipmentsMasterData,
-  getEquipmentsCalibrationListing,
-} from './actions';
+import {getEquipmentsListData, saveEquipmentsCalibrationInfo} from './actions';
 import {HeaderItems} from '../../../../constants/constants';
+import CalendarPicker from '../../../../components/UI/CalenderPicker';
+import Input from '../../../../components/UI/Input';
+import {getDbDateFromDDMMYYYY} from '../../../../utils/Utils';
 
 const EquipmentCalibrationListing = ({
   navigation,
@@ -27,23 +28,34 @@ const EquipmentCalibrationListing = ({
   navigation: any;
   route: any;
 }) => {
+  const {testEquipmentCategoryId, testEquipmentCategoryName} = route.params;
   const {height} = Dimensions.get('window');
   const calculatedHeight = height * 0.75;
   const {showSnackbar} = useSnackbar();
   const focus = useIsFocused();
 
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const [selectedTestCategoryData, setSelectedTestCategoryData] = useState<any>(
-    {},
-  );
+
   const dispatch = useDispatch();
 
-  const {equipmentsMasterData, equipmentsCalibrationListing, loading, error} =
-    useSelector((state: any) => state.EquipmentsCalibration);
-  const [
-    equipmentCalibrationFormInfoData,
-    setEquipmentCalibrationFormInfoData,
-  ]: any = useState(null);
+  const {
+    equipmentsListData,
+    loading,
+    error,
+    savedEquipmentsCalibrationFormInfo,
+  } = useSelector((state: any) => state.EquipmentsCalibration);
+  const [equipmentListInfoData, setEquipmentListInfoData] = useState<any[]>([]);
+
+  // Modal state
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedEquipment, setSelectedEquipment] = useState<any>(null);
+
+  // Form fields for the modal
+  const [dateOfCalibration, setDateOfCalibration] = useState('');
+  const [nextDateOfCalibration, setNextDateOfCalibration] = useState('');
+  const [calibrationDoneBy, setCalibrationDoneBy] = useState('');
+  const [name, setName] = useState('');
+
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();
     eventEmitter.emit('headerEvent', HeaderItems.equipmentListing);
@@ -51,84 +63,255 @@ const EquipmentCalibrationListing = ({
 
   useEffect(() => {
     if (focus == true) {
-      dispatch(getEquipmentsMasterData());
+      dispatch(getEquipmentsListData({projectId: loggedInUser.projectId}));
     }
   }, [focus]);
 
   useEffect(() => {
     if (error) {
-      showSnackbar('Unable to saveMix design data');
+      showSnackbar('Unable to fetch equipment data');
       console.log('=======ERROR=======', error);
     }
-    if (equipmentsMasterData) {
-      setEquipmentCalibrationFormInfoData(equipmentsMasterData);
-      console.log('=====', equipmentsMasterData);
-    }
-  }, [error]);
 
-  const handleCategorySelect = (selectedOption: any) => {
-    setSelectedTestCategoryData({...selectedOption});
-    handleFormData(selectedOption);
+    if (equipmentsListData && equipmentsListData.length > 0) {
+      console.log(
+        '==== Hello  EquipmentsListData ======',
+        testEquipmentCategoryId,
+      );
+      const filteredData = equipmentsListData.filter(
+        (equipment: any) =>
+          equipment.testEquipmentCategoryId === testEquipmentCategoryId,
+      );
+      setEquipmentListInfoData(filteredData);
+      console.log('Filtered Data:', filteredData);
+    }
+  }, [equipmentsListData, error]);
+
+  useEffect(() => {
+    if (savedEquipmentsCalibrationFormInfo) {
+      showSnackbar('Calibration data saved successfully');
+      setModalVisible(false);
+      dispatch(getEquipmentsListData({projectId: loggedInUser.projectId}));
+      // Reset form fields
+      resetFormFields();
+    }
+  }, [savedEquipmentsCalibrationFormInfo]);
+
+  const resetFormFields = () => {
+    setDateOfCalibration('');
+    setNextDateOfCalibration('');
+    setCalibrationDoneBy('');
+    setName('');
+    setSelectedEquipment(null);
   };
 
-  const handleFormData = async (testCategoryData: any) => {
+  const handleEditEquipment = (equipment: any) => {};
+
+  const handleDeleteEquipment = (equipmentId: string) => {
+    // Implement delete functionality
+  };
+
+  const handleAddDetails = (equipment: any) => {
+    console.log('===equipmentCalibrations===', equipment.equipmentCalibrations);
+    navigation.navigate('EquipmentCalibration', {
+      _id: equipment._id,
+      name: equipment.name,
+      equipmentData: equipment.equipmentCalibrations,
+      testEquipmentCategoryName: equipment.testEquipmentCategoryName,
+      testEquipmentTypeName: equipment.testEquipmentTypeName,
+      testEquipmentSubTypeName: equipment.testEquipmentSubTypeName,
+    });
+    // setSelectedEquipment(equipment);
+    // console.log('===  Eq  =====>', equipment);
+    // setModalVisible(true);
+  };
+
+  const handleSubmitCalibration = () => {
+    if (
+      !dateOfCalibration ||
+      !nextDateOfCalibration ||
+      !calibrationDoneBy ||
+      !name
+    ) {
+      showSnackbar('Please fill all required fields');
+      return;
+    }
+    console.log('========>', selectedEquipment._id);
     dispatch(
-      getEquipmentsCalibrationListing({
+      saveEquipmentsCalibrationInfo({
         projectId: loggedInUser.projectId,
-        testWorkCategoryType: testCategoryData.type,
-        testEquipmentTypeId: 'NA',
+        testEquipmentId: selectedEquipment._id,
+        body: {
+          name: name,
+          dateOfCalibration: getDbDateFromDDMMYYYY(dateOfCalibration),
+          nextDateOfCalibration: getDbDateFromDDMMYYYY(nextDateOfCalibration),
+          calibrationDoneBy: calibrationDoneBy,
+          additionalData: {},
+        },
       }),
     );
-    console.log('============', equipmentsCalibrationListing);
+  };
+
+  const renderEquipmentItem = (equipment: any) => {
+    return (
+      <View key={equipment._id} style={styles.itemContainer}>
+        <View style={styles.equipmentInfo}>
+          <Text style={styles.equipmentName}>{equipment.name}</Text>
+          <Text style={styles.equipmentDetails}>
+            {equipment.testEquipmentTypeName} • {equipment.make || 'N/A'} •{' '}
+            {equipment.modelNo || 'N/A'}
+          </Text>
+          <Text style={styles.equipmentId}>
+            ID: {equipment.uniqueEquipmentId}
+          </Text>
+        </View>
+        <View style={styles.iconContainer}>
+          <TouchableOpacity onPress={() => handleAddDetails(equipment)}>
+            <Image
+              source={require('./../../../../images/plus.png')}
+              style={styles.ActionIcon}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => handleEditEquipment(equipment)}>
+            <Image
+              source={require('./../../../../images/edit.png')}
+              style={styles.ActionIcon}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => handleDeleteEquipment(equipment._id)}>
+            <Image
+              source={require('./../../../../images/menu/delete.png')}
+              style={styles.ActionIcon}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  };
+
+  // Modal for adding calibration details
+  const renderCalibrationModal = () => {
+    return (
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(false);
+          resetFormFields();
+        }}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Calibration Details</Text>
+
+            {selectedEquipment && (
+              <View style={styles.equipmentInfoContainer}>
+                <Text style={styles.equipmentNameTitle}>
+                  {selectedEquipment.name}
+                </Text>
+
+                <View style={styles.equipmentPropertyContainer}>
+                  <Text style={styles.propertyLabel}>Category:</Text>
+                  <Text style={styles.propertyValue}>
+                    {selectedEquipment.testEquipmentCategoryName || 'N/A'}
+                  </Text>
+                </View>
+
+                <View style={styles.equipmentPropertyContainer}>
+                  <Text style={styles.propertyLabel}>Type:</Text>
+                  <Text style={styles.propertyValue}>
+                    {selectedEquipment.testEquipmentTypeName || 'N/A'}
+                  </Text>
+                </View>
+
+                {selectedEquipment.testEquipmentSubTypeName && (
+                  <View style={styles.equipmentPropertyContainer}>
+                    <Text style={styles.propertyLabel}>Sub Type:</Text>
+                    <Text style={styles.propertyValue}>
+                      {selectedEquipment.testEquipmentSubTypeName}
+                    </Text>
+                  </View>
+                )}
+
+                <View style={styles.divider} />
+              </View>
+            )}
+
+            <ScrollView style={styles.formContainer}>
+              <View style={styles.inputWrapper}>
+                <Text style={styles.inputLabel}>Name</Text>
+                <Input
+                  value={name}
+                  style={styles.input}
+                  label=""
+                  onChange={(value: string) => setName(value)}
+                  isRequired={true}
+                />
+              </View>
+
+              <CalendarPicker
+                label="Date of Calibration"
+                value={dateOfCalibration}
+                onChange={(value: any) => {
+                  setDateOfCalibration(value);
+                }}
+              />
+
+              <CalendarPicker
+                label="Next Date of Calibration"
+                value={nextDateOfCalibration}
+                onChange={(value: any) => {
+                  setNextDateOfCalibration(value);
+                }}
+              />
+
+              <View style={styles.inputWrapper}>
+                <Text style={styles.inputLabel}>Calibration Done By</Text>
+                <Input
+                  value={calibrationDoneBy}
+                  style={styles.input}
+                  label=""
+                  onChange={(value: string) => setCalibrationDoneBy(value)}
+                  isRequired={true}
+                />
+              </View>
+            </ScrollView>
+
+            <View style={styles.modalFooter}>
+              <TouchableOpacity
+                style={styles.cancelButton}
+                onPress={() => {
+                  setModalVisible(false);
+                  resetFormFields();
+                }}>
+                <Text style={styles.cancelButtonText}>Cancel</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.submitButton}
+                onPress={handleSubmitCalibration}>
+                <Text style={styles.submitButtonText}>Submit</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+    );
   };
 
   return (
     <View style={styles.recentWorkContainer}>
-      <ScrollView>
-        <TouchableOpacity
-          style={styles.btnCtaOutline}
-          onPress={() => {
-            console.log('Add Equipment Calibration');
-            navigation.navigate('EquipmentCalibration');
-          }}>
-          <Text style={styles.btnCtaTextOutline}>
-            Add Equipment Calibartion{' '}
-          </Text>
-        </TouchableOpacity>
-        <View style={styles.innerScrollView}>
-          <CustomSelectDropdown
-            label="Test Category"
-            data={equipmentCalibrationFormInfoData}
-            selectedValue={selectedTestCategoryData}
-            onSelect={handleCategorySelect}
-          />
-        </View>
-        {equipmentsCalibrationListing?.map((item: any, index: number) => {
-          return (
-            <>
-              <View style={[styles.itemContainerSourceDetailList]}>
-                <Text style={styles.itemText}>{item.name}</Text>
-                <View style={styles.iconContainer}>
-                  <TouchableOpacity onPress={() => console.log('Edit')}>
-                    <Image
-                      style={styles.ActionIcon}
-                      tintColor={'#333'}
-                      source={require('./../../../../images/edit.png')}
-                    />
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => console.log('Trash')}>
-                    <Image
-                      style={styles.ActionIcon}
-                      tintColor={'#333'}
-                      source={require('./../../../../images/trash.png')}
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </>
-          );
-        })}
+      <ScrollView contentContainerStyle={styles.innerScrollView}>
+        {equipmentListInfoData && equipmentListInfoData.length > 0 ? (
+          equipmentListInfoData.map(renderEquipmentItem)
+        ) : (
+          <Text style={styles.noDataText}>No equipment data found</Text>
+        )}
       </ScrollView>
+
+      {renderCalibrationModal()}
+
       <LoadingAnimation loading={loading} />
     </View>
   );
@@ -136,88 +319,132 @@ const EquipmentCalibrationListing = ({
 
 const styles = StyleSheet.create({
   ActionIcon: {
-    width: 20,
-    height: 20,
+    width: 24,
+    height: 24,
   },
-  // container: {
-  //     flex: 1,
-  //     paddingTop: 40,
-  //     paddingHorizontal: 20,
-  //   },
   itemContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 10,
-    marginVertical: 2,
-    backgroundColor: '#f9f9f9',
-    borderRadius: 4,
-    borderLeftWidth: 8,
+    padding: 15,
+    marginVertical: 8,
+    backgroundColor: '#ffffff',
+    borderRadius: 8,
+    borderLeftWidth: 4,
+    borderLeftColor: '#1C58C0',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 1},
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
-  itemContainerSourceDetailList: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 10,
-    marginVertical: 2,
-    backgroundColor: '#f9f9f9',
+  equipmentInfo: {
+    flex: 1,
+    paddingRight: 10,
   },
-  itemText: {
-    fontSize: 14,
-    maxWidth: 200,
+  equipmentName: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#333333',
+    marginBottom: 4,
+  },
+  equipmentDetails: {
+    fontSize: 13,
+    color: '#666666',
+    marginBottom: 2,
+  },
+  equipmentId: {
+    fontSize: 12,
+    color: '#888888',
   },
   iconContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    width: 110,
-  },
-  icon: {
-    margin: 0,
-    padding: 0,
+    width: 100,
   },
   recentWorkContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    padding: 20,
+    flex: 1,
+    backgroundColor: '#f5f7fa',
+    padding: 15,
   },
   innerScrollView: {
-    paddingBottom: 10,
-    paddingTop: 15,
+    paddingBottom: 60,
   },
-  footerButton: {
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    backgroundColor: '#fff',
-    marginTop: 15,
-    height: 78,
-    flexDirection: 'row',
-    alignItems: 'center',
+  noDataText: {
+    textAlign: 'center',
+    marginTop: 40,
+    fontSize: 16,
+    color: '#666666',
+  },
+  // Modal styles
+  modalContainer: {
+    flex: 1,
     justifyContent: 'center',
-    gap: 10,
-  },
-  btnCtaOutline: {
-    borderRadius: 30,
-    borderWidth: 1,
-    borderColor: '#1C58C0',
-    backgroundColor: '#fff',
-    paddingHorizontal: 30,
-    paddingVertical: 12,
     alignItems: 'center',
-    justifyContent: 'center',
-    minWidth: 130,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
-  btnCtaTextOutline: {
+  modalContent: {
+    width: '90%',
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    maxHeight: '90%',
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: '#333',
+    textAlign: 'center',
+  },
+  equipmentInfoContainer: {
+    backgroundColor: '#f5f7fa',
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 15,
+  },
+  equipmentNameTitle: {
+    fontSize: 16,
+    fontWeight: '600',
     color: '#1C58C0',
-    fontSize: 14,
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  equipmentPropertyContainer: {
+    flexDirection: 'row',
+    marginBottom: 4,
+    alignItems: 'center',
+  },
+  propertyLabel: {
+    fontSize: 13,
     fontWeight: '500',
+    color: '#555',
+    width: 110,
   },
-  mixDesignContainer: {
-    marginTop: 15,
+  propertyValue: {
+    fontSize: 13,
+    color: '#333',
+    flex: 1,
   },
-  inputContainer: {
-    marginBottom: 20,
+  divider: {
+    height: 1,
+    backgroundColor: '#ddd',
+    marginTop: 8,
+  },
+  formContainer: {
+    maxHeight: 360,
+  },
+  inputWrapper: {
+    marginBottom: 15,
   },
   inputLabel: {
     fontSize: 14,
@@ -225,63 +452,48 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     color: '#333',
   },
-  inputWrapper: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    paddingHorizontal: 10,
-  },
   input: {
     height: 40,
     fontSize: 14,
-  },
-  tableContainer: {
-    borderWidth: 1,
     borderColor: '#ddd',
     borderRadius: 8,
-    overflow: 'hidden',
-    marginBottom: 20,
   },
-  tableHeader: {
+  modalFooter: {
     flexDirection: 'row',
-    backgroundColor: '#f5f5f5',
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    justifyContent: 'space-between',
+    marginTop: 15,
   },
-  tableHeaderCell: {
-    fontWeight: '600',
-    fontSize: 14,
-    color: '#333',
-  },
-  tableRow: {
-    flexDirection: 'row',
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
-    alignItems: 'center',
-  },
-  tableCell: {
-    fontSize: 14,
-    color: '#333',
-    paddingRight: 5,
-  },
-  tableCellDropdown: {
-    paddingHorizontal: 5,
-  },
-  tableCellInput: {
-    paddingLeft: 5,
-  },
-  qtyInput: {
-    height: 40,
-    fontSize: 14,
+  cancelButton: {
+    flex: 1,
+    borderRadius: 30,
     borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 6,
-    paddingHorizontal: 8,
+    borderColor: '#ccc',
+    backgroundColor: '#fff',
+    paddingVertical: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 10,
   },
-  materialDropdown: {
-    width: '100%',
+  cancelButtonText: {
+    color: '#666',
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  submitButton: {
+    flex: 1,
+    borderRadius: 30,
+    borderWidth: 1,
+    borderColor: '#1C58C0',
+    backgroundColor: '#1C58C0',
+    paddingVertical: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: 10,
+  },
+  submitButtonText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '500',
   },
 });
 

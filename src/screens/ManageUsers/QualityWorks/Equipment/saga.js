@@ -37,6 +37,7 @@ function* getEquipmentsListData({payload}) {
   try {
     const response = yield getEquipmentsDataApi(
       payload.projectId,
+      payload.testEquipmentCategoryType || 'NA'
     );
     yield put({type: 'GET_EQUIPMENTS_LIST_DATA_SUCCESS', response});
   } catch (error) {

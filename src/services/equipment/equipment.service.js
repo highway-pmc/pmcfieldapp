@@ -12,10 +12,10 @@ export const getEquipmentMasterDataApi = async () => {
     });
 };
 
-export const getEquipmentsDataApi = async projectId => {
+export const getEquipmentsDataApi = async (projectId, testWorkCategoryType) => {
   return apiService
     .getRequest(
-      `v1/auth/projects/${projectId}/test-equipment-category/NA/test-equipment-type/NA/equipments`,
+      `v1/auth/projects/${projectId}/test-equipment-category/${testWorkCategoryType}/test-equipment-type/NA/equipments`,
     )
     .then(response => {
       console.log('response ===== API ======', response);

@@ -20,3 +20,7 @@ export const saveEquipmentsInfo = payload => ({
   type: 'SAVE_EQUIPMENTS_FORM_INFO_REQUEST',
   payload: payload,
 });
+
+export const clearEquipmentData = () => ({
+  type: 'CLEAR_EQUIPMENTS_FORM_DATA_REQUEST'
+});

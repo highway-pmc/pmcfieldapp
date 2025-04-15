@@ -88,7 +88,7 @@ const EquipmentAdd = ({navigation, route}: {navigation: any; route: any}) => {
       showSnackbar('Data saved Succesfull');
       setTimeout(() => {
         navigation.navigate('EquipmentListing');
-      }, 3000);
+      }, 2000);
     }
     if (equipmentsMasterData) {
       setEquipmentCalibrationFormInfoData(equipmentsMasterData);

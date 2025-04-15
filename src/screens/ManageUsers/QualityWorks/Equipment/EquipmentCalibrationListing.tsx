@@ -28,7 +28,7 @@ const EquipmentCalibrationListing = ({
   navigation: any;
   route: any;
 }) => {
-  const {testEquipmentCategoryId, testEquipmentCategoryName} = route.params;
+  const {testEquipmentCategoryId, testEquipmentCategoryName, testEquipmentCategoryType} = route.params;
   const {height} = Dimensions.get('window');
   const calculatedHeight = height * 0.75;
   const {showSnackbar} = useSnackbar();
@@ -50,12 +50,6 @@ const EquipmentCalibrationListing = ({
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedEquipment, setSelectedEquipment] = useState<any>(null);
 
-  // Form fields for the modal
-  const [dateOfCalibration, setDateOfCalibration] = useState('');
-  const [nextDateOfCalibration, setNextDateOfCalibration] = useState('');
-  const [calibrationDoneBy, setCalibrationDoneBy] = useState('');
-  const [name, setName] = useState('');
-
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();
     eventEmitter.emit('headerEvent', HeaderItems.equipmentListing);
@@ -63,7 +57,7 @@ const EquipmentCalibrationListing = ({
 
   useEffect(() => {
     if (focus == true) {
-      dispatch(getEquipmentsListData({projectId: loggedInUser.projectId}));
+      dispatch(getEquipmentsListData({projectId: loggedInUser.projectId, testEquipmentCategoryType: testEquipmentCategoryType}));
     }
   }, [focus]);
 
@@ -73,37 +67,10 @@ const EquipmentCalibrationListing = ({
       console.log('=======ERROR=======', error);
     }
 
-    if (equipmentsListData && equipmentsListData.length > 0) {
-      console.log(
-        '==== Hello  EquipmentsListData ======',
-        testEquipmentCategoryId,
-      );
-      const filteredData = equipmentsListData.filter(
-        (equipment: any) =>
-          equipment.testEquipmentCategoryId === testEquipmentCategoryId,
-      );
-      setEquipmentListInfoData(filteredData);
-      console.log('Filtered Data:', filteredData);
+    if (equipmentsListData) {
+      setEquipmentListInfoData(equipmentsListData);
     }
   }, [equipmentsListData, error]);
-
-  useEffect(() => {
-    if (savedEquipmentsCalibrationFormInfo) {
-      showSnackbar('Calibration data saved successfully');
-      setModalVisible(false);
-      dispatch(getEquipmentsListData({projectId: loggedInUser.projectId}));
-      // Reset form fields
-      resetFormFields();
-    }
-  }, [savedEquipmentsCalibrationFormInfo]);
-
-  const resetFormFields = () => {
-    setDateOfCalibration('');
-    setNextDateOfCalibration('');
-    setCalibrationDoneBy('');
-    setName('');
-    setSelectedEquipment(null);
-  };
 
   const handleEditEquipment = (equipment: any) => {};
 
@@ -112,7 +79,6 @@ const EquipmentCalibrationListing = ({
   };
 
   const handleAddDetails = (equipment: any) => {
-    console.log('===equipmentCalibrations===', equipment.equipmentCalibrations);
     navigation.navigate('EquipmentCalibration', {
       _id: equipment._id,
       name: equipment.name,
@@ -124,32 +90,6 @@ const EquipmentCalibrationListing = ({
     // setSelectedEquipment(equipment);
     // console.log('===  Eq  =====>', equipment);
     // setModalVisible(true);
-  };
-
-  const handleSubmitCalibration = () => {
-    if (
-      !dateOfCalibration ||
-      !nextDateOfCalibration ||
-      !calibrationDoneBy ||
-      !name
-    ) {
-      showSnackbar('Please fill all required fields');
-      return;
-    }
-    console.log('========>', selectedEquipment._id);
-    dispatch(
-      saveEquipmentsCalibrationInfo({
-        projectId: loggedInUser.projectId,
-        testEquipmentId: selectedEquipment._id,
-        body: {
-          name: name,
-          dateOfCalibration: getDbDateFromDDMMYYYY(dateOfCalibration),
-          nextDateOfCalibration: getDbDateFromDDMMYYYY(nextDateOfCalibration),
-          calibrationDoneBy: calibrationDoneBy,
-          additionalData: {},
-        },
-      }),
-    );
   };
 
   const renderEquipmentItem = (equipment: any) => {
@@ -190,116 +130,6 @@ const EquipmentCalibrationListing = ({
     );
   };
 
-  // Modal for adding calibration details
-  const renderCalibrationModal = () => {
-    return (
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(false);
-          resetFormFields();
-        }}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Calibration Details</Text>
-
-            {selectedEquipment && (
-              <View style={styles.equipmentInfoContainer}>
-                <Text style={styles.equipmentNameTitle}>
-                  {selectedEquipment.name}
-                </Text>
-
-                <View style={styles.equipmentPropertyContainer}>
-                  <Text style={styles.propertyLabel}>Category:</Text>
-                  <Text style={styles.propertyValue}>
-                    {selectedEquipment.testEquipmentCategoryName || 'N/A'}
-                  </Text>
-                </View>
-
-                <View style={styles.equipmentPropertyContainer}>
-                  <Text style={styles.propertyLabel}>Type:</Text>
-                  <Text style={styles.propertyValue}>
-                    {selectedEquipment.testEquipmentTypeName || 'N/A'}
-                  </Text>
-                </View>
-
-                {selectedEquipment.testEquipmentSubTypeName && (
-                  <View style={styles.equipmentPropertyContainer}>
-                    <Text style={styles.propertyLabel}>Sub Type:</Text>
-                    <Text style={styles.propertyValue}>
-                      {selectedEquipment.testEquipmentSubTypeName}
-                    </Text>
-                  </View>
-                )}
-
-                <View style={styles.divider} />
-              </View>
-            )}
-
-            <ScrollView style={styles.formContainer}>
-              <View style={styles.inputWrapper}>
-                <Text style={styles.inputLabel}>Name</Text>
-                <Input
-                  value={name}
-                  style={styles.input}
-                  label=""
-                  onChange={(value: string) => setName(value)}
-                  isRequired={true}
-                />
-              </View>
-
-              <CalendarPicker
-                label="Date of Calibration"
-                value={dateOfCalibration}
-                onChange={(value: any) => {
-                  setDateOfCalibration(value);
-                }}
-              />
-
-              <CalendarPicker
-                label="Next Date of Calibration"
-                value={nextDateOfCalibration}
-                onChange={(value: any) => {
-                  setNextDateOfCalibration(value);
-                }}
-              />
-
-              <View style={styles.inputWrapper}>
-                <Text style={styles.inputLabel}>Calibration Done By</Text>
-                <Input
-                  value={calibrationDoneBy}
-                  style={styles.input}
-                  label=""
-                  onChange={(value: string) => setCalibrationDoneBy(value)}
-                  isRequired={true}
-                />
-              </View>
-            </ScrollView>
-
-            <View style={styles.modalFooter}>
-              <TouchableOpacity
-                style={styles.cancelButton}
-                onPress={() => {
-                  setModalVisible(false);
-                  resetFormFields();
-                }}>
-                <Text style={styles.cancelButtonText}>Cancel</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.submitButton}
-                onPress={handleSubmitCalibration}>
-                <Text style={styles.submitButtonText}>Submit</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
-    );
-  };
-
   return (
     <View style={styles.recentWorkContainer}>
       <ScrollView contentContainerStyle={styles.innerScrollView}>
@@ -309,8 +139,6 @@ const EquipmentCalibrationListing = ({
           <Text style={styles.noDataText}>No equipment data found</Text>
         )}
       </ScrollView>
-
-      {renderCalibrationModal()}
 
       <LoadingAnimation loading={loading} />
     </View>

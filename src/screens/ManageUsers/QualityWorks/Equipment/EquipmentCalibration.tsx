@@ -15,7 +15,7 @@ import {useSnackbar} from '../../../../context/SnackbarContext';
 import {useDispatch, useSelector} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
 import LoadingAnimation from '../../../Common/LoadingAnimation';
-import {getEquipmentsListData, saveEquipmentsCalibrationInfo} from './actions';
+import {clearEquipmentData, getEquipmentsListData, saveEquipmentsCalibrationInfo} from './actions';
 import CalendarPicker from '../../../../components/UI/CalenderPicker';
 import Input from '../../../../components/UI/Input';
 import {getDbDateFromDDMMYYYY} from '../../../../utils/Utils';
@@ -48,7 +48,7 @@ const EquipmentCalibration = ({
     (state: any) => state.EquipmentsCalibration,
   );
 
-  const [calibrationListData, setCalibrationListData] = useState([]);
+  const [calibrationListData, setCalibrationListData]: any = useState([]);
 
   // Modal state
   const [modalVisible, setModalVisible] = useState(false);
@@ -68,8 +68,9 @@ const EquipmentCalibration = ({
     if (focus) {
       // If equipment data is passed, extract the calibration data
       if (equipmentData) {
-        setCalibrationListData(equipmentData);
-        
+        dispatch(clearEquipmentData());
+        setCalibrationListData([]);
+        setCalibrationListData([...equipmentData]);
       }
     }
   }, [focus, equipmentData]);
@@ -77,22 +78,14 @@ const EquipmentCalibration = ({
   useEffect(() => {
     if (error) {
       showSnackbar('Unable to save calibration data');
-      console.log('=======ERROR=======', error);
     }
 
     if (savedEquipmentsCalibrationFormInfo) {
       showSnackbar('Calibration data saved successfully');
       setModalVisible(false);
-
+      setCalibrationListData([...calibrationListData, savedEquipmentsCalibrationFormInfo])
       // Add the new calibration to the list
-      const newCalibration = {
-        _id: savedEquipmentsCalibrationFormInfo._id,
-        name: calibrationName,
-        dateOfCalibration: getDbDateFromDDMMYYYY(dateOfCalibration),
-        nextDateOfCalibration: getDbDateFromDDMMYYYY(nextDateOfCalibration),
-        calibrationDoneBy: calibrationDoneBy,
-        createdAt: new Date().toISOString(),
-      };
+      
       resetFormFields();
     }
   }, [savedEquipmentsCalibrationFormInfo, error]);
@@ -102,6 +95,7 @@ const EquipmentCalibration = ({
     setNextDateOfCalibration('');
     setCalibrationDoneBy('');
     setCalibrationName('');
+    dispatch(clearEquipmentData());
   };
 
   const handleSubmitCalibration = () => {

@@ -1898,20 +1898,6 @@ const SourceApprovalsReducer = (state = sourceApprovalsState, action) => {
         error: null,
         loading: true,
       };
-      return {
-        ...state,
-        sourceApprovals: null,
-        sourceApprovalsByStatus: null,
-        addedSourceApproval: null,
-        patchedSourceApproval: null,
-        updatedSourceApproval: null,
-        deletedSourceApproval: null,
-        addedSourceDetail: null,
-        updatedSourceDetail: null,
-        deletedSourceDetail: null,
-        error: action.error,
-        loading: false,
-      };
     default:
       return state;
   }
@@ -1981,6 +1967,7 @@ const EquimentCalibrationReducer = (state = sourceApprovalsState, action) => {
     case 'SAVE_EQUIPMENTS_CALIBRATION_FORM_INFO_REQUEST':
       return {
         ...state,
+        savedEquipmentsCalibrationFormInfo: null,
         error: null,
         loading: true,
       };
@@ -2016,6 +2003,17 @@ const EquimentCalibrationReducer = (state = sourceApprovalsState, action) => {
         ...state,
         savedEquipmentsCalibrationListInfo: null,
         error: action.error,
+        loading: false,
+      };
+    case 'CLEAR_EQUIPMENTS_FORM_DATA_REQUEST':
+      return {
+        ...state,
+        equipmentsCalibrationListing: null,
+        savedEquipmentsCalibrationListInfo: null,
+        savedEquipmentsCalibrationFormInfo: null,
+        equipmentsListData: null,
+        equipmentsMasterData: null,
+        error: null,
         loading: false,
       };
 

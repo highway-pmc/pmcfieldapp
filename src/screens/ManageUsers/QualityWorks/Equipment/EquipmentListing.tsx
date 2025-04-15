@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -10,15 +10,17 @@ import {
   Image,
 } from 'react-native';
 import CustomSelectDropdown from '../../../Common/CustomSelectDropdown';
-import {useSnackbar} from '../../../../context/SnackbarContext';
-import {useDispatch, useSelector} from 'react-redux';
-import {useIsFocused} from '@react-navigation/native';
+import { useSnackbar } from '../../../../context/SnackbarContext';
+import { useDispatch, useSelector } from 'react-redux';
+import { useIsFocused } from '@react-navigation/native';
 import LoadingAnimation from '../../../Common/LoadingAnimation';
 import {
   getEquipmentsMasterData,
   getEquipmentsCalibrationListing,
+  getEquipmentsListData,
+  clearEquipmentData,
 } from './actions';
-import {HeaderItems} from '../../../../constants/constants';
+import { HeaderItems } from '../../../../constants/constants';
 
 const EquipmentListing = ({
   navigation,
@@ -27,43 +29,57 @@ const EquipmentListing = ({
   navigation: any;
   route: any;
 }) => {
-  const {height} = Dimensions.get('window');
+  const { height } = Dimensions.get('window');
   const calculatedHeight = height * 0.75;
-  const {showSnackbar} = useSnackbar();
+  const { showSnackbar } = useSnackbar();
   const focus = useIsFocused();
 
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
 
   const dispatch = useDispatch();
 
-  const {equipmentsMasterData, equipmentsCalibrationListing, loading, error} =
+  const { equipmentsMasterData, equipmentsListData, loading, error } =
     useSelector((state: any) => state.EquipmentsCalibration);
   const [equipmentInfoData, setEquipmentInfoData] = useState([]);
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();
     eventEmitter.emit('headerEvent', HeaderItems.equipmentListing);
   }
-  //const getEquipmentList
+
   useEffect(() => {
-    dispatch(getEquipmentsMasterData());
-  }, []);
+    if (focus == true) {
+      console.log('==EquipmentListing==');
+      dispatch(clearEquipmentData());
+      setEquipmentInfoData([]);
+      dispatch(getEquipmentsMasterData());
+    }
+  }, [focus]);
+
   const navigateToListOfEquipment = (item: any) => {
-    console.log("==Params==",item);
+    console.log("==Params==", item);
     navigation.navigate('EquipmentCalibrationListing', {
       testEquipmentCategoryId: item._id,
       testEquipmentCategoryName: item.name,
+      testEquipmentCategoryType: item.type,
     });
   };
   useEffect(() => {
     if (error) {
       showSnackbar('Unable to saveMix design data');
-      console.log('=======ERROR=======', error);
     }
-    if (equipmentsMasterData) {
+    if (equipmentsMasterData && !equipmentInfoData?.length) {
       setEquipmentInfoData(equipmentsMasterData);
-      console.log('=====', equipmentsMasterData);
+      dispatch(getEquipmentsListData({ projectId: loggedInUser.projectId }));
     }
-  }, [error]);
+    if (equipmentsListData) {
+      equipmentInfoData.forEach((item: any) => {
+        item.noOfEquipment = equipmentsListData.filter((euip: any) => euip.testEquipmentCategoryId == item._id)?.length || 0;
+      });
+
+      setEquipmentInfoData([...equipmentInfoData]);
+    }
+  }, [equipmentsMasterData, equipmentsListData, error]);
+
   // Show loader until the equipmentsMasterData is loaded
   if (!equipmentsMasterData || loading) {
     return <LoadingAnimation loading={true} />;
@@ -80,14 +96,19 @@ const EquipmentListing = ({
       </TouchableOpacity>
       <ScrollView>
         <View style={styles.innerScrollView}>
-          {equipmentsMasterData &&
-            equipmentsMasterData.map((item: any, index: any) => (
+          {equipmentInfoData &&
+            equipmentInfoData.map((item: any, index: any) => (
               <TouchableOpacity
                 key={index}
                 onPress={() => navigateToListOfEquipment(item)}
                 style={styles.equipmentCard}>
                 <View style={styles.equipmentCardContent}>
                   <Text style={styles.equipmentName}>{item.name}</Text>
+                </View>
+                <View style={styles.equipmentCardContent}>
+                  <Text style={styles.equipmentCount}>
+                    {item.noOfEquipment}
+                  </Text>
                 </View>
               </TouchableOpacity>
             ))}
@@ -252,7 +273,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginVertical: 8,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 1},
+    shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
     elevation: 2,

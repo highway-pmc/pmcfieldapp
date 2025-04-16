@@ -20,7 +20,8 @@ import {
   clearEquipmentData,
   getEquipmentsListData,
   saveEquipmentsCalibrationInfo,
-  deleteEquipmentCalibration, // Import the delete calibration action
+  editEquipmentsCalibration, // Import the edit action
+  deleteEquipmentCalibration,
 } from './actions';
 import CalendarPicker from '../../../../components/UI/CalenderPicker';
 import Input from '../../../../components/UI/Input';
@@ -54,6 +55,7 @@ const EquipmentCalibration = ({
     loading,
     error,
     savedEquipmentsCalibrationFormInfo,
+    editedEquipmentsCalibrationFormInfo, // Add state for edited data
     deletedEquipmentCalibration,
   } = useSelector((state: any) => state.EquipmentsCalibration);
 
@@ -61,6 +63,8 @@ const EquipmentCalibration = ({
 
   // Modal state
   const [modalVisible, setModalVisible] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [currentCalibrationId, setCurrentCalibrationId] = useState('');
 
   // Form fields for the modal
   const [dateOfCalibration, setDateOfCalibration] = useState('');
@@ -100,6 +104,25 @@ const EquipmentCalibration = ({
     }
   }, [savedEquipmentsCalibrationFormInfo, error]);
 
+  // Add effect for handling edited calibration data
+  useEffect(() => {
+    if (editedEquipmentsCalibrationFormInfo) {
+      showSnackbar('Calibration data updated successfully');
+      setModalVisible(false);
+
+      // Update the calibration list with the edited data
+      setCalibrationListData(
+        calibrationListData.map((item: any) =>
+          item._id === editedEquipmentsCalibrationFormInfo._id
+            ? editedEquipmentsCalibrationFormInfo
+            : item,
+        ),
+      );
+
+      resetFormFields();
+    }
+  }, [editedEquipmentsCalibrationFormInfo]);
+
   useEffect(() => {
     if (deletedEquipmentCalibration) {
       showSnackbar('Calibration record deleted successfully');
@@ -118,6 +141,8 @@ const EquipmentCalibration = ({
     setNextDateOfCalibration('');
     setCalibrationDoneBy('');
     setCalibrationName('');
+    setIsEditing(false);
+    setCurrentCalibrationId('');
     dispatch(clearEquipmentData());
   };
 
@@ -132,22 +157,67 @@ const EquipmentCalibration = ({
       return;
     }
 
-    dispatch(
-      saveEquipmentsCalibrationInfo({
-        projectId: loggedInUser.projectId,
-        testEquipmentId: _id,
-        body: {
-          name: calibrationName,
-          dateOfCalibration: getDbDateFromDDMMYYYY(dateOfCalibration),
-          nextDateOfCalibration: getDbDateFromDDMMYYYY(nextDateOfCalibration),
-          calibrationDoneBy: calibrationDoneBy,
-          additionalData: {},
-        },
-      }),
-    );
+    const calibrationData = {
+      name: calibrationName,
+      dateOfCalibration: getDbDateFromDDMMYYYY(dateOfCalibration),
+      nextDateOfCalibration: getDbDateFromDDMMYYYY(nextDateOfCalibration),
+      calibrationDoneBy: calibrationDoneBy,
+      additionalData: {},
+    };
+
+    if (isEditing) {
+      // Handle edit
+      dispatch(
+        editEquipmentsCalibration({
+          projectId: loggedInUser.projectId,
+          testEquipmentId: _id,
+          testEquipmentCalibrationId: currentCalibrationId,
+          body: calibrationData,
+        }),
+      );
+    } else {
+      // Handle add
+      dispatch(
+        saveEquipmentsCalibrationInfo({
+          projectId: loggedInUser.projectId,
+          testEquipmentId: _id,
+          body: calibrationData,
+        }),
+      );
+    }
   };
 
-  // New function to handle calibration deletion
+  // New function to handle calibration edit
+  const handleEditCalibration = (calibration: any) => {
+    // Convert date format from database to DD/MM/YYYY for display
+    const formatDateForDisplay = (dateString: string) => {
+      if (!dateString) return '';
+      const date = new Date(dateString);
+      return `${date.getDate().toString().padStart(2, '0')}/${(
+        date.getMonth() + 1
+      )
+        .toString()
+        .padStart(2, '0')}/${date.getFullYear()}`;
+    };
+
+    // Set form fields with calibration data
+    setCalibrationName(calibration.name || '');
+    setDateOfCalibration(
+      formatDateForDisplay(calibration.dateOfCalibration) || '',
+    );
+    setNextDateOfCalibration(
+      formatDateForDisplay(calibration.nextDateOfCalibration) || '',
+    );
+    setCalibrationDoneBy(calibration.calibrationDoneBy || '');
+
+    // Set editing state
+    setIsEditing(true);
+    setCurrentCalibrationId(calibration._id);
+
+    // Open modal
+    setModalVisible(true);
+  };
+
   const handleDeleteCalibration = (calibrationId: string) => {
     Alert.alert(
       'Delete Calibration Record',
@@ -196,20 +266,31 @@ const EquipmentCalibration = ({
             Done By: {calibration.calibrationDoneBy || 'N/A'}
           </Text>
         </View>
-        {/* Add delete button for calibration entries */}
-        <TouchableOpacity
-          onPress={() => handleDeleteCalibration(calibration._id)}
-          style={styles.deleteButton}>
-          <Image
-            source={require('./../../../../images/menu/delete.png')}
-            style={styles.actionIcon}
-          />
-        </TouchableOpacity>
+        <View style={styles.actionButtons}>
+          {/* Add edit button */}
+          <TouchableOpacity
+            onPress={() => handleEditCalibration(calibration)}
+            style={styles.actionButton}>
+            <Image
+              source={require('./../../../../images/edit.png')}
+              style={styles.actionIcon}
+            />
+          </TouchableOpacity>
+          {/* Delete button */}
+          <TouchableOpacity
+            onPress={() => handleDeleteCalibration(calibration._id)}
+            style={styles.actionButton}>
+            <Image
+              source={require('./../../../../images/menu/delete.png')}
+              style={styles.actionIcon}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
     );
   };
 
-  // Modal for adding calibration details
+  // Modal for adding/editing calibration details
   const renderCalibrationModal = () => {
     return (
       <Modal
@@ -222,7 +303,11 @@ const EquipmentCalibration = ({
         }}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Calibration Details</Text>
+            <Text style={styles.modalTitle}>
+              {isEditing
+                ? 'Edit Calibration Details'
+                : 'Add Calibration Details'}
+            </Text>
 
             <View style={styles.equipmentInfoContainer}>
               <Text style={styles.equipmentNameTitle}>{name}</Text>
@@ -230,14 +315,14 @@ const EquipmentCalibration = ({
               <View style={styles.equipmentPropertyContainer}>
                 <Text style={styles.propertyLabel}>Category:</Text>
                 <Text style={styles.propertyValue}>
-                  {testEquipmentCategoryName || 'N/A'}
+                  {testEquipmentCategoryName}
                 </Text>
               </View>
 
               <View style={styles.equipmentPropertyContainer}>
                 <Text style={styles.propertyLabel}>Type:</Text>
                 <Text style={styles.propertyValue}>
-                  {testEquipmentTypeName || 'N/A'}
+                  {testEquipmentTypeName}
                 </Text>
               </View>
 
@@ -306,7 +391,9 @@ const EquipmentCalibration = ({
               <TouchableOpacity
                 style={styles.submitButton}
                 onPress={handleSubmitCalibration}>
-                <Text style={styles.submitButtonText}>Submit</Text>
+                <Text style={styles.submitButtonText}>
+                  {isEditing ? 'Update' : 'Submit'}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -321,7 +408,10 @@ const EquipmentCalibration = ({
       <View style={[styles.headerContainer, {justifyContent: 'center'}]}>
         <TouchableOpacity
           style={styles.btnCtaOutline}
-          onPress={() => setModalVisible(true)}>
+          onPress={() => {
+            resetFormFields();
+            setModalVisible(true);
+          }}>
           <Text style={styles.btnCtaTextOutline}>Add Calibration</Text>
         </TouchableOpacity>
       </View>
@@ -565,12 +655,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#666666',
   },
+  actionButtons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  actionButton: {
+    padding: 8,
+    marginLeft: 5,
+  },
   actionIcon: {
     width: 24,
     height: 24,
-  },
-  deleteButton: {
-    padding: 8,
   },
 });
 

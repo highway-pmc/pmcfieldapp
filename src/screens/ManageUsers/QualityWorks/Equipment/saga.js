@@ -7,6 +7,8 @@ import {
   saveEquipmentFormInfoApi,
   deleteEquipmentCalibrationFormInfoApi,
   deleteEquipmentFormInfoApi,
+  editEquipmentCalibrationFormInfoApi,
+  editEquipmentFormInfoApi,
 } from '../../../../services/equipment/equipment.service';
 
 function* getEquipmentMasterData() {
@@ -185,6 +187,6 @@ export default function* equipmentCalibrationScreenSaga() {
     deleteEquipmentCalibrationInfo,
   );
   yield takeLatest('DELETE_EQUIPMENT_REQUEST', deleteEquipmentInfo);
-  yield takeEvery('EDIT_EQUIPMENTS_CALIBRATION_FORM_INFO_REQUEST', editEquipmentsCalibrationInfo);
-  yield takeEvery('EDIT_EQUIPMENTS_FORM_INFO_REQUEST', editEquipmentsInfo);
+  yield takeLatest('EDIT_EQUIPMENTS_CALIBRATION_FORM_INFO_REQUEST', editEquipmentsCalibrationInfo);
+  yield takeLatest('EDIT_EQUIPMENTS_FORM_INFO_REQUEST', editEquipmentsInfo);
 }

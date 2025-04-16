@@ -35,7 +35,7 @@ export const deleteEquipment = payload => ({
   payload: payload,
 });
 
-export const editEquipmentsCalibrationInfo = payload => ({
+export const editEquipmentsCalibration = payload => ({
   type: 'EDIT_EQUIPMENTS_CALIBRATION_FORM_INFO_REQUEST',
   payload: payload,
 });

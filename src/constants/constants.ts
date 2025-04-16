@@ -46,7 +46,7 @@ export const HeaderItems = {
   procurements: {showBack: true, title: 'Procurements'},
   mixDesignListing: {showBack: false, title: 'Mix Design'},
   mixDesignInfo: {showBack: true, title: 'Mix Design'},
-  equipmentListing: {showBack: true, title: 'Equipment'},
+  equipmentListing: {showBack: false, title: 'Equipment'},
   equipmentInfo: {showBack: true, title: 'Equipment '},
   equipmentCalibrationListing: {showBack: true, title: 'Equipment Calibration'},
   equipmentCalibrationInfo: {showBack: true, title: 'Equipment'},

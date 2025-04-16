@@ -9,13 +9,18 @@ import {
   NativeEventEmitter,
   Image,
   Modal,
+  Alert,
 } from 'react-native';
 import CustomSelectDropdown from '../../../Common/CustomSelectDropdown';
 import {useSnackbar} from '../../../../context/SnackbarContext';
 import {useDispatch, useSelector} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
 import LoadingAnimation from '../../../Common/LoadingAnimation';
-import {getEquipmentsListData, saveEquipmentsCalibrationInfo} from './actions';
+import {
+  getEquipmentsListData,
+  saveEquipmentsCalibrationInfo,
+  deleteEquipment, // Import the delete action
+} from './actions';
 import {HeaderItems} from '../../../../constants/constants';
 import CalendarPicker from '../../../../components/UI/CalenderPicker';
 import Input from '../../../../components/UI/Input';
@@ -28,7 +33,11 @@ const EquipmentCalibrationListing = ({
   navigation: any;
   route: any;
 }) => {
-  const {testEquipmentCategoryId, testEquipmentCategoryName, testEquipmentCategoryType} = route.params;
+  const {
+    testEquipmentCategoryId,
+    testEquipmentCategoryName,
+    testEquipmentCategoryType,
+  } = route.params;
   const {height} = Dimensions.get('window');
   const calculatedHeight = height * 0.75;
   const {showSnackbar} = useSnackbar();
@@ -43,21 +52,23 @@ const EquipmentCalibrationListing = ({
     loading,
     error,
     savedEquipmentsCalibrationFormInfo,
+    deletedEquipment, // Add this to track delete operation state
   } = useSelector((state: any) => state.EquipmentsCalibration);
   const [equipmentListInfoData, setEquipmentListInfoData] = useState<any[]>([]);
 
-  // Modal state
-  const [modalVisible, setModalVisible] = useState(false);
-  const [selectedEquipment, setSelectedEquipment] = useState<any>(null);
-
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();
-    eventEmitter.emit('headerEvent', HeaderItems.equipmentListing);
+    eventEmitter.emit('headerEvent', HeaderItems.equipmentCalibrationListing);
   }
 
   useEffect(() => {
     if (focus == true) {
-      dispatch(getEquipmentsListData({projectId: loggedInUser.projectId, testEquipmentCategoryType: testEquipmentCategoryType}));
+      dispatch(
+        getEquipmentsListData({
+          projectId: loggedInUser.projectId,
+          testEquipmentCategoryType: testEquipmentCategoryType,
+        }),
+      );
     }
   }, [focus]);
 
@@ -72,10 +83,44 @@ const EquipmentCalibrationListing = ({
     }
   }, [equipmentsListData, error]);
 
+  useEffect(() => {
+    if (deletedEquipment) {
+      showSnackbar('Equipment deleted successfully');
+      dispatch(
+        getEquipmentsListData({
+          projectId: loggedInUser.projectId,
+          testEquipmentCategoryType: testEquipmentCategoryType,
+        }),
+      );
+    }
+  }, [deletedEquipment]);
+
   const handleEditEquipment = (equipment: any) => {};
 
   const handleDeleteEquipment = (equipmentId: string) => {
-    // Implement delete functionality
+    console.log('Clicked on delete function');
+    Alert.alert(
+      'Delete Equipment',
+      'Are you sure you want to delete this equipment?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          onPress: () => {
+            dispatch(
+              deleteEquipment({
+                projectId: loggedInUser.projectId,
+                testEquipmentId: equipmentId,
+              }),
+            );
+          },
+          style: 'destructive',
+        },
+      ],
+    );
   };
 
   const handleAddDetails = (equipment: any) => {

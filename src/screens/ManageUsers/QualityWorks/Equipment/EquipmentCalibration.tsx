@@ -9,13 +9,19 @@ import {
   NativeEventEmitter,
   Image,
   Modal,
+  Alert,
 } from 'react-native';
 import {HeaderItems} from '../../../../constants/constants';
 import {useSnackbar} from '../../../../context/SnackbarContext';
 import {useDispatch, useSelector} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
 import LoadingAnimation from '../../../Common/LoadingAnimation';
-import {clearEquipmentData, getEquipmentsListData, saveEquipmentsCalibrationInfo} from './actions';
+import {
+  clearEquipmentData,
+  getEquipmentsListData,
+  saveEquipmentsCalibrationInfo,
+  deleteEquipmentCalibration, // Import the delete calibration action
+} from './actions';
 import CalendarPicker from '../../../../components/UI/CalenderPicker';
 import Input from '../../../../components/UI/Input';
 import {getDbDateFromDDMMYYYY} from '../../../../utils/Utils';
@@ -44,9 +50,12 @@ const EquipmentCalibration = ({
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
   const dispatch = useDispatch();
 
-  const {loading, error, savedEquipmentsCalibrationFormInfo} = useSelector(
-    (state: any) => state.EquipmentsCalibration,
-  );
+  const {
+    loading,
+    error,
+    savedEquipmentsCalibrationFormInfo,
+    deletedEquipmentCalibration,
+  } = useSelector((state: any) => state.EquipmentsCalibration);
 
   const [calibrationListData, setCalibrationListData]: any = useState([]);
 
@@ -83,12 +92,26 @@ const EquipmentCalibration = ({
     if (savedEquipmentsCalibrationFormInfo) {
       showSnackbar('Calibration data saved successfully');
       setModalVisible(false);
-      setCalibrationListData([...calibrationListData, savedEquipmentsCalibrationFormInfo])
-      // Add the new calibration to the list
-      
+      setCalibrationListData([
+        ...calibrationListData,
+        savedEquipmentsCalibrationFormInfo,
+      ]);
       resetFormFields();
     }
   }, [savedEquipmentsCalibrationFormInfo, error]);
+
+  useEffect(() => {
+    if (deletedEquipmentCalibration) {
+      showSnackbar('Calibration record deleted successfully');
+      setCalibrationListData((prevCalibrationList: any) =>
+        prevCalibrationList.filter(
+          (item: any) => item._id !== deletedEquipmentCalibration._id,
+        ),
+      );
+
+      dispatch(clearEquipmentData());
+    }
+  }, [deletedEquipmentCalibration]);
 
   const resetFormFields = () => {
     setDateOfCalibration('');
@@ -124,7 +147,33 @@ const EquipmentCalibration = ({
     );
   };
 
-  //Format date for display
+  // New function to handle calibration deletion
+  const handleDeleteCalibration = (calibrationId: string) => {
+    Alert.alert(
+      'Delete Calibration Record',
+      'Are you sure you want to delete this calibration record? This action cannot be undone.',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          onPress: () => {
+            dispatch(
+              deleteEquipmentCalibration({
+                projectId: loggedInUser.projectId,
+                testEquipmentId: _id,
+                testEquipmentCalibrationId: calibrationId,
+              }),
+            );
+          },
+          style: 'destructive',
+        },
+      ],
+    );
+  };
+
   const formatDate = (dateString: any) => {
     if (!dateString) return 'N/A';
     const date = new Date(dateString);
@@ -137,13 +186,25 @@ const EquipmentCalibration = ({
         <View style={styles.equipmentInfo}>
           <Text style={styles.equipmentName}>{calibration.name}</Text>
           <Text style={styles.equipmentDetails}>
-            Calibration Date: {formatDate(calibration.dateOfCalibration)} 
+            Calibration Date: {formatDate(calibration.dateOfCalibration)}
           </Text>
           <Text style={styles.equipmentDetails}>
             Next Calibration Date:{' '}
             {formatDate(calibration.nextDateOfCalibration)}
           </Text>
+          <Text style={styles.equipmentDetails}>
+            Done By: {calibration.calibrationDoneBy || 'N/A'}
+          </Text>
         </View>
+        {/* Add delete button for calibration entries */}
+        <TouchableOpacity
+          onPress={() => handleDeleteCalibration(calibration._id)}
+          style={styles.deleteButton}>
+          <Image
+            source={require('./../../../../images/menu/delete.png')}
+            style={styles.actionIcon}
+          />
+        </TouchableOpacity>
       </View>
     );
   };
@@ -261,9 +322,7 @@ const EquipmentCalibration = ({
         <TouchableOpacity
           style={styles.btnCtaOutline}
           onPress={() => setModalVisible(true)}>
-          <Text style={styles.btnCtaTextOutline}>
-            Add Calibration
-          </Text>
+          <Text style={styles.btnCtaTextOutline}>Add Calibration</Text>
         </TouchableOpacity>
       </View>
 
@@ -505,6 +564,13 @@ const styles = StyleSheet.create({
     marginTop: 40,
     fontSize: 16,
     color: '#666666',
+  },
+  actionIcon: {
+    width: 24,
+    height: 24,
+  },
+  deleteButton: {
+    padding: 8,
   },
 });
 

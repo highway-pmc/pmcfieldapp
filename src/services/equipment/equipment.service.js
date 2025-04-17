@@ -25,6 +25,43 @@ export const getEquipmentsDataApi = async projectId => {
       throw new Error(errorMessge);
     });
 };
+
+export const generateEquipmentReportApi = async (
+  projectId,
+  testEquipmentId,
+) => {
+  return apiService
+    .getRequest(
+      `v1/auth/projects/${projectId}/equipments/${testEquipmentId}/report`,
+    )
+    .then(response => {
+      return response;
+    })
+    .catch(err => {
+      const errorMessge = err.message || 'Unable to generate Equipment Report.';
+      throw new Error(errorMessge);
+    });
+};
+
+export const generateEquipmentCalibrationReportApi = async (
+  projectId,
+  testEquipmentId,
+  testEquipmentCalibrationId,
+) => {
+  return apiService
+    .getRequest(
+      `v1/auth/projects/${projectId}/equipments/${testEquipmentId}/equipment-calibrations/${testEquipmentCalibrationId}/report`,
+    )
+    .then(response => {
+      return response;
+    })
+    .catch(err => {
+      const errorMessge =
+        err.message || 'Unable to generate Equipment Calibration Report.';
+      throw new Error(errorMessge);
+    });
+};
+
 export const editEquipmentCalibrationFormInfoApi = async (
   projectId,
   testEquipmentId,
@@ -63,6 +100,7 @@ export const saveEquipmentCalibrationFormInfoApi = async (
       throw new Error(errorMessge);
     });
 };
+
 export const deleteEquipmentCalibrationFormInfoApi = async (
   projectId,
   testEquipmentId,
@@ -82,6 +120,7 @@ export const deleteEquipmentCalibrationFormInfoApi = async (
       throw new Error(errorMessge);
     });
 };
+
 export const saveEquipmentFormInfoApi = async (
   projectId,
   testEquipmentCategory,
@@ -93,7 +132,6 @@ export const saveEquipmentFormInfoApi = async (
       `v1/auth/projects/${projectId}/test-equipment-category/${testEquipmentCategory}/test-equipment-type/${testEquipmentTypeId}/equipments`,
       body,
     )
-
     .then(response => {
       console.log('response', response);
       return response;
@@ -103,6 +141,7 @@ export const saveEquipmentFormInfoApi = async (
       throw new Error(errorMessge);
     });
 };
+
 export const editEquipmentFormInfoApi = async (
   projectId,
   testEquipmentCategory,
@@ -124,6 +163,7 @@ export const editEquipmentFormInfoApi = async (
       throw new Error(errorMessge);
     });
 };
+
 export const deleteEquipmentFormInfoApi = async (
   projectId,
   testEquipmentId,
@@ -132,7 +172,6 @@ export const deleteEquipmentFormInfoApi = async (
     .deleteRequest(
       `v1/auth/projects/${projectId}/equipments/${testEquipmentId}`,
     )
-
     .then(response => {
       console.log('response', response);
       return response;

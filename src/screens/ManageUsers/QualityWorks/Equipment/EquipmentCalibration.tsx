@@ -16,12 +16,14 @@ import {useSnackbar} from '../../../../context/SnackbarContext';
 import {useDispatch, useSelector} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
 import LoadingAnimation from '../../../Common/LoadingAnimation';
+import Pdf from 'react-native-pdf'; // Import Pdf component
 import {
   clearEquipmentData,
   getEquipmentsListData,
   saveEquipmentsCalibrationInfo,
-  editEquipmentsCalibration, // Import the edit action
+  editEquipmentsCalibration,
   deleteEquipmentCalibration,
+  generateEquipmentCalibrationReport,
 } from './actions';
 import CalendarPicker from '../../../../components/UI/CalenderPicker';
 import Input from '../../../../components/UI/Input';
@@ -43,7 +45,7 @@ const EquipmentCalibration = ({
     equipmentData,
   } = route.params;
 
-  const {height} = Dimensions.get('window');
+  const {height, width} = Dimensions.get('window');
   const calculatedHeight = height * 0.75;
   const {showSnackbar} = useSnackbar();
   const focus = useIsFocused();
@@ -55,8 +57,9 @@ const EquipmentCalibration = ({
     loading,
     error,
     savedEquipmentsCalibrationFormInfo,
-    editedEquipmentsCalibrationFormInfo, // Add state for edited data
+    editedEquipmentsCalibrationFormInfo,
     deletedEquipmentCalibration,
+    equipmentCalibrationReport,
   } = useSelector((state: any) => state.EquipmentsCalibration);
 
   const [calibrationListData, setCalibrationListData]: any = useState([]);
@@ -65,6 +68,10 @@ const EquipmentCalibration = ({
   const [modalVisible, setModalVisible] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [currentCalibrationId, setCurrentCalibrationId] = useState('');
+
+  // Report modal state
+  const [reportModalVisible, setReportModalVisible] = useState(false);
+  const [pdfSource, setPdfSource] = useState(null);
 
   // Form fields for the modal
   const [dateOfCalibration, setDateOfCalibration] = useState('');
@@ -82,6 +89,7 @@ const EquipmentCalibration = ({
       // If equipment data is passed, extract the calibration data
       if (equipmentData) {
         dispatch(clearEquipmentData());
+        setPdfSource(null);
         setCalibrationListData([]);
         setCalibrationListData([...equipmentData]);
       }
@@ -136,6 +144,16 @@ const EquipmentCalibration = ({
     }
   }, [deletedEquipmentCalibration]);
 
+  // Handle report generation
+  useEffect(() => {
+    if (equipmentCalibrationReport) {
+      setReportModalVisible(true);
+      setPdfSource({
+        uri: 'data:application/pdf;base64,' + equipmentCalibrationReport,
+      });
+    }
+  }, [equipmentCalibrationReport]);
+
   const resetFormFields = () => {
     setDateOfCalibration('');
     setNextDateOfCalibration('');
@@ -185,6 +203,22 @@ const EquipmentCalibration = ({
         }),
       );
     }
+  };
+
+  // New function to handle report generation
+  const handleGenerateReport = (calibration: any) => {
+    setPdfSource(null);
+    dispatch(clearEquipmentData());
+
+    setTimeout(() => {
+      dispatch(
+        generateEquipmentCalibrationReport({
+          projectId: loggedInUser.projectId,
+          testEquipmentId: _id,
+          testEquipmentCalibrationId: calibration._id,
+        }),
+      );
+    }, 100);
   };
 
   // New function to handle calibration edit
@@ -247,7 +281,7 @@ const EquipmentCalibration = ({
   const formatDate = (dateString: any) => {
     if (!dateString) return 'N/A';
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-GB'); // DD/MM/YYYY format
+    return date.toLocaleDateString('en-GB'); 
   };
 
   const renderCalibrationItem = (calibration: any) => {
@@ -267,6 +301,12 @@ const EquipmentCalibration = ({
           </Text>
         </View>
         <View style={styles.actionButtons}>
+          <TouchableOpacity
+            style={styles.reportButton}
+            onPress={() => handleGenerateReport(calibration)}
+            >
+            <Text style={styles.reportButtonText}>View</Text>
+          </TouchableOpacity>
           {/* Add edit button */}
           <TouchableOpacity
             onPress={() => handleEditCalibration(calibration)}
@@ -402,10 +442,65 @@ const EquipmentCalibration = ({
     );
   };
 
+  const renderReportModal = () => {
+    return (
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={reportModalVisible}
+        onRequestClose={() => {
+          setReportModalVisible(false);
+          setPdfSource(null);
+        }}>
+        <View style={styles.reportModalContainer}>
+          <View style={styles.reportCenteredView}>
+            <View style={styles.reportModalView}>
+              <View style={styles.reportModalHeader}>
+                <Text style={styles.reportModalTitle}>Calibration Report</Text>
+                <TouchableOpacity
+                  style={styles.reportButtonClose}
+                  onPress={() => {
+                    setReportModalVisible(false);
+                    setPdfSource(null);
+                  }}>
+                  <Image
+                    style={styles.closeIcon}
+                    tintColor={'#333'}
+                    source={require('./../../../../images/menu/close-icon.png')}
+                  />
+                </TouchableOpacity>
+              </View>
+              {pdfSource && (
+                <View style={styles.pdfContainer}>
+                  <Pdf
+                    source={pdfSource}
+                    onLoadComplete={(numberOfPages, filePath) => {
+                      console.log(`Number of pages: ${numberOfPages}`);
+                    }}
+                    onPageChanged={(page, numberOfPages) => {
+                      console.log(`Current page: ${page}`);
+                    }}
+                    onError={error => {
+                      console.log(error);
+                    }}
+                    onPressLink={uri => {
+                      console.log(`Link pressed: ${uri}`);
+                    }}
+                    style={styles.pdf}
+                  />
+                </View>
+              )}
+            </View>
+          </View>
+        </View>
+      </Modal>
+    );
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.headerTitle}>{name} </Text>
-      <View style={[styles.headerContainer, {justifyContent: 'center'}]}>
+      <View style={[styles.headerContainer]}>
         <TouchableOpacity
           style={styles.btnCtaOutline}
           onPress={() => {
@@ -425,6 +520,7 @@ const EquipmentCalibration = ({
       </ScrollView>
 
       {renderCalibrationModal()}
+      {renderReportModal()}
 
       <LoadingAnimation loading={loading} />
     </View>
@@ -467,6 +563,21 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#333',
     marginBottom: 15,
+  },
+  reportButton: {
+    borderRadius: 30,
+    borderWidth: 1,
+    borderColor: '#27AE60',
+    backgroundColor: '#27AE60',
+    paddingHorizontal: 4,
+    paddingVertical: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  reportButtonText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '500',
   },
   addButton: {
     flexDirection: 'row',
@@ -666,6 +777,68 @@ const styles = StyleSheet.create({
   actionIcon: {
     width: 24,
     height: 24,
+  },
+  // Report modal styles
+  reportModalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+  },
+  reportCenteredView: {
+    marginTop: 'auto',
+    backgroundColor: '#fff',
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+    borderRadius: 12,
+    borderBottomWidth: 1,
+    borderColor: '#EBEBF0',
+    borderStyle: 'solid',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 60,
+  },
+  reportModalView: {
+    minHeight: 150,
+  },
+  reportModalHeader: {
+    position: 'relative',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderColor: '#EBEBF0',
+    borderStyle: 'solid',
+  },
+  reportModalTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#27272A',
+    textAlign: 'center',
+  },
+  reportButtonClose: {
+    position: 'absolute',
+    right: 15,
+  },
+  closeIcon: {
+    width: 30,
+    height: 30,
+  },
+  pdfContainer: {
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    marginTop: 25,
+    height: Dimensions.get('screen').height - 200,
+  },
+  pdf: {
+    flex: 1,
+    width: Dimensions.get('screen').width,
+    height: Dimensions.get('screen').height,
   },
 });
 

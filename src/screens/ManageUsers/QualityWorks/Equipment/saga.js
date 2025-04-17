@@ -9,6 +9,8 @@ import {
   deleteEquipmentFormInfoApi,
   editEquipmentCalibrationFormInfoApi,
   editEquipmentFormInfoApi,
+  generateEquipmentReportApi,
+  generateEquipmentCalibrationReportApi,
 } from '../../../../services/equipment/equipment.service';
 
 function* getEquipmentMasterData() {
@@ -46,6 +48,40 @@ function* getEquipmentsListData({payload}) {
   } catch (error) {
     yield put({
       type: 'GET_EQUIPMENTS_LIST_DATA_FAILURE',
+      error: error.message,
+    });
+  }
+}
+
+function* generateEquipmentReport({payload}) {
+  try {
+    const response = yield generateEquipmentReportApi(
+      payload.projectId,
+      payload.testEquipmentId,
+    );
+    yield put({type: 'GENERATE_EQUIPMENT_REPORT_SUCCESS', response});
+  } catch (error) {
+    yield put({
+      type: 'GENERATE_EQUIPMENT_REPORT_FAILURE',
+      error: error.message,
+    });
+  }
+}
+
+function* generateEquipmentCalibrationReport({payload}) {
+  try {
+    const response = yield generateEquipmentCalibrationReportApi(
+      payload.projectId,
+      payload.testEquipmentId,
+      payload.testEquipmentCalibrationId,
+    );
+    yield put({
+      type: 'GENERATE_EQUIPMENT_CALIBRATION_REPORT_SUCCESS',
+      response,
+    });
+  } catch (error) {
+    yield put({
+      type: 'GENERATE_EQUIPMENT_CALIBRATION_REPORT_FAILURE',
       error: error.message,
     });
   }
@@ -90,7 +126,6 @@ function* saveEquipmentFormInfo({payload}) {
   }
 }
 
-
 function* deleteEquipmentCalibrationInfo({payload}) {
   try {
     const response = yield deleteEquipmentCalibrationFormInfoApi(
@@ -127,6 +162,7 @@ function* deleteEquipmentInfo({payload}) {
     });
   }
 }
+
 function* editEquipmentsCalibrationInfo({payload}) {
   try {
     const response = yield editEquipmentCalibrationFormInfoApi(
@@ -167,6 +203,7 @@ function* editEquipmentsInfo({payload}) {
     });
   }
 }
+
 export default function* equipmentCalibrationScreenSaga() {
   yield takeLatest(
     'GET_EQUIPMENTS_CALIBRATION_LISTING_REQUEST',
@@ -181,12 +218,23 @@ export default function* equipmentCalibrationScreenSaga() {
     saveEquipmentCalibrationFormInfo,
   );
   yield takeLatest('GET_EQUIPMENTS_LIST_DATA_REQUEST', getEquipmentsListData);
+  yield takeLatest(
+    'GENERATE_EQUIPMENT_REPORT_REQUEST',
+    generateEquipmentReport,
+  );
+  yield takeLatest(
+    'GENERATE_EQUIPMENT_CALIBRATION_REPORT_REQUEST',
+    generateEquipmentCalibrationReport,
+  );
   yield takeLatest('SAVE_EQUIPMENTS_FORM_INFO_REQUEST', saveEquipmentFormInfo);
   yield takeLatest(
     'DELETE_EQUIPMENT_CALIBRATION_REQUEST',
     deleteEquipmentCalibrationInfo,
   );
   yield takeLatest('DELETE_EQUIPMENT_REQUEST', deleteEquipmentInfo);
-  yield takeLatest('EDIT_EQUIPMENTS_CALIBRATION_FORM_INFO_REQUEST', editEquipmentsCalibrationInfo);
+  yield takeLatest(
+    'EDIT_EQUIPMENTS_CALIBRATION_FORM_INFO_REQUEST',
+    editEquipmentsCalibrationInfo,
+  );
   yield takeLatest('EDIT_EQUIPMENTS_FORM_INFO_REQUEST', editEquipmentsInfo);
 }

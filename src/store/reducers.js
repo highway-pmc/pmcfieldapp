@@ -2086,6 +2086,48 @@ const EquimentCalibrationReducer = (state = sourceApprovalsState, action) => {
         error: action.error,
         loading: false,
       };
+    case 'GENERATE_EQUIPMENT_REPORT_REQUEST':
+      return {
+        ...state,
+        error: null,
+        loading: true,
+        equipmentReport: null,
+      };
+    case 'GENERATE_EQUIPMENT_REPORT_SUCCESS':
+      return {
+        ...state,
+        equipmentReport: action.response,
+        error: null,
+        loading: false,
+      };
+    case 'GENERATE_EQUIPMENT_REPORT_FAILURE':
+      return {
+        ...state,
+        equipmentReport: null,
+        error: action.error,
+        loading: false,
+      };
+    case 'GENERATE_EQUIPMENT_CALIBRATION_REPORT_REQUEST':
+      return {
+        ...state,
+        error: null,
+        loading: true,
+        equipmentCalibrationReport: null,
+      };
+    case 'GENERATE_EQUIPMENT_CALIBRATION_REPORT_SUCCESS':
+      return {
+        ...state,
+        equipmentCalibrationReport: action.response,
+        error: null,
+        loading: false,
+      };
+    case 'GENERATE_EQUIPMENT_CALIBRATION_REPORT_FAILURE':
+      return {
+        ...state,
+        equipmentCalibrationReport: null,
+        error: action.error,
+        loading: false,
+      };
     case 'CLEAR_EQUIPMENTS_FORM_DATA_REQUEST':
       return {
         ...state,
@@ -2095,6 +2137,8 @@ const EquimentCalibrationReducer = (state = sourceApprovalsState, action) => {
         equipmentsListData: null,
         equipmentsMasterData: null,
         error: null,
+        equipmentReport: null,
+        equipmentCalibrationReport: null,
         loading: false,
       };
 

@@ -217,6 +217,217 @@ export const testSampleFormOtherWork = (
                 selectedTestSample.type ===
                   TEST_TYPES.RETRO_REFLECTION_SIGN_BOARD ? (
                   <View>
+                    <Input
+                      label="No. of Test"
+                      value={concreteSampleTestItems[0].otherInfo.noOfTest}
+                      onChange={(value: any) =>
+                        handleInputChangeFineAggregate(
+                          concreteSampleTestItems[0].otherInfo,
+                          'noOfTest',
+                          value,
+                        )
+                      }
+                      isRequired={true}
+                    />
+                    <Input
+                      label="Type of sign board"
+                      value={concreteSampleTestItems[0].typeOfSignBoard}
+                      onChange={(value: any) =>
+                        handleInputChangeFineAggregate(
+                          concreteSampleTestItems[0],
+                          'typeOfSignBoard',
+                          value,
+                        )
+                      }
+                      isRequired={true}
+                    />
+                    <Input
+                      label="Chainage"
+                      value={concreteSampleTestItems[0].chainage}
+                      onChange={(value: any) =>
+                        handleInputChangeFineAggregate(
+                          concreteSampleTestItems[0],
+                          'chainage',
+                          value,
+                        )
+                      }
+                      isRequired={true}
+                    />
+                    <DropdownPicker
+                      value={concreteSampleTestItems[0].side}
+                      label="Side"
+                      items={[
+                        {label: 'Select', value: ''},
+                        {label: 'LHS', value: 'LHS'},
+                        {label: 'LHS', value: 'LHS'},
+                      ]}
+                      onChange={(value: any) =>
+                        handleInputChangeFineAggregate(
+                          concreteSampleTestItems[0],
+                          'side',
+                          value,
+                        )
+                      }
+                    />
+                    <DropdownPicker
+                      value={concreteSampleTestItems[0].sheetType}
+                      label="Sheet Type"
+                      items={[
+                        {label: 'Select', value: ''},
+                        {label: 'III', value: 'III'},
+                        {label: 'IV', value: 'IV'},
+                        {label: 'VIII', value: 'VIII'},
+                        {label: 'XI', value: 'XI'},
+                      ]}
+                      onChange={(value: any) =>
+                        handleInputChangeFineAggregate(
+                          concreteSampleTestItems[0],
+                          'sheetType',
+                          value,
+                        )
+                      }
+                    />
+                    {/*TODO*/}
+                    <Input
+                      label="Observation Angle"
+                      value={concreteSampleTestItems[0].observationAngle}
+                      onChange={(value: any) =>
+                        handleInputChangeFineAggregate(
+                          concreteSampleTestItems[0],
+                          'observationAngle',
+                          value,
+                        )
+                      }
+                      isRequired={true}
+                    />
+                    <Input
+                      label="Entrance Angle"
+                      value={concreteSampleTestItems[0].entranceAngle}
+                      onChange={(value: any) =>
+                        handleInputChangeFineAggregate(
+                          concreteSampleTestItems[0],
+                          'entranceAngle',
+                          value,
+                        )
+                      }
+                      isRequired={true}
+                    />
+                    <DropdownPicker
+                      value={concreteSampleTestItems[0].color}
+                      label="Color"
+                      items={[
+                        {label: 'Select', value: ''},
+                        {label: 'White', value: 'White'},
+                        {label: 'Yellow', value: 'Yellow'},
+                        {label: 'Orange', value: 'Orange'},
+                        {label: 'Green', value: 'Green'},
+                        {label: 'Red', value: 'Red'},
+                        {label: 'Blue', value: 'Blue'},
+                        {label: 'Brown', value: 'Brown'},
+                      ]}
+                      onChange={(value: any) =>
+                        handleInputChangeFineAggregate(
+                          concreteSampleTestItems[0],
+                          'sheetType',
+                          value,
+                        )
+                      }
+                    />
+                    <Input
+                      label="Measured Lux"
+                      value={concreteSampleTestItems[0].measuredLux}
+                      onChange={(value: any) =>
+                        handleInputChangeFineAggregate(
+                          concreteSampleTestItems[0],
+                          'measuredLux',
+                          value,
+                        )
+                      }
+                      isRequired={true}
+                    />
+                    <Input
+                      label="Condition Of Sign Board Surface"
+                      value={
+                        concreteSampleTestItems[0].conditionOfSignBoardSurface
+                      }
+                      onChange={(value: any) =>
+                        handleInputChangeFineAggregate(
+                          concreteSampleTestItems[0],
+                          'conditionOfSignBoardSurface',
+                          value,
+                        )
+                      }
+                      isRequired={true}
+                    />
+                    <Input
+                      label="Visibility Condition At Night"
+                      value={
+                        concreteSampleTestItems[0].visibilityConditionAtNight
+                      }
+                      onChange={(value: any) =>
+                        handleInputChangeFineAggregate(
+                          concreteSampleTestItems[0],
+                          'visibilityConditionAtNight',
+                          value,
+                        )
+                      }
+                      isRequired={true}
+                    />
+                    <Input
+                      label="Cleanliness Of Board"
+                      value={concreteSampleTestItems[0].cleanlinessOfBoard}
+                      onChange={(value: any) =>
+                        handleInputChangeFineAggregate(
+                          concreteSampleTestItems[0],
+                          'cleanlinessOfBoard',
+                          value,
+                        )
+                      }
+                      isRequired={true}
+                    />
+                    <Input
+                      label="Any Damage Or Obstruction"
+                      value={concreteSampleTestItems[0].anyDamageOrObstruction}
+                      onChange={(value: any) =>
+                        handleInputChangeFineAggregate(
+                          concreteSampleTestItems[0],
+                          'anyDamageOrObstruction',
+                          value,
+                        )
+                      }
+                      isRequired={true}
+                    />
+                    <Input
+                      label="Meets MoRTH Retro Reflectivity Standards"
+                      value={
+                        concreteSampleTestItems[0]
+                          .meetsMoRTHRetroReflectivityStandards
+                      }
+                      onChange={(value: any) =>
+                        handleInputChangeFineAggregate(
+                          concreteSampleTestItems[0],
+                          'meetsMoRTHRetroReflectivityStandards',
+                          value,
+                        )
+                      }
+                      isRequired={true}
+                    />
+                  </View>
+                ) : selectedTestSample.type ===
+                  TEST_TYPES.DIMENSION_OF_SIGN_BOARD ? (
+                  <View>
+                    <Input
+                      label="No. of Test"
+                      value={concreteSampleTestItems[0].otherInfo.noOfTest}
+                      onChange={(value: any) =>
+                        handleInputChangeFineAggregate(
+                          concreteSampleTestItems[0].otherInfo,
+                          'noOfTest',
+                          value,
+                        )
+                      }
+                      isRequired={true}
+                    />
                     {concreteSampleTestItems.map((item: any, index: number) => (
                       <View style={{flexDirection: 'row'}} key={index}>
                         <View style={{flexDirection: 'column'}}>
@@ -243,7 +454,7 @@ export const testSampleFormOtherWork = (
                                         styles.textStyle2,
                                         {textAlign: 'center'},
                                       ]}>
-                                      {value.testProperty}
+                                      {value.sNo}
                                     </Text>
                                   </View>
 
@@ -259,13 +470,13 @@ export const testSampleFormOtherWork = (
                                         </Text>
                                       </View>
                                     ) : null}
-                                    <CustomTextInput
-                                      rowItem={value}
-                                      tempProp={false}
-                                      styleName={styles.inputStyle3}
-                                      styles={styles}
-                                      fieldName={'test1'}
-                                    />
+                                    <Text
+                                      style={[
+                                        styles.textStyle2,
+                                        {textAlign: 'center'},
+                                      ]}>
+                                      {value.parameter}
+                                    </Text>
                                   </View>
 
                                   <View
@@ -285,7 +496,7 @@ export const testSampleFormOtherWork = (
                                       tempProp={false}
                                       styleName={styles.inputStyle3}
                                       styles={styles}
-                                      fieldName={'test2'}
+                                      fieldName={'specifiedDimension'}
                                     />
                                   </View>
 
@@ -306,7 +517,102 @@ export const testSampleFormOtherWork = (
                                       tempProp={false}
                                       styleName={styles.inputStyle3}
                                       styles={styles}
-                                      fieldName={'test3'}
+                                      fieldName={'measuredDimension'}
+                                    />
+                                  </View>
+                                  <View
+                                    style={{
+                                      flexDirection: 'column',
+                                      width: 120,
+                                    }}>
+                                    {index === 0 && indexDetails === 0 ? (
+                                      <View style={{height: 40}}>
+                                        <Text style={{fontWeight: '700'}}>
+                                          {item.details.titles[3]}
+                                        </Text>
+                                      </View>
+                                    ) : null}
+                                    <CustomTextInput
+                                      rowItem={value}
+                                      tempProp={false}
+                                      styleName={styles.inputStyle3}
+                                      styles={styles}
+                                      fieldName={'remark'}
+                                    />
+                                  </View>
+                                </View>
+                              ),
+                            )}
+                        </View>
+                      </View>
+                    ))}
+                  </View>
+                ) : null)}
+              {currentTestMaterialData.materialType ===
+                (TEST_MATERIALS_TYPES.ROAD_MAKING &&
+                selectedTestSample.type ===
+                  TEST_TYPES.SOFTENING_POINT_THERMOPLAST_PAINT ? (
+                  <View>
+                    <Input
+                      label="Material Type"
+                      value={concreteSampleTestItems[0].otherInfo.materialType}
+                      onChange={(value: any) =>
+                        handleInputChangeFineAggregate(
+                          concreteSampleTestItems[0].otherInfo,
+                          'materialType',
+                          value,
+                        )
+                      }
+                      isRequired={true}
+                    />
+                    {concreteSampleTestItems.map((item: any, index: number) => (
+                      <View style={{flexDirection: 'row'}} key={index}>
+                        <View style={{flexDirection: 'column'}}>
+                          {item.details &&
+                            item.details.values.map(
+                              (value: any, indexDetails: number) => (
+                                <View
+                                  style={{flexDirection: 'row'}}
+                                  key={indexDetails}>
+                                  <View
+                                    style={{
+                                      flexDirection: 'column',
+                                      width: 200,
+                                    }}>
+                                    {index === 0 && indexDetails === 0 ? (
+                                      <View style={{height: 40}}>
+                                        <Text style={{fontWeight: '700'}}>
+                                          {item.details.titles[0]}
+                                        </Text>
+                                      </View>
+                                    ) : null}
+                                    <Text
+                                      style={[
+                                        styles.textStyle2,
+                                        {textAlign: 'center'},
+                                      ]}>
+                                      {value.trial}
+                                    </Text>
+                                  </View>
+
+                                  <View
+                                    style={{
+                                      flexDirection: 'column',
+                                      width: 120,
+                                    }}>
+                                    {index === 0 && indexDetails === 0 ? (
+                                      <View style={{height: 40}}>
+                                        <Text style={{fontWeight: '700'}}>
+                                          {item.details.titles[1]}
+                                        </Text>
+                                      </View>
+                                    ) : null}
+                                    <CustomTextInput
+                                      rowItem={value}
+                                      tempProp={false}
+                                      styleName={styles.inputStyle3}
+                                      styles={styles}
+                                      fieldName={'temp'}
                                     />
                                   </View>
                                 </View>
@@ -317,8 +623,20 @@ export const testSampleFormOtherWork = (
                     ))}
                   </View>
                 ) : selectedTestSample.type ===
-                  TEST_TYPES.DIMENSION_OF_SIGN_BOARD ? (
+                  TEST_TYPES.REFLECTIVITY_THERMOPLAST_PAINT ? (
                   <View>
+                    <Input
+                      label="No. of Test"
+                      value={concreteSampleTestItems[0].otherInfo.noOfTest}
+                      onChange={(value: any) =>
+                        handleInputChangeFineAggregate(
+                          concreteSampleTestItems[0].otherInfo,
+                          'noOfTest',
+                          value,
+                        )
+                      }
+                      isRequired={true}
+                    />
                     {concreteSampleTestItems.map((item: any, index: number) => (
                       <View style={{flexDirection: 'row'}} key={index}>
                         <View style={{flexDirection: 'column'}}>
@@ -345,7 +663,7 @@ export const testSampleFormOtherWork = (
                                         styles.textStyle2,
                                         {textAlign: 'center'},
                                       ]}>
-                                      {value.testProperty}
+                                      {value.sNo}
                                     </Text>
                                   </View>
 
@@ -361,13 +679,13 @@ export const testSampleFormOtherWork = (
                                         </Text>
                                       </View>
                                     ) : null}
-                                    <CustomTextInput
-                                      rowItem={value}
-                                      tempProp={false}
-                                      styleName={styles.inputStyle3}
-                                      styles={styles}
-                                      fieldName={'test1'}
-                                    />
+                                    <Text
+                                      style={[
+                                        styles.textStyle2,
+                                        {textAlign: 'center'},
+                                      ]}>
+                                      {value.parameter}
+                                    </Text>
                                   </View>
 
                                   <View
@@ -387,7 +705,7 @@ export const testSampleFormOtherWork = (
                                       tempProp={false}
                                       styleName={styles.inputStyle3}
                                       styles={styles}
-                                      fieldName={'test2'}
+                                      fieldName={'specifiedDimension'}
                                     />
                                   </View>
 
@@ -408,7 +726,297 @@ export const testSampleFormOtherWork = (
                                       tempProp={false}
                                       styleName={styles.inputStyle3}
                                       styles={styles}
-                                      fieldName={'test3'}
+                                      fieldName={'measuredDimension'}
+                                    />
+                                  </View>
+                                  <View
+                                    style={{
+                                      flexDirection: 'column',
+                                      width: 120,
+                                    }}>
+                                    {index === 0 && indexDetails === 0 ? (
+                                      <View style={{height: 40}}>
+                                        <Text style={{fontWeight: '700'}}>
+                                          {item.details.titles[3]}
+                                        </Text>
+                                      </View>
+                                    ) : null}
+                                    <CustomTextInput
+                                      rowItem={value}
+                                      tempProp={false}
+                                      styleName={styles.inputStyle3}
+                                      styles={styles}
+                                      fieldName={'remark'}
+                                    />
+                                  </View>
+                                </View>
+                              ),
+                            )}
+                        </View>
+                      </View>
+                    ))}
+                  </View>
+                ) : null)}
+
+              {currentTestMaterialData.materialType ===
+                (TEST_MATERIALS_TYPES.ROAD_MAKING &&
+                selectedTestSample.type ===
+                  TEST_TYPES.SOFTENING_POINT_THERMOPLAST_PAINT ? (
+                  <View>
+                    <Input
+                      label="Material Type"
+                      value={concreteSampleTestItems[0].otherInfo.materialType}
+                      onChange={(value: any) =>
+                        handleInputChangeFineAggregate(
+                          concreteSampleTestItems[0].otherInfo,
+                          'materialType',
+                          value,
+                        )
+                      }
+                      isRequired={true}
+                    />
+                    {concreteSampleTestItems.map((item: any, index: number) => (
+                      <View style={{flexDirection: 'row'}} key={index}>
+                        <View style={{flexDirection: 'column'}}>
+                          {item.details &&
+                            item.details.values.map(
+                              (value: any, indexDetails: number) => (
+                                <View
+                                  style={{flexDirection: 'row'}}
+                                  key={indexDetails}>
+                                  <View
+                                    style={{
+                                      flexDirection: 'column',
+                                      width: 200,
+                                    }}>
+                                    {index === 0 && indexDetails === 0 ? (
+                                      <View style={{height: 40}}>
+                                        <Text style={{fontWeight: '700'}}>
+                                          {item.details.titles[0]}
+                                        </Text>
+                                      </View>
+                                    ) : null}
+                                    <CustomTextInput
+                                      rowItem={value}
+                                      tempProp={false}
+                                      styleName={styles.inputStyle3}
+                                      styles={styles}
+                                      fieldName={'trial'}
+                                    />
+                                  </View>
+
+                                  <View
+                                    style={{
+                                      flexDirection: 'column',
+                                      width: 120,
+                                    }}>
+                                    {index === 0 && indexDetails === 0 ? (
+                                      <View style={{height: 40}}>
+                                        <Text style={{fontWeight: '700'}}>
+                                          {item.details.titles[1]}
+                                        </Text>
+                                      </View>
+                                    ) : null}
+                                    <CustomTextInput
+                                      rowItem={value}
+                                      tempProp={false}
+                                      styleName={styles.inputStyle3}
+                                      styles={styles}
+                                      fieldName={'trial'}
+                                    />
+                                  </View>
+                                </View>
+                              ),
+                            )}
+                        </View>
+                      </View>
+                    ))}
+                  </View>
+                ) : null)}
+              {currentTestMaterialData.materialType ===
+                (TEST_MATERIALS_TYPES.PILE &&
+                selectedTestSample.type === TEST_TYPES.PILE_STATE_LOAD_TEST ? (
+                  <View>
+                    <DropdownPicker
+                      value={concreteSampleTestItems[0].typeOfLoading}
+                      label="Type Of Loading"
+                      items={[
+                        {label: 'Select', value: ''},
+                        {label: 'Static', value: 'Static'},
+                        {label: 'Dynamic', value: 'Dynamic'},
+                      ]}
+                      onChange={(value: any) =>
+                        handleInputChangeFineAggregate(
+                          concreteSampleTestItems[0],
+                          'typeOfLoading',
+                          value,
+                        )
+                      }
+                    />
+                    <DropdownPicker
+                      value={concreteSampleTestItems[0].typeOfTesting}
+                      label="Side"
+                      items={[
+                        {label: 'Select', value: ''},
+                        {label: 'Initial', value: 'Initial'},
+                        {label: 'Routine', value: 'Routine'},
+                      ]}
+                      onChange={(value: any) =>
+                        handleInputChangeFineAggregate(
+                          concreteSampleTestItems[0],
+                          'typeOfTesting',
+                          value,
+                        )
+                      }
+                    />
+                    <DropdownPicker
+                      value={concreteSampleTestItems[0].side}
+                      label="Side"
+                      items={[
+                        {label: 'Select', value: ''},
+                        {label: 'Kentledge', value: 'Kentledge'},
+                        {label: 'Reaction Beams', value: 'Reaction Beams'},
+                        {label: 'Anchor Piles', value: 'Anchor Piles'},
+                      ]}
+                      onChange={(value: any) =>
+                        handleInputChangeFineAggregate(
+                          concreteSampleTestItems[0],
+                          'side',
+                          value,
+                        )
+                      }
+                    />
+                    <Input
+                      label="Design Safe Load"
+                      value={concreteSampleTestItems[0].designSafeLoad}
+                      onChange={(value: any) =>
+                        handleInputChangeFineAggregate(
+                          concreteSampleTestItems[0],
+                          'designSafeLoad',
+                          value,
+                        )
+                      }
+                      isRequired={true}
+                    />
+                    <Input
+                      label="Maximum Test Load"
+                      value={concreteSampleTestItems[0].materialType}
+                      onChange={(value: any) =>
+                        handleInputChangeFineAggregate(
+                          concreteSampleTestItems[0],
+                          'maximumTestLoad',
+                          value,
+                        )
+                      }
+                      isRequired={true}
+                    />
+                    {concreteSampleTestItems.map((item: any, index: number) => (
+                      <View style={{flexDirection: 'row'}} key={index}>
+                        <View style={{flexDirection: 'column'}}>
+                          {item.details &&
+                            item.details.values.map(
+                              (value: any, indexDetails: number) => (
+                                <View
+                                  style={{flexDirection: 'row'}}
+                                  key={indexDetails}>
+                                  <View
+                                    style={{
+                                      flexDirection: 'column',
+                                      width: 200,
+                                    }}>
+                                    {index === 0 && indexDetails === 0 ? (
+                                      <View style={{height: 40}}>
+                                        <Text style={{fontWeight: '700'}}>
+                                          {item.details.titles[0]}
+                                        </Text>
+                                      </View>
+                                    ) : null}
+                                    <CustomTextInput
+                                      rowItem={value}
+                                      tempProp={false}
+                                      styleName={styles.inputStyle3}
+                                      styles={styles}
+                                      fieldName={'loadApplied'}
+                                    />
+                                  </View>
+                                  <View
+                                    style={{
+                                      flexDirection: 'column',
+                                      width: 120,
+                                    }}>
+                                    {index === 0 && indexDetails === 0 ? (
+                                      <View style={{height: 40}}>
+                                        <Text style={{fontWeight: '700'}}>
+                                          {item.details.titles[1]}
+                                        </Text>
+                                      </View>
+                                    ) : null}
+                                    <CustomTextInput
+                                      rowItem={value}
+                                      tempProp={false}
+                                      styleName={styles.inputStyle3}
+                                      styles={styles}
+                                      fieldName={'settlementReading'}
+                                    />
+                                  </View>
+                                  <View
+                                    style={{
+                                      flexDirection: 'column',
+                                      width: 120,
+                                    }}>
+                                    {index === 0 && indexDetails === 0 ? (
+                                      <View style={{height: 40}}>
+                                        <Text style={{fontWeight: '700'}}>
+                                          {item.details.titles[1]}
+                                        </Text>
+                                      </View>
+                                    ) : null}
+                                    <CustomTextInput
+                                      rowItem={value}
+                                      tempProp={false}
+                                      styleName={styles.inputStyle3}
+                                      styles={styles}
+                                      fieldName={'displacment'}
+                                    />
+                                  </View>
+                                  <View
+                                    style={{
+                                      flexDirection: 'column',
+                                      width: 120,
+                                    }}>
+                                    {index === 0 && indexDetails === 0 ? (
+                                      <View style={{height: 40}}>
+                                        <Text style={{fontWeight: '700'}}>
+                                          {item.details.titles[1]}
+                                        </Text>
+                                      </View>
+                                    ) : null}
+                                    <CustomTextInput
+                                      rowItem={value}
+                                      tempProp={false}
+                                      styleName={styles.inputStyle3}
+                                      styles={styles}
+                                      fieldName={'timeOfReading'}
+                                    />
+                                  </View>
+                                  <View
+                                    style={{
+                                      flexDirection: 'column',
+                                      width: 120,
+                                    }}>
+                                    {index === 0 && indexDetails === 0 ? (
+                                      <View style={{height: 40}}>
+                                        <Text style={{fontWeight: '700'}}>
+                                          {item.details.titles[1]}
+                                        </Text>
+                                      </View>
+                                    ) : null}
+                                    <CustomTextInput
+                                      rowItem={value}
+                                      tempProp={false}
+                                      styleName={styles.inputStyle3}
+                                      styles={styles}
+                                      fieldName={'remark'}
                                     />
                                   </View>
                                 </View>

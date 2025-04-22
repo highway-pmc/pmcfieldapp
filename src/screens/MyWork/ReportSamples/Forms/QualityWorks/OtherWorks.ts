@@ -1,4 +1,4 @@
-//Other work -> Bridge -> Bridge Load Test
+//Bridge -> Bridge Load Test
 export const getTestSampleBridgeLoadTestObject = (sampleNum: any) => {
   return {
     sampleNo: {
@@ -115,7 +115,8 @@ export const getTestSampleBridgeLoadTestObject = (sampleNum: any) => {
   };
 };
 
-//Other work -> Road Making -> Reflectivity
+//Road Making ->
+//Reflectivity
 export const getReflectivityObject = (sampleNum: any) => {
   return {
     sampleNo: {
@@ -138,7 +139,7 @@ export const getReflectivityObject = (sampleNum: any) => {
     meetsMoRTHRetroReflectivityStandards: '',
   };
 };
-//Other work -> Road Making -> Reflectivity
+//Softening Point
 export const getSofteningPointObject = (sampleNum: any) => {
   return {
     sampleNo: {
@@ -164,7 +165,7 @@ export const getSofteningPointObject = (sampleNum: any) => {
   };
 };
 
-//Other work -> Sign Board
+//Sign Board
 export const getDimensionSignBoardsObject = (sampleNum: any) => {
   return {
     sampleNo: {
@@ -243,7 +244,7 @@ export const getDimensionSignBoardsObject = (sampleNum: any) => {
     },
   };
 };
-export const getDRetroReflectiveSignBoardsObject = (sampleNum: any) => {
+export const getRetroReflectiveSignBoardsObject = (sampleNum: any) => {
   return {
     sampleNo: {
       title: 'Sample no',
@@ -265,5 +266,235 @@ export const getDRetroReflectiveSignBoardsObject = (sampleNum: any) => {
     cleanlinessOfBoard: '', // Char, max 50
     anyDamageOrObstruction: '', // Char, max 50
     meetsMoRTHRetroReflectivityStandards: '', // YES / NO
+  };
+};
+
+//Road Studs & Cats Eyes->RoadStud Reflectivity
+export const getRoadStudReflectivityObject = (sampleNum: any) => {
+  return {
+    sampleNo: {
+      title: 'Sample no',
+      value: sampleNum,
+    },
+    otherInfo: {
+      noOfTest: 0.0,
+    },
+    visibilityConditionAtNight: '',
+    cleanlinessOfStuds: '',
+    anyDamage: '',
+    meetsMoRTHCoefficientOfLuminousStandards: '',
+    details: {
+      titles: [
+        'S. No.',
+        'Location of Reading',
+        'Measured Coefficient of Luminous',
+        'Remarks',
+      ],
+      values: [
+        {
+          sNo: '1',
+          loactionOfReading: 0.0,
+          coefficientofLuminous: 0.0,
+          remark: '',
+        },
+        {
+          sNo: '2',
+          loactionOfReading: 0.0,
+          coefficientofLuminous: 0.0,
+          remark: '',
+        },
+        {
+          sNo: '3',
+          loactionOfReading: 0.0,
+          coefficientofLuminous: 0.0,
+          remark: '',
+        },
+        {
+          sNo: '4',
+          loactionOfReading: 0.0,
+          coefficientofLuminous: 0.0,
+          remark: '',
+        },
+        {
+          sNo: '5',
+          loactionOfReading: 0.0,
+          coefficientofLuminous: 0.0,
+          remark: '',
+        },
+      ],
+    },
+  };
+};
+
+//Bentonite //TODOs
+export const getBentoniteObject = (sampleNum: any) => {
+  return {
+    sampleNo: {
+      title: 'Sample no',
+      value: sampleNum,
+    },
+    otherInfo: {
+      noOfTest: 0.0,
+    },
+    visibilityConditionAtNight: '',
+    cleanlinessOfStuds: '',
+    anyDamage: '',
+    meetsMoRTHCoefficientOfLuminousStandards: '',
+    details: {
+      titles: [
+        'S. No.',
+        'Location of Reading',
+        'Measured Coefficient of Luminous',
+        'Remarks',
+      ],
+      values: [
+        {
+          sNo: '1',
+          loactionOfReading: 0.0,
+          coefficientofLuminous: 0.0,
+          remark: '',
+        },
+        {
+          sNo: '2',
+          loactionOfReading: 0.0,
+          coefficientofLuminous: 0.0,
+          remark: '',
+        },
+        {
+          sNo: '3',
+          loactionOfReading: 0.0,
+          coefficientofLuminous: 0.0,
+          remark: '',
+        },
+        {
+          sNo: '4',
+          loactionOfReading: 0.0,
+          coefficientofLuminous: 0.0,
+          remark: '',
+        },
+        {
+          sNo: '5',
+          loactionOfReading: 0.0,
+          coefficientofLuminous: 0.0,
+          remark: '',
+        },
+      ],
+    },
+  };
+};
+//Pile Load Test //TODOS
+export const getPileLoadTestObject = (sampleNum: any) => {
+  return {
+    sampleNo: {
+      title: 'Sample no',
+      value: sampleNum,
+    },
+    typeOfLoading: '', // Static / Dynamic
+    typeOfTesting: '', // Initial / Routine
+    reaction: '', // Kentledge / Reaction Beams / Anchor Piles
+    designSafeLoad: 0, // >0, int 3, max 1000
+    maximumTestLoad: 0, // >0, int 3, max 1000
+    details: {
+      titles: [
+        'Load Applied (kN)',
+        'Settlement Reading (mm)',
+        'Displacement (mm)',
+        'Time of Reading',
+        'Remarks',
+      ],
+      values: [
+        {
+          loadApplied: 0.0,
+          settlementReading: 0.0,
+          displacment: 0.0,
+          timeOfReading: '',
+          remark: '',
+        },
+        {
+          loadApplied: 0.0,
+          settlementReading: 0.0,
+          displacment: 0.0,
+          timeOfReading: '',
+          remark: '',
+        },
+        {
+          loadApplied: 0.0,
+          settlementReading: 0.0,
+          displacment: 0.0,
+          timeOfReading: '',
+          remark: '',
+        },
+        {
+          loadApplied: 0.0,
+          settlementReading: 0.0,
+          displacment: 0.0,
+          timeOfReading: '',
+          remark: '',
+        },
+        {
+          loadApplied: 0.0,
+          settlementReading: 0.0,
+          displacment: 0.0,
+          timeOfReading: '',
+          remark: '',
+        },
+        {
+          loadApplied: 0.0,
+          settlementReading: 0.0,
+          displacment: 0.0,
+          timeOfReading: '',
+          remark: '',
+        },
+        {
+          loadApplied: 0.0,
+          settlementReading: 0.0,
+          displacment: 0.0,
+          timeOfReading: '',
+          remark: '',
+        },
+        {
+          loadApplied: 0.0,
+          settlementReading: 0.0,
+          displacment: 0.0,
+          timeOfReading: '',
+          remark: '',
+        },
+        {
+          loadApplied: 0.0,
+          settlementReading: 0.0,
+          displacment: 0.0,
+          timeOfReading: '',
+          remark: '',
+        },
+        {
+          loadApplied: 0.0,
+          settlementReading: 0.0,
+          displacment: 0.0,
+          timeOfReading: '',
+          remark: '',
+        },
+        {
+          loadApplied: 0.0,
+          settlementReading: 0.0,
+          displacment: 0.0,
+          timeOfReading: '',
+          remark: '',
+        },
+        {
+          loadApplied: 0.0,
+          settlementReading: 0.0,
+          displacment: 0.0,
+          timeOfReading: '',
+          remark: '',
+        },
+        {
+          loadApplied: 0.0,
+          settlementReading: 0.0,
+          displacment: 0.0,
+          timeOfReading: '',
+          remark: '',
+        },
+      ],
+    },
   };
 };

@@ -925,4 +925,94 @@ export const getSandEquivalentObject = (sampleNum: any) => {
   };
 };
 
-//Bituminus work -> Fine Aggregate -> Plasticity index
+//Emulsion Prime Coat
+//Emulsion Tack Coat
+//
+export const getViscocityEmulsionObject = (sampleNum: any) => {
+  return {
+    sampleNo: {
+      title: 'Sample no',
+      value: sampleNum,
+    },
+    details: {
+      titles: ['Parameter', 'Observed Value (sec)'],
+      values: [
+        {
+          testProperty: 'Viscosity @ 25°C (SFV)',
+          obsValue: 0.0,
+        },
+      ],
+    },
+  };
+};
+export const getResidueByEvaporationEmulsionObject = (sampleNum: any) => {
+  return {
+    sampleNo: {
+      title: 'Sample no',
+      value: sampleNum,
+    },
+    details: {
+      titles: ['Parameter', 'Weight (g)'],
+      values: [
+        {
+          parameter: 'Weight of Empty Dish (W1)',
+          weight: 0.0,
+        },
+        {
+          parameter: 'Weight of Dish + Sample (W2)',
+          weight: 0.0,
+        },
+        {
+          parameter: 'Weight of Dish + Residue (W3)',
+          weight: 0.0,
+        },
+      ],
+    },
+  };
+};
+export const getWaterContentEmulsionObject = (sampleNum: any) => {
+  return {
+    sampleNo: {
+      title: 'Sample no',
+      value: sampleNum,
+    },
+    details: {
+      titles: ['Parameter', 'Weight (g)'],
+      values: [
+        {
+          parameter: 'Weight of Empty container (W1)',
+          weight: 0.0,
+        },
+        {
+          parameter: 'Weight of container + Sample (W2)',
+          weight: 0.0,
+        },
+        {
+          parameter: 'Weight of container + water (W3)',
+          weight: 0.0,
+        },
+      ],
+    },
+  };
+};
+export const getCoatThicknessEmulsionObject = (sampleNum: any) => {
+  return {
+    sampleNo: {
+      title: 'Sample no',
+      value: sampleNum,
+    },
+    details: {
+      titles: ['Parameter', 'Weight (g)'],
+      values: [
+        {
+          parameter: 'Weight of Empty Tray  (W1)',
+          weight: 0.0,
+        },
+        {
+          parameter: 'Weight of tray + Sample (W2)',
+          weight: 0.0,
+        },
+      ],
+    },
+  };
+};

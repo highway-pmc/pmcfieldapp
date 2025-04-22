@@ -690,6 +690,7 @@ export const TEST_WORK_CATEGORY_TYPES = {
   CONCRETE_STRUCTURE: 'concrete-structure',
   CONCRETE_RIGID_PAVEMENT: 'concrete-rigid-pavement',
   BITUMINOUS_WORKS: 'bituminous-works',
+  OTHER_WORK: 'other-work',
   EARTH_WORKS: 'earth-work',
   SUB_BASE: 'sub-base',
   BASE_SUB_BASE: 'base-sub-base',
@@ -705,6 +706,9 @@ export const TEST_MATERIALS_TYPES = {
   COARSE_AGGREGATE_MICRO_SURFACING: 'coarse-aggregate-micro-surfacing',
   COARSE_AGGREGATE_SMA: 'coarse-aggregate-sma',
   EMULSION: 'emulsion',
+  EMULSION_PRIME_COAT: 'emulsion',
+  EMULSION_TACT_COAT: 'emulsion',
+  CELLULOSE_FIBRE: 'cellulose-fibre',
   WATER: 'water',
   FINE_AGGREGATE: 'fine-aggregate',
   GRANULATED_SLAG: 'granulated-slag',
@@ -735,6 +739,13 @@ export const TEST_MATERIALS_TYPES = {
   PQC: 'pqc',
   SHEATHING_DUCT: 'sheathing-duct',
   STRANDS: 'strands',
+  SIGN_BOARDS: '',
+  ROAD_STUD: '',
+  ROAD_MAKING: '',
+  PILE: '',
+  HIGHWAY_LIGHTING: '',
+  BRIDGE: '',
+  BENTONITE_OTHER: '',
 };
 
 export const TEST_TYPES = {
@@ -780,6 +791,11 @@ export const TEST_TYPES = {
   MICRO_SURFACING_GRADATION: 'micro-surfacing-gradation',
   SAND_EQUIVALENT: 'sand-equivalent-test',
   PERCENTAGE_OF_FRACTURE_FACE: 'percentage-of-fracture-face',
+  VISCOCITY: 'viscocity',
+  RESIDUE_BY_EVAPORATION: 'residue-by-evaporation',
+  WATER_CONTENT: 'water-content',
+  COAT_THICKNESS_SS: 'coat-thickness-ss',
+  COAT_THICKNESS_RS: 'coat-thickness-rs',
   //EarthWork
   MOISTURE_CONTENT: 'moisture-content-prior-compaction',
   FREE_SWELL_INDEX: 'free-swell-index-test',
@@ -809,6 +825,9 @@ export const TEST_TYPES = {
   SEAL_PULL_TEST: 'seal-pull-test',
   CYCLIC_MOTION_TEST: 'cyclic-motion-test',
   VISUAL_DIMENSION_TEST: 'visual-and-dimension-test',
+  //Other
+  RETRO_REFLECTION_SIGN_BOARD:'',
+  DIMENSION_OF_SIGN_BOARD:'',
 };
 
 export const YES_NO_LIST = [

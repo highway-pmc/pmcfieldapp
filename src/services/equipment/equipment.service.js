@@ -149,13 +149,16 @@ export const editEquipmentFormInfoApi = async (
   testEquipmentId,
   body,
 ) => {
+  console.log(
+    'API Path:',
+    `v1/auth/projects/${projectId}/test-equipment-category/${testEquipmentCategory}/test-equipment-type/${testEquipmentTypeId}/equipments/${testEquipmentId}`,
+  );
   return apiService
-    .postRequest(
+    .putRequest(
       `v1/auth/projects/${projectId}/test-equipment-category/${testEquipmentCategory}/test-equipment-type/${testEquipmentTypeId}/equipments/${testEquipmentId}`,
       body,
     )
     .then(response => {
-      console.log('response', response);
       return response;
     })
     .catch(err => {

@@ -111,7 +111,14 @@ const EquipmentCalibrationListing = ({
     }
   }, [equipmentReport]);
 
-  const handleEditEquipment = (equipment: any) => {};
+  const handleEditEquipment = (equipment: any) => {
+    console.log('Navigating to Equipment screen with props:', equipment);
+    navigation.navigate('Equipment', {
+      isEditMode: true,
+      equipmentData: equipment,
+      testEquipmentCategoryType: testEquipmentCategoryType,
+    });
+  };
 
   const handleDeleteEquipment = (equipmentId: string) => {
     console.log('Clicked on delete function');

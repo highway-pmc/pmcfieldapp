@@ -12,13 +12,12 @@ export const getEquipmentMasterDataApi = async () => {
     });
 };
 
-export const getEquipmentsDataApi = async (projectId, testWorkCategoryType) => {
+export const getEquipmentsDataApi = async projectId => {
   return apiService
     .getRequest(
-      `v1/auth/projects/${projectId}/test-equipment-category/${testWorkCategoryType}/test-equipment-type/NA/equipments`,
+      `v1/auth/projects/${projectId}/test-equipment-category/NA/test-equipment-type/NA/equipments`,
     )
     .then(response => {
-      console.log('response ===== API ======', response);
       return response;
     })
     .catch(err => {
@@ -26,6 +25,63 @@ export const getEquipmentsDataApi = async (projectId, testWorkCategoryType) => {
       throw new Error(errorMessge);
     });
 };
+
+export const generateEquipmentReportApi = async (
+  projectId,
+  testEquipmentId,
+) => {
+  return apiService
+    .getRequest(
+      `v1/auth/projects/${projectId}/equipments/${testEquipmentId}/report`,
+    )
+    .then(response => {
+      return response;
+    })
+    .catch(err => {
+      const errorMessge = err.message || 'Unable to generate Equipment Report.';
+      throw new Error(errorMessge);
+    });
+};
+
+export const generateEquipmentCalibrationReportApi = async (
+  projectId,
+  testEquipmentId,
+  testEquipmentCalibrationId,
+) => {
+  return apiService
+    .getRequest(
+      `v1/auth/projects/${projectId}/equipments/${testEquipmentId}/equipment-calibrations/${testEquipmentCalibrationId}/report`,
+    )
+    .then(response => {
+      return response;
+    })
+    .catch(err => {
+      const errorMessge =
+        err.message || 'Unable to generate Equipment Calibration Report.';
+      throw new Error(errorMessge);
+    });
+};
+
+export const editEquipmentCalibrationFormInfoApi = async (
+  projectId,
+  testEquipmentId,
+  testEquipmentCalibrationId,
+  body,
+) => {
+  return apiService
+    .putRequest(
+      `v1/auth/projects/${projectId}/equipments/${testEquipmentId}/equipment-calibrations/${testEquipmentCalibrationId}`,
+      body,
+    )
+    .then(response => {
+      return response;
+    })
+    .catch(err => {
+      const errorMessge = err.message || 'Unable to save Mix design.';
+      throw new Error(errorMessge);
+    });
+};
+
 export const saveEquipmentCalibrationFormInfoApi = async (
   projectId,
   testEquipmentId,
@@ -37,6 +93,24 @@ export const saveEquipmentCalibrationFormInfoApi = async (
       body,
     )
     .then(response => {
+      return response;
+    })
+    .catch(err => {
+      const errorMessge = err.message || 'Unable to save Mix design.';
+      throw new Error(errorMessge);
+    });
+};
+
+export const deleteEquipmentCalibrationFormInfoApi = async (
+  projectId,
+  testEquipmentId,
+  testEquipmentCalibrationId,
+) => {
+  return apiService
+    .deleteRequest(
+      `v1/auth/projects/${projectId}/equipments/${testEquipmentId}/equipment-calibrations/${testEquipmentCalibrationId}`,
+    )
+    .then(response => {
       console.log('=======>', response);
       return response;
     })
@@ -46,6 +120,7 @@ export const saveEquipmentCalibrationFormInfoApi = async (
       throw new Error(errorMessge);
     });
 };
+
 export const saveEquipmentFormInfoApi = async (
   projectId,
   testEquipmentCategory,
@@ -57,7 +132,49 @@ export const saveEquipmentFormInfoApi = async (
       `v1/auth/projects/${projectId}/test-equipment-category/${testEquipmentCategory}/test-equipment-type/${testEquipmentTypeId}/equipments`,
       body,
     )
+    .then(response => {
+      console.log('response', response);
+      return response;
+    })
+    .catch(err => {
+      const errorMessge = err.message || 'Unable to save Mix design.';
+      throw new Error(errorMessge);
+    });
+};
 
+export const editEquipmentFormInfoApi = async (
+  projectId,
+  testEquipmentCategory,
+  testEquipmentTypeId,
+  testEquipmentId,
+  body,
+) => {
+  console.log(
+    'API Path:',
+    `v1/auth/projects/${projectId}/test-equipment-category/${testEquipmentCategory}/test-equipment-type/${testEquipmentTypeId}/equipments/${testEquipmentId}`,
+  );
+  return apiService
+    .putRequest(
+      `v1/auth/projects/${projectId}/test-equipment-category/${testEquipmentCategory}/test-equipment-type/${testEquipmentTypeId}/equipments/${testEquipmentId}`,
+      body,
+    )
+    .then(response => {
+      return response;
+    })
+    .catch(err => {
+      const errorMessge = err.message || 'Unable to save Mix design.';
+      throw new Error(errorMessge);
+    });
+};
+
+export const deleteEquipmentFormInfoApi = async (
+  projectId,
+  testEquipmentId,
+) => {
+  return apiService
+    .deleteRequest(
+      `v1/auth/projects/${projectId}/equipments/${testEquipmentId}`,
+    )
     .then(response => {
       console.log('response', response);
       return response;

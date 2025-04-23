@@ -9,13 +9,20 @@ import {
   NativeEventEmitter,
   Image,
   Modal,
+  Alert,
 } from 'react-native';
 import CustomSelectDropdown from '../../../Common/CustomSelectDropdown';
 import {useSnackbar} from '../../../../context/SnackbarContext';
 import {useDispatch, useSelector} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
 import LoadingAnimation from '../../../Common/LoadingAnimation';
-import {getEquipmentsListData, saveEquipmentsCalibrationInfo} from './actions';
+import Pdf from 'react-native-pdf'; // Import Pdf component
+import {
+  getEquipmentsListData,
+  saveEquipmentsCalibrationInfo,
+  deleteEquipment,
+  generateEquipmentReport,
+} from './actions';
 import {HeaderItems} from '../../../../constants/constants';
 import CalendarPicker from '../../../../components/UI/CalenderPicker';
 import Input from '../../../../components/UI/Input';
@@ -28,8 +35,12 @@ const EquipmentCalibrationListing = ({
   navigation: any;
   route: any;
 }) => {
-  const {testEquipmentCategoryId, testEquipmentCategoryName, testEquipmentCategoryType} = route.params;
-  const {height} = Dimensions.get('window');
+  const {
+    testEquipmentCategoryId,
+    testEquipmentCategoryName,
+    testEquipmentCategoryType,
+  } = route.params;
+  const {height, width} = Dimensions.get('window');
   const calculatedHeight = height * 0.75;
   const {showSnackbar} = useSnackbar();
   const focus = useIsFocused();
@@ -42,22 +53,28 @@ const EquipmentCalibrationListing = ({
     equipmentsListData,
     loading,
     error,
-    savedEquipmentsCalibrationFormInfo,
+    equipmentReport,
+    deletedEquipment,
   } = useSelector((state: any) => state.EquipmentsCalibration);
   const [equipmentListInfoData, setEquipmentListInfoData] = useState<any[]>([]);
 
-  // Modal state
-  const [modalVisible, setModalVisible] = useState(false);
-  const [selectedEquipment, setSelectedEquipment] = useState<any>(null);
+  // Report modal state
+  const [reportModalVisible, setReportModalVisible] = useState(false);
+  const [pdfSource, setPdfSource] = useState(null);
 
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();
-    eventEmitter.emit('headerEvent', HeaderItems.equipmentListing);
+    eventEmitter.emit('headerEvent', HeaderItems.equipmentCalibrationListing);
   }
 
   useEffect(() => {
     if (focus == true) {
-      dispatch(getEquipmentsListData({projectId: loggedInUser.projectId, testEquipmentCategoryType: testEquipmentCategoryType}));
+      dispatch(
+        getEquipmentsListData({
+          projectId: loggedInUser.projectId,
+          testEquipmentCategoryType: testEquipmentCategoryType,
+        }),
+      );
     }
   }, [focus]);
 
@@ -72,10 +89,72 @@ const EquipmentCalibrationListing = ({
     }
   }, [equipmentsListData, error]);
 
-  const handleEditEquipment = (equipment: any) => {};
+  useEffect(() => {
+    if (deletedEquipment) {
+      showSnackbar('Equipment deleted successfully');
+      dispatch(
+        getEquipmentsListData({
+          projectId: loggedInUser.projectId,
+          testEquipmentCategoryType: testEquipmentCategoryType,
+        }),
+      );
+    }
+  }, [deletedEquipment]);
+
+  // Handle report generation response
+  useEffect(() => {
+    if (equipmentReport) {
+      setReportModalVisible(true);
+      setPdfSource({
+        uri: 'data:application/pdf;base64,' + equipmentReport,
+      });
+    }
+  }, [equipmentReport]);
+
+  const handleEditEquipment = (equipment: any) => {
+    console.log('Navigating to Equipment screen with props:', equipment);
+    navigation.navigate('Equipment', {
+      isEditMode: true,
+      equipmentData: equipment,
+      testEquipmentCategoryType: testEquipmentCategoryType,
+    });
+  };
 
   const handleDeleteEquipment = (equipmentId: string) => {
-    // Implement delete functionality
+    console.log('Clicked on delete function');
+    Alert.alert(
+      'Delete Equipment',
+      'Are you sure you want to delete this equipment?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          onPress: () => {
+            dispatch(
+              deleteEquipment({
+                projectId: loggedInUser.projectId,
+                testEquipmentId: equipmentId,
+              }),
+            );
+          },
+          style: 'destructive',
+        },
+      ],
+    );
+  };
+
+  // New function to generate equipment report
+  const handleGenerateReport = (equipmentId: string) => {
+    setPdfSource(null);
+    dispatch(
+      generateEquipmentReport({
+        projectId: loggedInUser.projectId,
+        testEquipmentId: equipmentId,
+      }),
+    );
   };
 
   const handleAddDetails = (equipment: any) => {
@@ -87,9 +166,6 @@ const EquipmentCalibrationListing = ({
       testEquipmentTypeName: equipment.testEquipmentTypeName,
       testEquipmentSubTypeName: equipment.testEquipmentSubTypeName,
     });
-    // setSelectedEquipment(equipment);
-    // console.log('===  Eq  =====>', equipment);
-    // setModalVisible(true);
   };
 
   const renderEquipmentItem = (equipment: any) => {
@@ -106,27 +182,92 @@ const EquipmentCalibrationListing = ({
           </Text>
         </View>
         <View style={styles.iconContainer}>
-          <TouchableOpacity onPress={() => handleAddDetails(equipment)}>
-            <Image
-              source={require('./../../../../images/plus.png')}
-              style={styles.ActionIcon}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleEditEquipment(equipment)}>
-            <Image
-              source={require('./../../../../images/edit.png')}
-              style={styles.ActionIcon}
-            />
-          </TouchableOpacity>
+          {/* View Report Button */}
+
+          <View style={{flexDirection: 'row', gap: 5, marginBottom: 5}}>
+            <TouchableOpacity onPress={() => handleAddDetails(equipment)}>
+              <Image
+                source={require('./../../../../images/plus.png')}
+                style={styles.ActionIcon}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => handleEditEquipment(equipment)}>
+              <Image
+                source={require('./../../../../images/edit.png')}
+                style={styles.ActionIcon}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => handleDeleteEquipment(equipment._id)}>
+              <Image
+                source={require('./../../../../images/menu/delete.png')}
+                style={styles.ActionIcon}
+              />
+            </TouchableOpacity>
+          </View>
           <TouchableOpacity
-            onPress={() => handleDeleteEquipment(equipment._id)}>
-            <Image
-              source={require('./../../../../images/menu/delete.png')}
-              style={styles.ActionIcon}
-            />
+            style={styles.viewButton}
+            onPress={() => handleGenerateReport(equipment._id)}>
+            <Text style={styles.viewButtonText}>View</Text>
           </TouchableOpacity>
         </View>
       </View>
+    );
+  };
+
+  // Report modal component
+  const renderReportModal = () => {
+    return (
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={reportModalVisible}
+        onRequestClose={() => {
+          setReportModalVisible(false);
+          setPdfSource(null);
+        }}>
+        <View style={styles.reportModalContainer}>
+          <View style={styles.reportCenteredView}>
+            <View style={styles.reportModalView}>
+              <View style={styles.reportModalHeader}>
+                <Text style={styles.reportModalTitle}>Equipment Report</Text>
+                <TouchableOpacity
+                  style={styles.reportButtonClose}
+                  onPress={() => {
+                    setReportModalVisible(false);
+                    setPdfSource(null);
+                  }}>
+                  <Image
+                    style={styles.closeIcon}
+                    tintColor={'#333'}
+                    source={require('./../../../../images/menu/close-icon.png')}
+                  />
+                </TouchableOpacity>
+              </View>
+              {pdfSource && (
+                <View style={styles.pdfContainer}>
+                  <Pdf
+                    source={pdfSource}
+                    onLoadComplete={(numberOfPages, filePath) => {
+                      console.log(`Number of pages: ${numberOfPages}`);
+                    }}
+                    onPageChanged={(page, numberOfPages) => {
+                      console.log(`Current page: ${page}`);
+                    }}
+                    onError={error => {
+                      console.log(error);
+                    }}
+                    onPressLink={uri => {
+                      console.log(`Link pressed: ${uri}`);
+                    }}
+                    style={styles.pdf}
+                  />
+                </View>
+              )}
+            </View>
+          </View>
+        </View>
+      </Modal>
     );
   };
 
@@ -140,6 +281,7 @@ const EquipmentCalibrationListing = ({
         )}
       </ScrollView>
 
+      {renderReportModal()}
       <LoadingAnimation loading={loading} />
     </View>
   );
@@ -186,10 +328,10 @@ const styles = StyleSheet.create({
     color: '#888888',
   },
   iconContainer: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'space-around',
     alignItems: 'center',
-    width: 100,
+    width: 130, // Increased width to accommodate View button
   },
   recentWorkContainer: {
     flex: 1,
@@ -205,123 +347,82 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#666666',
   },
-  // Modal styles
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
+  viewButton: {
+    borderRadius: 30,
+    borderWidth: 1,
+    borderColor: '#27AE60',
+    backgroundColor: '#27AE60',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
   },
-  modalContent: {
-    width: '90%',
-    backgroundColor: 'white',
-    borderRadius: 10,
-    padding: 20,
+  viewButtonText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: '500',
+  },
+  // Report modal styles
+  reportModalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+  },
+  reportCenteredView: {
+    marginTop: 'auto',
+    backgroundColor: '#fff',
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+    borderRadius: 12,
+    borderBottomWidth: 1,
+    borderColor: '#EBEBF0',
+    borderStyle: 'solid',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
     },
     shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    maxHeight: '90%',
+    shadowRadius: 4,
+    elevation: 60,
   },
-  modalTitle: {
+  reportModalView: {
+    minHeight: 150,
+  },
+  reportModalHeader: {
+    position: 'relative',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderColor: '#EBEBF0',
+    borderStyle: 'solid',
+  },
+  reportModalTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    color: '#333',
+    fontWeight: '700',
+    color: '#27272A',
     textAlign: 'center',
   },
-  equipmentInfoContainer: {
-    backgroundColor: '#f5f7fa',
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 15,
+  reportButtonClose: {
+    position: 'absolute',
+    right: 15,
   },
-  equipmentNameTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#1C58C0',
-    marginBottom: 8,
-    textAlign: 'center',
+  closeIcon: {
+    width: 30,
+    height: 30,
   },
-  equipmentPropertyContainer: {
-    flexDirection: 'row',
-    marginBottom: 4,
+  pdfContainer: {
+    justifyContent: 'flex-start',
     alignItems: 'center',
+    marginTop: 25,
+    height: Dimensions.get('screen').height - 200,
   },
-  propertyLabel: {
-    fontSize: 13,
-    fontWeight: '500',
-    color: '#555',
-    width: 110,
-  },
-  propertyValue: {
-    fontSize: 13,
-    color: '#333',
+  pdf: {
     flex: 1,
-  },
-  divider: {
-    height: 1,
-    backgroundColor: '#ddd',
-    marginTop: 8,
-  },
-  formContainer: {
-    maxHeight: 360,
-  },
-  inputWrapper: {
-    marginBottom: 15,
-  },
-  inputLabel: {
-    fontSize: 14,
-    fontWeight: '500',
-    marginBottom: 8,
-    color: '#333',
-  },
-  input: {
-    height: 40,
-    fontSize: 14,
-    borderColor: '#ddd',
-    borderRadius: 8,
-  },
-  modalFooter: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 15,
-  },
-  cancelButton: {
-    flex: 1,
-    borderRadius: 30,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    backgroundColor: '#fff',
-    paddingVertical: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 10,
-  },
-  cancelButtonText: {
-    color: '#666',
-    fontSize: 14,
-    fontWeight: '500',
-  },
-  submitButton: {
-    flex: 1,
-    borderRadius: 30,
-    borderWidth: 1,
-    borderColor: '#1C58C0',
-    backgroundColor: '#1C58C0',
-    paddingVertical: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginLeft: 10,
-  },
-  submitButtonText: {
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: '500',
+    width: Dimensions.get('screen').width,
+    height: Dimensions.get('screen').height,
   },
 });
 

@@ -98,19 +98,17 @@ const EquipmentListing = ({
         <View style={styles.innerScrollView}>
           {equipmentInfoData &&
             equipmentInfoData.map((item: any, index: any) => (
-              <TouchableOpacity
+                <TouchableOpacity
                 key={index}
                 onPress={() => navigateToListOfEquipment(item)}
                 style={styles.equipmentCard}>
                 <View style={styles.equipmentCardContent}>
                   <Text style={styles.equipmentName}>{item.name}</Text>
+                    <View style={[styles.equipmentCountContainer, { backgroundColor: '#E0F7FF', borderRadius: 50, width: 40, height: 40 }]}>
+                    <Text style={styles.equipmentCount}>{item.noOfEquipment}</Text>
+                    </View>
                 </View>
-                <View style={styles.equipmentCardContent}>
-                  <Text style={styles.equipmentCount}>
-                    {item.noOfEquipment}
-                  </Text>
-                </View>
-              </TouchableOpacity>
+                </TouchableOpacity>
             ))}
         </View>
       </ScrollView>
@@ -293,6 +291,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     color: '#333333',
+  },
+  equipmentCountContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

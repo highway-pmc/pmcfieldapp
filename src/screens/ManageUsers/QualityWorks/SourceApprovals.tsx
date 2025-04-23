@@ -181,10 +181,15 @@ const SourceApprovals = ({
   const [emulsion, setEmulsion] = useState({
     sourceApprovalId: '',
     gradeOfEmulsion: '', // characters, max limit 100
-    ratePerMT: 0.0, // (3 decimal, >0, 100000)
+    ratePerKg: 0.0, // (3 decimal, >0, 100000)
     emulsionBrand: '', // characters, max limit 100
   });
-
+  //Cellulose Fibre
+  const [celluloseFibre, setCelluloseFibre] = useState({
+    sourceApprovalId: '',
+    brandName: '',
+    ratePerKg: 0.0,
+  });
   //Coarse Aggregate (SMA)
   const [coarseAggregateSMA, setCoarseAggregateSMA] = useState({
     sourceApprovalId: '',
@@ -377,8 +382,15 @@ const SourceApprovals = ({
           setEmulsion({
             sourceApprovalId: item._id,
             gradeOfEmulsion: item.gradeOfEmulsion, // characters, max limit 100
-            ratePerMT: item.ratePerMT, // (3 decimal, >0, 100000)
+            ratePerKg: item.ratePerKg, // (3 decimal, >0, 100000)
             emulsionBrand: item.emulsionBrand, // characters, max limit 100
+          });
+          break;
+        case TEST_MATERIALS_TYPES.CELLULOSE_FIBRE:
+          setCelluloseFibre({
+            sourceApprovalId: item._id,
+            brandName: item.brandName, // characters, max limit 100
+            ratePerKg: item.ratePerKg, // (3 decimal, >0, 100000)
           });
           break;
       }
@@ -825,10 +837,10 @@ const SourceApprovals = ({
           return false;
         }
       } else if (materialType === TEST_MATERIALS_TYPES.EMULSION) {
-        const ratePerMT = Number(emulsion.ratePerMT);
+        const ratePerKg = Number(emulsion.ratePerKg);
         if (
-          ratePerMT > 100000 ||
-          !/^\d+(\.\d{1,3})?$/.test(ratePerMT.toString())
+          ratePerKg > 100000 ||
+          !/^\d+(\.\d{1,3})?$/.test(ratePerKg.toString())
         ) {
           showSnackbar(
             'Rate per MT must be less than 100,000 and up to 3 decimal places.',
@@ -836,14 +848,26 @@ const SourceApprovals = ({
           );
           return false;
         }
-        if (emulsion.gradeOfEmulsion.length > 100) {
+        if (emulsion.emulsionBrand.length > 100) {
           showSnackbar(
-            'Grade of Emulsion must be less than 100 characters.',
+            'Emulsion Brand must be less than 100 characters.',
             'error',
           );
           return false;
         }
-        if (emulsion.emulsionBrand.length > 100) {
+      } else if (materialType === TEST_MATERIALS_TYPES.CELLULOSE_FIBRE) {
+        const ratePerKg = Number(celluloseFibre.ratePerKg);
+        if (
+          ratePerKg > 100000 ||
+          !/^\d+(\.\d{1,3})?$/.test(ratePerKg.toString())
+        ) {
+          showSnackbar(
+            'Rate per MT must be less than 100,000 and up to 3 decimal places.',
+            'error',
+          );
+          return false;
+        }
+        if (celluloseFibre.brandName.length > 100) {
           showSnackbar(
             'Emulsion Brand must be less than 100 characters.',
             'error',
@@ -1127,13 +1151,21 @@ const SourceApprovals = ({
           body = {
             name: emulsion.gradeOfEmulsion,
             metaData: {
-              ratePerMT: Number(emulsion.ratePerMT),
+              ratePerKg: Number(emulsion.ratePerKg),
               gradeOfEmulsion: emulsion.gradeOfEmulsion,
               emulsionBrand: emulsion.emulsionBrand,
             },
           };
           break;
-
+        case TEST_MATERIALS_TYPES.CELLULOSE_FIBRE:
+          body = {
+            brandName: celluloseFibre.brandName,
+            metaData: {
+              ratePerKg: Number(celluloseFibre.ratePerKg),
+              brandName: celluloseFibre.brandName,
+            },
+          };
+          break;
         default:
           console.error('Unknown material type for Bituminous Works');
           return;
@@ -1328,11 +1360,17 @@ const SourceApprovals = ({
             setEmulsion({
               sourceApprovalId: selectedSource._id,
               gradeOfEmulsion: 'VG 30',
-              ratePerMT: 0.0,
+              ratePerKg: 0.0,
               emulsionBrand: '',
             });
             break;
-
+          case TEST_MATERIALS_TYPES.CELLULOSE_FIBRE:
+            setCelluloseFibre({
+              sourceApprovalId: selectedSource._id,
+              brandName: '',
+              ratePerKg: 0.0,
+            });
+            break;
           default:
             console.warn(`Unknown material type: ${materialType}`);
         }
@@ -1486,10 +1524,15 @@ const SourceApprovals = ({
             case TEST_MATERIALS_TYPES.EMULSION:
               editedObj.name = emulsion.gradeOfEmulsion;
               editedObj.metaData.gradeOfEmulsion = emulsion.gradeOfEmulsion;
-              editedObj.metaData.ratePerMT = emulsion.ratePerMT;
+              editedObj.metaData.ratePerKg = emulsion.ratePerKg;
               editedObj.metaData.emulsionBrand = emulsion.emulsionBrand;
               break;
-
+            case TEST_MATERIALS_TYPES.CELLULOSE_FIBRE:
+              editedObj.name = celluloseFibre.brandName;
+              editedObj.metaData.brandName =
+                celluloseFibre.brandName;
+              editedObj.metaData.ratePerKg = celluloseFibre.ratePerKg;
+              break;
             default:
               // Default logic for non-bituminous works
               console.error('Material type Not Found');
@@ -1635,12 +1678,18 @@ const SourceApprovals = ({
           case TEST_MATERIALS_TYPES.EMULSION:
             setEmulsion({
               sourceApprovalId: selectedSource._id,
-              gradeOfEmulsion: 'VG 30',
-              ratePerMT: 0.0,
+              gradeOfEmulsion: '',
+              ratePerKg: 0.0,
               emulsionBrand: '',
             });
             break;
-
+          case TEST_MATERIALS_TYPES.CELLULOSE_FIBRE:
+            setCelluloseFibre({
+              sourceApprovalId: selectedSource._id,
+              brandName: '',
+              ratePerKg: 0.0,
+            });
+            break;
           default:
             console.warn(`Unknown material type: ${materialType}`);
         }
@@ -1815,11 +1864,17 @@ const SourceApprovals = ({
           setEmulsion({
             sourceApprovalId: item.sourceApprovalId,
             gradeOfEmulsion: item.metaData?.gradeOfEmulsion,
-            ratePerMT: item.metaData?.ratePerMT,
+            ratePerKg: item.metaData?.ratePerKg,
             emulsionBrand: item.metaData?.emulsionBrand,
           });
           break;
-
+        case TEST_MATERIALS_TYPES.CELLULOSE_FIBRE:
+          setCelluloseFibre({
+            sourceApprovalId: item.sourceApprovalId,
+            brandName: item.metaData?.brandName,
+            ratePerKg: item.metaData?.ratePerKg,
+          });
+          break;
         default:
           console.warn(`Unknown material type: ${materialType}`);
       }
@@ -1998,21 +2053,28 @@ const SourceApprovals = ({
         return (
           <View style={styles.reportFields}>
             <View>
-              <Input
+              <DropdownPicker
                 label="Grade of Emulsion"
+                items={[
+                  {label: 'Select', value: ''},
+                  {label: 'RS1', value: 'RS2'},
+                  {label: 'RS2', value: 'RS2'},
+                  {label: 'MS', value: 'MS'},
+                  {label: 'SS1', value: 'SS1'},
+                  {label: 'SS2', value: 'SS2'},
+                ]}
                 value={emulsion.gradeOfEmulsion}
                 onChange={(value: string) =>
                   handleEmulsionInputChange('gradeOfEmulsion', value)
                 }
-                isRequired={true}
               />
             </View>
             <View>
               <Input
-                label="Rate per MT"
-                value={emulsion.ratePerMT}
+                label="Rate per Kg"
+                value={emulsion.ratePerKg}
                 onChange={(value: number) =>
-                  handleEmulsionInputChange('ratePerMT', value)
+                  handleEmulsionInputChange('ratePerKg', value)
                 }
                 isRequired={true}
                 keyboardType="numeric"
@@ -2026,6 +2088,37 @@ const SourceApprovals = ({
                   handleEmulsionInputChange('emulsionBrand', value)
                 }
                 isRequired={true}
+              />
+            </View>
+            <TouchableOpacity
+              style={styles.btnContainer}
+              onPress={addSourceDetailsSubmit}>
+              <Text style={styles.submitBtn}>Submit</Text>
+            </TouchableOpacity>
+          </View>
+        );
+      } else if (materialType === TEST_MATERIALS_TYPES.CELLULOSE_FIBRE) {
+        return (
+          <View style={styles.reportFields}>
+            <View>
+              <Input
+                label="Rate per Kg"
+                value={celluloseFibre.ratePerKg}
+                onChange={(value: number) =>
+                  setCelluloseFibre({...celluloseFibre, ratePerKg: value})
+                }
+                isRequired={true}
+                keyboardType="numeric"
+              />
+            </View>
+            <View>
+              <Input
+              label="Brand Name"
+              value={celluloseFibre.brandName}
+              onChange={(value: string) =>
+                setCelluloseFibre({...celluloseFibre, brandName: value})
+              }
+              isRequired={true}
               />
             </View>
             <TouchableOpacity

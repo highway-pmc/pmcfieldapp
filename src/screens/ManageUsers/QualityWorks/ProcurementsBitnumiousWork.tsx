@@ -176,7 +176,7 @@ const ProcurementsBitnumiousWork = ({
   const {showSnackbar} = useSnackbar();
 
   const dispatch = useDispatch();
-  const { height } = Dimensions.get('window');
+  const {height} = Dimensions.get('window');
   const calculatedHeight = height * 0.75;
   const calculatedFlatListHeight = height * 0.72;
 
@@ -407,7 +407,6 @@ const ProcurementsBitnumiousWork = ({
     setVehicleNos(item.vehicleNo || []);
 
     if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BITUMINOUS_WORKS) {
-      console.log('=====MetaData====', item.metaData.qtyInKg);
       switch (materialType) {
         case TEST_MATERIALS_TYPES.FINE_AGGREGATE:
           setDetailsFineAggregate({
@@ -689,20 +688,11 @@ const ProcurementsBitnumiousWork = ({
     if (!validateForm()) {
       return;
     }
-    console.log('===submit======');
     let materialSpecificFields: any = {};
 
     if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BITUMINOUS_WORKS) {
       switch (materialType) {
         case TEST_MATERIALS_TYPES.FINE_AGGREGATE:
-          console.log(
-            '====Source Id===',
-            detailsFineAggregate.sourceApprovalId,
-          );
-          console.log(
-            '====Source detail Id===',
-            detailsFineAggregate.sourceApprovalDetailId,
-          );
           materialSpecificFields = {
             projectId: loggedInUser.projectId,
             testMaterialId: testMaterialId,
@@ -799,24 +789,14 @@ const ProcurementsBitnumiousWork = ({
               },
             },
           };
-          console.log(
-            '====COARSE_AGGREGATE_MICRO_SURFACING====',
-            JSON.stringify(materialSpecificFields),
-          );
           break;
 
         case TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA:
-          console.log(
-            '====detailsCoarseAggregateSMA====',
-            JSON.stringify(detailsCoarseAggregateSMA),
-          );
           materialSpecificFields = {
             projectId: loggedInUser.projectId,
             testMaterialId: testMaterialId,
             body: {
               sourceApprovalId: detailsCoarseAggregateSMA.sourceApprovalId,
-              //sourceApprovalDetailId:
-              //detailsCoarseAggregateSMA.sourceApprovalDetailId,
               vehicleNo: vehicleNos.length
                 ? vehicleNos
                 : [detailsCoarseAggregateSMA.vehicleNo || ''],
@@ -1008,10 +988,8 @@ const ProcurementsBitnumiousWork = ({
         allowMultiSelection: false,
       });
       const res = result[0];
-      console.log('==res===', res);
       setFileRes(res);
     } catch (err) {
-      console.log('======err2===', err);
       if (DocumentPicker.isCancel(err)) {
         showSnackbar('No document selected');
       } else {
@@ -1041,10 +1019,8 @@ const ProcurementsBitnumiousWork = ({
           },
           body: data,
         });
-        console.log('===responseOfFileUpload====', responseOfFileUpload);
         if (responseOfFileUpload.status == 200) {
           let responseInJs = await responseOfFileUpload.json();
-          console.log('===responseInJs====', responseInJs);
           let fileName = responseInJs.data.fileUrl;
           showSnackbar('Upload Succesfull');
           setFileRes(null);
@@ -1052,9 +1028,7 @@ const ProcurementsBitnumiousWork = ({
           showSnackbar('Upload Failed');
         }
       } catch (err) {
-        console.log('==err==', err);
         showSnackbar('Upload Failed');
-        console.log(err, 'error in upload');
       }
     } else {
       showSnackbar('File size should not exceed 4 MB');
@@ -1109,11 +1083,13 @@ const ProcurementsBitnumiousWork = ({
                           onChange={(value: string) => setVehicleNoTemp(value)}
                         />
                       </View>
-                      <View  style={commonStyles.paadingTop}>
+                      <View style={commonStyles.paadingTop}>
                         <TouchableOpacity
                           style={commonStyles.add_vehicle}
                           onPress={onAddVehicle}>
-                          <Text style={commonStyles.btnAddVehicle}>Add Vehicle</Text>
+                          <Text style={commonStyles.btnAddVehicle}>
+                            Add Vehicle
+                          </Text>
                         </TouchableOpacity>
                       </View>
                     </View>
@@ -1189,136 +1165,138 @@ const ProcurementsBitnumiousWork = ({
                 showsHorizontalScrollIndicator={false}
                 style={[{height: calculatedHeight}]}>
                 <View style={commonStyles.procurementsInnerContainer}>
-                <View>
-                  <DropdownPicker
-                    label="Nominal Size"
-                    items={[
-                      {label: 'Select', value: ''},
-                      {label: '37.5mm', value: '37.5mm'},
-                      {label: '26.5mm', value: '26.5mm'},
-                      {label: '19mm', value: '19mm'},
-                      {label: '13.2mm', value: '13.2mm'},
-                    ]}
-                    value={detailsCoarseAggregateDBMBC.nominalSize}
-                    onChange={(value: string) =>
-                      handleInputChangeBituminousWork(
-                        'nominalSize',
-                        value,
-                        'detailsCoarseAggregateDBMBC',
-                      )
-                    }
-                  />
-                </View>
-                <View>
-                  {renderSourceDetailsPickerBituminousWork(
-                    'Source Detail',
-                    'sourceApprovalId',
-                    'detailsCoarseAggregateDBMBC',
-                    sourceApprovalsFiltered,
-                  )}
-                </View>
-                <View>
-                  <Input
-                    label="Lot No/Trip No/Invoice No"
-                    value={detailsCoarseAggregateDBMBC.lotNo}
-                    onChange={(value: string) =>
-                      handleInputChangeBituminousWork(
-                        'lotNo',
-                        value,
-                        'detailsCoarseAggregateDBMBC',
-                      )
-                    }
-                    isRequired={true}
-                  />
-                </View>
-                <View>
-                  <View style={commonStyles.addMoreVichleContainer}>
-                  <View style={commonStyles.vichleWth}>
-                      <Input
-                        label="Vehicle No. (Last 4 digits)"
-                        value={vehicleNoTemp}
-                        onChange={(value: string) => setVehicleNoTemp(value)}
-                      />
-                    </View>
-                    <View style={commonStyles.paadingTop}>
-                      <TouchableOpacity
-                        style={commonStyles.add_vehicle}
-                        onPress={onAddVehicle}>
-                        <Text style={commonStyles.btnAddVehicle}>Add Vehicle</Text>
-                      </TouchableOpacity>
-                    </View>
+                  <View>
+                    <DropdownPicker
+                      label="Nominal Size"
+                      items={[
+                        {label: 'Select', value: ''},
+                        {label: '37.5mm', value: '37.5mm'},
+                        {label: '26.5mm', value: '26.5mm'},
+                        {label: '19mm', value: '19mm'},
+                        {label: '13.2mm', value: '13.2mm'},
+                      ]}
+                      value={detailsCoarseAggregateDBMBC.nominalSize}
+                      onChange={(value: string) =>
+                        handleInputChangeBituminousWork(
+                          'nominalSize',
+                          value,
+                          'detailsCoarseAggregateDBMBC',
+                        )
+                      }
+                    />
                   </View>
-                  <View style={{maxHeight: 400}}>
-                    <ScrollView>
-                      <FlatList
-                        data={vehicleNos}
-                        renderItem={renderAddedVehicleItem}
-                        keyExtractor={item => item}
-                      />
-                    </ScrollView>
-                  </View>
-                </View>
-                <View>
-                  <Input
-                    label="Quantity (in kg)"
-                    value={detailsCoarseAggregateDBMBC.qtyInKg}
-                    onChange={(value: string) =>
-                      handleInputChangeBituminousWork(
-                        'qtyInKg',
-                        value,
-                        'detailsCoarseAggregateDBMBC',
-                      )
-                    }
-                    isRequired={true}
-                  />
-                </View>
-                <View>
-                  <Input
-                    label="Quantity (in cum)"
-                    value={detailsCoarseAggregateDBMBC.qtyInCum}
-                    onChange={(value: string) =>
-                      handleInputChangeBituminousWork(
-                        'qtyInCum',
-                        value,
-                        'detailsCoarseAggregateDBMBC',
-                      )
-                    }
-                    isRequired={true}
-                  />
-                </View>
-                <View>
-                  <CalendarPicker
-                    label="Date"
-                    value={detailsCoarseAggregateDBMBC.procurementDateTime}
-                    onChange={date =>
-                      handleInputChangeBituminousWork(
-                        'procurementDateTime',
-                        date,
-                        'detailsCoarseAggregateDBMBC',
-                      )
-                    }
-                  />
-                </View>
-                <View style={{flexDirection: 'column'}}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}>
-                    <TouchableOpacity
-                      style={styles.upload_container}
-                      onPress={onDocumentPress}>
-                      <Text style={styles.uploadBtn}>Upload Weight Slip</Text>
-                    </TouchableOpacity>
-                    {detailsCoarseAggregateDBMBC.uploadWeightSlip && (
-                      <Text>
-                        {detailsCoarseAggregateDBMBC.uploadWeightSlip}
-                      </Text>
+                  <View>
+                    {renderSourceDetailsPickerBituminousWork(
+                      'Source Detail',
+                      'sourceApprovalId',
+                      'detailsCoarseAggregateDBMBC',
+                      sourceApprovalsFiltered,
                     )}
                   </View>
+                  <View>
+                    <Input
+                      label="Lot No/Trip No/Invoice No"
+                      value={detailsCoarseAggregateDBMBC.lotNo}
+                      onChange={(value: string) =>
+                        handleInputChangeBituminousWork(
+                          'lotNo',
+                          value,
+                          'detailsCoarseAggregateDBMBC',
+                        )
+                      }
+                      isRequired={true}
+                    />
+                  </View>
+                  <View>
+                    <View style={commonStyles.addMoreVichleContainer}>
+                      <View style={commonStyles.vichleWth}>
+                        <Input
+                          label="Vehicle No. (Last 4 digits)"
+                          value={vehicleNoTemp}
+                          onChange={(value: string) => setVehicleNoTemp(value)}
+                        />
+                      </View>
+                      <View style={commonStyles.paadingTop}>
+                        <TouchableOpacity
+                          style={commonStyles.add_vehicle}
+                          onPress={onAddVehicle}>
+                          <Text style={commonStyles.btnAddVehicle}>
+                            Add Vehicle
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                    <View style={{maxHeight: 400}}>
+                      <ScrollView>
+                        <FlatList
+                          data={vehicleNos}
+                          renderItem={renderAddedVehicleItem}
+                          keyExtractor={item => item}
+                        />
+                      </ScrollView>
+                    </View>
+                  </View>
+                  <View>
+                    <Input
+                      label="Quantity (in kg)"
+                      value={detailsCoarseAggregateDBMBC.qtyInKg}
+                      onChange={(value: string) =>
+                        handleInputChangeBituminousWork(
+                          'qtyInKg',
+                          value,
+                          'detailsCoarseAggregateDBMBC',
+                        )
+                      }
+                      isRequired={true}
+                    />
+                  </View>
+                  <View>
+                    <Input
+                      label="Quantity (in cum)"
+                      value={detailsCoarseAggregateDBMBC.qtyInCum}
+                      onChange={(value: string) =>
+                        handleInputChangeBituminousWork(
+                          'qtyInCum',
+                          value,
+                          'detailsCoarseAggregateDBMBC',
+                        )
+                      }
+                      isRequired={true}
+                    />
+                  </View>
+                  <View>
+                    <CalendarPicker
+                      label="Date"
+                      value={detailsCoarseAggregateDBMBC.procurementDateTime}
+                      onChange={date =>
+                        handleInputChangeBituminousWork(
+                          'procurementDateTime',
+                          date,
+                          'detailsCoarseAggregateDBMBC',
+                        )
+                      }
+                    />
+                  </View>
+                  <View style={{flexDirection: 'column'}}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}>
+                      <TouchableOpacity
+                        style={styles.upload_container}
+                        onPress={onDocumentPress}>
+                        <Text style={styles.uploadBtn}>Upload Weight Slip</Text>
+                      </TouchableOpacity>
+                      {detailsCoarseAggregateDBMBC.uploadWeightSlip && (
+                        <Text>
+                          {detailsCoarseAggregateDBMBC.uploadWeightSlip}
+                        </Text>
+                      )}
+                    </View>
+                  </View>
                 </View>
-              </View>
               </ScrollView>
               <TouchableOpacity
                 style={styles.btnContainer}
@@ -1336,119 +1314,121 @@ const ProcurementsBitnumiousWork = ({
                 showsHorizontalScrollIndicator={false}
                 style={[{height: calculatedHeight}]}>
                 <View style={commonStyles.procurementsInnerContainer}>
-                <View>
-                  <DropdownPicker
-                    label="Grade of Bitumen"
-                    items={[
-                      {label: 'Select', value: ''},
-                      {label: 'VG 30', value: 'VG 30'},
-                      {label: 'VG 40', value: 'VG 40'},
-                      {label: 'PMB', value: 'PMB'},
-                    ]}
-                    value={detailsBitumen.gradeOfBitumen}
-                    onChange={(value: string) =>
-                      handleInputChangeBituminousWork(
-                        'gradeOfBitumen',
-                        value,
-                        'detailsBitumen',
-                      )
-                    }
-                  />
-                </View>
-                <View>
-                  {renderSourceDetailsPickerBituminousWork(
-                    'Source Detail',
-                    'sourceApprovalId',
-                    'detailsBitumen',
-                    sourceApprovalsFiltered,
-                  )}
-                </View>
-                <View>
-                  <Input
-                    label="Lot No/Trip No/Invoice No"
-                    value={detailsBitumen.lotNo}
-                    onChange={(value: string) =>
-                      handleInputChangeBituminousWork(
-                        'lotNo',
-                        value,
-                        'detailsBitumen',
-                      )
-                    }
-                    isRequired={true}
-                  />
-                </View>
-                <View>
-                  <View style={commonStyles.addMoreVichleContainer}>
-                    <View style={commonStyles.vichleWth}>
-                      <Input
-                        label="Vehicle No. (Last 4 digits)"
-                        value={vehicleNoTemp}
-                        onChange={(value: string) => setVehicleNoTemp(value)}
-                      />
-                    </View>
-                    <View style={commonStyles.paadingTop}>
-                      <TouchableOpacity
-                        style={commonStyles.add_vehicle}
-                        onPress={onAddVehicle}>
-                        <Text style={commonStyles.btnAddVehicle}>Add Vehicle</Text>
-                      </TouchableOpacity>
-                    </View>
+                  <View>
+                    <DropdownPicker
+                      label="Grade of Bitumen"
+                      items={[
+                        {label: 'Select', value: ''},
+                        {label: 'VG 30', value: 'VG 30'},
+                        {label: 'VG 40', value: 'VG 40'},
+                        {label: 'PMB', value: 'PMB'},
+                      ]}
+                      value={detailsBitumen.gradeOfBitumen}
+                      onChange={(value: string) =>
+                        handleInputChangeBituminousWork(
+                          'gradeOfBitumen',
+                          value,
+                          'detailsBitumen',
+                        )
+                      }
+                    />
                   </View>
-                  <View style={{maxHeight: 400}}>
-                    <ScrollView>
-                      <FlatList
-                        data={vehicleNos}
-                        renderItem={renderAddedVehicleItem}
-                        keyExtractor={item => item}
-                      />
-                    </ScrollView>
-                  </View>
-                </View>
-                <View>
-                  <Input
-                    label="Quantity (in kg)"
-                    value={detailsBitumen.qtyInKg}
-                    onChange={(value: string) =>
-                      handleInputChangeBituminousWork(
-                        'qtyInKg',
-                        value,
-                        'detailsBitumen',
-                      )
-                    }
-                    isRequired={true}
-                  />
-                </View>
-                <View>
-                  <CalendarPicker
-                    label="Date"
-                    value={detailsBitumen.procurementDateTime}
-                    onChange={date =>
-                      handleInputChangeBituminousWork(
-                        'procurementDateTime',
-                        date,
-                        'detailsBitumen',
-                      )
-                    }
-                  />
-                </View>
-                <View style={{flexDirection: 'column'}}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}>
-                    <TouchableOpacity
-                      style={styles.upload_container}
-                      onPress={onDocumentPress}>
-                      <Text style={styles.uploadBtn}>Upload Weight Slip</Text>
-                    </TouchableOpacity>
-                    {detailsBitumen.uploadWeightSlip && (
-                      <Text>{detailsBitumen.uploadWeightSlip}</Text>
+                  <View>
+                    {renderSourceDetailsPickerBituminousWork(
+                      'Source Detail',
+                      'sourceApprovalId',
+                      'detailsBitumen',
+                      sourceApprovalsFiltered,
                     )}
                   </View>
+                  <View>
+                    <Input
+                      label="Lot No/Trip No/Invoice No"
+                      value={detailsBitumen.lotNo}
+                      onChange={(value: string) =>
+                        handleInputChangeBituminousWork(
+                          'lotNo',
+                          value,
+                          'detailsBitumen',
+                        )
+                      }
+                      isRequired={true}
+                    />
+                  </View>
+                  <View>
+                    <View style={commonStyles.addMoreVichleContainer}>
+                      <View style={commonStyles.vichleWth}>
+                        <Input
+                          label="Vehicle No. (Last 4 digits)"
+                          value={vehicleNoTemp}
+                          onChange={(value: string) => setVehicleNoTemp(value)}
+                        />
+                      </View>
+                      <View style={commonStyles.paadingTop}>
+                        <TouchableOpacity
+                          style={commonStyles.add_vehicle}
+                          onPress={onAddVehicle}>
+                          <Text style={commonStyles.btnAddVehicle}>
+                            Add Vehicle
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                    <View style={{maxHeight: 400}}>
+                      <ScrollView>
+                        <FlatList
+                          data={vehicleNos}
+                          renderItem={renderAddedVehicleItem}
+                          keyExtractor={item => item}
+                        />
+                      </ScrollView>
+                    </View>
+                  </View>
+                  <View>
+                    <Input
+                      label="Quantity (in kg)"
+                      value={detailsBitumen.qtyInKg}
+                      onChange={(value: string) =>
+                        handleInputChangeBituminousWork(
+                          'qtyInKg',
+                          value,
+                          'detailsBitumen',
+                        )
+                      }
+                      isRequired={true}
+                    />
+                  </View>
+                  <View>
+                    <CalendarPicker
+                      label="Date"
+                      value={detailsBitumen.procurementDateTime}
+                      onChange={date =>
+                        handleInputChangeBituminousWork(
+                          'procurementDateTime',
+                          date,
+                          'detailsBitumen',
+                        )
+                      }
+                    />
+                  </View>
+                  <View style={{flexDirection: 'column'}}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}>
+                      <TouchableOpacity
+                        style={styles.upload_container}
+                        onPress={onDocumentPress}>
+                        <Text style={styles.uploadBtn}>Upload Weight Slip</Text>
+                      </TouchableOpacity>
+                      {detailsBitumen.uploadWeightSlip && (
+                        <Text>{detailsBitumen.uploadWeightSlip}</Text>
+                      )}
+                    </View>
+                  </View>
                 </View>
-              </View>
               </ScrollView>
               <TouchableOpacity
                 style={styles.btnContainer}
@@ -1466,138 +1446,142 @@ const ProcurementsBitnumiousWork = ({
                 showsHorizontalScrollIndicator={false}
                 style={[{height: calculatedHeight}]}>
                 <View style={commonStyles.procurementsInnerContainer}>
-                <View>
-                  <DropdownPicker
-                    label="Nominal Size"
-                    items={[
-                      {label: 'Select', value: ''},
-                      {label: '37.5mm', value: '37.5mm'},
-                      {label: '26.5mm', value: '26.5mm'},
-                      {label: '19mm', value: '19mm'},
-                      {label: '13.2mm', value: '13.2mm'},
-                    ]}
-                    value={detailsCoarseAggregateMicroSurfacing.nominalSize}
-                    onChange={(value: string) =>
-                      handleInputChangeBituminousWork(
-                        'nominalSize',
-                        value,
-                        'detailsCoarseAggregateMicroSurfacing',
-                      )
-                    }
-                  />
-                </View>
-                <View>
-                  {renderSourceDetailsPickerBituminousWork(
-                    'Source Detail',
-                    'sourceApprovalId',
-                    'detailsCoarseAggregateMicroSurfacing',
-                    sourceApprovalsFiltered,
-                  )}
-                </View>
-                <View>
-                  <Input
-                    label="Lot No/Trip No/Invoice No"
-                    value={detailsCoarseAggregateMicroSurfacing.lotNo}
-                    onChange={(value: string) =>
-                      handleInputChangeBituminousWork(
-                        'lotNo',
-                        value,
-                        'detailsCoarseAggregateMicroSurfacing',
-                      )
-                    }
-                    isRequired={true}
-                  />
-                </View>
-                <View>
-                  <View style={commonStyles.addMoreVichleContainer}>
-                    <View style={commonStyles.vichleWth}>
-                      <Input
-                        label="Vehicle No. (Last 4 digits)"
-                        value={vehicleNoTemp}
-                        onChange={(value: string) => setVehicleNoTemp(value)}
-                      />
-                    </View>
-                    <View style={commonStyles.paadingTop}>
-                      <TouchableOpacity
-                        style={commonStyles.add_vehicle}
-                        onPress={onAddVehicle}>
-                        <Text style={commonStyles.btnAddVehicle}>Add Vehicle</Text>
-                      </TouchableOpacity>
-                    </View>
+                  <View>
+                    <DropdownPicker
+                      label="Nominal Size"
+                      items={[
+                        {label: 'Select', value: ''},
+                        {label: '37.5mm', value: '37.5mm'},
+                        {label: '26.5mm', value: '26.5mm'},
+                        {label: '19mm', value: '19mm'},
+                        {label: '13.2mm', value: '13.2mm'},
+                      ]}
+                      value={detailsCoarseAggregateMicroSurfacing.nominalSize}
+                      onChange={(value: string) =>
+                        handleInputChangeBituminousWork(
+                          'nominalSize',
+                          value,
+                          'detailsCoarseAggregateMicroSurfacing',
+                        )
+                      }
+                    />
                   </View>
-                  <View style={{maxHeight: 400}}>
-                    <ScrollView>
-                      <FlatList
-                        data={vehicleNos}
-                        renderItem={renderAddedVehicleItem}
-                        keyExtractor={item => item}
-                      />
-                    </ScrollView>
-                  </View>
-                </View>
-                <View>
-                  <Input
-                    label="Quantity (in kg)"
-                    value={detailsCoarseAggregateMicroSurfacing.qtyInKg}
-                    onChange={(value: string) =>
-                      handleInputChangeBituminousWork(
-                        'qtyInKg',
-                        value,
-                        'detailsCoarseAggregateMicroSurfacing',
-                      )
-                    }
-                    isRequired={true}
-                  />
-                </View>
-                <View>
-                  <Input
-                    label="Quantity (in cum)"
-                    value={detailsCoarseAggregateMicroSurfacing.qtyInCum}
-                    onChange={(value: string) =>
-                      handleInputChangeBituminousWork(
-                        'qtyInCum',
-                        value,
-                        'detailsCoarseAggregateMicroSurfacing',
-                      )
-                    }
-                    isRequired={true}
-                  />
-                </View>
-                <View>
-                  <CalendarPicker
-                    label="Date"
-                    value={
-                      detailsCoarseAggregateMicroSurfacing.procurementDateTime
-                    }
-                    onChange={date =>
-                      handleInputChangeBituminousWork(
-                        'procurementDateTime',
-                        date,
-                        'detailsCoarseAggregateMicroSurfacing',
-                      )
-                    }
-                  />
-                </View>
-                <View style={{flexDirection: 'column'}}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}>
-                    <TouchableOpacity
-                      style={styles.upload_container}
-                      onPress={onDocumentPress}>
-                      <Text style={styles.uploadBtn}>Upload Weight Slip</Text>
-                    </TouchableOpacity>
-                    {detailsCoarseAggregateMicroSurfacing.uploadWeightSlip && (
-                      <Text>
-                        {detailsCoarseAggregateMicroSurfacing.uploadWeightSlip}
-                      </Text>
+                  <View>
+                    {renderSourceDetailsPickerBituminousWork(
+                      'Source Detail',
+                      'sourceApprovalId',
+                      'detailsCoarseAggregateMicroSurfacing',
+                      sourceApprovalsFiltered,
                     )}
                   </View>
+                  <View>
+                    <Input
+                      label="Lot No/Trip No/Invoice No"
+                      value={detailsCoarseAggregateMicroSurfacing.lotNo}
+                      onChange={(value: string) =>
+                        handleInputChangeBituminousWork(
+                          'lotNo',
+                          value,
+                          'detailsCoarseAggregateMicroSurfacing',
+                        )
+                      }
+                      isRequired={true}
+                    />
+                  </View>
+                  <View>
+                    <View style={commonStyles.addMoreVichleContainer}>
+                      <View style={commonStyles.vichleWth}>
+                        <Input
+                          label="Vehicle No. (Last 4 digits)"
+                          value={vehicleNoTemp}
+                          onChange={(value: string) => setVehicleNoTemp(value)}
+                        />
+                      </View>
+                      <View style={commonStyles.paadingTop}>
+                        <TouchableOpacity
+                          style={commonStyles.add_vehicle}
+                          onPress={onAddVehicle}>
+                          <Text style={commonStyles.btnAddVehicle}>
+                            Add Vehicle
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                    <View style={{maxHeight: 400}}>
+                      <ScrollView>
+                        <FlatList
+                          data={vehicleNos}
+                          renderItem={renderAddedVehicleItem}
+                          keyExtractor={item => item}
+                        />
+                      </ScrollView>
+                    </View>
+                  </View>
+                  <View>
+                    <Input
+                      label="Quantity (in kg)"
+                      value={detailsCoarseAggregateMicroSurfacing.qtyInKg}
+                      onChange={(value: string) =>
+                        handleInputChangeBituminousWork(
+                          'qtyInKg',
+                          value,
+                          'detailsCoarseAggregateMicroSurfacing',
+                        )
+                      }
+                      isRequired={true}
+                    />
+                  </View>
+                  <View>
+                    <Input
+                      label="Quantity (in cum)"
+                      value={detailsCoarseAggregateMicroSurfacing.qtyInCum}
+                      onChange={(value: string) =>
+                        handleInputChangeBituminousWork(
+                          'qtyInCum',
+                          value,
+                          'detailsCoarseAggregateMicroSurfacing',
+                        )
+                      }
+                      isRequired={true}
+                    />
+                  </View>
+                  <View>
+                    <CalendarPicker
+                      label="Date"
+                      value={
+                        detailsCoarseAggregateMicroSurfacing.procurementDateTime
+                      }
+                      onChange={date =>
+                        handleInputChangeBituminousWork(
+                          'procurementDateTime',
+                          date,
+                          'detailsCoarseAggregateMicroSurfacing',
+                        )
+                      }
+                    />
+                  </View>
+                  <View style={{flexDirection: 'column'}}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}>
+                      <TouchableOpacity
+                        style={styles.upload_container}
+                        onPress={onDocumentPress}>
+                        <Text style={styles.uploadBtn}>Upload Weight Slip</Text>
+                      </TouchableOpacity>
+                      {detailsCoarseAggregateMicroSurfacing.uploadWeightSlip && (
+                        <Text>
+                          {
+                            detailsCoarseAggregateMicroSurfacing.uploadWeightSlip
+                          }
+                        </Text>
+                      )}
+                    </View>
+                  </View>
                 </View>
-              </View>
               </ScrollView>
               <TouchableOpacity
                 style={styles.btnContainer}
@@ -1615,134 +1599,138 @@ const ProcurementsBitnumiousWork = ({
                 showsHorizontalScrollIndicator={false}
                 style={[{height: calculatedHeight}]}>
                 <View style={commonStyles.procurementsInnerContainer}>
-                <View>
-                  <DropdownPicker
-                    label="Nominal Size"
-                    items={[
-                      {label: 'Select', value: ''},
-                      {label: '37.5mm', value: '37.5mm'},
-                      {label: '26.5mm', value: '26.5mm'},
-                      {label: '19mm', value: '19mm'},
-                      {label: '13.2mm', value: '13.2mm'},
-                    ]}
-                    value={detailsCoarseAggregateSMA.nominalSize}
-                    onChange={(value: string) =>
-                      handleInputChangeBituminousWork(
-                        'nominalSize',
-                        value,
-                        'detailsCoarseAggregateSMA',
-                      )
-                    }
-                  />
-                </View>
-                <View>
-                  {renderSourceDetailsPickerBituminousWork(
-                    'Source Detail',
-                    'sourceApprovalId',
-                    'detailsCoarseAggregateSMA',
-                    sourceApprovalsFiltered,
-                  )}
-                </View>
-                <View>
-                  <Input
-                    label="Lot No/Trip No/Invoice No"
-                    value={detailsCoarseAggregateSMA.lotNo}
-                    onChange={(value: string) =>
-                      handleInputChangeBituminousWork(
-                        'lotNo',
-                        value,
-                        'detailsCoarseAggregateSMA',
-                      )
-                    }
-                    isRequired={true}
-                  />
-                </View>
-                <View>
-                  <View style={commonStyles.addMoreVichleContainer}>
-                    <View style={commonStyles.vichleWth}>
-                      <Input
-                        label="Vehicle No. (Last 4 digits)"
-                        value={vehicleNoTemp}
-                        onChange={(value: string) => setVehicleNoTemp(value)}
-                      />
-                    </View>
-                    <View style={commonStyles.paadingTop}>
-                      <TouchableOpacity
-                        style={commonStyles.add_vehicle}
-                        onPress={onAddVehicle}>
-                        <Text style={commonStyles.btnAddVehicle}>Add Vehicle</Text>
-                      </TouchableOpacity>
-                    </View>
+                  <View>
+                    <DropdownPicker
+                      label="Nominal Size"
+                      items={[
+                        {label: 'Select', value: ''},
+                        {label: '37.5mm', value: '37.5mm'},
+                        {label: '26.5mm', value: '26.5mm'},
+                        {label: '19mm', value: '19mm'},
+                        {label: '13.2mm', value: '13.2mm'},
+                      ]}
+                      value={detailsCoarseAggregateSMA.nominalSize}
+                      onChange={(value: string) =>
+                        handleInputChangeBituminousWork(
+                          'nominalSize',
+                          value,
+                          'detailsCoarseAggregateSMA',
+                        )
+                      }
+                    />
                   </View>
-                  <View style={{maxHeight: 400}}>
-                    <ScrollView>
-                      <FlatList
-                        data={vehicleNos}
-                        renderItem={renderAddedVehicleItem}
-                        keyExtractor={item => item}
-                      />
-                    </ScrollView>
-                  </View>
-                </View>
-                <View>
-                  <Input
-                    label="Quantity (in kg)"
-                    value={detailsCoarseAggregateSMA.qtyInKg}
-                    onChange={(value: string) =>
-                      handleInputChangeBituminousWork(
-                        'qtyInKg',
-                        value,
-                        'detailsCoarseAggregateSMA',
-                      )
-                    }
-                    isRequired={true}
-                  />
-                </View>
-                <View>
-                  <Input
-                    label="Quantity (in cum)"
-                    value={detailsCoarseAggregateSMA.qtyInCum}
-                    onChange={(value: string) =>
-                      handleInputChangeBituminousWork(
-                        'qtyInCum',
-                        value,
-                        'detailsCoarseAggregateSMA',
-                      )
-                    }
-                    isRequired={true}
-                  />
-                </View>
-                <View>
-                  <CalendarPicker
-                    label="Date"
-                    value={detailsCoarseAggregateSMA.procurementDateTime}
-                    onChange={date =>
-                      handleInputChangeBituminousWork(
-                        'procurementDateTime',
-                        date,
-                        'detailsCoarseAggregateSMA',
-                      )
-                    }
-                  />
-                </View>
-                <View style={{flexDirection: 'column'}}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}>
-                    <TouchableOpacity
-                      style={styles.upload_container}
-                      onPress={onDocumentPress}>
-                      <Text style={styles.uploadBtn}>Upload Weight Slip</Text>
-                    </TouchableOpacity>
-                    {detailsCoarseAggregateSMA.uploadWeightSlip && (
-                      <Text>{detailsCoarseAggregateSMA.uploadWeightSlip}</Text>
+                  <View>
+                    {renderSourceDetailsPickerBituminousWork(
+                      'Source Detail',
+                      'sourceApprovalId',
+                      'detailsCoarseAggregateSMA',
+                      sourceApprovalsFiltered,
                     )}
                   </View>
+                  <View>
+                    <Input
+                      label="Lot No/Trip No/Invoice No"
+                      value={detailsCoarseAggregateSMA.lotNo}
+                      onChange={(value: string) =>
+                        handleInputChangeBituminousWork(
+                          'lotNo',
+                          value,
+                          'detailsCoarseAggregateSMA',
+                        )
+                      }
+                      isRequired={true}
+                    />
+                  </View>
+                  <View>
+                    <View style={commonStyles.addMoreVichleContainer}>
+                      <View style={commonStyles.vichleWth}>
+                        <Input
+                          label="Vehicle No. (Last 4 digits)"
+                          value={vehicleNoTemp}
+                          onChange={(value: string) => setVehicleNoTemp(value)}
+                        />
+                      </View>
+                      <View style={commonStyles.paadingTop}>
+                        <TouchableOpacity
+                          style={commonStyles.add_vehicle}
+                          onPress={onAddVehicle}>
+                          <Text style={commonStyles.btnAddVehicle}>
+                            Add Vehicle
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                    <View style={{maxHeight: 400}}>
+                      <ScrollView>
+                        <FlatList
+                          data={vehicleNos}
+                          renderItem={renderAddedVehicleItem}
+                          keyExtractor={item => item}
+                        />
+                      </ScrollView>
+                    </View>
+                  </View>
+                  <View>
+                    <Input
+                      label="Quantity (in kg)"
+                      value={detailsCoarseAggregateSMA.qtyInKg}
+                      onChange={(value: string) =>
+                        handleInputChangeBituminousWork(
+                          'qtyInKg',
+                          value,
+                          'detailsCoarseAggregateSMA',
+                        )
+                      }
+                      isRequired={true}
+                    />
+                  </View>
+                  <View>
+                    <Input
+                      label="Quantity (in cum)"
+                      value={detailsCoarseAggregateSMA.qtyInCum}
+                      onChange={(value: string) =>
+                        handleInputChangeBituminousWork(
+                          'qtyInCum',
+                          value,
+                          'detailsCoarseAggregateSMA',
+                        )
+                      }
+                      isRequired={true}
+                    />
+                  </View>
+                  <View>
+                    <CalendarPicker
+                      label="Date"
+                      value={detailsCoarseAggregateSMA.procurementDateTime}
+                      onChange={date =>
+                        handleInputChangeBituminousWork(
+                          'procurementDateTime',
+                          date,
+                          'detailsCoarseAggregateSMA',
+                        )
+                      }
+                    />
+                  </View>
+                  <View style={{flexDirection: 'column'}}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}>
+                      <TouchableOpacity
+                        style={styles.upload_container}
+                        onPress={onDocumentPress}>
+                        <Text style={styles.uploadBtn}>Upload Weight Slip</Text>
+                      </TouchableOpacity>
+                      {detailsCoarseAggregateSMA.uploadWeightSlip && (
+                        <Text>
+                          {detailsCoarseAggregateSMA.uploadWeightSlip}
+                        </Text>
+                      )}
+                    </View>
+                  </View>
                 </View>
-              </View>
               </ScrollView>
               <TouchableOpacity
                 style={styles.btnContainer}
@@ -1760,120 +1748,123 @@ const ProcurementsBitnumiousWork = ({
                 showsHorizontalScrollIndicator={false}
                 style={[{height: calculatedHeight}]}>
                 <View style={commonStyles.procurementsInnerContainer}>
-                <View>
-                  {/*Wrong dropdown it must fetch by backend*/}
-                  <DropdownPicker
-                    label="Grade of Bitumen"
-                    items={[
-                      {label: 'Select', value: ''},
-                      {label: 'VG 30', value: 'VG 30'},
-                      {label: 'VG 40', value: 'VG 40'},
-                      {label: 'PMB', value: 'PMB'},
-                    ]}
-                    value={detailsEmulsion.gradeOfBitumen}
-                    onChange={(value: string) =>
-                      handleInputChangeBituminousWork(
-                        'gradeOfBitumen',
-                        value,
-                        'detailsEmulsion',
-                      )
-                    }
-                  />
-                </View>
-                <View>
-                  {renderSourceDetailsPickerBituminousWork(
-                    'Source Detail',
-                    'sourceApprovalId',
-                    'detailsEmulsion',
-                    sourceApprovalsFiltered,
-                  )}
-                </View>
-                <View>
-                  <Input
-                    label="Lot No/Trip No/Invoice No"
-                    value={detailsEmulsion.lotNo}
-                    onChange={(value: string) =>
-                      handleInputChangeBituminousWork(
-                        'lotNo',
-                        value,
-                        'detailsEmulsion',
-                      )
-                    }
-                    isRequired={true}
-                  />
-                </View>
-                <View>
-                  <View style={commonStyles.addMoreVichleContainer}>
-                    <View style={commonStyles.vichleWth}>
-                      <Input
-                        label="Vehicle No. (Last 4 digits)"
-                        value={vehicleNoTemp}
-                        onChange={(value: string) => setVehicleNoTemp(value)}
-                      />
-                    </View>
-                    <View style={commonStyles.paadingTop}>
-                      <TouchableOpacity
-                        style={commonStyles.add_vehicle}
-                        onPress={onAddVehicle}>
-                        <Text style={commonStyles.btnAddVehicle}>Add Vehicle</Text>
-                      </TouchableOpacity>
-                    </View>
+                  <View>
+                    <DropdownPicker
+                      label="Grade of Bitumen"
+                      items={[
+                        {label: 'Select', value: ''},
+                        {label: 'RS1', value: 'RS2'},
+                        {label: 'RS2', value: 'RS2'},
+                        {label: 'MS', value: 'MS'},
+                        {label: 'SS1', value: 'SS1'},
+                        {label: 'SS2', value: 'SS2'},
+                      ]}
+                      value={detailsEmulsion.gradeOfBitumen}
+                      onChange={(value: string) =>
+                        handleInputChangeBituminousWork(
+                          'gradeOfBitumen',
+                          value,
+                          'detailsEmulsion',
+                        )
+                      }
+                    />
                   </View>
-                  <View style={{maxHeight: 400}}>
-                    <ScrollView>
-                      <FlatList
-                        data={vehicleNos}
-                        renderItem={renderAddedVehicleItem}
-                        keyExtractor={item => item}
-                      />
-                    </ScrollView>
-                  </View>
-                </View>
-                <View>
-                  <Input
-                    label="Quantity (in kg)"
-                    value={detailsEmulsion.qtyInKg}
-                    onChange={(value: string) =>
-                      handleInputChangeBituminousWork(
-                        'qtyInKg',
-                        value,
-                        'detailsEmulsion',
-                      )
-                    }
-                    isRequired={true}
-                  />
-                </View>
-                <View>
-                  <CalendarPicker
-                    label="Date"
-                    value={detailsEmulsion.procurementDateTime}
-                    onChange={date =>
-                      handleInputChangeBituminousWork(
-                        'procurementDateTime',
-                        date,
-                        'detailsEmulsion',
-                      )
-                    }
-                  />
-                </View>
-                <View style={{flexDirection: 'column'}}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}>
-                    <TouchableOpacity
-                      style={styles.upload_container}
-                      onPress={onDocumentPress}>
-                      <Text style={styles.uploadBtn}>Upload Weight Slip</Text>
-                    </TouchableOpacity>
-                    {detailsEmulsion.uploadWeightSlip && (
-                      <Text>{detailsEmulsion.uploadWeightSlip}</Text>
+                  <View>
+                    {renderSourceDetailsPickerBituminousWork(
+                      'Source Detail',
+                      'sourceApprovalId',
+                      'detailsEmulsion',
+                      sourceApprovalsFiltered,
                     )}
                   </View>
+                  <View>
+                    <Input
+                      label="Lot No/Trip No/Invoice No"
+                      value={detailsEmulsion.lotNo}
+                      onChange={(value: string) =>
+                        handleInputChangeBituminousWork(
+                          'lotNo',
+                          value,
+                          'detailsEmulsion',
+                        )
+                      }
+                      isRequired={true}
+                    />
+                  </View>
+                  <View>
+                    <View style={commonStyles.addMoreVichleContainer}>
+                      <View style={commonStyles.vichleWth}>
+                        <Input
+                          label="Vehicle No. (Last 4 digits)"
+                          value={vehicleNoTemp}
+                          onChange={(value: string) => setVehicleNoTemp(value)}
+                        />
+                      </View>
+                      <View style={commonStyles.paadingTop}>
+                        <TouchableOpacity
+                          style={commonStyles.add_vehicle}
+                          onPress={onAddVehicle}>
+                          <Text style={commonStyles.btnAddVehicle}>
+                            Add Vehicle
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                    <View style={{maxHeight: 400}}>
+                      <ScrollView>
+                        <FlatList
+                          data={vehicleNos}
+                          renderItem={renderAddedVehicleItem}
+                          keyExtractor={item => item}
+                        />
+                      </ScrollView>
+                    </View>
+                  </View>
+                  <View>
+                    <Input
+                      label="Quantity (in kg)"
+                      value={detailsEmulsion.qtyInKg}
+                      onChange={(value: string) =>
+                        handleInputChangeBituminousWork(
+                          'qtyInKg',
+                          value,
+                          'detailsEmulsion',
+                        )
+                      }
+                      isRequired={true}
+                    />
+                  </View>
+                  <View>
+                    <CalendarPicker
+                      label="Date"
+                      value={detailsEmulsion.procurementDateTime}
+                      onChange={date =>
+                        handleInputChangeBituminousWork(
+                          'procurementDateTime',
+                          date,
+                          'detailsEmulsion',
+                        )
+                      }
+                    />
+                  </View>
+                  <View style={{flexDirection: 'column'}}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}>
+                      <TouchableOpacity
+                        style={styles.upload_container}
+                        onPress={onDocumentPress}>
+                        <Text style={styles.uploadBtn}>Upload Weight Slip</Text>
+                      </TouchableOpacity>
+                      {detailsEmulsion.uploadWeightSlip && (
+                        <Text>{detailsEmulsion.uploadWeightSlip}</Text>
+                      )}
+                    </View>
+                  </View>
                 </View>
-              </View>
               </ScrollView>
               <TouchableOpacity
                 style={styles.btnContainer}
@@ -2004,7 +1995,7 @@ const ProcurementsBitnumiousWork = ({
     <SafeAreaView style={styles.container}>
       <View>
         <View style={styles.reportFields}>
-          <View  style={commonStyles.detailsSection}>
+          <View style={commonStyles.detailsSection}>
             <Text style={styles.AssignRoleText}>
               {testWorkCategoryName + ' > ' + testMaterialName}
             </Text>
@@ -2021,9 +2012,10 @@ const ProcurementsBitnumiousWork = ({
             </TouchableOpacity>
           </View>
           <View>
-            <ScrollView howsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-            style={[{height: calculatedFlatListHeight}]}>
+            <ScrollView
+              howsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
+              style={[{height: calculatedFlatListHeight}]}>
               <View style={commonStyles.flatListContainer}>
                 <FlatList
                   data={data}

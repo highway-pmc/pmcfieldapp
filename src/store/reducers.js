@@ -2005,6 +2005,129 @@ const EquimentCalibrationReducer = (state = sourceApprovalsState, action) => {
         error: action.error,
         loading: false,
       };
+    case 'DELETE_EQUIPMENT_CALIBRATION_REQUEST':
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case 'DELETE_EQUIPMENT_CALIBRATION_SUCCESS':
+      return {
+        ...state,
+        deletedEquipmentCalibration: action.response,
+        error: null,
+        loading: false,
+      };
+    case 'DELETE_EQUIPMENT_CALIBRATION_FAILURE':
+      return {
+        ...state,
+        deletedEquipmentCalibration: null,
+        error: action.error,
+        loading: false,
+      };
+    case 'DELETE_EQUIPMENT_REQUEST':
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case 'DELETE_EQUIPMENT_SUCCESS':
+      return {
+        ...state,
+        deletedEquipment: action.response,
+        error: null,
+        loading: false,
+      };
+    case 'DELETE_EQUIPMENT_FAILURE':
+      return {
+        ...state,
+        deletedEquipment: null,
+        error: action.error,
+        loading: false,
+      };
+    case 'EDIT_EQUIPMENTS_CALIBRATION_FORM_INFO_REQUEST':
+      return {
+        ...state,
+        editedEquipmentsCalibrationFormInfo: null,
+        error: null,
+        loading: true,
+      };
+    case 'EDIT_EQUIPMENTS_CALIBRATION_FORM_INFO_SUCCESS':
+      return {
+        ...state,
+        editedEquipmentsCalibrationFormInfo: action.response,
+        error: null,
+        loading: false,
+      };
+    case 'EDIT_EQUIPMENTS_CALIBRATION_FORM_INFO_FAILURE':
+      return {
+        ...state,
+        editedEquipmentsCalibrationFormInfo: null,
+        error: action.error,
+        loading: false,
+      };
+    case 'EDIT_EQUIPMENTS_FORM_INFO_REQUEST':
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case 'EDIT_EQUIPMENTS_FORM_INFO_SUCCESS':
+      return {
+        ...state,
+        editedEquipmentsFormInfo: action.response,
+        error: null,
+        loading: false,
+      };
+    case 'EDIT_EQUIPMENTS_FORM_INFO_FAILURE':
+      return {
+        ...state,
+        editedEquipmentsFormInfo: null,
+        error: action.error,
+        loading: false,
+      };
+    case 'GENERATE_EQUIPMENT_REPORT_REQUEST':
+      return {
+        ...state,
+        error: null,
+        loading: true,
+        equipmentReport: null,
+      };
+    case 'GENERATE_EQUIPMENT_REPORT_SUCCESS':
+      return {
+        ...state,
+        equipmentReport: action.response,
+        error: null,
+        loading: false,
+      };
+    case 'GENERATE_EQUIPMENT_REPORT_FAILURE':
+      return {
+        ...state,
+        equipmentReport: null,
+        error: action.error,
+        loading: false,
+      };
+    case 'GENERATE_EQUIPMENT_CALIBRATION_REPORT_REQUEST':
+      return {
+        ...state,
+        error: null,
+        loading: true,
+        equipmentCalibrationReport: null,
+      };
+    case 'GENERATE_EQUIPMENT_CALIBRATION_REPORT_SUCCESS':
+      return {
+        ...state,
+        equipmentCalibrationReport: action.response,
+        error: null,
+        loading: false,
+      };
+    case 'GENERATE_EQUIPMENT_CALIBRATION_REPORT_FAILURE':
+      return {
+        ...state,
+        equipmentCalibrationReport: null,
+        error: action.error,
+        loading: false,
+      };
     case 'CLEAR_EQUIPMENTS_FORM_DATA_REQUEST':
       return {
         ...state,
@@ -2014,6 +2137,8 @@ const EquimentCalibrationReducer = (state = sourceApprovalsState, action) => {
         equipmentsListData: null,
         equipmentsMasterData: null,
         error: null,
+        equipmentReport: null,
+        equipmentCalibrationReport: null,
         loading: false,
       };
 

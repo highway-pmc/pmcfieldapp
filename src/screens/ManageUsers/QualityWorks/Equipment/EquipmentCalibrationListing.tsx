@@ -16,7 +16,7 @@ import {useSnackbar} from '../../../../context/SnackbarContext';
 import {useDispatch, useSelector} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
 import LoadingAnimation from '../../../Common/LoadingAnimation';
-import Pdf from 'react-native-pdf'; // Import Pdf component
+import Pdf from 'react-native-pdf'; 
 import {
   getEquipmentsListData,
   saveEquipmentsCalibrationInfo,
@@ -146,7 +146,6 @@ const EquipmentCalibrationListing = ({
     );
   };
 
-  // New function to generate equipment report
   const handleGenerateReport = (equipmentId: string) => {
     setPdfSource(null);
     dispatch(

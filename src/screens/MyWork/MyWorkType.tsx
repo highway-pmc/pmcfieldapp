@@ -94,6 +94,7 @@ const MyWorkType = ({navigation}: {navigation: any}) => {
             ))
           }
       </View>
+      
     </ScrollView>
   )
 }

@@ -142,8 +142,8 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 5, // Fixed distance from top
-    marginBottom: 20, // Consistent spacing between icon and text
+    marginTop: 5, 
+    marginBottom: 20, 
   },
   menuIcon: {
     width: 48,

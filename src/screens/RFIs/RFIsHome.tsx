@@ -11,7 +11,6 @@ import {useIsFocused} from '@react-navigation/native';
 import {NativeEventEmitter} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {HeaderItems, RFIs_TYPE} from '../../constants/constants';
-import Generate from '../../images/rfis/ic_generate.svg';
 const RFIsHome = ({route, navigation}: any) => {
   const focus = useIsFocused();
 
@@ -100,12 +99,11 @@ const RFIsHome = ({route, navigation}: any) => {
           </View>
 
           <View style={styles.iconContainer}>
-            {/* <Image
+            <Image
               source={category.iconSource}
               style={styles.icon}
               resizeMode="contain"
-            /> */}
-            <Generate/>
+            />
           </View>
         </View>
       </LinearGradient>

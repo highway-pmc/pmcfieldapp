@@ -8,6 +8,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import CheckBox from '@react-native-community/checkbox';
 import LoadingAnimation from '../../Common/LoadingAnimation';
 import { isTestInventoryClassification } from '../../../utils/Utils';
+import LinearGradient from 'react-native-linear-gradient';
 
 const AssignTestWorkCategory = ({ route, navigation }: { route: any, navigation: any }) => {
   const { testClassificationId, testClassificationName, testClassificationType, workType } = route.params;
@@ -190,9 +191,11 @@ const AssignTestWorkCategory = ({ route, navigation }: { route: any, navigation:
 
   return (
     <View style={styles.Container}>
-      {(error) && <View style={styles.ErrorSectionStyle}>
-        <Text style={styles.errorText}>{error}</Text>
-      </View>}
+      {error && (
+        <View style={styles.ErrorSectionStyle}>
+          <Text style={styles.errorText}>{error}</Text>
+        </View>
+      )}
       <View style={styles.SectionStyle}>
         <Image
           source={require('./../../../images/search-icon.png')}
@@ -207,44 +210,54 @@ const AssignTestWorkCategory = ({ route, navigation }: { route: any, navigation:
           underlineColorAndroid="#f000"
           blurOnSubmit={false}
           value={searchText}
-          onChangeText={(text) => {
+          onChangeText={text => {
             setSearchText(text);
           }}
         />
       </View>
       <ScrollView style={styles.Height100}>
-        {testWorkCategoriesData.filter((subSeg: any) => {
+        {testWorkCategoriesData
+          .filter((subSeg: any) => {
             if (searchText && subSeg.name) {
-              return subSeg.name.toLowerCase().includes(searchText.toLowerCase())
+              return subSeg.name
+                .toLowerCase()
+                .includes(searchText.toLowerCase());
             } else {
               return true;
             }
-          }).map((item: any, index) => (
-          <View style={styles.UserCategory}>
-            <View style={styles.FlexRowCenter}>
-              {
-                !isTestInventoryClassification(testClassificationType) &&
-                <CheckBox
-                  value={item.isChecked}
-                  onValueChange={() => handleRadioChange(index)}
-                  style={styles.checkbox}
-                  tintColors={{ true: '#0F56B3', false: '#818181' }}
-                />
-              }
-              
-              <View>
-                <Text style={styles.UserRole}>{item.name}</Text>
-              </View>
+          })
+          .map((item: any, index) => (
+            <View style={styles.categoryItemContainer}>
+              <LinearGradient
+                colors={['#FFFFFF', '#E0E7FF']}
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 0}}
+                style={styles.gradientContainer}>
+                <View style={styles.leftBorder} />
+                <View style={styles.FlexRowCenter}>
+                  {!isTestInventoryClassification(testClassificationType) && (
+                    <CheckBox
+                      value={item.isChecked}
+                      onValueChange={() => handleRadioChange(index)}
+                      style={styles.checkbox}
+                      tintColors={{true: '#0F56B3', false: '#818181'}}
+                    />
+                  )}
+                  <View>
+                    <Text style={styles.categoryText}>{item.name}</Text>
+                  </View>
+                </View>
+                <TouchableOpacity
+                  style={styles.arrowContainer}
+                  onPress={() => onTestWorkCategoryNextClick(item)}>
+                  <Image
+                    style={[styles.CloseIcon, {height: 20, width: 20}]}
+                    source={require('./../../../images/right-arrow.png')}
+                  />
+                </TouchableOpacity>
+              </LinearGradient>
             </View>
-            <TouchableOpacity
-              onPress={() => onTestWorkCategoryNextClick(item)}>
-              <Image
-                style={styles.CloseIcon}
-                source={require('./../../../images/right-arrow.png')}
-              />
-            </TouchableOpacity>
-          </View>
-        ))}
+          ))}
       </ScrollView>
       {/* Modal Start */}
       <Modal
@@ -254,7 +267,7 @@ const AssignTestWorkCategory = ({ route, navigation }: { route: any, navigation:
         onRequestClose={() => {
           openAssignPopup(!isAssignPopOpen);
         }}>
-        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.3)' }}>
+        <View style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.3)'}}>
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <View style={styles.ModalHeader}>
@@ -271,9 +284,11 @@ const AssignTestWorkCategory = ({ route, navigation }: { route: any, navigation:
               </View>
               <View style={styles.ModalInnerContainer}>
                 <View>
-                  <Text style={styles.AssignRoleText}>Work Category: {selectedTestWorkCategory.name}</Text>
+                  <Text style={styles.AssignRoleText}>
+                    Work Category: {selectedTestWorkCategory.name}
+                  </Text>
                 </View>
-                <ScrollView style={{ paddingTop: 10, height: 500 }}>
+                <ScrollView style={{paddingTop: 10, height: 500}}>
                   {userData.map((item: any, index) => (
                     <View style={styles.CategoryType}>
                       <View style={styles.FlexRowCenter}>
@@ -282,26 +297,24 @@ const AssignTestWorkCategory = ({ route, navigation }: { route: any, navigation:
                           disabled={item.assignmentLevel != null}
                           onValueChange={() => handleUserData(index)}
                           style={styles.checkbox}
-                          tintColors={{ true: '#0F56B3', false: '#818181' }}
+                          tintColors={{true: '#5A2AAF', false: '#818181'}}
                         />
-                        <View style={{ flexDirection: 'row' }}>
-                          <Text style={styles.AssignRoleText}>
-                            {item.name}
-                          </Text>
-                          {
-                            item.assignmentLevel ?
+                        <View style={{flexDirection: 'row'}}>
+                          <Text style={styles.AssignRoleText}>{item.name}</Text>
+                          {item.assignmentLevel ? (
                             <Text style={styles.userAlreadyAssigned}>
                               {item.assignmentLevel}
-                            </Text> : null
-                          }
-
+                            </Text>
+                          ) : null}
                         </View>
                       </View>
                     </View>
                   ))}
                 </ScrollView>
 
-                <TouchableOpacity style={styles.assignTagButoon} onPress={() => onTestAssignment()}>
+                <TouchableOpacity
+                  style={styles.assignTagButoon}
+                  onPress={() => onTestAssignment()}>
                   <Text style={styles.assignTagButoonText}>Assign</Text>
                 </TouchableOpacity>
               </View>
@@ -309,9 +322,12 @@ const AssignTestWorkCategory = ({ route, navigation }: { route: any, navigation:
           </View>
         </View>
       </Modal>
-      <LoadingAnimation loading={loading || loadingUsers || loadingTestWorkCategory}></LoadingAnimation>
+      <LoadingAnimation
+        loading={
+          loading || loadingUsers || loadingTestWorkCategory
+        }></LoadingAnimation>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -371,6 +387,42 @@ const styles = StyleSheet.create({
     marginTop: 10,
     justifyContent: 'flex-end',
     gap: 10,
+  },
+  // Add these new styles to the StyleSheet
+  categoryItemContainer: {
+    marginBottom: 15,
+    borderRadius: 16,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: '#ABBEFD',
+  },
+  gradientContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 20,
+    paddingHorizontal: 15,
+    borderRadius: 16,
+    position: 'relative',
+  },
+  leftBorder: {
+    paddingVertical: 3,
+    position: 'absolute',
+    left: 0,
+    top: 10,
+    bottom: 10,
+    zIndex: 100,
+    width: 2,
+    backgroundColor: '#5A7EF8',
+  },
+  categoryText: {
+    marginLeft: 10,
+    fontSize: 16,
+    fontWeight: '400',
+    color: '#27272A',
+  },
+  arrowContainer: {
+    alignSelf: 'center',
   },
   ButtonStyle: {
     backgroundColor: '#fff',
@@ -436,7 +488,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   checkbox: {
-    transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }],
+    transform: [{scaleX: 1.2}, {scaleY: 1.2}],
   },
   label: {
     margin: 8,

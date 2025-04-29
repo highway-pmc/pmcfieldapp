@@ -9,6 +9,7 @@ import {
   Alert,
   TextInput,
 } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import React, {useEffect, useState} from 'react';
 import {useIsFocused} from '@react-navigation/native';
 import {
@@ -285,16 +286,13 @@ const AssignTestMaterials = ({
         item.materialType === TEST_MATERIALS_TYPES.BITUMEN ||
         item.materialType === TEST_MATERIALS_TYPES.SOIL ||
         item.materialType === TEST_MATERIALS_TYPES.FLY_ASH ||
-
         item.materialType === TEST_MATERIALS_TYPES.GSB ||
         item.materialType === TEST_MATERIALS_TYPES.CTSB ||
         item.materialType === TEST_MATERIALS_TYPES.WMM ||
         item.materialType === TEST_MATERIALS_TYPES.FINE_AGGREGATE_WMM ||
         item.materialType === TEST_MATERIALS_TYPES.COARSE_AGGREGATE_WMM ||
-
         item.materialType === TEST_MATERIALS_TYPES.STRANDS ||
         item.materialType === TEST_MATERIALS_TYPES.SHEATHING_DUCT ||
-
         testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BEARING ||
         testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EXPANSION_JOINT ||
         testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.STEEL
@@ -303,23 +301,31 @@ const AssignTestMaterials = ({
           testClassificationType ===
           TEST_CLASSIFICATION_TYPES.PROCUREMENT_DETAILS
         ) {
-          let routeName = "Procurements";
-          if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BITUMINOUS_WORKS) {
-            routeName = "ProcurementsBitnumiousWork";
-          }
-          else if(testWorkCategoryType===TEST_WORK_CATEGORY_TYPES.EARTH_WORKS ||
+          let routeName = 'Procurements';
+          if (
+            testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BITUMINOUS_WORKS
+          ) {
+            routeName = 'ProcurementsBitnumiousWork';
+          } else if (
+            testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EARTH_WORKS ||
             testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.SUB_BASE ||
             testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BASE_SUB_BASE
-          ){
-            routeName = "ProcurementsEarthWork";
-          } else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BEARING) {
-            routeName = "ProcurementsBearings";
-          } else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EXPANSION_JOINT) {
-            routeName = "ProcurementsExpansionJoints";
+          ) {
+            routeName = 'ProcurementsEarthWork';
+          } else if (
+            testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BEARING
+          ) {
+            routeName = 'ProcurementsBearings';
+          } else if (
+            testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.EXPANSION_JOINT
+          ) {
+            routeName = 'ProcurementsExpansionJoints';
           } else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.STEEL) {
-            routeName = "ProcurementsSteel";
-          } else if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.PRESTRESSING) {
-            routeName = "ProcurementsPrestressing";
+            routeName = 'ProcurementsSteel';
+          } else if (
+            testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.PRESTRESSING
+          ) {
+            routeName = 'ProcurementsPrestressing';
           }
           navigation.navigate(routeName, {
             testClassificationId: testClassificationId,
@@ -402,26 +408,35 @@ const AssignTestMaterials = ({
               }
             })
             .map((item: any, index) => (
-              <View style={styles.UserCategory}>
-                <View style={styles.FlexRowCenter}>
-                  {!isTestInventoryClassification(testClassificationType) && (
-                    <CheckBox
-                      value={item.isChecked}
-                      onValueChange={() => handleRadioChange(index)}
-                      style={styles.checkbox}
-                      tintColors={{true: '#0F56B3', false: '#818181'}}
-                    />
-                  )}
-                  <View>
-                    <Text style={styles.UserRole}>{item.name}</Text>
+              <View style={styles.categoryItemContainer}>
+                <LinearGradient
+                  colors={['#FFFFFF', '#E0E7FF']}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}
+                  style={styles.gradientContainer}>
+                  <View style={styles.leftBorder} />
+                  <View style={styles.FlexRowCenter}>
+                    {!isTestInventoryClassification(testClassificationType) && (
+                      <CheckBox
+                        value={item.isChecked}
+                        onValueChange={() => handleRadioChange(index)}
+                        style={styles.checkbox}
+                        tintColors={{true: '#5A2AAF', false: '#818181'}}
+                      />
+                    )}
+                    <View>
+                      <Text style={styles.categoryText}>{item.name}</Text>
+                    </View>
                   </View>
-                </View>
-                <TouchableOpacity onPress={() => onNext(item)}>
-                  <Image
-                    style={styles.CloseIcon}
-                    source={require('./../../../images/right-arrow.png')}
-                  />
-                </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.arrowContainer}
+                    onPress={() => onNext(item)}>
+                    <Image
+                      style={[styles.CloseIcon, {height: 20, width: 20}]}
+                      source={require('./../../../images/right-arrow.png')}
+                    />
+                  </TouchableOpacity>
+                </LinearGradient>
               </View>
             ))}
         </View>
@@ -593,6 +608,41 @@ const styles = StyleSheet.create({
     elevation: 10,
     alignItems: 'center',
     marginTop: -10,
+  },
+  categoryItemContainer: {
+    marginBottom: 15,
+    borderRadius: 16,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: '#ABBEFD',
+  },
+  gradientContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 20,
+    paddingHorizontal: 15,
+    borderRadius: 16,
+    position: 'relative',
+  },
+  leftBorder: {
+    paddingVertical: 3,
+    position: 'absolute',
+    left: 0,
+    top: 10,
+    bottom: 10,
+    zIndex: 100,
+    width: 2,
+    backgroundColor: '#5A7EF8',
+  },
+  categoryText: {
+    marginLeft: 10,
+    fontSize: 16,
+    fontWeight: '400',
+    color: '#27272A',
+  },
+  arrowContainer: {
+    alignSelf: 'center',
   },
   ImageSearch: {
     position: 'absolute',

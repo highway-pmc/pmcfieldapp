@@ -1,6 +1,6 @@
 // HomeScreen.js
-import { useIsFocused } from '@react-navigation/native';
-import React, { useEffect } from 'react';
+import {useIsFocused} from '@react-navigation/native';
+import React, {useEffect} from 'react';
 import {
   StyleSheet,
   View,
@@ -9,173 +9,157 @@ import {
   Image,
   ScrollView,
   NativeEventEmitter,
-  FlatList,
+  Dimensions,
   Alert,
+  StatusBar,
 } from 'react-native';
-import { Dashboard_MENU, HeaderItems } from '../../constants/constants';
-import { useDispatch, useSelector } from 'react-redux';
-import { updateFCMToken } from './actions';
-import messaging from '@react-native-firebase/messaging'
+import {Dashboard_MENU, HeaderItems} from '../../constants/constants';
+import {useDispatch, useSelector} from 'react-redux';
+import {updateFCMToken} from './actions';
+import messaging from '@react-native-firebase/messaging';
 
-const DashboardListing = ({ navigation }: { navigation: any }) => {
+const {width} = Dimensions.get('window');
+const itemWidth = (width - 45) / 2; // 45 accounts for padding and gap
 
+const DashboardListing = ({navigation}: {navigation: any}) => {
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();
     eventEmitter.emit('headerEvent', HeaderItems.dashboard);
   }
 
-  // useEffect(() => {
-  //   const unsubscribe = messaging().onMessage(async remoteMessage => {
-  //     Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
-  //   });
-
-  //   return unsubscribe;
-  // }, []);
-
   useEffect(() => {
     if (loggedInUser) {
-      updateDeviceToken()
+      updateDeviceToken();
     }
   }, [loggedInUser]);
 
-  const updateDeviceToken = async() => {
+  const updateDeviceToken = async () => {
     let token = await messaging().getToken();
     dispatch(updateFCMToken(token));
-  }
+  };
 
   const checkPermissions = (permissions: string[], categories?: string[]) => {
     let index = -1;
     const roles = loggedInUser.roles?.split(',') || [];
-    permissions.forEach((item) => {
+    permissions.forEach(item => {
       if (roles.indexOf(item) != -1) {
         index = 1;
       }
-    })
+    });
 
-    if (categories && index === -1 && roles.length === 1 && roles[0] === "user") {
+    if (
+      categories &&
+      index === -1 &&
+      roles.length === 1 &&
+      roles[0] === 'user'
+    ) {
       const userCategories = loggedInUser.categories?.split(',');
 
-      categories.forEach((item) => {
+      categories.forEach(item => {
         if (userCategories.indexOf(item) != -1) {
           index = 1;
         }
-      })
+      });
     }
 
     return index;
-  }
+  };
+
+  // Filter menu items based on permissions
+  const filteredMenu = Dashboard_MENU.filter(
+    item => checkPermissions(item.permissions, item.categories) !== -1,
+  );
 
   return (
-    <ScrollView style={styles.Container}>
-      <FlatList data={Dashboard_MENU}
-        renderItem={({ item }) =>
-        checkPermissions(item.permissions, item.categories) != -1 &&
-          <TouchableOpacity style={styles.MenuContainer} onPress={() => {
-            navigation.navigate(item.route);
-            navigation.closeDrawer();
-          }}>
-            <Image style={styles.TopMenuIcon} source={item.icon} />
-            <View style={styles.textContainer}>
-              <Text style={styles.TextBold}>{item.title}</Text>
-              <Text style={styles.SubText}>{item.subTitle}</Text>
+    <ScrollView style={styles.container}>
+      <StatusBar/>
+      <View style={styles.gridContainer}>
+        {filteredMenu.map(item => (
+          <TouchableOpacity
+            key={item.id}
+            style={[
+              styles.menuCard,
+              {
+                backgroundColor: item.backgroundColor || '#E6F2F3',
+                borderColor: item.border || '#D0EDF3',
+              },
+            ]}
+            onPress={() => {
+              navigation.navigate(item.route);
+              navigation.closeDrawer();
+            }}>
+            <View
+              style={[
+                styles.iconContainer,
+                {backgroundColor: item.backgroundColor || '#E6F2F3'},
+              ]}>
+              <Image style={styles.menuIcon} source={item.icon} />
             </View>
+            <Text
+              style={[styles.titleText, {color: item.titleColor || '#1C6BA4'}]}>
+              {item.title}
+            </Text>
+            <Text style={styles.subtitleText}>{item.subTitle}</Text>
           </TouchableOpacity>
-        }
-      />
-
-      {/* <TouchableOpacity style={styles.MenuContainer} onPress={() => {
-          navigation.navigate('MyWork');
-          navigation.closeDrawer();
-        }}>
-        <Image style={styles.TopMenuIcon} source={require('./../../images/dashboard/my-work-icon.png')} />
-        <View style={styles.textContainer}>
-          <Text style={styles.TextBold}>My Work</Text>
-          <Text style={styles.SubText}>Check your task</Text>
-        </View>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.MenuContainer} onPress={() => {
-          navigation.navigate('ManageUsers');
-          navigation.closeDrawer();
-        }}>
-        <Image style={styles.TopMenuIcon} source={require('./../../images/dashboard/manage-user-icon.png')} />
-        <View style={styles.textContainer}>
-          <Text style={styles.TextBold}>Manage User</Text>
-          <Text style={styles.SubText}>Check user</Text>
-        </View>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.MenuContainer} onPress={() => {
-          navigation.navigate('Reports');
-          navigation.closeDrawer();
-        }}>
-        <Image style={styles.TopMenuIcon} source={require('./../../images/dashboard/report-list-icon.png')} />
-        <View style={styles.textContainer}>
-          <Text style={styles.TextBold}>Report</Text>
-          <Text style={styles.SubText}>Report</Text>
-        </View>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.MenuContainer} onPress={() => {
-          navigation.navigate('Progress');
-          navigation.closeDrawer();
-        }}>
-        <Image style={styles.TopMenuIcon} source={require('./../../images/dashboard/progress-icon.png')} />
-        <View style={styles.textContainer}>
-          <Text style={styles.TextBold}>Progress Dashboard</Text>
-          <Text style={styles.SubText}>Progress</Text>
-        </View>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.MenuContainer} onPress={() => {
-          navigation.navigate('RFIs');
-          navigation.closeDrawer();
-        }}>
-        <Image style={styles.TopMenuIcon} source={require('./../../images/dashboard/manage-rfi-icon.png')} />
-        <View style={styles.textContainer}>
-          <Text style={styles.TextBold}>Manage RFIs</Text>
-          <Text style={styles.SubText}>RFI</Text>
-        </View>
-      </TouchableOpacity> */}
+        ))}
+      </View>
     </ScrollView>
-  )
+  );
 };
 
 const styles = StyleSheet.create({
-  Container: {
-    flexDirection: 'column',
-    paddingVertical: 10,
+  container: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
     padding: 15,
   },
-  TopMenuIcon: {
-    width: 56,
-    height: 56,
-    marginRight: 15,
-  },
-  MenuContainer: {
+  gridContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    backgroundColor: '#fff',
-    borderRadius: 24,
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  menuCard: {
+    width: itemWidth,
+    height: 180,
+    borderRadius: 16,
     padding: 20,
     marginBottom: 15,
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
     borderWidth: 1,
-    borderColor: '#BECADA',
-    borderStyle: 'solid'
+    elevation: 1,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 1},
+    shadowOpacity: 0.05,
+    shadowRadius: 1,
   },
-  TextBold: {
+  iconContainer: {
+    width: 45,
+    height: 45,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 5, 
+    marginBottom: 20, 
+  },
+  menuIcon: {
+    width: 48,
+    height: 48,
+    resizeMode: 'contain',
+  },
+  titleText: {
+    fontSize: 16,
     fontWeight: '700',
-    fontSize: 18,
-    color: '#333',
+    marginBottom: 5,
   },
-  SubText: {
-    fontWeight: '400',
+  subtitleText: {
     fontSize: 14,
-    color: '#7B8D9E'
+    color: '#7B8D9E',
+    fontWeight: '400',
   },
-  textContainer: {
-    flexDirection: 'column'
-  }
 });
 
 export default DashboardListing;

@@ -1,10 +1,19 @@
-import { View, Text, NativeEventEmitter, StyleSheet, ScrollView, TouchableOpacity  } from 'react-native'
-import React, {useEffect, useState} from 'react'
-import { useIsFocused } from '@react-navigation/native';
-import { HeaderItems, PROJECT_TYPE, ROLES } from "../../constants/constants"
-import { useSelector } from 'react-redux';
+import {
+  View,
+  Text,
+  NativeEventEmitter,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  Dimensions,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {useIsFocused} from '@react-navigation/native';
+import {HeaderItems, PROJECT_TYPE, ROLES} from '../../constants/constants';
+import {useSelector} from 'react-redux';
 import TileCardComponent from '../Common/TileCardComponent';
-import { WORK_MODULE_TYPE } from '../Common/CommonConstantsTypes';
+import {WORK_MODULE_TYPE} from '../Common/CommonConstantsTypes';
 
 const MyWorkType = ({navigation}: {navigation: any}) => {
   const [projectHead, setProjectHead] = useState(false);
@@ -24,38 +33,36 @@ const MyWorkType = ({navigation}: {navigation: any}) => {
   const render = () => {
     setRoles([]);
     let rolesArr: any = [];
-    if(loggedInUser.roles) {
-      if (loggedInUser.roles.split(',').find((role: any) => role === ROLES.PROJECT_HEAD)) {
+    if (loggedInUser.roles) {
+      if (
+        loggedInUser.roles
+          .split(',')
+          .find((role: any) => role === ROLES.PROJECT_HEAD)
+      ) {
         rolesArr = WORK_MODULE_TYPE;
         setProjectHead(true);
       } else {
         loggedInUser.roles.split(',').forEach((role: any) => {
           if (role === ROLES.STRUCTURE_HEAD) {
-            rolesArr.push(
-              {
-                title: 'Structure',
-                workType: PROJECT_TYPE.STRUCTURE_WORK,
-              }
-            );
+            rolesArr.push({
+              title: 'Structure',
+              workType: PROJECT_TYPE.STRUCTURE_WORK,
+            });
           } else if (role === ROLES.HIGHWAY_HEAD) {
-            rolesArr.push(
-              {
-                title: 'Highway',
-                workType: PROJECT_TYPE.HIGHWAY_WORK
-              }
-            );
+            rolesArr.push({
+              title: 'Highway',
+              workType: PROJECT_TYPE.HIGHWAY_WORK,
+            });
           } else if (role === ROLES.OTHER_WORF_HEAD) {
-            rolesArr.push(
-              {
-                title: 'Other',
-                workType: PROJECT_TYPE.OTHER_WORK
-              }
-            );
+            rolesArr.push({
+              title: 'Other',
+              workType: PROJECT_TYPE.OTHER_WORK,
+            });
           }
         });
       }
     }
-    
+
     HeaderItems.myWork.showBack = false;
     if (rolesArr.length === 1) {
       onPressWorkType(rolesArr[0].workType);
@@ -65,42 +72,49 @@ const MyWorkType = ({navigation}: {navigation: any}) => {
       return;
     }
     HeaderItems.myWork.showBack = true;
-    setRoles(rolesArr)
-  }
+    setRoles(rolesArr);
+  };
 
   const onPressWorkType = (workType: any) => {
-    navigation.navigate("MyWork", {
-      workType: workType
-    })
-  }
+    navigation.navigate('MyWork', {
+      workType: workType,
+    });
+  };
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.rfiTabBar}>
-          {
-            roles.map((role: any) => (
-              <>
-              <TileCardComponent
-                title={role.title}
-                content={role.discription}
-                bgColor={role.color}
-                image={role.src}
-                onPress={() => onPressWorkType(role.workType)}
-              />
-              </>
-            // <TouchableOpacity style={[styles.rfiTab, {backgroundColor: role.color}]} onPress={() => onPressWorkType(role.workType)}>
-            //   <Text style={styles.tabText}>{role.title}</Text>
-            // </TouchableOpacity>
-            ))
-          }
-      </View>
-    </ScrollView>
-  )
-}
+    <View style={styles.mainContainer}>
+      <ScrollView style={styles.container}>
+        <View style={styles.rfiTabBar}>
+          {roles.map((role: any, index: number) => (
+            <TileCardComponent
+              key={index}
+              title={role.title}
+              content={role.discription}
+              bgColor={role.color}
+              image={role.src}
+              onPress={() => onPressWorkType(role.workType)}
+            />
+          ))}
+        </View>
+      </ScrollView>
+      <Image
+        style={styles.imageWorker}
+        source={require('../../images/myWork/worker.png')}
+        resizeMode="contain"
+      />
+    </View>
+  );
+};
+
+const windowWidth = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
-  container: {
+  mainContainer: {
+    flex: 1,
     backgroundColor: '#F2F2F2',
+  },
+  container: {
+    flex: 1,
     padding: 20,
   },
   rfiTabBar: {
@@ -108,7 +122,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flexWrap: 'wrap',
-    gap: 10
+    gap: 10,
+    paddingBottom: 120, 
   },
   rfiTab: {
     width: 180,
@@ -134,9 +149,15 @@ const styles = StyleSheet.create({
   tabText: {
     fontSize: 20,
     fontWeight: '400',
-    color: '#fff'
+    color: '#fff',
   },
-  
+  imageWorker: {
+    position: 'absolute',
+    bottom: 0,
+    alignSelf: 'center',
+    width: windowWidth,
+    height: 300,
+  },
 });
 
-export default MyWorkType
+export default MyWorkType;

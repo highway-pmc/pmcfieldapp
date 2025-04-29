@@ -1,25 +1,68 @@
-import { View, Text, TouchableOpacity, NativeEventEmitter, StyleSheet, Image, Modal, Alert, TextInput } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { useIsFocused } from '@react-navigation/native';
-import { HeaderItems, TEST_ASSIGNMENT_LEVEL } from '../../../constants/constants';
-import { useDispatch, useSelector } from 'react-redux';
-import { clearTestClassificationsAssignmentData, getTestType, getUsersForTestAssignment, testTypesAssignToUsers } from './actions';
-import { ScrollView } from 'react-native-gesture-handler';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  NativeEventEmitter,
+  StyleSheet,
+  Image,
+  Modal,
+  Alert,
+  TextInput,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {useIsFocused} from '@react-navigation/native';
+import {HeaderItems, TEST_ASSIGNMENT_LEVEL} from '../../../constants/constants';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  clearTestClassificationsAssignmentData,
+  getTestType,
+  getUsersForTestAssignment,
+  testTypesAssignToUsers,
+} from './actions';
+import {ScrollView} from 'react-native-gesture-handler';
 import CheckBox from '@react-native-community/checkbox';
 import LoadingAnimation from '../../Common/LoadingAnimation';
+import LinearGradient from 'react-native-linear-gradient';
 
-const AssignTestTypes = ({ route, navigation }: { route: any, navigation: any }) => {
-  const { testClassificationId, testClassificationName, testWorkCategoryId, testWorkCategoryName, testMaterialId, testMaterialName, workType } = route.params;
+const AssignTestTypes = ({
+  route,
+  navigation,
+}: {
+  route: any;
+  navigation: any;
+}) => {
+  const {
+    testClassificationId,
+    testClassificationName,
+    testWorkCategoryId,
+    testWorkCategoryName,
+    testMaterialId,
+    testMaterialName,
+    workType,
+  } = route.params;
 
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const { testTypes, users, loadingUsers, loadingTestTypes, testTypesAssigned, loading, error } = useSelector((state: any) => state.TestAssignment);
+  const {
+    testTypes,
+    users,
+    loadingUsers,
+    loadingTestTypes,
+    testTypesAssigned,
+    loading,
+    error,
+  } = useSelector((state: any) => state.TestAssignment);
   const [testTypesData, setTestTypesData] = useState([]);
-  const [selectedTestType, setSelectedTestType] = useState({ isChecked: false, _id: "", name: "", displayName: "" });
+  const [selectedTestType, setSelectedTestType] = useState({
+    isChecked: false,
+    _id: '',
+    name: '',
+    displayName: '',
+  });
   const [userData, setUserCheckboxes] = useState([]);
   const [isAssignPopOpen, openAssignPopup] = useState(false);
   const [searchText, setSearchText] = useState('');
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();
@@ -29,37 +72,41 @@ const AssignTestTypes = ({ route, navigation }: { route: any, navigation: any })
   useEffect(() => {
     if (testTypes) {
       testTypes.forEach((tType: any) => {
-        tType.isChecked = false
+        tType.isChecked = false;
       });
       setTestTypesData(testTypes);
     }
 
     if (users) {
       users.forEach((user: any) => {
-        user.isChecked = false
+        user.isChecked = false;
       });
       setUserCheckboxes(users);
     }
   }, [testTypes, users, error]);
 
   useEffect(() => {
-    dispatch(getTestType({
-      projectId: loggedInUser.projectId,
-      testClassificationId: testClassificationId,
-      testWorkCategoryId: testWorkCategoryId,
-      testMaterialId: testMaterialId,
-    }));
+    dispatch(
+      getTestType({
+        projectId: loggedInUser.projectId,
+        testClassificationId: testClassificationId,
+        testWorkCategoryId: testWorkCategoryId,
+        testMaterialId: testMaterialId,
+      }),
+    );
 
-    dispatch(getUsersForTestAssignment({
-      projectId: loggedInUser.projectId,
-      workType: workType
-    }));
+    dispatch(
+      getUsersForTestAssignment({
+        projectId: loggedInUser.projectId,
+        workType: workType,
+      }),
+    );
   }, []);
 
   const handleRadioChange = (index: any) => {
     const testType: any = testTypesData[index];
 
-    testType.isChecked = !testType.isChecked
+    testType.isChecked = !testType.isChecked;
     setSelectedTestType(testType);
 
     const updatedCheckboxes: any = [...userData];
@@ -68,17 +115,45 @@ const AssignTestTypes = ({ route, navigation }: { route: any, navigation: any })
       updatedCheckboxes.forEach((user: any) => {
         user.isChecked = false;
         delete user.assignmentLevel;
-        if (user.testAssignment?.find((wa: any) => wa.testClassification?.id === testClassificationId && wa.assignmentLevel === 1) != null) {
+        if (
+          user.testAssignment?.find(
+            (wa: any) =>
+              wa.testClassification?.id === testClassificationId &&
+              wa.assignmentLevel === 1,
+          ) != null
+        ) {
           user.assignmentLevel = TEST_ASSIGNMENT_LEVEL.LEVEL1;
           user.isChecked = true;
-        } else if (user.testAssignment?.find((wa: any) => wa.testClassification?.id === testClassificationId && wa.testWorkCategoryId === testWorkCategoryId && wa.assignmentLevel === 2)) {
+        } else if (
+          user.testAssignment?.find(
+            (wa: any) =>
+              wa.testClassification?.id === testClassificationId &&
+              wa.testWorkCategoryId === testWorkCategoryId &&
+              wa.assignmentLevel === 2,
+          )
+        ) {
           user.assignmentLevel = TEST_ASSIGNMENT_LEVEL.LEVEL2;
           user.isChecked = true;
-        } else if (user.testAssignment?.find((wa: any) => wa.testClassification?.id === testClassificationId && wa.testWorkCategoryId === testWorkCategoryId && wa.testMaterialId === testMaterialId && wa.assignmentLevel === 3)) {
+        } else if (
+          user.testAssignment?.find(
+            (wa: any) =>
+              wa.testClassification?.id === testClassificationId &&
+              wa.testWorkCategoryId === testWorkCategoryId &&
+              wa.testMaterialId === testMaterialId &&
+              wa.assignmentLevel === 3,
+          )
+        ) {
           user.assignmentLevel = TEST_ASSIGNMENT_LEVEL.LEVEL3;
           user.isChecked = true;
         } else {
-          const testAssignment = user.testAssignment?.find((wa: any) => wa.testClassification?.id === testClassificationId && wa.testWorkCategoryId === testWorkCategoryId && wa.testMaterialId === testMaterialId && wa.testTypeId === testType._id && wa.assignmentLevel === 4);
+          const testAssignment = user.testAssignment?.find(
+            (wa: any) =>
+              wa.testClassification?.id === testClassificationId &&
+              wa.testWorkCategoryId === testWorkCategoryId &&
+              wa.testMaterialId === testMaterialId &&
+              wa.testTypeId === testType._id &&
+              wa.assignmentLevel === 4,
+          );
           if (testAssignment) {
             user.isChecked = true;
           }
@@ -94,7 +169,14 @@ const AssignTestTypes = ({ route, navigation }: { route: any, navigation: any })
     const updatedCheckboxes: any = [...userData];
     const selectedUser: any = updatedCheckboxes[index];
     selectedUser.isChecked = !selectedUser.isChecked;
-    const testAssignment = selectedUser.testAssignment?.find((wa: any) => wa.testClassification?.id === testClassificationId && wa.testWorkCategoryId === testWorkCategoryId && wa.testMaterialId === testMaterialId && wa.testTypeId === selectedTestType._id && wa.assignmentLevel === 4)
+    const testAssignment = selectedUser.testAssignment?.find(
+      (wa: any) =>
+        wa.testClassification?.id === testClassificationId &&
+        wa.testWorkCategoryId === testWorkCategoryId &&
+        wa.testMaterialId === testMaterialId &&
+        wa.testTypeId === selectedTestType._id &&
+        wa.assignmentLevel === 4,
+    );
     if (selectedUser.isChecked) {
       if (testAssignment) {
         testAssignment.dirty = false;
@@ -118,15 +200,17 @@ const AssignTestTypes = ({ route, navigation }: { route: any, navigation: any })
 
   useEffect(() => {
     if (testTypesAssigned) {
-      Alert.alert("Success", "Tasks assigned successfully");
+      Alert.alert('Success', 'Tasks assigned successfully');
       openAssignClose();
       dispatch(clearTestClassificationsAssignmentData());
       setTimeout(() => {
-        dispatch(getUsersForTestAssignment({
-          projectId: loggedInUser.projectId,
-          workType: workType
-        }));
-      }, 500)
+        dispatch(
+          getUsersForTestAssignment({
+            projectId: loggedInUser.projectId,
+            workType: workType,
+          }),
+        );
+      }, 500);
     }
   }, [testTypesAssigned, error]);
 
@@ -138,8 +222,8 @@ const AssignTestTypes = ({ route, navigation }: { route: any, navigation: any })
     usersToBeAssign.forEach((u: any) => {
       let user: any = {
         _id: u._id,
-        delete: u.delete || false
-      }
+        delete: u.delete || false,
+      };
       const testAssignment = u.testAssignment?.find((wa: any) => wa.dirty);
       if (testAssignment) {
         user.testAssignmentId = testAssignment._id;
@@ -149,19 +233,21 @@ const AssignTestTypes = ({ route, navigation }: { route: any, navigation: any })
     });
 
     if (usersToBeAssignArray.length) {
-      dispatch(testTypesAssignToUsers({
-        projectId: loggedInUser.projectId,
-        testClassificationId: testClassificationId,
-        testWorkCategoryId: testWorkCategoryId,
-        testMaterialId: testMaterialId,
-        testTypeId: selectedTestType._id,
-        body: {
-          users: usersToBeAssignArray,
-          level: 4
-        }
-      }));
+      dispatch(
+        testTypesAssignToUsers({
+          projectId: loggedInUser.projectId,
+          testClassificationId: testClassificationId,
+          testWorkCategoryId: testWorkCategoryId,
+          testMaterialId: testMaterialId,
+          testTypeId: selectedTestType._id,
+          body: {
+            users: usersToBeAssignArray,
+            level: 4,
+          },
+        }),
+      );
     }
-  }
+  };
 
   const openAssignClose = () => {
     testTypesData.forEach((item: any) => {
@@ -175,15 +261,20 @@ const AssignTestTypes = ({ route, navigation }: { route: any, navigation: any })
   };
 
   // unmount
-  useEffect(() => () => {
-    setSearchText('');
-  }, []);
+  useEffect(
+    () => () => {
+      setSearchText('');
+    },
+    [],
+  );
 
   return (
     <View style={styles.Container}>
-      {(error) && <View style={styles.ErrorSectionStyle}>
-        <Text style={styles.errorText}>{error}</Text>
-      </View>}
+      {error && (
+        <View style={styles.ErrorSectionStyle}>
+          <Text style={styles.errorText}>{error}</Text>
+        </View>
+      )}
       <View style={styles.SectionStyle}>
         <Image
           source={require('./../../../images/search-icon.png')}
@@ -198,33 +289,42 @@ const AssignTestTypes = ({ route, navigation }: { route: any, navigation: any })
           underlineColorAndroid="#f000"
           blurOnSubmit={false}
           value={searchText}
-          onChangeText={(text) => {
+          onChangeText={text => {
             setSearchText(text);
           }}
         />
       </View>
-      
+
       <ScrollView style={styles.Height100}>
-        {testTypesData.filter((testType: any) => {
+        {testTypesData
+          .filter((testType: any) => {
             if (searchText && testType.displayName) {
-              return testType.displayName.toLowerCase().includes(searchText.toLowerCase())
+              return testType.displayName
+                .toLowerCase()
+                .includes(searchText.toLowerCase());
             } else {
               return true;
             }
-          }).map((item: any, index) => (
-          <View style={styles.UserCategory}>
-            <View style={styles.FlexRowCenter}>
-              <CheckBox
-                value={item.isChecked}
-                onValueChange={() => handleRadioChange(index)}
-                style={styles.checkbox}
-                tintColors={{ true: '#0F56B3', false: '#818181' }}
-              />
-              <View>
-                <Text style={styles.UserRole}>{item.name}</Text>
-              </View>
-            </View>
-            {/* <View>
+          })
+          .map((item: any, index) => (
+            <View style={styles.categoryItemContainer}>
+              <LinearGradient
+                colors={['#FFFFFF', '#E0E7FF']}
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 0}}
+                style={styles.gradientContainer}>
+                <View style={styles.FlexRowCenter}>
+                  <CheckBox
+                    value={item.isChecked}
+                    onValueChange={() => handleRadioChange(index)}
+                    style={styles.checkbox}
+                    tintColors={{true: '#5A2AAF', false: '#818181'}}
+                  />
+                  <View>
+                    <Text style={styles.categoryText}>{item.name}</Text>
+                  </View>
+                </View>
+                {/* <View>
               <TouchableOpacity>
                 <Image
                   style={styles.CloseIcon}
@@ -232,8 +332,9 @@ const AssignTestTypes = ({ route, navigation }: { route: any, navigation: any })
                 />
               </TouchableOpacity>
             </View> */}
-          </View>
-        ))}
+              </LinearGradient>
+            </View>
+          ))}
       </ScrollView>
       {/* Modal Start */}
       <Modal
@@ -243,7 +344,7 @@ const AssignTestTypes = ({ route, navigation }: { route: any, navigation: any })
         onRequestClose={() => {
           openAssignPopup(!isAssignPopOpen);
         }}>
-        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.3)' }}>
+        <View style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.3)'}}>
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <View style={styles.ModalHeader}>
@@ -260,9 +361,11 @@ const AssignTestTypes = ({ route, navigation }: { route: any, navigation: any })
               </View>
               <View style={styles.ModalInnerContainer}>
                 <View>
-                  <Text style={styles.AssignRoleText}>Task: {selectedTestType.displayName}</Text>
+                  <Text style={styles.AssignRoleText}>
+                    Task: {selectedTestType.displayName}
+                  </Text>
                 </View>
-                <ScrollView style={{ paddingTop: 10, height: 500 }}>
+                <ScrollView style={{paddingTop: 10, height: 500}}>
                   {userData.map((item: any, index) => (
                     <View style={styles.CategoryType}>
                       <View style={styles.FlexRowCenter}>
@@ -271,26 +374,24 @@ const AssignTestTypes = ({ route, navigation }: { route: any, navigation: any })
                           disabled={item.assignmentLevel != null}
                           onValueChange={() => handleUserData(index)}
                           style={styles.checkbox}
-                          tintColors={{ true: '#0F56B3', false: '#818181' }}
+                          tintColors={{true: '#0F56B3', false: '#818181'}}
                         />
-                        <View style={{ flexDirection: 'row' }}>
-                          <Text style={styles.AssignRoleText}>
-                            {item.name}
-                          </Text>
-                          {
-                            item.assignmentLevel &&
+                        <View style={{flexDirection: 'row'}}>
+                          <Text style={styles.AssignRoleText}>{item.name}</Text>
+                          {item.assignmentLevel && (
                             <Text style={styles.userAlreadyAssigned}>
                               {item.assignmentLevel}
                             </Text>
-                          }
-
+                          )}
                         </View>
                       </View>
                     </View>
                   ))}
                 </ScrollView>
 
-                <TouchableOpacity style={styles.assignTagButoon} onPress={() => onWorkAssignment()}>
+                <TouchableOpacity
+                  style={styles.assignTagButoon}
+                  onPress={() => onWorkAssignment()}>
                   <Text style={styles.assignTagButoonText}>Assign</Text>
                 </TouchableOpacity>
               </View>
@@ -298,10 +399,13 @@ const AssignTestTypes = ({ route, navigation }: { route: any, navigation: any })
           </View>
         </View>
       </Modal>
-      <LoadingAnimation loading={loading || loadingUsers || loadingTestTypes}></LoadingAnimation>
+      <LoadingAnimation
+        loading={
+          loading || loadingUsers || loadingTestTypes
+        }></LoadingAnimation>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   Container: {
@@ -315,6 +419,41 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: '#f11f1f',
+  },
+  categoryItemContainer: {
+    marginBottom: 15,
+    borderRadius: 16,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: '#ABBEFD',
+  },
+  gradientContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 20,
+    paddingHorizontal: 15,
+    borderRadius: 16,
+    position: 'relative',
+  },
+  leftBorder: {
+    paddingVertical: 3,
+    position: 'absolute',
+    left: 0,
+    top: 10,
+    bottom: 10,
+    zIndex: 100,
+    width: 2,
+    backgroundColor: '#5A7EF8',
+  },
+  categoryText: {
+    marginLeft: 10,
+    fontSize: 16,
+    fontWeight: '400',
+    color: '#27272A',
+  },
+  arrowContainer: {
+    alignSelf: 'center',
   },
   NoDataContainer: {
     flexDirection: 'column',
@@ -425,7 +564,8 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   checkbox: {
-    transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }],
+    transform: [{scaleX: 1.2}, {scaleY: 1.2}],
+    borderRadius: 5,
   },
   label: {
     margin: 8,
@@ -580,4 +720,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AssignTestTypes
+export default AssignTestTypes;

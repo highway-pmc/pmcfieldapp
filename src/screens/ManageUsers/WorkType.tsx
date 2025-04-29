@@ -1,13 +1,26 @@
-import { View, Text, NativeEventEmitter, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { useIsFocused } from '@react-navigation/native';
-import { HeaderItems, PROJECT_TYPE, ROLES, WORK_TYPE } from "../../constants/constants"
-import { useSelector } from 'react-redux';
+import {
+  View,
+  Text,
+  NativeEventEmitter,
+  StyleSheet,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {useIsFocused} from '@react-navigation/native';
+import {
+  HeaderItems,
+  PROJECT_TYPE,
+  ROLES,
+  WORK_TYPE,
+} from '../../constants/constants';
+import {useSelector} from 'react-redux';
 import AssignTestClassification from './QualityWorks/AssignTestClassification';
 import TileCardComponent from '../Common/TileCardComponent';
-import { WORK_MODULE_TYPE } from '../Common/CommonConstantsTypes';
+import {WORK_MODULE_TYPE} from '../Common/CommonConstantsTypes';
 
-const WorkType = ({ navigation }: { navigation: any }) => {
+const WorkType = ({navigation}: {navigation: any}) => {
   const [projectHead, setProjectHead] = useState(false);
   const [roles, setRoles] = useState([]);
 
@@ -25,32 +38,30 @@ const WorkType = ({ navigation }: { navigation: any }) => {
     let rolesArr: any = [];
     if (loggedInUser.roles) {
       //loggedInUser.roles = 'structure-head,highway-head';
-      if (loggedInUser.roles.split(',').find((role: any) => role === ROLES.PROJECT_HEAD)) {
+      if (
+        loggedInUser.roles
+          .split(',')
+          .find((role: any) => role === ROLES.PROJECT_HEAD)
+      ) {
         rolesArr = WORK_MODULE_TYPE;
         setProjectHead(true);
       } else {
         loggedInUser.roles.split(',').forEach((role: any) => {
           if (role === ROLES.STRUCTURE_HEAD) {
-            rolesArr.push(
-              {
-                title: 'Structure',
-                workType: PROJECT_TYPE.STRUCTURE_WORK
-              }
-            );
+            rolesArr.push({
+              title: 'Structure',
+              workType: PROJECT_TYPE.STRUCTURE_WORK,
+            });
           } else if (role === ROLES.HIGHWAY_HEAD) {
-            rolesArr.push(
-              {
-                title: 'Highway',
-                workType: PROJECT_TYPE.HIGHWAY_WORK
-              }
-            );
+            rolesArr.push({
+              title: 'Highway',
+              workType: PROJECT_TYPE.HIGHWAY_WORK,
+            });
           } else if (role === ROLES.OTHER_WORF_HEAD) {
-            rolesArr.push(
-              {
-                title: 'Other',
-                workType: PROJECT_TYPE.OTHER_WORK
-              }
-            );
+            rolesArr.push({
+              title: 'Other',
+              workType: PROJECT_TYPE.OTHER_WORK,
+            });
           }
         });
       }
@@ -60,14 +71,14 @@ const WorkType = ({ navigation }: { navigation: any }) => {
       onPressWorkType(rolesArr[0].workType);
       return;
     }
-    setRoles(rolesArr)
+    setRoles(rolesArr);
   }, []);
 
   const onPressWorkType = (workType: any) => {
-    navigation.navigate("AssignWork", {
-      workType: workType
-    })
-  }
+    navigation.navigate('AssignWork', {
+      workType: workType,
+    });
+  };
 
   const switchTab = (tabName: any) => {
     setActiveTab(tabName);
@@ -82,8 +93,7 @@ const WorkType = ({ navigation }: { navigation: any }) => {
               styles.tabItem,
               activeTab === WORK_TYPE.SITE_WORK && styles.activeTab,
             ]}
-            onPress={() => switchTab(WORK_TYPE.SITE_WORK)}
-          >
+            onPress={() => switchTab(WORK_TYPE.SITE_WORK)}>
             <Text style={styles.activeTabText}>{WORK_TYPE.SITE_WORK}</Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -91,36 +101,33 @@ const WorkType = ({ navigation }: { navigation: any }) => {
               styles.tabItem,
               activeTab === WORK_TYPE.LAB_WORK && styles.activeTab,
             ]}
-            onPress={() => switchTab(WORK_TYPE.LAB_WORK)}
-          >
+            onPress={() => switchTab(WORK_TYPE.LAB_WORK)}>
             <Text style={styles.activeTabText}>{WORK_TYPE.LAB_WORK}</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.tabContent}>
-          {activeTab === WORK_TYPE.SITE_WORK &&
+          {activeTab === WORK_TYPE.SITE_WORK && (
             <View style={styles.rfiTabBar}>
-              {
-                roles.map((role: any) => (
-                  <TileCardComponent
-                    title={role.title}
-                    content={role.discription}
-                    bgColor={role.color}
-                    image={role.src}
-                    onPress={() => onPressWorkType(role.workType)}
-                  />
-                ))
-              }
+              {roles.map((role: any) => (
+                <TileCardComponent
+                  title={role.title}
+                  content={role.discription}
+                  bgColor={role.color}
+                  image={role.src}
+                  onPress={() => onPressWorkType(role.workType)}
+                />
+              ))}
             </View>
-          }
-          {activeTab === WORK_TYPE.LAB_WORK && 
+          )}
+          {activeTab === WORK_TYPE.LAB_WORK && (
             <AssignTestClassification></AssignTestClassification>
-          }
+          )}
         </View>
-
+       
       </View>
     </ScrollView>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -131,7 +138,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flexWrap: 'wrap',
-    gap: 5
+    gap: 5,
   },
   rfiTab: {
     width: 180,
@@ -157,7 +164,7 @@ const styles = StyleSheet.create({
   tabText: {
     fontSize: 20,
     fontWeight: '400',
-    color: '#fff'
+    color: '#fff',
   },
   tabBar: {
     flexDirection: 'row',
@@ -170,24 +177,24 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 20,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   activeTab: {
     borderBottomWidth: 3,
     borderStyle: 'solid',
-    borderColor: '#1C58C0'
+    borderColor: '#1C58C0',
   },
   activeTabText: {
     color: '#000',
     fontSize: 16,
-    fontWeight: '500'
+    fontWeight: '500',
   },
   tabContent: {
     paddingHorizontal: 20,
     paddingTop: 20,
     borderWidth: 1,
-    height: '100%'
+    height: '100%',
   },
 });
 
-export default WorkType
+export default WorkType;

@@ -34,6 +34,7 @@
     "react-native-elements": "^3.4.3",
     "react-native-gesture-handler": "^2.12.1",
     "react-native-image-picker": "^7.0.2",
+    "react-native-linear-gradient": "^2.8.3",
     "react-native-modal-datetime-picker": "^17.1.0",
     "react-native-paper": "^5.10.1",
     "react-native-pdf": "^6.7.3",

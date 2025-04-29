@@ -11,18 +11,32 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
-import {HeaderItems, PROJECT_TYPE, TEST_ASSIGNMENT_LEVEL} from '../../../constants/constants';
+import {
+  HeaderItems,
+  PROJECT_TYPE,
+  TEST_ASSIGNMENT_LEVEL,
+} from '../../../constants/constants';
 import CheckBox from '@react-native-community/checkbox';
 import {ScrollView} from 'react-native-gesture-handler';
-import { useDispatch, useSelector } from 'react-redux';
-import { clearTestClassificationsAssignmentData, getTestClassifications, getUsersForTestAssignment, testClassificationsTestAssignToUsers } from './actions';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  clearTestClassificationsAssignmentData,
+  getTestClassifications,
+  getUsersForTestAssignment,
+  testClassificationsTestAssignToUsers,
+} from './actions';
 import LoadingAnimation from '../../Common/LoadingAnimation';
-import { isTestInventoryClassification } from '../../../utils/Utils';
+import {isTestInventoryClassification} from '../../../utils/Utils';
+import LinearGradient from 'react-native-linear-gradient';
 
 const AssignTestClassification = () => {
   const navigation: any = useNavigation();
   const [testClassificationsData, setTestClassificationsData] = useState([]);
-  const [selectedTestClassification, setSelectedTestClassification] = useState({isChecked: false, _id: "", name: ''});
+  const [selectedTestClassification, setSelectedTestClassification] = useState({
+    isChecked: false,
+    _id: '',
+    name: '',
+  });
   const [searchText, setSearchText] = useState('');
   // const [usersToBeAssigned, setUsersToBeAssigned] = useState([])
   const [userData, setUserCheckboxes] = useState([]);
@@ -34,47 +48,61 @@ const AssignTestClassification = () => {
     eventEmitter.emit('headerEvent', HeaderItems.assignTestClassification);
   }
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const [isAssignPopOpen, openAssignPopup] = useState(false);
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const { testClassifications, users, testClassificationsTestAssigned, loading, loadingUsers, error} = useSelector((state: any) => state.TestAssignment);
-  
+  const {
+    testClassifications,
+    users,
+    testClassificationsTestAssigned,
+    loading,
+    loadingUsers,
+    error,
+  } = useSelector((state: any) => state.TestAssignment);
+
   // unmount
-  useEffect( () => () => {
-    setTestClassificationsData([]);
-    setUserCheckboxes([]);
-    setSearchText('');
-  }, [] );
+  useEffect(
+    () => () => {
+      setTestClassificationsData([]);
+      setUserCheckboxes([]);
+      setSearchText('');
+    },
+    [],
+  );
 
   useEffect(() => {
     if (testClassifications) {
       testClassifications.forEach((tClassi: any) => {
-        tClassi.isChecked = false
+        tClassi.isChecked = false;
       });
       setTestClassificationsData(testClassifications);
     }
 
     if (users) {
       users.forEach((user: any) => {
-        user.isChecked = false
+        user.isChecked = false;
       });
       setUserCheckboxes(users);
     }
   }, [testClassifications, users]);
 
   useEffect(() => {
-    dispatch(getTestClassifications({
-      projectId: loggedInUser.projectId,
-      workType: workType
-    }));
+    dispatch(
+      getTestClassifications({
+        projectId: loggedInUser.projectId,
+        workType: workType,
+      }),
+    );
 
-    dispatch(getUsersForTestAssignment({
-      projectId: loggedInUser.projectId,
-      workType: workType
-    }));
+    dispatch(
+      getUsersForTestAssignment({
+        projectId: loggedInUser.projectId,
+        workType: workType,
+      }),
+    );
   }, []);
-  
+
   const handleRadioChange = (index: any) => {
     const testClassification: any = testClassificationsData[index];
 
@@ -87,17 +115,45 @@ const AssignTestClassification = () => {
       updatedCheckboxes.forEach((user: any) => {
         user.isChecked = false;
         delete user.assignmentLevel;
-        const testAssignment = user.testAssignment?.find((wa: any) => wa.testClassification?.id === testClassificationsData[index]._id && wa.assignmentLevel === 1);
+        const testAssignment = user.testAssignment?.find(
+          (wa: any) =>
+            wa.testClassification?.id === testClassificationsData[index]._id &&
+            wa.assignmentLevel === 1,
+        );
 
         if (testAssignment) {
           user.isChecked = true;
-        } else if (user.testAssignment?.find((wa: any) => wa.testClassification?.id === testClassification._id && wa.testWorkCategoryId && wa.assignmentLevel === 2) != null) {
+        } else if (
+          user.testAssignment?.find(
+            (wa: any) =>
+              wa.testClassification?.id === testClassification._id &&
+              wa.testWorkCategoryId &&
+              wa.assignmentLevel === 2,
+          ) != null
+        ) {
           user.assignmentLevel = TEST_ASSIGNMENT_LEVEL.LEVEL2;
           user.isChecked = true;
-        } else if (user.testAssignment?.find((wa: any) => wa.testClassification?.id === testClassification._id && wa.testWorkCategoryId && wa.testMaterialId && wa.assignmentLevel === 3) != null) {
+        } else if (
+          user.testAssignment?.find(
+            (wa: any) =>
+              wa.testClassification?.id === testClassification._id &&
+              wa.testWorkCategoryId &&
+              wa.testMaterialId &&
+              wa.assignmentLevel === 3,
+          ) != null
+        ) {
           user.assignmentLevel = TEST_ASSIGNMENT_LEVEL.LEVEL3;
           user.isChecked = true;
-        } else if (user.testAssignment?.find((wa: any) => wa.testClassification?.id === testClassification._id && wa.testWorkCategoryId && wa.testMaterialId && wa.testTypeId && wa.assignmentLevel === 4) != null) {
+        } else if (
+          user.testAssignment?.find(
+            (wa: any) =>
+              wa.testClassification?.id === testClassification._id &&
+              wa.testWorkCategoryId &&
+              wa.testMaterialId &&
+              wa.testTypeId &&
+              wa.assignmentLevel === 4,
+          ) != null
+        ) {
           user.assignmentLevel = TEST_ASSIGNMENT_LEVEL.LEVEL4;
           user.isChecked = true;
         }
@@ -112,7 +168,11 @@ const AssignTestClassification = () => {
     const updatedCheckboxes: any = [...userData];
     const selectedUser: any = updatedCheckboxes[index];
     selectedUser.isChecked = !selectedUser.isChecked;
-    const testAssignment = selectedUser.testAssignment?.find((wa: any) => wa.testClassification?.id === selectedTestClassification._id && wa.assignmentLevel === 1)
+    const testAssignment = selectedUser.testAssignment?.find(
+      (wa: any) =>
+        wa.testClassification?.id === selectedTestClassification._id &&
+        wa.assignmentLevel === 1,
+    );
     if (selectedUser.isChecked) {
       if (testAssignment) {
         testAssignment.dirty = false;
@@ -136,13 +196,15 @@ const AssignTestClassification = () => {
 
   useEffect(() => {
     if (testClassificationsTestAssigned) {
-      Alert.alert("Success", "Tests assigned successfully");
+      Alert.alert('Success', 'Tests assigned successfully');
       openAssignClose();
       dispatch(clearTestClassificationsAssignmentData());
-      dispatch(getUsersForTestAssignment({
-        projectId: loggedInUser.projectId,
-        workType: workType
-      }));
+      dispatch(
+        getUsersForTestAssignment({
+          projectId: loggedInUser.projectId,
+          workType: workType,
+        }),
+      );
     }
   }, [testClassificationsTestAssigned, error]);
 
@@ -154,8 +216,8 @@ const AssignTestClassification = () => {
     usersToBeAssign.forEach((u: any) => {
       let user: any = {
         _id: u._id,
-        delete: u.delete || false
-      }
+        delete: u.delete || false,
+      };
       const testAssignment = u.testAssignment?.find((wa: any) => wa.dirty);
       if (testAssignment) {
         user.testAssignmentId = testAssignment._id;
@@ -165,33 +227,37 @@ const AssignTestClassification = () => {
     });
 
     if (usersToBeAssignArray.length) {
-      dispatch(testClassificationsTestAssignToUsers({
-        projectId: loggedInUser.projectId,
-        testClassificationId: selectedTestClassification._id,
-        body: {
-          users: usersToBeAssignArray,
-          level: 1
-        }
-      }));
+      dispatch(
+        testClassificationsTestAssignToUsers({
+          projectId: loggedInUser.projectId,
+          testClassificationId: selectedTestClassification._id,
+          body: {
+            users: usersToBeAssignArray,
+            level: 1,
+          },
+        }),
+      );
     }
-  }
+  };
 
   const openAssignClose = () => {
     testClassificationsData.forEach((item: any) => {
       item.isChecked = false;
     });
     userData.forEach((item: any) => {
-        item.isChecked = false;
+      item.isChecked = false;
     });
     openAssignPopup(!isAssignPopOpen);
   };
 
   return (
     <View style={styles.Container}>
-        <View style={styles.TopHeaderFixed}>
-        {(error) && <View style={styles.ErrorSectionStyle}>
-                <Text style={styles.errorText}>{error}</Text>
-              </View>}
+      <View style={styles.TopHeaderFixed}>
+        {error && (
+          <View style={styles.ErrorSectionStyle}>
+            <Text style={styles.errorText}>{error}</Text>
+          </View>
+        )}
         <View style={styles.SectionStyle}>
           <Image
             source={require('./../../../images/search-icon.png')}
@@ -206,53 +272,66 @@ const AssignTestClassification = () => {
             underlineColorAndroid="#f000"
             blurOnSubmit={false}
             value={searchText}
-            onChangeText={(text) => {
+            onChangeText={text => {
               setSearchText(text);
             }}
           />
         </View>
       </View>
       <ScrollView style={styles.Height100}>
-        {testClassificationsData.filter((testClassif: any) => {
+        {testClassificationsData
+          .filter((testClassif: any) => {
             if (searchText && testClassif.name) {
-              return testClassif.name.toLowerCase().includes(searchText.toLowerCase())
+              return testClassif.name
+                .toLowerCase()
+                .includes(searchText.toLowerCase());
             } else {
               return true;
             }
-          }).map((item: any, index) => (
-          <View style={styles.UserCategory}>
-            <View style={styles.FlexRowCenter}>
-              <CheckBox
-                value={item.isChecked}
-                onValueChange={() => handleRadioChange(index)}
-                style={styles.checkbox}
-                tintColors={{true: '#0F56B3', false: '#818181'}}
-              />
-              <View>
-                <Text style={styles.UserRole}>{item.name}</Text>
-              </View>
-            </View>
-            <View>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('AssignTestWorkCategory', {
-                  testClassificationId: item._id,
-                  testClassificationName: item.name,
-                  workType: workType
-                })}>
-                {
-                  !isTestInventoryClassification(item.type) &&
-                  <Image
-                    style={styles.CloseIcon}
-                    source={require('./../../../images/right-arrow.png')}
+          })
+          .map((item: any, index) => (
+            <View style={styles.categoryItemContainer}>
+              <LinearGradient
+                colors={['#FFFFFF', '#E0E7FF']}
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 0}}
+                style={styles.gradientContainer}>
+                <View style={styles.leftBorder} />
+                <View style={styles.FlexRowCenter}>
+                  <CheckBox
+                    value={item.isChecked}
+                    onValueChange={() => handleRadioChange(index)}
+                    style={styles.checkbox}
+                    tintColors={{true: '#5A2AAF', false: '#818181'}}
                   />
-                }
-              </TouchableOpacity>
+                  <View>
+                    <Text style={styles.categoryText}>{item.name}</Text>
+                  </View>
+                </View>
+                <View>
+                  <TouchableOpacity
+                    style={styles.arrowContainer}
+                    onPress={() =>
+                      navigation.navigate('AssignTestWorkCategory', {
+                        testClassificationId: item._id,
+                        testClassificationName: item.name,
+                        workType: workType,
+                      })
+                    }>
+                    {!isTestInventoryClassification(item.type) && (
+                      <Image
+                        style={[styles.CloseIcon, {height: 20, width: 20}]}
+                        source={require('./../../../images/right-arrow.png')}
+                      />
+                    )}
+                  </TouchableOpacity>
+                </View>
+              </LinearGradient>
             </View>
-          </View>
-        ))}
+          ))}
 
         {/* No Data Found */}
-        {(!loading && !testClassificationsData.length) && 
+        {!loading && !testClassificationsData.length && (
           <View style={styles.NoDataContainer}>
             <Image
               style={styles.WthHeight}
@@ -264,7 +343,7 @@ const AssignTestClassification = () => {
             </Text>
             )} */}
           </View>
-        }
+        )}
       </ScrollView>
 
       {/* Modal Start */}
@@ -291,37 +370,38 @@ const AssignTestClassification = () => {
                 </TouchableOpacity>
               </View>
               <View style={styles.ModalInnerContainer}>
-              <View>
-                <Text style={styles.AssignRoleText}>Test Classification: {selectedTestClassification.name}</Text>
-              </View>
-              <ScrollView style={{paddingTop: 10, height: 500}}>
-                {userData.map((item: any, index) => (
-                  <View style={styles.CategoryType}>
-                    <View style={styles.FlexRowCenter}>
-                      <CheckBox
-                        value={item.isChecked}
-                        disabled={item.assignmentLevel != null}
-                        onValueChange={() => handleUserData(index)}
-                        style={styles.checkbox}
-                        tintColors={{true: '#0F56B3', false: '#818181'}}
-                      />
-                      <View style={{ flexDirection: 'row' }}>
-                        <Text style={styles.AssignRoleText}>
-                          {item.name}
-                        </Text>
-                        {
-                            item.assignmentLevel &&
+                <View>
+                  <Text style={styles.AssignRoleText}>
+                    Test Classification: {selectedTestClassification.name}
+                  </Text>
+                </View>
+                <ScrollView style={{paddingTop: 10, height: 500}}>
+                  {userData.map((item: any, index) => (
+                    <View style={styles.CategoryType}>
+                      <View style={styles.FlexRowCenter}>
+                        <CheckBox
+                          value={item.isChecked}
+                          disabled={item.assignmentLevel != null}
+                          onValueChange={() => handleUserData(index)}
+                          style={styles.checkbox}
+                          tintColors={{true: '#0F56B3', false: '#818181'}}
+                        />
+                        <View style={{flexDirection: 'row'}}>
+                          <Text style={styles.AssignRoleText}>{item.name}</Text>
+                          {item.assignmentLevel && (
                             <Text style={styles.userAlreadyAssigned}>
                               {item.assignmentLevel}
                             </Text>
-                          }
+                          )}
+                        </View>
                       </View>
                     </View>
-                  </View>
-                ))}
+                  ))}
                 </ScrollView>
 
-                <TouchableOpacity style={styles.assignTagButoon} onPress={() => onTestAssignment()}>
+                <TouchableOpacity
+                  style={styles.assignTagButoon}
+                  onPress={() => onTestAssignment()}>
                   <Text style={styles.assignTagButtonText}>Assign</Text>
                 </TouchableOpacity>
               </View>
@@ -340,7 +420,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     paddingVertical: 10,
     padding: 15,
-    paddingBottom: 35
+    paddingBottom: 35,
   },
   ErrorSectionStyle: {
     flexDirection: 'row',
@@ -610,6 +690,41 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#fff',
     fontWeight: '500',
+  },
+  categoryItemContainer: {
+    marginBottom: 15,
+    borderRadius: 16,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: '#ABBEFD',
+  },
+  gradientContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 20,
+    paddingHorizontal: 15,
+    borderRadius: 16,
+    position: 'relative',
+  },
+  leftBorder: {
+    paddingVertical: 3,
+    position: 'absolute',
+    left: 0,
+    top: 10,
+    bottom: 10,
+    zIndex: 100,
+    width: 2,
+    backgroundColor: '#5A7EF8',
+  },
+  categoryText: {
+    marginLeft: 10,
+    fontSize: 16,
+    fontWeight: '400',
+    color: '#27272A',
+  },
+  arrowContainer: {
+    alignSelf: 'center',
   },
 });
 

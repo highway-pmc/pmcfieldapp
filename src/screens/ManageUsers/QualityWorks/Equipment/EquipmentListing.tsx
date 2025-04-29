@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -7,12 +7,10 @@ import {
   Text,
   TouchableOpacity,
   NativeEventEmitter,
-  Image,
 } from 'react-native';
-import CustomSelectDropdown from '../../../Common/CustomSelectDropdown';
-import { useSnackbar } from '../../../../context/SnackbarContext';
-import { useDispatch, useSelector } from 'react-redux';
-import { useIsFocused } from '@react-navigation/native';
+import {useSnackbar} from '../../../../context/SnackbarContext';
+import {useDispatch, useSelector} from 'react-redux';
+import {useIsFocused} from '@react-navigation/native';
 import LoadingAnimation from '../../../Common/LoadingAnimation';
 import {
   getEquipmentsMasterData,
@@ -20,7 +18,8 @@ import {
   getEquipmentsListData,
   clearEquipmentData,
 } from './actions';
-import { HeaderItems } from '../../../../constants/constants';
+import {HeaderItems} from '../../../../constants/constants';
+import LinearGradient from 'react-native-linear-gradient';
 
 const EquipmentListing = ({
   navigation,
@@ -29,16 +28,16 @@ const EquipmentListing = ({
   navigation: any;
   route: any;
 }) => {
-  const { height } = Dimensions.get('window');
+  const {height} = Dimensions.get('window');
   const calculatedHeight = height * 0.75;
-  const { showSnackbar } = useSnackbar();
+  const {showSnackbar} = useSnackbar();
   const focus = useIsFocused();
 
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
 
   const dispatch = useDispatch();
 
-  const { equipmentsMasterData, equipmentsListData, loading, error } =
+  const {equipmentsMasterData, equipmentsListData, loading, error} =
     useSelector((state: any) => state.EquipmentsCalibration);
   const [equipmentInfoData, setEquipmentInfoData] = useState([]);
   if (useIsFocused()) {
@@ -56,7 +55,7 @@ const EquipmentListing = ({
   }, [focus]);
 
   const navigateToListOfEquipment = (item: any) => {
-    console.log("==Params==", item);
+    console.log('==Params==', item);
     navigation.navigate('EquipmentCalibrationListing', {
       testEquipmentCategoryId: item._id,
       testEquipmentCategoryName: item.name,
@@ -65,15 +64,18 @@ const EquipmentListing = ({
   };
   useEffect(() => {
     if (error) {
-      showSnackbar('Unable to saveMix design data');
+      showSnackbar('Unable to save equipment data');
     }
     if (equipmentsMasterData && !equipmentInfoData?.length) {
       setEquipmentInfoData(equipmentsMasterData);
-      dispatch(getEquipmentsListData({ projectId: loggedInUser.projectId }));
+      dispatch(getEquipmentsListData({projectId: loggedInUser.projectId}));
     }
     if (equipmentsListData) {
       equipmentInfoData.forEach((item: any) => {
-        item.noOfEquipment = equipmentsListData.filter((euip: any) => euip.testEquipmentCategoryId == item._id)?.length || 0;
+        item.noOfEquipment =
+          equipmentsListData.filter(
+            (euip: any) => euip.testEquipmentCategoryId == item._id,
+          )?.length || 0;
       });
 
       setEquipmentInfoData([...equipmentInfoData]);
@@ -85,30 +87,43 @@ const EquipmentListing = ({
     return <LoadingAnimation loading={true} />;
   }
   return (
-    <View style={styles.recentWorkContainer}>
-      <TouchableOpacity
-        style={styles.btnCtaOutline}
-        onPress={() => {
-          console.log('Add Equipment');
-          navigation.navigate('Equipment');
-        }}>
-        <Text style={styles.btnCtaTextOutline}>Add Equipment </Text>
-      </TouchableOpacity>
+    <View style={styles.container}>
+      <View style={styles.headerContainer}>
+        <Text style={styles.headerText}>List</Text>
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() => {
+            console.log('Add Equipment');
+            navigation.navigate('Equipment');
+          }}>
+          <Text style={styles.addButtonText}>Add Equipment</Text>
+        </TouchableOpacity>
+      </View>
       <ScrollView>
-        <View style={styles.innerScrollView}>
+        <View style={styles.listContainer}>
           {equipmentInfoData &&
             equipmentInfoData.map((item: any, index: any) => (
-                <TouchableOpacity
+              <TouchableOpacity
                 key={index}
                 onPress={() => navigateToListOfEquipment(item)}
                 style={styles.equipmentCard}>
+                {/* <View style={styles.equipmentLine}></View> */}
+                <LinearGradient
+                  colors={['#FFFFFF', '#F2E3E9']}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}
+                  style={styles.gradientBackground}
+                />
+                <View style={styles.leftBorder} />
                 <View style={styles.equipmentCardContent}>
                   <Text style={styles.equipmentName}>{item.name}</Text>
-                    <View style={[styles.equipmentCountContainer, { backgroundColor: '#E0F7FF', borderRadius: 50, width: 40, height: 40 }]}>
-                    <Text style={styles.equipmentCount}>{item.noOfEquipment}</Text>
-                    </View>
+                  <View style={styles.equipmentCountContainer}>
+                    <Text style={styles.equipmentCount}>
+                      {item.noOfEquipment}
+                    </Text>
+                  </View>
                 </View>
-                </TouchableOpacity>
+              </TouchableOpacity>
             ))}
         </View>
       </ScrollView>
@@ -118,179 +133,84 @@ const EquipmentListing = ({
 };
 
 const styles = StyleSheet.create({
-  ActionIcon: {
-    width: 20,
-    height: 20,
+  container: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    padding: 16,
   },
-  // container: {
-  //     flex: 1,
-  //     paddingTop: 40,
-  //     paddingHorizontal: 20,
-  //   },
-  itemContainer: {
+  headerContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 10,
-    marginVertical: 2,
-    backgroundColor: '#f9f9f9',
-    borderRadius: 4,
-    borderLeftWidth: 8,
+    marginBottom: 16,
+    paddingHorizontal: 4,
   },
-  itemContainerSourceDetailList: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 10,
-    marginVertical: 2,
-    backgroundColor: '#f9f9f9',
+  headerText: {
+    fontSize: 18,
+    fontWeight: '500',
+    color: '#000000',
   },
-  itemText: {
-    fontSize: 14,
-    maxWidth: 200,
-  },
-  iconContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    width: 110,
-  },
-  icon: {
-    margin: 0,
-    padding: 0,
-  },
-  recentWorkContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    padding: 20,
-  },
-  innerScrollView: {
-    paddingBottom: 10,
-    paddingTop: 15,
-  },
-  footerButton: {
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    backgroundColor: '#fff',
-    marginTop: 15,
-    height: 78,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 10,
-  },
-  btnCtaOutline: {
+  addButton: {
+    borderWidth: 1,
+    borderColor: '#9D4C6C',
     borderRadius: 30,
-    borderWidth: 1,
-    borderColor: '#1C58C0',
-    backgroundColor: '#fff',
-    paddingHorizontal: 30,
-    paddingVertical: 12,
+    paddingVertical: 6,
+    paddingHorizontal: 15,
     alignItems: 'center',
     justifyContent: 'center',
-    minWidth: 130,
   },
-  btnCtaTextOutline: {
-    color: '#1C58C0',
-    fontSize: 14,
+  addButtonText: {
+    color: '#9D4C6C',
+    fontSize: 12,
     fontWeight: '500',
   },
-  mixDesignContainer: {
-    marginTop: 15,
-  },
-  inputContainer: {
-    marginBottom: 20,
-  },
-  inputLabel: {
-    fontSize: 14,
-    fontWeight: '500',
-    marginBottom: 8,
-    color: '#333',
-  },
-  inputWrapper: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    paddingHorizontal: 10,
-  },
-  input: {
-    height: 40,
-    fontSize: 14,
-  },
-  tableContainer: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    overflow: 'hidden',
-    marginBottom: 20,
-  },
-  tableHeader: {
-    flexDirection: 'row',
-    backgroundColor: '#f5f5f5',
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
-  },
-  tableHeaderCell: {
-    fontWeight: '600',
-    fontSize: 14,
-    color: '#333',
-  },
-  tableRow: {
-    flexDirection: 'row',
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
-    alignItems: 'center',
-  },
-  tableCell: {
-    fontSize: 14,
-    color: '#333',
-    paddingRight: 5,
-  },
-  tableCellDropdown: {
-    paddingHorizontal: 5,
-  },
-  tableCellInput: {
-    paddingLeft: 5,
-  },
-  qtyInput: {
-    height: 40,
-    fontSize: 14,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 6,
-    paddingHorizontal: 8,
-  },
-  materialDropdown: {
-    width: '100%',
+  listContainer: {
+    paddingBottom: 20,
   },
   equipmentCard: {
-    backgroundColor: '#ffffff',
     borderRadius: 12,
     marginVertical: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: '#F8C5CD',
+    position: 'relative',
+    height: 70,
   },
+  gradientBackground: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+  },
+  leftBorder: {
+    paddingVertical: 3,
+    position: 'absolute',
+    left: 0,
+    top: 10,
+    bottom: 10,
+    zIndex: 100,
+    width: 2,
+    backgroundColor: '#9D4C6C',
+  },
+
   equipmentCardContent: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 20,
+    padding: 15,
+    height: '100%',
   },
   equipmentName: {
     fontSize: 14,
-    fontWeight: '500',
-    color: '#333333',
+    fontWeight: '400',
+    color: '#000000',
+    marginLeft: 6,
   },
   equipmentCount: {
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: '600',
-    color: '#333333',
+    color: '#9D4C6C',
   },
   equipmentCountContainer: {
     justifyContent: 'center',

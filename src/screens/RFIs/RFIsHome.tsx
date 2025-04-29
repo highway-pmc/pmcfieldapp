@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import { HeaderItems, RFIs_TYPE } from "../../constants/constants"
 
-
 const RFIsHome = ({ route, navigation }: { route: any, navigation: any }) => {
 
   const focus = useIsFocused();

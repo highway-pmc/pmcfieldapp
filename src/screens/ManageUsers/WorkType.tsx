@@ -85,58 +85,65 @@ const WorkType = ({navigation}: {navigation: any}) => {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <View>
-        <View style={styles.tabBar}>
-          <TouchableOpacity
+    <View style={styles.container}>
+      <View style={styles.tabBar}>
+        <TouchableOpacity
+          style={[
+            styles.tabItem,
+            activeTab === WORK_TYPE.SITE_WORK && styles.activeTab,
+          ]}
+          onPress={() => switchTab(WORK_TYPE.SITE_WORK)}>
+          <Text
             style={[
-              styles.tabItem,
-              activeTab === WORK_TYPE.SITE_WORK && styles.activeTab,
-            ]}
-            onPress={() => switchTab(WORK_TYPE.SITE_WORK)}>
-            <Text style={styles.activeTabText}>{WORK_TYPE.SITE_WORK}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
+              styles.activeTabText,
+              activeTab === WORK_TYPE.SITE_WORK && styles.activeFontColor,
+            ]}>
+            {WORK_TYPE.SITE_WORK}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.tabItem,
+            activeTab === WORK_TYPE.LAB_WORK && styles.activeTab,
+          ]}
+          onPress={() => switchTab(WORK_TYPE.LAB_WORK)}>
+          <Text
             style={[
-              styles.tabItem,
-              activeTab === WORK_TYPE.LAB_WORK && styles.activeTab,
-            ]}
-            onPress={() => switchTab(WORK_TYPE.LAB_WORK)}>
-            <Text style={styles.activeTabText}>{WORK_TYPE.LAB_WORK}</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.tabContent}>
-          {activeTab === WORK_TYPE.SITE_WORK && (
-            <View style={styles.rfiTabBar}>
-              {roles.map((role: any) => (
-                <TileCardComponent
-                  title={role.title}
-                  content={role.discription}
-                  bgColor={role.color}
-                  image={role.src}
-                  onPress={() => onPressWorkType(role.workType)}
-                />
-              ))}
-            </View>
-          )}
-          {activeTab === WORK_TYPE.LAB_WORK && (
-            <AssignTestClassification></AssignTestClassification>
-          )}
-        </View>
-       
+              styles.activeTabText,
+              activeTab === WORK_TYPE.LAB_WORK && styles.activeFontColor,
+            ]}>
+            {WORK_TYPE.LAB_WORK}
+          </Text>
+        </TouchableOpacity>
       </View>
-    </ScrollView>
+      <View style={styles.tabContent}>
+        {activeTab === WORK_TYPE.SITE_WORK && (
+          <View style={styles.rfiTabBar}>
+            {roles.map((role: any) => (
+              <TileCardComponent
+                title={role.title}
+                content={role.discription}
+                bgColor={role.backgroundColor}
+                imageBg={role.imageBg}
+                image={role.src}
+                onPress={() => onPressWorkType(role.workType)}
+              />
+            ))}
+          </View>
+        )}
+        {activeTab === WORK_TYPE.LAB_WORK && (
+          <AssignTestClassification></AssignTestClassification>
+        )}
+      </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#F2F2F2',
-  },
+  container: {},
   rfiTabBar: {
     flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'space-between',
     flexWrap: 'wrap',
     gap: 5,
   },
@@ -167,32 +174,37 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   tabBar: {
+    margin: 10,
     flexDirection: 'row',
-    backgroundColor: '#fff',
+    backgroundColor: '#D2C5FF',
     alignItems: 'center',
     justifyContent: 'space-between',
+    borderRadius: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 10,
   },
   tabItem: {
     flex: 1,
-    paddingVertical: 15,
-    paddingHorizontal: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
     alignItems: 'center',
     justifyContent: 'center',
   },
   activeTab: {
-    borderBottomWidth: 3,
-    borderStyle: 'solid',
-    borderColor: '#1C58C0',
+    backgroundColor: '#F1F1FE',
+    borderRadius: 10,
+  },
+  activeFontColor: {
+    color: '#4E36A3',
   },
   activeTabText: {
-    color: '#000',
+    color: '#ffffff',
     fontSize: 16,
     fontWeight: '500',
   },
   tabContent: {
     paddingHorizontal: 20,
     paddingTop: 20,
-    borderWidth: 1,
     height: '100%',
   },
 });

@@ -119,11 +119,8 @@ const styles = StyleSheet.create({
   },
   rfiTabBar: {
     flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
     flexWrap: 'wrap',
     gap: 10,
-    paddingBottom: 120, 
   },
   rfiTab: {
     width: 180,

@@ -10,19 +10,29 @@ import {
   Image,
   Modal,
   Pressable,
-  FlatList,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
-import {HeaderItems, ROLES, USER_CATEGORIES, USER_CATEGORY, UserRoles} from '../../constants/constants';
+import {
+  HeaderItems,
+  ROLES,
+  USER_CATEGORIES,
+  USER_CATEGORY,
+  UserRoles,
+} from '../../constants/constants';
 import CheckBox from '@react-native-community/checkbox';
-import { RadioButton } from 'react-native-paper';
+import {RadioButton} from 'react-native-paper';
 import LoadingAnimation from '../Common/LoadingAnimation';
-import { useDispatch, useSelector } from 'react-redux';
-import { user } from '../../models/user';
-import { addUserCategories, clearUserAssignment, getUsers, getUserCategories } from './actions';
+import {useDispatch, useSelector} from 'react-redux';
+import {user} from '../../models/user';
+import {
+  addUserCategories,
+  clearUserAssignment,
+  getUsers,
+  getUserCategories,
+} from './actions';
 
-const ManageUsers = ({navigation}:{navigation: any}) => {
+const ManageUsers = ({navigation}: {navigation: any}) => {
   const [searchText, setSearchText] = useState('');
   const [selectedUserId, setSelectedUserId] = useState('');
   const [isAssignPopOpen, openAssignPopup] = useState(false);
@@ -31,9 +41,10 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
   const [userCategories, setUserCategories] = useState([]);
 
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const { users, usersAdded, categories, loading, usersLoading, error} = useSelector((state: any) => state.UserAssignment);
+  const {users, usersAdded, categories, loading, usersLoading, error} =
+    useSelector((state: any) => state.UserAssignment);
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();
@@ -54,7 +65,7 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
   useEffect(() => {
     if (categories) {
       categories.forEach((cate: any) => {
-        cate.isChecked = false
+        cate.isChecked = false;
       });
       setUserCategories(categories);
     }
@@ -62,21 +73,29 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
 
   useEffect(() => {
     if (usersAdded) {
-      Alert.alert("Success", "User categories added successfully");
-      const selectedUser: any = userList.find((u: user) => u._id === selectedUserId);
+      Alert.alert('Success', 'User categories added successfully');
+      const selectedUser: any = userList.find(
+        (u: user) => u._id === selectedUserId,
+      );
       if (selectedUser) {
         selectedUser.categories = getSelectedUserCategories();
-        selectedUser.categoriesDisplay = getUserCategoriesString(selectedUser.categories);
+        selectedUser.categoriesDisplay = getUserCategoriesString(
+          selectedUser.categories,
+        );
       }
       setTimeout(() => {
         openAssignPopup(false);
-      }, 1000)
+      }, 1000);
     }
   }, [usersAdded, error]);
 
   useEffect(() => {
-    if(loggedInUser.roles) {
-      if (loggedInUser.roles.split(',').find((role: any) => role === ROLES.PROJECT_HEAD)) {
+    if (loggedInUser.roles) {
+      if (
+        loggedInUser.roles
+          .split(',')
+          .find((role: any) => role === ROLES.PROJECT_HEAD)
+      ) {
         setProjectHead(true);
       }
     }
@@ -85,35 +104,45 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
   }, []);
 
   // unmount
-  useEffect( () => () => {
-    dispatch(clearUserAssignment());
-  }, [] );
+  useEffect(
+    () => () => {
+      dispatch(clearUserAssignment());
+    },
+    [],
+  );
 
   const onUserCategoryAssignment = () => {
-    dispatch(addUserCategories({
-      userId: selectedUserId,
-      categories: getSelectedUserCategories()
-    }));
-  }
+    dispatch(
+      addUserCategories({
+        userId: selectedUserId,
+        categories: getSelectedUserCategories(),
+      }),
+    );
+  };
 
   const getSelectedUserCategories = () => {
-    const categories: any[] = [];//userCategories.filter((item: any) => item.isChecked).forEach();
+    const categories: any[] = [];
     userCategories.forEach((item: any) => {
-      if(item.isChecked) {
+      if (item.isChecked) {
         categories.push({
           id: item._id,
-          name: item.name
-        })
+          name: item.name,
+        });
       }
     });
 
     return categories;
-  }
+  };
 
   const getUserCategoriesString = (assignedCategories = []) => {
-    var assignedCate = assignedCategories.map((item: any) => userCategories.find((uc: any) => uc.name === item.name)?.displayName?.split(' ')[0] || '')
+    var assignedCate = assignedCategories.map(
+      (item: any) =>
+        userCategories
+          .find((uc: any) => uc.name === item.name)
+          ?.displayName?.split(' ')[0] || '',
+    );
     return assignedCate.join(', ');
-  }
+  };
 
   const handleRadioChange = (value: any) => {
     setSelectedUserId(value);
@@ -122,31 +151,33 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
 
     if (selectedUser && selectedUser.categories) {
       userCategories.forEach((cate: any) => {
-        if (selectedUser.categories.find((uCate: any) => uCate.name == cate.name)) {
+        if (
+          selectedUser.categories.find((uCate: any) => uCate.name == cate.name)
+        ) {
           cate.isChecked = true;
         } else {
           cate.isChecked = false;
         }
-      })
+      });
     } else {
       userCategories.forEach((cate: any) => {
         cate.isChecked = false;
-      })
+      });
     }
   };
 
   const handleUserCategories = (item: any) => {
-    // const updatedCheckboxes = [...userCategories];
-    // updatedCheckboxes[index].isChecked = !updatedCheckboxes[index].isChecked;
     item.isChecked = !item.isChecked;
-    if(item.isChecked && item.name === USER_CATEGORY.QUALITY_WORK) {
+    if (item.isChecked && item.name === USER_CATEGORY.QUALITY_WORK) {
       userCategories.forEach((cate: any) => {
         if (cate.name != USER_CATEGORY.QUALITY_WORK) {
           cate.isChecked = false;
         }
-      })
+      });
     } else if (item.isChecked) {
-      const qualityWork: any = userCategories.find((cate: any) => cate.name === USER_CATEGORY.QUALITY_WORK);
+      const qualityWork: any = userCategories.find(
+        (cate: any) => cate.name === USER_CATEGORY.QUALITY_WORK,
+      );
       if (qualityWork) {
         qualityWork.isChecked = false;
       }
@@ -164,117 +195,110 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
   };
 
   return (
-    <View style={styles.Container}>
-      <View style={styles.TopHeaderFixed}>
-      {(error) && <View style={styles.ErrorSectionStyle}>
-                <Text style={styles.errorText}>{error}</Text>
-              </View>}
-        <View style={styles.SectionStyle}>
+    <View style={styles.container}>
+      {/* Search Bar */}
+      <View style={styles.searchContainer}>
+        {error && (
+          <View style={styles.errorSection}>
+            <Text style={styles.errorText}>{error}</Text>
+          </View>
+        )}
+        <View style={styles.searchInputContainer}>
           <Image
             source={require('./../../images/search-icon.png')}
-            style={styles.ImageSearch}
+            style={styles.searchIcon}
           />
           <TextInput
-            style={styles.inputStyle}
+            style={styles.searchInput}
             placeholder="Search user"
             autoCapitalize="none"
             keyboardType="email-address"
             returnKeyType="next"
             underlineColorAndroid="#f000"
             blurOnSubmit={false}
-            onChangeText={(text) => {
+            onChangeText={text => {
               setSearchText(text);
-              setUserList(users.filter((u: any) => {
-                if (text && u.name) {
-                  return u.name.toLowerCase().includes(text.toLowerCase())
-                } else {
-                  return true;
-                }
-              }));
+              setUserList(
+                users.filter((u: any) => {
+                  if (text && u.name) {
+                    return u.name.toLowerCase().includes(text.toLowerCase());
+                  } else {
+                    return true;
+                  }
+                }),
+              );
             }}
           />
         </View>
       </View>
-      <ScrollView style={styles.Height80}>
-      <RadioButton.Group onValueChange={handleRadioChange} value={selectedUserId}>
-        {userList.map((item: user, index) => (
-          <View style={styles.UserCategory}>
-            <View style={styles.FlexRowCenter}>
-              <Image
-                source={userIcon}
-                style={styles.UserImage}
-              />
-              <View>
-                <View style={styles.FlexRowCenter}>
-                  <Text style={styles.UserName}>{item.name}</Text>
-                  {/* <View style={styles.assignTag}>
-                    <Text style={styles.assignTagText}>{item.title}</Text>
-                  </View> */}
-                </View>
-                <View style={{flexDirection: 'row', alignItems: 'center', gap: 5}}>
-                  <Text style={styles.UserRole}>{item.designation}:</Text>
-                  <Text style={styles.UserCategoryDisplay}>{item.categoriesDisplay}</Text>
+
+      {/* User List */}
+      <ScrollView style={styles.userListContainer}>
+        <RadioButton.Group
+          onValueChange={handleRadioChange}
+          value={selectedUserId}>
+          {userList.map((item: user, index) => (
+            <View style={styles.userCard} key={item._id}>
+              <View style={styles.userInfoContainer}>
+                <Image source={userIcon} style={styles.userAvatar} />
+                <View style={styles.userDetails}>
+                  <Text style={styles.userName}>{item.name}</Text>
+                  <View style={styles.userRoleContainer}>
+                    <Text style={styles.userDesignation}>User Designation</Text>
+                  </View>
                 </View>
               </View>
+              {projectHead && (
+                <RadioButton
+                  value={item._id}
+                  color="#673AB7"
+                  uncheckedColor="#DDDDDD"
+                />
+              )}
             </View>
-            {
-              projectHead && <View>
-              <RadioButton
-                value={item._id}
-                color="#1C58C0"
-                uncheckedColor="gray"
-              />
-            </View>
-            }
-            
-          </View>
-        ))}
-      </RadioButton.Group>
+          ))}
+        </RadioButton.Group>
+
         {/* No Data Found */}
-        {(!usersLoading && !userList.length) && 
-          <View style={styles.NoDataContainer}>
+        {!usersLoading && !userList.length && (
+          <View style={styles.noDataContainer}>
             <Image
-              style={styles.WthHeight}
+              style={styles.noDataImage}
               source={require('./../../images/no-data-found.png')}
             />
-            <Text style={styles.NodataHeadText}>Sorry, no result found!</Text>
-            {(searchText && <Text style={styles.NodataSubText}>
-              Please try to search another keywork...
-            </Text>
+            <Text style={styles.noDataTitle}>Sorry, no result found!</Text>
+            {searchText && (
+              <Text style={styles.noDataSubtext}>
+                Please try to search another keywork...
+              </Text>
             )}
           </View>
-        }
+        )}
       </ScrollView>
 
-      {/* Footer Assign CTA Start */}
-      {
-        projectHead && <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          marginHorizontal: -15,
-          bottom: -15,
-          backgroundColor: '#1C58C0',
-        }}>
-        <Pressable
-          style={[
-            !selectedUserId ? styles.DisabledButton : styles.buttonAssign,
-            styles.SeperatorBorder,
-          ]}
-          disabled={!selectedUserId}
-          onPress={() => openAssignPopup(true)}>
-          <Text style={styles.textStyle}>Assign Category</Text>
-        </Pressable>
+      {/* Footer Buttons */}
+      {projectHead && (
+        <View style={styles.footerContainer}>
+          <Pressable
+            style={[
+              styles.footerButton,
+              styles.assignCategoryButton,
+              !selectedUserId && styles.disabledButton,
+            ]}
+            disabled={!selectedUserId}
+            onPress={() => openAssignPopup(true)}>
+            <Text style={styles.buttonText}>Assign Category</Text>
+          </Pressable>
 
-        <Pressable
-          style={[styles.buttonAssign]} onPress={() => navigation.navigate("WorkType")}>
-          <Text style={styles.textStyle}>Assign Work</Text>
-        </Pressable>
-      </View>
-      }
+          <Pressable
+            style={[styles.footerButton, styles.assignWorkButton]}
+            onPress={() => navigation.navigate('WorkType')}>
+            <Text style={styles.buttonText}>Assign Work</Text>
+          </Pressable>
+        </View>
+      )}
 
-      {/* Modal Start */}
+      {/* Category Assignment Modal */}
       <Modal
         animationType="fade"
         transparent={true}
@@ -282,41 +306,41 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
         onRequestClose={() => {
           openAssignPopup(!isAssignPopOpen);
         }}>
-        <View style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.3)'}}>
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <View style={styles.ModalHeader}>
-                <Text style={styles.modalText}>Assign Category</Text>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <View style={styles.modalHeader}>
+                <Text style={styles.modalTitle}>Assign Category</Text>
                 <TouchableOpacity
-                  style={styles.buttonClose}
+                  style={styles.closeButton}
                   onPress={() => openUserCategoriesOptions()}>
                   <Image
-                    style={styles.CloseIcon}
+                    style={styles.closeIcon}
                     tintColor={'#333'}
                     source={require('./../../images/menu/close-icon.png')}
                   />
                 </TouchableOpacity>
               </View>
-              <View style={styles.ModalInnerContainer}>
-              {userCategories.map((item: any, index) => (
-                  <View style={styles.CategoryType}>
-                    <View style={styles.FlexRowCenter}>
+              <View style={styles.modalBody}>
+                {userCategories.map((item: any, index) => (
+                  <View style={styles.categoryItem} key={item._id}>
+                    <View style={styles.categoryCheckbox}>
                       <CheckBox
                         value={item.isChecked}
                         onValueChange={() => handleUserCategories(item)}
                         style={styles.checkbox}
-                        tintColors={{true: '#0F56B3', false: '#818181'}}
+                        tintColors={{true: '#5A2AAF', false: '#818181'}}
                       />
-                      <View>
-                        <Text style={styles.AssignRoleText}>
-                          {item.displayName}
-                        </Text>
-                      </View>
+                      <Text style={styles.categoryText}>
+                        {item.displayName}
+                      </Text>
                     </View>
                   </View>
                 ))}
-                <TouchableOpacity style={styles.assignTagButoon} onPress={() => onUserCategoryAssignment()}>
-                  <Text style={styles.assignTagButoonText}>Assign</Text>
+                <TouchableOpacity
+                  style={styles.assignButton}
+                  onPress={() => onUserCategoryAssignment()}>
+                  <Text style={styles.assignButtonText}>Assign</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -330,277 +354,208 @@ const ManageUsers = ({navigation}:{navigation: any}) => {
 };
 
 const styles = StyleSheet.create({
-  ErrorSectionStyle: {
-    flexDirection: 'row',
-    marginBottom: 20,
+  container: {
+    flex: 1,
+    backgroundColor: '#F5F6FA',
+  },
+  searchContainer: {
+    paddingHorizontal: 15,
+    paddingTop: 10,
+    paddingBottom: 15,
+  },
+  errorSection: {
+    marginBottom: 10,
   },
   errorText: {
     color: '#f11f1f',
   },
-  Container: {
-    flexDirection: 'column',
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    backgroundColor: '#F1F6FF'
-  },
-  NoDataContainer: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    marginTop: '30%',
-  },
-  WthHeight: {
-    width: 150,
-    height: 150
-  },
-  NodataHeadText: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#27272A',
-  },
-  NodataSubText: {
-    fontSize: 16,
-    color: '#27272A',
-  },
-  FlexRowCenter: {
+  searchInputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 8,
+    position: 'relative',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
-  assignTag: {
-    backgroundColor: '#1C58C0',
-    borderRadius: 15,
-    color: '#fff',
-    paddingHorizontal: 10,
-    paddingTop: 2,
-    paddingBottom: 3,
-    marginLeft: 10,
+  searchIcon: {
+    width: 20,
+    height: 20,
+    position: 'absolute',
+    left: 15,
+    zIndex: 1,
   },
-  assignTagText: {
-    fontSize: 12,
-    color: '#fff',
-  },
-  TopHeaderFixed: {
-    marginBottom: 15,
-  },
-  TopButtonContainer: {
-    flexDirection: 'row',
-    marginBottom: 15,
-    marginTop: 10,
-    justifyContent: 'flex-end',
-    gap: 10,
-  },
-  ButtonStyle: {
-    backgroundColor: '#fff',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 4,
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderColor: '#333',
-  },
-  TextStyle: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#333',
-  },
-  inputStyle: {
+  searchInput: {
     flex: 1,
-    color: '#2c2c2c',
+    paddingVertical: 12,
     paddingLeft: 45,
     paddingRight: 15,
-    backgroundColor: '#fff',
-    fontWeight: '600',
-    paddingVertical: 15,
-    height: 55
+    fontSize: 16,
+    color: '#333',
   },
-  SectionStyle: {
-    flexDirection: 'row',
-    marginBottom: 0,
-    position: 'relative',
-    marginHorizontal: -15,
-    backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.25,
-    shadowRadius: 20,
-    // Shadow for Android
-    elevation: 10,
-    alignItems: 'center',
-    marginTop: -10,
+  userListContainer: {
+    flex: 1,
+    paddingHorizontal: 15,
   },
-  ImageSearch: {
-    position: 'absolute',
-    width: 24,
-    height: 24,
-    zIndex: 9,
-    left: 10,
-    top: '27%',
-  },
-  UserCategory: {
+  userCard: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#fff',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 8,
+    padding: 15,
+    marginBottom: 10,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 1},
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
     borderWidth: 1,
     borderColor: '#BECADA',
-    borderStyle: 'solid',
-    borderRadius: 8,
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    marginBottom: 15,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    shadowOpacity: 0.1,
-    elevation: 3,
   },
-  checkbox: {
-    transform: [{scaleX: 1.2}, {scaleY: 1.2}],
+  userInfoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
   },
-  label: {
-    margin: 8,
-  },
-  UserImage: {
+  userAvatar: {
     width: 45,
     height: 45,
-    borderWidth: 2,
-    borderColor: '#BECADA',
-    borderStyle: 'solid',
-    borderRadius: 36,
+    borderRadius: 25,
     marginRight: 15,
   },
-  UserName: {
-    fontSize: 18,
+  userDetails: {
+    flex: 1,
+  },
+  userName: {
+    fontSize: 16,
     fontWeight: '500',
-    color: '#27272A',
+    color: '#333333',
+    marginBottom: 4,
   },
-  UserRole: {
-    fontSize: 14,
-    fontWeight: '400',
-    color: '#808089',
+  userRoleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  UserCategoryDisplay: {
+  userDesignation: {
     fontSize: 12,
+    color: '#666666',
+  },
+  userCategories: {
+    fontSize: 12,
+    color: '#5A2AAF',
     fontWeight: '500',
-    color: '#1C58C0',
   },
-  centeredView: {
-    marginTop: 'auto',
-    backgroundColor: '#fff',
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 0,
-    borderRadius: 12,
-    borderBottomWidth: 1,
-    borderColor: '#EBEBF0',
-    borderStyle: 'solid',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 60,
+  noDataContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 100,
   },
-  PopHeader: {},
-  modalView: {
-    minHeight: 150,
+  noDataImage: {
+    width: 120,
+    height: 120,
+    marginBottom: 20,
   },
-  ModalInnerContainer: {
-    paddingHorizontal: 15,
-  },
-  button: {
-    borderRadius: 4,
-    borderBottomEndRadius: 0,
-    paddingVertical: 20,
-    marginHorizontal: -15,
-  },
-  buttonOpen: {
-    backgroundColor: '#F194FF',
-  },
-  buttonAssign: {
-    backgroundColor: '#1C58C0',
-    paddingVertical: 20,
-    paddingHorizontal: 30,
-    width: '50%'
-  },
-  SeperatorBorder: {
-    borderRightWidth: 1,
-    borderColor: '#fff'
-  },
-  DisabledButton: {
-    opacity: .5,
-    backgroundColor: '#1C58C0',
-    paddingVertical: 20,
-    paddingHorizontal: 30,
-    width: '50%'
-  },
-  textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  modalText: {
+  noDataTitle: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#27272A',
-    textAlign: 'center',
+    color: '#333',
+    marginBottom: 8,
   },
-  Height80: {
-    height: '83%',
+  noDataSubtext: {
+    fontSize: 14,
+    color: '#666',
   },
-  Height100: {
-    height: '100%',
+  footerContainer: {
+    flexDirection: 'row',
+    backgroundColor: '#5A2AAF',
+    height: 56,
   },
-  CloseIcon: {
-    width: 30,
-    height: 30,
+  footerButton: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  ModalHeader: {
-    position: 'relative',
+  assignCategoryButton: {
+    borderRightWidth: 1,
+    borderRightColor: '#FFFFFF',
+  },
+  assignWorkButton: {},
+  disabledButton: {
+    opacity: 0.7,
+  },
+  buttonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
+    paddingVertical: 12,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'flex-end',
+  },
+  modalContainer: {
+    backgroundColor: '#FFFFFF',
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
+    overflow: 'hidden',
+  },
+  modalContent: {},
+  modalHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 15,
     borderBottomWidth: 1,
-    borderColor: '#EBEBF0',
-    borderStyle: 'solid',
+    borderBottomColor: '#EEEEEE',
+    paddingVertical: 15,
   },
-  buttonClose: {
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#333333',
+  },
+  closeButton: {
     position: 'absolute',
     right: 15,
   },
-  CategoryType: {
+  closeIcon: {
+    width: 22,
+    height: 22,
+  },
+  modalBody: {
+    padding: 15,
+  },
+  categoryItem: {
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#EEEEEE',
+  },
+  categoryCheckbox: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    borderBottomWidth: 1,
-    borderColor: '#EBEBF0',
-    borderStyle: 'solid',
-    paddingVertical: 10,
   },
-  AssignRoleText: {
+  checkbox: {
+    marginRight: 10,
+  },
+  categoryText: {
     fontSize: 16,
-    fontWeight: '400',
-    color: '#27272A',
-    marginLeft: 5,
+    color: '#333333',
   },
-  assignTagButoon: {
-    backgroundColor: '#1C58C0',
-    borderRadius: 30,
-    color: '#fff',
-    paddingHorizontal: 15,
-    paddingTop: 12,
-    paddingBottom: 12,
-    marginBottom: 10,
-    marginTop: 10,
+  assignButton: {
+    backgroundColor: '#5A2AAF',
+    borderRadius: 25,
+    paddingVertical: 12,
     alignItems: 'center',
+    marginTop: 20,
   },
-  assignTagButoonText: {
+  assignButtonText: {
+    color: '#FFFFFF',
     fontSize: 16,
-    color: '#fff',
-    fontWeight: '500',
+    fontWeight: '600',
   },
 });
 

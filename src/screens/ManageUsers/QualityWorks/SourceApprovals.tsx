@@ -48,6 +48,7 @@ import DropdownPicker from '../../../components/UI/DropdownPicker';
 import {number} from 'prop-types';
 import commonStyles from '../../Common/commonStyles';
 import {set} from 'date-fns';
+import LinearGradient from 'react-native-linear-gradient';
 
 const SourceApprovals = ({
   route,
@@ -2807,98 +2808,101 @@ const SourceApprovals = ({
 
   const renderItem = ({item}: {item: any}) => (
     <>
-      <View
-        style={[
-          commonStyles.sourceApprovalsBox,
-          {borderColor: getBorderColor(item.status)},
-        ]}>
-        <View style={commonStyles.boxRowWithBtn}>
-          {item.status === SOURCE_APPROVAL_STATUS.APPROVED && (
-            <View>
-              <Image
-                style={commonStyles.actionTypeIcon}
-                source={require('./../../../images/Check_fill.png')}
-              />
-            </View>
-          )}
-          {item.status === SOURCE_APPROVAL_STATUS.REJECTED && (
-            <View>
-              <Image
-                style={commonStyles.actionTypeIcon}
-                source={require('./../../../images/Close_round_fill.png')}
-              />
-            </View>
-          )}
-          <View style={commonStyles.sourceContent}>
-            <Text style={commonStyles.sourceContentSize}>{item.name}</Text>
-          </View>
-          <View style={commonStyles.editAddDeleteContainer}>
-            {item.status !== SOURCE_APPROVAL_STATUS.APPROVED && (
-              <>
-                <Image
-                  style={commonStyles.editAddDeleteIcons}
-                  onPress={() => handleAdd(item)}
-                  source={require('./../../../images/plus.png')}
-                />
-                <Image
-                  style={commonStyles.editAddDeleteIcons}
-                  onPress={() => handleEdit(item)}
-                  source={require('./../../../images/edit-source.png')}
-                />
-                <Image
-                  style={commonStyles.editAddDeleteIcons}
-                  onPress={() => handleDelete(item)}
-                  source={require('./../../../images/delete.png')}
-                />
-              </>
-            )}
+      <View style={[commonStyles.sourceApprovalsBox, {borderColor: '#ABBEFD',borderRadius:10}]}>
+        <LinearGradient
+          colors={['#FFFFFF', '#E0E7FF']}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 0}}
+          >
+            <View style={styles.leftBorder} />
+          <View style={commonStyles.boxRowWithBtn}>
             {item.status === SOURCE_APPROVAL_STATUS.APPROVED && (
-              <Text style={commonStyles.approveText}>Approved</Text>
-            )}
-            {/* {item.status === SOURCE_APPROVAL_STATUS.REJECTED && <Text style={commonStyles.rejectText}>Rejected</Text>} */}
-          </View>
-        </View>
-        {item.status === SOURCE_APPROVAL_STATUS.PENDING && (
-          <>
-            <View style={commonStyles.approvalRejectedContainer}>
-              <TouchableOpacity
-                onPress={() =>
-                  onSourceStatusChanged(item, SOURCE_APPROVAL_STATUS.APPROVED)
-                }
-                style={commonStyles.subActionRow}>
+              <View>
                 <Image
                   style={commonStyles.actionTypeIcon}
                   source={require('./../../../images/Check_fill.png')}
                 />
-                <Text style={commonStyles.approveText}>Approve</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() =>
-                  onSourceStatusChanged(item, SOURCE_APPROVAL_STATUS.REJECTED)
-                }
-                style={commonStyles.subActionRow}>
+              </View>
+            )}
+            {item.status === SOURCE_APPROVAL_STATUS.REJECTED && (
+              <View>
                 <Image
                   style={commonStyles.actionTypeIcon}
                   source={require('./../../../images/Close_round_fill.png')}
                 />
-                <Text style={commonStyles.rejectText}>Reject</Text>
-              </TouchableOpacity>
-            </View>
-          </>
-        )}
-        {item.status === SOURCE_APPROVAL_STATUS.REJECTED && (
-          <>
-            <View style={commonStyles.approvalRejectedContainer}>
-              <View style={commonStyles.subActionRow}>
-                <Image
-                  style={commonStyles.actionTypeIcon}
-                  source={require('./../../../images/Check_fill.png')}
-                />
-                <Text style={commonStyles.approveText}>Approve</Text>
               </View>
+            )}
+            <View style={commonStyles.sourceContent}>
+              <Text style={commonStyles.sourceContentSize}>{item.name}</Text>
             </View>
-          </>
-        )}
+            <View style={commonStyles.editAddDeleteContainer}>
+              {item.status !== SOURCE_APPROVAL_STATUS.APPROVED && (
+                <>
+                  <Image
+                    style={commonStyles.editAddDeleteIcons}
+                    onPress={() => handleAdd(item)}
+                    source={require('./../../../images/plus.png')}
+                  />
+                  <Image
+                    style={commonStyles.editAddDeleteIcons}
+                    onPress={() => handleEdit(item)}
+                    source={require('./../../../images/edit-source.png')}
+                  />
+                  <Image
+                    style={commonStyles.editAddDeleteIcons}
+                    onPress={() => handleDelete(item)}
+                    source={require('./../../../images/delete.png')}
+                  />
+                </>
+              )}
+              {item.status === SOURCE_APPROVAL_STATUS.APPROVED && (
+                <Text style={commonStyles.approveText}>Approved</Text>
+              )}
+              {/* {item.status === SOURCE_APPROVAL_STATUS.REJECTED && <Text style={commonStyles.rejectText}>Rejected</Text>} */}
+            </View>
+          </View>
+          {item.status === SOURCE_APPROVAL_STATUS.PENDING && (
+            <>
+              <View style={commonStyles.approvalRejectedContainer}>
+                <TouchableOpacity
+                  onPress={() =>
+                    onSourceStatusChanged(item, SOURCE_APPROVAL_STATUS.APPROVED)
+                  }
+                  style={commonStyles.subActionRow}>
+                  <Image
+                    style={commonStyles.actionTypeIcon}
+                    source={require('./../../../images/Check_fill.png')}
+                  />
+                  <Text style={commonStyles.approveText}>Approve</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() =>
+                    onSourceStatusChanged(item, SOURCE_APPROVAL_STATUS.REJECTED)
+                  }
+                  style={commonStyles.subActionRow}>
+                  <Image
+                    style={commonStyles.actionTypeIcon}
+                    source={require('./../../../images/Close_round_fill.png')}
+                  />
+                  <Text style={commonStyles.rejectText}>Reject</Text>
+                </TouchableOpacity>
+              </View>
+            </>
+          )}
+          {item.status === SOURCE_APPROVAL_STATUS.REJECTED && (
+            <>
+              <View style={commonStyles.approvalRejectedContainer}>
+                <View style={commonStyles.subActionRow}>
+                  <Image
+                    style={commonStyles.actionTypeIcon}
+                    source={require('./../../../images/Check_fill.png')}
+                  />
+                  <Text style={commonStyles.approveText}>Approve</Text>
+                </View>
+              </View>
+            </>
+          )}
+        </LinearGradient>
       </View>
     </>
   );
@@ -3058,7 +3062,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 15,
-    backgroundColor: '#F1F6FF',
+    backgroundColor: '#FFFFFF',
   },
   ActionIcon: {
     width: 20,
@@ -3300,6 +3304,16 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     color: '#27272A',
     marginLeft: 5,
+  },
+  leftBorder: {
+    paddingVertical: 3,
+    position: 'absolute',
+    left: 0,
+    top: 10,
+    bottom: 10,
+    zIndex: 100,
+    width: 2,
+    backgroundColor: '#5A7EF8',
   },
 });
 

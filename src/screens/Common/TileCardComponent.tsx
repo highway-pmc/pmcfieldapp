@@ -15,13 +15,14 @@ const imageMap: any = {
 const {width} = Dimensions.get('window');
 const itemWidth = (width - 50) / 2;
 const TileCardComponent = (props: any) => {
+  console.log('TileCardComponent', props);
   return (
     <TouchableOpacity
       style={[styles.card, {backgroundColor: props.bgColor}]}
       onPress={props.onPress}>
       <View style={[styles.iconsStyle, {backgroundColor: props.imageBg}]}>
         {props.image && (
-          <Image source={imageMap[props.image]} style={[styles.image]} />
+          <Image source={props.image} style={[styles.image,, {backgroundColor: props.imageBg}]} />
         )}
       </View>
 
@@ -63,10 +64,9 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   image: {
-    width: 50,
-    height: 50,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
+    width: 60,
+    height: 60,
+    borderRadius: 12,
     backgroundColor: '#fff',
   },
   title: {

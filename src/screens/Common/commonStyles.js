@@ -82,7 +82,7 @@ const commonStyles = StyleSheet.create({
     width: 18,
     height: 18,
   },
-  
+
   sourceApprovalsBox: {
     backgroundColor: '#fff',
     borderWidth: 1,
@@ -150,11 +150,12 @@ const commonStyles = StyleSheet.create({
   //RFI' LAB Test Toggle CSS
   toggleContainer: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
+    backgroundColor: '#D2C5FF',
     borderRadius: 10,
     padding: 5,
     alignSelf: 'center',
     marginBottom: 10,
+    color: '#fff',
   },
   toggleButton: {
     flex: 1,
@@ -164,14 +165,14 @@ const commonStyles = StyleSheet.create({
     borderRadius: 8,
   },
   activeToggleButton: {
-    backgroundColor: '#007BFF',
+    backgroundColor: '#F1F1FE',
   },
   toggleText: {
     fontSize: 16,
-    color: '#333',
+    color: '#FFFFFF',
   },
   activeToggleText: {
-    color: '#fff',
+    color: '#4E36A3',
     fontWeight: '500',
   },
 

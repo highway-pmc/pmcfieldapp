@@ -289,7 +289,13 @@ const ManageUsers = ({navigation}: {navigation: any}) => {
             onPress={() => openAssignPopup(true)}>
             <Text style={styles.buttonText}>Assign Category</Text>
           </Pressable>
-
+          <View
+            style={{
+              width: 1,
+              backgroundColor: '#fff',
+              marginHorizontal: 15,
+            }}
+          />
           <Pressable
             style={[styles.footerButton, styles.assignWorkButton]}
             onPress={() => navigation.navigate('WorkType')}>
@@ -472,17 +478,15 @@ const styles = StyleSheet.create({
   footerContainer: {
     flexDirection: 'row',
     backgroundColor: '#5A2AAF',
-    height: 56,
+    height: 75,
+    paddingVertical: 7,
   },
   footerButton: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  assignCategoryButton: {
-    borderRightWidth: 1,
-    borderRightColor: '#FFFFFF',
-  },
+  assignCategoryButton: {},
   assignWorkButton: {},
   disabledButton: {
     opacity: 0.7,

@@ -49,6 +49,7 @@ import {number} from 'prop-types';
 import commonStyles from '../../Common/commonStyles';
 import {set} from 'date-fns';
 import LinearGradient from 'react-native-linear-gradient';
+import KebabMenu from '../../Common/KebabMenu';
 
 const SourceApprovals = ({
   route,
@@ -1530,8 +1531,7 @@ const SourceApprovals = ({
               break;
             case TEST_MATERIALS_TYPES.CELLULOSE_FIBRE:
               editedObj.name = celluloseFibre.brandName;
-              editedObj.metaData.brandName =
-                celluloseFibre.brandName;
+              editedObj.metaData.brandName = celluloseFibre.brandName;
               editedObj.metaData.ratePerKg = celluloseFibre.ratePerKg;
               break;
             default:
@@ -2114,12 +2114,12 @@ const SourceApprovals = ({
             </View>
             <View>
               <Input
-              label="Brand Name"
-              value={celluloseFibre.brandName}
-              onChange={(value: string) =>
-                setCelluloseFibre({...celluloseFibre, brandName: value})
-              }
-              isRequired={true}
+                label="Brand Name"
+                value={celluloseFibre.brandName}
+                onChange={(value: string) =>
+                  setCelluloseFibre({...celluloseFibre, brandName: value})
+                }
+                isRequired={true}
               />
             </View>
             <TouchableOpacity
@@ -2808,13 +2808,17 @@ const SourceApprovals = ({
 
   const renderItem = ({item}: {item: any}) => (
     <>
-      <View style={[commonStyles.sourceApprovalsBox, {borderColor: '#ABBEFD',borderRadius:10}]}>
+      <View
+        style={[
+          commonStyles.sourceApprovalsBox,
+          {borderColor: '#ABBEFD', borderRadius: 10},
+        ]}>
         <LinearGradient
           colors={['#FFFFFF', '#E0E7FF']}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 0}}
-          >
-            <View style={styles.leftBorder} />
+          style={{borderRadius: 10}}>
+          <View style={styles.leftBorder} />
           <View style={commonStyles.boxRowWithBtn}>
             {item.status === SOURCE_APPROVAL_STATUS.APPROVED && (
               <View>
@@ -2835,23 +2839,13 @@ const SourceApprovals = ({
             <View style={commonStyles.sourceContent}>
               <Text style={commonStyles.sourceContentSize}>{item.name}</Text>
             </View>
-            <View style={commonStyles.editAddDeleteContainer}>
+            <View style={[commonStyles.editAddDeleteContainer]}>
               {item.status !== SOURCE_APPROVAL_STATUS.APPROVED && (
                 <>
-                  <Image
-                    style={commonStyles.editAddDeleteIcons}
-                    onPress={() => handleAdd(item)}
-                    source={require('./../../../images/plus.png')}
-                  />
-                  <Image
-                    style={commonStyles.editAddDeleteIcons}
-                    onPress={() => handleEdit(item)}
-                    source={require('./../../../images/edit-source.png')}
-                  />
-                  <Image
-                    style={commonStyles.editAddDeleteIcons}
-                    onPress={() => handleDelete(item)}
-                    source={require('./../../../images/delete.png')}
+                  <KebabMenu
+                    onEdit={() => handleEdit(item)}
+                    onDelete={() => handleDelete(item)}
+                    onAdd={() => handleAdd(item)}
                   />
                 </>
               )}

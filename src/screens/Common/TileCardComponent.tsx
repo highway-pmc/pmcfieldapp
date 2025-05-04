@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: '100%',
-    height: '100%', // Take up all of parent container space
+    height: '100%', 
   },
   title: {
     fontSize: 18,
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
   iconsStyle: {
-    padding: 3,
+    padding: 8,
     width: 60,
     height: 60,
     borderRadius: 12,

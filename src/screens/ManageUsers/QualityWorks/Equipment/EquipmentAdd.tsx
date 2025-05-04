@@ -355,7 +355,7 @@ const styles = StyleSheet.create({
   btnCtaOutline: {
     borderRadius: 30,
     borderWidth: 1,
-    borderColor: '#1C58C0',
+    borderColor: '#9D4C6C',
     backgroundColor: '#fff',
     paddingHorizontal: 30,
     paddingVertical: 12,
@@ -364,7 +364,7 @@ const styles = StyleSheet.create({
     minWidth: 130,
   },
   btnCtaTextOutline: {
-    color: '#1C58C0',
+    color: '#9D4C6C',
     fontSize: 14,
     fontWeight: '500',
   },

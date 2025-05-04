@@ -7,13 +7,16 @@ import {
   Dimensions,
 } from 'react-native';
 import PropTypes from 'prop-types';
+
 const imageMap: any = {
-  structure: require('./../../images/structure-work.png'),
-  highway: require('./../../images/highway-work.png'),
-  other: require('./../../images/other-work.png'),
+  structure: require('./../../images/myWork/structure.png'),
+  highway: require('./../../images/myWork/highway.png'),
+  other: require('./../../images/myWork/other.png'),
 };
+
 const {width} = Dimensions.get('window');
 const itemWidth = (width - 50) / 2;
+
 const TileCardComponent = (props: any) => {
   console.log('TileCardComponent', props);
   return (
@@ -22,7 +25,11 @@ const TileCardComponent = (props: any) => {
       onPress={props.onPress}>
       <View style={[styles.iconsStyle, {backgroundColor: props.imageBg}]}>
         {props.image && (
-          <Image source={props.image} style={[styles.image,, {backgroundColor: props.imageBg}]} />
+          <Image
+            source={imageMap[props.image]}
+            style={styles.image}
+            resizeMode="contain"
+          />
         )}
       </View>
 
@@ -46,11 +53,10 @@ const styles = StyleSheet.create({
     width: itemWidth,
     height: 180,
     borderRadius: 10,
-    padding: 20,
+    padding: 15,
     marginBottom: 15,
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
-    borderWidth: 1,
     elevation: 1,
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 1},
@@ -64,10 +70,8 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   image: {
-    width: 60,
-    height: 60,
-    borderRadius: 12,
-    backgroundColor: '#fff',
+    width: '100%',
+    height: '100%', // Take up all of parent container space
   },
   title: {
     fontSize: 18,
@@ -81,13 +85,15 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
   iconsStyle: {
-    width: 45,
-    height: 45,
+    padding: 3,
+    width: 60,
+    height: 60,
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 5,
     marginBottom: 20,
+    overflow: 'hidden',
   },
   rightStyle: {
     width: 50,

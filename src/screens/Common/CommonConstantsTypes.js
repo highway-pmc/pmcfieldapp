@@ -250,7 +250,7 @@ export const WORK_MODULE_TYPE = [
     backgroundColor: '#EC825C',
     imageBg: '#CD5C34',
     discription: 'Keeping Roads Safe, Smooth, and Reliable',
-    src: '../../images/myWork/highway.png',
+    src: 'highway',
   },
   {
     title: 'Other',

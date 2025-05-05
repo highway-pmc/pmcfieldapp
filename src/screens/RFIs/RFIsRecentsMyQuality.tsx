@@ -19,7 +19,7 @@ import {
 } from '../../constants/constants';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
-import React, {Fragment, useEffect, useState} from 'react';
+import React, {Fragment, useEffect, useLayoutEffect, useState} from 'react';
 import {
   actionGetTestRFIs,
   clearRFITasksEvent,
@@ -166,6 +166,17 @@ const RFIsRecentsMyQuality = (props: any) => {
   const calculatedHeight = height * 0.51;
   // Rfi
 
+  useLayoutEffect(() => {
+    navigation.getParent()?.setOptions({
+      tabBarStyle: {display: 'none'},
+    });
+
+    return () => {
+      navigation.getParent()?.setOptions({
+        tabBarStyle: undefined, // Reset on back
+      });
+    };
+  }, [navigation]);
   const [sampleTestItems, setSampleTestItems]: any[] = useState([]);
   const [data, setData]: any[] = useState({
     dateOfTesting: '',
@@ -176,7 +187,7 @@ const RFIsRecentsMyQuality = (props: any) => {
     typeOfConcreteSurface: '',
   });
 
-  const [selectedTestType, setSelectedTestType] = useState("field-lab-test");
+  const [selectedTestType, setSelectedTestType] = useState('field-lab-test');
 
   const renderdata = (selectedRFI: any) => {
     return (
@@ -1378,97 +1389,98 @@ const RFIsRecentsMyQuality = (props: any) => {
           </Text>
         </TouchableOpacity>
       </View>
+      <ScrollView>
+        <Text style={styles.headerText}> Recent {getRFIType()} RFI's</Text>
+        <View style={styles.alignmentVertical}>
+          <View style={styles.recentWorkContainer}>
+            <View style={styles.recentWorkHead}>
+              <Text style={styles.headerText}>
+                Recent RFI's (
+                <Text style={styles.taskCount}>{rfiData.length}</Text>)
+              </Text>
+            </View>
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
+              style={[
+                props.rfiType === RFIs_TYPE.GENERATE
+                  ? styles.recentWorkContent
+                  : styles.recentWorkContentHeight100,
+                {height: calculatedHeight},
+              ]}>
+              {rfiData.map((item: any, index) => (
+                <TouchableOpacity
+                  style={styles.recentWorkCard}
+                  onPress={() => onSelectRFI(item)}>
+                  <View
+                    style={[
+                      styles.taskCategory,
+                      {flexWrap: 'wrap', paddingBottom: 10},
+                    ]}>
+                    <Text style={styles.subHead}>{item.name}</Text>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      backgroundColor: '#EDE9FE',
+                      padding: 10,
+                      borderRadius: 10,
+                    }}>
+                    <View>
+                      <Text style={[styles.dateText, styles.fontBold]}>
+                        Generated Date
+                      </Text>
+                      <Text style={[styles.dateText, styles.subFontText]}>
+                        {getDisplayDate(item.rfiDateTime)}
+                      </Text>
+                    </View>
+                    <View>
+                      <Text style={[styles.dateText, styles.fontBold]}>
+                        Generated Time
+                      </Text>
+                      <Text style={[styles.dateText, styles.subFontText]}>
+                        {getDisplayTime(item.rfiDateTime)}
+                      </Text>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              ))}
 
-      <Text style={styles.headerText}> Recent {getRFIType()} RFI's</Text>
-      <View style={styles.alignmentVertical}>
-        <View style={styles.recentWorkContainer}>
-          <View style={styles.recentWorkHead}>
-            <Text style={styles.headerText}>
-              Recent RFI's (
-              <Text style={styles.taskCount}>{rfiData.length}</Text>)
-            </Text>
+              {!rfiData.length && !loading && (
+                <View style={styles.noDataContainer}>
+                  <Image
+                    style={styles.noDataImage}
+                    source={require('../../images/no-data-found.png')}
+                  />
+                  <Text style={styles.noDataHeadText}>
+                    No {getRFIType()} RFI's
+                  </Text>
+                  <Text style={styles.noDataSubText}>
+                    There is no {getRFIType()?.toLowerCase()} RFI's
+                  </Text>
+                </View>
+              )}
+            </ScrollView>
           </View>
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-            style={[
-              props.rfiType === RFIs_TYPE.GENERATE
-                ? styles.recentWorkContent
-                : styles.recentWorkContentHeight100,
-              {height: calculatedHeight},
-            ]}>
-            {rfiData.map((item: any, index) => (
+          {props.rfiType === RFIs_TYPE.GENERATE && (
+            <View style={styles.footerButton}>
               <TouchableOpacity
-                style={styles.recentWorkCard}
-                onPress={() => onSelectRFI(item)}>
-                <View
-                  style={[
-                    styles.taskCategory,
-                    {flexWrap: 'wrap', paddingBottom: 10},
-                  ]}>
-                  <Text style={styles.subHead}>{item.name}</Text>
-                </View>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    backgroundColor: '#EDE9FE',
-                    padding: 10,
-                    borderRadius: 10,
-                  }}>
-                  <View>
-                    <Text style={[styles.dateText, styles.fontBold]}>
-                      Generated Date
-                    </Text>
-                    <Text style={[styles.dateText, styles.subFontText]}>
-                      {getDisplayDate(item.rfiDateTime)}
-                    </Text>
-                  </View>
-                  <View>
-                    <Text style={[styles.dateText, styles.fontBold]}>
-                      Generated Time
-                    </Text>
-                    <Text style={[styles.dateText, styles.subFontText]}>
-                      {getDisplayTime(item.rfiDateTime)}
-                    </Text>
-                  </View>
-                </View>
+                style={styles.btnCta}
+                onPress={() =>
+                  navigation.navigate('RFIsGenerateMyQuality', {
+                    rfiType: props.rfiType,
+                    testType: selectedTestType,
+                    projectId: loggedInUser.projectId,
+                  })
+                }>
+                <Text style={styles.btnCtaText}>Generate RFI's</Text>
               </TouchableOpacity>
-            ))}
-
-            {!rfiData.length && !loading && (
-              <View style={styles.noDataContainer}>
-                <Image
-                  style={styles.noDataImage}
-                  source={require('../../images/no-data-found.png')}
-                />
-                <Text style={styles.noDataHeadText}>
-                  No {getRFIType()} RFI's
-                </Text>
-                <Text style={styles.noDataSubText}>
-                  There is no {getRFIType()?.toLowerCase()} RFI's
-                </Text>
-              </View>
-            )}
-          </ScrollView>
+            </View>
+          )}
         </View>
-        {props.rfiType === RFIs_TYPE.GENERATE && (
-          <View style={styles.footerButton}>
-            <TouchableOpacity
-              style={styles.btnCta}
-              onPress={() =>
-                navigation.navigate('RFIsGenerateMyQuality', {
-                  rfiType: props.rfiType,
-                  testType: selectedTestType,
-                  projectId: loggedInUser.projectId,
-                })
-              }>
-              <Text style={styles.btnCtaText}>Generate RFI's</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      </View>
+      </ScrollView>
 
       <Modal
         animationType="fade"

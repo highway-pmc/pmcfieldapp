@@ -317,14 +317,14 @@ export const CustomForms = (_v: any) => {
 
   const renderLayingOfDlcHeadings = () => (
     <View style={styles.rowContainer}>
-      <View style={styles.cell}>
-        <Text style={styles.cellText}>Serial No.</Text>
+      <View style={[styles.cell, {width: 70}]}>
+        <Text style={styles.cellText}>S. No.</Text>
       </View>
       <View style={styles.cell}>
         <Text style={styles.cellText}>Vehicle No.</Text>
       </View>
       <View style={styles.cell}>
-        <Text style={styles.cellText}>Total Qty of DLC (cum)</Text>
+        <Text style={styles.cellText}>Total Qty of DLC</Text>
       </View>
       <View style={styles.cell}>
         <Text style={styles.cellText}>Laying Start Time</Text>
@@ -355,7 +355,7 @@ export const CustomForms = (_v: any) => {
   };
   const renderItemLayingOfDlc = (rowData: any) => (
     <View style={[styles.rowContainer, styles.marginBottom10]}>
-      <View style={styles.cell}>
+      <View style={[styles.cell, {width: 70}]}>
         <Text>{rowData.index + 1}</Text>
       </View>
       <View style={styles.cell}>

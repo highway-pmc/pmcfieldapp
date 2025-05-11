@@ -399,8 +399,8 @@ import DropdownPicker from '../../components/UI/DropdownPicker';
       width: '100%',
     },
     submitButton: {
-      backgroundColor: '#007BFF',
-      paddingVertical: 15,
+      backgroundColor: '#5A2AAF',
+      paddingVertical: 8,
       borderRadius: 8,
       alignItems: 'center',
       marginTop: 20,

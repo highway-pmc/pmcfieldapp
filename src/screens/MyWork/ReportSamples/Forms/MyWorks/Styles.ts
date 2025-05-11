@@ -392,18 +392,19 @@ export const styles = StyleSheet.create({
   },
   submitButton: {
     width: 120,
-    backgroundColor: '#1C58C0',
+    backgroundColor: '#5A2AAF',
     borderRadius: 30,
     color: '#fff',
     paddingHorizontal: 30,
-    paddingTop: 12,
-    paddingBottom: 12,
+    paddingVertical:8,
     marginBottom: 10,
     marginTop: 10,
     alignItems: 'center',
   },
   saveButtonColor: {
-    backgroundColor: '#5eab4b',
+    backgroundColor: '#fff',
+    borderWidth:1,
+    borderColor: '#5A2AAF',
   },
   submitButtonText: {
     fontSize: 14,

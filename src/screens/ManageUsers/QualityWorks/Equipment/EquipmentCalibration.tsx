@@ -16,7 +16,9 @@ import {useSnackbar} from '../../../../context/SnackbarContext';
 import {useDispatch, useSelector} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
 import LoadingAnimation from '../../../Common/LoadingAnimation';
-import Pdf from 'react-native-pdf'; // Import Pdf component
+import Pdf from 'react-native-pdf';
+import KebabMenu from '../../../Common/KebabMenu';
+import LinearGradient from 'react-native-linear-gradient';
 import {
   clearEquipmentData,
   getEquipmentsListData,
@@ -281,12 +283,18 @@ const EquipmentCalibration = ({
   const formatDate = (dateString: any) => {
     if (!dateString) return 'N/A';
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-GB'); 
+    return date.toLocaleDateString('en-GB');
   };
 
   const renderCalibrationItem = (calibration: any) => {
     return (
-      <View key={calibration._id} style={styles.itemContainer}>
+      <LinearGradient
+        key={calibration._id}
+        colors={['#FFFFFF', '#F2E3E9']}
+        start={{x: 0, y: 0}}
+        end={{x: 1, y: 0}}
+        style={styles.itemContainer}>
+        <View style={styles.leftBorder} />
         <View style={styles.equipmentInfo}>
           <Text style={styles.equipmentName}>{calibration.name}</Text>
           <Text style={styles.equipmentDetails}>
@@ -297,36 +305,17 @@ const EquipmentCalibration = ({
             {formatDate(calibration.nextDateOfCalibration)}
           </Text>
           <Text style={styles.equipmentDetails}>
-            Done By: {calibration.calibrationDoneBy || 'N/A'}
+            Done by: {calibration.calibrationDoneBy || 'N/A'}
           </Text>
         </View>
-        <View style={styles.actionButtons}>
-          <TouchableOpacity
-            style={styles.reportButton}
-            onPress={() => handleGenerateReport(calibration)}
-            >
-            <Text style={styles.reportButtonText}>View</Text>
-          </TouchableOpacity>
-          {/* Add edit button */}
-          <TouchableOpacity
-            onPress={() => handleEditCalibration(calibration)}
-            style={styles.actionButton}>
-            <Image
-              source={require('./../../../../images/edit.png')}
-              style={styles.actionIcon}
-            />
-          </TouchableOpacity>
-          {/* Delete button */}
-          <TouchableOpacity
-            onPress={() => handleDeleteCalibration(calibration._id)}
-            style={styles.actionButton}>
-            <Image
-              source={require('./../../../../images/menu/delete.png')}
-              style={styles.actionIcon}
-            />
-          </TouchableOpacity>
+        <View style={{position: 'absolute', right: 0, top: 0}}>
+          <KebabMenu
+            onView={() => handleGenerateReport(calibration)}
+            onEdit={() => handleEditCalibration(calibration)}
+            onDelete={() => handleDeleteCalibration(calibration._id)}
+          />
         </View>
-      </View>
+      </LinearGradient>
     );
   };
 
@@ -499,16 +488,18 @@ const EquipmentCalibration = ({
 
   return (
     <View style={styles.container}>
-      <Text style={styles.headerTitle}>{name} </Text>
-      <View style={[styles.headerContainer]}>
-        <TouchableOpacity
-          style={styles.btnCtaOutline}
-          onPress={() => {
-            resetFormFields();
-            setModalVisible(true);
-          }}>
-          <Text style={styles.btnCtaTextOutline}>Add Calibration</Text>
-        </TouchableOpacity>
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <Text style={styles.headerTitle}>{name}</Text>
+        <View style={[styles.headerContainer]}>
+          <TouchableOpacity
+            style={styles.btnCtaOutline}
+            onPress={() => {
+              resetFormFields();
+              setModalVisible(true);
+            }}>
+            <Text style={styles.btnCtaTextOutline}>Add Calibration</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -536,70 +527,78 @@ const styles = StyleSheet.create({
   btnCtaOutline: {
     borderRadius: 30,
     borderWidth: 1,
-    borderColor: '#1C58C0',
+    borderColor: '#9D4C6C',
     backgroundColor: '#fff',
-    paddingHorizontal: 30,
-    paddingVertical: 12,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
     alignItems: 'center',
     justifyContent: 'center',
     minWidth: 130,
   },
   btnCtaTextOutline: {
-    color: '#1C58C0',
-    fontSize: 14,
+    color: '#9D4C6C',
+    fontSize: 12,
     fontWeight: '500',
   },
   headerContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     alignItems: 'center',
     marginBottom: 15,
     paddingBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
   },
   headerTitle: {
-    fontSize: 18,
-    fontWeight: '600',
+    fontSize: 16,
+    fontWeight: '500',
     color: '#333',
     marginBottom: 15,
-  },
-  reportButton: {
-    borderRadius: 30,
-    borderWidth: 1,
-    borderColor: '#27AE60',
-    backgroundColor: '#27AE60',
-    paddingHorizontal: 4,
-    paddingVertical: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  reportButtonText: {
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: '500',
-  },
-  addButton: {
-    flexDirection: 'row',
-    backgroundColor: '#1C58C0',
-    paddingHorizontal: 15,
-    paddingVertical: 8,
-    borderRadius: 20,
-    alignItems: 'center',
-  },
-  addIcon: {
-    width: 16,
-    height: 16,
-    tintColor: '#fff',
-    marginRight: 5,
-  },
-  addButtonText: {
-    color: '#fff',
-    fontWeight: '500',
-    fontSize: 14,
+    flex: 3,
   },
   scrollContainer: {
     paddingBottom: 60,
+  },
+  // Item styles for the list
+  itemContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 15,
+    marginVertical: 8,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    position: 'relative',
+  },
+  leftBorder: {
+    position: 'absolute',
+    left: 0,
+    top: 10,
+    bottom: 10,
+    width: 2,
+    backgroundColor: '#9D4C6C',
+  },
+  equipmentInfo: {
+    flex: 1,
+    paddingLeft: 8,
+  },
+  equipmentName: {
+    fontSize: 15,
+    fontWeight: '500',
+    color: '#333333',
+    marginBottom: 4,
+  },
+  equipmentDetails: {
+    fontSize: 13,
+    color: '#666666',
+    marginBottom: 2,
+  },
+  noDataText: {
+    textAlign: 'center',
+    marginTop: 40,
+    fontSize: 16,
+    color: '#666666',
   },
   // Modal styles
   modalContainer: {
@@ -639,7 +638,7 @@ const styles = StyleSheet.create({
   equipmentNameTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#1C58C0',
+    color: '#9D4C6C',
     marginBottom: 8,
     textAlign: 'center',
   },
@@ -707,8 +706,8 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 30,
     borderWidth: 1,
-    borderColor: '#1C58C0',
-    backgroundColor: '#1C58C0',
+    borderColor: '#9D4C6C',
+    backgroundColor: '#9D4C6C',
     paddingVertical: 12,
     alignItems: 'center',
     justifyContent: 'center',
@@ -718,65 +717,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 14,
     fontWeight: '500',
-  },
-  // Item styles for the list
-  itemContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 15,
-    marginVertical: 8,
-    backgroundColor: '#ffffff',
-    borderRadius: 8,
-    borderLeftWidth: 4,
-    borderLeftColor: '#1C58C0',
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 1},
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  equipmentInfo: {
-    flex: 1,
-    paddingRight: 10,
-  },
-  equipmentName: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#333333',
-    marginBottom: 4,
-  },
-  equipmentDetails: {
-    fontSize: 13,
-    color: '#666666',
-    marginBottom: 2,
-  },
-  equipmentId: {
-    fontSize: 12,
-    color: '#888888',
-    marginBottom: 2,
-  },
-  equipmentDate: {
-    fontSize: 11,
-    color: '#999999',
-  },
-  noDataText: {
-    textAlign: 'center',
-    marginTop: 40,
-    fontSize: 16,
-    color: '#666666',
-  },
-  actionButtons: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  actionButton: {
-    padding: 8,
-    marginLeft: 5,
-  },
-  actionIcon: {
-    width: 24,
-    height: 24,
   },
   // Report modal styles
   reportModalContainer: {

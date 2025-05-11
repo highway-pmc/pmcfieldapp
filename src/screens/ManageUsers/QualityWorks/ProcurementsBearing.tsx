@@ -492,7 +492,7 @@ const ProcurementsBearings = ({
       showSnackbar('File size should not exceed 4 MB');
     }
   };
-  const { height } = Dimensions.get('window');
+  const {height} = Dimensions.get('window');
   const calculatedHeight = height * 0.75;
   const calculatedFlatListHeight = height * 0.72;
 
@@ -711,9 +711,10 @@ const ProcurementsBearings = ({
             </TouchableOpacity>
           </View>
           <View>
-            <ScrollView howsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-            style={[{height: calculatedFlatListHeight}]}>
+            <ScrollView
+              howsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
+              style={[{height: calculatedFlatListHeight}]}>
               <View style={commonStyles.flatListContainer}>
                 <FlatList
                   data={data}
@@ -786,7 +787,7 @@ const styles = StyleSheet.create({
   //     paddingTop: 40,
   //     paddingHorizontal: 20,
   //   },
-  
+
   itemContainerVehicleList: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -960,7 +961,7 @@ const styles = StyleSheet.create({
     color: 'white',
     padding: 12,
     borderRadius: 25,
-    backgroundColor: '#1d7dea',
+    backgroundColor: '##5A2AAF',
     minWidth: 100,
     textAlign: 'center',
   },

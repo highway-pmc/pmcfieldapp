@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
-    padding: 20
+    padding: 20,
   },
   recentWorkContent: {
     paddingHorizontal: 20,
@@ -205,28 +205,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 10
+    gap: 10,
   },
   btnCta: {
     borderRadius: 30,
-    backgroundColor: '#1C58C0',
+    backgroundColor: '#4E36A3',
     paddingHorizontal: 20,
     paddingVertical: 12,
     alignItems: 'center',
     justifyContent: 'center',
-    minWidth: 130
+    minWidth: 130,
   },
   btnCtaOutline: {
     borderRadius: 30,
     borderWidth: 1,
-    borderStyle: 'solid', 
+    borderStyle: 'solid',
     borderColor: '#1C58C0',
     backgroundColor: '#fff',
     paddingHorizontal: 30,
     paddingVertical: 12,
     alignItems: 'center',
     justifyContent: 'center',
-    minWidth: 130
+    minWidth: 130,
   },
   btnCtaTextOutline: {
     color: '#1C58C0',

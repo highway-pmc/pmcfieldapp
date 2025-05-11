@@ -90,7 +90,8 @@ const MyWorkType = ({navigation}: {navigation: any}) => {
               key={index}
               title={role.title}
               content={role.discription}
-              bgColor={role.color}
+              bgColor={role.backgroundColor}
+              imageBg={role.imageBg}
               image={role.src}
               onPress={() => onPressWorkType(role.workType)}
             />

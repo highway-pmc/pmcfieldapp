@@ -16,7 +16,7 @@ import {useSnackbar} from '../../../../context/SnackbarContext';
 import {useDispatch, useSelector} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
 import LoadingAnimation from '../../../Common/LoadingAnimation';
-import Pdf from 'react-native-pdf'; 
+import Pdf from 'react-native-pdf';
 import {
   getEquipmentsListData,
   saveEquipmentsCalibrationInfo,
@@ -27,7 +27,8 @@ import {HeaderItems} from '../../../../constants/constants';
 import CalendarPicker from '../../../../components/UI/CalenderPicker';
 import Input from '../../../../components/UI/Input';
 import {getDbDateFromDDMMYYYY} from '../../../../utils/Utils';
-
+import KebabMenu from '../../../Common/KebabMenu';
+import LinearGradient from 'react-native-linear-gradient';
 const EquipmentCalibrationListing = ({
   navigation,
   route,
@@ -169,7 +170,13 @@ const EquipmentCalibrationListing = ({
 
   const renderEquipmentItem = (equipment: any) => {
     return (
-      <View key={equipment._id} style={styles.itemContainer}>
+      <LinearGradient
+        key={equipment._id}
+        colors={['#FFFFFF', '#F2E3E9']}
+        start={{x: 0, y: 0}}
+        end={{x: 1, y: 0}}
+        style={styles.itemContainer}>
+        <View style={styles.leftBorder} />
         <View style={styles.equipmentInfo}>
           <Text style={styles.equipmentName}>{equipment.name}</Text>
           <Text style={styles.equipmentDetails}>
@@ -180,37 +187,15 @@ const EquipmentCalibrationListing = ({
             ID: {equipment.uniqueEquipmentId}
           </Text>
         </View>
-        <View style={styles.iconContainer}>
-          {/* View Report Button */}
-
-          <View style={{flexDirection: 'row', gap: 5, marginBottom: 5}}>
-            <TouchableOpacity onPress={() => handleAddDetails(equipment)}>
-              <Image
-                source={require('./../../../../images/plus.png')}
-                style={styles.ActionIcon}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleEditEquipment(equipment)}>
-              <Image
-                source={require('./../../../../images/edit.png')}
-                style={styles.ActionIcon}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => handleDeleteEquipment(equipment._id)}>
-              <Image
-                source={require('./../../../../images/menu/delete.png')}
-                style={styles.ActionIcon}
-              />
-            </TouchableOpacity>
-          </View>
-          <TouchableOpacity
-            style={styles.viewButton}
-            onPress={() => handleGenerateReport(equipment._id)}>
-            <Text style={styles.viewButtonText}>View</Text>
-          </TouchableOpacity>
+        <View style={{position: 'absolute', right: 0, top: 0}}>
+          <KebabMenu
+            onView={() => handleGenerateReport(equipment._id)}
+            onEdit={() => handleEditEquipment(equipment)}
+            onDelete={() => handleDeleteEquipment(equipment._id)}
+            onAdd={() => handleAddDetails(equipment)}
+          />
         </View>
-      </View>
+      </LinearGradient>
     );
   };
 
@@ -287,29 +272,41 @@ const EquipmentCalibrationListing = ({
 };
 
 const styles = StyleSheet.create({
-  ActionIcon: {
-    width: 24,
-    height: 24,
+  // Main container styles
+  recentWorkContainer: {
+    flex: 1,
+    backgroundColor: '#f5f7fa',
+    padding: 15,
   },
+  innerScrollView: {
+    paddingBottom: 60,
+  },
+
+  // Equipment item styles
   itemContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
     padding: 15,
     marginVertical: 8,
-    backgroundColor: '#ffffff',
-    borderRadius: 8,
-    borderLeftWidth: 4,
-    borderLeftColor: '#1C58C0',
+    borderRadius: 10,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 1},
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
+    shadowRadius: 4,
+    elevation: 3,
+    position: 'relative',
+  },
+  leftBorder: {
+    position: 'absolute',
+    left: 0,
+    top: 10,
+    bottom: 10,
+    width: 2,
+    backgroundColor: '#9D4C6C',
   },
   equipmentInfo: {
     flex: 1,
-    paddingRight: 10,
+    paddingLeft: 8,
   },
   equipmentName: {
     fontSize: 16,
@@ -326,41 +323,15 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#888888',
   },
-  iconContainer: {
-    flexDirection: 'column',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    width: 130, // Increased width to accommodate View button
-  },
-  recentWorkContainer: {
-    flex: 1,
-    backgroundColor: '#f5f7fa',
-    padding: 15,
-  },
-  innerScrollView: {
-    paddingBottom: 60,
-  },
+
+  // No data message
   noDataText: {
     textAlign: 'center',
     marginTop: 40,
     fontSize: 16,
     color: '#666666',
   },
-  viewButton: {
-    borderRadius: 30,
-    borderWidth: 1,
-    borderColor: '#27AE60',
-    backgroundColor: '#27AE60',
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  viewButtonText: {
-    color: '#fff',
-    fontSize: 12,
-    fontWeight: '500',
-  },
+
   // Report modal styles
   reportModalContainer: {
     flex: 1,

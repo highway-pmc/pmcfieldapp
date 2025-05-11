@@ -14,7 +14,7 @@ import {
 import {RFI_STATUS, RFIs_TYPE, TASK_TYPES} from '../../constants/constants';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
-import React, {Fragment, useEffect, useState} from 'react';
+import React, {Fragment, useEffect, useLayoutEffect, useState} from 'react';
 import {
   actionGetRFIs,
   clearRFITasksEvent,
@@ -42,7 +42,17 @@ const RFIsRecents = (props: any) => {
   const [openCalendar, setOpenCalendar] = useState(false);
 
   const [pdfSource, setPdfSource] = useState(null);
+  useLayoutEffect(() => {
+    navigation.getParent()?.setOptions({
+      tabBarStyle: {display: 'none'},
+    });
 
+    return () => {
+      navigation.getParent()?.setOptions({
+        tabBarStyle: undefined, // Reset on back
+      });
+    };
+  }, [navigation]);
   const dispatch = useDispatch();
   const focus = useIsFocused();
 
@@ -9264,6 +9274,9 @@ const RFIsRecents = (props: any) => {
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                     alignItems: 'center',
+                    backgroundColor: '#EDE9FE',
+                    padding: 10,
+                    borderRadius: 10,
                   }}>
                   <View>
                     <Text style={[styles.dateText, styles.fontBold]}>
@@ -9400,17 +9413,13 @@ const RFIsRecents = (props: any) => {
                       alignItems: 'center',
                     }}>
                     <View>
-                      <Text style={[styles.dateText, styles.fontBold]}>
-                        Generated Date
-                      </Text>
+                      <Text style={[styles.dateText]}>Generated Date</Text>
                       <Text style={[styles.dateText, styles.subFontText]}>
                         {getDisplayDate(selectedRFI.rfiDateTime)}
                       </Text>
                     </View>
                     <View>
-                      <Text style={[styles.dateText, styles.fontBold]}>
-                        Generated Time
-                      </Text>
+                      <Text style={[styles.dateText]}>Generated Time</Text>
                       <Text style={[styles.dateText, styles.subFontText]}>
                         {getDisplayTime(selectedRFI.rfiDateTime)}
                       </Text>
@@ -9590,7 +9599,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   taskCount: {
-    color: '#1C58C0',
+    color: '#4E36A3',
   },
   recentWorkContent: {
     padding: 20,
@@ -9605,7 +9614,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     padding: 15,
     borderWidth: 1,
-    borderColor: '#E3E3E3',
+    borderColor: '#EDE9FE',
     borderStyle: 'solid',
     marginBottom: 15,
   },
@@ -9642,7 +9651,7 @@ const styles = StyleSheet.create({
   },
   btnCta: {
     borderRadius: 10,
-    backgroundColor: '#1C58C0',
+    backgroundColor: '#4E36A3',
     paddingHorizontal: 20,
     paddingVertical: 12,
     alignItems: 'center',

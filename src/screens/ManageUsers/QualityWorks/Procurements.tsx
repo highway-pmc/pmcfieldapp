@@ -934,6 +934,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',
+    backgroundColor: '#F7F3FF',
   },
   saveBtn: {
     fontSize: 14,
@@ -951,7 +952,7 @@ const styles = StyleSheet.create({
     color: 'white',
     padding: 12,
     borderRadius: 25,
-    backgroundColor: '#1d7dea',
+    backgroundColor: '#5A2AAF',
     minWidth: 100,
     textAlign: 'center',
   },

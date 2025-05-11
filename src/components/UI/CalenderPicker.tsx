@@ -32,7 +32,7 @@ const CalendarPicker: React.FC<CalendarPickerProps> = ({
         <Text style={styles.inputText}>
           {value || `Select ${label?.toLowerCase() || 'Date'}`}
         </Text>
-        <Image style={styles.CalendarIcon} source={require('./../../images/date-icon.png')} />
+        <Image style={styles.CalendarIcon} source={require('./../../images/common/calenderIcon.png')} />
       </TouchableOpacity>
       {show && (
         <Modal transparent={true} animationType="slide" visible={show}>

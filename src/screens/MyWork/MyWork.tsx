@@ -176,7 +176,8 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                   <Text
                     style={styles.BreadcrumbPrevTextUnderline}
                     onPress={() =>
-                      index === 0 && (_v.setCurrentLevel(1), _v.setBreadcrumbData([]))
+                      index === 0 &&
+                      (_v.setCurrentLevel(1), _v.setBreadcrumbData([]))
                     }>
                     {item.name}
                   </Text>
@@ -224,11 +225,17 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                 <TouchableOpacity
                   style={styles.MyWorkCard}
                   onPress={() =>
-                    _event.onClick(2, projModuleItem.assignmentLevel, projModuleIndex)
+                    _event.onClick(
+                      2,
+                      projModuleItem.assignmentLevel,
+                      projModuleIndex,
+                    )
                   }>
                   <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
                   <View style={styles.TaskDetails}>
-                    <Text style={[styles.SubHeadingText, styles.BoldText]}>Assigned:</Text>
+                    <Text style={[styles.SubHeadingText, styles.BoldText]}>
+                      Assigned:
+                    </Text>
                     <Text style={[styles.SubHeadingText, styles.SubActive]}>
                       {projModuleItem.name}
                     </Text>
@@ -701,7 +708,9 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                 ))
             : _customForms.tasksListing(_v)
           : null}
-        {_v.currentLevel === 5 || _v.currentLevel === 6 ? _customForms.tasksListing(_v) : null}
+        {_v.currentLevel === 5 || _v.currentLevel === 6
+          ? _customForms.tasksListing(_v)
+          : null}
         {/* No Data Found */}
         {!_v.loading && !_v.myWorksData.length ? (
           <View style={styles.NoDataContainer}>
@@ -744,7 +753,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                 <View style={styles.taskAddContainer}>
                   <Text style={styles.Lable}>
                     Task:{' '}
-                    <Text style={{fontWeight: '600', color: '#1C58C0'}}>
+                    <Text style={{fontWeight: '600', color: '#5A2AAF'}}>
                       {_v.selectedTask?.displayName}
                     </Text>
                   </Text>
@@ -754,7 +763,9 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                   style={{minHeight: 100, maxHeight: 500}}>
                   <Fragment>
                     <StatusBar barStyle="dark-content" />
-                    <SafeAreaView>{_customForms.taskForm(_v.selectedTask?.name)}</SafeAreaView>
+                    <SafeAreaView>
+                      {_customForms.taskForm(_v.selectedTask?.name)}
+                    </SafeAreaView>
                   </Fragment>
                 </ScrollView>
 
@@ -766,20 +777,26 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                       justifyContent: 'center',
                       gap: 20,
                       marginBottom: -65,
-                      backgroundColor: '#fff',
+                      backgroundColor: '#F7F3FF',
                       paddingVertical: 10,
                       marginHorizontal: -15,
                     },
                   ]}>
                   <TouchableOpacity
                     style={[styles.submitButton, styles.saveButtonColor]}
-                    onPress={() => _event.onFillChecklist(RFI_STATUS.IN_PROGRESS)}>
-                    <Text style={styles.submitButtonText}>Save</Text>
+                    onPress={() =>
+                      _event.onFillChecklist(RFI_STATUS.IN_PROGRESS)
+                    }>
+                    <Text style={[styles.submitButtonText, {color: '#5A2AAF'}]}>
+                      Save
+                    </Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity
                     style={styles.submitButton}
-                    onPress={() => _event.onFillChecklist(RFI_STATUS.IN_REVIEW)}>
+                    onPress={() =>
+                      _event.onFillChecklist(RFI_STATUS.IN_REVIEW)
+                    }>
                     <Text style={styles.submitButtonText}>Submit</Text>
                   </TouchableOpacity>
                 </View>

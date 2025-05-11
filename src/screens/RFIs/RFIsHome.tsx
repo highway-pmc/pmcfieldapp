@@ -36,7 +36,7 @@ const RFIsHome = ({route, navigation}: any) => {
       type: RFIs_TYPE.GENERATE,
       colors: ['#7A54FF', '#493299'],
       buttonText: "Generate RFI's",
-      iconSource: require('../../images/rfis/image.png'), // Custom icon for Generate
+      iconSource: require('../../images/rfis/image.png'),
     },
     {
       title: "In Progress RFI's",
@@ -45,7 +45,7 @@ const RFIsHome = ({route, navigation}: any) => {
       type: RFIs_TYPE.IN_PROGRESS,
       colors: ['#FFA37E', '#F47D4D'],
       buttonText: "Progress RFI's",
-      iconSource: require('../../images/rfis/ic_inprogress.svg'), // Custom icon for In Progress
+      iconSource: require('../../images/rfis/ic_inprogress.png'),
     },
     {
       title: "Rejected RFI's",
@@ -54,7 +54,7 @@ const RFIsHome = ({route, navigation}: any) => {
       type: RFIs_TYPE.REJECTED,
       colors: ['#FD8989', '#FF6968'],
       buttonText: "Rejected RFI's",
-      iconSource: require('../../images/rfis/ic_rejected.svg'), // Custom icon for Rejected
+      iconSource: require('../../images/rfis/ic_rejected.png'),
     },
     {
       title: "Closed RFI's",
@@ -63,7 +63,7 @@ const RFIsHome = ({route, navigation}: any) => {
       type: RFIs_TYPE.CLOSED,
       colors: ['#FFB246', '#E99928'],
       buttonText: "Closed RFI's",
-      iconSource: require('../../images/rfis/ic_closed.svg'), // Custom icon for Closed
+      iconSource: require('../../images/rfis/ic_closed.png'),
     },
     {
       title: "Approved RFI's",
@@ -72,7 +72,7 @@ const RFIsHome = ({route, navigation}: any) => {
       type: RFIs_TYPE.APPROVED,
       colors: ['#6CC058', '#6CC058'],
       buttonText: "Approved RFI's",
-      iconSource: require('../../images/rfis/ic_approved.svg'), // Custom icon for Approved
+      iconSource: require('../../images/rfis/ic_approved.png'),
     },
   ];
 

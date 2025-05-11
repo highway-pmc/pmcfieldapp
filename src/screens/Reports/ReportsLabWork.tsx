@@ -1,12 +1,26 @@
-import { View, Text, NativeEventEmitter, StyleSheet, ScrollView, TouchableOpacity, Image, Modal, Dimensions } from 'react-native'
-import React, { useEffect, useState} from 'react'
-import { useIsFocused } from '@react-navigation/native';
-import { HeaderItems } from "../../constants/constants"
-import { useDispatch, useSelector } from 'react-redux';
+import {
+  View,
+  Text,
+  NativeEventEmitter,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  Modal,
+  Dimensions,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {useIsFocused} from '@react-navigation/native';
+import {HeaderItems} from '../../constants/constants';
+import {useDispatch, useSelector} from 'react-redux';
 import LoadingAnimation from '../Common/LoadingAnimation';
 import Pdf from 'react-native-pdf';
-import { clearRFIReportsEvent, listTestSampleReportsForLoggedinUser, viewTestSampleReport } from './actions';
-import { getDisplayDate, getDisplayTime } from '../../utils/Utils';
+import {
+  clearRFIReportsEvent,
+  listTestSampleReportsForLoggedinUser,
+  viewTestSampleReport,
+} from './actions';
+import {getDisplayDate, getDisplayTime} from '../../utils/Utils';
 
 const ReportsLabWork = (props: any) => {
   if (useIsFocused()) {
@@ -14,7 +28,9 @@ const ReportsLabWork = (props: any) => {
     eventEmitter.emit('headerEvent', HeaderItems.reports);
   }
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const { sampleTestDataList, reportDownloaded, loading, error } = useSelector((state: any) => state.Reports);
+  const {sampleTestDataList, reportDownloaded, loading, error} = useSelector(
+    (state: any) => state.Reports,
+  );
 
   const [rfiData, setRfiData] = useState([]);
 
@@ -22,8 +38,7 @@ const ReportsLabWork = (props: any) => {
 
   const [pdfSource, setPdfSource] = useState(null);
 
-
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const focus = useIsFocused();
 
   useEffect(() => {
@@ -37,10 +52,12 @@ const ReportsLabWork = (props: any) => {
   }, [focus]);
 
   const getRFIsReportsData = () => {
-    dispatch(listTestSampleReportsForLoggedinUser({
-      projectId: loggedInUser.projectId
-    }));
-  }
+    dispatch(
+      listTestSampleReportsForLoggedinUser({
+        projectId: loggedInUser.projectId,
+      }),
+    );
+  };
 
   useEffect(() => {
     if (sampleTestDataList) {
@@ -48,54 +65,69 @@ const ReportsLabWork = (props: any) => {
     }
     if (reportDownloaded) {
       setOpenPopup(true);
-      setPdfSource({ uri: "data:application/pdf;base64," + reportDownloaded });
+      setPdfSource({uri: 'data:application/pdf;base64,' + reportDownloaded});
     }
   }, [sampleTestDataList, reportDownloaded]);
 
   // unmount
-  useEffect(() => () => {
-    dispatch(clearRFIReportsEvent());
-  }, []);
+  useEffect(
+    () => () => {
+      dispatch(clearRFIReportsEvent());
+    },
+    [],
+  );
 
   const onDownloadReport = (item: any) => {
     setPdfSource(null);
     dispatch(clearRFIReportsEvent());
     setTimeout(() => {
-      dispatch(viewTestSampleReport({
-        projectId: loggedInUser.projectId,
-        testRFIId: item._id,
-      }));
-    })
-  }
+      dispatch(
+        viewTestSampleReport({
+          projectId: loggedInUser.projectId,
+          testRFIId: item._id,
+        }),
+      );
+    });
+  };
 
   return (
     <View>
       <Text style={styles.headerText}>RFI's Reports</Text>
       <View style={styles.recentWorkContainer}>
         <View style={styles.recentWorkContentHeight100}>
-          <ScrollView showsVerticalScrollIndicator={false}
+          <ScrollView
+            showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}>
-            {
-              rfiData?.map((item: any, index) => (
-                <TouchableOpacity style={styles.recentWorkCard} onPress={() => onDownloadReport(item)}>
-                  <View style={styles.taskCategory}>
-                    <Text style={styles.subHead}>{item.name}</Text>
-                    <Image style={styles.ArrowIcon} source={require('../../images/right-arrow-icon.png')} />
-                  </View>
-                  <Text style={styles.dateText}>Generated Date: {getDisplayDate(item.rfiDateTime)}</Text>
-                  {/* <Text style={styles.dateText}>Generated Time: {getDisplayTime(item.rfiDateTime)}</Text> */}
-                </TouchableOpacity>
-              ))
-            }
+            {rfiData?.map((item: any, index) => (
+              <TouchableOpacity
+                style={styles.recentWorkCard}
+                onPress={() => onDownloadReport(item)}>
+                <View style={styles.taskCategory}>
+                  <Text style={styles.subHead}>{item.name}</Text>
+                  <Image
+                    style={styles.ArrowIcon}
+                    source={require('../../images/right-arrow-icon.png')}
+                  />
+                </View>
+                <Text style={styles.dateText}>
+                  Generated Date: {getDisplayDate(item.rfiDateTime)}
+                </Text>
+                {/* <Text style={styles.dateText}>Generated Time: {getDisplayTime(item.rfiDateTime)}</Text> */}
+              </TouchableOpacity>
+            ))}
 
-            {
-              (!rfiData && !rfiData.length && !loading) &&
+            {!rfiData && !rfiData.length && !loading && (
               <View style={styles.noDataContainer}>
-                <Image style={styles.noDataImage} source={require('../../images/no-data-found.png')} />
+                <Image
+                  style={styles.noDataImage}
+                  source={require('../../images/no-data-found.png')}
+                />
                 <Text style={styles.noDataHeadText}>No RFI's</Text>
-                <Text style={styles.noDataSubText}>There is no RFI's report generated</Text>
+                <Text style={styles.noDataSubText}>
+                  There is no RFI's report generated
+                </Text>
               </View>
-            }
+            )}
           </ScrollView>
         </View>
       </View>
@@ -115,7 +147,10 @@ const ReportsLabWork = (props: any) => {
                 <Text style={styles.modalText}>Report</Text>
                 <TouchableOpacity
                   style={styles.buttonClose}
-                  onPress={() => { setOpenPopup(!openPopup); setPdfSource(null); }}>
+                  onPress={() => {
+                    setOpenPopup(!openPopup);
+                    setPdfSource(null);
+                  }}>
                   <Image
                     style={styles.CloseIcon}
                     tintColor={'#333'}
@@ -123,42 +158,42 @@ const ReportsLabWork = (props: any) => {
                   />
                 </TouchableOpacity>
               </View>
-              {
-                pdfSource &&
+              {pdfSource && (
                 <View style={styles.containerPdf}>
-                  <Pdf source={pdfSource}
+                  <Pdf
+                    source={pdfSource}
                     onLoadComplete={(numberOfPages, filePath) => {
                       console.log(`Number of pages: ${numberOfPages}`);
                     }}
                     onPageChanged={(page, numberOfPages) => {
                       console.log(`Current page: ${page}`);
                     }}
-                    onError={(error) => {
+                    onError={error => {
                       console.log(error);
                     }}
-                    onPressLink={(uri) => {
+                    onPressLink={uri => {
                       console.log(`Link pressed: ${uri}`);
                     }}
-                    style={styles.pdf} />
+                    style={styles.pdf}
+                  />
                 </View>
-              }
+              )}
             </View>
           </View>
         </View>
-
       </Modal>
 
       <LoadingAnimation loading={loading}></LoadingAnimation>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   containerPdf: {
     justifyContent: 'flex-start',
     alignItems: 'center',
     marginTop: 25,
-    height: Dimensions.get('screen').height - 200
+    height: Dimensions.get('screen').height - 200,
   },
   pdf: {
     flex: 1,
@@ -168,61 +203,65 @@ const styles = StyleSheet.create({
   headerText: {
     color: '#000',
     fontSize: 16,
-    fontWeight: '500'
+    fontWeight: '500',
   },
   recentWorkContainer: {
     flexDirection: 'column',
     backgroundColor: '#fff',
     borderRadius: 12,
     marginTop: 15,
-    height: '80%'
+    height: '80%',
   },
   recentWorkHead: {
     flexDirection: 'row',
     borderBottomWidth: 1,
     borderColor: '#DEE1E7',
-    padding: 20
+    padding: 20,
   },
   taskCount: {
-    color: '#1C58C0'
+    color: '#1C58C0',
   },
   recentWorkContent: {
     padding: 20,
-    height: '90%'
+    height: '90%',
   },
   recentWorkContentHeight100: {
     padding: 20,
-    height: '100%'
+    height: '100%',
   },
   recentWorkCard: {
     backgroundColor: '#fff',
     borderRadius: 4,
     padding: 15,
     borderWidth: 1,
-    borderColor: '#E3E3E3',
+    borderColor: '#EDE9FE',
     borderStyle: 'solid',
-    marginBottom: 15
+    marginBottom: 15,
   },
   taskCategory: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
     gap: 2,
-    marginBottom: 5
+    marginBottom: 8,
+    marginRight: 5,
   },
   subHead: {
     color: '#150B3D',
     fontSize: 14,
-    fontWeight: '600'
+    fontWeight: '600',
   },
   ArrowIcon: {
     width: 18,
-    height: 18
+    height: 18,
   },
   dateText: {
     color: '#150B3D',
     fontSize: 14,
-    fontWeight: '300'
+    fontWeight: '300',
+    backgroundColor: '#EDE9FE',
+    padding: 7,
+    borderRadius: 4,
   },
   footerButton: {
     padding: 20,
@@ -232,38 +271,38 @@ const styles = StyleSheet.create({
   },
   btnCta: {
     borderRadius: 10,
-    backgroundColor: '#1C58C0',
+    backgroundColor: '#4E36A3',
     paddingHorizontal: 20,
     paddingVertical: 12,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   btnCtaText: {
     color: '#fff',
     fontSize: 14,
-    fontWeight: '500'
+    fontWeight: '500',
   },
   noDataContainer: {
     marginVertical: 30,
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   noDataHeadText: {
     fontSize: 18,
     fontWeight: '500',
-    color: '#34343F'
+    color: '#34343F',
   },
   noDataSubText: {
     fontSize: 14,
     fontWeight: '500',
     color: '#464665',
-    marginTop: 10
+    marginTop: 10,
   },
   noDataImage: {
     width: 245,
     height: 184,
-    marginBottom: 15
+    marginBottom: 15,
   },
 
   centeredView: {
@@ -313,7 +352,7 @@ const styles = StyleSheet.create({
   },
   ModalInnerContainer: {
     paddingHorizontal: 15,
-    paddingBottom: 20
+    paddingBottom: 20,
   },
   modalLabel: {
     fontSize: 16,
@@ -344,38 +383,38 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     borderWidth: 1,
     height: Dimensions.get('screen').height - 50,
-    width: Dimensions.get('screen').width
+    width: Dimensions.get('screen').width,
   },
   ImageSections: {
     display: 'flex',
     flexDirection: 'row',
     paddingHorizontal: 8,
     paddingVertical: 8,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   images: {
     width: 500,
     height: 400,
     borderColor: 'black',
     borderWidth: 1,
-    marginHorizontal: 3
+    marginHorizontal: 3,
   },
   btnParentSection: {
     // alignItems: 'center',
-    marginTop: 10
+    marginTop: 10,
   },
 
   GenerateRFIFieldLabel: {
     fontSize: 16,
     color: '#150A33',
-    fontWeight: '500'
+    fontWeight: '500',
   },
   GenerateRFIFieldTextInput: {
     width: 295,
     height: 40,
     fontSize: 12,
-    color: "#666666",
-    backgroundColor: "#99ABC6"
+    color: '#666666',
+    backgroundColor: '#99ABC6',
   },
   assignTagButtonText: {
     fontSize: 16,
@@ -397,4 +436,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ReportsLabWork
+export default ReportsLabWork;

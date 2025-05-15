@@ -27,6 +27,7 @@ import {Guid} from 'guid-typescript';
 import {styles} from './Styles';
 import {Validates} from './Validates';
 import {Events} from './Events';
+import TableCommonStyles from '../../../../Common/TableCommonStyles';
 
 export const CustomForms = (_v: any) => {
   const _validation = Validates(_v);
@@ -962,86 +963,72 @@ export const CustomForms = (_v: any) => {
   );
 
   const renderHeadings = () => (
-    <View
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 10,
-        gap: 5,
-      }}>
-      <View style={{width: 50, alignItems: 'center', padding: 5}}>
-        <Text style={{fontWeight: '600', fontSize: 12}}>TM No.</Text>
+    <View style={TableCommonStyles.tableHeaderContainer}>
+      <View style={{ width: 50, ...TableCommonStyles.headerCell }}>
+        <Text style={TableCommonStyles.headerText}>TM No.</Text>
       </View>
-      <View style={{width: 100, alignItems: 'center', padding: 5}}>
-        <Text style={{fontWeight: '600', fontSize: 12}}>Vehicle No.</Text>
+
+      <View style={{ width: 100, ...TableCommonStyles.headerCell }}>
+        <Text style={TableCommonStyles.headerText}>Vehicle No.</Text>
       </View>
-      <View style={{width: 150, alignItems: 'center', padding: 5}}>
-        <Text style={{fontWeight: '600', fontSize: 12}}>Time of arrival</Text>
+
+      <View style={{ width: 150, ...TableCommonStyles.headerCell }}>
+        <Text style={TableCommonStyles.headerText}>Time of arrival</Text>
       </View>
-      <View style={{width: 130, alignItems: 'center', padding: 5}}>
-        <Text style={{fontWeight: '600', fontSize: 12}}>Grade of Concrete</Text>
+
+      <View style={{ width: 130, ...TableCommonStyles.headerCell }}>
+        <Text style={TableCommonStyles.headerText}>Grade of Concrete</Text>
       </View>
+
       {_v.selectedTask.name === TASK_TYPES.CONCRETING && (
-        <View style={{width: 130, alignItems: 'center', padding: 5}}>
-          <Text style={{fontWeight: '600', fontSize: 12}}>
-            Concrete temp in C
-          </Text>
+        <View style={{ width: 130, ...TableCommonStyles.headerCell }}>
+          <Text style={TableCommonStyles.headerText}>Concrete temp in C</Text>
         </View>
       )}
 
       {_v.selectedTask.name === TASK_TYPES.CONCRETING && (
-        <View style={{width: 130, alignItems: 'center', padding: 5}}>
-          <Text style={{fontWeight: '600', fontSize: 12}}>
-            Slump value in mm
-          </Text>
+        <View style={{ width: 130, ...TableCommonStyles.headerCell }}>
+          <Text style={TableCommonStyles.headerText}>Slump value in mm</Text>
         </View>
       )}
 
-      <View style={{width: 150, alignItems: 'center', padding: 5}}>
-        <Text style={{fontWeight: '600', fontSize: 12}}>
-          Concrete start time
-        </Text>
+      <View style={{ width: 150, ...TableCommonStyles.headerCell }}>
+        <Text style={TableCommonStyles.headerText}>Concrete start time</Text>
       </View>
-      <View style={{width: 150, alignItems: 'center', padding: 5}}>
-        <Text style={{fontWeight: '600', fontSize: 12}}>
-          Concrete poured in cum
-        </Text>
+
+      <View style={{ width: 150, ...TableCommonStyles.headerCell }}>
+        <Text style={TableCommonStyles.headerText}>Concrete poured in cum</Text>
       </View>
-      <View style={{width: 150, alignItems: 'center', padding: 5}}>
-        <Text style={{fontWeight: '600', fontSize: 12}}>
-          Concrete finish time
-        </Text>
+
+      <View style={{ width: 150, ...TableCommonStyles.headerCell }}>
+        <Text style={TableCommonStyles.headerText}>Concrete finish time</Text>
       </View>
-      <View style={{width: 80, alignItems: 'center', padding: 5}}>
-        <Text style={{fontWeight: '600', fontSize: 12}}>Actions</Text>
+
+      <View style={{ width: 80, ...TableCommonStyles.headerCell }}>
+        <Text style={TableCommonStyles.headerText}>Actions</Text>
       </View>
     </View>
   );
   const renderHeadingsPQC = () => (
     <View
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 10,
-        gap: 5,
-      }}>
-      <View style={{width: 50, alignItems: 'center', padding: 5}}>
-        <Text style={{fontWeight: '600', fontSize: 12}}>Sl. No.</Text>
+      style={TableCommonStyles.tableHeaderContainer}>
+      <View style={{width: 50, ...TableCommonStyles.headerCell }}>
+      <Text style={TableCommonStyles.headerText}>Sl. No.</Text>
       </View>
-      <View style={{width: 100, alignItems: 'center', padding: 5}}>
-        <Text style={{fontWeight: '600', fontSize: 12}}>Vehicle No.</Text>
+      <View style={{width: 100,...TableCommonStyles.headerCell }}>
+      <Text style={TableCommonStyles.headerText}>Vehicle No.</Text>
       </View>
-      <View style={{width: 150, alignItems: 'center', padding: 5}}>
-        <Text style={{fontWeight: '600', fontSize: 12}}>
+      <View style={{width: 150, ...TableCommonStyles.headerCell }}>
+      <Text style={TableCommonStyles.headerText}>
           Total qty of PQC in cum
         </Text>
       </View>
 
-      <View style={{width: 150, alignItems: 'center', padding: 5}}>
-        <Text style={{fontWeight: '600', fontSize: 12}}>Laying start time</Text>
+      <View style={{width: 150, ...TableCommonStyles.headerCell }}>
+      <Text style={TableCommonStyles.headerText}>Laying start time</Text>
       </View>
-      <View style={{width: 150, alignItems: 'center', padding: 5}}>
-        <Text style={{fontWeight: '600', fontSize: 12}}>Laying end time</Text>
+      <View style={{width: 150, ...TableCommonStyles.headerCell }}>
+      <Text style={TableCommonStyles.headerText}>Laying end time</Text>
       </View>
     </View>
   );
@@ -1922,8 +1909,8 @@ export const CustomForms = (_v: any) => {
           <View>
             <Text
               style={{
-                textAlign: 'center',
-                fontSize: 20,
+                textAlign: 'left',
+                fontSize: 14,
                 paddingBottom: 10,
               }}>
               Pick Image from Camera & Gallery
@@ -1947,12 +1934,14 @@ export const CustomForms = (_v: any) => {
               <TouchableOpacity
                 onPress={launchCamera}
                 style={styles.btnSection}>
+                <Image style={styles.gallaryIconWidth} source={require('../../../../../images/cameraIcon.png')}/>
                 <Text style={styles.btnText}>Camera</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 onPress={launchImageLibrary}
                 style={styles.btnSection}>
+                <Image style={styles.gallaryIconWidth} source={require('../../../../../images/gallaryIcon.png')}/>
                 <Text style={styles.btnText}>Gallery</Text>
               </TouchableOpacity>
             </View>

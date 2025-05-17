@@ -51,7 +51,7 @@ const DropdownPicker: React.FC<DropdownPickerProps> = ({
           onBlur={handleBlur}
           onValueChange={onChange}>
           {items.map((option, index) => (
-              <Picker.Item key={index} label={option[lableField]} value={option[valueField]} />
+              <Picker.Item style={{fontSize: 13}} key={index} label={option[lableField]} value={option[valueField]} />
           ))}
         </Picker>
         {error ? <Text style={styles.error}>{error}</Text> : null}
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#2c2c2c',
     position: 'relative',
-    height: 44
+    height: 40
 },
 picker: {
   width: '100%',

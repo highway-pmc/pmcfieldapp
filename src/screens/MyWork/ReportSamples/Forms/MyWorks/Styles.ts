@@ -10,7 +10,8 @@ export const styles = StyleSheet.create({
   },
   selectDropdown: {
     backgroundColor: '#fff',
-    padding: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 5,
     borderRadius: 4,
     borderColor: '#ddd',
     borderWidth: 1,
@@ -18,6 +19,16 @@ export const styles = StyleSheet.create({
     fontSize: 12,
     color: '#2c2c2c',
     position: 'relative',
+    maxHeight: 30,
+    minHeight: 45
+  },
+  dropDownContainerStyle: {
+    borderColor: '#ddd',
+  },
+  dropDownTextStyle: {
+    fontSize: 12,
+    margin: 0,
+    color: '#2c2c2c',
   },
   MainContainer: {
     flexDirection: 'column',
@@ -40,7 +51,7 @@ export const styles = StyleSheet.create({
   },
   Lable: {
     fontSize: 12,
-    marginBottom: 5,
+    marginBottom: 3,
     color: '#666',
     fontWeight: '500',
   },
@@ -428,6 +439,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: 8,
     paddingVertical: 8,
+    paddingBottom: 0,
     justifyContent: 'center',
   },
   images: {
@@ -440,27 +452,36 @@ export const styles = StyleSheet.create({
   btnParentSection: {
     // alignItems: 'center',
     marginTop: 10,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 10},
-    shadowOpacity: 0.5,
-    shadowRadius: 10,
-    // Shadow for Android
-    elevation: 10,
-    borderTopWidth: 1,
-    borderColor: '#f3f3f3',
+    // shadowColor: '#000',
+    // shadowOffset: {width: 0, height: 10},
+    // shadowOpacity: 0.5,
+    // shadowRadius: 10,
+    // // Shadow for Android
+    // elevation: 10,
+    // borderTopWidth: 1,
+    // borderColor: '#f3f3f3',
   },
   btnSection: {
-    width: 150,
-    height: 50,
-    backgroundColor: '#1C58C0',
-    // alignItems: 'center',
+    paddingHorizontal: 40,
+    paddingVertical: 15, 
+    display: 'flex',
+    alignItems: 'center',
+    flexDirection: 'column',
+    backgroundColor: '#fffff',
     justifyContent: 'center',
-    borderRadius: 3,
+    borderRadius: 16,
     marginBottom: 10,
+    borderWidth: 1,
+    borderColor: '#e6e6e6'
+  },
+  gallaryIconWidth: {
+    width: 36,
+    height: 36,
+    marginBottom: 7,
   },
   btnText: {
     textAlign: 'center',
-    color: '#fff',
+    color: '#2F4FCD',
     fontSize: 14,
     fontWeight: 'bold',
   },

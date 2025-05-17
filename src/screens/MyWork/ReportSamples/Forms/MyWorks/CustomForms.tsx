@@ -2004,6 +2004,9 @@ export const CustomForms = (_v: any) => {
                   value={_v.cleanliness}
                   items={YES_NO_LIST}
                   style={styles.selectDropdown}
+                  dropDownContainerStyle={styles.dropDownContainerStyle}
+                  textStyle={styles.dropDownTextStyle}
+                  style={styles.selectDropdown}
                   setOpen={_v.setOpenCleanliness}
                   setValue={_v.setCleanliness}
                 />
@@ -2018,6 +2021,8 @@ export const CustomForms = (_v: any) => {
                   value={_v.formworkAlignmentChecked}
                   items={YES_NO_LIST}
                   style={styles.selectDropdown}
+                  dropDownContainerStyle={styles.dropDownContainerStyle}
+                  textStyle={styles.dropDownTextStyle}
                   setOpen={_v.setOpenFormworkAlignmentChecked}
                   setValue={_v.setFormworkAlignmentChecked}
                 />
@@ -2034,6 +2039,8 @@ export const CustomForms = (_v: any) => {
                   value={_v.formworkSealingChecked}
                   items={YES_NO_NA_LIST}
                   style={styles.selectDropdown}
+                  dropDownContainerStyle={styles.dropDownContainerStyle}
+                  textStyle={styles.dropDownTextStyle}
                   setOpen={_v.setOpenFormworkSealingChecked}
                   setValue={_v.setFormworkSealingChecked}
                 />
@@ -2050,6 +2057,8 @@ export const CustomForms = (_v: any) => {
                   value={_v.formworkdDrawingsChecked}
                   items={YES_NO_LIST}
                   style={styles.selectDropdown}
+                  dropDownContainerStyle={styles.dropDownContainerStyle}
+                  textStyle={styles.dropDownTextStyle}
                   setOpen={_v.setOpenFormworkdDrawingsChecked}
                   setValue={_v.setFormworkdDrawingsChecked}
                 />
@@ -2064,6 +2073,8 @@ export const CustomForms = (_v: any) => {
                   value={_v.concreteFinishLevelMarked}
                   items={YES_NO_LIST}
                   style={styles.selectDropdown}
+                  dropDownContainerStyle={styles.dropDownContainerStyle}
+                  textStyle={styles.dropDownTextStyle}
                   setOpen={_v.setOpenConcreteFinishLevelMarked}
                   setValue={_v.setConcreteFinishLevelMarked}
                 />
@@ -2078,6 +2089,8 @@ export const CustomForms = (_v: any) => {
                   value={_v.formworkProperlySupported}
                   items={YES_NO_NA_LIST}
                   style={styles.selectDropdown}
+                  dropDownContainerStyle={styles.dropDownContainerStyle}
+                  textStyle={styles.dropDownTextStyle}
                   setOpen={_v.setOpenFormworkProperlySupported}
                   setValue={_v.setFormworkProperlySupported}
                 />
@@ -2092,6 +2105,8 @@ export const CustomForms = (_v: any) => {
                   value={_v.formworkFitConcreting}
                   items={YES_NO_NA_LIST}
                   style={styles.selectDropdown}
+                  dropDownContainerStyle={styles.dropDownContainerStyle}
+                  textStyle={styles.dropDownTextStyle}
                   setOpen={_v.setOpenFormworkFitConcreting}
                   setValue={_v.setFormworkFitConcreting}
                 />
@@ -2148,6 +2163,9 @@ export const CustomForms = (_v: any) => {
                   open={_v.openRebarAndDimensionGFC}
                   value={_v.rebarAndDimensionGFC}
                   items={YES_NO_LIST}
+                  style={styles.selectDropdown}
+                  dropDownContainerStyle={styles.dropDownContainerStyle}
+                  textStyle={styles.dropDownTextStyle}
                   setOpen={_v.setOpenRebarAndDimensionGFC}
                   setValue={_v.setRebarAndDimensionGFC}
                 />
@@ -2163,6 +2181,9 @@ export const CustomForms = (_v: any) => {
                   open={_v.openShapingNoAndLengthOfBarsGFC}
                   value={_v.shapingNoAndLengthOfBarsGFC}
                   items={YES_NO_LIST}
+                  style={styles.selectDropdown}
+                  dropDownContainerStyle={styles.dropDownContainerStyle}
+                  textStyle={styles.dropDownTextStyle}
                   setOpen={_v.setOpenShapingNoAndLengthOfBarsGFC}
                   setValue={_v.setShapingNoAndLengthOfBarsGFC}
                 />
@@ -2178,6 +2199,9 @@ export const CustomForms = (_v: any) => {
                   open={_v.openRebarsSecurelyTightened}
                   value={_v.rebarsSecurelyTightened}
                   items={YES_NO_NA_LIST}
+                  style={styles.selectDropdown}
+                  dropDownContainerStyle={styles.dropDownContainerStyle}
+                  textStyle={styles.dropDownTextStyle}
                   setOpen={_v.setOpenRebarsSecurelyTightened}
                   setValue={_v.setRebarsSecurelyTightened}
                 />
@@ -2193,6 +2217,9 @@ export const CustomForms = (_v: any) => {
                   open={_v.openSpliceLengthAndLocationGFC}
                   value={_v.spliceLengthAndLocationGFC}
                   items={YES_NO_LIST}
+                  style={styles.selectDropdown}
+                  dropDownContainerStyle={styles.dropDownContainerStyle}
+                  textStyle={styles.dropDownTextStyle}
                   setOpen={_v.setOpenSpliceLengthAndLocationGFC}
                   setValue={_v.setSpliceLengthAndLocationGFC}
                 />
@@ -2206,6 +2233,9 @@ export const CustomForms = (_v: any) => {
                   open={_v.openRebarWithinToleranceLimit}
                   value={_v.rebarWithinToleranceLimit}
                   items={YES_NO_LIST}
+                  style={styles.selectDropdown}
+                  dropDownContainerStyle={styles.dropDownContainerStyle}
+                  textStyle={styles.dropDownTextStyle}
                   setOpen={_v.setOpenRebarWithinToleranceLimit}
                   setValue={_v.setRebarWithinToleranceLimit}
                 />
@@ -2221,6 +2251,9 @@ export const CustomForms = (_v: any) => {
                   open={_v.openCouplerArrangementsWithinTolerance}
                   value={_v.couplerArrangementsWithinTolerance}
                   items={YES_NO_NA_LIST}
+                  style={styles.selectDropdown}
+                  dropDownContainerStyle={styles.dropDownContainerStyle}
+                  textStyle={styles.dropDownTextStyle}
                   setOpen={_v.setOpenCouplerArrangementsWithinTolerance}
                   setValue={_v.setCouplerArrangementsWithinTolerance}
                 />
@@ -2234,6 +2267,9 @@ export const CustomForms = (_v: any) => {
                   open={_v.openBarBendingScheduleChecked}
                   value={_v.barBendingScheduleChecked}
                   items={YES_NO_NA_LIST}
+                  style={styles.selectDropdown}
+                  dropDownContainerStyle={styles.dropDownContainerStyle}
+                  textStyle={styles.dropDownTextStyle}
                   setOpen={_v.setOpenBarBendingScheduleChecked}
                   setValue={_v.setBarBendingScheduleChecked}
                 />
@@ -2247,6 +2283,9 @@ export const CustomForms = (_v: any) => {
                   open={_v.openSpacerBarCheckedGFC}
                   value={_v.spacerBarCheckedGFC}
                   items={YES_NO_NA_LIST}
+                  style={styles.selectDropdown}
+                  dropDownContainerStyle={styles.dropDownContainerStyle}
+                  textStyle={styles.dropDownTextStyle}
                   setOpen={_v.setOpenSpacerBarCheckedGFC}
                   setValue={_v.setSpacerBarCheckedGFC}
                 />
@@ -2302,6 +2341,9 @@ export const CustomForms = (_v: any) => {
                   open={_v.openRebarAndDimensionGFC}
                   value={_v.rebarAndDimensionGFC}
                   items={YES_NO_LIST}
+                  style={styles.selectDropdown}
+                  dropDownContainerStyle={styles.dropDownContainerStyle}
+                  textStyle={styles.dropDownTextStyle}
                   setOpen={_v.setOpenRebarAndDimensionGFC}
                   setValue={_v.setRebarAndDimensionGFC}
                 />
@@ -2317,6 +2359,9 @@ export const CustomForms = (_v: any) => {
                   open={_v.openShapingNoAndLengthOfBarsGFC}
                   value={_v.shapingNoAndLengthOfBarsGFC}
                   items={YES_NO_LIST}
+                  style={styles.selectDropdown}
+                  dropDownContainerStyle={styles.dropDownContainerStyle}
+                  textStyle={styles.dropDownTextStyle}
                   setOpen={_v.setOpenShapingNoAndLengthOfBarsGFC}
                   setValue={_v.setShapingNoAndLengthOfBarsGFC}
                 />
@@ -2332,6 +2377,9 @@ export const CustomForms = (_v: any) => {
                   open={_v.openRebarsSecurelyTightened}
                   value={_v.rebarsSecurelyTightened}
                   items={YES_NO_NA_LIST}
+                  style={styles.selectDropdown}
+                  dropDownContainerStyle={styles.dropDownContainerStyle}
+                  textStyle={styles.dropDownTextStyle}
                   setOpen={_v.setOpenRebarsSecurelyTightened}
                   setValue={_v.setRebarsSecurelyTightened}
                 />
@@ -2347,6 +2395,9 @@ export const CustomForms = (_v: any) => {
                   open={_v.openSpliceLengthAndLocationGFC}
                   value={_v.spliceLengthAndLocationGFC}
                   items={YES_NO_LIST}
+                  style={styles.selectDropdown}
+                  dropDownContainerStyle={styles.dropDownContainerStyle}
+                  textStyle={styles.dropDownTextStyle}
                   setOpen={_v.setOpenSpliceLengthAndLocationGFC}
                   setValue={_v.setSpliceLengthAndLocationGFC}
                 />
@@ -2360,6 +2411,9 @@ export const CustomForms = (_v: any) => {
                   open={_v.openRebarWithinToleranceLimit}
                   value={_v.rebarWithinToleranceLimit}
                   items={YES_NO_LIST}
+                  style={styles.selectDropdown}
+                  dropDownContainerStyle={styles.dropDownContainerStyle}
+                  textStyle={styles.dropDownTextStyle}
                   setOpen={_v.setOpenRebarWithinToleranceLimit}
                   setValue={_v.setRebarWithinToleranceLimit}
                 />
@@ -2375,6 +2429,9 @@ export const CustomForms = (_v: any) => {
                   open={_v.openCouplerArrangementsWithinTolerance}
                   value={_v.couplerArrangementsWithinTolerance}
                   items={YES_NO_NA_LIST}
+                  style={styles.selectDropdown}
+                  dropDownContainerStyle={styles.dropDownContainerStyle}
+                  textStyle={styles.dropDownTextStyle}
                   setOpen={_v.setOpenCouplerArrangementsWithinTolerance}
                   setValue={_v.setCouplerArrangementsWithinTolerance}
                 />
@@ -2388,6 +2445,9 @@ export const CustomForms = (_v: any) => {
                   open={_v.openBarBendingScheduleChecked}
                   value={_v.barBendingScheduleChecked}
                   items={YES_NO_NA_LIST}
+                  style={styles.selectDropdown}
+                  dropDownContainerStyle={styles.dropDownContainerStyle}
+                  textStyle={styles.dropDownTextStyle}
                   setOpen={_v.setOpenBarBendingScheduleChecked}
                   setValue={_v.setBarBendingScheduleChecked}
                 />
@@ -2516,6 +2576,9 @@ export const CustomForms = (_v: any) => {
                   open={_v.openConcreteHasAchievedDesiredStrength}
                   value={_v.concreteHasAchievedDesiredStrength}
                   items={YES_NO_LIST}
+                  style={styles.selectDropdown}
+                  dropDownContainerStyle={styles.dropDownContainerStyle}
+                  textStyle={styles.dropDownTextStyle}
                   setOpen={_v.setOpenConcreteHasAchievedDesiredStrength}
                   setValue={_v.setConcreteHasAchievedDesiredStrength}
                 />
@@ -2531,6 +2594,9 @@ export const CustomForms = (_v: any) => {
                   open={_v.openMinimumTimeHasBeenAttained}
                   value={_v.minimumTimeHasBeenAttained}
                   items={YES_NO_LIST}
+                  style={styles.selectDropdown}
+                  dropDownContainerStyle={styles.dropDownContainerStyle}
+                  textStyle={styles.dropDownTextStyle}
                   setOpen={_v.setOpenMinimumTimeHasBeenAttained}
                   setValue={_v.setMinimumTimeHasBeenAttained}
                 />
@@ -2728,6 +2794,9 @@ export const CustomForms = (_v: any) => {
                   open={_v.openPlieShaftCleanedLooseMaterial}
                   value={_v.plieShaftCleanedLooseMaterial}
                   items={YES_NO_LIST}
+                  style={styles.selectDropdown}
+                  dropDownContainerStyle={styles.dropDownContainerStyle}
+                  textStyle={styles.dropDownTextStyle}
                   setOpen={_v.setOpenPlieShaftCleanedLooseMaterial}
                   setValue={_v.setPlieShaftCleanedLooseMaterial}
                 />
@@ -2743,6 +2812,9 @@ export const CustomForms = (_v: any) => {
                   open={_v.openSuitableSpacerProvidedToMaintainCoverToSteel}
                   value={_v.suitableSpacerProvidedToMaintainCoverToSteel}
                   items={YES_NO_LIST}
+                  style={styles.selectDropdown}
+                  dropDownContainerStyle={styles.dropDownContainerStyle}
+                  textStyle={styles.dropDownTextStyle}
                   setOpen={
                     _v.setOpenSuitableSpacerProvidedToMaintainCoverToSteel
                   }
@@ -2760,6 +2832,9 @@ export const CustomForms = (_v: any) => {
                   open={_v.openNoLBendBottomOfTheCageChecked}
                   value={_v.noLBendBottomOfTheCageChecked}
                   items={YES_NO_NA_LIST}
+                  style={styles.selectDropdown}
+                  dropDownContainerStyle={styles.dropDownContainerStyle}
+                  textStyle={styles.dropDownTextStyle}
                   setOpen={_v.setOpenNoLBendBottomOfTheCageChecked}
                   setValue={_v.setNoLBendBottomOfTheCageChecked}
                 />

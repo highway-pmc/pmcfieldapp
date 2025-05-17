@@ -10,7 +10,8 @@ export const styles = StyleSheet.create({
   },
   selectDropdown: {
     backgroundColor: '#fff',
-    padding: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 5,
     borderRadius: 4,
     borderColor: '#ddd',
     borderWidth: 1,
@@ -18,6 +19,16 @@ export const styles = StyleSheet.create({
     fontSize: 12,
     color: '#2c2c2c',
     position: 'relative',
+    maxHeight: 30,
+    minHeight: 45
+  },
+  dropDownContainerStyle: {
+    borderColor: '#ddd',
+  },
+  dropDownTextStyle: {
+    fontSize: 12,
+    margin: 0,
+    color: '#2c2c2c',
   },
   MainContainer: {
     flexDirection: 'column',
@@ -40,7 +51,7 @@ export const styles = StyleSheet.create({
   },
   Lable: {
     fontSize: 12,
-    marginBottom: 5,
+    marginBottom: 3,
     color: '#666',
     fontWeight: '500',
   },

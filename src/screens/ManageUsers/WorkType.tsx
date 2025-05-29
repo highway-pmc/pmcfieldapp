@@ -119,13 +119,20 @@ const WorkType = ({navigation}: {navigation: any}) => {
       <View style={styles.tabContent}>
         {activeTab === WORK_TYPE.SITE_WORK && (
           <View style={styles.rfiTabBar}>
-            {roles.map((role: any) => (
+            {roles.map((role: any, index: number) => (
               <TileCardComponent
+                key={index}
                 title={role.title}
-                content={role.discription}
+                workType={role.workType}
                 bgColor={role.backgroundColor}
                 imageBg={role.imageBg}
+                linearLight={role.linearLight}
+                linearDark={role.linearDark}
                 image={role.src}
+                generatedTask={role.generatedTask}
+                inProgressTask={role.inProgressTask}
+                closedTask={role.closedTask}
+                rejected={role.rejected}
                 onPress={() => onPressWorkType(role.workType)}
               />
             ))}

@@ -49,6 +49,8 @@ import ProcurementsPrestressing from '../../screens/ManageUsers/QualityWorks/Pro
 import EquipmentCalibrationListing from '../../screens/ManageUsers/QualityWorks/Equipment/EquipmentCalibrationListing';
 import Equipment from '../../screens/ManageUsers/QualityWorks/Equipment/EquipmentAdd';
 import EquipmentListing from '../../screens/ManageUsers/QualityWorks/Equipment/EquipmentListing';
+import StoreHome from '../../screens/Store/StoreHome';
+import AddPurchase from '../../screens/Store/AddPurchase';
 const Stack = createStackNavigator();
 
 const screenOptionStyle = {
@@ -186,7 +188,22 @@ const EquipmentStackNavigator = () => {
     </Stack.Navigator>
   );
 };
-
+const StoreStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen
+        name="Store"
+        component={StoreHome}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="AddPurchase"
+        component={AddPurchase}
+        options={{headerShown: false}}
+      />
+    </Stack.Navigator>
+  );
+};
 const MixDesignStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
@@ -412,4 +429,5 @@ export {
   ProjectInfoStackNavigator,
   ChangePasswordStackNavigator,
   EquipmentStackNavigator,
+  StoreStackNavigator,
 };

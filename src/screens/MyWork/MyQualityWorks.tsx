@@ -187,6 +187,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
   const handleApprovalType = (selectedOption: any) => {
     setSelectedValues(selectedOption);
     getMyWorksData(selectedOption?.type);
+    console.log('selectedOption', selectedOption);
   };
 
   useEffect(() => {
@@ -251,8 +252,6 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
   const onMyTestClick = (item: any) => {
     setCurrentLevel(1);
     if (isTestInventoryClassification(item.type)) {
-      // TODO - will introduce type in db and use it iso Classification Name
-      //const testWorkCategory = item.testWorkCategoriesData[1];
       navigation.navigate('SelectTestWorkCategory', {
         testClassificationId: item.id,
         testClassificationName: item.name,
@@ -1428,7 +1427,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
                     {testClassificationItem.name}
                   </Text>
                   <View style={{flexDirection: 'row'}}>
-                    <Text style={styles.SubHeadingText}>Assigned:</Text>
+                    <Text style={styles.SubHeadingText}>Assigned :</Text>
                     <Text style={[styles.SubHeadingText, styles.SubActive]}>
                       {testClassificationItem.name}
                     </Text>

@@ -18,8 +18,8 @@ const RFIsDashboard = ({route, navigation}: {route: any; navigation: any}) => {
   const {rfiType} = route.params;
 
   const [activeTab, setActiveTab] = useState(WORK_TYPE.SITE_WORK);
-
   const focus = useIsFocused();
+
   useEffect(() => {
     if (focus == true) {
       const eventEmitter = new NativeEventEmitter();
@@ -62,6 +62,20 @@ const RFIsDashboard = ({route, navigation}: {route: any; navigation: any}) => {
             {WORK_TYPE.LAB_WORK}
           </Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.tabItem,
+            activeTab === WORK_TYPE.SURVEY_WORK && styles.activeTab,
+          ]}
+          onPress={() => switchTab(WORK_TYPE.SURVEY_WORK)}>
+          <Text
+            style={[
+              styles.activeTabText,
+              activeTab === WORK_TYPE.SURVEY_WORK && styles.activeFontColor,
+            ]}>
+            {WORK_TYPE.SURVEY_WORK}
+          </Text>
+        </TouchableOpacity>
       </View>
       <View style={styles.tabContent}>
         {activeTab === WORK_TYPE.SITE_WORK && (
@@ -70,15 +84,17 @@ const RFIsDashboard = ({route, navigation}: {route: any; navigation: any}) => {
         {activeTab === WORK_TYPE.LAB_WORK && (
           <RFIsRecentsMyQuality rfiType={rfiType}></RFIsRecentsMyQuality>
         )}
+        {activeTab === WORK_TYPE.SURVEY_WORK && <Text>Survey Work</Text>}
       </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {backgroundColor: '#fff', flex: 1},
   tabBar: {
-    margin: 10,
+    marginTop: 15,
+    marginHorizontal: 10,
     flexDirection: 'row',
     backgroundColor: '#D2C5FF',
     alignItems: 'center',
@@ -90,7 +106,7 @@ const styles = StyleSheet.create({
   tabItem: {
     flex: 1,
     paddingVertical: 10,
-    paddingHorizontal: 15,
+    paddingHorizontal: 5,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -103,7 +119,7 @@ const styles = StyleSheet.create({
   },
   activeTabText: {
     color: '#ffffff',
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '500',
   },
   tabContent: {

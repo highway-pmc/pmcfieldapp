@@ -50,6 +50,8 @@ export const HeaderItems = {
   equipmentInfo: {showBack: true, title: 'Equipment '},
   equipmentCalibrationListing: {showBack: true, title: 'Equipment Calibration'},
   equipmentCalibrationInfo: {showBack: true, title: 'Equipment'},
+  store: {showBack: false, title: 'Store'},
+  addPurchase:{showBack: true, title: 'Add Purchase'},
 };
 
 export const UserRoles = {
@@ -78,7 +80,7 @@ export const Dashboard_MENU = [
   {
     id: '1',
     icon: require('./../images/homeDashbord/myWork.png'),
-    iconMenu: require('./../images/menu/manage-icon.png'),
+    iconMenu: require('./../images/homeDashbord/myWork.png'),
     title: 'My Work',
     subTitle: 'Assigned Work',
     route: 'MyWorkType',
@@ -86,6 +88,7 @@ export const Dashboard_MENU = [
     titleColor: '#1C6BA4',
     border: '#D0EDF3',
     permissions: [
+      'user',
       'project-head',
       'structure-head',
       'highway-head',
@@ -96,7 +99,7 @@ export const Dashboard_MENU = [
   {
     id: '2',
     icon: require('./../images/homeDashbord/userManagement.png'),
-    iconMenu: require('./../images/menu/mywork-icon.png'),
+    iconMenu: require('./../images/homeDashbord/userManagement.png'),
     title: 'User Management',
     subTitle: 'Manage User',
     route: 'ManageUsers',
@@ -114,7 +117,7 @@ export const Dashboard_MENU = [
   {
     id: '3',
     icon: require('./../images/homeDashbord/report.png'),
-    iconMenu: require('./../images/menu/report-menu-icon.png'),
+    iconMenu: require('./../images/homeDashbord/report.png'),
     title: 'Report',
     subTitle: 'Generated Report',
     route: 'ReportsDashboard',
@@ -133,7 +136,7 @@ export const Dashboard_MENU = [
   {
     id: '4',
     icon: require('./../images/homeDashbord/manageRFI.png'),
-    iconMenu: require('./../images/menu/manage-rfi-icom.png'),
+    iconMenu: require('./../images/homeDashbord/manageRFI.png'),
     title: "Manage RFI's",
     subTitle: 'Responsible for Managing',
     route: 'RFIsHome',
@@ -151,7 +154,7 @@ export const Dashboard_MENU = [
   {
     id: '5',
     icon: require('./../images/homeDashbord/qualitywork.png'),
-    iconMenu: require('./../images/menu/mywork-icon.png'),
+    iconMenu: require('./../images/homeDashbord/qualitywork.png'),
     title: 'Quality Work',
     subTitle: 'Implements Quality Control',
     route: 'MyQualityWorks',
@@ -164,7 +167,7 @@ export const Dashboard_MENU = [
   {
     id: '6',
     icon: require('./../images/homeDashbord/equipment.png'),
-    iconMenu: require('./../images/menu/mywork-icon.png'),
+    iconMenu: require('./../images/homeDashbord/equipment.png'),
     title: 'Equipment',
     subTitle: 'Equipment Handling',
     route: 'EquipmentListing',
@@ -177,7 +180,7 @@ export const Dashboard_MENU = [
   {
     id: '7',
     icon: require('./../images/homeDashbord/mixDesign.png'),
-    iconMenu: require('./../images/menu/mywork-icon.png'),
+    iconMenu: require('./../images/homeDashbord/mixDesign.png'),
     title: 'Mix Design',
     subTitle: 'Mix Design',
     route: 'MixDesignListing',
@@ -190,7 +193,7 @@ export const Dashboard_MENU = [
   {
     id: '8',
     icon: require('./../images/dashboard/my-work-icon.png'),
-    iconMenu: require('./../images/menu/mywork-icon.png'),
+    iconMenu: require('./../images/dashboard/my-work-icon.png'),
     title: 'My Task',
     subTitle: 'Check your task',
     route: 'MyTask',
@@ -201,11 +204,68 @@ export const Dashboard_MENU = [
   },
   {
     id: '9',
-    icon: require('./../images/dashboard/progress-icon.png'),
-    iconMenu: require('./../images/menu/progress-dash-icon.png'),
+    icon: require('./../images/dashboard/progess-dashboard.png'),
+    iconMenu: require('./../images/dashboard/progess-dashboard.png'),
     title: 'Progress Dashboard',
     subTitle: 'Progress',
     route: 'Progress',
+    backgroundColor: '#FDD1E0',
+    titleColor: '#FF77A3',
+    border: '#FFA2BF',
+    permissions: [
+      'project-head',
+      'structure-head',
+      'highway-head',
+      'other-work-head',
+      'quality-head',
+      'user',
+    ],
+  },
+  {
+    id: '10',
+    icon: require('./../images/dashboard/project-info.png'),
+    iconMenu: require('./../images/dashboard/project-info.png'),
+    title: 'Project Info',
+    subTitle: 'Project Info',
+    route: 'ProjectInfo',
+    backgroundColor: '#FEE6B5',
+    titleColor: '#FEA261',
+    border: '#FFCE72',
+    permissions: [
+      'project-head',
+      'structure-head',
+      'highway-head',
+      'other-work-head',
+      'quality-head',
+      'user',
+    ],
+  },
+  {
+    id: '11',
+    icon: require('./../images/dashboard/store.png'),
+    iconMenu: require('./../images/dashboard/store.png'),
+    title: 'Store',
+    subTitle: 'Add Purchase & Update Inventory',
+    route: 'Store',
+    backgroundColor: '#A7E1F7',
+    titleColor: '#66949A',
+    border: '#96D1D9',
+    permissions: [
+      'project-head',
+      'structure-head',
+      'highway-head',
+      'other-work-head',
+      'quality-head',
+      'user',
+    ],
+  },
+  {
+    id: '12',
+    icon: require('./../images/dashboard/my-work-icon.png'),
+    iconMenu: require('./../images/dashboard/my-work-icon.png'),
+    title: 'Production',
+    subTitle: 'Production',
+    route: '',
     backgroundColor: '#E9FFE9',
     titleColor: '#5EAB4B',
     border: '#F6D5E2',
@@ -219,12 +279,12 @@ export const Dashboard_MENU = [
     ],
   },
   {
-    id: '10',
+    id: '13',
     icon: require('./../images/dashboard/my-work-icon.png'),
-    iconMenu: require('./../images/menu/mywork-icon.png'),
-    title: 'Project Info',
-    subTitle: 'Project Info',
-    route: 'ProjectInfo',
+    iconMenu: require('./../images/dashboard/my-work-icon.png'),
+    title: 'Surveying',
+    subTitle: 'Surveying',
+    route: '',
     backgroundColor: '#E9FFE9',
     titleColor: '#5EAB4B',
     border: '#F6D5E2',
@@ -489,8 +549,14 @@ export const TEST_SAMPLE_CONCRETE_CATEGORY = {
 };
 
 export const WORK_TYPE = {
-  SITE_WORK: 'Site Work',
-  LAB_WORK: 'Lab Work',
+  SITE_WORK: 'My Work',
+  LAB_WORK: 'Quality Work',
+  SURVEY_WORK:'Survey Work',
+};
+
+export const STORE_OPTION = {
+  PURCHASING: 'Purchasing',
+  INVENTORY: 'Inventory',
 };
 
 export const WORK_ASSIGNMENT_LEVEL = {
@@ -856,8 +922,8 @@ export const TEST_TYPES = {
   CYCLIC_MOTION_TEST: 'cyclic-motion-test',
   VISUAL_DIMENSION_TEST: 'visual-and-dimension-test',
   //Other
-  RETRO_REFLECTION_SIGN_BOARD:'',
-  DIMENSION_OF_SIGN_BOARD:'',
+  RETRO_REFLECTION_SIGN_BOARD: '',
+  DIMENSION_OF_SIGN_BOARD: '',
 };
 
 export const YES_NO_LIST = [

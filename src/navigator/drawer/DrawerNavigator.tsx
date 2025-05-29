@@ -16,6 +16,7 @@ import {
   ReportsStackNavigator,
   MixDesignStackNavigator,
   EquipmentStackNavigator,
+  StoreStackNavigator,
 } from './StackNavigator';
 import ForgotPasswordStep3 from '../../screens/ForgotPassword/Step3';
 import {useSelector} from 'react-redux';
@@ -62,25 +63,6 @@ const DrawerNavigator = () => {
           headerShown: false,
         }}
       />
-      {/* {
-        !projectHead ? 
-        <Drawer.Screen
-        name="MyWork"
-        component={MyWorkStackNavigator}
-        options={{
-          headerShown: false
-        }}
-      />
-      :
-      <Drawer.Screen
-        name="MyWork"
-        component={MyWorkPHStackNavigator}
-        options={{
-          headerShown: false
-        }}
-      />
-      } */}
-
       <Drawer.Screen
         name="MyTask"
         component={MyTaskStackNavigator}
@@ -105,6 +87,13 @@ const DrawerNavigator = () => {
       <Drawer.Screen
         name="EquipmentListing"
         component={EquipmentStackNavigator}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Drawer.Screen
+        name="Store"
+        component={StoreStackNavigator}
         options={{
           headerShown: false,
         }}

@@ -25,6 +25,7 @@ import LoadingAnimation from '../Common/LoadingAnimation';
 import Pdf from 'react-native-pdf';
 import {SwipeListView} from 'react-native-swipe-list-view';
 import {getDisplayDate, getDisplayTime} from '../../utils/Utils';
+import commonStyles from '../Common/commonStyles';
 const {height} = Dimensions.get('window');
 
 const RFIsRecents = (props: any) => {
@@ -9198,9 +9199,55 @@ const RFIsRecents = (props: any) => {
         );
     }
   };
-
+  const [selectedCategory, setSelectedCategory] = useState('structure');
   return (
     <View>
+      <View style={commonStyles.toggleContainer}>
+        <TouchableOpacity
+          style={[
+            commonStyles.toggleButton,
+            selectedCategory === 'structure' && commonStyles.activeToggleButton,
+          ]}
+          onPress={() => setSelectedCategory('structure')}>
+          <Text
+            style={[
+              commonStyles.toggleText,
+              selectedCategory === 'structure' && commonStyles.activeToggleText,
+            ]}>
+            Structure
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[
+            commonStyles.toggleButton,
+            selectedCategory === 'highway' && commonStyles.activeToggleButton,
+          ]}
+          onPress={() => setSelectedCategory('highway')}>
+          <Text
+            style={[
+              commonStyles.toggleText,
+              selectedCategory === 'highway' && commonStyles.activeToggleText,
+            ]}>
+            Highway
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[
+            commonStyles.toggleButton,
+            selectedCategory === 'other' && commonStyles.activeToggleButton,
+          ]}
+          onPress={() => setSelectedCategory('other')}>
+          <Text
+            style={[
+              commonStyles.toggleText,
+              selectedCategory === 'other' && commonStyles.activeToggleText,
+            ]}>
+            Other
+          </Text>
+        </TouchableOpacity>
+      </View>
       <Text style={styles.headerText}> Recent {getRFIType()} RFI's</Text>
       <View style={styles.recentWorkContainer}>
         <View style={styles.recentWorkHead}>

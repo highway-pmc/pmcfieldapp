@@ -55,21 +55,21 @@ const KebabMenu = ({
             ]}>
             {onAdd && (
               <Text
-                style={[styles.menuItem, {borderBottomWidth: 1}]}
+                style={[styles.menuItem]}
                 onPress={() => handlePress(onAdd)}>
                 Add
               </Text>
             )}
             {onView && (
               <Text
-                style={[styles.menuItem, {borderBottomWidth: 1}]}
+                style={[styles.menuItem]}
                 onPress={() => handlePress(onView)}>
                 View
               </Text>
             )}
             {onEdit && (
               <Text
-                style={[styles.menuItem, {borderBottomWidth: 1}]}
+                style={[styles.menuItem]}
                 onPress={() => handlePress(onEdit)}>
                 Edit
               </Text>
@@ -118,7 +118,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333',
     textAlign: 'center',
-    
   },
 });
 

@@ -424,8 +424,14 @@ const AssignTestMaterials = ({
                         tintColors={{true: '#5A2AAF', false: '#818181'}}
                       />
                     )}
-                    <View>
+                    <View style={{flex: 1}}>
                       <Text style={styles.categoryText}>{item.name}</Text>
+                    </View>
+
+                    <View>
+                      <Text style={[styles.categoryText, {color: '#5A7EF8',fontWeight:'500'}]}>
+                        32
+                      </Text>
                     </View>
                   </View>
                   <TouchableOpacity
@@ -621,7 +627,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: 20,
-    paddingHorizontal: 15,
+    paddingHorizontal: 20,
     borderRadius: 16,
     position: 'relative',
   },
@@ -643,6 +649,7 @@ const styles = StyleSheet.create({
   },
   arrowContainer: {
     alignSelf: 'center',
+    marginRight: 10,
   },
   ImageSearch: {
     position: 'absolute',

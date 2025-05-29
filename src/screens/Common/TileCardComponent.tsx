@@ -7,6 +7,7 @@ import {
   Dimensions,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import LinearGradient from 'react-native-linear-gradient';
 
 const imageMap: any = {
   structure: require('./../../images/myWork/structure.png'),
@@ -14,94 +15,150 @@ const imageMap: any = {
   other: require('./../../images/myWork/other.png'),
 };
 
-const {width} = Dimensions.get('window');
-const itemWidth = (width - 50) / 2;
+// Define the component props interface for better type checking
+interface TileCardProps {
+  title: string;
+  workType: string;
+  imageBg: string;
+  bgColor: string;
+  linearLight: string;
+  linearDark: string;
+  image: string;
+  generatedTask: number;
+  inProgressTask: number;
+  closedTask: number;
+  rejected: number;
+  onPress: () => void;
+}
 
-const TileCardComponent = (props: any) => {
-  console.log('TileCardComponent', props);
+const TileCardComponent = (props: TileCardProps) => {
+  const {
+    title,
+    imageBg,
+    bgColor,
+    linearLight,
+    linearDark,
+    image,
+    generatedTask,
+    inProgressTask,
+    closedTask,
+    rejected,
+    onPress,
+  } = props;
+
+  const gradientColors = [linearLight || bgColor, linearDark || bgColor];
+
   return (
-    <TouchableOpacity
-      style={[styles.card, {backgroundColor: props.bgColor}]}
-      onPress={props.onPress}>
-      <View style={[styles.iconsStyle, {backgroundColor: props.imageBg}]}>
-        {props.image && (
-          <Image
-            source={imageMap[props.image]}
-            style={styles.image}
-            resizeMode="contain"
-          />
-        )}
-      </View>
+    <TouchableOpacity style={styles.cardWrapper} onPress={onPress}>
+      <LinearGradient
+        colors={gradientColors}
+        start={{x: 0, y: 0}}
+        end={{x: 1, y: 0}}
+        style={styles.card}>
+        <View style={styles.container}>
+          <View style={styles.textContainer}>
+            <Text style={styles.title}>{title} Work</Text>
 
-      <Text style={styles.title}>{props.title}</Text>
-      <Text style={styles.content}>{props.content}</Text>
+            <View style={styles.tasksContainer}>
+              <Text style={styles.taskLabel}>
+                Generated Task:{' '}
+                <Text style={styles.taskValue}>{generatedTask}</Text>
+              </Text>
+              <Text style={styles.taskLabel}>
+                In progress Task:{' '}
+                <Text style={styles.taskValue}>{inProgressTask}</Text>
+              </Text>
+              <Text style={styles.taskLabel}>
+                Closed Task: <Text style={styles.taskValue}>{closedTask}</Text>
+              </Text>
+              <Text style={styles.taskLabel}>
+                Rejected: <Text style={styles.taskValue}>{rejected}</Text>
+              </Text>
+            </View>
+          </View>
+
+          <View style={styles.imageContainer}>
+            {image && (
+              <Image
+                source={imageMap[image]}
+                style={styles.image}
+                resizeMode="contain"
+              />
+            )}
+          </View>
+        </View>
+      </LinearGradient>
     </TouchableOpacity>
   );
 };
 
 TileCardComponent.propTypes = {
   title: PropTypes.string.isRequired,
-  content: PropTypes.string.isRequired,
-  image: PropTypes.string,
+  workType: PropTypes.string.isRequired,
   imageBg: PropTypes.string,
   bgColor: PropTypes.string,
+  linearLight: PropTypes.string,
+  linearDark: PropTypes.string,
+  image: PropTypes.string,
+  generatedTask: PropTypes.number,
+  inProgressTask: PropTypes.number,
+  closedTask: PropTypes.number,
+  rejected: PropTypes.number,
   onPress: PropTypes.func.isRequired,
 };
 
 const styles = StyleSheet.create({
-  card: {
-    width: itemWidth,
-    height: 180,
+  cardWrapper: {
+    width: '100%',
+    marginBottom: 5,
     borderRadius: 10,
-    padding: 15,
-    marginBottom: 15,
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
+    overflow: 'hidden',
     elevation: 1,
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 1},
     shadowOpacity: 0.05,
     shadowRadius: 1,
   },
-  subTextContainer: {
-    width: '80%',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
+  card: {
+    width: '100%',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 10,
+  },
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  textContainer: {
+    flex: 1,
     justifyContent: 'flex-start',
   },
-  image: {
-    width: '100%',
-    height: '100%', 
-  },
   title: {
-    fontSize: 18,
-    fontWeight: '700',
-    marginBottom: 5,
-    color: '#fff',
+    fontSize: 20,
+    fontWeight: '600',
+    marginBottom: 15,
+    color:"#333333"
   },
-  content: {
-    fontSize: 12,
-    color: '#fff',
-    fontWeight: '400',
-  },
-  iconsStyle: {
-    padding: 8,
-    width: 60,
-    height: 60,
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
+  tasksContainer: {
     marginTop: 5,
-    marginBottom: 20,
-    overflow: 'hidden',
   },
-  rightStyle: {
-    width: 50,
+  taskLabel: {
+    fontSize: 13,
+    fontWeight: '400',
+    color: '#666666',
   },
-  CloseIcon: {
-    width: 45,
-    height: 45,
-    tintColor: '#fff',
+  taskValue: {
+    fontWeight: '700',
+  },
+  imageContainer: {
+    width: '30%',
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+  },
+  image: {
+    width: 120,
+    height: 120,
+    opacity: 0.5,
   },
 });
 

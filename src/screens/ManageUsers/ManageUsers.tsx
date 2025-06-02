@@ -174,12 +174,24 @@ const ManageUsers = ({navigation}: {navigation: any}) => {
           cate.isChecked = false;
         }
       });
+    } else if (item.isChecked && item.name === USER_CATEGORY.SURVEY_WORK) {
+      userCategories.forEach((cate: any) => {
+        if (cate.name != USER_CATEGORY.SURVEY_WORK) {
+          cate.isChecked = false;
+        }
+      });
     } else if (item.isChecked) {
       const qualityWork: any = userCategories.find(
         (cate: any) => cate.name === USER_CATEGORY.QUALITY_WORK,
       );
       if (qualityWork) {
         qualityWork.isChecked = false;
+      }
+      const surveyWork: any = userCategories.find(
+        (cate: any) => cate.name === USER_CATEGORY.SURVEY_WORK,
+      );
+      if (surveyWork) {
+        surveyWork.isChecked = false;
       }
     }
     setUserCategories([...userCategories]);

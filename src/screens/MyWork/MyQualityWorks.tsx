@@ -1388,6 +1388,15 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
                 handleApprovalType(selectedOption)
               }
             />
+
+            {approvalTypeArray.map((item: any, index: number) => (
+              <TouchableOpacity
+                onPress={() => handleApprovalType(item)}>
+                <View key={index}>
+                  <Text>{item.name}</Text>
+                </View>
+              </TouchableOpacity>
+            ))}
           </View>
         </View>
       )}

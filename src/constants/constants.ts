@@ -51,7 +51,7 @@ export const HeaderItems = {
   equipmentCalibrationListing: {showBack: true, title: 'Equipment Calibration'},
   equipmentCalibrationInfo: {showBack: true, title: 'Equipment'},
   store: {showBack: false, title: 'Store'},
-  addPurchase:{showBack: true, title: 'Add Purchase'},
+  addPurchase: {showBack: true, title: 'Add Purchase'},
 };
 
 export const UserRoles = {
@@ -261,14 +261,14 @@ export const Dashboard_MENU = [
   },
   {
     id: '12',
-    icon: require('./../images/dashboard/my-work-icon.png'),
-    iconMenu: require('./../images/dashboard/my-work-icon.png'),
+    icon: require('./../images/homeDashbord/production.png'),
+    iconMenu: require('./../images/homeDashbord/production.png'),
     title: 'Production',
     subTitle: 'Production',
     route: '',
-    backgroundColor: '#E9FFE9',
-    titleColor: '#5EAB4B',
-    border: '#F6D5E2',
+    backgroundColor: '#A8BBF2',
+    titleColor: '#1E3A8A',
+    border: '#8DA2DF',
     permissions: [
       'project-head',
       'structure-head',
@@ -280,14 +280,14 @@ export const Dashboard_MENU = [
   },
   {
     id: '13',
-    icon: require('./../images/dashboard/my-work-icon.png'),
-    iconMenu: require('./../images/dashboard/my-work-icon.png'),
+    icon: require('./../images/homeDashbord/surveying.png'),
+    iconMenu: require('./../images/homeDashbord/surveying.png'),
     title: 'Surveying',
     subTitle: 'Surveying',
     route: '',
-    backgroundColor: '#E9FFE9',
-    titleColor: '#5EAB4B',
-    border: '#F6D5E2',
+    backgroundColor: '#FFEFC8',
+    titleColor: '#FBC02D',
+    border: '#FFE094',
     permissions: [
       'project-head',
       'structure-head',
@@ -399,6 +399,7 @@ export const USER_CATEGORY = {
   HIGHWAY_WORK: 'highway-work',
   OTHER_WORK: 'other-work',
   QUALITY_WORK: 'quality-work',
+  SURVEY_WORK: 'survey-work',
 };
 
 export const USER_CATEGORY_DISPLAY = {
@@ -406,6 +407,7 @@ export const USER_CATEGORY_DISPLAY = {
   HIGHWAY: 'Highway',
   OTHER: 'Other',
   QUALITY: 'Quality',
+  SURVEY: ' Survey',
 };
 
 export const USER_CATEGORIES = [
@@ -429,6 +431,11 @@ export const USER_CATEGORIES = [
     value: USER_CATEGORY.QUALITY_WORK,
     isChecked: false,
   },
+  {
+    label: 'Survey Work',
+    value: USER_CATEGORY.SURVEY_WORK,
+    isChecked: false,
+  },
 ];
 
 export const PROJECT_TYPE = {
@@ -436,6 +443,7 @@ export const PROJECT_TYPE = {
   HIGHWAY_WORK: 'highway-work',
   OTHER_WORK: 'other-work',
   QUALITY_WORK: 'quality-work',
+  SURVEY_WORK: 'survey-work',
 };
 
 export const SEGMENT_TYPES = {
@@ -551,7 +559,7 @@ export const TEST_SAMPLE_CONCRETE_CATEGORY = {
 export const WORK_TYPE = {
   SITE_WORK: 'My Work',
   LAB_WORK: 'Quality Work',
-  SURVEY_WORK:'Survey Work',
+  SURVEY_WORK: 'Survey Work',
 };
 
 export const STORE_OPTION = {

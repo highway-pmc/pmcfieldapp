@@ -164,8 +164,8 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
     if (focus == true) {
       const eventEmitter = new NativeEventEmitter();
       eventEmitter.emit('headerEvent', HeaderItems.myQualityWorks);
-      setCurrentLevel(1);
-      setMyTestsDataAll([]);
+      setCurrentLevel(0);
+      setMyTestsDataAll([...approvalTypeArray]);
       setMyTestsData([]);
       setCurrentTestWorkCategoryData([]);
       setCurrentTestMaterialsData([]);
@@ -191,7 +191,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
   };
 
   useEffect(() => {
-    getMyWorksData(selectedValues?.type);
+   // getMyWorksData(selectedValues?.type);
   }, [selectedValues]);
 
   const getMyWorksData = (selectedType: any) => {
@@ -206,9 +206,13 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
 
   useEffect(() => {
     if (myTests) {
-      setCurrentLevel(0);
-      setMyTestsDataAll(myTests);
+      //setCurrentLevel(0);
+      // setMyTestsDataAll(myTests);
+      onMyTestClick(myTests[0]);
     }
+  }, [myTests]);
+
+  useEffect(() => {
     if (testSampleUpdated) {
       const sampleDataTemp: any = [...currentSubTestTypeRFIsData];
       const updatedSampleIndex = sampleDataTemp.findIndex(
@@ -230,7 +234,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
       dispatch(clearMyWorksEvent());
       getMyWorksData(selectedValues?.type);
     }
-  }, [myTests, testSampleUpdated, rfiChecklistSaved, error]);
+  }, [testSampleUpdated, rfiChecklistSaved, error]);
 
   // unmount
   useEffect(
@@ -250,7 +254,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
   );
 
   const onMyTestClick = (item: any) => {
-    setCurrentLevel(1);
+    //setCurrentLevel(1);
     if (isTestInventoryClassification(item.type)) {
       navigation.navigate('SelectTestWorkCategory', {
         testClassificationId: item.id,
@@ -262,6 +266,9 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
       return;
     }
     setMyTestsData([item]);
+    setTimeout(() => {
+      onClick(2, item.assignmentLevel, 0, -1, -1, -1, [item])
+    }, 100);    
   };
 
   const onClick = (
@@ -271,8 +278,9 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
     workCateIndex: number = -1,
     testMateIndex: number = -1,
     testTypeIndex: number = -1,
+    myTestsDataDuplicate: any = null
   ) => {
-    const testClassifData: any = myTestsData[testClassifIndex];
+    const testClassifData: any = myTestsData[testClassifIndex] || myTestsDataDuplicate[testClassifIndex];
     if (isTestInventoryClassification(testClassifData.type)) {
       // TODO - will introduce type in db and use it iso Classification Name
       const testWorkCategory = testClassifData.testWorkCategoriesData[0];
@@ -1347,7 +1355,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
                   <Text
                     style={styles.BreadcrumbPrevTextUnderline}
                     onPress={() =>
-                      index === 0 && (setCurrentLevel(1), setBreadcrumbData([]))
+                      index === 0 && (setCurrentLevel(0), setBreadcrumbData([]))
                     }>
                     {item.name}
                   </Text>
@@ -1366,30 +1374,20 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
             ))}
           </ScrollView>
         </View>
-      ) : (
-        currentLevel !== 0 && (
-          <View style={styles.BackToQualityworkContainer}>
-            <Text
-              style={styles.BreadcrumbPrevTextUnderline}
-              onPress={() => (setCurrentLevel(0), setBreadcrumbData([]))}>
-              Back to quality work
-            </Text>
-          </View>
-        )
-      )}
-      {currentLevel === 0 && (
+      ) : null}
+      {/* {currentLevel === 0 && (
         <View style={{paddingHorizontal: 10}}>
-          <View style={styles.qualityDropDown}>
-            <CustomSelectDropdown
+          <View style={styles.qualityDropDown}> */}
+            {/* <CustomSelectDropdown
               label="Selected Type"
               data={approvalTypeArray}
               selectedValue={selectedValues}
               onSelect={(selectedOption: any) =>
                 handleApprovalType(selectedOption)
               }
-            />
+            /> */}
 
-            {approvalTypeArray.map((item: any, index: number) => (
+            {/* {approvalTypeArray.map((item: any, index: number) => (
               <TouchableOpacity
                 onPress={() => handleApprovalType(item)}>
                 <View key={index}>
@@ -1399,7 +1397,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
             ))}
           </View>
         </View>
-      )}
+      )} */}
 
       {currentLevel !== 0 && currentLevel !== 1 && currentLevel !== 4 ? (
         <View style={styles.SearchBox}>
@@ -1430,7 +1428,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
                   styles.MyWorkCard,
                   {backgroundColor: colors[index % colors.length]},
                 ]}
-                onPress={() => onMyTestClick(testClassificationItem)}>
+                onPress={() => handleApprovalType(testClassificationItem)}>
                 <View style={styles.TaskDetails}>
                   <Text style={styles.HeadingText}>
                     {testClassificationItem.name}

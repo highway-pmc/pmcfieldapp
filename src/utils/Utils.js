@@ -24,6 +24,11 @@ const isProductionClassification = (testClassificationType) => {
     return (testClassificationType === TEST_CLASSIFICATION_TYPES.PRODUCTION);
 }
 
+const isEquipmentClassification = (testClassificationType) => {
+    // TODO: need to introduce types in db and use them here iso name
+    return (testClassificationType === TEST_CLASSIFICATION_TYPES.EQUIPMENTS);
+}
+
 const getDbDate = (date) => {
     return moment(new Date(date)).format('YYYY-MM-DD');
 }
@@ -46,6 +51,7 @@ export {
     isTestInventoryClassification,
     isStoreClassification,
     isProductionClassification,
+    isEquipmentClassification,
     getDbDate,
     getDbDateFromDDMMYYYY,
     getDisplayDate,

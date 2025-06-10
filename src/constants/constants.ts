@@ -50,6 +50,10 @@ export const HeaderItems = {
     showBack: true,
     title: 'Assign Production Users',
   },
+  assignEquipmentUsers: {
+    showBack: true,
+    title: 'Assign Equipment Users',
+  },
   assignTestWorkCategory: {showBack: true, title: 'Assign Test Work Category'},
   selectTestWorkCategory: {showBack: true, title: 'Select Test Work Category'},
   assignTestMaterials: {showBack: true, title: 'Assign Test Materials'},
@@ -468,6 +472,7 @@ export const PROJECT_TYPE = {
   ADMIN_WORK: 'admin-work',
   STORES: 'stores',
   PRODUCTION: 'production',
+  EQUIPMENTS: 'equipments',
 };
 
 export const SEGMENT_TYPES = {
@@ -586,6 +591,7 @@ export const WORK_TYPE = {
   SURVEY_WORK: 'Survey Work',
   STORE_WORK: 'Stores',
   PRODUCTION_WORK: 'Production',
+  EQUIPMENTS_WORK: 'Equipments',
 };
 
 export const STORE_OPTION = {
@@ -816,6 +822,7 @@ export const TEST_CLASSIFICATION_TYPES = {
   EQUIPMENT_CALIBRATION: 'equipment-calibration',
   STORES: 'stores',
   PRODUCTION: 'production',
+  EQUIPMENTS: 'equipments',
 };
 
 export const TEST_WORK_CATEGORY_TYPES = {

@@ -22,6 +22,7 @@ import {WORK_MODULE_TYPE} from '../Common/CommonConstantsTypes';
 import AssignSurveyUsers from './AssignSurveyUsers';
 import AssignStoreUsers from './AssignStoreUsers';
 import AssignProductionUsers from './AssignProductionUsers';
+import AssignEquipmentUsers from './AssignEquipmentUsers';
 
 const WorkType = ({navigation}: {navigation: any}) => {
   const [projectHead, setProjectHead] = useState(false);
@@ -165,6 +166,20 @@ const WorkType = ({navigation}: {navigation: any}) => {
             {WORK_TYPE.PRODUCTION_WORK}
           </Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.tabItem,
+            activeTab === WORK_TYPE.EQUIPMENTS_WORK && styles.activeTab,
+          ]}
+          onPress={() => switchTab(WORK_TYPE.EQUIPMENTS_WORK)}>
+          <Text
+            style={[
+              styles.activeTabText,
+              activeTab === WORK_TYPE.EQUIPMENTS_WORK && styles.activeFontColor,
+            ]}>
+            {WORK_TYPE.EQUIPMENTS_WORK}
+          </Text>
+        </TouchableOpacity>
       </View>
       <View style={styles.tabContent}>
         {activeTab === WORK_TYPE.SITE_WORK && (
@@ -199,6 +214,9 @@ const WorkType = ({navigation}: {navigation: any}) => {
         )}
         {activeTab === WORK_TYPE.PRODUCTION_WORK && (
           <AssignProductionUsers></AssignProductionUsers>
+        )}
+        {activeTab === WORK_TYPE.EQUIPMENTS_WORK && (
+          <AssignEquipmentUsers></AssignEquipmentUsers>
         )}
       </View>
     </View>

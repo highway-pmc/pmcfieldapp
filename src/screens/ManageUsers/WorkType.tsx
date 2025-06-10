@@ -19,6 +19,9 @@ import {useSelector} from 'react-redux';
 import AssignTestClassification from './QualityWorks/AssignTestClassification';
 import TileCardComponent from '../Common/TileCardComponent';
 import {WORK_MODULE_TYPE} from '../Common/CommonConstantsTypes';
+import AssignSurveyUsers from './AssignSurveyUsers';
+import AssignStoreUsers from './AssignStoreUsers';
+import AssignProductionUsers from './AssignProductionUsers';
 
 const WorkType = ({navigation}: {navigation: any}) => {
   const [projectHead, setProjectHead] = useState(false);
@@ -61,6 +64,11 @@ const WorkType = ({navigation}: {navigation: any}) => {
             rolesArr.push({
               title: 'Other',
               workType: PROJECT_TYPE.OTHER_WORK,
+            });
+          } else if (role === ROLES.SURVEY_HEAD) {
+            rolesArr.push({
+              title: 'Survey',
+              workType: PROJECT_TYPE.SURVEY_WORK,
             });
           }
         });
@@ -115,6 +123,48 @@ const WorkType = ({navigation}: {navigation: any}) => {
             {WORK_TYPE.LAB_WORK}
           </Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.tabItem,
+            activeTab === WORK_TYPE.SURVEY_WORK && styles.activeTab,
+          ]}
+          onPress={() => switchTab(WORK_TYPE.SURVEY_WORK)}>
+          <Text
+            style={[
+              styles.activeTabText,
+              activeTab === WORK_TYPE.SURVEY_WORK && styles.activeFontColor,
+            ]}>
+            {WORK_TYPE.SURVEY_WORK}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.tabItem,
+            activeTab === WORK_TYPE.STORE_WORK && styles.activeTab,
+          ]}
+          onPress={() => switchTab(WORK_TYPE.STORE_WORK)}>
+          <Text
+            style={[
+              styles.activeTabText,
+              activeTab === WORK_TYPE.STORE_WORK && styles.activeFontColor,
+            ]}>
+            {WORK_TYPE.STORE_WORK}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.tabItem,
+            activeTab === WORK_TYPE.PRODUCTION_WORK && styles.activeTab,
+          ]}
+          onPress={() => switchTab(WORK_TYPE.PRODUCTION_WORK)}>
+          <Text
+            style={[
+              styles.activeTabText,
+              activeTab === WORK_TYPE.PRODUCTION_WORK && styles.activeFontColor,
+            ]}>
+            {WORK_TYPE.PRODUCTION_WORK}
+          </Text>
+        </TouchableOpacity>
       </View>
       <View style={styles.tabContent}>
         {activeTab === WORK_TYPE.SITE_WORK && (
@@ -140,6 +190,15 @@ const WorkType = ({navigation}: {navigation: any}) => {
         )}
         {activeTab === WORK_TYPE.LAB_WORK && (
           <AssignTestClassification></AssignTestClassification>
+        )}
+        {activeTab === WORK_TYPE.SURVEY_WORK && (
+          <AssignSurveyUsers></AssignSurveyUsers>
+        )}
+        {activeTab === WORK_TYPE.STORE_WORK && (
+          <AssignStoreUsers></AssignStoreUsers>
+        )}
+        {activeTab === WORK_TYPE.PRODUCTION_WORK && (
+          <AssignProductionUsers></AssignProductionUsers>
         )}
       </View>
     </View>

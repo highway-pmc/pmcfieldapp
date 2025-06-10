@@ -38,6 +38,18 @@ export const HeaderItems = {
     showBack: true,
     title: 'Assign Test Classification',
   },
+  assignSurveyUsers: {
+    showBack: true,
+    title: 'Assign Survey Users',
+  },
+  assignStoreUsers: {
+    showBack: true,
+    title: 'Assign Store Users',
+  },
+  assignProductionUsers: {
+    showBack: true,
+    title: 'Assign Production Users',
+  },
   assignTestWorkCategory: {showBack: true, title: 'Assign Test Work Category'},
   selectTestWorkCategory: {showBack: true, title: 'Select Test Work Category'},
   assignTestMaterials: {showBack: true, title: 'Assign Test Materials'},
@@ -74,6 +86,7 @@ export const ROLES = {
   OTHER_WORF_HEAD: 'other-work-head',
   QUALITY_HEAD: 'quality-head',
   QUALITY_USERS: 'quality-users',
+  SURVEY_HEAD: 'survey-head',
   USER: 'user',
 };
 
@@ -400,6 +413,7 @@ export const USER_CATEGORY = {
   HIGHWAY_WORK: 'highway-work',
   OTHER_WORK: 'other-work',
   QUALITY_WORK: 'quality-work',
+  ADMIN_WORK: 'admin-work',
   SURVEY_WORK: 'survey-work',
 };
 
@@ -408,7 +422,8 @@ export const USER_CATEGORY_DISPLAY = {
   HIGHWAY: 'Highway',
   OTHER: 'Other',
   QUALITY: 'Quality',
-  SURVEY: ' Survey',
+  ADMIN: 'Admin',
+  SURVEY: 'Survey',
 };
 
 export const USER_CATEGORIES = [
@@ -437,6 +452,11 @@ export const USER_CATEGORIES = [
     value: USER_CATEGORY.SURVEY_WORK,
     isChecked: false,
   },
+  {
+    label: 'Admin Users',
+    value: USER_CATEGORY.ADMIN_WORK,
+    isChecked: false,
+  },
 ];
 
 export const PROJECT_TYPE = {
@@ -445,6 +465,9 @@ export const PROJECT_TYPE = {
   OTHER_WORK: 'other-work',
   QUALITY_WORK: 'quality-work',
   SURVEY_WORK: 'survey-work',
+  ADMIN_WORK: 'admin-work',
+  STORES: 'stores',
+  PRODUCTION: 'production',
 };
 
 export const SEGMENT_TYPES = {
@@ -561,6 +584,8 @@ export const WORK_TYPE = {
   SITE_WORK: 'My Work',
   LAB_WORK: 'Quality Work',
   SURVEY_WORK: 'Survey Work',
+  STORE_WORK: 'Stores',
+  PRODUCTION_WORK: 'Production',
 };
 
 export const STORE_OPTION = {
@@ -789,6 +814,8 @@ export const TEST_CLASSIFICATION_TYPES = {
   SOURCE_APPROVALS: 'source-approvals',
   UPLOAD_MTC: 'upload-mtc',
   EQUIPMENT_CALIBRATION: 'equipment-calibration',
+  STORES: 'stores',
+  PRODUCTION: 'production',
 };
 
 export const TEST_WORK_CATEGORY_TYPES = {

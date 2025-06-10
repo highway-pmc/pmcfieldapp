@@ -258,6 +258,10 @@ const styles = StyleSheet.create({
   equipmentCountContainer: {
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#FFF',
+    borderRadius: 20,
+    height: 30,
+    width: 30,
   },
 });
 

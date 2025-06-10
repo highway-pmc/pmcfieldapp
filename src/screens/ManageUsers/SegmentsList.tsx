@@ -1,42 +1,108 @@
-import { View, Text, TouchableOpacity, NativeEventEmitter, StyleSheet, Image, Modal, Alert, TextInput } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { useIsFocused } from '@react-navigation/native';
-import { HeaderItems, SEGMENT_TYPES_DISPLAY, WORK_ASSIGNMENT_LEVEL } from '../../constants/constants';
-import { useDispatch, useSelector } from 'react-redux';
-import { clearNextLevel, clearProjectModulesWorkAssignmentData, getProjectModuleNextLevel, getProjectModuleSegments, getUsersForWorkAssignment, segmentTypeWorkAssignToUsers, segmentWorkAssignToUsers } from './actions';
-import { ScrollView } from 'react-native-gesture-handler';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  NativeEventEmitter,
+  StyleSheet,
+  Image,
+  Modal,
+  Alert,
+  TextInput,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {useIsFocused} from '@react-navigation/native';
+import {
+  HeaderItems,
+  SEGMENT_TYPES_DISPLAY,
+  WORK_ASSIGNMENT_LEVEL,
+} from '../../constants/constants';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  clearNextLevel,
+  clearProjectModulesWorkAssignmentData,
+  getProjectModuleNextLevel,
+  getProjectModuleSegments,
+  getUsersForWorkAssignment,
+  segmentTypeWorkAssignToUsers,
+  segmentWorkAssignToUsers,
+} from './actions';
+import {ScrollView} from 'react-native-gesture-handler';
 import CheckBox from '@react-native-community/checkbox';
 import LoadingAnimation from '../Common/LoadingAnimation';
-import { groupBy } from '../../utils/Utils';
+import {groupBy} from '../../utils/Utils';
+import LinearGradient from 'react-native-linear-gradient';
 
-const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) => {
-  const { projectModuleId, projectModuleName, type, subType, workType } = route.params;
+const SegmentsList = ({route, navigation}: {route: any; navigation: any}) => {
+  const {projectModuleId, projectModuleName, type, subType, workType} =
+    route.params;
 
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const { segments, users, segmentWorkAssigned, nextLevel, loading, loadingSegment, loadingUsers, error } = useSelector((state: any) => state.WorkAssignment);
+  const {
+    segments,
+    users,
+    segmentWorkAssigned,
+    nextLevel,
+    loading,
+    loadingSegment,
+    loadingUsers,
+    error,
+  } = useSelector((state: any) => state.WorkAssignment);
   const [segmentsData, setSegmentsData] = useState([]);
   const [selectedSegmentType, setSelectedSegmentType] = useState('');
   const [segmentTypeToAssignWork, setSegmentTypeToAssignWork] = useState('');
   const [segmentsByGroupOnType, setSegmentsByGroupOnType] = useState(null);
-  const [selectedSegment, setSelectedSegment] = useState({ isChecked: false, _id: "", name: "" });
+  const [selectedSegment, setSelectedSegment] = useState({
+    isChecked: false,
+    _id: '',
+    name: '',
+  });
   const [userData, setUserCheckboxes] = useState([]);
   const [isAssignPopOpen, openAssignPopup] = useState(false);
   const [searchText, setSearchText] = useState('');
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+
+  // Function to get colors based on work type
+  const getWorkTypeColors = (workType: any) => {
+    const colorSchemes = {
+      'structure-work': {
+        gradientColors: ['#FFFFFF', '#BABABA'],
+        borderColor: '#6D6B6B',
+        leftBorderColor: '#5C5959',
+      },
+      'highway-work': {
+        gradientColors: ['#FFFFFF', '#FFB499'],
+        borderColor: '#EC825C',
+        leftBorderColor: '#EC825C',
+      },
+      'other-work': {
+        gradientColors: ['#FFFFFF', '#ABF8CA'],
+        borderColor: '#4FD384',
+        leftBorderColor: '#2E8B57',
+      },
+      // Default fallback
+      default: {
+        gradientColors: ['#FFFFFF', '#E0E7FF'],
+        borderColor: '#ABBEFD',
+        leftBorderColor: '#5A7EF8',
+      },
+    };
+
+    return colorSchemes[workType] || colorSchemes.default;
+  };
 
   useEffect(() => {
     if (segments) {
       segments.forEach((pModule: any) => {
-        pModule.isChecked = false
+        pModule.isChecked = false;
       });
-      const gbSegmentTypes = groupBy(segments, "type");
+      const gbSegmentTypes = groupBy(segments, 'type');
       setSegmentsByGroupOnType(gbSegmentTypes);
     }
 
     if (users) {
       users.forEach((user: any) => {
-        user.isChecked = false
+        user.isChecked = false;
       });
       setUserCheckboxes(users);
     }
@@ -45,15 +111,19 @@ const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) =>
   useEffect(() => {
     setSelectedSegmentType('');
     setSearchText('');
-    dispatch(getProjectModuleSegments({
-      projectId: loggedInUser.projectId,
-      projectModuleId: projectModuleId
-    }));
+    dispatch(
+      getProjectModuleSegments({
+        projectId: loggedInUser.projectId,
+        projectModuleId: projectModuleId,
+      }),
+    );
 
-    dispatch(getUsersForWorkAssignment({
-      projectId: loggedInUser.projectId,
-      workType: workType
-    }));
+    dispatch(
+      getUsersForWorkAssignment({
+        projectId: loggedInUser.projectId,
+        workType: workType,
+      }),
+    );
   }, []);
 
   if (useIsFocused()) {
@@ -64,9 +134,9 @@ const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) =>
   const onSegmentTypeClick = (type: any) => {
     setSelectedSegmentType(type);
     if (segmentsByGroupOnType) {
-      setSegmentsData(segmentsByGroupOnType[type])
+      setSegmentsData(segmentsByGroupOnType[type]);
     }
-  }
+  };
 
   const handleSegmentTypeChange = (segmentType: any) => {
     setSegmentTypeToAssignWork(segmentType);
@@ -76,17 +146,43 @@ const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) =>
         user.isChecked = false;
         delete user.assignedSegmentType;
         delete user.assignmentLevel;
-        if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.assignmentLevel === 1) != null) {
+        if (
+          user.workAssignment?.find(
+            (wa: any) =>
+              wa.projectModule?.id === projectModuleId &&
+              wa.assignmentLevel === 1,
+          ) != null
+        ) {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL1;
           user.isChecked = true;
-        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId && wa.assignmentLevel === 3) != null) {
+        } else if (
+          user.workAssignment?.find(
+            (wa: any) =>
+              wa.projectModule?.id === projectModuleId &&
+              wa.segmentId &&
+              wa.assignmentLevel === 3,
+          ) != null
+        ) {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL3;
           user.isChecked = true;
-        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId && wa.componentId && wa.assignmentLevel === 4) != null) {
+        } else if (
+          user.workAssignment?.find(
+            (wa: any) =>
+              wa.projectModule?.id === projectModuleId &&
+              wa.segmentId &&
+              wa.componentId &&
+              wa.assignmentLevel === 4,
+          ) != null
+        ) {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL4;
           user.isChecked = true;
         } else {
-          const assignedWorkLength = user.workAssignment?.filter((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentType === segmentType && wa.assignmentLevel === 2).length;
+          const assignedWorkLength = user.workAssignment?.filter(
+            (wa: any) =>
+              wa.projectModule?.id === projectModuleId &&
+              wa.segmentType === segmentType &&
+              wa.assignmentLevel === 2,
+          ).length;
           const segmentTypeLength = segmentsByGroupOnType[segmentType].length;
 
           if (assignedWorkLength === segmentTypeLength) {
@@ -102,7 +198,7 @@ const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) =>
 
   const handleRadioChange = (index: any) => {
     const segment: any = segmentsData[index];
-    segment.isChecked = !segment.isChecked
+    segment.isChecked = !segment.isChecked;
     setSelectedSegment(segment);
 
     const updatedCheckboxes: any = [...userData];
@@ -111,26 +207,79 @@ const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) =>
       updatedCheckboxes.forEach((user: any) => {
         user.isChecked = false;
         delete user.assignmentLevel;
-        if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.assignmentLevel === 1) != null) {
+        if (
+          user.workAssignment?.find(
+            (wa: any) =>
+              wa.projectModule?.id === projectModuleId &&
+              wa.assignmentLevel === 1,
+          ) != null
+        ) {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL1;
           user.isChecked = true;
-        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segment._id && wa.assignmentLevel === 3) != null) {
+        } else if (
+          user.workAssignment?.find(
+            (wa: any) =>
+              wa.projectModule?.id === projectModuleId &&
+              wa.segmentId === segment._id &&
+              wa.assignmentLevel === 3,
+          ) != null
+        ) {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL3;
           user.isChecked = true;
-        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segment._id && wa.componentId && wa.assignmentLevel === 4) != null) {
+        } else if (
+          user.workAssignment?.find(
+            (wa: any) =>
+              wa.projectModule?.id === projectModuleId &&
+              wa.segmentId === segment._id &&
+              wa.componentId &&
+              wa.assignmentLevel === 4,
+          ) != null
+        ) {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL4;
           user.isChecked = true;
-        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId && wa.componentId && wa.subComponentId && wa.taskId && wa.assignmentLevel === 5) != null) {
+        } else if (
+          user.workAssignment?.find(
+            (wa: any) =>
+              wa.projectModule?.id === projectModuleId &&
+              wa.segmentId &&
+              wa.componentId &&
+              wa.subComponentId &&
+              wa.taskId &&
+              wa.assignmentLevel === 5,
+          ) != null
+        ) {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL5;
           user.isChecked = true;
-        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId && wa.componentId && wa.taskId && wa.assignmentLevel === 5) != null) {
+        } else if (
+          user.workAssignment?.find(
+            (wa: any) =>
+              wa.projectModule?.id === projectModuleId &&
+              wa.segmentId &&
+              wa.componentId &&
+              wa.taskId &&
+              wa.assignmentLevel === 5,
+          ) != null
+        ) {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL5;
           user.isChecked = true;
-        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId && wa.taskId && wa.assignmentLevel === 5) != null) {
+        } else if (
+          user.workAssignment?.find(
+            (wa: any) =>
+              wa.projectModule?.id === projectModuleId &&
+              wa.segmentId &&
+              wa.taskId &&
+              wa.assignmentLevel === 5,
+          ) != null
+        ) {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL5;
           user.isChecked = true;
         } else {
-          const workAssignment = user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segment._id && wa.assignmentLevel === 2);
+          const workAssignment = user.workAssignment?.find(
+            (wa: any) =>
+              wa.projectModule?.id === projectModuleId &&
+              wa.segmentId === segment._id &&
+              wa.assignmentLevel === 2,
+          );
           if (workAssignment) {
             user.isChecked = true;
           }
@@ -148,9 +297,14 @@ const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) =>
     selectedUser.isChecked = !selectedUser.isChecked;
     let workAssignment: any = null;
     if (!selectedSegmentType && selectedUser.assignedSegmentType === 'all') {
-      workAssignment = {}
+      workAssignment = {};
     } else {
-      workAssignment = selectedUser.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === selectedSegment._id && wa.assignmentLevel === 2)
+      workAssignment = selectedUser.workAssignment?.find(
+        (wa: any) =>
+          wa.projectModule?.id === projectModuleId &&
+          wa.segmentId === selectedSegment._id &&
+          wa.assignmentLevel === 2,
+      );
     }
     if (selectedUser.isChecked) {
       if (workAssignment) {
@@ -175,15 +329,17 @@ const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) =>
 
   useEffect(() => {
     if (segmentWorkAssigned) {
-      Alert.alert("Success", "Works assigned successfully");
+      Alert.alert('Success', 'Works assigned successfully');
       openAssignClose();
       dispatch(clearProjectModulesWorkAssignmentData());
       setTimeout(() => {
-        dispatch(getUsersForWorkAssignment({
-          projectId: loggedInUser.projectId,
-          workType: workType
-        }));
-      }, 500)
+        dispatch(
+          getUsersForWorkAssignment({
+            projectId: loggedInUser.projectId,
+            workType: workType,
+          }),
+        );
+      }, 500);
     }
   }, [segmentWorkAssigned, error]);
 
@@ -195,8 +351,8 @@ const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) =>
     usersToBeAssign.forEach((u: any) => {
       let user: any = {
         _id: u._id,
-        delete: u.delete || false
-      }
+        delete: u.delete || false,
+      };
       const workAssignment = u.workAssignment?.find((wa: any) => wa.dirty);
       if (workAssignment) {
         user.workAssignmentId = workAssignment._id;
@@ -207,28 +363,32 @@ const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) =>
 
     if (usersToBeAssignArray.length) {
       if (selectedSegmentType) {
-        dispatch(segmentWorkAssignToUsers({
-          projectId: loggedInUser.projectId,
-          projectModuleId: projectModuleId,
-          segmentId: selectedSegment._id,
-          body: {
-            users: usersToBeAssignArray,
-            level: 2
-          }
-        }));
+        dispatch(
+          segmentWorkAssignToUsers({
+            projectId: loggedInUser.projectId,
+            projectModuleId: projectModuleId,
+            segmentId: selectedSegment._id,
+            body: {
+              users: usersToBeAssignArray,
+              level: 2,
+            },
+          }),
+        );
       } else {
-          dispatch(segmentTypeWorkAssignToUsers({
+        dispatch(
+          segmentTypeWorkAssignToUsers({
             projectId: loggedInUser.projectId,
             projectModuleId: projectModuleId,
             type: segmentTypeToAssignWork,
             body: {
               users: usersToBeAssignArray,
-              level: 2
-            }
-          }));
+              level: 2,
+            },
+          }),
+        );
       }
     }
-  }
+  };
 
   const openAssignClose = () => {
     segmentsData.forEach((item: any) => {
@@ -242,19 +402,24 @@ const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) =>
   };
 
   // unmount
-  useEffect( () => () => {
-    setSearchText('');
-  }, [] );
+  useEffect(
+    () => () => {
+      setSearchText('');
+    },
+    [],
+  );
 
   const onSegmentNextClick = (item: any) => {
     setSelectedSegment(item);
-    dispatch(getProjectModuleNextLevel({
-      projectId: loggedInUser.projectId,
-      projectModuleId: projectModuleId,
-      id: item._id,
-      type: 'segment',
-    }));
-  }
+    dispatch(
+      getProjectModuleNextLevel({
+        projectId: loggedInUser.projectId,
+        projectModuleId: projectModuleId,
+        id: item._id,
+        type: 'segment',
+      }),
+    );
+  };
 
   useEffect(() => {
     if (nextLevel) {
@@ -267,8 +432,8 @@ const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) =>
           segmentName: selectedSegment.name,
           type: type,
           subType: subType,
-          workType: workType
-        })
+          workType: workType,
+        });
       } else if (nextLevel.nextLevel === 'task') {
         navigation.navigate('AssignTasks', {
           projectModuleId: projectModuleId,
@@ -277,95 +442,146 @@ const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) =>
           segmentName: selectedSegment.name,
           type: type,
           subType: subType,
-          workType: workType
-        })
+          workType: workType,
+        });
       }
-      
     }
   }, [nextLevel]);
 
+  // Get work type colors
+  const workTypeColors = getWorkTypeColors(workType);
+
   return (
     <View style={styles.Container}>
-      {(error) && <View style={styles.ErrorSectionStyle}>
-        <Text style={styles.errorText}>{error}</Text>
-      </View>}
+      {error && (
+        <View style={styles.ErrorSectionStyle}>
+          <Text style={styles.errorText}>{error}</Text>
+        </View>
+      )}
 
-      {
-        selectedSegmentType && <View style={styles.SectionStyle}>
-        <Image
-          source={require('./../../images/search-icon.png')}
-          style={styles.ImageSearch}
-        />
-        <TextInput
-          style={styles.inputStyle}
-          placeholder="Search"
-          autoCapitalize="none"
-          keyboardType="email-address"
-          returnKeyType="next"
-          underlineColorAndroid="#f000"
-          blurOnSubmit={false}
-          value={searchText}
-          onChangeText={(text) => {
-            setSearchText(text);
-          }}
-        />
-      </View>
-      }
+      {selectedSegmentType && (
+        <View style={styles.SectionStyle}>
+          <Image
+            source={require('./../../images/search-icon.png')}
+            style={styles.ImageSearch}
+          />
+          <TextInput
+            style={styles.inputStyle}
+            placeholder="Search"
+            autoCapitalize="none"
+            keyboardType="email-address"
+            returnKeyType="next"
+            underlineColorAndroid="#f000"
+            blurOnSubmit={false}
+            value={searchText}
+            onChangeText={text => {
+              setSearchText(text);
+            }}
+          />
+        </View>
+      )}
       <ScrollView style={styles.Height100}>
-
-        {
-          !selectedSegmentType && segmentsByGroupOnType && Object.keys(segmentsByGroupOnType).length ? Object.keys(segmentsByGroupOnType).map((item) => (
-            <View style={styles.UserCategory}>
-              <View style={[styles.FlexRowCenter, {gap: 10}]}>
-              <CheckBox
-                //value={item.isChecked}
-                onValueChange={() => handleSegmentTypeChange(item)}
-                style={styles.checkbox}
-                tintColors={{ true: '#0F56B3', false: '#818181' }}
-              />
-              <View>
-              <TouchableOpacity onPress={() => onSegmentTypeClick(item)}
-              >
-                <Text>{segmentsByGroupOnType[item].length}</Text>
-                <Text>{SEGMENT_TYPES_DISPLAY[item]}</Text>
-              </TouchableOpacity>
-              </View>
-            </View>
-              
-            </View>
-          )): null
-        }
-
-        {selectedSegmentType && segmentsData.filter((seg: any) => {
-            if (searchText && seg.name) {
-              return seg.name.toLowerCase().includes(searchText.toLowerCase())
-            } else {
-              return true;
-            }
-          }).map((item: any, index) => (
-          <View style={styles.UserCategory}>
-            <View style={styles.FlexRowCenter}>
-              <CheckBox
-                value={item.isChecked}
-                onValueChange={() => handleRadioChange(index)}
-                style={styles.checkbox}
-                tintColors={{ true: '#0F56B3', false: '#818181' }}
-              />
-              <View>
-                <Text style={styles.UserRole}>{item.name}</Text>
-              </View>
-            </View>
-            <View>
-              <TouchableOpacity
-                onPress={() => onSegmentNextClick(item)}>
-                <Image
-                  style={styles.CloseIcon}
-                  source={require('./../../images/right-arrow.png')}
+        {!selectedSegmentType &&
+        segmentsByGroupOnType &&
+        Object.keys(segmentsByGroupOnType).length
+          ? Object.keys(segmentsByGroupOnType).map((item, index) => (
+              <View
+                key={index}
+                style={[
+                  styles.UserCategory,
+                  {borderColor: workTypeColors.borderColor},
+                ]}>
+                <LinearGradient
+                  colors={workTypeColors.gradientColors}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}
+                  style={styles.gradientBackground}
                 />
-              </TouchableOpacity>
-            </View>
-          </View>
-        ))}
+                <View
+                  style={[
+                    styles.leftBorder,
+                    {backgroundColor: workTypeColors.leftBorderColor},
+                  ]}
+                />
+                <View style={styles.segmentTypeRow}>
+                  <View style={styles.FlexRowCenter}>
+                    <CheckBox
+                      onValueChange={() => handleSegmentTypeChange(item)}
+                      style={styles.checkbox}
+                      tintColors={{true: '#5A2AAF', false: '#818181'}}
+                    />
+                    <TouchableOpacity onPress={() => onSegmentTypeClick(item)}>
+                      <Text style={styles.segmentTypeText}>
+                        {SEGMENT_TYPES_DISPLAY[item]}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+
+                  <View style={[styles.numberCircle]}>
+                    <Text
+                      style={[
+                        styles.numberText,
+                        {color: workTypeColors.leftBorderColor},
+                      ]}>
+                      {segmentsByGroupOnType[item].length}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            ))
+          : null}
+
+        {selectedSegmentType &&
+          segmentsData
+            .filter((seg: any) => {
+              if (searchText && seg.name) {
+                return seg.name
+                  .toLowerCase()
+                  .includes(searchText.toLowerCase());
+              } else {
+                return true;
+              }
+            })
+            .map((item: any, index) => (
+              <View
+                key={index}
+                style={[
+                  styles.categoryItemContainer,
+                  {borderColor: workTypeColors.borderColor},
+                ]}>
+                <LinearGradient
+                  colors={workTypeColors.gradientColors}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}
+                  style={styles.gradientContainer}>
+                  <View
+                    style={[
+                      styles.leftBorder,
+                      {backgroundColor: workTypeColors.leftBorderColor},
+                    ]}
+                  />
+                  <View style={styles.FlexRowCenter}>
+                    <CheckBox
+                      value={item.isChecked}
+                      onValueChange={() => handleRadioChange(index)}
+                      style={styles.checkbox}
+                      tintColors={{true: '#5A2AAF', false: '#818181'}}
+                    />
+                    <View>
+                      <Text style={styles.UserRole}>{item.name}</Text>
+                    </View>
+                  </View>
+                  <View>
+                    <TouchableOpacity onPress={() => onSegmentNextClick(item)}>
+                      <Image
+                        style={styles.CloseIcon}
+                        source={require('./../../images/right-arrow.png')}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </LinearGradient>
+              </View>
+            ))}
       </ScrollView>
       {/* Modal Start */}
       <Modal
@@ -375,7 +591,7 @@ const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) =>
         onRequestClose={() => {
           openAssignPopup(!isAssignPopOpen);
         }}>
-        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.3)' }}>
+        <View style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.3)'}}>
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <View style={styles.ModalHeader}>
@@ -392,37 +608,42 @@ const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) =>
               </View>
               <View style={styles.ModalInnerContainer}>
                 <View>
-                  <Text style={styles.AssignRoleTextHeading}>{selectedSegmentType ? (SEGMENT_TYPES_DISPLAY[selectedSegmentType] + ' : ' + selectedSegment.name) : 'Segment type: ' + SEGMENT_TYPES_DISPLAY[segmentTypeToAssignWork]}</Text>
+                  <Text style={styles.AssignRoleTextHeading}>
+                    {selectedSegmentType
+                      ? SEGMENT_TYPES_DISPLAY[selectedSegmentType] +
+                        ' : ' +
+                        selectedSegment.name
+                      : 'Segment type: ' +
+                        SEGMENT_TYPES_DISPLAY[segmentTypeToAssignWork]}
+                  </Text>
                 </View>
-                <ScrollView style={{ paddingTop: 0, height: 500 }}>
+                <ScrollView style={{paddingTop: 0, height: 500}}>
                   {userData.map((item: any, index) => (
-                    <View style={styles.CategoryType}>
+                    <View key={index} style={styles.CategoryType}>
                       <View style={styles.FlexRowCenter}>
                         <CheckBox
                           value={item.isChecked}
                           disabled={item.assignmentLevel != null}
                           onValueChange={() => handleUserData(index)}
                           style={styles.checkbox}
-                          tintColors={{ true: '#0F56B3', false: '#818181' }}
+                          tintColors={{true: '#5A2AAF', false: '#818181'}}
                         />
-                        <View style={{ flexDirection: 'row' }}>
-                          <Text style={styles.AssignRoleText}>
-                            {item.name}
-                          </Text>
-                          {
-                            item.assignmentLevel &&
+                        <View style={{flexDirection: 'row'}}>
+                          <Text style={styles.AssignRoleText}>{item.name}</Text>
+                          {item.assignmentLevel && (
                             <Text style={styles.userAlreadyAssigned}>
                               {item.assignmentLevel}
                             </Text>
-                          }
-
+                          )}
                         </View>
                       </View>
                     </View>
                   ))}
                 </ScrollView>
 
-                <TouchableOpacity style={styles.assignTagButoon} onPress={() => onWorkAssignment()}>
+                <TouchableOpacity
+                  style={styles.assignTagButoon}
+                  onPress={() => onWorkAssignment()}>
                   <Text style={styles.assignTagButoonText}>Assign</Text>
                 </TouchableOpacity>
               </View>
@@ -430,10 +651,11 @@ const SegmentsList = ({ route, navigation }: { route: any, navigation: any }) =>
           </View>
         </View>
       </Modal>
-      <LoadingAnimation loading={loading || loadingSegment || loadingUsers}></LoadingAnimation>
+      <LoadingAnimation
+        loading={loading || loadingSegment || loadingUsers}></LoadingAnimation>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   Container: {
@@ -469,9 +691,10 @@ const styles = StyleSheet.create({
   FlexRowCenter: {
     flexDirection: 'row',
     alignItems: 'center',
+    paddingHorizontal: 10,
   },
   assignTag: {
-    backgroundColor: '#1C58C0',
+    backgroundColor: '#5A2AAF',
     borderRadius: 15,
     color: '#fff',
     paddingHorizontal: 10,
@@ -515,7 +738,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     fontWeight: '600',
     paddingVertical: 15,
-    height: 55
+    height: 55,
   },
   SectionStyle: {
     flexDirection: 'row',
@@ -524,7 +747,7 @@ const styles = StyleSheet.create({
     marginHorizontal: -15,
     backgroundColor: '#fff',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10 },
+    shadowOffset: {width: 0, height: 10},
     shadowOpacity: 0.25,
     shadowRadius: 20,
     // Shadow for Android
@@ -541,19 +764,54 @@ const styles = StyleSheet.create({
     top: '27%',
   },
   UserCategory: {
-    backgroundColor: '#fff',
     borderRadius: 12,
-    padding: 20,
     marginTop: 15,
-    flexDirection: 'row',
-    alignContent: 'center',
-    justifyContent: 'space-between',
     borderWidth: 1,
-    borderColor: '#BECADA',
     borderStyle: 'solid',
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  gradientBackground: {
+    ...StyleSheet.absoluteFillObject,
+    borderRadius: 12,
+  },
+  segmentTypeRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 20,
+    paddingRight: 15,
+  },
+  segmentTypeText: {
+    fontSize: 16,
+    fontWeight: '400',
+    color: '#27272A',
+    marginLeft: 10,
+  },
+  numberCircle: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  numberText: {
+    fontSize: 16,
+    fontWeight: '600',
   },
   checkbox: {
-    transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }],
+    transform: [{scaleX: 1.2}, {scaleY: 1.2}],
   },
   label: {
     margin: 8,
@@ -576,6 +834,31 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '400',
     color: '#808089',
+  },
+  categoryItemContainer: {
+    marginVertical: 8,
+    borderRadius: 16,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: '#ABBEFD',
+  },
+  gradientContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 20,
+    paddingHorizontal: 12,
+    borderRadius: 16,
+    position: 'relative',
+  },
+  leftBorder: {
+    paddingVertical: 3,
+    position: 'absolute',
+    left: 0,
+    top: 10,
+    bottom: 10,
+    zIndex: 100,
+    width: 2,
   },
   centeredView: {
     marginTop: 'auto',
@@ -612,7 +895,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F194FF',
   },
   buttonAssign: {
-    backgroundColor: '#1C58C0',
+    backgroundColor: '#5A2AAF',
     paddingVertical: 20,
     paddingHorizontal: 30,
     width: '50%',
@@ -623,7 +906,7 @@ const styles = StyleSheet.create({
   },
   DisabledButton: {
     opacity: 0.5,
-    backgroundColor: '#1C58C0',
+    backgroundColor: '#5A2AAF',
     paddingVertical: 20,
     paddingHorizontal: 30,
     width: '50%',
@@ -677,7 +960,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#27272A',
     marginLeft: 5,
-    marginTop: 10
+    marginTop: 10,
   },
   AssignRoleText: {
     fontSize: 14,
@@ -686,7 +969,7 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   assignTagButoon: {
-    backgroundColor: '#1C58C0',
+    backgroundColor: '#5A2AAF',
     borderRadius: 30,
     color: '#fff',
     paddingHorizontal: 15,
@@ -697,7 +980,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   userAlreadyAssigned: {
-    backgroundColor: '#1C58C0',
+    backgroundColor: '#5A2AAF',
     borderRadius: 30,
     fontSize: 12,
     color: '#fff',
@@ -715,4 +998,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SegmentsList
+export default SegmentsList;

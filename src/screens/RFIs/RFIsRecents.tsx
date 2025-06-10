@@ -9202,180 +9202,192 @@ const RFIsRecents = (props: any) => {
   const [selectedCategory, setSelectedCategory] = useState('structure');
   return (
     <View>
-      <View style={commonStyles.toggleContainer}>
-        <TouchableOpacity
+        <View
           style={[
-            commonStyles.toggleButton,
-            selectedCategory === 'structure' && commonStyles.activeToggleButton,
-          ]}
-          onPress={() => setSelectedCategory('structure')}>
-          <Text
+            commonStyles.toggleContainer,
+            {borderBottomColor: '#D2C5FF', borderBottomWidth: 1},
+          ]}>
+          <TouchableOpacity
             style={[
-              commonStyles.toggleText,
-              selectedCategory === 'structure' && commonStyles.activeToggleText,
-            ]}>
-            Structure
-          </Text>
-        </TouchableOpacity>
+              commonStyles.toggleButton,
+              selectedCategory === 'structure' &&
+                commonStyles.activeToggleButton,
+            ]}
+            onPress={() => setSelectedCategory('structure')}>
+            <Text
+              style={[
+                commonStyles.toggleText,
+                selectedCategory === 'structure' &&
+                  commonStyles.activeToggleText,
+              ]}>
+              Structure
+            </Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[
-            commonStyles.toggleButton,
-            selectedCategory === 'highway' && commonStyles.activeToggleButton,
-          ]}
-          onPress={() => setSelectedCategory('highway')}>
-          <Text
+          <TouchableOpacity
             style={[
-              commonStyles.toggleText,
-              selectedCategory === 'highway' && commonStyles.activeToggleText,
-            ]}>
-            Highway
-          </Text>
-        </TouchableOpacity>
+              commonStyles.toggleButton,
+              selectedCategory === 'highway' && commonStyles.activeToggleButton,
+            ]}
+            onPress={() => setSelectedCategory('highway')}>
+            <Text
+              style={[
+                commonStyles.toggleText,
+                selectedCategory === 'highway' && commonStyles.activeToggleText,
+              ]}>
+              Highway
+            </Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[
-            commonStyles.toggleButton,
-            selectedCategory === 'other' && commonStyles.activeToggleButton,
-          ]}
-          onPress={() => setSelectedCategory('other')}>
-          <Text
+          <TouchableOpacity
             style={[
-              commonStyles.toggleText,
-              selectedCategory === 'other' && commonStyles.activeToggleText,
-            ]}>
-            Other
-          </Text>
-        </TouchableOpacity>
-      </View>
-      <Text style={styles.headerText}> Recent {getRFIType()} RFI's</Text>
-      <View style={styles.recentWorkContainer}>
+              commonStyles.toggleButton,
+              selectedCategory === 'other' && commonStyles.activeToggleButton,
+            ]}
+            onPress={() => setSelectedCategory('other')}>
+            <Text
+              style={[
+                commonStyles.toggleText,
+                selectedCategory === 'other' && commonStyles.activeToggleText,
+              ]}>
+              Other
+            </Text>
+          </TouchableOpacity>
+        </View>
         <View style={styles.recentWorkHead}>
+          <Text style={styles.headerText}>
+            {' '}
+            Recent {getRFIType()} RFI's(
+            <Text style={styles.taskCount}>{rfiData.length}</Text>){' '}
+          </Text>
+        </View>
+        <View style={styles.recentWorkContainer}>
+          {/* <View style={styles.recentWorkHead}>
           <Text style={styles.headerText}>
             Recent RFI's (<Text style={styles.taskCount}>{rfiData.length}</Text>
             )
           </Text>
-        </View>
-        <View
-          style={[
-            props.rfiType === RFIs_TYPE.GENERATE
-              ? styles.recentWorkContent
-              : styles.recentWorkContentHeight100,
-            {height: calculatedHeight},
-          ]}>
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}>
-            {rfiData.map((item: any, index) => (
-              <TouchableOpacity
-                style={styles.recentWorkCard}
-                onPress={() => onSelectRFI(item)}>
-                <View
-                  style={[
-                    styles.taskCategory,
-                    {flexWrap: 'wrap', paddingBottom: 10},
-                  ]}>
-                  <Text style={styles.subHead}>
-                    {item.workAssignmentData.projectModule?.name}
-                  </Text>
-                  <Image
-                    style={styles.ArrowIcon}
-                    source={require('../../images/right-arrow-icon.png')}
-                  />
-                  <Text style={styles.subHead}>
-                    {item.workAssignmentData.segmentId?.name}
-                  </Text>
-                  <Image
-                    style={styles.ArrowIcon}
-                    source={require('../../images/right-arrow-icon.png')}
-                  />
-                  {item.workAssignmentData.componentId ? (
-                    <View style={styles.taskCategory}>
-                      <Text style={styles.subHead}>
-                        {item.workAssignmentData.componentId?.name}
-                      </Text>
-                      <Image
-                        style={styles.ArrowIcon}
-                        source={require('../../images/right-arrow-icon.png')}
-                      />
-                    </View>
-                  ) : null}
-
-                  {item.workAssignmentData.subComponentId ? (
-                    <View style={styles.taskCategory}>
-                      <Text style={styles.subHead}>
-                        {item.workAssignmentData.subComponentId?.name}
-                      </Text>
-                      <Image
-                        style={styles.ArrowIcon}
-                        source={require('../../images/right-arrow-icon.png')}
-                      />
-                    </View>
-                  ) : null}
-                  <Text style={[styles.subHead, styles.taskCount]}>
-                    {item.workAssignmentData.taskId?.displayName}
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    backgroundColor: '#EDE9FE',
-                    padding: 10,
-                    borderRadius: 10,
-                  }}>
-                  <View>
-                    <Text style={[styles.dateText, styles.fontBold]}>
-                      Generated Date
+        </View> */}
+          <View
+            style={[
+              props.rfiType === RFIs_TYPE.GENERATE
+                ? styles.recentWorkContent
+                : styles.recentWorkContentHeight100,
+              {height: calculatedHeight},
+            ]}>
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}>
+              {rfiData.map((item: any, index) => (
+                <TouchableOpacity
+                  style={styles.recentWorkCard}
+                  onPress={() => onSelectRFI(item)}>
+                  <View
+                    style={[
+                      styles.taskCategory,
+                      {flexWrap: 'wrap', paddingBottom: 10},
+                    ]}>
+                    <Text style={styles.subHead}>
+                      {item.workAssignmentData.projectModule?.name}
                     </Text>
-                    <Text style={[styles.dateText, styles.subFontText]}>
-                      {getDisplayDate(item.rfiDateTime)}
+                    <Image
+                      style={styles.ArrowIcon}
+                      source={require('../../images/right-arrow-icon.png')}
+                    />
+                    <Text style={styles.subHead}>
+                      {item.workAssignmentData.segmentId?.name}
+                    </Text>
+                    <Image
+                      style={styles.ArrowIcon}
+                      source={require('../../images/right-arrow-icon.png')}
+                    />
+                    {item.workAssignmentData.componentId ? (
+                      <View style={styles.taskCategory}>
+                        <Text style={styles.subHead}>
+                          {item.workAssignmentData.componentId?.name}
+                        </Text>
+                        <Image
+                          style={styles.ArrowIcon}
+                          source={require('../../images/right-arrow-icon.png')}
+                        />
+                      </View>
+                    ) : null}
+
+                    {item.workAssignmentData.subComponentId ? (
+                      <View style={styles.taskCategory}>
+                        <Text style={styles.subHead}>
+                          {item.workAssignmentData.subComponentId?.name}
+                        </Text>
+                        <Image
+                          style={styles.ArrowIcon}
+                          source={require('../../images/right-arrow-icon.png')}
+                        />
+                      </View>
+                    ) : null}
+                    <Text style={[styles.subHead, styles.taskCount]}>
+                      {item.workAssignmentData.taskId?.displayName}
                     </Text>
                   </View>
-                  <View>
-                    <Text style={[styles.dateText, styles.fontBold]}>
-                      Generated Time
-                    </Text>
-                    <Text style={[styles.dateText, styles.subFontText]}>
-                      {getDisplayTime(item.rfiDateTime)}
-                    </Text>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      backgroundColor: '#EDE9FE',
+                      padding: 10,
+                      borderRadius: 10,
+                    }}>
+                    <View>
+                      <Text style={[styles.dateText, styles.fontBold]}>
+                        Generated Date
+                      </Text>
+                      <Text style={[styles.dateText, styles.subFontText]}>
+                        {getDisplayDate(item.rfiDateTime)}
+                      </Text>
+                    </View>
+                    <View>
+                      <Text style={[styles.dateText, styles.fontBold]}>
+                        Generated Time
+                      </Text>
+                      <Text style={[styles.dateText, styles.subFontText]}>
+                        {getDisplayTime(item.rfiDateTime)}
+                      </Text>
+                    </View>
                   </View>
-                </View>
-              </TouchableOpacity>
-            ))}
+                </TouchableOpacity>
+              ))}
 
-            {!rfiData.length && !loading && (
-              <View style={styles.noDataContainer}>
-                <Image
-                  style={styles.noDataImage}
-                  source={require('../../images/no-data-found.png')}
-                />
-                <Text style={styles.noDataHeadText}>
-                  No {getRFIType()} RFI's
-                </Text>
-                <Text style={styles.noDataSubText}>
-                  There is no {getRFIType()?.toLowerCase()} RFI's
-                </Text>
-              </View>
-            )}
-          </ScrollView>
-        </View>
-        {props.rfiType === RFIs_TYPE.GENERATE && (
-          <View style={styles.footerButton}>
-            <TouchableOpacity
-              style={styles.btnCta}
-              onPress={() =>
-                navigation.navigate('RFIsGenerateMyWork', {
-                  rfiType: props.rfiType,
-                })
-              }>
-              <Text style={styles.btnCtaText}>Generate RFI's</Text>
-            </TouchableOpacity>
+              {!rfiData.length && !loading && (
+                <View style={styles.noDataContainer}>
+                  <Image
+                    style={styles.noDataImage}
+                    source={require('../../images/no-data-found.png')}
+                  />
+                  <Text style={styles.noDataHeadText}>
+                    No {getRFIType()} RFI's
+                  </Text>
+                  <Text style={styles.noDataSubText}>
+                    There is no {getRFIType()?.toLowerCase()} RFI's
+                  </Text>
+                </View>
+              )}
+            </ScrollView>
           </View>
-        )}
-      </View>
-
+          {props.rfiType === RFIs_TYPE.GENERATE && (
+            <View style={styles.footerButton}>
+              <TouchableOpacity
+                style={styles.btnCta}
+                onPress={() =>
+                  navigation.navigate('RFIsGenerateMyWork', {
+                    rfiType: props.rfiType,
+                  })
+                }>
+                <Text style={styles.btnCtaText}>Generate RFI's</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+      
       <Modal
         animationType="fade"
         transparent={true}
@@ -9643,7 +9655,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderBottomWidth: 1,
     borderColor: '#DEE1E7',
-    padding: 20,
+    padding: 15,
   },
   taskCount: {
     color: '#4E36A3',
@@ -9695,6 +9707,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     marginTop: 10,
     marginHorizontal: -20,
+    marginBottom: 20,
   },
   btnCta: {
     borderRadius: 10,

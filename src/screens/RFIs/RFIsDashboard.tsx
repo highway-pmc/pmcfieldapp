@@ -123,9 +123,10 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   tabContent: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
     paddingTop: 20,
     height: '100%',
+    width: '100%',
   },
 });
 

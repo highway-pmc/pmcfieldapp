@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '600',
     marginBottom: 15,
-    color:"#333333"
+    color: '#333333',
   },
   tasksContainer: {
     marginTop: 5,
@@ -156,9 +156,12 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   image: {
-    width: 120,
-    height: 120,
+    position: 'absolute',
+    width: 80,
+    height: 80,
     opacity: 0.5,
+    top:60,
+    right: -8,
   },
 });
 

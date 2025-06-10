@@ -164,11 +164,17 @@ export default function Purchase() {
     resetFilters();
   };
 
-  // Table Header Component
-  const TableHeader = () => (
-    <View style={styles.headerRow}>
-      <Text style={[styles.headerCell, {width: 120}]}>Material</Text>
-      <Text style={[styles.headerCell, {width: 100}]}>Vendor</Text>
+  // Fixed Column Header
+  const FixedColumnHeader = () => (
+    <View style={styles.fixedHeaderCell}>
+      <Text style={styles.fixedHeaderText}>Material</Text>
+    </View>
+  );
+
+  // Scrollable Headers
+  const ScrollableHeaders = () => (
+    <View style={styles.scrollableHeaderRow}>
+      <Text style={[styles.headerCell, {width: 140}]}>Vendor</Text>
       <Text style={[styles.headerCell, {width: 60}]}>Qty</Text>
       <Text style={[styles.headerCell, {width: 80}]}>Unit</Text>
       <Text style={[styles.headerCell, {width: 100}]}>Rate/Unit</Text>
@@ -177,11 +183,30 @@ export default function Purchase() {
     </View>
   );
 
-  // Table Row Component
-  const renderItem = ({item}: any) => (
-    <View style={styles.row}>
-      <Text style={[styles.cell, {width: 120}]}>{item.material}</Text>
-      <Text style={[styles.cell, {width: 100}]}>{item.vendor}</Text>
+  // Complete scrollable table (header + data)
+  const ScrollableTable = () => (
+    <View>
+      <ScrollableHeaders />
+      <FlatList
+        data={purchaseData}
+        keyExtractor={item => item.id}
+        renderItem={({item}) => <ScrollableRow item={item} />}
+        scrollEnabled={false}
+      />
+    </View>
+  );
+
+  // Fixed Column Row
+  const FixedColumnRow = ({item}: any) => (
+    <View style={styles.fixedCell}>
+      <Text style={styles.fixedCellText}>{item.material}</Text>
+    </View>
+  );
+
+  // Scrollable Row
+  const ScrollableRow = ({item}: any) => (
+    <View style={styles.scrollableRow}>
+      <Text style={[styles.cell, {width: 140}]}>{item.vendor}</Text>
       <Text style={[styles.cell, {width: 60}]}>{item.qty}</Text>
       <Text style={[styles.cell, {width: 80}]}>{item.unit}</Text>
       <Text style={[styles.cell, {width: 100}]}>{item.rate}</Text>
@@ -233,24 +258,34 @@ export default function Purchase() {
         </View>
       )}
 
-      <ScrollView horizontal={true} style={styles.tableContainer}>
-        <View>
-          <TableHeader />
-
-          {purchaseData.length > 0 ? (
-            <FlatList
-              data={purchaseData}
-              keyExtractor={item => item.id}
-              renderItem={renderItem}
-              scrollEnabled={false}
-            />
-          ) : (
-            <View style={styles.emptyState}>
-              <Text style={styles.emptyStateText}>No purchase data found</Text>
+      {/* Table with Fixed First Column */}
+      <View style={styles.tableContainer}>
+        {purchaseData.length > 0 ? (
+          <View style={styles.dataContainer}>
+            {/* Fixed Column (Header + Data) */}
+            <View style={styles.fixedColumn}>
+              <FixedColumnHeader />
+              <FlatList
+                data={purchaseData}
+                keyExtractor={item => item.id}
+                renderItem={({item}) => <FixedColumnRow item={item} />}
+                scrollEnabled={false}
+              />
             </View>
-          )}
-        </View>
-      </ScrollView>
+
+            {/* Scrollable Columns (Header + Data together) */}
+            <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}>
+              <ScrollableTable />
+            </ScrollView>
+          </View>
+        ) : (
+          <View style={styles.emptyState}>
+            <Text style={styles.emptyStateText}>No purchase data found</Text>
+          </View>
+        )}
+      </View>
 
       <Modal
         animationType="slide"
@@ -348,7 +383,7 @@ export default function Purchase() {
 }
 
 const styles = StyleSheet.create({
-  // Existing styles from your component
+  // Existing styles
   container: {
     flex: 1,
     padding: 16,
@@ -360,9 +395,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 20,
     paddingHorizontal: 10,
-  },
-  tableContainer: {
-    flex: 1,
   },
   addButton: {
     backgroundColor: '#fff',
@@ -382,51 +414,12 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: '#4E36A3',
-    
   },
   activeFilterButton: {
     backgroundColor: '#4E36A3',
   },
   activeFilterText: {
     color: '#fff',
-  },
-  headerRow: {
-    flexDirection: 'row',
-    backgroundColor: '#E3DEF6',
-    padding: 12,
-    borderTopLeftRadius: 5,
-    borderTopRightRadius: 5,
-    borderWidth: 1,
-    borderColor: '#E6E6E6',
-  },
-  headerCell: {
-    fontWeight: 'bold',
-    fontSize: 14,
-    color: '#000000',
-    paddingHorizontal: 3,
-  },
-  row: {
-    flexDirection: 'row',
-    paddingHorizontal: 12,
-    paddingVertical: 15,
-    borderWidth: 1,
-    borderColor: '#E6E6E6',
-    backgroundColor: '#F8F8F8',
-  },
-  cell: {
-    fontSize: 14,
-    paddingHorizontal: 5,
-    color: '#333333',
-  },
-  emptyState: {
-    padding: 30,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#E6E6E6',
-  },
-  emptyStateText: {
-    color: '#999',
-    fontSize: 16,
   },
   activeFiltersContainer: {
     flexDirection: 'row',
@@ -445,7 +438,93 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 
-  // Modal styles
+  // New Table Styles with Fixed Column
+  tableContainer: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: '#E6E6E6',
+    borderRadius: 5,
+  },
+  dataContainer: {
+    flexDirection: 'row',
+    flex: 1,
+  },
+  fixedColumn: {
+    width: 120,
+    // borderRightWidth: 1,
+    // borderRightColor: '#E6E6E6',
+  },
+  fixedHeaderCell: {
+    width: 120,
+    padding: 12,
+    backgroundColor: '#E3DEF6',
+    justifyContent: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E6E6E6',
+  },
+  fixedHeaderText: {
+    fontWeight: 'bold',
+    fontSize: 14,
+    color: '#000000',
+    paddingHorizontal: 3,
+    borderTopRightRadius: 10,
+  },
+  scrollableHeaderRow: {
+    flexDirection: 'row',
+    paddingVertical: 12,
+    backgroundColor: '#E3DEF6',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E6E6E6',
+  },
+  headerCell: {
+    fontWeight: 'bold',
+    fontSize: 14,
+    color: '#000000',
+    paddingHorizontal: 3,
+    textAlign: 'center',
+    borderTopLeftRadius: 5,
+  },
+  fixedCell: {
+    paddingHorizontal: 12,
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E6E6E6',
+    backgroundColor: '#F8F8F8',
+    justifyContent: 'center',
+    minHeight: 50,
+  },
+  fixedCellText: {
+    fontSize: 14,
+    paddingHorizontal: 5,
+    color: '#333333',
+  },
+  scrollableRow: {
+    flexDirection: 'row',
+    paddingHorizontal: 12,
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E6E6E6',
+    backgroundColor: '#F8F8F8',
+    minHeight: 50,
+  },
+  cell: {
+    fontSize: 14,
+    paddingHorizontal: 5,
+    color: '#333333',
+    textAlign: 'center',
+  },
+  emptyState: {
+    padding: 30,
+    alignItems: 'center',
+    borderTopWidth: 1,
+    borderTopColor: '#E6E6E6',
+  },
+  emptyStateText: {
+    color: '#999',
+    fontSize: 16,
+  },
+
+  // Modal styles (unchanged)
   centeredView: {
     flex: 1,
     justifyContent: 'flex-end',

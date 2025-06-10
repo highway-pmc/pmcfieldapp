@@ -52,6 +52,7 @@ export const HeaderItems = {
   equipmentCalibrationInfo: {showBack: true, title: 'Equipment'},
   store: {showBack: false, title: 'Store'},
   addPurchase: {showBack: true, title: 'Add Purchase'},
+  production: {showBack: false, title: 'Production'},
 };
 
 export const UserRoles = {

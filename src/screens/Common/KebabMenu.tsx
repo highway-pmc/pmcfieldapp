@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Dimensions,
 } from 'react-native';
+import {Image} from 'react-native-elements';
 
 const KebabMenu = ({
   onView,
@@ -54,32 +55,48 @@ const KebabMenu = ({
               {top: menuPosition.y, left: menuPosition.x - 100},
             ]}>
             {onAdd && (
-              <Text
-                style={[styles.menuItem]}
-                onPress={() => handlePress(onAdd)}>
-                Add
-              </Text>
+              <TouchableOpacity onPress={() => handlePress(onAdd)}>
+                <View style={styles.menuItem}>
+                  <Image
+                    source={require('../../images/menuaction/add.png')}
+                    style={styles.menuIcon}
+                  />
+                  <Text style={styles.menuText}>Add</Text>
+                </View>
+              </TouchableOpacity>
             )}
             {onView && (
-              <Text
-                style={[styles.menuItem]}
-                onPress={() => handlePress(onView)}>
-                View
-              </Text>
+              <TouchableOpacity onPress={() => handlePress(onView)}>
+                <View style={styles.menuItem}>
+                  <Image
+                    source={require('../../images/menuaction/edit.png')}
+                    style={styles.menuIcon}
+                  />
+                  <Text style={styles.menuText}>View</Text>
+                </View>
+              </TouchableOpacity>
             )}
             {onEdit && (
-              <Text
-                style={[styles.menuItem]}
-                onPress={() => handlePress(onEdit)}>
-                Edit
-              </Text>
+              <TouchableOpacity onPress={() => handlePress(onEdit)}>
+                <View style={styles.menuItem}>
+                  <Image
+                    source={require('../../images/menuaction/edit.png')}
+                    style={styles.menuIcon}
+                  />
+                  <Text style={styles.menuText}>Edit</Text>
+                </View>
+              </TouchableOpacity>
             )}
             {onDelete && (
-              <Text
-                style={styles.menuItem}
-                onPress={() => handlePress(onDelete)}>
-                Delete
-              </Text>
+              <TouchableOpacity onPress={() => handlePress(onDelete)}>
+                <View style={styles.menuItem}>
+                  <Image
+                    source={require('../../images/menuaction/delete.png')}
+                    style={styles.menuIcon}
+                  />
+                  <Text style={styles.menuText}>Delete</Text>
+                </View>
+              </TouchableOpacity>
             )}
           </View>
         </TouchableOpacity>
@@ -111,13 +128,22 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 6,
     elevation: 5,
-    width: 120,
+    width: 150,
   },
   menuItem: {
     paddingVertical: 8,
+    flexDirection: 'row',
+    paddingHorizontal: 5,
+  },
+  menuIcon: {
+    width: 20,
+    height: 20,
+    marginRight: 8,
+    resizeMode: 'contain',
+  },
+  menuText: {
     fontSize: 16,
     color: '#333',
-    textAlign: 'center',
   },
 });
 

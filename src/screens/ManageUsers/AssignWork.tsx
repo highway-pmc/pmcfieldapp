@@ -11,69 +11,129 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useIsFocused} from '@react-navigation/native';
-import {HeaderItems, PROJECT_TYPE, WORK_ASSIGNMENT_LEVEL} from '../../constants/constants';
+import {
+  HeaderItems,
+  PROJECT_TYPE,
+  WORK_ASSIGNMENT_LEVEL,
+} from '../../constants/constants';
 import CheckBox from '@react-native-community/checkbox';
 import {ScrollView} from 'react-native-gesture-handler';
-import { useDispatch, useSelector } from 'react-redux';
-import { clearProjectModulesWorkAssignmentData, getProjectModules, getUsersForWorkAssignment, projectModulesWorkAssignToUsers } from './actions';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  clearProjectModulesWorkAssignmentData,
+  getProjectModules,
+  getUsersForWorkAssignment,
+  projectModulesWorkAssignToUsers,
+} from './actions';
 import LoadingAnimation from '../Common/LoadingAnimation';
+import LinearGradient from 'react-native-linear-gradient';
 
-const AssignWork = ({route, navigation}: { route: any, navigation: any }) => {
+// Color schemes for different work types
+const getWorkTypeColors = (workType: any) => {
+  const colorSchemes = {
+    'structure-work': {
+      gradientColors: ['#FFFFFF', '#BABABA'],
+      borderColor: '#6D6B6B',
+      leftBorderColor: '#5C5959',
+    },
+    'highway-work': {
+      gradientColors: ['#FFFFFF', '#FFB499'],
+      borderColor: '#EC825C',
+      leftBorderColor: '#EC825C',
+    },
+    'other-work': {
+      gradientColors: ['#FFFFFF', '#ABF8CA'],
+      borderColor: '#4FD384',
+      leftBorderColor: '#2E8B57',
+    },
+    // Default fallback
+    default: {
+      gradientColors: ['#FFFFFF', '#E0E7FF'],
+      borderColor: '#ABBEFD',
+      leftBorderColor: '#5A7EF8',
+    },
+  };
 
+  return colorSchemes[workType] || colorSchemes.default;
+};
+
+const AssignWork = ({route, navigation}: {route: any; navigation: any}) => {
   const [projectModulesData, setProjectModulesData] = useState([]);
-  const [selectedProjectModule, setSelectedProjectModule] = useState({isChecked: false, _id: "", name: ''});
+  const [selectedProjectModule, setSelectedProjectModule] = useState({
+    isChecked: false,
+    _id: '',
+    name: '',
+  });
   const [searchText, setSearchText] = useState('');
   // const [usersToBeAssigned, setUsersToBeAssigned] = useState([])
   const [userData, setUserCheckboxes] = useState([]);
 
-  const { workType } = route.params;
+  const {workType} = route.params;
+
+  // Get colors based on work type
+  const workTypeColors = getWorkTypeColors(workType);
 
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();
     eventEmitter.emit('headerEvent', HeaderItems.assignWork);
   }
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const [isAssignPopOpen, openAssignPopup] = useState(false);
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const { projectModules, users, projectModulesWorkAssigned, loading, loadingUsers, error} = useSelector((state: any) => state.WorkAssignment);
-  
+  const {
+    projectModules,
+    users,
+    projectModulesWorkAssigned,
+    loading,
+    loadingUsers,
+    error,
+  } = useSelector((state: any) => state.WorkAssignment);
+
   // unmount
-  useEffect( () => () => {
-    setProjectModulesData([]);
-    setUserCheckboxes([]);
-    setSearchText('');
-  }, [] );
+  useEffect(
+    () => () => {
+      setProjectModulesData([]);
+      setUserCheckboxes([]);
+      setSearchText('');
+    },
+    [],
+  );
 
   useEffect(() => {
+    console.log('Work Type', workType);
     if (projectModules) {
       projectModules.forEach((pModule: any) => {
-        pModule.isChecked = false
+        pModule.isChecked = false;
       });
       setProjectModulesData(projectModules);
     }
 
     if (users) {
       users.forEach((user: any) => {
-        user.isChecked = false
+        user.isChecked = false;
       });
       setUserCheckboxes(users);
     }
   }, [projectModules, users]);
 
   useEffect(() => {
-    dispatch(getProjectModules({
-      projectId: loggedInUser.projectId,
-      workType: workType
-    }));
+    dispatch(
+      getProjectModules({
+        projectId: loggedInUser.projectId,
+        workType: workType,
+      }),
+    );
 
-    dispatch(getUsersForWorkAssignment({
-      projectId: loggedInUser.projectId,
-      workType: workType
-    }));
+    dispatch(
+      getUsersForWorkAssignment({
+        projectId: loggedInUser.projectId,
+        workType: workType,
+      }),
+    );
   }, []);
-  
+
   const handleRadioChange = (index: any) => {
     const projectModule: any = projectModulesData[index];
 
@@ -86,23 +146,69 @@ const AssignWork = ({route, navigation}: { route: any, navigation: any }) => {
       updatedCheckboxes.forEach((user: any) => {
         user.isChecked = false;
         delete user.assignmentLevel;
-        const workAssignment = user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModulesData[index]._id && wa.assignmentLevel === 1);
+        const workAssignment = user.workAssignment?.find(
+          (wa: any) =>
+            wa.projectModule?.id === projectModulesData[index]._id &&
+            wa.assignmentLevel === 1,
+        );
 
         if (workAssignment) {
           user.isChecked = true;
-        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModule._id && wa.segmentId && wa.assignmentLevel === 2) != null) {
+        } else if (
+          user.workAssignment?.find(
+            (wa: any) =>
+              wa.projectModule?.id === projectModule._id &&
+              wa.segmentId &&
+              wa.assignmentLevel === 2,
+          ) != null
+        ) {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL2;
           user.isChecked = true;
-        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModule._id && wa.segmentId && wa.componentId && wa.assignmentLevel === 3) != null) {
+        } else if (
+          user.workAssignment?.find(
+            (wa: any) =>
+              wa.projectModule?.id === projectModule._id &&
+              wa.segmentId &&
+              wa.componentId &&
+              wa.assignmentLevel === 3,
+          ) != null
+        ) {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL3;
           user.isChecked = true;
-        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModule._id && wa.segmentId && wa.componentId && wa.taskId && wa.assignmentLevel === 4) != null) {
+        } else if (
+          user.workAssignment?.find(
+            (wa: any) =>
+              wa.projectModule?.id === projectModule._id &&
+              wa.segmentId &&
+              wa.componentId &&
+              wa.taskId &&
+              wa.assignmentLevel === 4,
+          ) != null
+        ) {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL4;
           user.isChecked = true;
-        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModule._id && wa.segmentId && wa.componentId && wa.subComponentId && wa.taskId && wa.assignmentLevel === 5) != null) {
+        } else if (
+          user.workAssignment?.find(
+            (wa: any) =>
+              wa.projectModule?.id === projectModule._id &&
+              wa.segmentId &&
+              wa.componentId &&
+              wa.subComponentId &&
+              wa.taskId &&
+              wa.assignmentLevel === 5,
+          ) != null
+        ) {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL5;
           user.isChecked = true;
-        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModule._id && wa.segmentId && wa.taskId && wa.assignmentLevel === 5) != null) {
+        } else if (
+          user.workAssignment?.find(
+            (wa: any) =>
+              wa.projectModule?.id === projectModule._id &&
+              wa.segmentId &&
+              wa.taskId &&
+              wa.assignmentLevel === 5,
+          ) != null
+        ) {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL5;
           user.isChecked = true;
         }
@@ -117,7 +223,11 @@ const AssignWork = ({route, navigation}: { route: any, navigation: any }) => {
     const updatedCheckboxes: any = [...userData];
     const selectedUser: any = updatedCheckboxes[index];
     selectedUser.isChecked = !selectedUser.isChecked;
-    const workAssignment = selectedUser.workAssignment?.find((wa: any) => wa.projectModule?.id === selectedProjectModule._id && wa.assignmentLevel === 1)
+    const workAssignment = selectedUser.workAssignment?.find(
+      (wa: any) =>
+        wa.projectModule?.id === selectedProjectModule._id &&
+        wa.assignmentLevel === 1,
+    );
     if (selectedUser.isChecked) {
       if (workAssignment) {
         workAssignment.dirty = false;
@@ -141,13 +251,15 @@ const AssignWork = ({route, navigation}: { route: any, navigation: any }) => {
 
   useEffect(() => {
     if (projectModulesWorkAssigned) {
-      Alert.alert("Success", "Works assigned successfully");
+      Alert.alert('Success', 'Works assigned successfully');
       openAssignClose();
       dispatch(clearProjectModulesWorkAssignmentData());
-      dispatch(getUsersForWorkAssignment({
-        projectId: loggedInUser.projectId,
-        workType: workType
-      }));
+      dispatch(
+        getUsersForWorkAssignment({
+          projectId: loggedInUser.projectId,
+          workType: workType,
+        }),
+      );
     }
   }, [projectModulesWorkAssigned, error]);
 
@@ -159,8 +271,8 @@ const AssignWork = ({route, navigation}: { route: any, navigation: any }) => {
     usersToBeAssign.forEach((u: any) => {
       let user: any = {
         _id: u._id,
-        delete: u.delete || false
-      }
+        delete: u.delete || false,
+      };
       const workAssignment = u.workAssignment?.find((wa: any) => wa.dirty);
       if (workAssignment) {
         user.workAssignmentId = workAssignment._id;
@@ -170,33 +282,37 @@ const AssignWork = ({route, navigation}: { route: any, navigation: any }) => {
     });
 
     if (usersToBeAssignArray.length) {
-      dispatch(projectModulesWorkAssignToUsers({
-        projectId: loggedInUser.projectId,
-        projectModuleId: selectedProjectModule._id,
-        body: {
-          users: usersToBeAssignArray,
-          level: 1
-        }
-      }));
+      dispatch(
+        projectModulesWorkAssignToUsers({
+          projectId: loggedInUser.projectId,
+          projectModuleId: selectedProjectModule._id,
+          body: {
+            users: usersToBeAssignArray,
+            level: 1,
+          },
+        }),
+      );
     }
-  }
+  };
 
   const openAssignClose = () => {
     projectModulesData.forEach((item: any) => {
       item.isChecked = false;
     });
     userData.forEach((item: any) => {
-        item.isChecked = false;
+      item.isChecked = false;
     });
     openAssignPopup(!isAssignPopOpen);
   };
 
   return (
     <View style={styles.Container}>
-        <View style={styles.TopHeaderFixed}>
-        {(error) && <View style={styles.ErrorSectionStyle}>
-                <Text style={styles.errorText}>{error}</Text>
-              </View>}
+      <View style={styles.TopHeaderFixed}>
+        {error && (
+          <View style={styles.ErrorSectionStyle}>
+            <Text style={styles.errorText}>{error}</Text>
+          </View>
+        )}
         <View style={styles.SectionStyle}>
           <Image
             source={require('./../../images/search-icon.png')}
@@ -211,52 +327,75 @@ const AssignWork = ({route, navigation}: { route: any, navigation: any }) => {
             underlineColorAndroid="#f000"
             blurOnSubmit={false}
             value={searchText}
-            onChangeText={(text) => {
+            onChangeText={text => {
               setSearchText(text);
             }}
           />
         </View>
       </View>
       <ScrollView style={styles.Height100}>
-        {projectModulesData.filter((projectMod: any) => {
+        {projectModulesData
+          .filter((projectMod: any) => {
             if (searchText && projectMod.name) {
-              return projectMod.name.toLowerCase().includes(searchText.toLowerCase())
+              return projectMod.name
+                .toLowerCase()
+                .includes(searchText.toLowerCase());
             } else {
               return true;
             }
-          }).map((item: any, index) => (
-          <View style={styles.UserCategory}>
-            <View style={styles.FlexRowCenter}>
-              <CheckBox
-                value={item.isChecked}
-                onValueChange={() => handleRadioChange(index)}
-                style={styles.checkbox}
-                tintColors={{true: '#0F56B3', false: '#818181'}}
+          })
+          .map((item: any, index) => (
+            <View
+              key={index}
+              style={[
+                styles.UserCategory,
+                {borderColor: workTypeColors.borderColor},
+              ]}>
+              <LinearGradient
+                colors={workTypeColors.gradientColors}
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 0}}
+                style={styles.gradientBackground}
               />
+              <View
+                style={[
+                  styles.leftBorder,
+                  {backgroundColor: workTypeColors.leftBorderColor},
+                ]}
+              />
+              <View style={styles.FlexRowCenter}>
+                <CheckBox
+                  value={item.isChecked}
+                  onValueChange={() => handleRadioChange(index)}
+                  style={styles.checkbox}
+                  tintColors={{true: '#5A2AAF', false: '#818181'}}
+                />
+                <View>
+                  <Text style={styles.UserRole}>{item.name}</Text>
+                </View>
+              </View>
               <View>
-                <Text style={styles.UserRole}>{item.name}</Text>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate('SegmentsList', {
+                      projectModuleId: item._id,
+                      projectModuleName: item.name,
+                      type: item.type,
+                      subType: item.subType,
+                      workType: workType,
+                    })
+                  }>
+                  <Image
+                    style={styles.CloseIcon}
+                    source={require('./../../images/right-arrow.png')}
+                  />
+                </TouchableOpacity>
               </View>
             </View>
-            <View>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('SegmentsList', {
-                  projectModuleId: item._id,
-                  projectModuleName: item.name,
-                  type: item.type,
-                  subType: item.subType,
-                  workType: workType
-                })}>
-                <Image
-                  style={styles.CloseIcon}
-                  source={require('./../../images/right-arrow.png')}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
-        ))}
+          ))}
 
         {/* No Data Found */}
-        {(!loading && !projectModulesData.length) && 
+        {!loading && !projectModulesData.length && (
           <View style={styles.NoDataContainer}>
             <Image
               style={styles.WthHeight}
@@ -268,7 +407,7 @@ const AssignWork = ({route, navigation}: { route: any, navigation: any }) => {
             </Text>
             )} */}
           </View>
-        }
+        )}
       </ScrollView>
 
       {/* Modal Start */}
@@ -295,37 +434,38 @@ const AssignWork = ({route, navigation}: { route: any, navigation: any }) => {
                 </TouchableOpacity>
               </View>
               <View style={styles.ModalInnerContainer}>
-              <View>
-                <Text style={styles.AssignRoleTextHeading}>Project Module: {selectedProjectModule.name}</Text>
-              </View>
-              <ScrollView style={{paddingTop: 0, height: 500}}>
-                {userData.map((item: any, index) => (
-                  <View style={styles.CategoryType}>
-                    <View style={styles.FlexRowCenter}>
-                      <CheckBox
-                        value={item.isChecked}
-                        disabled={item.assignmentLevel != null}
-                        onValueChange={() => handleUserData(index)}
-                        style={styles.checkbox}
-                        tintColors={{true: '#0F56B3', false: '#818181'}}
-                      />
-                      <View style={{ flexDirection: 'row' }}>
-                        <Text style={styles.AssignRoleText}>
-                          {item.name}
-                        </Text>
-                        {
-                            item.assignmentLevel &&
+                <View>
+                  <Text style={styles.AssignRoleTextHeading}>
+                    Project Module: {selectedProjectModule.name}
+                  </Text>
+                </View>
+                <ScrollView style={{paddingTop: 0, height: 500}}>
+                  {userData.map((item: any, index) => (
+                    <View key={index} style={styles.CategoryType}>
+                      <View style={styles.FlexRowCenter}>
+                        <CheckBox
+                          value={item.isChecked}
+                          disabled={item.assignmentLevel != null}
+                          onValueChange={() => handleUserData(index)}
+                          style={styles.checkbox}
+                          tintColors={{true: '#5A2AAF', false: '#818181'}}
+                        />
+                        <View style={{flexDirection: 'row'}}>
+                          <Text style={styles.AssignRoleText}>{item.name}</Text>
+                          {item.assignmentLevel && (
                             <Text style={styles.userAlreadyAssigned}>
                               {item.assignmentLevel}
                             </Text>
-                          }
+                          )}
+                        </View>
                       </View>
                     </View>
-                  </View>
-                ))}
+                  ))}
                 </ScrollView>
 
-                <TouchableOpacity style={styles.assignTagButoon} onPress={() => onWorkAssignment()}>
+                <TouchableOpacity
+                  style={styles.assignTagButoon}
+                  onPress={() => onWorkAssignment()}>
                   <Text style={styles.assignTagButoonText}>Assign</Text>
                 </TouchableOpacity>
               </View>
@@ -344,7 +484,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     paddingVertical: 10,
     padding: 15,
-    paddingBottom: 35
+    paddingBottom: 65,
   },
   ErrorSectionStyle: {
     flexDirection: 'row',
@@ -376,7 +516,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   assignTag: {
-    backgroundColor: '#1C58C0',
+    backgroundColor: '#5A2AAF',
     borderRadius: 15,
     color: '#fff',
     paddingHorizontal: 10,
@@ -420,7 +560,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     fontWeight: '600',
     paddingVertical: 15,
-    height: 55
+    height: 55,
   },
   SectionStyle: {
     flexDirection: 'row',
@@ -429,7 +569,7 @@ const styles = StyleSheet.create({
     marginHorizontal: -15,
     backgroundColor: '#fff',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10 },
+    shadowOffset: {width: 0, height: 10},
     shadowOpacity: 0.25,
     shadowRadius: 20,
     // Shadow for Android
@@ -454,8 +594,25 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     justifyContent: 'space-between',
     borderWidth: 1,
-    borderColor: '#BECADA',
     borderStyle: 'solid',
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  gradientBackground: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+  },
+  leftBorder: {
+    paddingVertical: 3,
+    position: 'absolute',
+    left: 0,
+    top: 10,
+    bottom: 10,
+    zIndex: 100,
+    width: 2,
   },
   checkbox: {
     transform: [{scaleX: 1.2}, {scaleY: 1.2}],
@@ -480,7 +637,8 @@ const styles = StyleSheet.create({
   UserRole: {
     fontSize: 16,
     fontWeight: '400',
-    color: '#808089',
+    color: '#000000',
+    paddingLeft: 10,
   },
   centeredView: {
     marginTop: 'auto',
@@ -517,7 +675,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F194FF',
   },
   buttonAssign: {
-    backgroundColor: '#1C58C0',
+    backgroundColor: '#5A2AAF',
     paddingVertical: 20,
     paddingHorizontal: 30,
     width: '50%',
@@ -528,7 +686,7 @@ const styles = StyleSheet.create({
   },
   DisabledButton: {
     opacity: 0.5,
-    backgroundColor: '#1C58C0',
+    backgroundColor: '#5A2AAF',
     paddingVertical: 20,
     paddingHorizontal: 30,
     width: '50%',
@@ -549,6 +707,7 @@ const styles = StyleSheet.create({
   },
   Height100: {
     height: '100%',
+    paddingBottom: 20,
   },
   CloseIcon: {
     width: 30,
@@ -582,7 +741,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#27272A',
     marginLeft: 5,
-    marginTop: 10
+    marginTop: 10,
   },
   AssignRoleText: {
     fontSize: 14,
@@ -591,7 +750,7 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   assignTagButoon: {
-    backgroundColor: '#1C58C0',
+    backgroundColor: '#5A2AAF',
     borderRadius: 30,
     color: '#fff',
     paddingHorizontal: 15,
@@ -602,7 +761,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   userAlreadyAssigned: {
-    backgroundColor: '#1C58C0',
+    backgroundColor: '#5A2AAF',
     borderRadius: 30,
     fontSize: 12,
     color: '#fff',

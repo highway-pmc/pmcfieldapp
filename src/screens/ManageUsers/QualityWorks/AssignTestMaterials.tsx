@@ -429,7 +429,11 @@ const AssignTestMaterials = ({
                     </View>
 
                     <View>
-                      <Text style={[styles.categoryText, {color: '#5A7EF8',fontWeight:'500'}]}>
+                      <Text
+                        style={[
+                          styles.categoryText,
+                          {color: '#5A2AAF', fontWeight: '500'},
+                        ]}>
                         32
                       </Text>
                     </View>
@@ -485,7 +489,7 @@ const AssignTestMaterials = ({
                           disabled={item.assignmentLevel != null}
                           onValueChange={() => handleUserData(index)}
                           style={styles.checkbox}
-                          tintColors={{true: '#0F56B3', false: '#818181'}}
+                          tintColors={{true: '#5A2AAF', false: '#818181'}}
                         />
                         <View style={{flexDirection: 'row'}}>
                           <Text style={styles.AssignRoleText}>{item.name}</Text>
@@ -554,7 +558,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   assignTag: {
-    backgroundColor: '#1C58C0',
+    backgroundColor: '#5A2AAF',
     borderRadius: 15,
     color: '#fff',
     paddingHorizontal: 10,
@@ -732,7 +736,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F194FF',
   },
   buttonAssign: {
-    backgroundColor: '#1C58C0',
+    backgroundColor: '#5A2AAF',
     paddingVertical: 20,
     paddingHorizontal: 30,
     width: '50%',
@@ -743,7 +747,7 @@ const styles = StyleSheet.create({
   },
   DisabledButton: {
     opacity: 0.5,
-    backgroundColor: '#1C58C0',
+    backgroundColor: '#5A2AAF',
     paddingVertical: 20,
     paddingHorizontal: 30,
     width: '50%',
@@ -799,7 +803,7 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   assignTagButoon: {
-    backgroundColor: '#1C58C0',
+    backgroundColor: '#5A2AAF',
     borderRadius: 30,
     color: '#fff',
     paddingHorizontal: 15,
@@ -810,7 +814,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   userAlreadyAssigned: {
-    backgroundColor: '#1C58C0',
+    backgroundColor: '#5A2AAF',
     borderRadius: 30,
     fontSize: 12,
     color: '#fff',

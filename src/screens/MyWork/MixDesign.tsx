@@ -349,16 +349,16 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-between',
     padding: 20,
+    backgroundColor: '#FFFFFF',
+    height: Dimensions.get('window').height,
   },
   innerScrollView: {
-    paddingBottom: 10,
     paddingTop: 15,
   },
   footerButton: {
-    paddingVertical: 15,
     paddingHorizontal: 20,
     backgroundColor: '#fff',
-    marginTop: 15,
+    marginBottom:40,
     height: 78,
     flexDirection: 'row',
     alignItems: 'center',
@@ -368,7 +368,7 @@ const styles = StyleSheet.create({
   btnCtaOutline: {
     borderRadius: 30,
     borderWidth: 1,
-    borderColor: '#1C58C0',
+    borderColor: '#5EAB4B',
     backgroundColor: '#fff',
     paddingHorizontal: 30,
     paddingVertical: 8,
@@ -377,7 +377,7 @@ const styles = StyleSheet.create({
     minWidth: 130,
   },
   btnCtaTextOutline: {
-    color: '#1C58C0',
+    color: '#5EAB4B',
     fontSize: 14,
     fontWeight: '500',
   },

@@ -21,6 +21,9 @@ import {
 import {HeaderItems} from '../../../../constants/constants';
 import LinearGradient from 'react-native-linear-gradient';
 
+// Fix for EquipmentListing.tsx
+
+// Fix issue with useIsFocused being called in render
 const EquipmentListing = ({
   navigation,
   route,
@@ -34,19 +37,32 @@ const EquipmentListing = ({
   const focus = useIsFocused();
 
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-
   const dispatch = useDispatch();
 
   const {equipmentsMasterData, equipmentsListData, loading, error} =
     useSelector((state: any) => state.EquipmentsCalibration);
-  const [equipmentInfoData, setEquipmentInfoData] = useState([]);
-  if (useIsFocused()) {
-    const eventEmitter = new NativeEventEmitter();
-    eventEmitter.emit('headerEvent', HeaderItems.equipmentListing);
+
+  interface EquipmentInfo {
+    _id: string;
+    name: string;
+    type?: string;
+    noOfEquipment?: number;
   }
 
+  const [equipmentInfoData, setEquipmentInfoData] = useState<EquipmentInfo[]>(
+    [],
+  );
+
+  // Move this to useEffect to avoid execution during render
   useEffect(() => {
-    if (focus == true) {
+    if (focus) {
+      const eventEmitter = new NativeEventEmitter();
+      eventEmitter.emit('headerEvent', HeaderItems.equipmentListing);
+    }
+  }, [focus]);
+
+  useEffect(() => {
+    if (focus === true) {
       console.log('==EquipmentListing==');
       dispatch(clearEquipmentData());
       setEquipmentInfoData([]);
@@ -54,7 +70,50 @@ const EquipmentListing = ({
     }
   }, [focus]);
 
+  // Fix issue with equipmentInfoData update
+  useEffect(() => {
+    if (error) {
+      showSnackbar('Unable to fetch equipment data');
+    }
+
+    if (
+      equipmentsMasterData &&
+      (!equipmentInfoData || equipmentInfoData.length === 0)
+    ) {
+      setEquipmentInfoData(equipmentsMasterData);
+      dispatch(getEquipmentsListData({projectId: loggedInUser?.projectId}));
+    }
+
+    if (
+      equipmentsListData &&
+      equipmentInfoData &&
+      equipmentInfoData.length > 0
+    ) {
+      // Create a new array to avoid directly mutating state
+      const updatedEquipmentData = equipmentInfoData.map((item: any) => {
+        // Count equipment of this category
+        const count =
+          equipmentsListData.filter(
+            (equip: any) => equip.testEquipmentCategoryId === item._id,
+          )?.length || 0;
+
+        // Return a new object with the count
+        return {
+          ...item,
+          noOfEquipment: count,
+        };
+      });
+
+      setEquipmentInfoData(updatedEquipmentData);
+    }
+  }, [equipmentsMasterData, equipmentsListData, error]);
+
   const navigateToListOfEquipment = (item: any) => {
+    if (!item || !item._id) {
+      showSnackbar('Invalid equipment category');
+      return;
+    }
+
     console.log('==Params==', item);
     navigation.navigate('EquipmentCalibrationListing', {
       testEquipmentCategoryId: item._id,
@@ -62,30 +121,12 @@ const EquipmentListing = ({
       testEquipmentCategoryType: item.type,
     });
   };
-  useEffect(() => {
-    if (error) {
-      showSnackbar('Unable to save equipment data');
-    }
-    if (equipmentsMasterData && !equipmentInfoData?.length) {
-      setEquipmentInfoData(equipmentsMasterData);
-      dispatch(getEquipmentsListData({projectId: loggedInUser.projectId}));
-    }
-    if (equipmentsListData) {
-      equipmentInfoData.forEach((item: any) => {
-        item.noOfEquipment =
-          equipmentsListData.filter(
-            (euip: any) => euip.testEquipmentCategoryId == item._id,
-          )?.length || 0;
-      });
-
-      setEquipmentInfoData([...equipmentInfoData]);
-    }
-  }, [equipmentsMasterData, equipmentsListData, error]);
 
   // Show loader until the equipmentsMasterData is loaded
-  if (!equipmentsMasterData || loading) {
+  if (loading) {
     return <LoadingAnimation loading={true} />;
   }
+
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
@@ -101,13 +142,12 @@ const EquipmentListing = ({
       </View>
       <ScrollView>
         <View style={styles.listContainer}>
-          {equipmentInfoData &&
+          {equipmentInfoData && equipmentInfoData.length > 0 ? (
             equipmentInfoData.map((item: any, index: any) => (
               <TouchableOpacity
                 key={index}
                 onPress={() => navigateToListOfEquipment(item)}
                 style={styles.equipmentCard}>
-                {/* <View style={styles.equipmentLine}></View> */}
                 <LinearGradient
                   colors={['#FFFFFF', '#F2E3E9']}
                   start={{x: 0, y: 0}}
@@ -124,7 +164,10 @@ const EquipmentListing = ({
                   </View>
                 </View>
               </TouchableOpacity>
-            ))}
+            ))
+          ) : (
+            <Text>No equipment categories found</Text>
+          )}
         </View>
       </ScrollView>
       <LoadingAnimation loading={loading} />
@@ -215,6 +258,10 @@ const styles = StyleSheet.create({
   equipmentCountContainer: {
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#FFF',
+    borderRadius: 20,
+    height: 30,
+    width: 30,
   },
 });
 

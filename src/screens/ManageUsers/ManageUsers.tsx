@@ -174,12 +174,24 @@ const ManageUsers = ({navigation}: {navigation: any}) => {
           cate.isChecked = false;
         }
       });
+    } else if (item.isChecked && item.name === USER_CATEGORY.SURVEY_WORK) {
+      userCategories.forEach((cate: any) => {
+        if (cate.name != USER_CATEGORY.SURVEY_WORK) {
+          cate.isChecked = false;
+        }
+      });
     } else if (item.isChecked) {
       const qualityWork: any = userCategories.find(
         (cate: any) => cate.name === USER_CATEGORY.QUALITY_WORK,
       );
       if (qualityWork) {
         qualityWork.isChecked = false;
+      }
+      const surveyWork: any = userCategories.find(
+        (cate: any) => cate.name === USER_CATEGORY.SURVEY_WORK,
+      );
+      if (surveyWork) {
+        surveyWork.isChecked = false;
       }
     }
     setUserCategories([...userCategories]);
@@ -244,7 +256,13 @@ const ManageUsers = ({navigation}: {navigation: any}) => {
                 <View style={styles.userDetails}>
                   <Text style={styles.userName}>{item.name}</Text>
                   <View style={styles.userRoleContainer}>
-                    <Text style={styles.userDesignation}>User Designation</Text>
+                    <Text style={styles.userDesignationTitle}>
+                      {item.designation} :
+                    </Text>
+                    <Text style={styles.userDesignation}>
+                      {' '}
+                      {item.categoriesDisplay}
+                    </Text>
                   </View>
                 </View>
               </View>
@@ -446,9 +464,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  userDesignationTitle: {
+    fontSize: 12,
+    color: '#333333',
+  },
   userDesignation: {
     fontSize: 12,
-    color: '#666666',
+    color: '#5A2AAF',
   },
   userCategories: {
     fontSize: 12,

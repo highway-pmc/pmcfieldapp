@@ -89,10 +89,16 @@ const MyWorkType = ({navigation}: {navigation: any}) => {
             <TileCardComponent
               key={index}
               title={role.title}
-              content={role.discription}
+              workType={role.workType}
               bgColor={role.backgroundColor}
               imageBg={role.imageBg}
+              linearLight={role.linearLight}
+              linearDark={role.linearDark}
               image={role.src}
+              generatedTask={role.generatedTask}
+              inProgressTask={role.inProgressTask}
+              closedTask={role.closedTask}
+              rejected={role.rejected}
               onPress={() => onPressWorkType(role.workType)}
             />
           ))}
@@ -112,7 +118,7 @@ const windowWidth = Dimensions.get('window').width;
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: '#F2F2F2',
+    backgroundColor: '#FFF',
   },
   container: {
     flex: 1,

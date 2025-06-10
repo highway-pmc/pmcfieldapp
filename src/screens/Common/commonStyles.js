@@ -1,5 +1,5 @@
 // commonStyles.js
-import { StyleSheet } from 'react-native';
+import {StyleSheet} from 'react-native';
 
 const commonStyles = StyleSheet.create({
   separatTaskType: {
@@ -150,9 +150,7 @@ const commonStyles = StyleSheet.create({
   //RFI' LAB Test Toggle CSS
   toggleContainer: {
     flexDirection: 'row',
-    backgroundColor: '#D2C5FF',
-    borderRadius: 10,
-    padding: 5,
+    backgroundColor: '#FFF',
     alignSelf: 'center',
     marginBottom: 10,
     color: '#fff',
@@ -162,18 +160,20 @@ const commonStyles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     alignItems: 'center',
-    borderRadius: 8,
   },
   activeToggleButton: {
-    backgroundColor: '#F1F1FE',
+    borderBottomColor: '#4E36A3',
+    borderBottomWidth: 3,
   },
   toggleText: {
     fontSize: 16,
-    color: '#FFFFFF',
+    color: '#000000',
+    opacity: 0.4,
   },
   activeToggleText: {
     color: '#4E36A3',
     fontWeight: '500',
+    opacity: 1,
   },
 
   //Procurements Css

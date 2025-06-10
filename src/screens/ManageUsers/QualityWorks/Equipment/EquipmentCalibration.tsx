@@ -136,13 +136,11 @@ const EquipmentCalibration = ({
   useEffect(() => {
     if (deletedEquipmentCalibration) {
       showSnackbar('Calibration record deleted successfully');
-      setCalibrationListData((prevCalibrationList: any) =>
-        prevCalibrationList.filter(
-          (item: any) => item._id !== deletedEquipmentCalibration._id,
-        ),
-      );
 
-      dispatch(clearEquipmentData());
+      // Use setTimeout to ensure state update completes before clearing Redux data
+      setTimeout(() => {
+        dispatch(clearEquipmentData());
+      }, 100);
     }
   }, [deletedEquipmentCalibration]);
 
@@ -273,6 +271,10 @@ const EquipmentCalibration = ({
                 testEquipmentCalibrationId: calibrationId,
               }),
             );
+            const updatedList = calibrationListData.filter(
+              (item: any) => item._id !== calibrationId,
+            );
+            setCalibrationListData(updatedList);
           },
           style: 'destructive',
         },

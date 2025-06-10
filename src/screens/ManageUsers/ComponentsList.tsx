@@ -274,9 +274,11 @@ const ComponentsList = ({ route, navigation }: { route: any, navigation: any }) 
 
   return (
     <View style={styles.Container}>
-      {(error) && <View style={styles.ErrorSectionStyle}>
-        <Text style={styles.errorText}>{error}</Text>
-      </View>}
+      {error && (
+        <View style={styles.ErrorSectionStyle}>
+          <Text style={styles.errorText}>{error}</Text>
+        </View>
+      )}
       <View style={styles.SectionStyle}>
         <Image
           source={require('./../../images/search-icon.png')}
@@ -291,16 +293,20 @@ const ComponentsList = ({ route, navigation }: { route: any, navigation: any }) 
           underlineColorAndroid="#f000"
           blurOnSubmit={false}
           value={searchText}
-          onChangeText={(text) => {
+          onChangeText={text => {
             setSearchText(text);
           }}
         />
       </View>
-      <ScrollView style={styles.Height100} contentContainerStyle={commonStyles.paddingBottom20}>
+      <ScrollView
+        style={styles.Height100}
+        contentContainerStyle={commonStyles.paddingBottom20}>
         <>
-          <View style={{ paddingTop: 15 }}>
+          <View style={{paddingTop: 15}}>
             <Text style={commonStyles.titleText}>
-              {filteredCategory[0]?.segmentCategory !== 'NA' ? filteredCategory[0]?.segmentCategory : filteredCategory[0]?.name || ''}
+              {filteredCategory[0]?.segmentCategory !== 'NA'
+                ? filteredCategory[0]?.segmentCategory
+                : filteredCategory[0]?.name || ''}
             </Text>
           </View>
           {repeatedComponentTypes}
@@ -314,7 +320,7 @@ const ComponentsList = ({ route, navigation }: { route: any, navigation: any }) 
         onRequestClose={() => {
           openAssignPopup(!isAssignPopOpen);
         }}>
-        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.3)' }}>
+        <View style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.3)'}}>
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <View style={styles.ModalHeader}>
@@ -331,9 +337,11 @@ const ComponentsList = ({ route, navigation }: { route: any, navigation: any }) 
               </View>
               <View style={styles.ModalInnerContainer}>
                 <View>
-                  <Text style={styles.AssignRoleTextHeading}>Component: {selectedComponent.name}</Text>
+                  <Text style={styles.AssignRoleTextHeading}>
+                    Component: {selectedComponent.name}
+                  </Text>
                 </View>
-                <ScrollView style={{ paddingTop: 0, height: 500 }}>
+                <ScrollView style={{paddingTop: 0, height: 500}}>
                   {userData.map((item: any, index) => (
                     <View style={styles.CategoryType}>
                       <View style={styles.FlexRowCenter}>
@@ -342,26 +350,24 @@ const ComponentsList = ({ route, navigation }: { route: any, navigation: any }) 
                           disabled={item.assignmentLevel != null}
                           onValueChange={() => handleUserData(index)}
                           style={styles.checkbox}
-                          tintColors={{ true: '#0F56B3', false: '#818181' }}
+                          tintColors={{true: '#5A2AAF', false: '#818181'}}
                         />
-                        <View style={{ flexDirection: 'row' }}>
-                          <Text style={styles.AssignRoleText}>
-                            {item.name}
-                          </Text>
-                          {
-                            item.assignmentLevel ?
+                        <View style={{flexDirection: 'row'}}>
+                          <Text style={styles.AssignRoleText}>{item.name}</Text>
+                          {item.assignmentLevel ? (
                             <Text style={styles.userAlreadyAssigned}>
                               {item.assignmentLevel}
-                            </Text> : null
-                          }
-
+                            </Text>
+                          ) : null}
                         </View>
                       </View>
                     </View>
                   ))}
                 </ScrollView>
 
-                <TouchableOpacity style={styles.assignTagButoon} onPress={() => onWorkAssignment()}>
+                <TouchableOpacity
+                  style={styles.assignTagButoon}
+                  onPress={() => onWorkAssignment()}>
                   <Text style={styles.assignTagButoonText}>Assign</Text>
                 </TouchableOpacity>
               </View>
@@ -369,9 +375,12 @@ const ComponentsList = ({ route, navigation }: { route: any, navigation: any }) 
           </View>
         </View>
       </Modal>
-      <LoadingAnimation loading={loading || loadingUsers || loadingComponent}></LoadingAnimation>
+      <LoadingAnimation
+        loading={
+          loading || loadingUsers || loadingComponent
+        }></LoadingAnimation>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -379,7 +388,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     paddingVertical: 10,
     padding: 15,
-    paddingBottom: 35
+    paddingBottom: 35,
   },
   ErrorSectionStyle: {
     flexDirection: 'row',
@@ -411,7 +420,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   assignTag: {
-    backgroundColor: '#1C58C0',
+    backgroundColor: '#5A2AAF',
     borderRadius: 15,
     color: '#fff',
     paddingHorizontal: 10,
@@ -455,7 +464,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     fontWeight: '600',
     paddingVertical: 15,
-    height: 55
+    height: 55,
   },
   SectionStyle: {
     flexDirection: 'row',
@@ -464,7 +473,7 @@ const styles = StyleSheet.create({
     marginHorizontal: -15,
     backgroundColor: '#fff',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10 },
+    shadowOffset: {width: 0, height: 10},
     shadowOpacity: 0.25,
     shadowRadius: 20,
     // Shadow for Android
@@ -487,7 +496,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
     flexDirection: 'row',
     alignContent: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   checkbox: {
     transform: [{scaleX: 1.2}, {scaleY: 1.2}],
@@ -549,7 +558,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F194FF',
   },
   buttonAssign: {
-    backgroundColor: '#1C58C0',
+    backgroundColor: '#5A2AAF',
     paddingVertical: 20,
     paddingHorizontal: 30,
     width: '50%',
@@ -560,7 +569,7 @@ const styles = StyleSheet.create({
   },
   DisabledButton: {
     opacity: 0.5,
-    backgroundColor: '#1C58C0',
+    backgroundColor: '#5A2AAF',
     paddingVertical: 20,
     paddingHorizontal: 30,
     width: '50%',
@@ -614,7 +623,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#27272A',
     marginLeft: 5,
-    marginTop: 10
+    marginTop: 10,
   },
   AssignRoleText: {
     fontSize: 14,
@@ -623,7 +632,7 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   assignTagButoon: {
-    backgroundColor: '#1C58C0',
+    backgroundColor: '#5A2AAF',
     borderRadius: 30,
     color: '#fff',
     paddingHorizontal: 15,
@@ -634,7 +643,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   userAlreadyAssigned: {
-    backgroundColor: '#1C58C0',
+    backgroundColor: '#5A2AAF',
     borderRadius: 30,
     fontSize: 12,
     color: '#fff',

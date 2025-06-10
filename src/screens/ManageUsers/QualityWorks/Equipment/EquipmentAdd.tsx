@@ -80,11 +80,10 @@ const EquipmentAdd = ({navigation, route}: {navigation: any; route: any}) => {
   }
 
   useEffect(() => {
-    if (focus == true) {
+    if (focus === true) {
       dispatch(getEquipmentsMasterData());
-      //console.log('Equipment Data', equipmentData);
-      //console.log('Equipments Master Data', equipmentsMasterData);
-      // Don't reset fields if in edit mode
+
+      // Only reset fields if not in edit mode
       if (!isEditMode) {
         setDateOfPurchase('');
         setSelectedTestCategoryData(null);
@@ -100,60 +99,65 @@ const EquipmentAdd = ({navigation, route}: {navigation: any; route: any}) => {
   // Set up form data for edit mode
   useEffect(() => {
     if (isEditMode && equipmentData && equipmentsMasterData) {
-      // Find the category by ID instead of type
-      const categoryData = equipmentsMasterData.find(
-        (category: any) =>
-          category._id === equipmentData.testEquipmentCategoryId,
-      );
+      try {
+        // Find the category by ID
+        const categoryData = equipmentsMasterData.find(
+          category => category._id === equipmentData.testEquipmentCategoryId,
+        );
 
-      if (categoryData) {
-        setSelectedTestCategoryData(categoryData);
+        if (categoryData) {
+          setSelectedTestCategoryData(categoryData);
 
-        // Find the equipment type within this category
-        if (
-          categoryData.equipmentTypeData &&
-          categoryData.equipmentTypeData.length > 0
-        ) {
-          const typeData = categoryData.equipmentTypeData.find(
-            (type: any) => type._id === equipmentData.testEquipmentTypeId,
-          );
+          // Find the equipment type within this category
+          if (
+            categoryData.equipmentTypeData &&
+            categoryData.equipmentTypeData.length > 0
+          ) {
+            const typeData = categoryData.equipmentTypeData.find(
+              type => type._id === equipmentData.testEquipmentTypeId,
+            );
 
-          if (typeData) {
-            setSelectedMaterialTypeData(typeData);
+            if (typeData) {
+              setSelectedMaterialTypeData(typeData);
 
-            // Check for subtype in metaData
-            if (equipmentData.metaData && equipmentData.metaData.subType) {
-              // Find the matching subtype in the equipment type's subtypes array
-              if (typeData.subTypes && typeData.subTypes.length > 0) {
-                const subTypeData = typeData.subTypes.find(
-                  (subType: any) =>
-                    subType.type === equipmentData.metaData.subType.type,
-                );
+              // Check for subtype in metaData
+              if (equipmentData.metaData && equipmentData.metaData.subType) {
+                // Find the matching subtype in the equipment type's subtypes array
+                if (typeData.subTypes && typeData.subTypes.length > 0) {
+                  const subTypeData = typeData.subTypes.find(
+                    subType =>
+                      subType.type === equipmentData.metaData.subType.type,
+                  );
 
-                if (subTypeData) {
-                  setSelectedMaterialTypeCategoryData(subTypeData);
+                  if (subTypeData) {
+                    setSelectedMaterialTypeCategoryData(subTypeData);
+                  }
                 }
               }
             }
           }
         }
-      }
 
-      // Set other form fields
-      setName(equipmentData.name || '');
-      setMake(equipmentData.make || '');
-      setModelNumber(equipmentData.modelNo || '');
+        // Set other form fields
+        setName(equipmentData.name || '');
+        setMake(equipmentData.make || '');
+        setModelNumber(equipmentData.modelNo || '');
 
-      // Format date of purchase if available
-      if (equipmentData.dateOfPurchase) {
-        // You may need to format the date to DD/MM/YYYY format here
-        const date = new Date(equipmentData.dateOfPurchase);
-        const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(
-          date.getMonth() + 1
-        )
-          .toString()
-          .padStart(2, '0')}/${date.getFullYear()}`;
-        setDateOfPurchase(formattedDate);
+        // Format date of purchase if available
+        if (equipmentData.dateOfPurchase) {
+          // Format the date to DD/MM/YYYY
+          const date = new Date(equipmentData.dateOfPurchase);
+          const formattedDate = `${date
+            .getDate()
+            .toString()
+            .padStart(2, '0')}/${(date.getMonth() + 1)
+            .toString()
+            .padStart(2, '0')}/${date.getFullYear()}`;
+          setDateOfPurchase(formattedDate);
+        }
+      } catch (err) {
+        console.error('Error loading equipment data for edit:', err);
+        showSnackbar('Error loading equipment data');
       }
     }
   }, [isEditMode, equipmentData, equipmentsMasterData]);
@@ -167,7 +171,7 @@ const EquipmentAdd = ({navigation, route}: {navigation: any; route: any}) => {
       );
       setTimeout(() => {
         navigation.navigate('EquipmentListing');
-      }, 2000);
+      }, 1000);
     }
     if (equipmentsMasterData) {
       setEquipmentCalibrationFormInfoData(equipmentsMasterData);
@@ -201,29 +205,24 @@ const EquipmentAdd = ({navigation, route}: {navigation: any; route: any}) => {
 
   const onSubmit = () => {
     console.log('=======Submit========');
-    if (!selectedTestCategoryData || !selectedMaterialTypeData) {
-      showSnackbar('Please select equipment category and type');
+    if (!selectedTestCategoryData || !selectedMaterialTypeData || !name) {
+      showSnackbar('Please fill in all required fields');
       return;
     }
 
     const equipmentBody = {
       name: name,
-      dateOfPurchase: getDbDateFromDDMMYYYY(dateOfPurchase),
-      make: make,
-      modelNo: modelNumber,
+      dateOfPurchase: dateOfPurchase
+        ? getDbDateFromDDMMYYYY(dateOfPurchase)
+        : null,
+      make: make || '',
+      modelNo: modelNumber || '',
       additionalData: {
-        subType: selectedMaterialTypeCategoryData,
+        subType: selectedMaterialTypeCategoryData || null,
       },
     };
-    // console.log('Equipment Body:', equipmentBody);
-    // console.log('Selected Test Category Data:', selectedTestCategoryData?.type);
-    // console.log('Selected Material Type Data:', selectedMaterialTypeData?._id);
-    // console.log(
-    //   'Selected Material Type Category Data:',
-    //   selectedMaterialTypeCategoryData?._id,
-    // );
-    console.log('Equipment', equipmentData._id);
-    if (isEditMode) {
+
+    if (isEditMode && equipmentData) {
       // Call edit equipment API
       dispatch(
         editEquipmentsInfo({
@@ -234,6 +233,7 @@ const EquipmentAdd = ({navigation, route}: {navigation: any; route: any}) => {
           body: equipmentBody,
         }),
       );
+      navigation.navigate('EquipmentListing');
     } else {
       // Call save equipment API
       dispatch(
@@ -241,7 +241,7 @@ const EquipmentAdd = ({navigation, route}: {navigation: any; route: any}) => {
           projectId: loggedInUser.projectId,
           testWorkCategoryType: selectedTestCategoryData?.type,
           testEquipmentTypeId: selectedMaterialTypeData?._id,
-          testEquipmentSubTypeId: selectedMaterialTypeCategoryData?._id,
+          testEquipmentSubTypeId: selectedMaterialTypeCategoryData?._id || null,
           body: equipmentBody,
         }),
       );

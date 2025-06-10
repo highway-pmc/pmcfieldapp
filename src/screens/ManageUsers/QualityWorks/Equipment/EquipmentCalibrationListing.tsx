@@ -86,7 +86,11 @@ const EquipmentCalibrationListing = ({
     }
 
     if (equipmentsListData) {
-      setEquipmentListInfoData(equipmentsListData);
+      const filteredEquipments = equipmentsListData.filter(
+        (equip: any) =>
+          equip.testEquipmentCategoryId === testEquipmentCategoryId,
+      );
+      setEquipmentListInfoData(filteredEquipments);
     }
   }, [equipmentsListData, error]);
 

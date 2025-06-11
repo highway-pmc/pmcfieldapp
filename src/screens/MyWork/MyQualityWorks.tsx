@@ -208,7 +208,10 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
     if (myTests) {
       //setCurrentLevel(0);
       // setMyTestsDataAll(myTests);
-      onMyTestClick(myTests[0]);
+      console.log('myTests==============', JSON.stringify(myTests));
+      if (myTests.length > 0) {
+        onMyTestClick(myTests[0]);
+      }
     }
   }, [myTests]);
 

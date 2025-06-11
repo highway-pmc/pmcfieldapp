@@ -228,7 +228,7 @@ const AssignStoreUsers = () => {
             <Text style={styles.errorText}>{error}</Text>
           </View>
         )}
-        <View style={styles.SectionStyle}>
+        {/* <View style={styles.SectionStyle}>
           <Image
             source={require('./../../images/search-icon.png')}
             style={styles.ImageSearch}
@@ -246,7 +246,7 @@ const AssignStoreUsers = () => {
               setSearchText(text);
             }}
           />
-        </View>
+        </View> */}
       </View>
       <ScrollView style={styles.Height100}>
         {testClassificationsData

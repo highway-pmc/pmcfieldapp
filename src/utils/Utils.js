@@ -14,6 +14,21 @@ const isTestInventoryClassification = (testClassificationType) => {
     return (testClassificationType === TEST_CLASSIFICATION_TYPES.SOURCE_APPROVALS || testClassificationType === TEST_CLASSIFICATION_TYPES.PROCUREMENT_DETAILS);
 }
 
+const isStoreClassification = (testClassificationType) => {
+    // TODO: need to introduce types in db and use them here iso name
+    return (testClassificationType === TEST_CLASSIFICATION_TYPES.STORES);
+}
+
+const isProductionClassification = (testClassificationType) => {
+    // TODO: need to introduce types in db and use them here iso name
+    return (testClassificationType === TEST_CLASSIFICATION_TYPES.PRODUCTION);
+}
+
+const isEquipmentClassification = (testClassificationType) => {
+    // TODO: need to introduce types in db and use them here iso name
+    return (testClassificationType === TEST_CLASSIFICATION_TYPES.EQUIPMENTS);
+}
+
 const getDbDate = (date) => {
     return moment(new Date(date)).format('YYYY-MM-DD');
 }
@@ -34,6 +49,9 @@ const getDisplayTime = (date) => {
 export {
     groupBy,
     isTestInventoryClassification,
+    isStoreClassification,
+    isProductionClassification,
+    isEquipmentClassification,
     getDbDate,
     getDbDateFromDDMMYYYY,
     getDisplayDate,

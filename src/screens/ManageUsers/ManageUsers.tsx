@@ -180,6 +180,12 @@ const ManageUsers = ({navigation}: {navigation: any}) => {
           cate.isChecked = false;
         }
       });
+    } else if (item.isChecked && item.name === USER_CATEGORY.ADMIN_WORK) {
+      userCategories.forEach((cate: any) => {
+        if (cate.name != USER_CATEGORY.ADMIN_WORK) {
+          cate.isChecked = false;
+        }
+      });
     } else if (item.isChecked) {
       const qualityWork: any = userCategories.find(
         (cate: any) => cate.name === USER_CATEGORY.QUALITY_WORK,
@@ -192,6 +198,12 @@ const ManageUsers = ({navigation}: {navigation: any}) => {
       );
       if (surveyWork) {
         surveyWork.isChecked = false;
+      }
+      const adminWork: any = userCategories.find(
+        (cate: any) => cate.name === USER_CATEGORY.ADMIN_WORK,
+      );
+      if (adminWork) {
+        adminWork.isChecked = false;
       }
     }
     setUserCategories([...userCategories]);
@@ -242,6 +254,12 @@ const ManageUsers = ({navigation}: {navigation: any}) => {
             }}
           />
         </View>
+        <TouchableOpacity
+          onPress={() => {
+            dispatch(getUsers());
+          }}>
+            <Text style={{color: '#5A2AAF'}}>Refresh</Text>
+        </TouchableOpacity>
       </View>
 
       {/* User List */}
@@ -266,7 +284,7 @@ const ManageUsers = ({navigation}: {navigation: any}) => {
                   </View>
                 </View>
               </View>
-              {projectHead && (
+              {projectHead && (item.roles.indexOf('-head') === -1) && (
                 <RadioButton
                   value={item._id}
                   color="#673AB7"

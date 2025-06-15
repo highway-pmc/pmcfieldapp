@@ -31,6 +31,14 @@ import {
   getUsers,
   getUserCategories,
 } from './actions';
+import LinearGradient from 'react-native-linear-gradient';
+import WorkType from './WorkType';
+
+// Define tab options
+const TAB_OPTIONS = {
+  ASSIGN_CATEGORY: 'Assign Category',
+  ASSIGN_WORK: 'Assign Work',
+};
 
 const ManageUsers = ({navigation}: {navigation: any}) => {
   const [searchText, setSearchText] = useState('');
@@ -39,6 +47,9 @@ const ManageUsers = ({navigation}: {navigation: any}) => {
   const [projectHead, setProjectHead] = useState(false);
   const [userList, setUserList] = useState([]);
   const [userCategories, setUserCategories] = useState([]);
+
+  // Add required tab state
+  const [activeTab, setActiveTab] = useState(TAB_OPTIONS.ASSIGN_CATEGORY);
 
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
   const {users, usersAdded, categories, loading, usersLoading, error} =
@@ -110,6 +121,11 @@ const ManageUsers = ({navigation}: {navigation: any}) => {
     },
     [],
   );
+
+  // Add switchTab function
+  const switchTab = (tabName: string) => {
+    setActiveTab(tabName);
+  };
 
   const onUserCategoryAssignment = () => {
     dispatch(
@@ -220,124 +236,168 @@ const ManageUsers = ({navigation}: {navigation: any}) => {
 
   return (
     <View style={styles.container}>
-      {/* Search Bar */}
-      <View style={styles.searchContainer}>
-        {error && (
-          <View style={styles.errorSection}>
-            <Text style={styles.errorText}>{error}</Text>
-          </View>
-        )}
-        <View style={styles.searchInputContainer}>
-          <Image
-            source={require('./../../images/search-icon.png')}
-            style={styles.searchIcon}
-          />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search user"
-            autoCapitalize="none"
-            keyboardType="email-address"
-            returnKeyType="next"
-            underlineColorAndroid="#f000"
-            blurOnSubmit={false}
-            onChangeText={text => {
-              setSearchText(text);
-              setUserList(
-                users.filter((u: any) => {
-                  if (text && u.name) {
-                    return u.name.toLowerCase().includes(text.toLowerCase());
-                  } else {
-                    return true;
-                  }
-                }),
-              );
-            }}
-          />
+      {projectHead && (
+        <View style={styles.tabBar}>
+          <TouchableOpacity
+            style={[
+              styles.tabItem,
+              activeTab === TAB_OPTIONS.ASSIGN_CATEGORY && styles.activeTab,
+            ]}
+            onPress={() => switchTab(TAB_OPTIONS.ASSIGN_CATEGORY)}>
+            <Text
+              style={[
+                styles.activeTabText,
+                activeTab === TAB_OPTIONS.ASSIGN_CATEGORY &&
+                  styles.activeFontColor,
+              ]}>
+              {TAB_OPTIONS.ASSIGN_CATEGORY}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.tabItem,
+              activeTab === TAB_OPTIONS.ASSIGN_WORK && styles.activeTab,
+            ]}
+            onPress={() => switchTab(TAB_OPTIONS.ASSIGN_WORK)}>
+            <Text
+              style={[
+                styles.activeTabText,
+                activeTab === TAB_OPTIONS.ASSIGN_WORK && styles.activeFontColor,
+              ]}>
+              {TAB_OPTIONS.ASSIGN_WORK}
+            </Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          onPress={() => {
-            dispatch(getUsers());
-          }}>
-            <Text style={{color: '#5A2AAF'}}>Refresh</Text>
-        </TouchableOpacity>
-      </View>
+      )}
 
-      {/* User List */}
-      <ScrollView style={styles.userListContainer}>
-        <RadioButton.Group
-          onValueChange={handleRadioChange}
-          value={selectedUserId}>
-          {userList.map((item: user, index) => (
-            <View style={styles.userCard} key={item._id}>
-              <View style={styles.userInfoContainer}>
-                <Image source={userIcon} style={styles.userAvatar} />
-                <View style={styles.userDetails}>
-                  <Text style={styles.userName}>{item.name}</Text>
-                  <View style={styles.userRoleContainer}>
-                    <Text style={styles.userDesignationTitle}>
-                      {item.designation} :
-                    </Text>
-                    <Text style={styles.userDesignation}>
-                      {' '}
-                      {item.categoriesDisplay}
-                    </Text>
-                  </View>
-                </View>
+      {/* Search Bar and User List - Fixed the conditional rendering */}
+      {activeTab === TAB_OPTIONS.ASSIGN_CATEGORY ? (
+        <>
+          <View style={styles.searchContainer}>
+            {error && (
+              <View style={styles.errorSection}>
+                <Text style={styles.errorText}>{error}</Text>
               </View>
-              {projectHead && (item.roles.indexOf('-head') === -1) && (
-                <RadioButton
-                  value={item._id}
-                  color="#673AB7"
-                  uncheckedColor="#DDDDDD"
-                />
+            )}
+            <View style={styles.searchInputContainer}>
+              <Image
+                source={require('./../../images/search-icon.png')}
+                style={styles.searchIcon}
+              />
+              <TextInput
+                style={styles.searchInput}
+                placeholder="Search user"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                returnKeyType="next"
+                underlineColorAndroid="#f000"
+                blurOnSubmit={false}
+                onChangeText={text => {
+                  setSearchText(text);
+                  setUserList(
+                    users.filter((u: any) => {
+                      if (text && u.name) {
+                        return u.name
+                          .toLowerCase()
+                          .includes(text.toLowerCase());
+                      } else {
+                        return true;
+                      }
+                    }),
+                  );
+                }}
+              />
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+                gap: 16,
+                marginTop: 10,
+              }}>
+              <TouchableOpacity
+                onPress={() => {
+                  dispatch(getUsers());
+                }}
+                style={{marginRight: 0}}>
+                <Text style={{color: '#5A2AAF'}}>Refresh</Text>
+              </TouchableOpacity>
+              {selectedUserId && (
+                <TouchableOpacity onPress={() => openAssignPopup(true)}>
+                  <Text
+                    style={{
+                      color: '#5A2AAF',
+                      paddingLeft: 10,
+                      borderLeftWidth: 1,
+                      borderColor: '#5A2AAF',
+                    }}>
+                    Assign
+                  </Text>
+                </TouchableOpacity>
               )}
             </View>
-          ))}
-        </RadioButton.Group>
-
-        {/* No Data Found */}
-        {!usersLoading && !userList.length && (
-          <View style={styles.noDataContainer}>
-            <Image
-              style={styles.noDataImage}
-              source={require('./../../images/no-data-found.png')}
-            />
-            <Text style={styles.noDataTitle}>Sorry, no result found!</Text>
-            {searchText && (
-              <Text style={styles.noDataSubtext}>
-                Please try to search another keywork...
-              </Text>
-            )}
           </View>
-        )}
-      </ScrollView>
 
-      {/* Footer Buttons */}
-      {projectHead && (
-        <View style={styles.footerContainer}>
-          <Pressable
-            style={[
-              styles.footerButton,
-              styles.assignCategoryButton,
-              !selectedUserId && styles.disabledButton,
-            ]}
-            disabled={!selectedUserId}
-            onPress={() => openAssignPopup(true)}>
-            <Text style={styles.buttonText}>Assign Category</Text>
-          </Pressable>
-          <View
-            style={{
-              width: 1,
-              backgroundColor: '#fff',
-              marginHorizontal: 15,
-            }}
-          />
-          <Pressable
-            style={[styles.footerButton, styles.assignWorkButton]}
-            onPress={() => navigation.navigate('WorkType')}>
-            <Text style={styles.buttonText}>Assign Work</Text>
-          </Pressable>
-        </View>
+          {/* User List */}
+          <ScrollView style={styles.userListContainer}>
+            <RadioButton.Group
+              onValueChange={handleRadioChange}
+              value={selectedUserId}>
+              {userList.map((item: user, index) => (
+                <View style={styles.userCard} key={item._id}>
+                  <LinearGradient
+                    colors={['#FFFFFF', '#F2E3E9']}
+                    start={{x: 0, y: 0}}
+                    end={{x: 1, y: 0}}
+                    style={styles.gradientBackground}
+                  />
+                  <View style={styles.leftBorder} />
+                  <View style={styles.userInfoContainer}>
+                    <Image source={userIcon} style={styles.userAvatar} />
+                    <View style={styles.userDetails}>
+                      <Text style={styles.userName}>{item.name}</Text>
+                      <View style={styles.userRoleContainer}>
+                        <Text style={styles.userDesignationTitle}>
+                          {item.designation} :
+                        </Text>
+                        <Text style={styles.userDesignation}>
+                          {' '}
+                          {item.categoriesDisplay}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                  {projectHead && item.roles.indexOf('-head') === -1 && (
+                    <RadioButton
+                      value={item._id}
+                      color="#673AB7"
+                      uncheckedColor="#FFF"
+                    />
+                  )}
+                </View>
+              ))}
+            </RadioButton.Group>
+
+            {/* No Data Found */}
+            {!usersLoading && !userList.length && (
+              <View style={styles.noDataContainer}>
+                <Image
+                  style={styles.noDataImage}
+                  source={require('./../../images/no-data-found.png')}
+                />
+                <Text style={styles.noDataTitle}>Sorry, no result found!</Text>
+                {searchText && (
+                  <Text style={styles.noDataSubtext}>
+                    Please try to search another keywork...
+                  </Text>
+                )}
+              </View>
+            )}
+          </ScrollView>
+        </>
+      ) : (
+        <WorkType navigation={navigation} />
       )}
 
       {/* Category Assignment Modal */}
@@ -398,7 +458,7 @@ const ManageUsers = ({navigation}: {navigation: any}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F6FA',
+    backgroundColor: '#FFF',
   },
   searchContainer: {
     paddingHorizontal: 15,
@@ -446,22 +506,35 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#FFFFFF',
     borderRadius: 8,
     padding: 15,
     marginBottom: 10,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 1},
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
     borderWidth: 1,
-    borderColor: '#BECADA',
+    borderColor: '#F6D5E2',
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  gradientBackground: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+  },
+  leftBorder: {
+    position: 'absolute',
+    left: 0,
+    top: 8,
+    bottom: 8,
+    width: 2,
+    backgroundColor: '#9D4C6C',
+    zIndex: 1,
   },
   userInfoContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
+    zIndex: 2,
   },
   userAvatar: {
     width: 45,
@@ -600,6 +673,38 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: '600',
+  },
+  tabBar: {
+    margin: 10,
+    flexDirection: 'row',
+    backgroundColor: '#F6D5E2',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderRadius: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+  },
+  tabItem: {
+    flex: 1,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  activeTab: {
+    backgroundColor: '#F7EDF1',
+    borderRadius: 10,
+  },
+  activeFontColor: {
+    color: '#9D4C6C',
+  },
+  activeTabText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  tabContent: {
+    height: '100%',
   },
 });
 

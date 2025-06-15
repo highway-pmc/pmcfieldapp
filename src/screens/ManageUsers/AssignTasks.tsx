@@ -613,7 +613,7 @@ const styles = StyleSheet.create({
   // New gradient styles - replacing the old UserCategory style
   taskItemContainer: {
     marginBottom: 15,
-    borderRadius: 16,
+    borderRadius: 12,
     overflow: 'hidden',
     borderWidth: 1,
   },
@@ -623,7 +623,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 20,
     paddingHorizontal: 15,
-    borderRadius: 16,
+    borderRadius: 12,
     position: 'relative',
   },
   leftBorder: {
@@ -633,7 +633,7 @@ const styles = StyleSheet.create({
     top: 10,
     bottom: 10,
     zIndex: 100,
-    width: 3,
+    width: 2,
   },
   UserCategory: {
     backgroundColor: '#fff',

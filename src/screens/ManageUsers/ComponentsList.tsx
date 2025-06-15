@@ -1,28 +1,103 @@
-import { View, Text, TouchableOpacity, NativeEventEmitter, StyleSheet, Image, Modal, Alert, TextInput } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { useIsFocused } from '@react-navigation/native';
-import { HeaderItems, WORK_ASSIGNMENT_LEVEL } from '../../constants/constants';
-import { useDispatch, useSelector } from 'react-redux';
-import { clearProjectModulesWorkAssignmentData, getProjectModuleComponents, getUsersForWorkAssignment, componentWorkAssignToUsers, getProjectModuleNextLevel, clearNextLevel } from './actions';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  NativeEventEmitter,
+  StyleSheet,
+  Image,
+  Modal,
+  Alert,
+  TextInput,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {useIsFocused} from '@react-navigation/native';
+import {HeaderItems, WORK_ASSIGNMENT_LEVEL} from '../../constants/constants';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  clearProjectModulesWorkAssignmentData,
+  getProjectModuleComponents,
+  getUsersForWorkAssignment,
+  componentWorkAssignToUsers,
+  getProjectModuleNextLevel,
+  clearNextLevel,
+} from './actions';
 import commonStyles from '../Common/commonStyles';
-import { ScrollView } from 'react-native-gesture-handler';
+import {ScrollView} from 'react-native-gesture-handler';
 import CheckBox from '@react-native-community/checkbox';
 import LoadingAnimation from '../Common/LoadingAnimation';
 import CardComponent from '../Common/CardComponent';
-import { commonComponentTypes } from '../Common/CommonConstantsTypes';
+import {commonComponentTypes} from '../Common/CommonConstantsTypes';
+import LinearGradient from 'react-native-linear-gradient';
 
-const ComponentsList = ({ route, navigation }: { route: any, navigation: any }) => {
-  const { projectModuleId, projectModuleName, type, subType, segmentId, segmentName, workType } = route.params;
+// Color schemes for different work types
+const getWorkTypeColors = (workType: any) => {
+  const colorSchemes = {
+    'structure-work': {
+      gradientColors: ['#FFFFFF', '#BABABA'],
+      borderColor: '#6D6B6B',
+      leftBorderColor: '#5C5959',
+      titleColor: '#5C5959',
+    },
+    'highway-work': {
+      gradientColors: ['#FFFFFF', '#FFB499'],
+      borderColor: '#EC825C',
+      leftBorderColor: '#EC825C',
+      titleColor: '#EC825C',
+    },
+    'other-work': {
+      gradientColors: ['#FFFFFF', '#ABF8CA'],
+      borderColor: '#4FD384',
+      leftBorderColor: '#2E8B57',
+      titleColor: '#2E8B57',
+    },
+    // Default fallback
+    default: {
+      gradientColors: ['#FFFFFF', '#E0E7FF'],
+      borderColor: '#ABBEFD',
+      leftBorderColor: '#5A7EF8',
+      titleColor: '#5A7EF8',
+    },
+  };
+
+  return colorSchemes[workType] || colorSchemes.default;
+};
+
+const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
+  const {
+    projectModuleId,
+    projectModuleName,
+    type,
+    subType,
+    segmentId,
+    segmentName,
+    workType,
+  } = route.params;
+
+  // Get colors based on work type
+  const workTypeColors = getWorkTypeColors(workType);
 
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const { components, users, nextLevel, loadingUsers, loadingComponent, componentWorkAssigned, loading, error } = useSelector((state: any) => state.WorkAssignment);
+  const {
+    components,
+    users,
+    nextLevel,
+    loadingUsers,
+    loadingComponent,
+    componentWorkAssigned,
+    loading,
+    error,
+  } = useSelector((state: any) => state.WorkAssignment);
   const [componentsData, setComponentsData] = useState([]);
-  const [selectedComponent, setSelectedComponent] = useState({ isChecked: false, _id: "", name: "" });
+  const [selectedComponent, setSelectedComponent] = useState({
+    isChecked: false,
+    _id: '',
+    name: '',
+  });
   const [userData, setUserCheckboxes] = useState([]);
   const [isAssignPopOpen, openAssignPopup] = useState(false);
   const [searchText, setSearchText] = useState('');
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();
@@ -32,36 +107,40 @@ const ComponentsList = ({ route, navigation }: { route: any, navigation: any }) 
   useEffect(() => {
     if (components) {
       components.forEach((pModule: any) => {
-        pModule.isChecked = false
+        pModule.isChecked = false;
       });
       setComponentsData(components);
     }
 
     if (users) {
       users.forEach((user: any) => {
-        user.isChecked = false
+        user.isChecked = false;
       });
       setUserCheckboxes(users);
     }
   }, [components, users, error]);
 
   useEffect(() => {
-    dispatch(getProjectModuleComponents({
-      projectId: loggedInUser.projectId,
-      projectModuleId: projectModuleId,
-      segmentId: segmentId
-    }));
+    dispatch(
+      getProjectModuleComponents({
+        projectId: loggedInUser.projectId,
+        projectModuleId: projectModuleId,
+        segmentId: segmentId,
+      }),
+    );
 
-    dispatch(getUsersForWorkAssignment({
-      projectId: loggedInUser.projectId,
-      workType: workType
-    }));
+    dispatch(
+      getUsersForWorkAssignment({
+        projectId: loggedInUser.projectId,
+        workType: workType,
+      }),
+    );
   }, []);
 
   const handleRadioChange = (index: any) => {
     const component: any = componentsData[index];
 
-    component.isChecked = !component.isChecked
+    component.isChecked = !component.isChecked;
     setSelectedComponent(component);
 
     const updatedCheckboxes: any = [...userData];
@@ -70,23 +149,58 @@ const ComponentsList = ({ route, navigation }: { route: any, navigation: any }) 
       updatedCheckboxes.forEach((user: any) => {
         user.isChecked = false;
         delete user.assignmentLevel;
-        if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.assignmentLevel === 1) != null) {
+        if (
+          user.workAssignment?.find(
+            (wa: any) =>
+              wa.projectModule?.id === projectModuleId &&
+              wa.assignmentLevel === 1,
+          ) != null
+        ) {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL1;
           user.isChecked = true;
-        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.assignmentLevel === 2)) {
+        } else if (
+          user.workAssignment?.find(
+            (wa: any) =>
+              wa.projectModule?.id === projectModuleId &&
+              wa.segmentId === segmentId &&
+              wa.assignmentLevel === 2,
+          )
+        ) {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL2;
           user.isChecked = true;
-        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.componentId === component._id && wa.assignmentLevel === 4)) {
+        } else if (
+          user.workAssignment?.find(
+            (wa: any) =>
+              wa.projectModule?.id === projectModuleId &&
+              wa.segmentId === segmentId &&
+              wa.componentId === component._id &&
+              wa.assignmentLevel === 4,
+          )
+        ) {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL4;
           user.isChecked = true;
-        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.componentId === component._id && wa.assignmentLevel === 5)) {
+        } else if (
+          user.workAssignment?.find(
+            (wa: any) =>
+              wa.projectModule?.id === projectModuleId &&
+              wa.segmentId === segmentId &&
+              wa.componentId === component._id &&
+              wa.assignmentLevel === 5,
+          )
+        ) {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL5;
           user.isChecked = true;
         } /*else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.assignmentLevel === 5)) {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL5;
           user.isChecked = true;
         }*/ else {
-          const workAssignment = user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.componentId === component._id && wa.assignmentLevel === 3);
+          const workAssignment = user.workAssignment?.find(
+            (wa: any) =>
+              wa.projectModule?.id === projectModuleId &&
+              wa.segmentId === segmentId &&
+              wa.componentId === component._id &&
+              wa.assignmentLevel === 3,
+          );
           if (workAssignment) {
             user.isChecked = true;
           }
@@ -102,7 +216,13 @@ const ComponentsList = ({ route, navigation }: { route: any, navigation: any }) 
     const updatedCheckboxes: any = [...userData];
     const selectedUser: any = updatedCheckboxes[index];
     selectedUser.isChecked = !selectedUser.isChecked;
-    const workAssignment = selectedUser.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.componentId === selectedComponent._id && wa.assignmentLevel === 3)
+    const workAssignment = selectedUser.workAssignment?.find(
+      (wa: any) =>
+        wa.projectModule?.id === projectModuleId &&
+        wa.segmentId === segmentId &&
+        wa.componentId === selectedComponent._id &&
+        wa.assignmentLevel === 3,
+    );
     if (selectedUser.isChecked) {
       if (workAssignment) {
         workAssignment.dirty = false;
@@ -126,15 +246,17 @@ const ComponentsList = ({ route, navigation }: { route: any, navigation: any }) 
 
   useEffect(() => {
     if (componentWorkAssigned) {
-      Alert.alert("Success", "Works assigned successfully");
+      Alert.alert('Success', 'Works assigned successfully');
       openAssignClose();
       dispatch(clearProjectModulesWorkAssignmentData());
       setTimeout(() => {
-        dispatch(getUsersForWorkAssignment({
-          projectId: loggedInUser.projectId,
-          workType: workType
-        }));
-      }, 500)
+        dispatch(
+          getUsersForWorkAssignment({
+            projectId: loggedInUser.projectId,
+            workType: workType,
+          }),
+        );
+      }, 500);
     }
   }, [componentWorkAssigned, error]);
 
@@ -146,8 +268,8 @@ const ComponentsList = ({ route, navigation }: { route: any, navigation: any }) 
     usersToBeAssign.forEach((u: any) => {
       let user: any = {
         _id: u._id,
-        delete: u.delete || false
-      }
+        delete: u.delete || false,
+      };
       const workAssignment = u.workAssignment?.find((wa: any) => wa.dirty);
       if (workAssignment) {
         user.workAssignmentId = workAssignment._id;
@@ -157,18 +279,20 @@ const ComponentsList = ({ route, navigation }: { route: any, navigation: any }) 
     });
 
     if (usersToBeAssignArray.length) {
-      dispatch(componentWorkAssignToUsers({
-        projectId: loggedInUser.projectId,
-        projectModuleId: projectModuleId,
-        segmentId: segmentId,
-        componentId: selectedComponent._id,
-        body: {
-          users: usersToBeAssignArray,
-          level: 3
-        }
-      }));
+      dispatch(
+        componentWorkAssignToUsers({
+          projectId: loggedInUser.projectId,
+          projectModuleId: projectModuleId,
+          segmentId: segmentId,
+          componentId: selectedComponent._id,
+          body: {
+            users: usersToBeAssignArray,
+            level: 3,
+          },
+        }),
+      );
     }
-  }
+  };
 
   const openAssignClose = () => {
     componentsData.forEach((item: any) => {
@@ -182,19 +306,24 @@ const ComponentsList = ({ route, navigation }: { route: any, navigation: any }) 
   };
 
   // unmount
-  useEffect(() => () => {
-    setSearchText('');
-  }, []);
+  useEffect(
+    () => () => {
+      setSearchText('');
+    },
+    [],
+  );
 
   const onComponentNextClick = (item: any) => {
     setSelectedComponent(item);
-    dispatch(getProjectModuleNextLevel({
-      projectId: loggedInUser.projectId,
-      projectModuleId: projectModuleId,
-      id: item._id,
-      type: 'component',
-    }));
-  }
+    dispatch(
+      getProjectModuleNextLevel({
+        projectId: loggedInUser.projectId,
+        projectModuleId: projectModuleId,
+        id: item._id,
+        type: 'component',
+      }),
+    );
+  };
 
   useEffect(() => {
     if (nextLevel) {
@@ -209,8 +338,8 @@ const ComponentsList = ({ route, navigation }: { route: any, navigation: any }) 
           componentName: selectedComponent.name,
           type: type,
           subType: subType,
-          workType: workType
-        })
+          workType: workType,
+        });
       } else if (nextLevel.nextLevel === 'task') {
         navigation.navigate('AssignTasks', {
           projectModuleId: projectModuleId,
@@ -221,56 +350,104 @@ const ComponentsList = ({ route, navigation }: { route: any, navigation: any }) 
           componentName: selectedComponent.name,
           type: type,
           subType: subType,
-          workType: workType
-        })
+          workType: workType,
+        });
       }
-      
     }
   }, [nextLevel]);
 
   // code for Grouping coponent types
-  const { componentType } = componentsData.filter((subSeg: any) => {
-    if (searchText && subSeg.name) {
-      return subSeg.name.toLowerCase().includes(searchText.toLowerCase());
-    }
-    return true;
-  }).reduce(
-    (result: { componentType: any[] }, item: any) => {
+  const {componentType} = componentsData
+    .filter((subSeg: any) => {
+      if (searchText && subSeg.name) {
+        return subSeg.name.toLowerCase().includes(searchText.toLowerCase());
+      }
+      return true;
+    })
+    .reduce(
+      (result: {componentType: any[]}, item: any) => {
         result.componentType.push(item);
-      return result;
-    },
-    { componentType: [] }
-  );
-
-  const filteredCategory = componentType.filter((item, index) => index === 0).map((item) => ({ segmentCategory: item.segmentCategory || '', name: item.type || '' }));
-  
-  const repeatedComponentTypes = commonComponentTypes.map((type: any, index: any) => {
-    const filteredItems = componentType.filter((item) => item.type === type);
-  
-    return (
-      filteredItems.length > 0 && (
-        <>
-          <View style={commonStyles.separatTaskType} key={type}>
-            <View style={commonStyles.titleTextForGrouping}>
-              <Text style={commonStyles.titleText}>{type}</Text>
-            </View>
-            {filteredItems.map((item, index) => (
-              <CardComponent
-                key={`${type}-${index}`}
-                item={item}
-                index={index}
-                isChecked={item.isChecked}
-                name={item.name || ''}
-                handleRadio={handleRadioChange}
-                onComponentNext={onComponentNextClick}
-              />
-            ))}
-          </View>
-        </>
-      )
+        return result;
+      },
+      {componentType: []},
     );
-  });
-// End code for Grouping coponent types
+
+  const filteredCategory = componentType
+    .filter((item, index) => index === 0)
+    .map(item => ({
+      segmentCategory: item.segmentCategory || '',
+      name: item.type || '',
+    }));
+
+  const repeatedComponentTypes = commonComponentTypes.map(
+    (type: any, index: any) => {
+      const filteredItems = componentType.filter(item => item.type === type);
+
+      return (
+        filteredItems.length > 0 && (
+          <>
+            <View
+              style={styles.separatTaskType}
+              key={type}>
+              <View style={styles.titleTextForGrouping}>
+                <Text
+                  style={[
+                    styles.titleText,
+                    {color: workTypeColors.titleColor},
+                  ]}>
+                  {type.charAt(0).toUpperCase() + type.slice(1)}
+                </Text>
+              </View>
+              {filteredItems.map((item, index) => (
+                <View
+                  key={`${type}-${index}`}
+                  style={[
+                    styles.UserCategory,
+                    {borderColor: workTypeColors.borderColor},
+                  ]}>
+                  <LinearGradient
+                    colors={workTypeColors.gradientColors}
+                    start={{x: 0, y: 0}}
+                    end={{x: 1, y: 0}}
+                    style={styles.gradientBackground}
+                  />
+                  <View
+                    style={[
+                      styles.leftBorder,
+                      {backgroundColor: workTypeColors.leftBorderColor},
+                    ]}
+                  />
+                  <View style={styles.FlexRowCenter}>
+                    <CheckBox
+                      value={item.isChecked}
+                      onValueChange={() =>
+                        handleRadioChange(filteredItems.indexOf(item))
+                      }
+                      style={styles.checkbox}
+                      tintColors={{true: '#5A2AAF', false: '#818181'}}
+                    />
+                    <View>
+                      <Text style={styles.UserRole}>{item.name || ''}</Text>
+                    </View>
+                  </View>
+                  <View>
+                    <TouchableOpacity
+                      onPress={() => onComponentNextClick(item)}>
+                      <Image
+                        style={styles.CloseIcon}
+                        source={require('./../../images/right-arrow.png')}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              ))}
+            </View>
+          </>
+        )
+      );
+    },
+  );
+  // End code for Grouping coponent types
 
   return (
     <View style={styles.Container}>
@@ -303,10 +480,15 @@ const ComponentsList = ({ route, navigation }: { route: any, navigation: any }) 
         contentContainerStyle={commonStyles.paddingBottom20}>
         <>
           <View style={{paddingTop: 15}}>
-            <Text style={commonStyles.titleText}>
-              {filteredCategory[0]?.segmentCategory !== 'NA'
-                ? filteredCategory[0]?.segmentCategory
-                : filteredCategory[0]?.name || ''}
+            <Text
+              style={[styles.titleText, {color: workTypeColors.titleColor,fontWeight: '700'}]}>
+                {filteredCategory[0]?.segmentCategory !== 'NA'
+                ? filteredCategory[0]?.segmentCategory?.charAt(0).toUpperCase() + filteredCategory[0]?.segmentCategory?.slice(1)
+                : (filteredCategory[0]?.name
+                  ? filteredCategory[0]?.name.charAt(0).toUpperCase() + filteredCategory[0]?.name.slice(1)
+                  : ''
+                  )
+                }
             </Text>
           </View>
           {repeatedComponentTypes}
@@ -343,7 +525,7 @@ const ComponentsList = ({ route, navigation }: { route: any, navigation: any }) 
                 </View>
                 <ScrollView style={{paddingTop: 0, height: 500}}>
                   {userData.map((item: any, index) => (
-                    <View style={styles.CategoryType}>
+                    <View style={styles.CategoryType} key={index}>
                       <View style={styles.FlexRowCenter}>
                         <CheckBox
                           value={item.isChecked}
@@ -381,7 +563,7 @@ const ComponentsList = ({ route, navigation }: { route: any, navigation: any }) 
         }></LoadingAnimation>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   Container: {
@@ -497,6 +679,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignContent: 'center',
     justifyContent: 'space-between',
+    marginLeft: 12,
+    marginRight: 12,
+    borderWidth: 1,
+    borderStyle: 'solid',
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  gradientBackground: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+  },
+  leftBorder: {
+    paddingVertical: 3,
+    position: 'absolute',
+    left: 0,
+    top: 10,
+    bottom: 10,
+    zIndex: 100,
+    width: 2,
   },
   checkbox: {
     transform: [{scaleX: 1.2}, {scaleY: 1.2}],
@@ -521,7 +725,8 @@ const styles = StyleSheet.create({
   UserRole: {
     fontSize: 16,
     fontWeight: '400',
-    color: '#808089',
+    color: '#000000',
+    paddingLeft: 10,
   },
   centeredView: {
     marginTop: 'auto',
@@ -659,6 +864,17 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: '500',
   },
+  separatTaskType: {
+    marginBottom: 10,
+  },
+  titleTextForGrouping: {
+    paddingBottom: 10,
+  },
+  titleText: {
+    fontSize: 18,
+    fontWeight: '400',
+    paddingLeft: 12,
+  },
 });
 
-export default ComponentsList
+export default ComponentsList;

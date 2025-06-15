@@ -8,17 +8,61 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
-import {
-  HeaderItems,
-  PROJECT_TYPE,
-} from '../../constants/constants';
+import {HeaderItems, PROJECT_TYPE} from '../../constants/constants';
 import {ScrollView} from 'react-native-gesture-handler';
 import {useDispatch, useSelector} from 'react-redux';
-import {
-  getUsersForTestAssignment,
-} from './QualityWorks/actions';
+import {getUsersForTestAssignment} from './QualityWorks/actions';
 import LoadingAnimation from '../Common/LoadingAnimation';
 import LinearGradient from 'react-native-linear-gradient';
+import TileCardComponent from '../Common/TileCardComponent';
+
+
+// Add your WORK_MODULE_TYPE data
+export const WORK_MODULE_TYPE = [
+  {
+    title: 'Structure',
+    workType: PROJECT_TYPE.STRUCTURE_WORK,
+    backgroundColor: '#6D6B6B',
+    imageBg: '#5C5959',
+    linearLight: '#E5E5E5',
+    linearDark: '#8B8B8B',
+    generatedTask: 22,
+    inProgressTask: 25,
+    closedTask: 30,
+    rejected: 43,
+    discription: 'The Backbone of Successful Execution',
+    src: 'structure',
+  },
+  {
+    title: 'Highway',
+    workType: PROJECT_TYPE.HIGHWAY_WORK,
+    backgroundColor: '#EC825C',
+    imageBg: '#CD5C34',
+    linearLight: '#FBD0C1',
+    linearDark: '#EC825C',
+    generatedTask: 22,
+    inProgressTask: 25,
+    closedTask: 30,
+    rejected: 43,
+    discription: 'Keeping Roads Safe, Smooth, and Reliable',
+    src: 'highway',
+  },
+  {
+    title: 'Other',
+    workType: PROJECT_TYPE.OTHER_WORK,
+    backgroundColor: '#4FD384',
+    imageBg: '#2E8B57',
+    border: '#D0EDF3',
+    linearLight: '#DCFEE9',
+    linearDark: '#4FD39D',
+    generatedTask: 22,
+    inProgressTask: 25,
+    closedTask: 30,
+    rejected: 43,
+    discription: 'Bridging Gaps in the Workflow',
+    src: 'other',
+  },
+];
 
 const AssignSurveyUsers = () => {
   const navigation: any = useNavigation();
@@ -35,12 +79,16 @@ const AssignSurveyUsers = () => {
   const dispatch = useDispatch();
 
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const {
-    users,
-    loading,
-    loadingUsers,
-    error,
-  } = useSelector((state: any) => state.TestAssignment);
+  const {users, loading, loadingUsers, error} = useSelector(
+    (state: any) => state.TestAssignment,
+  );
+
+  // Handle work type press
+  const onPressWorkType = (workType: string) => {
+    console.log('Work type pressed:', workType);
+    // Add your navigation or action logic here
+    // navigation.navigate('WorkTypeScreen', { workType });
+  };
 
   // unmount
   useEffect(
@@ -71,59 +119,58 @@ const AssignSurveyUsers = () => {
 
   return (
     <View style={styles.Container}>
-      <View style={styles.TopHeaderFixed}>
-        {error && (
-          <View style={styles.ErrorSectionStyle}>
-            <Text style={styles.errorText}>{error}</Text>
-          </View>
-        )}
-        <View style={styles.SectionStyle}>
-          <Image
-            source={require('./../../images/search-icon.png')}
-            style={styles.ImageSearch}
-          />
-          <TextInput
-            style={styles.inputStyle}
-            placeholder="Search"
-            autoCapitalize="none"
-            keyboardType="email-address"
-            returnKeyType="next"
-            underlineColorAndroid="#f000"
-            blurOnSubmit={false}
-            value={searchText}
-            onChangeText={text => {
-              setSearchText(text);
-            }}
-          />
-        </View>
-      </View>
+    
+
       <ScrollView style={styles.Height100}>
-        {userData?.length > 0 &&
-          userData.filter((testClassif: any) => {
-            if (searchText && testClassif.name) {
-              return testClassif.name
-                .toLowerCase()
-                .includes(searchText.toLowerCase());
-            } else {
-              return true;
-            }
-          })
-          .map((item: any, index) => (
-            <View style={styles.categoryItemContainer}>
-              <LinearGradient
-                colors={['#FFFFFF', '#E0E7FF']}
-                start={{x: 0, y: 0}}
-                end={{x: 1, y: 0}}
-                style={styles.gradientContainer}>
-                <View style={styles.leftBorder} />
-                <View style={styles.FlexRowCenter}>
-                  <View>
-                    <Text style={styles.categoryText}>{item.name}</Text>
-                  </View>
-                </View>
-              </LinearGradient>
-            </View>
+        {/* Render TileCardComponents */}
+        <View style={styles.tileCardsContainer}>
+          {WORK_MODULE_TYPE.map((role, index) => (
+            <TileCardComponent
+              key={index}
+              title={role.title}
+              workType={role.workType}
+              bgColor={role.backgroundColor}
+              imageBg={role.imageBg}
+              linearLight={role.linearLight}
+              linearDark={role.linearDark}
+              image={role.src}
+              generatedTask={role.generatedTask}
+              inProgressTask={role.inProgressTask}
+              closedTask={role.closedTask}
+              rejected={role.rejected}
+              onPress={() => onPressWorkType(role.workType)}
+            />
           ))}
+        </View>
+
+        {/* Existing user list */}
+        {/* {userData?.length > 0 &&
+          userData
+            .filter((testClassif: any) => {
+              if (searchText && testClassif.name) {
+                return testClassif.name
+                  .toLowerCase()
+                  .includes(searchText.toLowerCase());
+              } else {
+                return true;
+              }
+            })
+            .map((item: any, index) => (
+              <View key={index} style={styles.categoryItemContainer}>
+                <LinearGradient
+                  colors={['#FFFFFF', '#E0E7FF']}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}
+                  style={styles.gradientContainer}>
+                  <View style={styles.leftBorder} />
+                  <View style={styles.FlexRowCenter}>
+                    <View>
+                      <Text style={styles.categoryText}>{item.name}</Text>
+                    </View>
+                  </View>
+                </LinearGradient>
+              </View>
+            ))} */}
 
         {/* No Data Found */}
         {!loading && !users?.length && (
@@ -133,10 +180,6 @@ const AssignSurveyUsers = () => {
               source={require('./../../images/no-data-found.png')}
             />
             <Text style={styles.NodataHeadText}>Sorry, no result found!</Text>
-            {/* {(searchText && <Text style={styles.NodataSubText}>
-              Please try to search another keywork...
-            </Text>
-            )} */}
           </View>
         )}
       </ScrollView>
@@ -152,6 +195,9 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     padding: 15,
     paddingBottom: 35,
+  },
+  tileCardsContainer: {
+    marginBottom: 20,
   },
   ErrorSectionStyle: {
     flexDirection: 'row',

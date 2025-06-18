@@ -14,11 +14,15 @@ const KebabMenu = ({
   onEdit,
   onDelete,
   onAdd,
+  onAccept,
+  onReject,
 }: {
   onView?: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
   onAdd?: () => void;
+  onReject?: () => void;
+  onAccept?: () => void;
 }) => {
   const [visible, setVisible] = useState(false);
   const [menuPosition, setMenuPosition] = useState({x: 0, y: 0});
@@ -95,6 +99,28 @@ const KebabMenu = ({
                     style={styles.menuIcon}
                   />
                   <Text style={styles.menuText}>Delete</Text>
+                </View>
+              </TouchableOpacity>
+            )}
+            {onAccept && (
+              <TouchableOpacity onPress={() => handlePress(onAccept)}>
+                <View style={styles.menuItem}>
+                  <Image
+                    source={require('../../images/menuaction/delete.png')}
+                    style={styles.menuIcon}
+                  />
+                  <Text style={styles.menuText}>Accept</Text>
+                </View>
+              </TouchableOpacity>
+            )}
+            {onReject && (
+              <TouchableOpacity onPress={() => handlePress(onReject)}>
+                <View style={styles.menuItem}>
+                  <Image
+                    source={require('../../images/menuaction/delete.png')}
+                    style={styles.menuIcon}
+                  />
+                  <Text style={styles.menuText}>Reject</Text>
                 </View>
               </TouchableOpacity>
             )}

@@ -26,41 +26,10 @@ import {ScrollView} from 'react-native-gesture-handler';
 import CheckBox from '@react-native-community/checkbox';
 import LoadingAnimation from '../Common/LoadingAnimation';
 import CardComponent from '../Common/CardComponent';
-import {commonComponentTypes} from '../Common/CommonConstantsTypes';
+import {commonComponentTypes, getWorkTypeColors} from '../Common/CommonConstantsTypes';
 import LinearGradient from 'react-native-linear-gradient';
 
-// Color schemes for different work types
-const getWorkTypeColors = (workType: any) => {
-  const colorSchemes = {
-    'structure-work': {
-      gradientColors: ['#FFFFFF', '#BABABA'],
-      borderColor: '#6D6B6B',
-      leftBorderColor: '#5C5959',
-      titleColor: '#5C5959',
-    },
-    'highway-work': {
-      gradientColors: ['#FFFFFF', '#FFB499'],
-      borderColor: '#EC825C',
-      leftBorderColor: '#EC825C',
-      titleColor: '#EC825C',
-    },
-    'other-work': {
-      gradientColors: ['#FFFFFF', '#ABF8CA'],
-      borderColor: '#4FD384',
-      leftBorderColor: '#2E8B57',
-      titleColor: '#2E8B57',
-    },
-    // Default fallback
-    default: {
-      gradientColors: ['#FFFFFF', '#E0E7FF'],
-      borderColor: '#ABBEFD',
-      leftBorderColor: '#5A7EF8',
-      titleColor: '#5A7EF8',
-    },
-  };
 
-  return colorSchemes[workType] || colorSchemes.default;
-};
 
 const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
   const {

@@ -31,6 +31,7 @@ import CheckBox from '@react-native-community/checkbox';
 import LoadingAnimation from '../Common/LoadingAnimation';
 import {groupBy} from '../../utils/Utils';
 import LinearGradient from 'react-native-linear-gradient';
+import {getWorkTypeColors} from '../Common/CommonConstantsTypes';
 
 const SegmentsList = ({route, navigation}: {route: any; navigation: any}) => {
   const {projectModuleId, projectModuleName, type, subType, workType} =
@@ -61,35 +62,6 @@ const SegmentsList = ({route, navigation}: {route: any; navigation: any}) => {
   const [searchText, setSearchText] = useState('');
 
   const dispatch = useDispatch();
-
-  // Function to get colors based on work type
-  const getWorkTypeColors = (workType: any) => {
-    const colorSchemes = {
-      'structure-work': {
-        gradientColors: ['#FFFFFF', '#BABABA'],
-        borderColor: '#6D6B6B',
-        leftBorderColor: '#5C5959',
-      },
-      'highway-work': {
-        gradientColors: ['#FFFFFF', '#FFB499'],
-        borderColor: '#EC825C',
-        leftBorderColor: '#EC825C',
-      },
-      'other-work': {
-        gradientColors: ['#FFFFFF', '#ABF8CA'],
-        borderColor: '#4FD384',
-        leftBorderColor: '#2E8B57',
-      },
-      // Default fallback
-      default: {
-        gradientColors: ['#FFFFFF', '#E0E7FF'],
-        borderColor: '#ABBEFD',
-        leftBorderColor: '#5A7EF8',
-      },
-    };
-
-    return colorSchemes[workType] || colorSchemes.default;
-  };
 
   useEffect(() => {
     if (segments) {

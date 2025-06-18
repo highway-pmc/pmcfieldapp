@@ -558,7 +558,7 @@ const styles = StyleSheet.create({
     borderColor: '#BECADA',
     borderStyle: 'solid',
     borderRadius: 36,
-    marginRight: 15,
+    marginRight: 10,
   },
   UserName: {
     fontSize: 18,

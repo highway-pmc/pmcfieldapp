@@ -52,6 +52,8 @@ import EquipmentListing from '../../screens/ManageUsers/QualityWorks/Equipment/E
 import StoreHome from '../../screens/Store/StoreHome';
 import AddPurchase from '../../screens/Store/AddPurchase';
 import MixDesignCategoryList from '../../screens/MyWork/MixDesignCategory';
+import ProductionHome from '../../screens/Production/ProductionHome';
+import ProductionDetail from '../../screens/Production/ProductionDetail';
 const Stack = createStackNavigator();
 
 const screenOptionStyle = {
@@ -222,6 +224,22 @@ const MixDesignStackNavigator = () => {
       <Stack.Screen
         name="MixDesignCategoryList"
         component={MixDesignCategoryList}
+        options={{headerShown: false}}
+      />
+    </Stack.Navigator>
+  );
+};
+const ProductionStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen
+        name="ProductionHome"
+        component={ProductionHome}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ProductionDetail"
+        component={ProductionDetail}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
@@ -425,6 +443,7 @@ export {
   MyWorkPHStackNavigator,
   MyTaskStackNavigator,
   MixDesignStackNavigator,
+  ProductionStackNavigator,
   MyQualityWorksStackNavigator,
   ManageUsersStackNavigator,
   NotificationsStackNavigator,

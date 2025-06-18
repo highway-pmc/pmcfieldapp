@@ -13,6 +13,7 @@ const imageMap: any = {
   structure: require('./../../images/myWork/structure.png'),
   highway: require('./../../images/myWork/highway.png'),
   other: require('./../../images/myWork/other.png'),
+  initialSurvey: require('./../../images/myWork/survey.png'),
 };
 
 // Define the component props interface for better type checking
@@ -57,7 +58,7 @@ const TileCardComponent = (props: TileCardProps) => {
         style={styles.card}>
         <View style={styles.container}>
           <View style={styles.textContainer}>
-            <Text style={styles.title}>{title} Work</Text>
+            <Text style={styles.title}>{title}</Text>
 
             <View style={styles.tasksContainer}>
               <Text style={styles.taskLabel}>
@@ -160,7 +161,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     opacity: 0.5,
-    top:60,
+    top: 60,
     right: -8,
   },
 });

@@ -20,7 +20,21 @@ import TileCardComponent from '../Common/TileCardComponent';
 // Add your WORK_MODULE_TYPE data
 export const WORK_MODULE_TYPE = [
   {
-    title: 'Structure',
+    title: 'Initial Survey',
+    workType: PROJECT_TYPE.STRUCTURE_WORK,
+    backgroundColor: '#ABBEFD',
+    imageBg: '#5C5959',
+    linearLight: '#FFFFFF',
+    linearDark: '#E0E7FF',
+    generatedTask: 22,
+    inProgressTask: 25,
+    closedTask: 30,
+    rejected: 43,
+    discription: 'The Backbone of Successful Execution',
+    src: 'initialSurvey',
+  },
+  {
+    title: 'Structure Work',
     workType: PROJECT_TYPE.STRUCTURE_WORK,
     backgroundColor: '#6D6B6B',
     imageBg: '#5C5959',
@@ -34,7 +48,7 @@ export const WORK_MODULE_TYPE = [
     src: 'structure',
   },
   {
-    title: 'Highway',
+    title: 'Highway Work',
     workType: PROJECT_TYPE.HIGHWAY_WORK,
     backgroundColor: '#EC825C',
     imageBg: '#CD5C34',
@@ -48,7 +62,7 @@ export const WORK_MODULE_TYPE = [
     src: 'highway',
   },
   {
-    title: 'Other',
+    title: 'Other Work',
     workType: PROJECT_TYPE.OTHER_WORK,
     backgroundColor: '#4FD384',
     imageBg: '#2E8B57',

@@ -159,6 +159,27 @@ const MyQualityWorksStackNavigator = () => {
         component={ProcurementsPrestressing}
         options={{headerShown: false}}
       />
+      {/* <Stack.Screen
+        name="MixDesignNavigation"
+        component={MixDesignStackNavigator}
+        options={{headerShown: false}}
+      /> */}
+      <Stack.Screen
+        name="MixDesignListing"
+        component={MixDesignListing}
+        options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name="MixDesign"
+        component={MixDesign}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="MixDesignCategoryList"
+        component={MixDesignCategoryList}
+        options={{headerShown: false}}
+      />
     </Stack.Navigator>
   );
 };

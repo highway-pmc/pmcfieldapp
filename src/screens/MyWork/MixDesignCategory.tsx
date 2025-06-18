@@ -58,7 +58,7 @@ const MixDesignCategoryList = ({
         getMixDesignListInfo({
           projectId: loggedInUser.projectId,
           testWorkCategoryType: testWorkCategoryType,
-          testMaterialId: 'NA',
+          testMaterialId: 'NA', 
         }),
       );
     }

@@ -42,6 +42,7 @@ import {
 import LoadingAnimation from '../Common/LoadingAnimation';
 import {
   getDbDateFromDDMMYYYY,
+  isMixDesignClassification,
   isTestInventoryClassification,
 } from '../../utils/Utils';
 import {useSnackbar} from '../../context/SnackbarContext';
@@ -179,9 +180,10 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
 
   const approvalTypeArray = [
     {name: 'Source Approvals', type: 'source-approvals'},
-    {name: 'Procurement Details', type: 'procurement-details'},
+    // {name: 'Procurement Details', type: 'procurement-details'},
     {name: 'Field Lab Test', type: 'field-lab-test'},
     {name: 'Third Party Lab Test', type: 'third-party-lab-test'},
+    {name: 'Mix Design', type: 'mix-design'},
   ];
 
   const handleApprovalType = (selectedOption: any) => {
@@ -208,7 +210,6 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
     if (myTests) {
       //setCurrentLevel(0);
       // setMyTestsDataAll(myTests);
-      console.log('myTests==============', JSON.stringify(myTests));
       if (myTests.length > 0) {
         onMyTestClick(myTests[0]);
       }
@@ -260,6 +261,16 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
     //setCurrentLevel(1);
     if (isTestInventoryClassification(item.type)) {
       navigation.navigate('SelectTestWorkCategory', {
+        testClassificationId: item.id,
+        testClassificationName: item.name,
+        testClassificationType: item.type,
+        testWorkCategoriesData: item.testWorkCategoriesData,
+        workType: workType,
+      });
+      return;
+    }
+    if (isMixDesignClassification(item.type)) {
+      navigation.navigate('MixDesignListing', {
         testClassificationId: item.id,
         testClassificationName: item.name,
         testClassificationType: item.type,

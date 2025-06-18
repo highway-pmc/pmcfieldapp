@@ -77,13 +77,14 @@ const DrawerNavigator = () => {
           headerShown: false,
         }}
       />
-      <Drawer.Screen
+      {/* <Drawer.Screen
         name="MixDesignListing"
         component={MixDesignStackNavigator}
         options={{
           headerShown: false,
         }}
-      />
+      /> */}
+
       <Drawer.Screen
         name="EquipmentListing"
         component={EquipmentStackNavigator}

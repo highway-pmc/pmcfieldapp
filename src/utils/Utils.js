@@ -14,6 +14,11 @@ const isTestInventoryClassification = (testClassificationType) => {
     return (testClassificationType === TEST_CLASSIFICATION_TYPES.SOURCE_APPROVALS || testClassificationType === TEST_CLASSIFICATION_TYPES.PROCUREMENT_DETAILS);
 }
 
+const isMixDesignClassification = (testClassificationType) => {
+    // TODO: need to introduce types in db and use them here iso name
+    return (testClassificationType === TEST_CLASSIFICATION_TYPES.MIX_DESIGN);
+}
+
 const isStoreClassification = (testClassificationType) => {
     // TODO: need to introduce types in db and use them here iso name
     return (testClassificationType === TEST_CLASSIFICATION_TYPES.STORES);
@@ -52,6 +57,7 @@ export {
     isStoreClassification,
     isProductionClassification,
     isEquipmentClassification,
+    isMixDesignClassification,
     getDbDate,
     getDbDateFromDDMMYYYY,
     getDisplayDate,

@@ -9,6 +9,7 @@ import React, {useState} from 'react';
 import {useIsFocused} from '@react-navigation/native';
 import {HeaderItems} from '../../constants/constants';
 import ProductionPending from './ProductionPending';
+import ProductionSummary from './ProductionSummary';
 
 const TABS = {
   PENDING_REQUEST: 'Pending Request',
@@ -70,8 +71,7 @@ const ProductionDetail = ({navigation}: {navigation: any}) => {
 
         {activeTab === TABS.PRODUCTION_SUMMARY && (
           <View style={styles.contentContainer}>
-            <Text style={styles.contentText}>Production Summary Content</Text>
-            {/* Add your production summary content here */}
+            <ProductionSummary />
           </View>
         )}
       </View>

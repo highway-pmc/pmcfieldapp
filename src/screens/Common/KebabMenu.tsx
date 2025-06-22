@@ -73,7 +73,7 @@ const KebabMenu = ({
               <TouchableOpacity onPress={() => handlePress(onView)}>
                 <View style={styles.menuItem}>
                   <Image
-                    source={require('../../images/menuaction/edit.png')}
+                    source={require('../../images/menuaction/view.png')}
                     style={styles.menuIcon}
                   />
                   <Text style={styles.menuText}>View</Text>
@@ -106,7 +106,7 @@ const KebabMenu = ({
               <TouchableOpacity onPress={() => handlePress(onAccept)}>
                 <View style={styles.menuItem}>
                   <Image
-                    source={require('../../images/menuaction/delete.png')}
+                    source={require('../../images/menuaction/accept.png')}
                     style={styles.menuIcon}
                   />
                   <Text style={styles.menuText}>Accept</Text>
@@ -117,7 +117,7 @@ const KebabMenu = ({
               <TouchableOpacity onPress={() => handlePress(onReject)}>
                 <View style={styles.menuItem}>
                   <Image
-                    source={require('../../images/menuaction/delete.png')}
+                    source={require('../../images/menuaction/reject.png')}
                     style={styles.menuIcon}
                   />
                   <Text style={styles.menuText}>Reject</Text>
@@ -154,12 +154,14 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 6,
     elevation: 5,
-    width: 150,
+    width: 130,
   },
   menuItem: {
     paddingVertical: 8,
     flexDirection: 'row',
     paddingHorizontal: 5,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
   },
   menuIcon: {
     width: 20,

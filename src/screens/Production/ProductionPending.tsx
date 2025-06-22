@@ -239,55 +239,6 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     minWidth: 40, // Ensure minimum width for the action container
   },
-  // Kebab Menu Styles
-  kebabIcon: {
-    padding: 8,
-    borderRadius: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
-  },
-  dot: {
-    fontSize: 20,
-    color: '#6366F1',
-    fontWeight: 'bold',
-  },
-  overlay: {
-    flex: 1,
-  },
-  menu: {
-    position: 'absolute',
-    backgroundColor: 'white',
-    padding: 8,
-    borderRadius: 8,
-    elevation: 8,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    width: 120,
-  },
-  menuItem: {
-    paddingVertical: 10,
-    paddingHorizontal: 8,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  menuIconPlaceholder: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    marginRight: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  acceptIcon: {
-    backgroundColor: '#10B981',
-  },
-  rejectIcon: {
-    backgroundColor: '#EF4444',
-  },
   menuIconText: {
     color: 'white',
     fontSize: 12,

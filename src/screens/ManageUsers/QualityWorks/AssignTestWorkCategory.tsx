@@ -299,7 +299,7 @@ const AssignTestWorkCategory = ({ route, navigation }: { route: any, navigation:
                           style={styles.checkbox}
                           tintColors={{true: '#5A2AAF', false: '#818181'}}
                         />
-                        <View style={{flexDirection: 'row'}}>
+                        <View style={{flexDirection: 'column'}}>
                           <Text style={styles.AssignRoleText}>{item.name}</Text>
                           {item.assignmentLevel ? (
                             <Text style={styles.userAlreadyAssigned}>
@@ -625,8 +625,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   userAlreadyAssigned: {
-    backgroundColor: '#5A2AAF',
-    borderRadius: 30,
     fontSize: 12,
     color: '#fff',
     paddingLeft: 12,

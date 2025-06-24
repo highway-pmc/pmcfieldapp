@@ -96,91 +96,104 @@ const WorkType = ({navigation}: {navigation: any}) => {
   return (
     <View style={styles.container}>
       <View style={styles.tabBar}>
-        <TouchableOpacity
-          style={[
-            styles.tabItem,
-            activeTab === WORK_TYPE.SITE_WORK && styles.activeTab,
-          ]}
-          onPress={() => switchTab(WORK_TYPE.SITE_WORK)}>
-          <Text
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.tabBarContent}>
+          <TouchableOpacity
             style={[
-              styles.activeTabText,
-              activeTab === WORK_TYPE.SITE_WORK && styles.activeFontColor,
-            ]}>
-            {WORK_TYPE.SITE_WORK}
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.tabItem,
-            activeTab === WORK_TYPE.LAB_WORK && styles.activeTab,
-          ]}
-          onPress={() => switchTab(WORK_TYPE.LAB_WORK)}>
-          <Text
+              styles.tabItem,
+              activeTab === WORK_TYPE.SITE_WORK && styles.activeTab,
+            ]}
+            onPress={() => switchTab(WORK_TYPE.SITE_WORK)}>
+            <Text
+              style={[
+                styles.activeTabText,
+                activeTab === WORK_TYPE.SITE_WORK && styles.activeFontColor,
+              ]}>
+              {WORK_TYPE.SITE_WORK}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
             style={[
-              styles.activeTabText,
-              activeTab === WORK_TYPE.LAB_WORK && styles.activeFontColor,
-            ]}>
-            {WORK_TYPE.LAB_WORK}
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.tabItem,
-            activeTab === WORK_TYPE.SURVEY_WORK && styles.activeTab,
-          ]}
-          onPress={() => switchTab(WORK_TYPE.SURVEY_WORK)}>
-          <Text
+              styles.tabItem,
+              activeTab === WORK_TYPE.LAB_WORK && styles.activeTab,
+            ]}
+            onPress={() => switchTab(WORK_TYPE.LAB_WORK)}>
+            <Text
+              style={[
+                styles.activeTabText,
+                activeTab === WORK_TYPE.LAB_WORK && styles.activeFontColor,
+              ]}>
+              {WORK_TYPE.LAB_WORK}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
             style={[
-              styles.activeTabText,
-              activeTab === WORK_TYPE.SURVEY_WORK && styles.activeFontColor,
-            ]}>
-            {WORK_TYPE.SURVEY_WORK}
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.tabItem,
-            activeTab === WORK_TYPE.STORE_WORK && styles.activeTab,
-          ]}
-          onPress={() => switchTab(WORK_TYPE.STORE_WORK)}>
-          <Text
+              styles.tabItem,
+              activeTab === WORK_TYPE.SURVEY_WORK && styles.activeTab,
+            ]}
+            onPress={() => switchTab(WORK_TYPE.SURVEY_WORK)}>
+            <Text
+              style={[
+                styles.activeTabText,
+                activeTab === WORK_TYPE.SURVEY_WORK && styles.activeFontColor,
+              ]}>
+              {WORK_TYPE.SURVEY_WORK}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
             style={[
-              styles.activeTabText,
-              activeTab === WORK_TYPE.STORE_WORK && styles.activeFontColor,
-            ]}>
-            {WORK_TYPE.STORE_WORK}
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.tabItem,
-            activeTab === WORK_TYPE.PRODUCTION_WORK && styles.activeTab,
-          ]}
-          onPress={() => switchTab(WORK_TYPE.PRODUCTION_WORK)}>
-          <Text
+              styles.tabItem,
+              activeTab === WORK_TYPE.STORE_WORK && styles.activeTab,
+            ]}
+            onPress={() => switchTab(WORK_TYPE.STORE_WORK)}>
+            <Text
+              style={[
+                styles.activeTabText,
+                activeTab === WORK_TYPE.STORE_WORK && styles.activeFontColor,
+              ]}>
+              {WORK_TYPE.STORE_WORK}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
             style={[
-              styles.activeTabText,
-              activeTab === WORK_TYPE.PRODUCTION_WORK && styles.activeFontColor,
-            ]}>
-            {WORK_TYPE.PRODUCTION_WORK}
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.tabItem,
-            activeTab === WORK_TYPE.EQUIPMENTS_WORK && styles.activeTab,
-          ]}
-          onPress={() => switchTab(WORK_TYPE.EQUIPMENTS_WORK)}>
-          <Text
+              styles.tabItem,
+              activeTab === WORK_TYPE.PRODUCTION_WORK && styles.activeTab,
+            ]}
+            onPress={() => switchTab(WORK_TYPE.PRODUCTION_WORK)}>
+            <Text
+              style={[
+                styles.activeTabText,
+                activeTab === WORK_TYPE.PRODUCTION_WORK &&
+                  styles.activeFontColor,
+              ]}>
+              {WORK_TYPE.PRODUCTION_WORK}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
             style={[
-              styles.activeTabText,
-              activeTab === WORK_TYPE.EQUIPMENTS_WORK && styles.activeFontColor,
-            ]}>
-            {WORK_TYPE.EQUIPMENTS_WORK}
-          </Text>
-        </TouchableOpacity>
+              styles.tabItem,
+              activeTab === WORK_TYPE.EQUIPMENTS_WORK && styles.activeTab,
+            ]}
+            onPress={() => switchTab(WORK_TYPE.EQUIPMENTS_WORK)}>
+            <Text
+              style={[
+                styles.activeTabText,
+                activeTab === WORK_TYPE.EQUIPMENTS_WORK &&
+                  styles.activeFontColor,
+              ]}>
+              {WORK_TYPE.EQUIPMENTS_WORK}
+            </Text>
+          </TouchableOpacity>
+        </ScrollView>
       </View>
+
       <View style={styles.tabContent}>
         {activeTab === WORK_TYPE.SITE_WORK && (
           <View style={styles.rfiTabBar}>
@@ -258,37 +271,44 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   tabBar: {
-    margin: 10,
     flexDirection: 'row',
-    backgroundColor: '#D2C5FF',
+    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderRadius: 10,
-    paddingVertical: 8,
-    paddingHorizontal: 10,
+    borderBottomWidth: 1,
+    borderColor: '#D2C5FF',
+  },
+  tabBarContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   tabItem: {
-    flex: 1,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
     alignItems: 'center',
     justifyContent: 'center',
+    minWidth: 100,
+    color: '#6666664D',
   },
   activeTab: {
-    backgroundColor: '#F1F1FE',
-    borderRadius: 10,
+    borderCurve: 'circular',
+    borderBottomWidth: 3,
+    borderStyle: 'solid',
+    borderColor: '#5A2AAF',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
   },
   activeFontColor: {
-    color: '#4E36A3',
+    color: '#5A2AAF',
   },
   activeTabText: {
-    color: '#ffffff',
+    color: '#6666664D',
     fontSize: 16,
     fontWeight: '500',
   },
   tabContent: {
-    paddingHorizontal: 20,
-    paddingTop: 20,
+    paddingHorizontal: 15,
+    paddingTop: 10,
     height: '100%',
   },
 });

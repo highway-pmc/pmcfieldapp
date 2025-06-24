@@ -1,207 +1,134 @@
 import {
   View,
   Text,
-  Button,
   NativeEventEmitter,
-  Alert,
   StyleSheet,
-  ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {useIsFocused} from '@react-navigation/native';
-import {HeaderItems, STORE_OPTION} from '../../constants/constants';
-import LinearGradient from 'react-native-linear-gradient';
+import {HeaderItems} from '../../constants/constants';
+import ProductionPending from './ProductionPending';
+import ProductionSummary from './ProductionSummary';
 
-export default function ProductionDetail() {
-  const [activeTab, setActiveTab] = useState(STORE_OPTION.PURCHASING);
-  const switchTab = (tabName: any) => {
+const TABS = {
+  PENDING_REQUEST: 'Pending Request',
+  PRODUCTION_SUMMARY: 'Production Summary',
+};
+
+const ProductionDetail = ({navigation}: {navigation: any}) => {
+  const [activeTab, setActiveTab] = useState(TABS.PENDING_REQUEST);
+
+  if (useIsFocused()) {
+    const eventEmitter = new NativeEventEmitter();
+    eventEmitter.emit('headerEvent', HeaderItems.production);
+  }
+
+  const switchTab = (tabName: string) => {
     setActiveTab(tabName);
   };
-  const focus = useIsFocused();
-
-  useEffect(() => {
-    if (focus == true) {
-      const eventEmitter = new NativeEventEmitter();
-      eventEmitter.emit('headerEvent', HeaderItems.production);
-    }
-  }, [focus]);
-
-  const equipmentData = [
-    {
-      id: 'HPMC RMC 001',
-      plant: 'RMC Plant',
-      location: 'Volte Volte 522 KZ210',
-      contractorId: 'M/s HPMC Testing contractor/Machineries/5812539',
-      pendingRequests: 100,
-    },
-    {
-      id: 'HPMC RMC 002',
-      plant: 'RMC Plant',
-      location: 'Volte Volte 522 KZ210',
-      contractorId: 'M/s HPMC Testing contractor/Machineries/5812539',
-      pendingRequests: 80,
-    },
-    {
-      id: 'HPMC RMP 001',
-      plant: 'RMP Plant',
-      location: 'HMP HMP 522 KZ210',
-      contractorId: 'M/s HPMC Testing contractor/Machineries/5812539',
-      pendingRequests: 80,
-    },
-    {
-      id: 'HPMC WMM 001',
-      plant: 'WMM Plant',
-      location: 'WMM HMP 522 KZ210',
-      contractorId: 'M/s HPMC Testing contractor/Machineries/5812539',
-      pendingRequests: 80,
-    },
-  ];
 
   return (
     <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Plants Equipment list</Text>
-        <TouchableOpacity style={styles.addButton}>
-          <Text style={styles.addButtonText}>+ Add</Text>
+      <View style={styles.tabBar}>
+        <TouchableOpacity
+          style={[
+            styles.tabItem,
+            activeTab === TABS.PENDING_REQUEST && styles.activeTab,
+          ]}
+          onPress={() => switchTab(TABS.PENDING_REQUEST)}>
+          <Text
+            style={[
+              styles.tabText,
+              activeTab === TABS.PENDING_REQUEST && styles.activeTabText,
+            ]}>
+            {TABS.PENDING_REQUEST}
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[
+            styles.tabItem,
+            activeTab === TABS.PRODUCTION_SUMMARY && styles.activeTab,
+          ]}
+          onPress={() => switchTab(TABS.PRODUCTION_SUMMARY)}>
+          <Text
+            style={[
+              styles.tabText,
+              activeTab === TABS.PRODUCTION_SUMMARY && styles.activeTabText,
+            ]}>
+            {TABS.PRODUCTION_SUMMARY}
+          </Text>
         </TouchableOpacity>
       </View>
 
-      <ScrollView
-        style={styles.listContainer}
-        showsVerticalScrollIndicator={false}>
-        {equipmentData.map((equipment, index) => (
-          <View key={index} style={styles.equipmentCard}>
-            <LinearGradient
-              colors={['#E8E0FF', '#F5F3FF']}
-              start={{x: 0, y: 0}}
-              end={{x: 1, y: 0}}
-              style={styles.gradientBackground}
-            />
-            <View style={styles.leftBorder} />
-            <View style={styles.equipmentCardContent}>
-              <View style={styles.equipmentInfo}>
-                <Text style={styles.equipmentId}>{equipment.id}</Text>
-                <Text style={styles.equipmentDetails}>
-                  {equipment.plant} {equipment.location}
-                </Text>
-                <Text style={styles.contractorId}>
-                  ID: {equipment.contractorId}
-                </Text>
-                <Text style={styles.pendingText}>
-                  Total no. of pending request :{' '}
-                  <Text style={styles.pendingCount}>
-                    {equipment.pendingRequests}
-                  </Text>
-                </Text>
-              </View>
-            </View>
+      <View style={styles.tabContent}>
+        {activeTab === TABS.PENDING_REQUEST && (
+          <View style={styles.contentContainer}>
+            <ProductionPending />
           </View>
-        ))}
-      </ScrollView>
+        )}
+
+        {activeTab === TABS.PRODUCTION_SUMMARY && (
+          <View style={styles.contentContainer}>
+            <ProductionSummary />
+          </View>
+        )}
+      </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
-    padding: 16,
+    backgroundColor: '#fff',
+    width: '100%',
   },
-  headerContainer: {
+  tabBar: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 16,
-    paddingHorizontal: 4,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderColor: '#D2C5FF',
   },
-  headerText: {
-    fontSize: 18,
-    fontWeight: '500',
-    color: '#000000',
-  },
-  addButton: {
-    borderWidth: 1,
-    borderColor: '#9D4C6C',
-    borderRadius: 30,
-    paddingVertical: 6,
-    paddingHorizontal: 15,
+  tabItem: {
+    flex: 1,
+    paddingVertical: 15,
     alignItems: 'center',
     justifyContent: 'center',
+    marginHorizontal: 20,
   },
-  addButtonText: {
-    color: '#9D4C6C',
-    fontSize: 12,
+  activeTab: {
+    borderBottomWidth: 3,
+    borderColor: '#5A2AAF',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
+  tabText: {
+    color: '#6666664D',
+    fontSize: 14,
+    fontWeight: '500',
+    textAlign: 'center',
+  },
+  activeTabText: {
+    color: '#5A2AAF',
+    fontWeight: '600',
+  },
+  tabContent: {
+    flex: 1,
+    paddingHorizontal: 15,
+    paddingTop: 20,
+  },
+  contentContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  contentText: {
+    fontSize: 18,
+    color: '#333',
     fontWeight: '500',
   },
-  listContainer: {
-    flex: 1,
-    paddingBottom: 20,
-  },
-  equipmentCard: {
-    borderRadius: 12,
-    marginVertical: 8,
-    overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: '#E8E0FF',
-    position: 'relative',
-    minHeight: 120,
-  },
-  gradientBackground: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-  },
-  leftBorder: {
-    position: 'absolute',
-    left: 0,
-    top: 10,
-    bottom: 10,
-    width: 4,
-    backgroundColor: '#6366F1',
-    borderRadius: 2,
-  },
-  equipmentCardContent: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    padding: 16,
-    paddingLeft: 24,
-    height: '100%',
-  },
-  equipmentInfo: {
-    flex: 1,
-    justifyContent: 'flex-start',
-  },
-  equipmentId: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#1F2937',
-    marginBottom: 4,
-  },
-  equipmentDetails: {
-    fontSize: 14,
-    fontWeight: '400',
-    color: '#6B7280',
-    marginBottom: 4,
-  },
-  contractorId: {
-    fontSize: 12,
-    fontWeight: '400',
-    color: '#6B7280',
-    marginBottom: 8,
-  },
-  pendingText: {
-    fontSize: 12,
-    fontWeight: '400',
-    color: '#6B7280',
-  },
-  pendingCount: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#1F2937',
-  },
 });
+
+export default ProductionDetail;

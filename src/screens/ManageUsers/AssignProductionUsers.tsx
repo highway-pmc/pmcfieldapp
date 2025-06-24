@@ -43,6 +43,42 @@ const AssignProductionUsers = () => {
 
   const workType = PROJECT_TYPE.PRODUCTION;
 
+  // Hardcoded data for the new cards
+  const hardcodedCards = [
+    {
+      id: 1,
+      title: 'HPMC RMC 001',
+      plantInfo: 'RMC Plant Volte Volte 522 KZ210',
+      machineId: 'M/s HPMC / Machineries/5812539',
+      pendingRequests: 100,
+      isChecked: false,
+    },
+    {
+      id: 2,
+      title: 'HPMC RMC 002',
+      plantInfo: 'RMC Plant Delhi Delhi 823 AB456',
+      machineId: 'M/s HPMC / Machineries/5812540',
+      pendingRequests: 85,
+      isChecked: false,
+    },
+    {
+      id: 3,
+      title: 'HPMC RMC 003',
+      plantInfo: 'RMC Plant Mumbai Mumbai 654 XY789',
+      machineId: 'M/s HPMC / Machineries/5812541',
+      pendingRequests: 120,
+      isChecked: false,
+    },
+    {
+      id: 4,
+      title: 'HPMC RMC 004',
+      plantInfo: 'RMC Plant Chennai Chennai 432 PQ123',
+      machineId: 'M/s HPMC / Machineries/5812542',
+      pendingRequests: 95,
+      isChecked: false,
+    },
+  ];
+
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();
     eventEmitter.emit('headerEvent', HeaderItems.assignProductionUsers);
@@ -74,7 +110,7 @@ const AssignProductionUsers = () => {
   useEffect(() => {
     if (testClassifications) {
       const testClassificationsFiltered = testClassifications.filter(
-        (tClassi: any) => isProductionClassification(tClassi.type)
+        (tClassi: any) => isProductionClassification(tClassi.type),
       );
       testClassificationsFiltered.forEach((tClassi: any) => {
         tClassi.isChecked = false;
@@ -220,6 +256,11 @@ const AssignProductionUsers = () => {
     openAssignPopup(!isAssignPopOpen);
   };
 
+  const handleHardcodedCardSelect = (cardId: number) => {
+    // Handle hardcoded card selection
+    console.log('Selected hardcoded card:', cardId);
+  };
+
   return (
     <View style={styles.Container}>
       <View style={styles.TopHeaderFixed}>
@@ -228,27 +269,10 @@ const AssignProductionUsers = () => {
             <Text style={styles.errorText}>{error}</Text>
           </View>
         )}
-        {/* <View style={styles.SectionStyle}>
-          <Image
-            source={require('./../../images/search-icon.png')}
-            style={styles.ImageSearch}
-          />
-          <TextInput
-            style={styles.inputStyle}
-            placeholder="Search"
-            autoCapitalize="none"
-            keyboardType="email-address"
-            returnKeyType="next"
-            underlineColorAndroid="#f000"
-            blurOnSubmit={false}
-            value={searchText}
-            onChangeText={text => {
-              setSearchText(text);
-            }}
-          />
-        </View> */}
       </View>
-      <ScrollView style={styles.Height100}>
+
+      {/* Original ScrollView - Commented out as requested */}
+      {/* <ScrollView style={styles.Height100}>
         {testClassificationsData
           .filter((testClassif: any) => {
             if (searchText && testClassif.name) {
@@ -284,7 +308,6 @@ const AssignProductionUsers = () => {
             </View>
           ))}
 
-        {/* No Data Found */}
         {!loading && !testClassificationsData.length && (
           <View style={styles.NoDataContainer}>
             <Image
@@ -292,12 +315,43 @@ const AssignProductionUsers = () => {
               source={require('./../../images/no-data-found.png')}
             />
             <Text style={styles.NodataHeadText}>Sorry, no result found!</Text>
-            {/* {(searchText && <Text style={styles.NodataSubText}>
-              Please try to search another keywork...
-            </Text>
-            )} */}
           </View>
         )}
+      </ScrollView> */}
+      <ScrollView style={styles.Height100}>
+        {hardcodedCards.map((card, index) => (
+          <View key={card.id} style={styles.hardcodedCardContainer}>
+            <LinearGradient
+              colors={['#FFFFFF', '#E0E7FF']}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 1}}
+              style={styles.hardcodedGradientContainer}>
+              <View style={styles.hardcodedLeftBorder} />
+              <View style={styles.hardcodedCardContent}>
+                <View style={styles.FlexRowCenter}>
+                  <CheckBox
+                    value={card.isChecked}
+                    onValueChange={() => handleHardcodedCardSelect(card.id)}
+                    style={styles.checkbox}
+                    tintColors={{true: '#5A7EF8', false: '#818181'}}
+                  />
+                  <View style={styles.hardcodedCardTextContainer}>
+                    <Text style={styles.hardcodedCardTitle}>{card.title}</Text>
+                    <Text style={styles.hardcodedCardSubtitle}>
+                      {card.plantInfo}
+                    </Text>
+                    <Text style={styles.hardcodedCardId}>
+                      ID: {card.machineId}
+                    </Text>
+                    <Text style={styles.hardcodedCardPending}>
+                      Total no. of pending request: {card.pendingRequests}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </LinearGradient>
+          </View>
+        ))}
       </ScrollView>
 
       {/* Modal Start */}
@@ -504,7 +558,7 @@ const styles = StyleSheet.create({
     borderColor: '#BECADA',
     borderStyle: 'solid',
     borderRadius: 36,
-    marginRight: 15,
+    marginRight: 10,
   },
   UserName: {
     fontSize: 18,
@@ -679,6 +733,67 @@ const styles = StyleSheet.create({
   },
   arrowContainer: {
     alignSelf: 'center',
+  },
+  // New styles for hardcoded cards
+  hardcodedCardContainer: {
+    marginBottom: 15,
+    borderRadius: 12,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: '#B8D4FF',
+    shadowColor: '#5A7EF8',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  hardcodedGradientContainer: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    paddingVertical: 18,
+    paddingHorizontal: 15,
+    borderRadius: 12,
+    position: 'relative',
+  },
+  hardcodedLeftBorder: {
+    position: 'absolute',
+    left: 0,
+    top: 10,
+    bottom: 10,
+    width: 2,
+    backgroundColor: '#5A7EF8',
+  },
+  hardcodedCardContent: {
+    flex: 1,
+    marginLeft: 8,
+  },
+  hardcodedCardTextContainer: {
+    flex: 1,
+    marginLeft: 12,
+  },
+  hardcodedCardTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#1F2937',
+    marginBottom: 4,
+  },
+  hardcodedCardSubtitle: {
+    fontSize: 14,
+    fontWeight: '400',
+    color: '#6B7280',
+    marginBottom: 2,
+  },
+  hardcodedCardId: {
+    fontSize: 14,
+    fontWeight: '400',
+    marginBottom: 2,
+  },
+  hardcodedCardPending: {
+    fontSize: 14,
+    fontWeight: '400',
   },
 });
 

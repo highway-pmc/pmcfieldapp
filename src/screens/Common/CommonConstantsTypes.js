@@ -237,7 +237,7 @@ export const commonComponentTypes = [
 
 export const WORK_MODULE_TYPE = [
   {
-    title: 'Structure',
+    title: 'Structure Work',
     workType: PROJECT_TYPE.STRUCTURE_WORK,
     backgroundColor: '#6D6B6B',
     imageBg: '#5C5959',
@@ -251,7 +251,7 @@ export const WORK_MODULE_TYPE = [
     src: 'structure',
   },
   {
-    title: 'Highway',
+    title: 'Highway Work',
     workType: PROJECT_TYPE.HIGHWAY_WORK,
     backgroundColor: '#EC825C',
     imageBg: '#CD5C34',
@@ -265,7 +265,7 @@ export const WORK_MODULE_TYPE = [
     src: 'highway',
   },
   {
-    title: 'Other',
+    title: 'Other Work',
     workType: PROJECT_TYPE.OTHER_WORK,
     backgroundColor: '#4FD384',
     imageBg: '#2E8B57',
@@ -298,3 +298,34 @@ export const CARD_ICONS = [
   require('./../../images/mix-design.png'),
   require('./../../images/equipment-calibration.png'),
 ];
+export const getWorkTypeColors = (workType) => {
+  const colorSchemes = {
+    'structure-work': {
+      gradientColors: ['#FFFFFF', '#FFB499'],
+      borderColor: '#6D6B6B',
+      leftBorderColor: '#5C5959',
+      checkboxColor: '#5C5959',
+    },
+    'highway-work': {
+      gradientColors: ['#FFFFFF', '#FFB499'],
+      borderColor: '#EC825C',
+      leftBorderColor: '#EC825C',
+      checkboxColor: '#EC825C',
+    },
+    'other-work': {
+      gradientColors: ['#FFFFFF', '#ABF8CA'],
+      borderColor: '#4FD384',
+      leftBorderColor: '#2E8B57',
+      checkboxColor: '#2E8B57',
+    },
+    // Default fallback
+    default: {
+      gradientColors: ['#FFFFFF', '#E0E7FF'],
+      borderColor: '#ABBEFD',
+      leftBorderColor: '#0F56B3',
+      checkboxColor: '#0F56B3',
+    },
+  };
+
+  return colorSchemes[workType] || colorSchemes.default;
+};

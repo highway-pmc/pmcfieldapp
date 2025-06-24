@@ -283,7 +283,7 @@ export const Dashboard_MENU = [
     iconMenu: require('./../images/homeDashbord/production.png'),
     title: 'Production',
     subTitle: 'Production',
-    route: '',
+    route: 'ProductionHome',
     backgroundColor: '#A8BBF2',
     titleColor: '#1E3A8A',
     border: '#8DA2DF',

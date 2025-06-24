@@ -1,31 +1,32 @@
 import {
   View,
   Text,
-  Button,
-  NativeEventEmitter,
-  Alert,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  NativeEventEmitter,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {useIsFocused} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {HeaderItems, STORE_OPTION} from '../../constants/constants';
 import LinearGradient from 'react-native-linear-gradient';
 
 export default function ProductionHome() {
   const [activeTab, setActiveTab] = useState(STORE_OPTION.PURCHASING);
-  const switchTab = (tabName: any) => {
-    setActiveTab(tabName);
-  };
+  const navigation = useNavigation();
   const focus = useIsFocused();
 
+  
   useEffect(() => {
     if (focus == true) {
       const eventEmitter = new NativeEventEmitter();
       eventEmitter.emit('headerEvent', HeaderItems.production);
     }
   }, [focus]);
+
+  const handleEquipmentPress = ()=> {
+    navigation.navigate('ProductionDetail');
+  };
 
   const equipmentData = [
     {
@@ -61,19 +62,18 @@ export default function ProductionHome() {
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Plants Equipment list</Text>
-        <TouchableOpacity style={styles.addButton}>
-          <Text style={styles.addButtonText}>+ Add</Text>
-        </TouchableOpacity>
+        <Text style={styles.headerText}>Plants Equipment List</Text>
       </View>
-
       <ScrollView
         style={styles.listContainer}
         showsVerticalScrollIndicator={false}>
         {equipmentData.map((equipment, index) => (
-          <View key={index} style={styles.equipmentCard}>
+          <TouchableOpacity
+            key={index}
+            onPress={() => handleEquipmentPress(equipment)}
+            style={styles.equipmentCard}>
             <LinearGradient
-              colors={['#E8E0FF', '#F5F3FF']}
+              colors={['#FFFFFF', '#E0E7FF']}
               start={{x: 0, y: 0}}
               end={{x: 1, y: 0}}
               style={styles.gradientBackground}
@@ -96,7 +96,7 @@ export default function ProductionHome() {
                 </Text>
               </View>
             </View>
-          </View>
+          </TouchableOpacity>
         ))}
       </ScrollView>
     </View>
@@ -121,20 +121,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#000000',
   },
-  addButton: {
-    borderWidth: 1,
-    borderColor: '#9D4C6C',
-    borderRadius: 30,
-    paddingVertical: 6,
-    paddingHorizontal: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  addButtonText: {
-    color: '#9D4C6C',
-    fontSize: 12,
-    fontWeight: '500',
-  },
   listContainer: {
     flex: 1,
     paddingBottom: 20,
@@ -144,9 +130,9 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     overflow: 'hidden',
     borderWidth: 1,
-    borderColor: '#E8E0FF',
+    borderColor: '#ABBEFD',
     position: 'relative',
-    minHeight: 120,
+    maxHeight: 120,
   },
   gradientBackground: {
     position: 'absolute',
@@ -158,17 +144,16 @@ const styles = StyleSheet.create({
   leftBorder: {
     position: 'absolute',
     left: 0,
-    top: 10,
-    bottom: 10,
-    width: 4,
+    top: '15%',
+    bottom: '15%',
+    width: 3,
     backgroundColor: '#6366F1',
-    borderRadius: 2,
   },
   equipmentCardContent: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    padding: 16,
+    padding: 10,
     paddingLeft: 24,
     height: '100%',
   },

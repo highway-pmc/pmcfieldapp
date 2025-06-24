@@ -14,11 +14,15 @@ const KebabMenu = ({
   onEdit,
   onDelete,
   onAdd,
+  onAccept,
+  onReject,
 }: {
   onView?: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
   onAdd?: () => void;
+  onReject?: () => void;
+  onAccept?: () => void;
 }) => {
   const [visible, setVisible] = useState(false);
   const [menuPosition, setMenuPosition] = useState({x: 0, y: 0});
@@ -69,7 +73,7 @@ const KebabMenu = ({
               <TouchableOpacity onPress={() => handlePress(onView)}>
                 <View style={styles.menuItem}>
                   <Image
-                    source={require('../../images/menuaction/edit.png')}
+                    source={require('../../images/menuaction/view.png')}
                     style={styles.menuIcon}
                   />
                   <Text style={styles.menuText}>View</Text>
@@ -95,6 +99,28 @@ const KebabMenu = ({
                     style={styles.menuIcon}
                   />
                   <Text style={styles.menuText}>Delete</Text>
+                </View>
+              </TouchableOpacity>
+            )}
+            {onAccept && (
+              <TouchableOpacity onPress={() => handlePress(onAccept)}>
+                <View style={styles.menuItem}>
+                  <Image
+                    source={require('../../images/menuaction/accept.png')}
+                    style={styles.menuIcon}
+                  />
+                  <Text style={styles.menuText}>Accept</Text>
+                </View>
+              </TouchableOpacity>
+            )}
+            {onReject && (
+              <TouchableOpacity onPress={() => handlePress(onReject)}>
+                <View style={styles.menuItem}>
+                  <Image
+                    source={require('../../images/menuaction/reject.png')}
+                    style={styles.menuIcon}
+                  />
+                  <Text style={styles.menuText}>Reject</Text>
                 </View>
               </TouchableOpacity>
             )}
@@ -128,12 +154,14 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 6,
     elevation: 5,
-    width: 150,
+    width: 130,
   },
   menuItem: {
     paddingVertical: 8,
     flexDirection: 'row',
     paddingHorizontal: 5,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
   },
   menuIcon: {
     width: 20,

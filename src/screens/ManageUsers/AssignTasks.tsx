@@ -25,6 +25,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import CheckBox from '@react-native-community/checkbox';
 import LoadingAnimation from '../Common/LoadingAnimation';
 import LinearGradient from 'react-native-linear-gradient';
+import { getWorkTypeColors } from '../Common/CommonConstantsTypes';
 
 const AssignTasks = ({route, navigation}: {route: any; navigation: any}) => {
   const {
@@ -42,37 +43,7 @@ const AssignTasks = ({route, navigation}: {route: any; navigation: any}) => {
   } = route.params;
 
   // Color scheme function
-  const getWorkTypeColors = (workType: any) => {
-    const colorSchemes = {
-      'structure-work': {
-        gradientColors: ['#FFFFFF', '#BABABA'],
-        borderColor: '#6D6B6B',
-        leftBorderColor: '#5C5959',
-        checkboxColor: '#5C5959',
-      },
-      'highway-work': {
-        gradientColors: ['#FFFFFF', '#FFB499'],
-        borderColor: '#EC825C',
-        leftBorderColor: '#EC825C',
-        checkboxColor: '#EC825C',
-      },
-      'other-work': {
-        gradientColors: ['#FFFFFF', '#ABF8CA'],
-        borderColor: '#4FD384',
-        leftBorderColor: '#2E8B57',
-        checkboxColor: '#2E8B57',
-      },
-      // Default fallback
-      default: {
-        gradientColors: ['#FFFFFF', '#E0E7FF'],
-        borderColor: '#ABBEFD',
-        leftBorderColor: '#0F56B3',
-        checkboxColor: '#0F56B3',
-      },
-    };
-
-    return colorSchemes[workType] || colorSchemes.default;
-  };
+  
 
   const workTypeColors = getWorkTypeColors(workType);
 
@@ -613,7 +584,7 @@ const styles = StyleSheet.create({
   // New gradient styles - replacing the old UserCategory style
   taskItemContainer: {
     marginBottom: 15,
-    borderRadius: 16,
+    borderRadius: 12,
     overflow: 'hidden',
     borderWidth: 1,
   },
@@ -623,7 +594,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 20,
     paddingHorizontal: 15,
-    borderRadius: 16,
+    borderRadius: 12,
     position: 'relative',
   },
   leftBorder: {
@@ -633,7 +604,7 @@ const styles = StyleSheet.create({
     top: 10,
     bottom: 10,
     zIndex: 100,
-    width: 3,
+    width: 2,
   },
   UserCategory: {
     backgroundColor: '#fff',

@@ -18,11 +18,6 @@ import ChangePassword from '../../screens/ChangePassword/ChangePassword';
 import ComponentsList from '../../screens/ManageUsers/ComponentsList';
 import WorkType from '../../screens/ManageUsers/WorkType';
 import AssignTasks from '../../screens/ManageUsers/AssignTasks';
-import PHWorkType from '../../screens/MyWorkProjectHead/PHWorkType';
-import PHAssignedWork from '../../screens/MyWorkProjectHead/PHAssignedWork';
-import PHAssignedTasks from '../../screens/MyWorkProjectHead/PHAssignedTasks';
-import PHAssignedComponents from '../../screens/MyWorkProjectHead/PHAssignedComponents';
-import PHAssignedSegments from '../../screens/MyWorkProjectHead/PHAssignedSegments';
 import MyWorkType from '../../screens/MyWork/MyWorkType';
 import RFIsDashboard from '../../screens/RFIs/RFIsDashboard';
 import RFIsGenerateMyWork from '../../screens/RFIs/RFIsGenerateMyWork';
@@ -327,38 +322,6 @@ const ManageUsersStackNavigator = () => {
   );
 };
 
-const MyWorkPHStackNavigator = () => {
-  return (
-    <Stack.Navigator screenOptions={screenOptionStyle}>
-      <Stack.Screen
-        name="PHWorkType"
-        component={PHWorkType}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="PHAssignedWork"
-        component={PHAssignedWork}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="PHAssignedSegments"
-        component={PHAssignedSegments}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="PHAssignedComponents"
-        component={PHAssignedComponents}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="PHAssignedTasks"
-        component={PHAssignedTasks}
-        options={{headerShown: false}}
-      />
-    </Stack.Navigator>
-  );
-};
-
 const NotificationsStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
@@ -461,7 +424,6 @@ const ChangePasswordStackNavigator = () => {
 
 export {
   MyWorkStackNavigator,
-  MyWorkPHStackNavigator,
   MyTaskStackNavigator,
   MixDesignStackNavigator,
   ProductionStackNavigator,

@@ -9,7 +9,7 @@ import CheckBox from '@react-native-community/checkbox';
 import LoadingAnimation from '../Common/LoadingAnimation';
 
 const SubComponentsList = ({ route, navigation }: { route: any, navigation: any }) => {
-  const { projectModuleId, projectModuleName, type, subType, segmentId, segmentName, componentId, componentName, workType } = route.params;
+  const { projectModuleId, projectModuleName, type, subType, segmentId, segmentName, componentId, componentName, workType, taskCategory } = route.params;
 
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
   const { subComponents, users, loadingUsers, loadingComponent, subComponentWorkAssigned, loading, error } = useSelector((state: any) => state.WorkAssignment);
@@ -47,7 +47,8 @@ const SubComponentsList = ({ route, navigation }: { route: any, navigation: any 
       projectId: loggedInUser.projectId,
       projectModuleId: projectModuleId,
       segmentId: segmentId,
-      componentId: componentId
+      componentId: componentId,
+      taskCategory: taskCategory,
     }));
 
     dispatch(getUsersForWorkAssignment({
@@ -161,6 +162,7 @@ const SubComponentsList = ({ route, navigation }: { route: any, navigation: any 
         segmentId: segmentId,
         componentId: componentId,
         subComponentId: selectedSubComponent._id,
+        taskCategory: taskCategory,
         body: {
           users: usersToBeAssignArray,
           level: 4
@@ -249,6 +251,7 @@ const SubComponentsList = ({ route, navigation }: { route: any, navigation: any 
                     type: type,
                     subType: subType,
                     workType: workType,
+                    taskCategory: taskCategory,
                   })
                 }>
                 <Image

@@ -43,7 +43,7 @@ const AssignWork = ({route, navigation}: {route: any; navigation: any}) => {
   // const [usersToBeAssigned, setUsersToBeAssigned] = useState([])
   const [userData, setUserCheckboxes] = useState([]);
 
-  const {workType} = route.params;
+  const {workType, taskCategory} = route.params;
 
   // Get colors based on work type
   const workTypeColors = getWorkTypeColors(workType);
@@ -94,10 +94,12 @@ const AssignWork = ({route, navigation}: {route: any; navigation: any}) => {
   }, [projectModules, users]);
 
   useEffect(() => {
+    console.log('====taskCategory=======', taskCategory)
     dispatch(
       getProjectModules({
         projectId: loggedInUser.projectId,
         workType: workType,
+        taskCategory: taskCategory,
       }),
     );
 
@@ -358,6 +360,7 @@ const AssignWork = ({route, navigation}: {route: any; navigation: any}) => {
                       type: item.type,
                       subType: item.subType,
                       workType: workType,
+                      taskCategory: taskCategory
                     })
                   }>
                   <Image

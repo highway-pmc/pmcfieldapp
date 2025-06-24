@@ -40,6 +40,7 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
     segmentId,
     segmentName,
     workType,
+    taskCategory
   } = route.params;
 
   // Get colors based on work type
@@ -95,6 +96,7 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
         projectId: loggedInUser.projectId,
         projectModuleId: projectModuleId,
         segmentId: segmentId,
+        taskCategory: taskCategory
       }),
     );
 
@@ -254,6 +256,7 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
           projectModuleId: projectModuleId,
           segmentId: segmentId,
           componentId: selectedComponent._id,
+          taskCategory: taskCategory,
           body: {
             users: usersToBeAssignArray,
             level: 3,
@@ -289,6 +292,7 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
         projectId: loggedInUser.projectId,
         projectModuleId: projectModuleId,
         id: item._id,
+        taskCategory: taskCategory,
         type: 'component',
       }),
     );
@@ -308,6 +312,7 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
           type: type,
           subType: subType,
           workType: workType,
+          taskCategory: taskCategory
         });
       } else if (nextLevel.nextLevel === 'task') {
         navigation.navigate('AssignTasks', {
@@ -320,6 +325,7 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
           type: type,
           subType: subType,
           workType: workType,
+          taskCategory: taskCategory
         });
       }
     }

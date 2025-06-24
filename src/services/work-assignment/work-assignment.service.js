@@ -1,7 +1,7 @@
 import apiService from '../api.service';
 
-export const getProjectModulesData = async (projectId, workType) => {
-    return apiService.getRequest(`v1/auth/projects/${projectId}/project-modules?workType=${workType || ''}`).then((response) => {
+export const getProjectModulesData = async (projectId, workType, taskCategory) => {
+    return apiService.getRequest(`v1/auth/projects/${projectId}/project-modules?workType=${workType || ''}&taskCategory=${taskCategory || ''}`).then((response) => {
         return response;
     }).catch((err) => {
         const errorMessge = err.message || 'Unable to get list of project modules.';
@@ -9,8 +9,8 @@ export const getProjectModulesData = async (projectId, workType) => {
     });
 }
 
-export const getProjectModuleSegmentsData = async (projectId, projectModuleId) => {
-    return apiService.getRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/segments`).then((response) => {
+export const getProjectModuleSegmentsData = async (projectId, projectModuleId, taskCategory) => {
+    return apiService.getRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/segments?taskCategory=${taskCategory}`).then((response) => {
         return response;
     }).catch((err) => {
         const errorMessge = err.message || 'Unable to get list of project module segments.';
@@ -18,8 +18,8 @@ export const getProjectModuleSegmentsData = async (projectId, projectModuleId) =
     });
 }
 
-export const getProjectModuleComponentsData = async (projectId, projectModuleId, segmentId) => {
-    return apiService.getRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/segments/${segmentId}/components`).then((response) => {
+export const getProjectModuleComponentsData = async (projectId, projectModuleId, segmentId, taskCategory) => {
+    return apiService.getRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/segments/${segmentId}/components?taskCategory=${taskCategory}`).then((response) => {
         return response;
     }).catch((err) => {
         const errorMessge = err.message || 'Unable to get list of project module components.';
@@ -27,8 +27,8 @@ export const getProjectModuleComponentsData = async (projectId, projectModuleId,
     });
 }
 
-export const getProjectModuleSubComponentsData = async (projectId, projectModuleId, segmentId, componentId) => {
-    return apiService.getRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/segments/${segmentId}/components/${componentId}/sub-components`).then((response) => {
+export const getProjectModuleSubComponentsData = async (projectId, projectModuleId, segmentId, componentId, taskCategory) => {
+    return apiService.getRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/segments/${segmentId}/components/${componentId}/sub-components?taskCategory=${taskCategory}`).then((response) => {
         return response;
     }).catch((err) => {
         const errorMessge = err.message || 'Unable to get list of sub components.';
@@ -36,8 +36,8 @@ export const getProjectModuleSubComponentsData = async (projectId, projectModule
     });
 }
 
-export const getProjectModuleComponentTasksData = async (projectId, projectModuleId, segmentId, componentId) => {
-    return apiService.getRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/segments/${segmentId}/components/${componentId}/tasks`).then((response) => {
+export const getProjectModuleComponentTasksData = async (projectId, projectModuleId, segmentId, componentId, taskCategory) => {
+    return apiService.getRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/segments/${segmentId}/components/${componentId}/tasks?taskCategory=${taskCategory}`).then((response) => {
         return response;
     }).catch((err) => {
         const errorMessge = err.message || 'Unable to get list of component tasks.';
@@ -45,8 +45,8 @@ export const getProjectModuleComponentTasksData = async (projectId, projectModul
     });
 }
 
-export const getProjectModuleSegmentTasksData = async (projectId, projectModuleId, segmentId) => {
-    return apiService.getRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/segments/${segmentId}/tasks`).then((response) => {
+export const getProjectModuleSegmentTasksData = async (projectId, projectModuleId, segmentId, taskCategory) => {
+    return apiService.getRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/segments/${segmentId}/tasks?taskCategory=${taskCategory}`).then((response) => {
         return response;
     }).catch((err) => {
         const errorMessge = err.message || 'Unable to get list of segment tasks.';
@@ -54,8 +54,8 @@ export const getProjectModuleSegmentTasksData = async (projectId, projectModuleI
     });
 }
 
-export const getProjectModuleNextLevelData = async (projectId, projectModuleId, id, type) => {
-    return apiService.getRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/id/${id}/type/${type}/next-level`).then((response) => {
+export const getProjectModuleNextLevelData = async (projectId, projectModuleId, id, type, taskCategory) => {
+    return apiService.getRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/id/${id}/type/${type}/next-level?taskCategory=${taskCategory}`).then((response) => {
         return response;
     }).catch((err) => {
         const errorMessge = err.message || 'Unable to find next level of project module.';
@@ -63,8 +63,8 @@ export const getProjectModuleNextLevelData = async (projectId, projectModuleId, 
     });
 }
 
-export const getProjectModuleSubComponentTasksData = async (projectId, projectModuleId, segmentId, componentId, subComponentId) => {
-    return apiService.getRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/segments/${segmentId}/components/${componentId}/sub-components/${subComponentId}/tasks`).then((response) => {
+export const getProjectModuleSubComponentTasksData = async (projectId, projectModuleId, segmentId, componentId, subComponentId, taskCategory) => {
+    return apiService.getRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/segments/${segmentId}/components/${componentId}/sub-components/${subComponentId}/tasks?taskCategory=${taskCategory}`).then((response) => {
         return response;
     }).catch((err) => {
         const errorMessge = err.message || 'Unable to get list of project module tasks.';
@@ -81,8 +81,8 @@ export const getUsersForWorkAssignmentData = async (projectId, workType) => {
     });
 }
 
-export const projectModulesWorkAssignToUsersApi = async (projectId, projectModuleId, body) => {
-    return apiService.postRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/work-assignment`, body).then((response) => {
+export const projectModulesWorkAssignToUsersApi = async (projectId, projectModuleId, taskCategory, body) => {
+    return apiService.postRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/work-assignment?taskCategory=${taskCategory}`, body).then((response) => {
         return response;
     }).catch((err) => {
         const errorMessge = err.message || 'Unable to assign works to users.';
@@ -90,8 +90,8 @@ export const projectModulesWorkAssignToUsersApi = async (projectId, projectModul
     });
 }
 
-export const segmentsWorkAssignToUsersApi = async (projectId, projectModuleId, segmentId, body) => {
-    return apiService.postRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/segments/${segmentId}/work-assignment`, body).then((response) => {
+export const segmentsWorkAssignToUsersApi = async (projectId, projectModuleId, segmentId, taskCategory, body) => {
+    return apiService.postRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/segments/${segmentId}/work-assignment?taskCategory=${taskCategory}`, body).then((response) => {
         return response;
     }).catch((err) => {
         const errorMessge = err.message || 'Unable to assign works to users.';
@@ -99,8 +99,8 @@ export const segmentsWorkAssignToUsersApi = async (projectId, projectModuleId, s
     });
 }
 
-export const segmentTypeWorkAssignToUsersApi = async (projectId, projectModuleId, type, body) => {
-    return apiService.postRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/segments/type/${type}/work-assignment`, body).then((response) => {
+export const segmentTypeWorkAssignToUsersApi = async (projectId, projectModuleId, type, taskCategory, body) => {
+    return apiService.postRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/segments/type/${type}/work-assignment?taskCategory=${taskCategory}`, body).then((response) => {
         return response;
     }).catch((err) => {
         const errorMessge = err.message || 'Unable to assign works to users.';
@@ -108,8 +108,8 @@ export const segmentTypeWorkAssignToUsersApi = async (projectId, projectModuleId
     });
 }
 
-export const componentsWorkAssignToUsersApi = async (projectId, projectModuleId, segmentId, componentId, body) => {
-    return apiService.postRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/segments/${segmentId}/components/${componentId}/work-assignment`, body).then((response) => {
+export const componentsWorkAssignToUsersApi = async (projectId, projectModuleId, segmentId, componentId, taskCategory, body) => {
+    return apiService.postRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/segments/${segmentId}/components/${componentId}/work-assignment?taskCategory=${taskCategory}`, body).then((response) => {
         return response;
     }).catch((err) => {
         const errorMessge = err.message || 'Unable to assign works to users.';
@@ -117,8 +117,8 @@ export const componentsWorkAssignToUsersApi = async (projectId, projectModuleId,
     });
 }
 
-export const subComponentsWorkAssignToUsersApi = async (projectId, projectModuleId, segmentId, componentId, subComponentId, body) => {
-    return apiService.postRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/segments/${segmentId}/components/${componentId}/sub-components/${subComponentId}/work-assignment`, body).then((response) => {
+export const subComponentsWorkAssignToUsersApi = async (projectId, projectModuleId, segmentId, componentId, subComponentId, taskCategory, body) => {
+    return apiService.postRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/segments/${segmentId}/components/${componentId}/sub-components/${subComponentId}/work-assignment?taskCategory=${taskCategory}`, body).then((response) => {
         return response;
     }).catch((err) => {
         const errorMessge = err.message || 'Unable to assign works to users.';
@@ -126,7 +126,7 @@ export const subComponentsWorkAssignToUsersApi = async (projectId, projectModule
     });
 }
 
-export const tasksWorkAssignToUsersApi = async (projectId, projectModuleId, segmentId, componentId, subComponentId, taskId, body) => {
+export const tasksWorkAssignToUsersApi = async (projectId, projectModuleId, segmentId, componentId, subComponentId, taskId, taskCategory, body) => {
     let url = '';
     if (subComponentId) {
         url = `v1/auth/projects/${projectId}/project-modules/${projectModuleId}/segments/${segmentId}/components/${componentId}/sub-components/${subComponentId}/tasks/${taskId}/work-assignment`
@@ -135,7 +135,7 @@ export const tasksWorkAssignToUsersApi = async (projectId, projectModuleId, segm
     } else {
         url = `v1/auth/projects/${projectId}/project-modules/${projectModuleId}/segments/${segmentId}/tasks/${taskId}/work-assignment`
     }
-    return apiService.postRequest(url, body).then((response) => {
+    return apiService.postRequest(`${url}?taskCategory=${taskCategory}`, body).then((response) => {
         return response;
     }).catch((err) => {
         const errorMessge = err.message || 'Unable to assign tasks to users.';

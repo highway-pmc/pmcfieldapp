@@ -31,7 +31,7 @@ function* addUserCategories({ payload }) {
 
 function* getProjectModules({ payload }) {
     try {
-        const response = yield (getProjectModulesData(payload.projectId, payload.workType));
+        const response = yield (getProjectModulesData(payload.projectId, payload.workType, payload.taskCategory));
 
         yield put({ type: "GET_PROJECT_MODULES_SUCCESS", response });
     } catch (error) {
@@ -41,7 +41,7 @@ function* getProjectModules({ payload }) {
 
 function* getProjectModuleSegments({ payload }) {
     try {
-        const response = yield (getProjectModuleSegmentsData(payload.projectId, payload.projectModuleId));
+        const response = yield (getProjectModuleSegmentsData(payload.projectId, payload.projectModuleId, payload.taskCategory));
 
         yield put({ type: "GET_PROJECT_MODULE_SEGMENTS_SUCCESS", response });
     } catch (error) {
@@ -51,7 +51,7 @@ function* getProjectModuleSegments({ payload }) {
 
 function* getProjectModuleComponents({ payload }) {
     try {
-        const response = yield (getProjectModuleComponentsData(payload.projectId, payload.projectModuleId, payload.segmentId));
+        const response = yield (getProjectModuleComponentsData(payload.projectId, payload.projectModuleId, payload.segmentId, payload.taskCategory));
         yield put({ type: "GET_PROJECT_MODULE_COMPONENTS_SUCCESS", response });
     } catch (error) {
         yield put({ type: "GET_PROJECT_MODULE_COMPONENTS_FAILURE", error: error.message });
@@ -60,7 +60,7 @@ function* getProjectModuleComponents({ payload }) {
 
 function* getProjectModuleSubComponents({ payload }) {
     try {
-        const response = yield (getProjectModuleSubComponentsData(payload.projectId, payload.projectModuleId, payload.segmentId, payload.componentId));
+        const response = yield (getProjectModuleSubComponentsData(payload.projectId, payload.projectModuleId, payload.segmentId, payload.componentId, payload.taskCategory));
         yield put({ type: "GET_PROJECT_MODULE_SUB_COMPONENTS_SUCCESS", response });
     } catch (error) {
         yield put({ type: "GET_PROJECT_MODULE_SUB_COMPONENTS_FAILURE", error: error.message });
@@ -69,7 +69,7 @@ function* getProjectModuleSubComponents({ payload }) {
 
 function* getProjectModuleComponentTasks({ payload }) {
     try {
-        const response = yield (getProjectModuleComponentTasksData(payload.projectId, payload.projectModuleId, payload.segmentId, payload.componentId));
+        const response = yield (getProjectModuleComponentTasksData(payload.projectId, payload.projectModuleId, payload.segmentId, payload.componentId, payload.taskCategory));
         yield put({ type: "GET_PROJECT_MODULE_COMPONENTS_TASKS_SUCCESS", response });
     } catch (error) {
         yield put({ type: "GET_PROJECT_MODULE_COMPONENTS_TASKS_FAILURE", error: error.message });
@@ -78,7 +78,7 @@ function* getProjectModuleComponentTasks({ payload }) {
 
 function* getProjectModuleSegmentTasks({ payload }) {
     try {
-        const response = yield (getProjectModuleSegmentTasksData(payload.projectId, payload.projectModuleId, payload.segmentId));
+        const response = yield (getProjectModuleSegmentTasksData(payload.projectId, payload.projectModuleId, payload.segmentId, payload.taskCategory));
 
         yield put({ type: "GET_PROJECT_MODULE_SEGMENT_TASKS_SUCCESS", response });
     } catch (error) {
@@ -88,7 +88,7 @@ function* getProjectModuleSegmentTasks({ payload }) {
 
 function* getProjectModuleSubComponentTasks({ payload }) {
     try {
-        const response = yield (getProjectModuleSubComponentTasksData(payload.projectId, payload.projectModuleId, payload.segmentId, payload.componentId, payload.subComponentId));
+        const response = yield (getProjectModuleSubComponentTasksData(payload.projectId, payload.projectModuleId, payload.segmentId, payload.componentId, payload.subComponentId, payload.taskCategory));
         yield put({ type: "GET_PROJECT_MODULE_SUB_COMPONENT_TASKS_SUCCESS", response });
     } catch (error) {
         yield put({ type: "GET_PROJECT_MODULE_SUB_COMPONENT_TASKS_FAILURE", error: error.message });
@@ -97,7 +97,7 @@ function* getProjectModuleSubComponentTasks({ payload }) {
 
 function* getProjectModuleNextLevel({ payload }) {
     try {
-        const response = yield (getProjectModuleNextLevelData(payload.projectId, payload.projectModuleId, payload.id, payload.type));
+        const response = yield (getProjectModuleNextLevelData(payload.projectId, payload.projectModuleId, payload.id, payload.type, payload.taskCategory));
         yield put({ type: "GET_PROJECT_MODULE_NEXT_LEVEL_SUCCESS", response });
     } catch (error) {
         yield put({ type: "GET_PROJECT_MODULE_NEXT_LEVEL_FAILURE", error: error.message });
@@ -115,7 +115,7 @@ function* getUsersForWorkAssignment({ payload }) {
 
 function* projectModulesWorkAssignToUsers({ payload }) {
     try {
-        const response = yield (projectModulesWorkAssignToUsersApi(payload.projectId, payload.projectModuleId, payload.body));
+        const response = yield (projectModulesWorkAssignToUsersApi(payload.projectId, payload.projectModuleId, payload.taskCategory, payload.body));
         yield put({ type: "PROJECT_MODULE_WORK_ASSIGNMENT_USERS_SUCCESS", response });
     } catch (error) {
         yield put({ type: "PROJECT_MODULE_WORK_ASSIGNMENT_USERS_FAILURE", error: error.message });
@@ -124,7 +124,7 @@ function* projectModulesWorkAssignToUsers({ payload }) {
 
 function* segmentsWorkAssignToUsers({ payload }) {
     try {
-        const response = yield (segmentsWorkAssignToUsersApi(payload.projectId, payload.projectModuleId, payload.segmentId, payload.body));
+        const response = yield (segmentsWorkAssignToUsersApi(payload.projectId, payload.projectModuleId, payload.segmentId, payload.taskCategory, payload.body));
         yield put({ type: "SEGMENT_WORK_ASSIGNMENT_USERS_SUCCESS", response });
     } catch (error) {
         yield put({ type: "SEGMENT_WORK_ASSIGNMENT_USERS_FAILURE", error: error.message });
@@ -133,7 +133,7 @@ function* segmentsWorkAssignToUsers({ payload }) {
 
 function* segmentTypeWorkAssignToUsers({ payload }) {
     try {
-        const response = yield (segmentTypeWorkAssignToUsersApi(payload.projectId, payload.projectModuleId, payload.type, payload.body));
+        const response = yield (segmentTypeWorkAssignToUsersApi(payload.projectId, payload.projectModuleId, payload.type, payload.taskCategory, payload.body));
         yield put({ type: "SEGMENT_TYPE_WORK_ASSIGNMENT_USERS_SUCCESS", response });
     } catch (error) {
         yield put({ type: "SEGMENT_TYPE_WORK_ASSIGNMENT_USERS_FAILURE", error: error.message });
@@ -142,7 +142,7 @@ function* segmentTypeWorkAssignToUsers({ payload }) {
 
 function* componentWorkAssignToUsers({ payload }) {
     try {
-        const response = yield (componentsWorkAssignToUsersApi(payload.projectId, payload.projectModuleId, payload.segmentId, payload.componentId, payload.body));
+        const response = yield (componentsWorkAssignToUsersApi(payload.projectId, payload.projectModuleId, payload.segmentId, payload.componentId, payload.taskCategory, payload.body));
         yield put({ type: "COMPONENT_WORK_ASSIGNMENT_USERS_SUCCESS", response });
     } catch (error) {
         yield put({ type: "COMPONENT_WORK_ASSIGNMENT_USERS_FAILURE", error: error.message });
@@ -151,7 +151,7 @@ function* componentWorkAssignToUsers({ payload }) {
 
 function* subComponentWorkAssignToUsers({ payload }) {
     try {
-        const response = yield (subComponentsWorkAssignToUsersApi(payload.projectId, payload.projectModuleId, payload.segmentId, payload.componentId, payload.subComponentId, payload.body));
+        const response = yield (subComponentsWorkAssignToUsersApi(payload.projectId, payload.projectModuleId, payload.segmentId, payload.componentId, payload.subComponentId, payload.taskCategory, payload.body));
         yield put({ type: "SUB_COMPONENT_WORK_ASSIGNMENT_USERS_SUCCESS", response });
     } catch (error) {
         yield put({ type: "SUB_COMPONENT_WORK_ASSIGNMENT_USERS_FAILURE", error: error.message });
@@ -160,7 +160,7 @@ function* subComponentWorkAssignToUsers({ payload }) {
 
 function* taskWorkAssignToUsers({ payload }) {
     try {
-        const response = yield (tasksWorkAssignToUsersApi(payload.projectId, payload.projectModuleId, payload.segmentId, payload.componentId, payload.subComponentId, payload.taskId, payload.body));
+        const response = yield (tasksWorkAssignToUsersApi(payload.projectId, payload.projectModuleId, payload.segmentId, payload.componentId, payload.subComponentId, payload.taskId, payload.taskCategory, payload.body));
         yield put({ type: "TASK_WORK_ASSIGNMENT_USERS_SUCCESS", response });
     } catch (error) {
         yield put({ type: "TASK_WORK_ASSIGNMENT_USERS_FAILURE", error: error.message });

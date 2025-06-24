@@ -592,6 +592,7 @@ export const WORK_TYPE = {
   STORE_WORK: 'Stores',
   PRODUCTION_WORK: 'Production',
   EQUIPMENTS_WORK: 'Equipments',
+  CASTING_YARD: 'Casting Yard',
 };
 
 export const STORE_OPTION = {

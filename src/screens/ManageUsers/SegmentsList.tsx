@@ -34,7 +34,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {getWorkTypeColors} from '../Common/CommonConstantsTypes';
 
 const SegmentsList = ({route, navigation}: {route: any; navigation: any}) => {
-  const {projectModuleId, projectModuleName, type, subType, workType} =
+  const {projectModuleId, projectModuleName, type, subType, workType, taskCategory} =
     route.params;
 
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
@@ -87,6 +87,7 @@ const SegmentsList = ({route, navigation}: {route: any; navigation: any}) => {
       getProjectModuleSegments({
         projectId: loggedInUser.projectId,
         projectModuleId: projectModuleId,
+        taskCategory: taskCategory
       }),
     );
 
@@ -340,6 +341,7 @@ const SegmentsList = ({route, navigation}: {route: any; navigation: any}) => {
             projectId: loggedInUser.projectId,
             projectModuleId: projectModuleId,
             segmentId: selectedSegment._id,
+            taskCategory: taskCategory,
             body: {
               users: usersToBeAssignArray,
               level: 2,
@@ -352,6 +354,7 @@ const SegmentsList = ({route, navigation}: {route: any; navigation: any}) => {
             projectId: loggedInUser.projectId,
             projectModuleId: projectModuleId,
             type: segmentTypeToAssignWork,
+            taskCategory: taskCategory,
             body: {
               users: usersToBeAssignArray,
               level: 2,
@@ -405,6 +408,7 @@ const SegmentsList = ({route, navigation}: {route: any; navigation: any}) => {
           type: type,
           subType: subType,
           workType: workType,
+          taskCategory: taskCategory
         });
       } else if (nextLevel.nextLevel === 'task') {
         navigation.navigate('AssignTasks', {
@@ -415,6 +419,7 @@ const SegmentsList = ({route, navigation}: {route: any; navigation: any}) => {
           type: type,
           subType: subType,
           workType: workType,
+          taskCategory: taskCategory
         });
       }
     }

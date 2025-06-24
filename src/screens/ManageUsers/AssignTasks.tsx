@@ -40,6 +40,7 @@ const AssignTasks = ({route, navigation}: {route: any; navigation: any}) => {
     subComponentId,
     subComponentName,
     workType,
+    taskCategory
   } = route.params;
 
   // Color scheme function
@@ -100,6 +101,7 @@ const AssignTasks = ({route, navigation}: {route: any; navigation: any}) => {
           segmentId: segmentId,
           componentId: componentId,
           subComponentId: subComponentId,
+          taskCategory: taskCategory
         }),
       );
     } else if (componentId) {
@@ -109,6 +111,7 @@ const AssignTasks = ({route, navigation}: {route: any; navigation: any}) => {
           projectModuleId: projectModuleId,
           segmentId: segmentId,
           componentId: componentId,
+          taskCategory: taskCategory
         }),
       );
     } else {
@@ -117,6 +120,7 @@ const AssignTasks = ({route, navigation}: {route: any; navigation: any}) => {
           projectId: loggedInUser.projectId,
           projectModuleId: projectModuleId,
           segmentId: segmentId,
+          taskCategory: taskCategory
         }),
       );
     }
@@ -304,6 +308,7 @@ const AssignTasks = ({route, navigation}: {route: any; navigation: any}) => {
           componentId: componentId,
           subComponentId: subComponentId,
           taskId: selectedTask._id,
+          taskCategory: taskCategory,
           body: {
             users: usersToBeAssignArray,
             level: 5,

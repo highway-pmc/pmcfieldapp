@@ -7,7 +7,6 @@ import userCategoriesAssignmentScreenSaga from '../screens/ManageUsers/saga';
 import projectInfoScreenSaga from '../screens/ProjectInfo/saga';
 import changePassowrdScreenSaga from '../screens/ChangePassword/saga';
 import myWorksScreenSaga from '../screens/MyWork/saga';
-import projectHeadMyWorkAssignmentScreenSaga from '../screens/MyWorkProjectHead/saga';
 import dashboardScreenSaga from '../screens/Dashboard/saga';
 import myRFISScreenSaga from '../screens/RFIs/saga';
 import myReportsScreenSaga from '../screens/Reports/saga';
@@ -24,7 +23,6 @@ function* rootSaga() {
         projectInfoScreenSaga(),
         changePassowrdScreenSaga(),
         myWorksScreenSaga(),
-        projectHeadMyWorkAssignmentScreenSaga(),
         dashboardScreenSaga(),
         myRFISScreenSaga(),
         myReportsScreenSaga(),

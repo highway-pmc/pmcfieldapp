@@ -120,11 +120,13 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
       updatedCheckboxes.forEach((user: any) => {
         user.isChecked = false;
         delete user.assignmentLevel;
+        /*
         if (
           user.workAssignment?.find(
             (wa: any) =>
               wa.projectModule?.id === projectModuleId &&
-              wa.assignmentLevel === 1,
+              wa.assignmentLevel === 1 &&
+              wa.assignmentLevelFrom === 1
           ) != null
         ) {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL1;
@@ -134,18 +136,22 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
             (wa: any) =>
               wa.projectModule?.id === projectModuleId &&
               wa.segmentId === segmentId &&
-              wa.assignmentLevel === 2,
+              wa.assignmentLevel === 2 &&
+              wa.assignmentLevelFrom === 2
           )
         ) {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL2;
           user.isChecked = true;
-        } else if (
+        } else
+        */
+        if (
           user.workAssignment?.find(
             (wa: any) =>
               wa.projectModule?.id === projectModuleId &&
               wa.segmentId === segmentId &&
               wa.componentId === component._id &&
-              wa.assignmentLevel === 4,
+              wa.assignmentLevel === 4 &&
+              wa.assignmentLevelFrom === 4
           )
         ) {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL4;
@@ -156,9 +162,11 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
               wa.projectModule?.id === projectModuleId &&
               wa.segmentId === segmentId &&
               wa.componentId === component._id &&
-              wa.assignmentLevel === 5,
+              wa.assignmentLevel === 5 &&
+              wa.assignmentLevelFrom === 5
           )
         ) {
+          console.log('=================', JSON.stringify(user.workAssignment))
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL5;
           user.isChecked = true;
         } /*else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.assignmentLevel === 5)) {

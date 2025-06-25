@@ -145,7 +145,7 @@ const AssignTasks = ({route, navigation}: {route: any; navigation: any}) => {
       updatedCheckboxes.forEach((user: any) => {
         user.isChecked = false;
         delete user.assignmentLevel;
-        if (
+        /*if (
           user.workAssignment?.find(
             (wa: any) =>
               wa.projectModule?.id === projectModuleId &&
@@ -164,13 +164,15 @@ const AssignTasks = ({route, navigation}: {route: any; navigation: any}) => {
         ) {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL2;
           user.isChecked = true;
-        } else if (
+        }*/
+       if (
           user.workAssignment?.find(
             (wa: any) =>
               wa.projectModule?.id === projectModuleId &&
               wa.segmentId === segmentId &&
               wa.componentId === componentId &&
-              wa.assignmentLevel === 3,
+              wa.assignmentLevel === 3 &&
+              wa.assignmentLevelFrom === 3,
           )
         ) {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL3;
@@ -182,7 +184,8 @@ const AssignTasks = ({route, navigation}: {route: any; navigation: any}) => {
               wa.segmentId === segmentId &&
               wa.componentId === componentId &&
               wa.subComponentId === subComponentId &&
-              wa.assignmentLevel === 4,
+              wa.assignmentLevel === 4 &&
+              wa.assignmentLevelFrom === 4,
           )
         ) {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL4;

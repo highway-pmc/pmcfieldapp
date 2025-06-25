@@ -69,16 +69,17 @@ const SubComponentsList = ({ route, navigation }: { route: any, navigation: any 
       updatedCheckboxes.forEach((user: any) => {
         user.isChecked = false;
         delete user.assignmentLevel;
-        if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.assignmentLevel === 1) != null) {
+        /*if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.assignmentLevel === 1) != null) {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL1;
           user.isChecked = true;
         } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.assignmentLevel === 2)) {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL2;
           user.isChecked = true;
-        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.componentId === componentId && wa.assignmentLevel === 3)) {
+        }*/
+       if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.componentId === componentId && wa.assignmentLevel === 3 && wa.assignmentLevelFrom === 3)) {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL3;
           user.isChecked = true;
-        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.componentId === componentId && wa.subComponentId === subComponent._id && wa.taskId && wa.assignmentLevel === 5)) {
+        } else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.componentId === componentId && wa.subComponentId === subComponent._id && wa.taskId && wa.assignmentLevel === 5 && wa.assignmentLevelFrom === 5)) {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL5;
           user.isChecked = true;
         } /*else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.taskId && wa.assignmentLevel === 5)) {

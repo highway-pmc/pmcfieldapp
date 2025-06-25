@@ -8,7 +8,7 @@ export const HeaderItems = {
   changePassword: {showBack: false, title: 'Change Password'},
   assignTask: {showBack: true, title: 'Assign Task'},
   flyoverDetails: {showBack: true, title: 'Flyover Details'},
-  manageWork: {showBack: true, title: 'Manage Works'},
+  manageWork: {showBack: false, title: 'Manage Works'},
   myWorkType: {showBack: false, title: 'My Work'},
   assignWork: {showBack: true, title: 'Assign Works'},
   segmentsList: {showBack: true, title: 'Assign Works - Segment'},
@@ -35,23 +35,23 @@ export const HeaderItems = {
   profile: {showBack: false, title: 'Edit Profile'},
 
   assignTestClassification: {
-    showBack: true,
+    showBack: false,
     title: 'Assign Test Classification',
   },
   assignSurveyUsers: {
-    showBack: true,
+    showBack: false,
     title: 'Assign Survey Users',
   },
   assignStoreUsers: {
-    showBack: true,
+    showBack: false,
     title: 'Assign Store Users',
   },
   assignProductionUsers: {
-    showBack: true,
+    showBack: false,
     title: 'Assign Production Users',
   },
   assignEquipmentUsers: {
-    showBack: true,
+    showBack: false,
     title: 'Assign Equipment Users',
   },
   assignTestWorkCategory: {showBack: true, title: 'Assign Test Work Category'},

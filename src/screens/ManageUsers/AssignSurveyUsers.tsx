@@ -16,7 +16,6 @@ import LoadingAnimation from '../Common/LoadingAnimation';
 import LinearGradient from 'react-native-linear-gradient';
 import TileCardComponent from '../Common/TileCardComponent';
 
-
 // Add your WORK_MODULE_TYPE data
 export const WORK_MODULE_TYPE = [
   {
@@ -32,6 +31,7 @@ export const WORK_MODULE_TYPE = [
     rejected: 43,
     discription: 'The Backbone of Successful Execution',
     src: 'initialSurvey',
+    borderColor: '#ABBEFD',
   },
   {
     title: 'Structure Work',
@@ -46,6 +46,7 @@ export const WORK_MODULE_TYPE = [
     rejected: 43,
     discription: 'The Backbone of Successful Execution',
     src: 'structure',
+    borderColor: '#8B8B8B',
   },
   {
     title: 'Highway Work',
@@ -60,6 +61,7 @@ export const WORK_MODULE_TYPE = [
     rejected: 43,
     discription: 'Keeping Roads Safe, Smooth, and Reliable',
     src: 'highway',
+    borderColor: '#EC835D',
   },
   {
     title: 'Other Work',
@@ -75,6 +77,7 @@ export const WORK_MODULE_TYPE = [
     rejected: 43,
     discription: 'Bridging Gaps in the Workflow',
     src: 'other',
+    borderColor: '#51D49E',
   },
 ];
 
@@ -133,8 +136,6 @@ const AssignSurveyUsers = () => {
 
   return (
     <View style={styles.Container}>
-    
-
       <ScrollView style={styles.Height100}>
         {/* Render TileCardComponents */}
         <View style={styles.tileCardsContainer}>
@@ -152,6 +153,7 @@ const AssignSurveyUsers = () => {
               inProgressTask={role.inProgressTask}
               closedTask={role.closedTask}
               rejected={role.rejected}
+              borderColor={role.borderColor}
               onPress={() => onPressWorkType(role.workType)}
             />
           ))}

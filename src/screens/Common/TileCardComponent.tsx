@@ -29,6 +29,7 @@ interface TileCardProps {
   inProgressTask: number;
   closedTask: number;
   rejected: number;
+  borderColor?: string;
   onPress: () => void;
 }
 
@@ -44,13 +45,19 @@ const TileCardComponent = (props: TileCardProps) => {
     inProgressTask,
     closedTask,
     rejected,
+    borderColor,
     onPress,
   } = props;
 
   const gradientColors = [linearLight || bgColor, linearDark || bgColor];
 
   return (
-    <TouchableOpacity style={styles.cardWrapper} onPress={onPress}>
+    <TouchableOpacity
+      style={[
+        styles.cardWrapper,
+        borderColor ? {borderColor, borderWidth: 1} : null,
+      ]}
+      onPress={onPress}>
       <LinearGradient
         colors={gradientColors}
         start={{x: 0, y: 0}}
@@ -105,6 +112,7 @@ TileCardComponent.propTypes = {
   inProgressTask: PropTypes.number,
   closedTask: PropTypes.number,
   rejected: PropTypes.number,
+  borderColor: PropTypes.string,
   onPress: PropTypes.func.isRequired,
 };
 

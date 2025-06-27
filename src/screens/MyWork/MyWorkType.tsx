@@ -99,6 +99,7 @@ const MyWorkType = ({navigation}: {navigation: any}) => {
               inProgressTask={role.inProgressTask}
               closedTask={role.closedTask}
               rejected={role.rejected}
+              borderColor={role.borderColor}
               onPress={() => onPressWorkType(role.workType)}
             />
           ))}

@@ -86,7 +86,14 @@ const WorkType = ({navigation}: {navigation: any}) => {
   const onPressWorkType = (workType: any) => {
     navigation.navigate('AssignWork', {
       workType: workType,
-      taskCategory: (activeTab === WORK_TYPE.SITE_WORK ? 'my-work' : activeTab === WORK_TYPE.SURVEY_WORK ? 'survey' : activeTab === WORK_TYPE.CASTING_YARD ? 'casting-yard' : ''),
+      taskCategory:
+        activeTab === WORK_TYPE.SITE_WORK
+          ? 'my-work'
+          : activeTab === WORK_TYPE.SURVEY_WORK
+          ? 'survey'
+          : activeTab === WORK_TYPE.CASTING_YARD
+          ? 'casting-yard'
+          : '',
     });
   };
 
@@ -186,8 +193,7 @@ const WorkType = ({navigation}: {navigation: any}) => {
             <Text
               style={[
                 styles.activeTabText,
-                activeTab === WORK_TYPE.CASTING_YARD &&
-                  styles.activeFontColor,
+                activeTab === WORK_TYPE.CASTING_YARD && styles.activeFontColor,
               ]}>
               {WORK_TYPE.CASTING_YARD}
             </Text>
@@ -212,7 +218,8 @@ const WorkType = ({navigation}: {navigation: any}) => {
       </View>
 
       <View style={styles.tabContent}>
-        {(activeTab === WORK_TYPE.SITE_WORK || activeTab === WORK_TYPE.CASTING_YARD) && (
+        {(activeTab === WORK_TYPE.SITE_WORK ||
+          activeTab === WORK_TYPE.CASTING_YARD) && (
           <View style={styles.rfiTabBar}>
             {roles.map((role: any, index: number) => (
               <TileCardComponent
@@ -228,6 +235,7 @@ const WorkType = ({navigation}: {navigation: any}) => {
                 inProgressTask={role.inProgressTask}
                 closedTask={role.closedTask}
                 rejected={role.rejected}
+                borderColor={role.borderColor}
                 onPress={() => onPressWorkType(role.workType)}
               />
             ))}

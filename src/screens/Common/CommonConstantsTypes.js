@@ -249,6 +249,7 @@ export const WORK_MODULE_TYPE = [
     rejected: 43,
     discription: 'The Backbone of Successful Execution',
     src: 'structure',
+    borderColor: '#8B8B8B',
   },
   {
     title: 'Highway Work',
@@ -263,6 +264,7 @@ export const WORK_MODULE_TYPE = [
     rejected: 43,
     discription: 'Keeping Roads Safe, Smooth, and Reliable',
     src: 'highway',
+    borderColor: '#EC835D',
   },
   {
     title: 'Other Work',
@@ -278,6 +280,7 @@ export const WORK_MODULE_TYPE = [
     rejected: 43,
     discription: 'Bridging Gaps in the Workflow',
     src: 'other',
+    borderColor: '#51D49E',
   },
 ];
 export const CARD_COLORS_ARRAY = [
@@ -298,7 +301,7 @@ export const CARD_ICONS = [
   require('./../../images/mix-design.png'),
   require('./../../images/equipment-calibration.png'),
 ];
-export const getWorkTypeColors = (workType) => {
+export const getWorkTypeColors = workType => {
   const colorSchemes = {
     'structure-work': {
       gradientColors: ['#FFFFFF', '#FFB499'],

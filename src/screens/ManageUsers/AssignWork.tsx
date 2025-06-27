@@ -27,10 +27,9 @@ import {
 } from './actions';
 import LoadingAnimation from '../Common/LoadingAnimation';
 import LinearGradient from 'react-native-linear-gradient';
-import { getWorkTypeColors } from '../Common/CommonConstantsTypes';
+import {getWorkTypeColors} from '../Common/CommonConstantsTypes';
 
 // Color schemes for different work types
-
 
 const AssignWork = ({route, navigation}: {route: any; navigation: any}) => {
   const [projectModulesData, setProjectModulesData] = useState([]);
@@ -94,7 +93,7 @@ const AssignWork = ({route, navigation}: {route: any; navigation: any}) => {
   }, [projectModules, users]);
 
   useEffect(() => {
-    console.log('====taskCategory=======', taskCategory)
+    console.log('====taskCategory=======', taskCategory);
     dispatch(
       getProjectModules({
         projectId: loggedInUser.projectId,
@@ -360,7 +359,7 @@ const AssignWork = ({route, navigation}: {route: any; navigation: any}) => {
                       type: item.type,
                       subType: item.subType,
                       workType: workType,
-                      taskCategory: taskCategory
+                      taskCategory: taskCategory,
                     })
                   }>
                   <Image
@@ -420,6 +419,7 @@ const AssignWork = ({route, navigation}: {route: any; navigation: any}) => {
                 <ScrollView style={{paddingTop: 0, height: 500}}>
                   {userData.map((item: any, index) => (
                     <View key={index} style={styles.CategoryType}>
+                      {/* Left side: Checkbox and user info */}
                       <View style={styles.FlexRowCenter}>
                         <CheckBox
                           value={item.isChecked}
@@ -428,14 +428,41 @@ const AssignWork = ({route, navigation}: {route: any; navigation: any}) => {
                           style={styles.checkbox}
                           tintColors={{true: '#5A2AAF', false: '#818181'}}
                         />
-                        <View style={{flexDirection: 'row'}}>
-                          <Text style={styles.AssignRoleText}>{item.name}</Text>
+                        <View style={styles.userInfoContainer}>
+                          <Text style={styles.AssignRoleText} numberOfLines={1}>
+                            {item.name}
+                          </Text>
                           {item.assignmentLevel && (
-                            <Text style={styles.userAlreadyAssigned}>
+                            <Text
+                              style={styles.userRoleSubtext}
+                              numberOfLines={1}>
                               {item.assignmentLevel}
                             </Text>
                           )}
                         </View>
+                      </View>
+
+                      {/* Right side: Action buttons */}
+                      <View style={styles.actionButtonsContainer}>
+                        <TouchableOpacity
+                          style={styles.updateButton}
+                          onPress={() => {
+                            console.log('Update user:', item.name);
+                          }}>
+                          <Text style={styles.updateButtonText}>Update</Text>
+                        </TouchableOpacity>
+
+                        <Text style={styles.buttonSeparator}>|</Text>
+
+                        <TouchableOpacity
+                          style={styles.deassignButton}
+                          onPress={() => {
+                            console.log('Deassign user:', item.name);
+                          }}>
+                          <Text style={styles.deassignButtonText}>
+                            Deassign
+                          </Text>
+                        </TouchableOpacity>
                       </View>
                     </View>
                   ))}
@@ -705,15 +732,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 15,
   },
-  CategoryType: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderBottomWidth: 1,
-    borderColor: '#EBEBF0',
-    borderStyle: 'solid',
-    paddingVertical: 10,
-  },
+
   AssignRoleTextHeading: {
     fontSize: 14,
     fontWeight: '600',
@@ -754,6 +773,71 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#fff',
     fontWeight: '500',
+  },
+  CategoryType: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderBottomWidth: 1,
+    borderColor: '#EBEBF0',
+    borderStyle: 'solid',
+    paddingVertical: 15,
+    paddingHorizontal: 5,
+    minHeight: 60, // Ensure minimum height
+  },
+
+  userInfoContainer: {
+    flexDirection: 'column',
+    marginLeft: 10,
+    flex: 0.6, // Reduced from flex: 1 to give more space to action buttons
+    minWidth: 120, // Ensure minimum width
+  },
+
+  actionButtonsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 0.4, // Give explicit flex space
+    justifyContent: 'flex-end', // Align buttons to the right
+    minWidth: 100, // Ensure minimum width for buttons
+  },
+
+  updateButton: {
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+    marginRight: 2,
+  },
+
+  updateButtonText: {
+    color: '#5A2AAF',
+    fontSize: 12, // Slightly smaller font
+    fontWeight: '500',
+  },
+
+  deassignButton: {
+    paddingHorizontal: 8, // Reduced padding for better fit
+    paddingVertical: 2,
+  },
+
+  deassignButtonText: {
+    color: '#5A2AAF',
+    fontSize: 12, // Slightly smaller font
+    fontWeight: '500',
+  },
+
+  buttonSeparator: {
+    color: '#CCCCCC',
+    fontSize: 12, // Smaller separator
+  },
+
+  userRoleSubtext: {
+    fontSize: 12,
+    color: '#666666',
+    marginTop: 2,
+    paddingLeft: 8,
+  },
+  levelIndicator: {
+    color: '#5A2AAF',
+    fontWeight: '600',
   },
 });
 

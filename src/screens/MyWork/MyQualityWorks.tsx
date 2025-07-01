@@ -109,6 +109,7 @@ import {
 import { thirdPartySampleTest } from './ReportSamples/Forms/QualityWorks/ThirdPartyLabTestCustomForm';
 import CustomSelectDropdown from '../Common/CustomSelectDropdown';
 import {getThirdPartyTestSampleObject} from './ReportSamples/Forms/QualityWorks/ThirdPartyTest';
+import LinearGradient from 'react-native-linear-gradient';
 const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
   const workType = PROJECT_TYPE.QUALITY_WORK;
@@ -1437,22 +1438,22 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
       <ScrollView showsVerticalScrollIndicator={false} style={styles.Height100}>
         {currentLevel === 0
           ? myTestsDataAll.map((testClassificationItem: any, index: number) => (
+            <LinearGradient colors={['#FEFEFF', '#E1E8FF']} start={{x: 0, y: 0}} end={{x: 1, y: 1}} style={styles.hardcodedGradientContainer}>
               <TouchableOpacity
                 style={[
-                  styles.MyWorkCard,
-                  {backgroundColor: colors[index % colors.length]},
+                  styles.MyWorkCard
                 ]}
                 onPress={() => handleApprovalType(testClassificationItem)}>
                 <View style={styles.TaskDetails}>
                   <Text style={styles.HeadingText}>
                     {testClassificationItem.name}
                   </Text>
-                  <View style={{flexDirection: 'row'}}>
-                    <Text style={styles.SubHeadingText}>Assigned :</Text>
+                  {/* <View style={{flexDirection: 'row'}}>
+                    <Text style={styles.SubHeadingText}>Assigneddd :</Text>
                     <Text style={[styles.SubHeadingText, styles.SubActive]}>
                       {testClassificationItem.name}
                     </Text>
-                  </View>
+                  </View> */}
                 </View>
                 <View style={commonStyles.iconsStyle}>
                   {imageMap.length && (
@@ -1462,13 +1463,8 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
                     />
                   )}
                 </View>
-                <View style={commonStyles.rightStyle}>
-                  <Image
-                    style={commonStyles.CloseIcon}
-                    source={require('./../../images/right-arrow.png')}
-                  />
-                </View>
               </TouchableOpacity>
+            </LinearGradient>
             ))
           : currentLevel === 1
           ? myTestsData.map(
@@ -2372,23 +2368,27 @@ const styles = StyleSheet.create({
 
   //MyQualityWork Card
   MyWorkCard: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    paddingVertical: 18,
-    paddingHorizontal: 20,
-    marginBottom: 20,
-    marginHorizontal: 10,
-    minHeight: 100,
-    position: 'relative',
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 10},
-    shadowOpacity: 0.25,
-    shadowRadius: 20,
-    elevation: 5,
     flexDirection: 'row',
-    overflow: 'hidden',
+    justifyContent: 'space-between',
+    gap: 20,
+    alignItems: 'flex-start',
+    width: '100%'
+  },
+  hardcodedGradientContainer: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    paddingVertical: 30,
+    paddingHorizontal: 30,
+    borderRadius: 12,
+    position: 'relative',
+    marginBottom: 20,
+    borderColor: '#CDD6F6',
+    borderWidth: 1,
+    borderBottomLeftRadius: 12,
+    borderBottomRightRadius: 12,
+    borderTopRightRadius: 12,
+    borderTopLeftRadius: 12,
+
   },
   CompleteWork: {
     borderWidth: 1,
@@ -2402,7 +2402,7 @@ const styles = StyleSheet.create({
     top: 10,
   },
   HeadingText: {
-    color: '#fff',
+    color: '#333',
     fontSize: 16,
     fontWeight: '700',
     marginBottom: 5,
@@ -2411,8 +2411,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'flex-start',
     flexWrap: 'wrap',
-    paddingLeft: 65,
-    width: '90%',
   },
   SubHeadingText: {
     color: '#fff',

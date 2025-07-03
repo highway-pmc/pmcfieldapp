@@ -331,7 +331,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   checkbox: {
-    transform: [{scaleX: 1.2}, {scaleY: 1.2}],
+    transform: [{scaleX: 1}, {scaleY: 1}],
   },
   label: {
     margin: 8,

@@ -327,27 +327,27 @@ const AssignProductionUsers = () => {
               end={{x: 1, y: 1}}
               style={styles.hardcodedGradientContainer}>
               <View style={styles.hardcodedLeftBorder} />
-              <View style={styles.hardcodedCardContent}>
-                <View style={styles.FlexRowCenter}>
-                  <CheckBox
-                    value={card.isChecked}
-                    onValueChange={() => handleHardcodedCardSelect(card.id)}
-                    style={styles.checkbox}
-                    tintColors={{true: '#5A7EF8', false: '#818181'}}
-                  />
-                  <View style={styles.hardcodedCardTextContainer}>
-                    <Text style={styles.hardcodedCardTitle}>{card.title}</Text>
-                    <Text style={styles.hardcodedCardSubtitle}>
-                      {card.plantInfo}
-                    </Text>
-                    <Text style={styles.hardcodedCardId}>
-                      ID: {card.machineId}
-                    </Text>
-                    <Text style={styles.hardcodedCardPending}>
-                      Total no. of pending request: {card.pendingRequests}
-                    </Text>
-                  </View>
-                </View>
+
+              {/* Header row with checkbox and title */}
+              <View style={styles.hardcodedHeaderRow}>
+                <CheckBox
+                  value={card.isChecked}
+                  onValueChange={() => handleHardcodedCardSelect(card.id)}
+                  style={styles.checkbox}
+                  tintColors={{true: '#5A7EF8', false: '#000001'}}
+                />
+                <Text style={styles.hardcodedCardTitle}>{card.title}</Text>
+              </View>
+
+              {/* Details section */}
+              <View style={styles.hardcodedCardDetails}>
+                <Text style={styles.hardcodedCardSubtitle}>
+                  {card.plantInfo}
+                </Text>
+                <Text style={styles.hardcodedCardId}>ID: {card.machineId}</Text>
+                <Text style={styles.hardcodedCardPending}>
+                  Total no. of pending request: {card.pendingRequests}
+                </Text>
               </View>
             </LinearGradient>
           </View>
@@ -392,7 +392,7 @@ const AssignProductionUsers = () => {
                           disabled={item.assignmentLevel != null}
                           onValueChange={() => handleUserData(index)}
                           style={styles.checkbox}
-                          tintColors={{true: '#5A2AAF', false: '#818181'}}
+                          tintColors={{true: '#5A2AAF', false: '#000'}}
                         />
                         <View style={{flexDirection: 'row'}}>
                           <Text style={styles.AssignRoleText}>{item.name}</Text>
@@ -427,7 +427,7 @@ const styles = StyleSheet.create({
   Container: {
     flexDirection: 'column',
     paddingVertical: 10,
-    padding: 15,
+    padding: 10,
     paddingBottom: 35,
   },
   ErrorSectionStyle: {
@@ -546,7 +546,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   checkbox: {
-    transform: [{scaleX: 1.2}, {scaleY: 1.2}],
+    transform: [{scaleX: 0.95}, {scaleY: 0.95}],
   },
   label: {
     margin: 8,
@@ -734,66 +734,65 @@ const styles = StyleSheet.create({
   arrowContainer: {
     alignSelf: 'center',
   },
+  hardcodedHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+
+    width: '100%',
+  },
+  hardcodedCardDetails: {
+    marginLeft: 35, // Aligns with the text after checkbox
+    width: '100%',
+  },
+  // Update existing styles:
+  hardcodedGradientContainer: {
+    flexDirection: 'column', // Changed from 'row' to 'column'
+    alignItems: 'flex-start',
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+    borderRadius: 12,
+    position: 'relative',
+  },
+  hardcodedCardTitle: {
+    fontSize: 17,
+    fontWeight: '600',
+    color: '#1F2937',
+    marginLeft: 4, // Space between checkbox and title
+    flex: 1, // Takes remaining space
+  },
+  hardcodedCardSubtitle: {
+    fontSize: 13,
+    fontWeight: '400',
+    color: '#6B7280',
+    marginBottom: 3,
+  },
+  hardcodedCardId: {
+    fontSize: 13,
+    fontWeight: '400',
+    color: '#374151',
+    marginBottom: 3,
+  },
+  hardcodedCardPending: {
+    fontSize: 13,
+    fontWeight: '400',
+    color: '#374151',
+  },
   // New styles for hardcoded cards
   hardcodedCardContainer: {
-    marginBottom: 15,
+    marginBottom: 12,
     borderRadius: 12,
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: '#B8D4FF',
-    shadowColor: '#5A7EF8',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.15,
-    shadowRadius: 4,
-    elevation: 3,
   },
-  hardcodedGradientContainer: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    paddingVertical: 18,
-    paddingHorizontal: 15,
-    borderRadius: 12,
-    position: 'relative',
-  },
+
   hardcodedLeftBorder: {
     position: 'absolute',
     left: 0,
-    top: 10,
-    bottom: 10,
+    top: '15%',
+    bottom: '15%',
     width: 2,
     backgroundColor: '#5A7EF8',
-  },
-  hardcodedCardContent: {
-    flex: 1,
-    marginLeft: 8,
-  },
-  hardcodedCardTextContainer: {
-    flex: 1,
-    marginLeft: 12,
-  },
-  hardcodedCardTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#1F2937',
-    marginBottom: 4,
-  },
-  hardcodedCardSubtitle: {
-    fontSize: 14,
-    fontWeight: '400',
-    color: '#6B7280',
-    marginBottom: 2,
-  },
-  hardcodedCardId: {
-    fontSize: 14,
-    fontWeight: '400',
-    marginBottom: 2,
-  },
-  hardcodedCardPending: {
-    fontSize: 14,
-    fontWeight: '400',
   },
 });
 

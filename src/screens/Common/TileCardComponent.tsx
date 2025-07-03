@@ -119,7 +119,7 @@ TileCardComponent.propTypes = {
 const styles = StyleSheet.create({
   cardWrapper: {
     width: '100%',
-    marginBottom: 5,
+    marginBottom: 10,
     borderRadius: 10,
     overflow: 'hidden',
     elevation: 1,
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: '600',
-    marginBottom: 15,
+    marginBottom: 8,
     color: '#333333',
   },
   tasksContainer: {

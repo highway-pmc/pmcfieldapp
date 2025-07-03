@@ -29,8 +29,6 @@ import LoadingAnimation from '../Common/LoadingAnimation';
 import LinearGradient from 'react-native-linear-gradient';
 import {getWorkTypeColors} from '../Common/CommonConstantsTypes';
 
-// Color schemes for different work types
-
 const AssignWork = ({route, navigation}: {route: any; navigation: any}) => {
   const [projectModulesData, setProjectModulesData] = useState([]);
   const [selectedProjectModule, setSelectedProjectModule] = useState({
@@ -39,7 +37,6 @@ const AssignWork = ({route, navigation}: {route: any; navigation: any}) => {
     name: '',
   });
   const [searchText, setSearchText] = useState('');
-  // const [usersToBeAssigned, setUsersToBeAssigned] = useState([])
   const [userData, setUserCheckboxes] = useState([]);
 
   const {workType, taskCategory} = route.params;
@@ -74,7 +71,15 @@ const AssignWork = ({route, navigation}: {route: any; navigation: any}) => {
     },
     [],
   );
+  // useEffect(() => {
+  //   console.log('projectModulesData:', projectModulesData);
+  //   console.log('projectModulesData length:', projectModulesData.length);
 
+  //   // Log each item individually
+  //   projectModulesData.forEach((item, index) => {
+  //     console.log(`Project Module ${index}:`, item);
+  //   });
+  // }, [projectModulesData]);
   useEffect(() => {
     console.log('Work Type', workType);
     if (projectModules) {
@@ -339,18 +344,31 @@ const AssignWork = ({route, navigation}: {route: any; navigation: any}) => {
                   {backgroundColor: workTypeColors.leftBorderColor},
                 ]}
               />
+
+              {/* Left side: Checkbox */}
               <View style={styles.FlexRowCenter}>
                 <CheckBox
                   value={item.isChecked}
                   onValueChange={() => handleRadioChange(index)}
                   style={styles.checkbox}
-                  tintColors={{true: '#5A2AAF', false: '#818181'}}
+                  tintColors={{true: '#5A2AAF', false: '#000001'}}
                 />
-                <View>
-                  <Text style={styles.UserRole}>{item.name}</Text>
-                </View>
               </View>
-              <View>
+
+              {/* Right side: Name and Number */}
+              <View style={styles.rightContentContainer}>
+                <View style={styles.nameNumberContainer}>
+                  <Text style={styles.UserRole}>{item.name}</Text>
+                  <View style={styles.numberCircle}>
+                    <Text
+                      style={[
+                        styles.numberText,
+                        {color: workTypeColors.leftBorderColor},
+                      ]}>
+                      {item.taskCount}
+                    </Text>
+                  </View>
+                </View>
                 <TouchableOpacity
                   onPress={() =>
                     navigation.navigate('SegmentsList', {
@@ -379,10 +397,6 @@ const AssignWork = ({route, navigation}: {route: any; navigation: any}) => {
               source={require('./../../images/no-data-found.png')}
             />
             <Text style={styles.NodataHeadText}>Sorry, no result found!</Text>
-            {/* {(searchText && <Text style={styles.NodataSubText}>
-              Please try to search another keywork...
-            </Text>
-            )} */}
           </View>
         )}
       </ScrollView>
@@ -395,7 +409,7 @@ const AssignWork = ({route, navigation}: {route: any; navigation: any}) => {
         onRequestClose={() => {
           openAssignPopup(!isAssignPopOpen);
         }}>
-        <View style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.3)'}}>
+        <View style={styles.modalBackdrop}>
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <View style={styles.ModalHeader}>
@@ -411,12 +425,30 @@ const AssignWork = ({route, navigation}: {route: any; navigation: any}) => {
                 </TouchableOpacity>
               </View>
               <View style={styles.ModalInnerContainer}>
+                <View style={styles.modalTopButtonsContainer}>
+                  <TouchableOpacity
+                    style={styles.modalTopButton}
+                    onPress={() => {
+                      console.log('Update user:');
+                    }}>
+                    <Text style={styles.modalTopButtonText}>Select All</Text>
+                  </TouchableOpacity>
+
+                  <Text style={[styles.buttonSeparator, {fontSize: 19}]}>
+                    |
+                  </Text>
+
+                  <TouchableOpacity style={styles.modalTopButton}>
+                    {/* <Image style={{width:14,height:14}} source={require('./../../images/userManagement/refresh.png')} /> */}
+                    <Text style={styles.modalTopButtonText}>Refresh</Text>
+                  </TouchableOpacity>
+                </View>
                 <View>
                   <Text style={styles.AssignRoleTextHeading}>
                     Project Module: {selectedProjectModule.name}
                   </Text>
                 </View>
-                <ScrollView style={{paddingTop: 0, height: 500}}>
+                <ScrollView style={styles.modalScrollView}>
                   {userData.map((item: any, index) => (
                     <View key={index} style={styles.CategoryType}>
                       {/* Left side: Checkbox and user info */}
@@ -426,7 +458,7 @@ const AssignWork = ({route, navigation}: {route: any; navigation: any}) => {
                           disabled={item.assignmentLevel != null}
                           onValueChange={() => handleUserData(index)}
                           style={styles.checkbox}
-                          tintColors={{true: '#5A2AAF', false: '#818181'}}
+                          tintColors={{true: '#5A2AAF', false: '#000001'}}
                         />
                         <View style={styles.userInfoContainer}>
                           <Text style={styles.AssignRoleText} numberOfLines={1}>
@@ -512,50 +544,12 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#27272A',
   },
-  NodataSubText: {
-    fontSize: 16,
-    color: '#27272A',
-  },
   FlexRowCenter: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  assignTag: {
-    backgroundColor: '#5A2AAF',
-    borderRadius: 15,
-    color: '#fff',
-    paddingHorizontal: 10,
-    paddingTop: 2,
-    paddingBottom: 3,
-    marginLeft: 10,
-  },
-  assignTagText: {
-    fontSize: 12,
-    color: '#fff',
-  },
   TopHeaderFixed: {
     marginBottom: 15,
-  },
-  TopButtonContainer: {
-    flexDirection: 'row',
-    marginBottom: 15,
-    marginTop: 10,
-    justifyContent: 'flex-end',
-    gap: 10,
-  },
-  ButtonStyle: {
-    backgroundColor: '#fff',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 4,
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderColor: '#333',
-  },
-  TextStyle: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#333',
   },
   inputStyle: {
     flex: 1,
@@ -577,7 +571,6 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 0, height: 10},
     shadowOpacity: 0.25,
     shadowRadius: 20,
-    // Shadow for Android
     elevation: 10,
     alignItems: 'center',
     marginTop: -10,
@@ -620,30 +613,17 @@ const styles = StyleSheet.create({
     width: 2,
   },
   checkbox: {
-    transform: [{scaleX: 1.2}, {scaleY: 1.2}],
-  },
-  label: {
-    margin: 8,
-  },
-  UserImage: {
-    width: 45,
-    height: 45,
-    borderWidth: 2,
-    borderColor: '#BECADA',
-    borderStyle: 'solid',
-    borderRadius: 36,
-    marginRight: 15,
-  },
-  UserName: {
-    fontSize: 18,
-    fontWeight: '500',
-    color: '#27272A',
+    transform: [{scaleX: 1}, {scaleY: 1}],
   },
   UserRole: {
     fontSize: 16,
     fontWeight: '400',
     color: '#000000',
     paddingLeft: 10,
+  },
+  modalBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.3)',
   },
   centeredView: {
     marginTop: 'auto',
@@ -663,52 +643,17 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 60,
   },
-  PopHeader: {},
   modalView: {
     minHeight: 150,
   },
   ModalInnerContainer: {
     paddingHorizontal: 15,
   },
-  button: {
-    borderRadius: 4,
-    borderBottomEndRadius: 0,
-    paddingVertical: 20,
-    marginHorizontal: -15,
-  },
-  buttonOpen: {
-    backgroundColor: '#F194FF',
-  },
-  buttonAssign: {
-    backgroundColor: '#5A2AAF',
-    paddingVertical: 20,
-    paddingHorizontal: 30,
-    width: '50%',
-  },
-  SeperatorBorder: {
-    borderRightWidth: 1,
-    borderColor: '#fff',
-  },
-  DisabledButton: {
-    opacity: 0.5,
-    backgroundColor: '#5A2AAF',
-    paddingVertical: 20,
-    paddingHorizontal: 30,
-    width: '50%',
-  },
-  textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
   modalText: {
     fontSize: 18,
     fontWeight: '700',
     color: '#27272A',
     textAlign: 'center',
-  },
-  Height80: {
-    height: '80%',
   },
   Height100: {
     height: '100%',
@@ -732,7 +677,24 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 15,
   },
-
+  modalTopButtonsContainer: {
+    flexDirection: 'row-reverse',
+    paddingVertical: 5,
+  },
+  modalTopButton: {
+    paddingHorizontal: 2,
+    paddingVertical: 6,
+    marginRight: 2,
+  },
+  modalTopButtonText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#5A2AAF',
+  },
+  modalScrollView: {
+    paddingTop: 0,
+    height: 500,
+  },
   AssignRoleTextHeading: {
     fontSize: 14,
     fontWeight: '600',
@@ -757,18 +719,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     alignItems: 'center',
   },
-  userAlreadyAssigned: {
-    backgroundColor: '#5A2AAF',
-    borderRadius: 30,
-    fontSize: 12,
-    color: '#fff',
-    paddingLeft: 12,
-    marginLeft: 20,
-    width: 60,
-    paddingTop: 5,
-    paddingBottom: 5,
-    alignItems: 'center',
-  },
   assignTagButoonText: {
     fontSize: 16,
     color: '#fff',
@@ -783,61 +733,84 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     paddingVertical: 15,
     paddingHorizontal: 5,
-    minHeight: 60, // Ensure minimum height
+    minHeight: 60,
   },
-
   userInfoContainer: {
     flexDirection: 'column',
     marginLeft: 10,
-    flex: 0.6, // Reduced from flex: 1 to give more space to action buttons
-    minWidth: 120, // Ensure minimum width
+    flex: 0.6,
+    minWidth: 120,
   },
-
   actionButtonsContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    flex: 0.4, // Give explicit flex space
-    justifyContent: 'flex-end', // Align buttons to the right
-    minWidth: 100, // Ensure minimum width for buttons
+    flex: 0.4,
+    justifyContent: 'flex-end',
+    minWidth: 100,
   },
-
   updateButton: {
-    paddingHorizontal: 8,
+    paddingHorizontal: 2,
     paddingVertical: 6,
     marginRight: 2,
   },
-
   updateButtonText: {
     color: '#5A2AAF',
-    fontSize: 12, // Slightly smaller font
-    fontWeight: '500',
+    fontSize: 12,
+    fontWeight: '400',
   },
-
   deassignButton: {
-    paddingHorizontal: 8, // Reduced padding for better fit
-    paddingVertical: 2,
+    paddingHorizontal: 4,
+    marginRight: 4,
   },
-
   deassignButtonText: {
     color: '#5A2AAF',
-    fontSize: 12, // Slightly smaller font
-    fontWeight: '500',
+    fontSize: 12,
+    fontWeight: '400',
   },
-
   buttonSeparator: {
     color: '#CCCCCC',
-    fontSize: 12, // Smaller separator
+    fontSize: 13,
   },
-
   userRoleSubtext: {
     fontSize: 12,
     color: '#666666',
     marginTop: 2,
     paddingLeft: 8,
   },
-  levelIndicator: {
-    color: '#5A2AAF',
+  numberCircle: {
+    minWidth: 38,
+    height: 40,
+    borderRadius: 20,
+    paddingHorizontal: 2,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  numberText: {
+    fontSize: 16,
     fontWeight: '600',
+  },
+  rightContentContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  nameNumberContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'space-between',
   },
 });
 

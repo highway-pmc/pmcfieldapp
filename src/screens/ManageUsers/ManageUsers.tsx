@@ -10,8 +10,9 @@ import {
   Image,
   Modal,
   Pressable,
+  RefreshControl, // Add this import
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import {
   HeaderItems,
@@ -47,6 +48,7 @@ const ManageUsers = ({navigation}: {navigation: any}) => {
   const [projectHead, setProjectHead] = useState(false);
   const [userList, setUserList] = useState([]);
   const [userCategories, setUserCategories] = useState([]);
+  const [refreshing, setRefreshing] = useState(false); // Add refreshing state
 
   // Add required tab state
   const [activeTab, setActiveTab] = useState(TAB_OPTIONS.ASSIGN_CATEGORY);
@@ -64,12 +66,22 @@ const ManageUsers = ({navigation}: {navigation: any}) => {
 
   const userIcon = require('./../../images/avtar.png');
 
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    dispatch(getUsers());
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 1000);
+  }, [dispatch]);
+
   useEffect(() => {
     if (users) {
       users.forEach((u: any) => {
         u.categoriesDisplay = getUserCategoriesString(u.categories);
       });
       setUserList(users);
+      // Stop refreshing when users are loaded
+      setRefreshing(false);
     }
   }, [users, error]);
 
@@ -316,20 +328,21 @@ const ManageUsers = ({navigation}: {navigation: any}) => {
                 gap: 16,
                 marginTop: 10,
               }}>
-              <TouchableOpacity
+              {/* Commented out the refresh button as requested */}
+              {/* <TouchableOpacity
                 onPress={() => {
                   dispatch(getUsers());
                 }}
                 style={{marginRight: 0}}>
                 <Text style={{color: '#5A2AAF'}}>Refresh</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               {selectedUserId && (
                 <TouchableOpacity onPress={() => openAssignPopup(true)}>
                   <Text
                     style={{
                       color: '#5A2AAF',
-                      paddingLeft: 10,
-                      borderLeftWidth: 1,
+                      paddingLeft: selectedUserId ? 0 : 10, // Adjust padding since refresh button is commented
+                      borderLeftWidth: selectedUserId ? 0 : 1, // Remove border since refresh button is commented
                       borderColor: '#5A2AAF',
                     }}>
                     Assign
@@ -339,8 +352,19 @@ const ManageUsers = ({navigation}: {navigation: any}) => {
             </View>
           </View>
 
-          {/* User List */}
-          <ScrollView style={styles.userListContainer}>
+          {/* User List with RefreshControl */}
+          <ScrollView
+            style={styles.userListContainer}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                colors={['#5A2AAF']} // Android
+                tintColor="#5A2AAF" // iOS
+                title="Pull to refresh..." // iOS
+                titleColor="#5A2AAF" // iOS
+              />
+            }>
             <RadioButton.Group
               onValueChange={handleRadioChange}
               value={selectedUserId}>
@@ -431,7 +455,7 @@ const ManageUsers = ({navigation}: {navigation: any}) => {
                         value={item.isChecked}
                         onValueChange={() => handleUserCategories(item)}
                         style={styles.checkbox}
-                        tintColors={{true: '#5A2AAF', false: '#818181'}}
+                        tintColors={{true: '#5A2AAF', false: '#000001'}}
                       />
                       <Text style={styles.categoryText}>
                         {item.displayName}

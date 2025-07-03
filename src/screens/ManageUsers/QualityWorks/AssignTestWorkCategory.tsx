@@ -1,27 +1,65 @@
-import { View, Text, TouchableOpacity, NativeEventEmitter, StyleSheet, Image, Modal, Alert, TextInput } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { useIsFocused } from '@react-navigation/native';
-import { HeaderItems, TEST_ASSIGNMENT_LEVEL } from '../../../constants/constants';
-import { useDispatch, useSelector } from 'react-redux';
-import { clearTestClassificationsAssignmentData, getTestWorkCategory, getUsersForTestAssignment, testWorkCategoryTestAssignToUsers } from './actions';
-import { ScrollView } from 'react-native-gesture-handler';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  NativeEventEmitter,
+  StyleSheet,
+  Image,
+  Modal,
+  Alert,
+  TextInput,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {useIsFocused} from '@react-navigation/native';
+import {HeaderItems, TEST_ASSIGNMENT_LEVEL} from '../../../constants/constants';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  clearTestClassificationsAssignmentData,
+  getTestWorkCategory,
+  getUsersForTestAssignment,
+  testWorkCategoryTestAssignToUsers,
+} from './actions';
+import {ScrollView} from 'react-native-gesture-handler';
 import CheckBox from '@react-native-community/checkbox';
 import LoadingAnimation from '../../Common/LoadingAnimation';
-import { isTestInventoryClassification } from '../../../utils/Utils';
+import {isTestInventoryClassification} from '../../../utils/Utils';
 import LinearGradient from 'react-native-linear-gradient';
 
-const AssignTestWorkCategory = ({ route, navigation }: { route: any, navigation: any }) => {
-  const { testClassificationId, testClassificationName, testClassificationType, workType } = route.params;
+const AssignTestWorkCategory = ({
+  route,
+  navigation,
+}: {
+  route: any;
+  navigation: any;
+}) => {
+  const {
+    testClassificationId,
+    testClassificationName,
+    testClassificationType,
+    workType,
+  } = route.params;
 
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const { testWorkCategory, users, loadingUsers, loadingTestWorkCategory, testWorkCategoryTestAssigned, loading, error } = useSelector((state: any) => state.TestAssignment);
+  const {
+    testWorkCategory,
+    users,
+    loadingUsers,
+    loadingTestWorkCategory,
+    testWorkCategoryTestAssigned,
+    loading,
+    error,
+  } = useSelector((state: any) => state.TestAssignment);
   const [testWorkCategoriesData, setTestWorkCategoriesData] = useState([]);
-  const [selectedTestWorkCategory, setSelectedTestWorkCategory] = useState({ isChecked: false, _id: "", name: "" });
+  const [selectedTestWorkCategory, setSelectedTestWorkCategory] = useState({
+    isChecked: false,
+    _id: '',
+    name: '',
+  });
   const [userData, setUserCheckboxes] = useState([]);
   const [isAssignPopOpen, openAssignPopup] = useState(false);
   const [searchText, setSearchText] = useState('');
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();
@@ -31,35 +69,39 @@ const AssignTestWorkCategory = ({ route, navigation }: { route: any, navigation:
   useEffect(() => {
     if (testWorkCategory) {
       testWorkCategory.forEach((workCategory: any) => {
-        workCategory.isChecked = false
+        workCategory.isChecked = false;
       });
       setTestWorkCategoriesData(testWorkCategory);
     }
 
     if (users) {
       users.forEach((user: any) => {
-        user.isChecked = false
+        user.isChecked = false;
       });
       setUserCheckboxes(users);
     }
   }, [testWorkCategory, users, error]);
 
   useEffect(() => {
-    dispatch(getTestWorkCategory({
-      projectId: loggedInUser.projectId,
-      testClassificationId: testClassificationId,
-    }));
+    dispatch(
+      getTestWorkCategory({
+        projectId: loggedInUser.projectId,
+        testClassificationId: testClassificationId,
+      }),
+    );
 
-    dispatch(getUsersForTestAssignment({
-      projectId: loggedInUser.projectId,
-      workType: workType
-    }));
+    dispatch(
+      getUsersForTestAssignment({
+        projectId: loggedInUser.projectId,
+        workType: workType,
+      }),
+    );
   }, []);
 
   const handleRadioChange = (index: any) => {
     const tWorkCategory: any = testWorkCategoriesData[index];
 
-    tWorkCategory.isChecked = !tWorkCategory.isChecked
+    tWorkCategory.isChecked = !tWorkCategory.isChecked;
     setSelectedTestWorkCategory(tWorkCategory);
 
     const updatedCheckboxes: any = [...userData];
@@ -68,17 +110,44 @@ const AssignTestWorkCategory = ({ route, navigation }: { route: any, navigation:
       updatedCheckboxes.forEach((user: any) => {
         user.isChecked = false;
         delete user.assignmentLevel;
-        if (user.testAssignment?.find((wa: any) => wa.testClassification?.id === testClassificationId && wa.assignmentLevel === 1) != null) {
+        if (
+          user.testAssignment?.find(
+            (wa: any) =>
+              wa.testClassification?.id === testClassificationId &&
+              wa.assignmentLevel === 1,
+          ) != null
+        ) {
           user.assignmentLevel = TEST_ASSIGNMENT_LEVEL.LEVEL1;
           user.isChecked = true;
-        } else if (user.testAssignment?.find((wa: any) => wa.testClassification?.id === testClassificationId && wa.testWorkCategoryId === tWorkCategory._id && wa.assignmentLevel === 3)) {
+        } else if (
+          user.testAssignment?.find(
+            (wa: any) =>
+              wa.testClassification?.id === testClassificationId &&
+              wa.testWorkCategoryId === tWorkCategory._id &&
+              wa.assignmentLevel === 3,
+          )
+        ) {
           user.assignmentLevel = TEST_ASSIGNMENT_LEVEL.LEVEL3;
           user.isChecked = true;
-        } else if (user.testAssignment?.find((wa: any) => wa.testClassification?.id === testClassificationId && wa.testWorkCategoryId === tWorkCategory._id && wa.testMaterialId && wa.testTypeId && wa.assignmentLevel === 4) != null) {
+        } else if (
+          user.testAssignment?.find(
+            (wa: any) =>
+              wa.testClassification?.id === testClassificationId &&
+              wa.testWorkCategoryId === tWorkCategory._id &&
+              wa.testMaterialId &&
+              wa.testTypeId &&
+              wa.assignmentLevel === 4,
+          ) != null
+        ) {
           user.assignmentLevel = TEST_ASSIGNMENT_LEVEL.LEVEL4;
           user.isChecked = true;
         } else {
-          const testAssignment = user.testAssignment?.find((wa: any) => wa.testClassification?.id === testClassificationId && wa.testWorkCategoryId === tWorkCategory._id && wa.assignmentLevel === 2);
+          const testAssignment = user.testAssignment?.find(
+            (wa: any) =>
+              wa.testClassification?.id === testClassificationId &&
+              wa.testWorkCategoryId === tWorkCategory._id &&
+              wa.assignmentLevel === 2,
+          );
           if (testAssignment) {
             user.isChecked = true;
           }
@@ -94,7 +163,12 @@ const AssignTestWorkCategory = ({ route, navigation }: { route: any, navigation:
     const updatedCheckboxes: any = [...userData];
     const selectedUser: any = updatedCheckboxes[index];
     selectedUser.isChecked = !selectedUser.isChecked;
-    const testAssignment = selectedUser.testAssignment?.find((wa: any) => wa.testClassification?.id === testClassificationId && wa.testWorkCategoryId === selectedTestWorkCategory._id && wa.assignmentLevel === 2)
+    const testAssignment = selectedUser.testAssignment?.find(
+      (wa: any) =>
+        wa.testClassification?.id === testClassificationId &&
+        wa.testWorkCategoryId === selectedTestWorkCategory._id &&
+        wa.assignmentLevel === 2,
+    );
     if (selectedUser.isChecked) {
       if (testAssignment) {
         testAssignment.dirty = false;
@@ -118,15 +192,17 @@ const AssignTestWorkCategory = ({ route, navigation }: { route: any, navigation:
 
   useEffect(() => {
     if (testWorkCategoryTestAssigned) {
-      Alert.alert("Success", "Tests assigned successfully");
+      Alert.alert('Success', 'Tests assigned successfully');
       openAssignClose();
       dispatch(clearTestClassificationsAssignmentData());
       setTimeout(() => {
-        dispatch(getUsersForTestAssignment({
-          projectId: loggedInUser.projectId,
-          workType: workType
-        }));
-      }, 500)
+        dispatch(
+          getUsersForTestAssignment({
+            projectId: loggedInUser.projectId,
+            workType: workType,
+          }),
+        );
+      }, 500);
     }
   }, [testWorkCategoryTestAssigned, error]);
 
@@ -138,8 +214,8 @@ const AssignTestWorkCategory = ({ route, navigation }: { route: any, navigation:
     usersToBeAssign.forEach((u: any) => {
       let user: any = {
         _id: u._id,
-        delete: u.delete || false
-      }
+        delete: u.delete || false,
+      };
       const testAssignment = u.testAssignment?.find((wa: any) => wa.dirty);
       if (testAssignment) {
         user.testAssignmentId = testAssignment._id;
@@ -149,17 +225,19 @@ const AssignTestWorkCategory = ({ route, navigation }: { route: any, navigation:
     });
 
     if (usersToBeAssignArray.length) {
-      dispatch(testWorkCategoryTestAssignToUsers({
-        projectId: loggedInUser.projectId,
-        testClassificationId: testClassificationId,
-        testWorkCategoryId: selectedTestWorkCategory._id,
-        body: {
-          users: usersToBeAssignArray,
-          level: 2
-        }
-      }));
+      dispatch(
+        testWorkCategoryTestAssignToUsers({
+          projectId: loggedInUser.projectId,
+          testClassificationId: testClassificationId,
+          testWorkCategoryId: selectedTestWorkCategory._id,
+          body: {
+            users: usersToBeAssignArray,
+            level: 2,
+          },
+        }),
+      );
     }
-  }
+  };
 
   const openAssignClose = () => {
     testWorkCategoriesData.forEach((item: any) => {
@@ -173,9 +251,12 @@ const AssignTestWorkCategory = ({ route, navigation }: { route: any, navigation:
   };
 
   // unmount
-  useEffect(() => () => {
-    setSearchText('');
-  }, []);
+  useEffect(
+    () => () => {
+      setSearchText('');
+    },
+    [],
+  );
 
   const onTestWorkCategoryNextClick = (item: any) => {
     navigation.navigate('AssignTestMaterials', {
@@ -185,9 +266,9 @@ const AssignTestWorkCategory = ({ route, navigation }: { route: any, navigation:
       testWorkCategoryId: item._id,
       testWorkCategoryName: item.name,
       testWorkCategoryType: item.type,
-      workType: workType
-    })
-  }
+      workType: workType,
+    });
+  };
 
   return (
     <View style={styles.Container}>
@@ -240,21 +321,21 @@ const AssignTestWorkCategory = ({ route, navigation }: { route: any, navigation:
                       value={item.isChecked}
                       onValueChange={() => handleRadioChange(index)}
                       style={styles.checkbox}
-                      tintColors={{true: '#0F56B3', false: '#818181'}}
+                      tintColors={{true: '#0F56B3', false: '#000001'}}
                     />
                   )}
                   <View>
                     <Text style={styles.categoryText}>{item.name}</Text>
                   </View>
                 </View>
-                <TouchableOpacity
+                {/* <TouchableOpacity
                   style={styles.arrowContainer}
                   onPress={() => onTestWorkCategoryNextClick(item)}>
                   <Image
                     style={[styles.CloseIcon, {height: 20, width: 20}]}
                     source={require('./../../../images/right-arrow.png')}
                   />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </LinearGradient>
             </View>
           ))}
@@ -283,30 +364,79 @@ const AssignTestWorkCategory = ({ route, navigation }: { route: any, navigation:
                 </TouchableOpacity>
               </View>
               <View style={styles.ModalInnerContainer}>
+                <View style={styles.modalTopButtonsContainer}>
+                  <TouchableOpacity
+                    style={styles.modalTopButton}
+                    onPress={() => {
+                      console.log('Update user:');
+                    }}>
+                    <Text style={styles.modalTopButtonText}>Select All</Text>
+                  </TouchableOpacity>
+
+                  <Text style={[styles.buttonSeparator, {fontSize: 19}]}>
+                    |
+                  </Text>
+
+                  <TouchableOpacity
+                    style={styles.modalTopButton}
+                    onPress={() => {
+                      console.log('Deassign user:');
+                    }}>
+                    <Text style={styles.modalTopButtonText}>Refresh</Text>
+                  </TouchableOpacity>
+                </View>
                 <View>
-                  <Text style={styles.AssignRoleText}>
+                  <Text style={styles.AssignRoleTextHeading}>
                     Work Category: {selectedTestWorkCategory.name}
                   </Text>
                 </View>
                 <ScrollView style={{paddingTop: 10, height: 500}}>
                   {userData.map((item: any, index) => (
-                    <View style={styles.CategoryType}>
+                    <View key={index} style={styles.CategoryType}>
+                      {/* Left side: Checkbox and user info */}
                       <View style={styles.FlexRowCenter}>
                         <CheckBox
                           value={item.isChecked}
                           disabled={item.assignmentLevel != null}
                           onValueChange={() => handleUserData(index)}
                           style={styles.checkbox}
-                          tintColors={{true: '#5A2AAF', false: '#818181'}}
+                          tintColors={{true: '#5A2AAF', false: '#000001'}}
                         />
-                        <View style={{flexDirection: 'column'}}>
-                          <Text style={styles.AssignRoleText}>{item.name}</Text>
-                          {item.assignmentLevel ? (
-                            <Text style={styles.userAlreadyAssigned}>
+                        <View style={styles.userInfoContainer}>
+                          <Text style={styles.AssignRoleText} numberOfLines={1}>
+                            {item.name}
+                          </Text>
+                          {item.assignmentLevel && (
+                            <Text
+                              style={styles.userRoleSubtext}
+                              numberOfLines={1}>
                               {item.assignmentLevel}
                             </Text>
-                          ) : null}
+                          )}
                         </View>
+                      </View>
+
+                      {/* Right side: Action buttons */}
+                      <View style={styles.actionButtonsContainer}>
+                        <TouchableOpacity
+                          style={styles.updateButton}
+                          onPress={() => {
+                            console.log('Update user:', item.name);
+                          }}>
+                          <Text style={styles.updateButtonText}>Update</Text>
+                        </TouchableOpacity>
+
+                        <Text style={styles.buttonSeparator}>|</Text>
+
+                        <TouchableOpacity
+                          style={styles.deassignButton}
+                          onPress={() => {
+                            console.log('Deassign user:', item.name);
+                          }}>
+                          <Text style={styles.deassignButtonText}>
+                            Deassign
+                          </Text>
+                        </TouchableOpacity>
                       </View>
                     </View>
                   ))}
@@ -328,7 +458,7 @@ const AssignTestWorkCategory = ({ route, navigation }: { route: any, navigation:
         }></LoadingAnimation>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   Container: {
@@ -391,7 +521,7 @@ const styles = StyleSheet.create({
   // Add these new styles to the StyleSheet
   categoryItemContainer: {
     marginBottom: 15,
-    borderRadius: 16,
+    borderRadius: 10,
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: '#ABBEFD',
@@ -402,15 +532,15 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 20,
     paddingHorizontal: 15,
-    borderRadius: 16,
+    borderRadius: 10,
     position: 'relative',
   },
   leftBorder: {
     paddingVertical: 3,
     position: 'absolute',
     left: 0,
-    top: 10,
-    bottom: 10,
+    top: '25%',
+    bottom: '25%',
     zIndex: 100,
     width: 2,
     backgroundColor: '#5A7EF8',
@@ -488,7 +618,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   checkbox: {
-    transform: [{scaleX: 1.2}, {scaleY: 1.2}],
+    transform: [{scaleX: 1}, {scaleY: 1}],
   },
   label: {
     margin: 8,
@@ -536,6 +666,10 @@ const styles = StyleSheet.create({
   },
   ModalInnerContainer: {
     paddingHorizontal: 15,
+  },
+  modalTopButtonsContainer: {
+    flexDirection: 'row-reverse',
+    paddingVertical: 5,
   },
   button: {
     borderRadius: 4,
@@ -607,9 +741,16 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     paddingVertical: 10,
   },
+  AssignRoleTextHeading: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#27272A',
+    marginLeft: 5,
+    marginTop: 10,
+  },
   AssignRoleText: {
-    fontSize: 16,
-    fontWeight: '400',
+    fontSize: 14,
+    fontWeight: '600',
     color: '#27272A',
     marginLeft: 5,
   },
@@ -639,6 +780,58 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: '500',
   },
+  modalTopButtonText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#5A2AAF',
+  },
+  buttonSeparator: {
+    color: '#CCCCCC',
+    fontSize: 13,
+  },
+  modalTopButton: {
+    paddingHorizontal: 2,
+    paddingVertical: 6,
+    marginRight: 2,
+  },
+  userInfoContainer: {
+    flexDirection: 'column',
+    marginLeft: 10,
+    flex: 0.6,
+    minWidth: 120,
+  },
+  userRoleSubtext: {
+    fontSize: 12,
+    color: '#666666',
+    marginTop: 2,
+    paddingLeft: 8,
+  },
+  actionButtonsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 0.4,
+    justifyContent: 'flex-end',
+    minWidth: 100,
+  },
+  updateButtonText: {
+    color: '#5A2AAF',
+    fontSize: 12,
+    fontWeight: '400',
+  },
+  updateButton: {
+    paddingHorizontal: 2,
+    paddingVertical: 6,
+    marginRight: 2,
+  },
+  deassignButton: {
+    paddingHorizontal: 4,
+    marginRight: 4,
+  },
+  deassignButtonText: {
+    color: '#5A2AAF',
+    fontSize: 12,
+    fontWeight: '400',
+  },
 });
 
-export default AssignTestWorkCategory
+export default AssignTestWorkCategory;

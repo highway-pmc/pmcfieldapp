@@ -293,11 +293,11 @@ export const CARD_COLORS_ARRAY = [
   '#B72CB2',
 ];
 export const CARD_ICONS = [
-  require('./../../images/source-approval.png'),
-  require('./../../images/procurement-detail.png'),
-  require('./../../images/lab-test.png'),
-  require('./../../images/lab-test.png'),
-  require('./../../images/upload-mtcs.png'),
+  require('./../../images/source-approval-icon.png'),
+  require('./../../images/microscope.png'),
+  require('./../../images/tube.png'),
+  require('./../../images/tube.png'),
+  require('./../../images/procurement.png'),
   require('./../../images/mix-design.png'),
   require('./../../images/equipment-calibration.png'),
 ];

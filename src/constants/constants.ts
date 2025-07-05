@@ -473,6 +473,7 @@ export const PROJECT_TYPE = {
   STORES: 'stores',
   PRODUCTION: 'production',
   EQUIPMENTS: 'equipments',
+  INITIAL_SURVEY: 'initial-survey',
 };
 
 export const SEGMENT_TYPES = {

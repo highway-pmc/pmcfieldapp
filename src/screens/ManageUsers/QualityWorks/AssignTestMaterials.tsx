@@ -251,7 +251,7 @@ const AssignTestMaterials = ({
       );
     }
   };
-
+ 
   const openAssignClose = () => {
     testMaterialsData.forEach((item: any) => {
       item.isChecked = false;
@@ -421,7 +421,7 @@ const AssignTestMaterials = ({
                         value={item.isChecked}
                         onValueChange={() => handleRadioChange(index)}
                         style={styles.checkbox}
-                        tintColors={{true: '#5A2AAF', false: '#818181'}}
+                        tintColors={{true: '#5A2AAF', false: '#000001'}}
                       />
                     )}
                     <View style={{flex: 1}}>
@@ -489,7 +489,7 @@ const AssignTestMaterials = ({
                           disabled={item.assignmentLevel != null}
                           onValueChange={() => handleUserData(index)}
                           style={styles.checkbox}
-                          tintColors={{true: '#5A2AAF', false: '#818181'}}
+                          tintColors={{true: '#5A2AAF', false: '#000001'}}
                         />
                         <View style={{flexDirection: 'row'}}>
                           <Text style={styles.AssignRoleText}>{item.name}</Text>
@@ -677,7 +677,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   checkbox: {
-    transform: [{scaleX: 1.2}, {scaleY: 1.2}],
+    transform: [{scaleX: 1}, {scaleY: 1}],
   },
   label: {
     margin: 8,

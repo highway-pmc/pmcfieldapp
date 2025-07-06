@@ -17,19 +17,18 @@ import LinearGradient from 'react-native-linear-gradient';
 import TileCardComponent from '../Common/TileCardComponent';
 
 // Add your WORK_MODULE_TYPE data
-export const WORK_MODULE_TYPE = [
+export const SURVEY_MODULE_TYPE = [
   {
     title: 'Initial Survey',
-    workType: PROJECT_TYPE.STRUCTURE_WORK,
+    workType: 'initial-survey',
     backgroundColor: '#ABBEFD',
     imageBg: '#5C5959',
     linearLight: '#FFFFFF',
     linearDark: '#E0E7FF',
     generatedTask: 22,
     inProgressTask: 25,
-    closedTask: 30,
+    closedTask: 3,
     rejected: 43,
-    discription: 'The Backbone of Successful Execution',
     src: 'initialSurvey',
     borderColor: '#ABBEFD',
   },
@@ -40,11 +39,10 @@ export const WORK_MODULE_TYPE = [
     imageBg: '#5C5959',
     linearLight: '#E5E5E5',
     linearDark: '#8B8B8B',
-    generatedTask: 22,
+    generatedTask: 2,
     inProgressTask: 25,
     closedTask: 30,
     rejected: 43,
-    discription: 'The Backbone of Successful Execution',
     src: 'structure',
     borderColor: '#8B8B8B',
   },
@@ -56,10 +54,9 @@ export const WORK_MODULE_TYPE = [
     linearLight: '#FBD0C1',
     linearDark: '#EC825C',
     generatedTask: 22,
-    inProgressTask: 25,
+    inProgressTask: 5,
     closedTask: 30,
-    rejected: 43,
-    discription: 'Keeping Roads Safe, Smooth, and Reliable',
+    rejected: 3,
     src: 'highway',
     borderColor: '#EC835D',
   },
@@ -71,11 +68,10 @@ export const WORK_MODULE_TYPE = [
     border: '#D0EDF3',
     linearLight: '#DCFEE9',
     linearDark: '#4FD39D',
-    generatedTask: 22,
-    inProgressTask: 25,
-    closedTask: 30,
-    rejected: 43,
-    discription: 'Bridging Gaps in the Workflow',
+    generatedTask: 2,
+    inProgressTask: 5,
+    closedTask: 0,
+    rejected: 4,
     src: 'other',
     borderColor: '#51D49E',
   },
@@ -101,10 +97,12 @@ const AssignSurveyUsers = () => {
   );
 
   // Handle work type press
-  const onPressWorkType = (workType: string) => {
+  const onPressWorkType = (workType: any) => {
     console.log('Work type pressed:', workType);
-    // Add your navigation or action logic here
-    // navigation.navigate('WorkTypeScreen', { workType });
+    navigation.navigate('AssignWork', {
+      workType: workType,
+      taskCategory: 'survey',
+    });
   };
 
   // unmount
@@ -139,7 +137,7 @@ const AssignSurveyUsers = () => {
       <ScrollView style={styles.Height100}>
         {/* Render TileCardComponents */}
         <View style={styles.tileCardsContainer}>
-          {WORK_MODULE_TYPE.map((role, index) => (
+          {SURVEY_MODULE_TYPE.map((role, index) => (
             <TileCardComponent
               key={index}
               title={role.title}
@@ -331,7 +329,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   checkbox: {
-    transform: [{scaleX: 1.2}, {scaleY: 1.2}],
+    transform: [{scaleX: 1}, {scaleY: 1}],
   },
   label: {
     margin: 8,

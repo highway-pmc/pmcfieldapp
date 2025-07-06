@@ -473,6 +473,7 @@ export const PROJECT_TYPE = {
   STORES: 'stores',
   PRODUCTION: 'production',
   EQUIPMENTS: 'equipments',
+  INITIAL_SURVEY: 'initial-survey',
 };
 
 export const SEGMENT_TYPES = {
@@ -537,6 +538,10 @@ export const SEGMENT_TYPES_DISPLAY: any = {
   'crash-barrier': 'Crash Barrier',
   'transverse-pipe-drain': 'Transverse Pipe Drain',
   median: 'Madian',
+  'control-points': 'Control Points',
+  alignment: 'Alignment',
+  benchmarks: 'Benchmarks',
+  ogl: 'OGL',
 };
 
 export const RFIs_TYPE = {

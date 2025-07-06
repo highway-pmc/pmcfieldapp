@@ -76,6 +76,7 @@ const AssignTestClassification = () => {
       testClassifications.forEach((tClassi: any) => {
         tClassi.isChecked = false;
       });
+      console.log('=======>', testClassifications);
       setTestClassificationsData(testClassifications);
     }
 
@@ -193,7 +194,18 @@ const AssignTestClassification = () => {
 
     setUserCheckboxes(updatedCheckboxes);
   };
-
+  const getTestClassificationIcon = (type: any) => {
+    switch (type) {
+      case 'field-lab-test':
+        return require('./../../../images/userManagement/field-lab-test.png');
+      case 'third-party-lab-test':
+        return require('./../../../images/userManagement/third-party-lab-test.png');
+      case 'mix-design':
+        return require('./../../../images/userManagement/mix-design.png');
+      default:
+        return require('./../../../images/userManagement/castingYard.png');
+    }
+  };
   useEffect(() => {
     if (testClassificationsTestAssigned) {
       Alert.alert('Success', 'Tests assigned successfully');
@@ -258,7 +270,7 @@ const AssignTestClassification = () => {
             <Text style={styles.errorText}>{error}</Text>
           </View>
         )}
-        <View style={styles.SectionStyle}>
+        {/* <View style={styles.SectionStyle}>
           <Image
             source={require('./../../../images/search-icon.png')}
             style={styles.ImageSearch}
@@ -276,7 +288,7 @@ const AssignTestClassification = () => {
               setSearchText(text);
             }}
           />
-        </View>
+        </View> */}
       </View>
       <ScrollView style={styles.Height100}>
         {testClassificationsData
@@ -289,43 +301,38 @@ const AssignTestClassification = () => {
               return true;
             }
           })
-          .map((item: any, index) => (
-            <View style={styles.categoryItemContainer}>
+          .map((item: any) => (
+            <View key={item._id} style={styles.categoryItemContainer}>
               <LinearGradient
-                colors={['#FFFFFF', '#E0E7FF']}
+                colors={['#FEFEFF', '#E1E8FF']}
                 start={{x: 0, y: 0}}
                 end={{x: 1, y: 0}}
                 style={styles.gradientContainer}>
-                <View style={styles.leftBorder} />
-                <View style={styles.FlexRowCenter}>
-                  <CheckBox
-                    value={item.isChecked}
-                    onValueChange={() => handleRadioChange(index)}
-                    style={styles.checkbox}
-                    tintColors={{true: '#5A2AAF', false: '#818181'}}
-                  />
-                  <View>
-                    <Text style={styles.categoryText}>{item.name}</Text>
-                  </View>
-                </View>
-                <View>
-                  <TouchableOpacity
-                    style={styles.arrowContainer}
-                    onPress={() =>
-                      navigation.navigate('AssignTestWorkCategory', {
-                        testClassificationId: item._id,
-                        testClassificationName: item.name,
-                        workType: workType,
-                      })
-                    }>
-                    {!isTestInventoryClassification(item.type) && (
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate('AssignTestWorkCategory', {
+                      testClassificationId: item._id,
+                      testClassificationName: item.name,
+                      workType: workType,
+                    })
+                  }>
+                  {!isTestInventoryClassification(item.type) && (
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        width: '100%',
+                      }}>
+                      <Text style={styles.categoryText}>{item.name}</Text>
+
                       <Image
-                        style={[styles.CloseIcon, {height: 20, width: 20}]}
-                        source={require('./../../../images/right-arrow.png')}
+                        source={getTestClassificationIcon(item.type)}
+                        style={styles.testClassificationIcon}
                       />
-                    )}
-                  </TouchableOpacity>
-                </View>
+                    </View>
+                  )}
+                </TouchableOpacity>
               </LinearGradient>
             </View>
           ))}
@@ -384,7 +391,7 @@ const AssignTestClassification = () => {
                           disabled={item.assignmentLevel != null}
                           onValueChange={() => handleUserData(index)}
                           style={styles.checkbox}
-                          tintColors={{true: '#5A2AAF', false: '#818181'}}
+                          tintColors={{true: '#5A2AAF', false: '#000001'}}
                         />
                         <View style={{flexDirection: 'row'}}>
                           <Text style={styles.AssignRoleText}>{item.name}</Text>
@@ -538,7 +545,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   checkbox: {
-    transform: [{scaleX: 1.2}, {scaleY: 1.2}],
+    transform: [{scaleX: 1}, {scaleY: 1}],
   },
   label: {
     margin: 8,
@@ -693,19 +700,9 @@ const styles = StyleSheet.create({
   },
   categoryItemContainer: {
     marginBottom: 15,
-    borderRadius: 16,
-    overflow: 'hidden',
+    borderRadius: 5,
     borderWidth: 1,
-    borderColor: '#ABBEFD',
-  },
-  gradientContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 20,
-    paddingHorizontal: 15,
-    borderRadius: 16,
-    position: 'relative',
+    borderColor: '#CDD6F6',
   },
   leftBorder: {
     paddingVertical: 3,
@@ -725,6 +722,26 @@ const styles = StyleSheet.create({
   },
   arrowContainer: {
     alignSelf: 'center',
+  },
+  contentContainer: {
+    flex: 1,
+  },
+  iconAndArrowContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 15,
+  },
+  testClassificationIcon: {
+    width: 70,
+    height: 70,
+  },
+  gradientContainer: {
+    paddingVertical: 20,
+    paddingHorizontal: 15,
+    borderRadius: 5,
+    position: 'relative',
+    minHeight: 80,
+    width: '100%',
   },
 });
 

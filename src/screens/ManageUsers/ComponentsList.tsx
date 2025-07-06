@@ -11,7 +11,12 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useIsFocused} from '@react-navigation/native';
-import {HeaderItems, WORK_ASSIGNMENT_LEVEL} from '../../constants/constants';
+import {
+  HeaderItems,
+  PROJECT_TYPE,
+  USER_CATEGORY,
+  WORK_ASSIGNMENT_LEVEL,
+} from '../../constants/constants';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   clearProjectModulesWorkAssignmentData,
@@ -26,10 +31,11 @@ import {ScrollView} from 'react-native-gesture-handler';
 import CheckBox from '@react-native-community/checkbox';
 import LoadingAnimation from '../Common/LoadingAnimation';
 import CardComponent from '../Common/CardComponent';
-import {commonComponentTypes, getWorkTypeColors} from '../Common/CommonConstantsTypes';
+import {
+  commonComponentTypes,
+  getWorkTypeColors,
+} from '../Common/CommonConstantsTypes';
 import LinearGradient from 'react-native-linear-gradient';
-
-
 
 const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
   const {
@@ -40,7 +46,7 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
     segmentId,
     segmentName,
     workType,
-    taskCategory
+    taskCategory,
   } = route.params;
 
   // Get colors based on work type
@@ -96,14 +102,17 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
         projectId: loggedInUser.projectId,
         projectModuleId: projectModuleId,
         segmentId: segmentId,
-        taskCategory: taskCategory
+        taskCategory: taskCategory,
       }),
     );
 
     dispatch(
       getUsersForWorkAssignment({
         projectId: loggedInUser.projectId,
-        workType: workType,
+        workType:
+          workType === PROJECT_TYPE.INITIAL_SURVEY
+            ? USER_CATEGORY.SURVEY_WORK
+            : workType,
       }),
     );
   }, []);
@@ -151,7 +160,7 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
               wa.segmentId === segmentId &&
               wa.componentId === component._id &&
               wa.assignmentLevel === 4 &&
-              wa.assignmentLevelFrom === 4
+              wa.assignmentLevelFrom === 4,
           )
         ) {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL4;
@@ -163,10 +172,10 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
               wa.segmentId === segmentId &&
               wa.componentId === component._id &&
               wa.assignmentLevel === 5 &&
-              wa.assignmentLevelFrom === 5
+              wa.assignmentLevelFrom === 5,
           )
         ) {
-          console.log('=================', JSON.stringify(user.workAssignment))
+          console.log('=================', JSON.stringify(user.workAssignment));
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL5;
           user.isChecked = true;
         } /*else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.assignmentLevel === 5)) {
@@ -232,7 +241,9 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
         dispatch(
           getUsersForWorkAssignment({
             projectId: loggedInUser.projectId,
-            workType: workType,
+            workType: workType === PROJECT_TYPE.INITIAL_SURVEY
+                        ? USER_CATEGORY.SURVEY_WORK
+                        : workType,
           }),
         );
       }, 500);
@@ -320,7 +331,7 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
           type: type,
           subType: subType,
           workType: workType,
-          taskCategory: taskCategory
+          taskCategory: taskCategory,
         });
       } else if (nextLevel.nextLevel === 'task') {
         navigation.navigate('AssignTasks', {
@@ -333,7 +344,7 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
           type: type,
           subType: subType,
           workType: workType,
-          taskCategory: taskCategory
+          taskCategory: taskCategory,
         });
       }
     }
@@ -365,13 +376,14 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
   const repeatedComponentTypes = commonComponentTypes.map(
     (type: any, index: any) => {
       const filteredItems = componentType.filter(item => item.type === type);
-
+      if (filteredItems.length === 0) {
+        return null;
+      }
+      console.log('Filtered Items:', filteredItems);
       return (
         filteredItems.length > 0 && (
           <>
-            <View
-              style={styles.separatTaskType}
-              key={type}>
+            <View style={styles.separatTaskType} key={type}>
               <View style={styles.titleTextForGrouping}>
                 <Text
                   style={[
@@ -400,26 +412,100 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
                       {backgroundColor: workTypeColors.leftBorderColor},
                     ]}
                   />
-                  <View style={styles.FlexRowCenter}>
-                    <CheckBox
-                      value={item.isChecked}
-                      onValueChange={() =>
-                        handleRadioChange(filteredItems.indexOf(item))
-                      }
-                      style={styles.checkbox}
-                      tintColors={{true: '#5A2AAF', false: '#818181'}}
-                    />
-                    <View>
-                      <Text style={styles.UserRole}>{item.name || ''}</Text>
+
+                  {/* Main content row */}
+                  <View style={styles.mainContentRow}>
+                    <View style={styles.FlexRowCenter}>
+                      <CheckBox
+                        value={item.isChecked}
+                        onValueChange={() =>
+                          handleRadioChange(filteredItems.indexOf(item))
+                        }
+                        style={styles.checkbox}
+                        tintColors={{true: '#5A2AAF', false: '#000001'}}
+                      />
+
+                      {/* Updated layout for name and task count */}
+                      <View>
+                        <Text style={styles.UserRole}>{item.name || ''}</Text>
+                      </View>
+                    </View>
+                    <View style={styles.FlexRowCenter}>
+                      <View style={styles.numberCircle}>
+                        <Text
+                          style={[
+                            styles.numberText,
+                            {color: workTypeColors.leftBorderColor},
+                          ]}>
+                          {item.taskCount}
+                        </Text>
+                      </View>
+                      <TouchableOpacity
+                        onPress={() => onComponentNextClick(item)}>
+                        <Image
+                          style={styles.CloseIcon}
+                          source={require('./../../images/right-arrow.png')}
+                        />
+                      </TouchableOpacity>
                     </View>
                   </View>
-                  <View>
+
+                  {/* Dashed line separator */}
+                  <View
+                    style={[
+                      styles.dashedLine,
+                      {borderBottomColor: workTypeColors.leftBorderColor},
+                    ]}
+                  />
+
+                  {/* Three buttons row */}
+                  <View style={styles.buttonsContainer}>
                     <TouchableOpacity
-                      onPress={() => onComponentNextClick(item)}>
-                      <Image
-                        style={styles.CloseIcon}
-                        source={require('./../../images/right-arrow.png')}
-                      />
+                      style={styles.actionButton}
+                      onPress={() => {
+                        console.log(
+                          'Split by Chainage pressed for:',
+                          item.name,
+                        );
+                        // Add your split by chainage logic here
+                      }}>
+                      <View style={styles.buttonContent}>
+                        <Image
+                          style={styles.buttonIcon}
+                          source={require('./../../images/userManagement/spliting.png')} // Replace with your actual icon
+                        />
+                        <Text style={styles.buttonText}>Split by Chainage</Text>
+                      </View>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                      style={styles.actionButton}
+                      onPress={() => {
+                        console.log('Split by Layer pressed for:', item.name);
+                        // Add your split by layer logic here
+                      }}>
+                      <View style={styles.buttonContent}>
+                        <Image
+                          style={styles.buttonIcon}
+                          source={require('./../../images/userManagement/spliting.png')} // Replace with your actual icon
+                        />
+                        <Text style={styles.buttonText}>Split by Layer</Text>
+                      </View>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                      style={styles.actionButton}
+                      onPress={() => {
+                        console.log('Delete pressed for:', item.name);
+                        // Add your delete logic here
+                      }}>
+                      <View style={styles.buttonContent}>
+                        <Image
+                          style={styles.buttonIcon}
+                          source={require('./../../images/userManagement/delete.png')} // Replace with your actual icon
+                        />
+                        <Text style={styles.buttonText}>Delete</Text>
+                      </View>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -462,16 +548,21 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
         style={styles.Height100}
         contentContainerStyle={commonStyles.paddingBottom20}>
         <>
-          <View style={{paddingTop: 15}}>
+          <View style={{paddingVertical: 10}}>
             <Text
-              style={[styles.titleText, {color: workTypeColors.titleColor,fontWeight: '700'}]}>
-                {filteredCategory[0]?.segmentCategory !== 'NA'
-                ? filteredCategory[0]?.segmentCategory?.charAt(0).toUpperCase() + filteredCategory[0]?.segmentCategory?.slice(1)
-                : (filteredCategory[0]?.name
-                  ? filteredCategory[0]?.name.charAt(0).toUpperCase() + filteredCategory[0]?.name.slice(1)
-                  : ''
-                  )
-                }
+              style={[
+                styles.titleText,
+                {color: workTypeColors.titleColor, fontWeight: '700'},
+              ]}>
+              {filteredCategory[0]?.segmentCategory !== 'NA'
+                ? filteredCategory[0]?.segmentCategory
+                    ?.charAt(0)
+                    .toUpperCase() +
+                  filteredCategory[0]?.segmentCategory?.slice(1)
+                : filteredCategory[0]?.name
+                ? filteredCategory[0]?.name.charAt(0).toUpperCase() +
+                  filteredCategory[0]?.name.slice(1)
+                : ''}
             </Text>
           </View>
           {repeatedComponentTypes}
@@ -485,7 +576,7 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
         onRequestClose={() => {
           openAssignPopup(!isAssignPopOpen);
         }}>
-        <View style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.3)'}}>
+        <View style={styles.modalBackdrop}>
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <View style={styles.ModalHeader}>
@@ -501,30 +592,83 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
                 </TouchableOpacity>
               </View>
               <View style={styles.ModalInnerContainer}>
+                <View style={styles.modalTopButtonsContainer}>
+                  <TouchableOpacity
+                    style={styles.modalTopButton}
+                    onPress={() => {
+                      console.log('Select All users');
+                      // Add logic to select all users
+                    }}>
+                    <Text style={styles.modalTopButtonText}>Select All</Text>
+                  </TouchableOpacity>
+
+                  <Text style={[styles.buttonSeparator, {fontSize: 19}]}>
+                    |
+                  </Text>
+
+                  <TouchableOpacity
+                    style={styles.modalTopButton}
+                    onPress={() => {
+                      console.log('Refresh users');
+                      // Add logic to refresh users
+                    }}>
+                    <Text style={styles.modalTopButtonText}>Refresh</Text>
+                  </TouchableOpacity>
+                </View>
                 <View>
                   <Text style={styles.AssignRoleTextHeading}>
                     Component: {selectedComponent.name}
                   </Text>
                 </View>
-                <ScrollView style={{paddingTop: 0, height: 500}}>
+                <ScrollView style={styles.modalScrollView}>
                   {userData.map((item: any, index) => (
-                    <View style={styles.CategoryType} key={index}>
+                    <View key={index} style={styles.CategoryType}>
+                      {/* Left side: Checkbox and user info */}
                       <View style={styles.FlexRowCenter}>
                         <CheckBox
                           value={item.isChecked}
                           disabled={item.assignmentLevel != null}
                           onValueChange={() => handleUserData(index)}
                           style={styles.checkbox}
-                          tintColors={{true: '#5A2AAF', false: '#818181'}}
+                          tintColors={{true: '#5A2AAF', false: '#000001'}}
                         />
-                        <View style={{flexDirection: 'row'}}>
-                          <Text style={styles.AssignRoleText}>{item.name}</Text>
-                          {item.assignmentLevel ? (
-                            <Text style={styles.userAlreadyAssigned}>
+                        <View style={styles.userInfoContainer}>
+                          <Text style={styles.AssignRoleText} numberOfLines={1}>
+                            {item.name}
+                          </Text>
+                          {item.assignmentLevel && (
+                            <Text
+                              style={styles.userRoleSubtext}
+                              numberOfLines={1}>
                               {item.assignmentLevel}
                             </Text>
-                          ) : null}
+                          )}
                         </View>
+                      </View>
+
+                      {/* Right side: Action buttons */}
+                      <View style={styles.actionButtonsContainer}>
+                        <TouchableOpacity
+                          style={styles.updateButton}
+                          onPress={() => {
+                            console.log('Update user:', item.name);
+                            // Add logic to update user assignment
+                          }}>
+                          <Text style={styles.updateButtonText}>Update</Text>
+                        </TouchableOpacity>
+
+                        <Text style={styles.buttonSeparator}>|</Text>
+
+                        <TouchableOpacity
+                          style={styles.deassignButton}
+                          onPress={() => {
+                            console.log('Deassign user:', item.name);
+                            // Add logic to deassign user
+                          }}>
+                          <Text style={styles.deassignButtonText}>
+                            Deassign
+                          </Text>
+                        </TouchableOpacity>
                       </View>
                     </View>
                   ))}
@@ -552,7 +696,7 @@ const styles = StyleSheet.create({
   Container: {
     flexDirection: 'column',
     paddingVertical: 10,
-    padding: 15,
+    padding: 8,
     paddingBottom: 35,
   },
   ErrorSectionStyle: {
@@ -657,9 +801,10 @@ const styles = StyleSheet.create({
   UserCategory: {
     backgroundColor: '#fff',
     borderRadius: 12,
-    padding: 20,
-    marginTop: 15,
-    flexDirection: 'row',
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+    marginTop: 8,
+    flexDirection: 'column',
     alignContent: 'center',
     justifyContent: 'space-between',
     marginLeft: 12,
@@ -680,13 +825,13 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
     position: 'absolute',
     left: 0,
-    top: 10,
-    bottom: 10,
+    top: '15%',
+    bottom: '15%',
     zIndex: 100,
     width: 2,
   },
   checkbox: {
-    transform: [{scaleX: 1.2}, {scaleY: 1.2}],
+    transform: [{scaleX: 1}, {scaleY: 1}],
   },
   label: {
     margin: 8,
@@ -710,6 +855,15 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     color: '#000000',
     paddingLeft: 10,
+  },
+  contentContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  modalBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.3)',
   },
   centeredView: {
     marginTop: 'auto',
@@ -804,7 +958,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: '#EBEBF0',
     borderStyle: 'solid',
-    paddingVertical: 10,
+    paddingVertical: 15,
+    paddingHorizontal: 5,
+    minHeight: 60,
   },
   AssignRoleTextHeading: {
     fontSize: 14,
@@ -830,6 +986,11 @@ const styles = StyleSheet.create({
     marginTop: 10,
     alignItems: 'center',
   },
+  assignTagButoonText: {
+    fontSize: 16,
+    color: '#fff',
+    fontWeight: '500',
+  },
   userAlreadyAssigned: {
     backgroundColor: '#5A2AAF',
     borderRadius: 30,
@@ -842,21 +1003,139 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     alignItems: 'center',
   },
-  assignTagButoonText: {
-    fontSize: 16,
-    color: '#fff',
-    fontWeight: '500',
-  },
   separatTaskType: {
     marginBottom: 10,
   },
-  titleTextForGrouping: {
-    paddingBottom: 10,
-  },
+  titleTextForGrouping: {},
   titleText: {
     fontSize: 18,
     fontWeight: '400',
     paddingLeft: 12,
+    paddingBottom: 2,
+  },
+  modalTopButtonsContainer: {
+    flexDirection: 'row-reverse',
+    paddingVertical: 5,
+  },
+  modalTopButton: {
+    paddingHorizontal: 2,
+    paddingVertical: 6,
+    marginRight: 2,
+  },
+  modalTopButtonText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#5A2AAF',
+  },
+  modalScrollView: {
+    paddingTop: 0,
+    height: 500,
+  },
+  userInfoContainer: {
+    flexDirection: 'column',
+    marginLeft: 10,
+    flex: 0.6,
+    minWidth: 120,
+  },
+  actionButtonsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 0.4,
+    justifyContent: 'flex-end',
+    minWidth: 100,
+  },
+  updateButton: {
+    paddingHorizontal: 2,
+    paddingVertical: 6,
+    marginRight: 2,
+  },
+  updateButtonText: {
+    color: '#5A2AAF',
+    fontSize: 12,
+    fontWeight: '400',
+  },
+  deassignButton: {
+    paddingHorizontal: 4,
+    marginRight: 4,
+  },
+  deassignButtonText: {
+    color: '#5A2AAF',
+    fontSize: 12,
+    fontWeight: '400',
+  },
+  buttonSeparator: {
+    color: '#CCCCCC',
+    fontSize: 13,
+  },
+  userRoleSubtext: {
+    fontSize: 12,
+    color: '#666666',
+    marginTop: 2,
+    paddingLeft: 8,
+  },
+  numberCircle: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  numberText: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  mainContentRow: {
+    flexDirection: 'row',
+    alignContent: 'center',
+    justifyContent: 'space-between',
+    paddingBottom: 10,
+  },
+  dashedLine: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#CCCCCC',
+    borderStyle: 'dashed',
+    marginVertical: 10,
+    marginHorizontal: -10,
+  },
+  buttonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    gap: 4,
+    paddingTop: 5,
+  },
+  actionButton: {
+    //backgroundColor: '#fff',
+    borderRadius: 20,
+    paddingHorizontal: 6,
+    paddingVertical: 5,
+    borderWidth: 1,
+    borderColor: '#5A2AAF',
+  },
+  buttonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 2,
+  },
+  buttonIcon: {
+    width: 15,
+    height: 15,
+  },
+  buttonText: {
+    fontSize: 12,
+    color: '#5A2AAF',
+    fontWeight: '500',
   },
 });
 

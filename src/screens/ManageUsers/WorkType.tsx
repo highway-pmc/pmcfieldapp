@@ -313,7 +313,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     minWidth: 100,
-    color: '#6666664D',
+    color: '#666666BF',
   },
   activeTab: {
     borderCurve: 'circular',
@@ -325,11 +325,12 @@ const styles = StyleSheet.create({
   },
   activeFontColor: {
     color: '#5A2AAF',
+    fontWeight: '500',
   },
   activeTabText: {
-    color: '#6666664D',
+    color: '#666666BF',
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: '400',
   },
   tabContent: {
     paddingHorizontal: 15,

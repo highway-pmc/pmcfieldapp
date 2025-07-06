@@ -232,7 +232,7 @@ const SubComponentsList = ({ route, navigation }: { route: any, navigation: any 
                   value={item.isChecked}
                   onValueChange={() => handleRadioChange(index)}
                   style={styles.checkbox}
-                  tintColors={{true: '#5A2AAF', false: '#818181'}}
+                  tintColors={{true: '#5A2AAF', false: '#000001'}}
                 />
                 <View>
                   <Text style={styles.UserRole}>{item.name}</Text>
@@ -301,7 +301,7 @@ const SubComponentsList = ({ route, navigation }: { route: any, navigation: any 
                           disabled={item.assignmentLevel != null}
                           onValueChange={() => handleUserData(index)}
                           style={styles.checkbox}
-                          tintColors={{true: '#5A2AAF', false: '#818181'}}
+                          tintColors={{true: '#5A2AAF', false: '#000001'}}
                         />
                         <View style={{flexDirection: 'row'}}>
                           <Text style={styles.AssignRoleText}>{item.name}</Text>

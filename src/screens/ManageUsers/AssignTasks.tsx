@@ -11,7 +11,12 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useIsFocused} from '@react-navigation/native';
-import {HeaderItems, WORK_ASSIGNMENT_LEVEL} from '../../constants/constants';
+import {
+  HeaderItems,
+  PROJECT_TYPE,
+  USER_CATEGORY,
+  WORK_ASSIGNMENT_LEVEL,
+} from '../../constants/constants';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   clearProjectModulesWorkAssignmentData,
@@ -25,7 +30,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import CheckBox from '@react-native-community/checkbox';
 import LoadingAnimation from '../Common/LoadingAnimation';
 import LinearGradient from 'react-native-linear-gradient';
-import { getWorkTypeColors } from '../Common/CommonConstantsTypes';
+import {getWorkTypeColors} from '../Common/CommonConstantsTypes';
 
 const AssignTasks = ({route, navigation}: {route: any; navigation: any}) => {
   const {
@@ -40,11 +45,10 @@ const AssignTasks = ({route, navigation}: {route: any; navigation: any}) => {
     subComponentId,
     subComponentName,
     workType,
-    taskCategory
+    taskCategory,
   } = route.params;
 
   // Color scheme function
-  
 
   const workTypeColors = getWorkTypeColors(workType);
 
@@ -101,7 +105,7 @@ const AssignTasks = ({route, navigation}: {route: any; navigation: any}) => {
           segmentId: segmentId,
           componentId: componentId,
           subComponentId: subComponentId,
-          taskCategory: taskCategory
+          taskCategory: taskCategory,
         }),
       );
     } else if (componentId) {
@@ -111,7 +115,7 @@ const AssignTasks = ({route, navigation}: {route: any; navigation: any}) => {
           projectModuleId: projectModuleId,
           segmentId: segmentId,
           componentId: componentId,
-          taskCategory: taskCategory
+          taskCategory: taskCategory,
         }),
       );
     } else {
@@ -120,7 +124,7 @@ const AssignTasks = ({route, navigation}: {route: any; navigation: any}) => {
           projectId: loggedInUser.projectId,
           projectModuleId: projectModuleId,
           segmentId: segmentId,
-          taskCategory: taskCategory
+          taskCategory: taskCategory,
         }),
       );
     }
@@ -128,7 +132,9 @@ const AssignTasks = ({route, navigation}: {route: any; navigation: any}) => {
     dispatch(
       getUsersForWorkAssignment({
         projectId: loggedInUser.projectId,
-        workType: workType,
+        workType: workType === PROJECT_TYPE.INITIAL_SURVEY
+                    ? USER_CATEGORY.SURVEY_WORK
+                    : workType,
       }),
     );
   }, []);
@@ -165,7 +171,7 @@ const AssignTasks = ({route, navigation}: {route: any; navigation: any}) => {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL2;
           user.isChecked = true;
         }*/
-       if (
+        if (
           user.workAssignment?.find(
             (wa: any) =>
               wa.projectModule?.id === projectModuleId &&
@@ -277,7 +283,10 @@ const AssignTasks = ({route, navigation}: {route: any; navigation: any}) => {
         dispatch(
           getUsersForWorkAssignment({
             projectId: loggedInUser.projectId,
-            workType: workType,
+            workType:
+              workType === PROJECT_TYPE.INITIAL_SURVEY
+                ? USER_CATEGORY.SURVEY_WORK
+                : workType,
           }),
         );
       }, 500);
@@ -422,7 +431,7 @@ const AssignTasks = ({route, navigation}: {route: any; navigation: any}) => {
         onRequestClose={() => {
           openAssignPopup(!isAssignPopOpen);
         }}>
-        <View style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.3)'}}>
+        <View style={styles.modalBackdrop}>
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <View style={styles.ModalHeader}>
@@ -438,30 +447,81 @@ const AssignTasks = ({route, navigation}: {route: any; navigation: any}) => {
                 </TouchableOpacity>
               </View>
               <View style={styles.ModalInnerContainer}>
+                <View style={styles.modalTopButtonsContainer}>
+                  <TouchableOpacity
+                    style={styles.modalTopButton}
+                    onPress={() => {
+                      // Select all users logic
+                      console.log('Select all');
+                    }}>
+                    <Text style={styles.modalTopButtonText}>Select All</Text>
+                  </TouchableOpacity>
+
+                  <Text style={[styles.buttonSeparator, {fontSize: 19}]}>
+                    |
+                  </Text>
+
+                  <TouchableOpacity
+                    style={styles.modalTopButton}
+                    onPress={() => {
+                      // Refresh users list
+                    }}>
+                    <Text style={styles.modalTopButtonText}>Refresh</Text>
+                  </TouchableOpacity>
+                </View>
                 <View>
                   <Text style={styles.AssignRoleTextHeading}>
                     Task: {selectedTask.displayName}
                   </Text>
                 </View>
-                <ScrollView style={{paddingTop: 0, height: 500}}>
+                <ScrollView style={styles.modalScrollView}>
                   {userData.map((item: any, index) => (
                     <View key={index} style={styles.CategoryType}>
+                      {/* Left side: Checkbox and user info */}
                       <View style={styles.FlexRowCenter}>
                         <CheckBox
                           value={item.isChecked}
                           disabled={item.assignmentLevel != null}
                           onValueChange={() => handleUserData(index)}
                           style={styles.checkbox}
-                          tintColors={{true: '#5A2AAF', false: '#818181'}}
+                          tintColors={{true: '#5A2AAF', false: '#000001'}}
                         />
-                        <View style={{flexDirection: 'row'}}>
-                          <Text style={styles.AssignRoleText}>{item.name}</Text>
+                        <View style={styles.userInfoContainer}>
+                          <Text style={styles.AssignRoleText} numberOfLines={1}>
+                            {item.name}
+                          </Text>
                           {item.assignmentLevel && (
-                            <Text style={styles.userAlreadyAssigned}>
+                            <Text
+                              style={styles.userRoleSubtext}
+                              numberOfLines={1}>
                               {item.assignmentLevel}
                             </Text>
                           )}
                         </View>
+                      </View>
+
+                      {/* Right side: Action buttons */}
+                      <View style={styles.actionButtonsContainer}>
+                        <TouchableOpacity
+                          style={styles.updateButton}
+                          onPress={() => {
+                            console.log('Update user:', item.name);
+                            // Handle user update logic
+                          }}>
+                          <Text style={styles.updateButtonText}>Update</Text>
+                        </TouchableOpacity>
+
+                        <Text style={styles.buttonSeparator}>|</Text>
+
+                        <TouchableOpacity
+                          style={styles.deassignButton}
+                          onPress={() => {
+                            console.log('Deassign user:', item.name);
+                          }}>
+                          <Text style={styles.deassignButtonText}>
+                            Deassign
+                          </Text>
+                        </TouchableOpacity>
                       </View>
                     </View>
                   ))}
@@ -515,10 +575,178 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#27272A',
   },
+  modalBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.3)',
+  },
+  centeredView: {
+    marginTop: 'auto',
+    backgroundColor: '#fff',
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+    borderRadius: 12,
+    borderBottomWidth: 1,
+    borderColor: '#EBEBF0',
+    borderStyle: 'solid',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 60,
+  },
+  modalView: {
+    minHeight: 150,
+  },
+  ModalInnerContainer: {
+    paddingHorizontal: 15,
+  },
+  modalText: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#27272A',
+    textAlign: 'center',
+  },
+  ModalHeader: {
+    position: 'relative',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderColor: '#EBEBF0',
+    borderStyle: 'solid',
+  },
+  buttonClose: {
+    position: 'absolute',
+    right: 15,
+  },
+  CloseIcon: {
+    width: 30,
+    height: 30,
+  },
+
+  // NEW STYLES ADDED
+  modalTopButtonsContainer: {
+    flexDirection: 'row-reverse',
+    paddingVertical: 5,
+  },
+  modalTopButton: {
+    paddingHorizontal: 2,
+    paddingVertical: 6,
+    marginRight: 2,
+  },
+  modalTopButtonText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#5A2AAF',
+  },
+  modalScrollView: {
+    paddingTop: 0,
+    height: 500,
+  },
+
+  // UPDATED CategoryType style
+  CategoryType: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderBottomWidth: 1,
+    borderColor: '#EBEBF0',
+    borderStyle: 'solid',
+    paddingVertical: 15,
+    paddingHorizontal: 5,
+    minHeight: 60,
+  },
+
+  // NEW user info container styles
+  userInfoContainer: {
+    flexDirection: 'column',
+    marginLeft: 10,
+    flex: 0.6,
+    minWidth: 120,
+  },
+
+  // NEW action buttons container
+  actionButtonsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 0.4,
+    justifyContent: 'flex-end',
+    minWidth: 100,
+  },
+
+  // NEW button styles
+  updateButton: {
+    paddingHorizontal: 2,
+    paddingVertical: 6,
+    marginRight: 2,
+  },
+  updateButtonText: {
+    color: '#5A2AAF',
+    fontSize: 12,
+    fontWeight: '400',
+  },
+  deassignButton: {
+    paddingHorizontal: 4,
+    marginRight: 4,
+  },
+  deassignButtonText: {
+    color: '#5A2AAF',
+    fontSize: 12,
+    fontWeight: '400',
+  },
+  buttonSeparator: {
+    color: '#CCCCCC',
+    fontSize: 13,
+  },
+  userRoleSubtext: {
+    fontSize: 12,
+    color: '#666666',
+    marginTop: 2,
+    paddingLeft: 8,
+  },
+
+  // Existing styles that remain the same
   FlexRowCenter: {
     flexDirection: 'row',
     alignItems: 'center',
   },
+  checkbox: {
+    transform: [{scaleX: 1}, {scaleY: 1}],
+  },
+  AssignRoleTextHeading: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#27272A',
+    marginLeft: 5,
+    marginTop: 10,
+  },
+  AssignRoleText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#27272A',
+    marginLeft: 5,
+  },
+  assignTagButoon: {
+    backgroundColor: '#5A2AAF',
+    borderRadius: 30,
+    color: '#fff',
+    paddingHorizontal: 15,
+    paddingTop: 12,
+    paddingBottom: 12,
+    marginBottom: 10,
+    marginTop: 10,
+    alignItems: 'center',
+  },
+  assignTagButoonText: {
+    fontSize: 16,
+    color: '#fff',
+    fontWeight: '500',
+  },
+
   assignTag: {
     backgroundColor: '#5A2AAF',
     borderRadius: 15,
@@ -623,9 +851,7 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     justifyContent: 'space-between',
   },
-  checkbox: {
-    transform: [{scaleX: 1.2}, {scaleY: 1.2}],
-  },
+
   label: {
     margin: 8,
   },
@@ -649,31 +875,9 @@ const styles = StyleSheet.create({
     color: '#27272A',
     marginLeft: 10,
   },
-  centeredView: {
-    marginTop: 'auto',
-    backgroundColor: '#fff',
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 0,
-    borderRadius: 12,
-    borderBottomWidth: 1,
-    borderColor: '#EBEBF0',
-    borderStyle: 'solid',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 60,
-  },
+
   PopHeader: {},
-  modalView: {
-    minHeight: 150,
-  },
-  ModalInnerContainer: {
-    paddingHorizontal: 15,
-  },
+
   button: {
     borderRadius: 4,
     borderBottomEndRadius: 0,
@@ -705,12 +909,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
-  modalText: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#27272A',
-    textAlign: 'center',
-  },
   Height80: {
     height: '80%',
   },
@@ -718,57 +916,7 @@ const styles = StyleSheet.create({
     height: '100%',
     marginVertical: 10,
   },
-  CloseIcon: {
-    width: 30,
-    height: 30,
-  },
-  ModalHeader: {
-    position: 'relative',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 15,
-    borderBottomWidth: 1,
-    borderColor: '#EBEBF0',
-    borderStyle: 'solid',
-  },
-  buttonClose: {
-    position: 'absolute',
-    right: 15,
-  },
-  CategoryType: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderBottomWidth: 1,
-    borderColor: '#EBEBF0',
-    borderStyle: 'solid',
-    paddingVertical: 10,
-  },
-  AssignRoleTextHeading: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#27272A',
-    marginLeft: 5,
-    marginTop: 10,
-  },
-  AssignRoleText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#27272A',
-    marginLeft: 5,
-  },
-  assignTagButoon: {
-    backgroundColor: '#5A2AAF',
-    borderRadius: 30,
-    color: '#fff',
-    paddingHorizontal: 15,
-    paddingTop: 12,
-    paddingBottom: 12,
-    marginBottom: 10,
-    marginTop: 10,
-    alignItems: 'center',
-  },
+
   userAlreadyAssigned: {
     backgroundColor: '#5A2AAF',
     borderRadius: 30,
@@ -780,11 +928,6 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     paddingBottom: 5,
     alignItems: 'center',
-  },
-  assignTagButoonText: {
-    fontSize: 16,
-    color: '#fff',
-    fontWeight: '500',
   },
 });
 

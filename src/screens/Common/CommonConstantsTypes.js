@@ -233,6 +233,10 @@ export const commonComponentTypes = [
   'static-weigh-bridge',
   'electrical-room',
   'pipe',
+  'control-points',
+  'alignment-marking',
+  'bench-marking',
+  'ogl',
 ];
 
 export const WORK_MODULE_TYPE = [
@@ -304,7 +308,7 @@ export const CARD_ICONS = [
 export const getWorkTypeColors = workType => {
   const colorSchemes = {
     'structure-work': {
-      gradientColors: ['#FFFFFF', '#FFB499'],
+      gradientColors: ['#FFFFFF', '#BABABA'],
       borderColor: '#6D6B6B',
       leftBorderColor: '#5C5959',
       checkboxColor: '#5C5959',

@@ -13,7 +13,9 @@ import React, {useEffect, useState} from 'react';
 import {useIsFocused} from '@react-navigation/native';
 import {
   HeaderItems,
+  PROJECT_TYPE,
   SEGMENT_TYPES_DISPLAY,
+  USER_CATEGORY,
   WORK_ASSIGNMENT_LEVEL,
 } from '../../constants/constants';
 import {useDispatch, useSelector} from 'react-redux';
@@ -34,8 +36,14 @@ import LinearGradient from 'react-native-linear-gradient';
 import {getWorkTypeColors} from '../Common/CommonConstantsTypes';
 
 const SegmentsList = ({route, navigation}: {route: any; navigation: any}) => {
-  const {projectModuleId, projectModuleName, type, subType, workType, taskCategory} =
-    route.params;
+  const {
+    projectModuleId,
+    projectModuleName,
+    type,
+    subType,
+    workType,
+    taskCategory,
+  } = route.params;
 
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
   const {
@@ -83,18 +91,22 @@ const SegmentsList = ({route, navigation}: {route: any; navigation: any}) => {
   useEffect(() => {
     setSelectedSegmentType('');
     setSearchText('');
+    console.log('====taskCategory=======', taskCategory);
     dispatch(
       getProjectModuleSegments({
         projectId: loggedInUser.projectId,
         projectModuleId: projectModuleId,
-        taskCategory: taskCategory
+        taskCategory: taskCategory,
       }),
     );
 
     dispatch(
       getUsersForWorkAssignment({
         projectId: loggedInUser.projectId,
-        workType: workType,
+        workType:
+          workType === PROJECT_TYPE.INITIAL_SURVEY
+            ? USER_CATEGORY.SURVEY_WORK
+            : workType,
       }),
     );
   }, []);
@@ -309,7 +321,9 @@ const SegmentsList = ({route, navigation}: {route: any; navigation: any}) => {
         dispatch(
           getUsersForWorkAssignment({
             projectId: loggedInUser.projectId,
-            workType: workType,
+            workType: workType === PROJECT_TYPE.INITIAL_SURVEY
+                        ? USER_CATEGORY.SURVEY_WORK
+                        : workType,
           }),
         );
       }, 500);
@@ -408,7 +422,7 @@ const SegmentsList = ({route, navigation}: {route: any; navigation: any}) => {
           type: type,
           subType: subType,
           workType: workType,
-          taskCategory: taskCategory
+          taskCategory: taskCategory,
         });
       } else if (nextLevel.nextLevel === 'task') {
         navigation.navigate('AssignTasks', {
@@ -419,7 +433,7 @@ const SegmentsList = ({route, navigation}: {route: any; navigation: any}) => {
           type: type,
           subType: subType,
           workType: workType,
-          taskCategory: taskCategory
+          taskCategory: taskCategory,
         });
       }
     }
@@ -485,7 +499,7 @@ const SegmentsList = ({route, navigation}: {route: any; navigation: any}) => {
                     <CheckBox
                       onValueChange={() => handleSegmentTypeChange(item)}
                       style={styles.checkbox}
-                      tintColors={{true: '#5A2AAF', false: '#818181'}}
+                      tintColors={{true: '#5A2AAF', false: '#000001'}}
                     />
                     <TouchableOpacity onPress={() => onSegmentTypeClick(item)}>
                       <Text style={styles.segmentTypeText}>
@@ -494,7 +508,7 @@ const SegmentsList = ({route, navigation}: {route: any; navigation: any}) => {
                     </TouchableOpacity>
                   </View>
 
-                  <View style={[styles.numberCircle]}>
+                  <View style={styles.numberCircle}>
                     <Text
                       style={[
                         styles.numberText,
@@ -537,17 +551,32 @@ const SegmentsList = ({route, navigation}: {route: any; navigation: any}) => {
                       {backgroundColor: workTypeColors.leftBorderColor},
                     ]}
                   />
-                  <View style={styles.FlexRowCenter}>
-                    <CheckBox
-                      value={item.isChecked}
-                      onValueChange={() => handleRadioChange(index)}
-                      style={styles.checkbox}
-                      tintColors={{true: '#5A2AAF', false: '#818181'}}
-                    />
-                    <View>
+                  {/* Main content row */}
+                  <View style={styles.mainContentRow}>
+                    {/* Left section: Checkbox and text */}
+                    <View style={styles.FlexRowCenter}>
+                      <CheckBox
+                        value={item.isChecked}
+                        onValueChange={() => handleRadioChange(index)}
+                        style={styles.checkbox}
+                        tintColors={{true: '#5A2AAF', false: '#000001'}}
+                      />
                       <Text style={styles.UserRole}>{item.name}</Text>
                     </View>
+
+                    {/* Right section: Number circle */}
+                    <View style={styles.numberCircle}>
+                      <Text
+                        style={[
+                          styles.numberText,
+                          {color: workTypeColors.leftBorderColor},
+                        ]}>
+                        {item.taskCount}
+                      </Text>
+                    </View>
                   </View>
+
+                  {/* Arrow button */}
                   <View>
                     <TouchableOpacity onPress={() => onSegmentNextClick(item)}>
                       <Image
@@ -568,7 +597,7 @@ const SegmentsList = ({route, navigation}: {route: any; navigation: any}) => {
         onRequestClose={() => {
           openAssignPopup(!isAssignPopOpen);
         }}>
-        <View style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.3)'}}>
+        <View style={styles.modalBackdrop}>
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <View style={styles.ModalHeader}>
@@ -584,6 +613,27 @@ const SegmentsList = ({route, navigation}: {route: any; navigation: any}) => {
                 </TouchableOpacity>
               </View>
               <View style={styles.ModalInnerContainer}>
+                <View style={styles.modalTopButtonsContainer}>
+                  <TouchableOpacity
+                    style={styles.modalTopButton}
+                    onPress={() => {
+                      console.log('Select All users');
+                    }}>
+                    <Text style={styles.modalTopButtonText}>Select All</Text>
+                  </TouchableOpacity>
+
+                  <Text style={[styles.buttonSeparator, {fontSize: 19}]}>
+                    |
+                  </Text>
+
+                  <TouchableOpacity
+                    style={styles.modalTopButton}
+                    onPress={() => {
+                      console.log('Refresh users');
+                    }}>
+                    <Text style={styles.modalTopButtonText}>Refresh</Text>
+                  </TouchableOpacity>
+                </View>
                 <View>
                   <Text style={styles.AssignRoleTextHeading}>
                     {selectedSegmentType
@@ -594,7 +644,7 @@ const SegmentsList = ({route, navigation}: {route: any; navigation: any}) => {
                         SEGMENT_TYPES_DISPLAY[segmentTypeToAssignWork]}
                   </Text>
                 </View>
-                <ScrollView style={{paddingTop: 0, height: 500}}>
+                <ScrollView style={styles.modalScrollView}>
                   {userData.map((item: any, index) => (
                     <View key={index} style={styles.CategoryType}>
                       <View style={styles.FlexRowCenter}>
@@ -603,16 +653,45 @@ const SegmentsList = ({route, navigation}: {route: any; navigation: any}) => {
                           disabled={item.assignmentLevel != null}
                           onValueChange={() => handleUserData(index)}
                           style={styles.checkbox}
-                          tintColors={{true: '#5A2AAF', false: '#818181'}}
+                          tintColors={{true: '#5A2AAF', false: '#000001'}}
                         />
-                        <View style={{flexDirection: 'row'}}>
-                          <Text style={styles.AssignRoleText}>{item.name}</Text>
+                        <View style={styles.userInfoContainer}>
+                          <Text style={styles.AssignRoleText} numberOfLines={1}>
+                            {item.name}
+                          </Text>
                           {item.assignmentLevel && (
-                            <Text style={styles.userAlreadyAssigned}>
+                            <Text
+                              style={styles.userRoleSubtext}
+                              numberOfLines={1}>
                               {item.assignmentLevel}
                             </Text>
                           )}
                         </View>
+                      </View>
+
+                      {/* Right side: Action buttons */}
+                      <View style={styles.actionButtonsContainer}>
+                        <TouchableOpacity
+                          style={styles.updateButton}
+                          onPress={() => {
+                            console.log('Update user:', item.name);
+                            // Add update functionality here
+                          }}>
+                          <Text style={styles.updateButtonText}>Update</Text>
+                        </TouchableOpacity>
+
+                        <Text style={styles.buttonSeparator}>|</Text>
+
+                        <TouchableOpacity
+                          style={styles.deassignButton}
+                          onPress={() => {
+                            console.log('Deassign user:', item.name);
+                            // Add deassign functionality here
+                          }}>
+                          <Text style={styles.deassignButtonText}>
+                            Deassign
+                          </Text>
+                        </TouchableOpacity>
                       </View>
                     </View>
                   ))}
@@ -668,7 +747,7 @@ const styles = StyleSheet.create({
   FlexRowCenter: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 10,
+    paddingHorizontal: 5,
   },
   assignTag: {
     backgroundColor: '#5A2AAF',
@@ -788,7 +867,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   checkbox: {
-    transform: [{scaleX: 1.2}, {scaleY: 1.2}],
+    transform: [{scaleX: 1}, {scaleY: 1}],
   },
   label: {
     margin: 8,
@@ -837,30 +916,12 @@ const styles = StyleSheet.create({
     zIndex: 100,
     width: 2,
   },
-  centeredView: {
-    marginTop: 'auto',
-    backgroundColor: '#fff',
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 0,
-    borderRadius: 12,
-    borderBottomWidth: 1,
-    borderColor: '#EBEBF0',
-    borderStyle: 'solid',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 60,
-  },
   PopHeader: {},
   modalView: {
     minHeight: 150,
   },
   ModalInnerContainer: {
-    paddingHorizontal: 15,
+    paddingHorizontal: 10,
   },
   button: {
     borderRadius: 4,
@@ -923,15 +984,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 15,
   },
-  CategoryType: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderBottomWidth: 1,
-    borderColor: '#EBEBF0',
-    borderStyle: 'solid',
-    paddingVertical: 10,
-  },
+
   AssignRoleTextHeading: {
     fontSize: 14,
     fontWeight: '600',
@@ -972,6 +1025,110 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#fff',
     fontWeight: '500',
+  },
+  modalBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.3)',
+  },
+
+  // Update existing centeredView style
+  centeredView: {
+    marginTop: 'auto',
+    backgroundColor: '#fff',
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+    borderRadius: 12,
+    borderBottomWidth: 1,
+    borderColor: '#EBEBF0',
+    borderStyle: 'solid',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 60,
+  },
+
+  // Add these new styles to your existing styles object
+  modalTopButtonsContainer: {
+    flexDirection: 'row-reverse',
+    paddingVertical: 5,
+  },
+  modalTopButton: {
+    paddingHorizontal: 2,
+    paddingVertical: 6,
+    marginRight: 2,
+  },
+  modalTopButtonText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#5A2AAF',
+  },
+  modalScrollView: {
+    paddingTop: 0,
+    height: 500,
+  },
+  userInfoContainer: {
+    flexDirection: 'column',
+    marginLeft: 10,
+    flex: 0.6,
+    minWidth: 120,
+  },
+  actionButtonsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 0.4,
+    justifyContent: 'flex-end',
+    minWidth: 100,
+  },
+  buttonSeparator: {
+    color: '#CCCCCC',
+    fontSize: 13,
+  },
+  updateButton: {
+    paddingHorizontal: 2,
+    paddingVertical: 6,
+    marginRight: 2,
+  },
+  updateButtonText: {
+    color: '#5A2AAF',
+    fontSize: 12,
+    fontWeight: '400',
+  },
+  deassignButton: {
+    paddingHorizontal: 4,
+    marginRight: 4,
+  },
+  deassignButtonText: {
+    color: '#5A2AAF',
+    fontSize: 12,
+    fontWeight: '400',
+  },
+  userRoleSubtext: {
+    fontSize: 12,
+    color: '#666666',
+    marginTop: 2,
+    paddingLeft: 8,
+  },
+
+  CategoryType: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderBottomWidth: 1,
+    borderColor: '#EBEBF0',
+    borderStyle: 'solid',
+    paddingVertical: 15,
+    paddingRight: 15,
+    minHeight: 60,
+  },
+  mainContentRow: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });
 

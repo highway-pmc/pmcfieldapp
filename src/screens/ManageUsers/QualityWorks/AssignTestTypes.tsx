@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useIsFocused} from '@react-navigation/native';
-import {HeaderItems, TEST_ASSIGNMENT_LEVEL} from '../../../constants/constants';
+import {HeaderItems, PROJECT_TYPE, TEST_ASSIGNMENT_LEVEL, USER_CATEGORY} from '../../../constants/constants';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   clearTestClassificationsAssignmentData,
@@ -98,7 +98,9 @@ const AssignTestTypes = ({
     dispatch(
       getUsersForTestAssignment({
         projectId: loggedInUser.projectId,
-        workType: workType,
+        workType: workType === PROJECT_TYPE.INITIAL_SURVEY
+                    ? USER_CATEGORY.SURVEY_WORK
+                    : workType,
       }),
     );
   }, []);
@@ -318,7 +320,7 @@ const AssignTestTypes = ({
                     value={item.isChecked}
                     onValueChange={() => handleRadioChange(index)}
                     style={styles.checkbox}
-                    tintColors={{true: '#5A2AAF', false: '#818181'}}
+                    tintColors={{true: '#5A2AAF', false: '#000001'}}
                   />
                   <View>
                     <Text style={styles.categoryText}>{item.name}</Text>
@@ -374,7 +376,7 @@ const AssignTestTypes = ({
                           disabled={item.assignmentLevel != null}
                           onValueChange={() => handleUserData(index)}
                           style={styles.checkbox}
-                          tintColors={{true: '#5A2AAF', false: '#818181'}}
+                          tintColors={{true: '#5A2AAF', false: '#000001'}}
                         />
                         <View style={{flexDirection: 'row'}}>
                           <Text style={styles.AssignRoleText}>{item.name}</Text>
@@ -564,7 +566,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   checkbox: {
-    transform: [{scaleX: 1.2}, {scaleY: 1.2}],
+    transform: [{scaleX: 1}, {scaleY: 1}],
     borderRadius: 5,
   },
   label: {

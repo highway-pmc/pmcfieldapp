@@ -14,6 +14,7 @@ import {useIsFocused} from '@react-navigation/native';
 import {
   HeaderItems,
   PROJECT_TYPE,
+  USER_CATEGORY,
   WORK_ASSIGNMENT_LEVEL,
 } from '../../constants/constants';
 import CheckBox from '@react-native-community/checkbox';
@@ -99,6 +100,7 @@ const AssignWork = ({route, navigation}: {route: any; navigation: any}) => {
 
   useEffect(() => {
     console.log('====taskCategory=======', taskCategory);
+    console.log('====workType=======', workType);
     dispatch(
       getProjectModules({
         projectId: loggedInUser.projectId,
@@ -110,7 +112,10 @@ const AssignWork = ({route, navigation}: {route: any; navigation: any}) => {
     dispatch(
       getUsersForWorkAssignment({
         projectId: loggedInUser.projectId,
-        workType: workType,
+        workType:
+          workType === PROJECT_TYPE.INITIAL_SURVEY
+            ? USER_CATEGORY.SURVEY_WORK
+            : workType,
       }),
     );
   }, []);
@@ -238,7 +243,10 @@ const AssignWork = ({route, navigation}: {route: any; navigation: any}) => {
       dispatch(
         getUsersForWorkAssignment({
           projectId: loggedInUser.projectId,
-          workType: workType,
+          workType:
+            workType === PROJECT_TYPE.INITIAL_SURVEY
+              ? USER_CATEGORY.SURVEY_WORK
+              : workType,
         }),
       );
     }

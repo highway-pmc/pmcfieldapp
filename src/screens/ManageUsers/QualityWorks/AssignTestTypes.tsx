@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useIsFocused} from '@react-navigation/native';
-import {HeaderItems, TEST_ASSIGNMENT_LEVEL} from '../../../constants/constants';
+import {HeaderItems, PROJECT_TYPE, TEST_ASSIGNMENT_LEVEL, USER_CATEGORY} from '../../../constants/constants';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   clearTestClassificationsAssignmentData,
@@ -98,7 +98,9 @@ const AssignTestTypes = ({
     dispatch(
       getUsersForTestAssignment({
         projectId: loggedInUser.projectId,
-        workType: workType,
+        workType: workType === PROJECT_TYPE.INITIAL_SURVEY
+                    ? USER_CATEGORY.SURVEY_WORK
+                    : workType,
       }),
     );
   }, []);

@@ -13,7 +13,9 @@ import React, {useEffect, useState} from 'react';
 import {useIsFocused} from '@react-navigation/native';
 import {
   HeaderItems,
+  PROJECT_TYPE,
   SEGMENT_TYPES_DISPLAY,
+  USER_CATEGORY,
   WORK_ASSIGNMENT_LEVEL,
 } from '../../constants/constants';
 import {useDispatch, useSelector} from 'react-redux';
@@ -89,6 +91,7 @@ const SegmentsList = ({route, navigation}: {route: any; navigation: any}) => {
   useEffect(() => {
     setSelectedSegmentType('');
     setSearchText('');
+    console.log('====taskCategory=======', taskCategory);
     dispatch(
       getProjectModuleSegments({
         projectId: loggedInUser.projectId,
@@ -100,7 +103,10 @@ const SegmentsList = ({route, navigation}: {route: any; navigation: any}) => {
     dispatch(
       getUsersForWorkAssignment({
         projectId: loggedInUser.projectId,
-        workType: workType,
+        workType:
+          workType === PROJECT_TYPE.INITIAL_SURVEY
+            ? USER_CATEGORY.SURVEY_WORK
+            : workType,
       }),
     );
   }, []);
@@ -315,7 +321,9 @@ const SegmentsList = ({route, navigation}: {route: any; navigation: any}) => {
         dispatch(
           getUsersForWorkAssignment({
             projectId: loggedInUser.projectId,
-            workType: workType,
+            workType: workType === PROJECT_TYPE.INITIAL_SURVEY
+                        ? USER_CATEGORY.SURVEY_WORK
+                        : workType,
           }),
         );
       }, 500);

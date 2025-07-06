@@ -11,7 +11,12 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useIsFocused} from '@react-navigation/native';
-import {HeaderItems, WORK_ASSIGNMENT_LEVEL} from '../../constants/constants';
+import {
+  HeaderItems,
+  PROJECT_TYPE,
+  USER_CATEGORY,
+  WORK_ASSIGNMENT_LEVEL,
+} from '../../constants/constants';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   clearProjectModulesWorkAssignmentData,
@@ -104,7 +109,10 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
     dispatch(
       getUsersForWorkAssignment({
         projectId: loggedInUser.projectId,
-        workType: workType,
+        workType:
+          workType === PROJECT_TYPE.INITIAL_SURVEY
+            ? USER_CATEGORY.SURVEY_WORK
+            : workType,
       }),
     );
   }, []);
@@ -233,7 +241,9 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
         dispatch(
           getUsersForWorkAssignment({
             projectId: loggedInUser.projectId,
-            workType: workType,
+            workType: workType === PROJECT_TYPE.INITIAL_SURVEY
+                        ? USER_CATEGORY.SURVEY_WORK
+                        : workType,
           }),
         );
       }, 500);

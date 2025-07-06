@@ -11,7 +11,12 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useIsFocused} from '@react-navigation/native';
-import {HeaderItems, WORK_ASSIGNMENT_LEVEL} from '../../constants/constants';
+import {
+  HeaderItems,
+  PROJECT_TYPE,
+  USER_CATEGORY,
+  WORK_ASSIGNMENT_LEVEL,
+} from '../../constants/constants';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   clearProjectModulesWorkAssignmentData,
@@ -25,7 +30,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import CheckBox from '@react-native-community/checkbox';
 import LoadingAnimation from '../Common/LoadingAnimation';
 import LinearGradient from 'react-native-linear-gradient';
-import { getWorkTypeColors } from '../Common/CommonConstantsTypes';
+import {getWorkTypeColors} from '../Common/CommonConstantsTypes';
 
 const AssignTasks = ({route, navigation}: {route: any; navigation: any}) => {
   const {
@@ -40,11 +45,10 @@ const AssignTasks = ({route, navigation}: {route: any; navigation: any}) => {
     subComponentId,
     subComponentName,
     workType,
-    taskCategory
+    taskCategory,
   } = route.params;
 
   // Color scheme function
-  
 
   const workTypeColors = getWorkTypeColors(workType);
 
@@ -101,7 +105,7 @@ const AssignTasks = ({route, navigation}: {route: any; navigation: any}) => {
           segmentId: segmentId,
           componentId: componentId,
           subComponentId: subComponentId,
-          taskCategory: taskCategory
+          taskCategory: taskCategory,
         }),
       );
     } else if (componentId) {
@@ -111,7 +115,7 @@ const AssignTasks = ({route, navigation}: {route: any; navigation: any}) => {
           projectModuleId: projectModuleId,
           segmentId: segmentId,
           componentId: componentId,
-          taskCategory: taskCategory
+          taskCategory: taskCategory,
         }),
       );
     } else {
@@ -120,7 +124,7 @@ const AssignTasks = ({route, navigation}: {route: any; navigation: any}) => {
           projectId: loggedInUser.projectId,
           projectModuleId: projectModuleId,
           segmentId: segmentId,
-          taskCategory: taskCategory
+          taskCategory: taskCategory,
         }),
       );
     }
@@ -128,7 +132,9 @@ const AssignTasks = ({route, navigation}: {route: any; navigation: any}) => {
     dispatch(
       getUsersForWorkAssignment({
         projectId: loggedInUser.projectId,
-        workType: workType,
+        workType: workType === PROJECT_TYPE.INITIAL_SURVEY
+                    ? USER_CATEGORY.SURVEY_WORK
+                    : workType,
       }),
     );
   }, []);
@@ -165,7 +171,7 @@ const AssignTasks = ({route, navigation}: {route: any; navigation: any}) => {
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL2;
           user.isChecked = true;
         }*/
-       if (
+        if (
           user.workAssignment?.find(
             (wa: any) =>
               wa.projectModule?.id === projectModuleId &&
@@ -277,7 +283,10 @@ const AssignTasks = ({route, navigation}: {route: any; navigation: any}) => {
         dispatch(
           getUsersForWorkAssignment({
             projectId: loggedInUser.projectId,
-            workType: workType,
+            workType:
+              workType === PROJECT_TYPE.INITIAL_SURVEY
+                ? USER_CATEGORY.SURVEY_WORK
+                : workType,
           }),
         );
       }, 500);
@@ -443,16 +452,12 @@ const AssignTasks = ({route, navigation}: {route: any; navigation: any}) => {
                     style={styles.modalTopButton}
                     onPress={() => {
                       // Select all users logic
-                      console.log("Select all")
+                      console.log('Select all');
                     }}>
                     <Text style={styles.modalTopButtonText}>Select All</Text>
                   </TouchableOpacity>
 
-                  <Text
-                    style={[
-                      styles.buttonSeparator,
-                      {fontSize: 19},
-                    ]}>
+                  <Text style={[styles.buttonSeparator, {fontSize: 19}]}>
                     |
                   </Text>
 
@@ -460,12 +465,6 @@ const AssignTasks = ({route, navigation}: {route: any; navigation: any}) => {
                     style={styles.modalTopButton}
                     onPress={() => {
                       // Refresh users list
-                      dispatch(
-                        getUsersForWorkAssignment({
-                          projectId: loggedInUser.projectId,
-                          workType: workType,
-                        }),
-                      );
                     }}>
                     <Text style={styles.modalTopButtonText}>Refresh</Text>
                   </TouchableOpacity>
@@ -747,7 +746,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: '500',
   },
- 
+
   assignTag: {
     backgroundColor: '#5A2AAF',
     borderRadius: 15,
@@ -852,7 +851,7 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     justifyContent: 'space-between',
   },
-  
+
   label: {
     margin: 8,
   },
@@ -876,9 +875,9 @@ const styles = StyleSheet.create({
     color: '#27272A',
     marginLeft: 10,
   },
-  
+
   PopHeader: {},
-  
+
   button: {
     borderRadius: 4,
     borderBottomEndRadius: 0,
@@ -917,7 +916,7 @@ const styles = StyleSheet.create({
     height: '100%',
     marginVertical: 10,
   },
-  
+
   userAlreadyAssigned: {
     backgroundColor: '#5A2AAF',
     borderRadius: 30,
@@ -930,7 +929,6 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     alignItems: 'center',
   },
-  
 });
 
 export default AssignTasks;

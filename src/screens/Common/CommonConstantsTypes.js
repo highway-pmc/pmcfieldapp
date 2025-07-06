@@ -233,6 +233,10 @@ export const commonComponentTypes = [
   'static-weigh-bridge',
   'electrical-room',
   'pipe',
+  'control-points',
+  'alignment-marking',
+  'bench-marking',
+  'ogl',
 ];
 
 export const WORK_MODULE_TYPE = [

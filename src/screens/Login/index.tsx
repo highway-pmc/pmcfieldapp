@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
   },
   SignInText: {
     fontSize: 28,
-    color: '#1C58C0',
+    color: '#5A2AAF',
     fontWeight: '700',
   },
   SubText: {
@@ -314,16 +314,16 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   buttonStyle: {
-    backgroundColor: '#1C58C0',
+    backgroundColor: '#5A2AAF',
     borderWidth: 0,
     color: '#FFFFFF',
     borderColor: '#7DE24E',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius:8,
+    borderRadius: 8,
     marginTop: 20,
     marginBottom: 25,
-    paddingVertical: 10
+    paddingVertical: 10,
   },
   buttonTextStyle: {
     color: '#FFFFFF',

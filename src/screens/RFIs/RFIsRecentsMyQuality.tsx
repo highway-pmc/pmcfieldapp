@@ -1390,14 +1390,29 @@ const RFIsRecentsMyQuality = (props: any) => {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.headerText}> Recent {getRFIType()} RFI's</Text>
+      {/* <Text style={styles.headerText}> Recent {getRFIType()} RFI's</Text> */}
       <View style={styles.alignmentVertical}>
         <View style={styles.recentWorkContainer}>
           <View style={styles.recentWorkHead}>
             <Text style={styles.headerText}>
-              Recent RFI's (
+              Recent {getRFIType()} RFI's (
               <Text style={styles.taskCount}>{rfiData.length}</Text>)
             </Text>
+            {props.rfiType === RFIs_TYPE.GENERATE && (
+              <View style={styles.footerButton}>
+                <TouchableOpacity
+                  style={styles.btnCta}
+                  onPress={() =>
+                    navigation.navigate('RFIsGenerateMyQuality', {
+                      rfiType: props.rfiType,
+                      testType: selectedTestType,
+                      projectId: loggedInUser.projectId,
+                    })
+                  }>
+                  <Text style={styles.btnCtaText}>Generate RFI's</Text>
+                </TouchableOpacity>
+              </View>
+            )}
           </View>
           <ScrollView
             showsVerticalScrollIndicator={false}
@@ -1464,21 +1479,6 @@ const RFIsRecentsMyQuality = (props: any) => {
             )}
           </ScrollView>
         </View>
-        {props.rfiType === RFIs_TYPE.GENERATE && (
-          <View style={styles.footerButton}>
-            <TouchableOpacity
-              style={styles.btnCta}
-              onPress={() =>
-                navigation.navigate('RFIsGenerateMyQuality', {
-                  rfiType: props.rfiType,
-                  testType: selectedTestType,
-                  projectId: loggedInUser.projectId,
-                })
-              }>
-              <Text style={styles.btnCtaText}>Generate RFI's</Text>
-            </TouchableOpacity>
-          </View>
-        )}
       </View>
 
       <Modal
@@ -1713,13 +1713,16 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     backgroundColor: '#fff',
     borderRadius: 12,
-    marginTop: 15,
+    // marginTop: 5,
   },
   recentWorkHead: {
     flexDirection: 'row',
     borderBottomWidth: 1,
     borderColor: '#DEE1E7',
-    padding: 20,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   taskCount: {
     color: '#1C58C0',
@@ -1765,23 +1768,22 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
   footerButton: {
-    padding: 20,
-    backgroundColor: '#fff',
-    marginTop: 10,
-    marginHorizontal: -20,
+    flexDirection: 'row-reverse',
+    borderColor: '#D2C5FF',
   },
   btnCta: {
     borderRadius: 10,
-    backgroundColor: '#4E36A3',
-    paddingHorizontal: 20,
-    paddingVertical: 12,
+    paddingHorizontal: 8,
+    paddingVertical: 5,
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#4E36A3',
   },
   btnCtaText: {
-    color: '#fff',
+    color: '#4E36A3',
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: '400',
   },
   noDataContainer: {
     marginVertical: 30,

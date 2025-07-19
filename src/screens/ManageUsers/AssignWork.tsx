@@ -88,6 +88,7 @@ const AssignWork = ({route, navigation}: {route: any; navigation: any}) => {
         pModule.isChecked = false;
       });
       setProjectModulesData(projectModules);
+      console.log('Project Modules Data Received:========', projectModules);
     }
 
     if (users) {
@@ -386,6 +387,7 @@ const AssignWork = ({route, navigation}: {route: any; navigation: any}) => {
                       subType: item.subType,
                       workType: workType,
                       taskCategory: taskCategory,
+                      chainage: item.metaData.chainage,
                     })
                   }>
                   <Image

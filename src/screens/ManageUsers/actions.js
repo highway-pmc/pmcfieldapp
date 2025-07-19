@@ -76,7 +76,15 @@ export const segmentTypeWorkAssignToUsers = (payload) => ({
     type: "SEGMENT_TYPE_WORK_ASSIGNMENT_USERS_REQUEST",
     payload: payload,
 });
+export const splitComponent = payload => ({
+  type: 'SPLIT_COMPONENT_REQUEST',
+  payload: payload,
+});
 
+export const deleteSplitComponent = payload => ({
+  type: 'DELETE_SPLIT_COMPONENT_REQUEST',
+  payload: payload,
+});
 export const componentWorkAssignToUsers = (payload) => ({
     type: "COMPONENT_WORK_ASSIGNMENT_USERS_REQUEST",
     payload: payload,

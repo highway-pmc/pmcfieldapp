@@ -25,12 +25,13 @@ import {
   componentWorkAssignToUsers,
   getProjectModuleNextLevel,
   clearNextLevel,
+  splitComponent,
+  deleteSplitComponent,
 } from './actions';
 import commonStyles from '../Common/commonStyles';
 import {ScrollView} from 'react-native-gesture-handler';
 import CheckBox from '@react-native-community/checkbox';
 import LoadingAnimation from '../Common/LoadingAnimation';
-import CardComponent from '../Common/CardComponent';
 import {
   commonComponentTypes,
   getWorkTypeColors,
@@ -47,11 +48,11 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
     segmentName,
     workType,
     taskCategory,
+    chainage,
   } = route.params;
 
   // Get colors based on work type
   const workTypeColors = getWorkTypeColors(workType);
-
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
   const {
     components,
@@ -86,6 +87,7 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
         pModule.isChecked = false;
       });
       setComponentsData(components);
+      console.log('======', components);
     }
 
     if (users) {
@@ -96,7 +98,7 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
     }
   }, [components, users, error]);
 
-  useEffect(() => {
+  const reloadComponents = () => {
     dispatch(
       getProjectModuleComponents({
         projectId: loggedInUser.projectId,
@@ -105,6 +107,10 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
         taskCategory: taskCategory,
       }),
     );
+  };
+
+  useEffect(() => {
+    reloadComponents(); // Fetch initial data
 
     dispatch(
       getUsersForWorkAssignment({
@@ -129,30 +135,6 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
       updatedCheckboxes.forEach((user: any) => {
         user.isChecked = false;
         delete user.assignmentLevel;
-        /*
-        if (
-          user.workAssignment?.find(
-            (wa: any) =>
-              wa.projectModule?.id === projectModuleId &&
-              wa.assignmentLevel === 1 &&
-              wa.assignmentLevelFrom === 1
-          ) != null
-        ) {
-          user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL1;
-          user.isChecked = true;
-        } else if (
-          user.workAssignment?.find(
-            (wa: any) =>
-              wa.projectModule?.id === projectModuleId &&
-              wa.segmentId === segmentId &&
-              wa.assignmentLevel === 2 &&
-              wa.assignmentLevelFrom === 2
-          )
-        ) {
-          user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL2;
-          user.isChecked = true;
-        } else
-        */
         if (
           user.workAssignment?.find(
             (wa: any) =>
@@ -175,13 +157,10 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
               wa.assignmentLevelFrom === 5,
           )
         ) {
-          console.log('=================', JSON.stringify(user.workAssignment));
+          //console.log('=================', JSON.stringify(user.workAssignment));
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL5;
           user.isChecked = true;
-        } /*else if (user.workAssignment?.find((wa: any) => wa.projectModule?.id === projectModuleId && wa.segmentId === segmentId && wa.assignmentLevel === 5)) {
-          user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL5;
-          user.isChecked = true;
-        }*/ else {
+        } else {
           const workAssignment = user.workAssignment?.find(
             (wa: any) =>
               wa.projectModule?.id === projectModuleId &&
@@ -231,7 +210,40 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
 
     setUserCheckboxes(updatedCheckboxes);
   };
-
+  const handleDeleteComponent = (componentToDelete: any) => {
+    Alert.alert(
+      'Confirm Deletion',
+      `Are you sure you want to delete "${componentToDelete.name}"? This action cannot be undone.`,
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: () => {
+            dispatch(
+              deleteSplitComponent({
+                projectModuleId: projectModuleId,
+                type: 'components',
+                id: componentToDelete._id,
+              }),
+            );
+            // Give feedback and reload the list after a short delay
+            Alert.alert(
+              'Success',
+              `"${componentToDelete.name}" has been deleted.`,
+            );
+            setTimeout(() => {
+              reloadComponents();
+            }, 1000);
+          },
+        },
+      ],
+      {cancelable: true},
+    );
+  };
   useEffect(() => {
     if (componentWorkAssigned) {
       Alert.alert('Success', 'Works assigned successfully');
@@ -241,9 +253,10 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
         dispatch(
           getUsersForWorkAssignment({
             projectId: loggedInUser.projectId,
-            workType: workType === PROJECT_TYPE.INITIAL_SURVEY
-                        ? USER_CATEGORY.SURVEY_WORK
-                        : workType,
+            workType:
+              workType === PROJECT_TYPE.INITIAL_SURVEY
+                ? USER_CATEGORY.SURVEY_WORK
+                : workType,
           }),
         );
       }, 500);
@@ -296,7 +309,6 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
     openAssignPopup(!isAssignPopOpen);
   };
 
-  // unmount
   useEffect(
     () => () => {
       setSearchText('');
@@ -350,7 +362,138 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
     }
   }, [nextLevel]);
 
-  // code for Grouping coponent types
+  const [isSplitChainageModalOpen, setIsSplitChainageModalOpen] =
+    useState(false);
+  const [selectedComponentForSplit, setSelectedComponentForSplit] =
+    useState(null);
+  const [splitChainageData, setSplitChainageData] = useState({
+    startChainage: 0.0,
+    endChainage: 0.0,
+    splitValue: 0.0,
+  });
+
+  const openSplitChainageModal = (item: any) => {
+    setSelectedComponentForSplit(item);
+    const startChainage =
+      item.splitInfo?.chainage?.start ?? chainage?.start ?? 0.0;
+    const endChainage = item.splitInfo?.chainage?.end ?? chainage?.end ?? 0.0;
+
+    setSplitChainageData({
+      startChainage: startChainage,
+      endChainage: endChainage,
+      splitValue: 0.0,
+    });
+    setIsSplitChainageModalOpen(true);
+  };
+
+  const closeSplitChainageModal = () => {
+    setIsSplitChainageModalOpen(false);
+    setSelectedComponentForSplit(null);
+    setSplitChainageData({
+      startChainage: 0.0,
+      endChainage: 0.0,
+      splitValue: 0.0,
+    });
+  };
+
+  const handleSplitByChainage = () => {
+    const {startChainage, endChainage, splitValue} = splitChainageData;
+
+    if (isNaN(splitValue) || splitValue <= 0) {
+      Alert.alert('Error', 'Please enter a valid number for the split value.');
+      return;
+    }
+
+    if (splitValue <= startChainage || splitValue >= endChainage) {
+      Alert.alert(
+        'Validation Error',
+        `Split value must be between ${startChainage} and ${endChainage}.`,
+      );
+      return;
+    }
+
+    if (!selectedComponentForSplit) {
+      Alert.alert('Error', 'No component selected for splitting.');
+      closeSplitChainageModal();
+      return;
+    }
+
+    const payload = {
+      projectModuleId: projectModuleId,
+      splitTo: 'components',
+      body: {
+        splitInfo: {
+          splitBy: 'chainage',
+          splitNo: splitValue,
+          originalParentId:
+            selectedComponentForSplit.splitInfo?.originalParentId ||
+            selectedComponentForSplit._id,
+          parentId: selectedComponentForSplit._id,
+        },
+      },
+    };
+
+    dispatch(splitComponent(payload));
+    Alert.alert(
+      'Success',
+      'Component split by chainage has been successfully initiated.',
+    );
+    setTimeout(() => {
+      reloadComponents();
+    }, 1000);
+    closeSplitChainageModal();
+  };
+
+  const [isSplitLayerModalOpen, setIsSplitLayerModalOpen] = useState(false);
+  const [selectedComponentForLayerSplit, setSelectedComponentForLayerSplit] =
+    useState(null);
+  const [splitLayerData, setSplitLayerData] = useState({numberOfLayers: 0});
+
+  const openSplitByLayerModal = (item: any) => {
+    setSelectedComponentForLayerSplit(item);
+    setSplitLayerData({numberOfLayers: 0});
+    setIsSplitLayerModalOpen(true);
+  };
+
+  const closeSplitByLayerModal = () => {
+    setIsSplitLayerModalOpen(false);
+    setSelectedComponentForLayerSplit(null);
+    setSplitLayerData({numberOfLayers: 0});
+  };
+
+  const handleSplitByLayer = () => {
+    if (
+      !splitLayerData.numberOfLayers ||
+      isNaN(splitLayerData.numberOfLayers) ||
+      splitLayerData.numberOfLayers <= 0
+    ) {
+      console.log('Please enter a valid number of layers.');
+      return;
+    }
+
+    const payload = {
+      projectModuleId: projectModuleId,
+      splitTo: 'components',
+      body: {
+        splitInfo: {
+          splitBy: 'layer',
+          splitNo: splitLayerData.numberOfLayers,
+          originalParentId:
+            selectedComponentForLayerSplit.splitInfo?.originalParentId ||
+            selectedComponentForLayerSplit._id,
+          parentId: selectedComponentForLayerSplit._id,
+        },
+      },
+    };
+
+    dispatch(splitComponent(payload));
+    Alert.alert('Success', 'Component split by layer successfully initiated.');
+    setTimeout(() => {
+      reloadComponents();
+    }, 1000);
+    closeSplitByLayerModal();
+  };
+
   const {componentType} = componentsData
     .filter((subSeg: any) => {
       if (searchText && subSeg.name) {
@@ -379,23 +522,35 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
       if (filteredItems.length === 0) {
         return null;
       }
-      console.log('Filtered Items:', filteredItems);
       return (
         filteredItems.length > 0 && (
-          <>
-            <View style={styles.separatTaskType} key={type}>
-              <View style={styles.titleTextForGrouping}>
-                <Text
-                  style={[
-                    styles.titleText,
-                    {color: workTypeColors.titleColor},
-                  ]}>
-                  {type.charAt(0).toUpperCase() + type.slice(1)}
-                </Text>
-              </View>
-              {filteredItems.map((item, index) => (
+          <View style={styles.separatTaskType} key={type}>
+            <View style={styles.titleTextForGrouping}>
+              <Text
+                style={[styles.titleText, {color: workTypeColors.titleColor}]}>
+                {type.charAt(0).toUpperCase() + type.slice(1)}
+              </Text>
+            </View>
+            {filteredItems.map((item, i) => {
+              // --- LOGIC FOR CONDITIONAL RENDERING ---
+              let isLastLayer = false;
+              if (item.splitInfo?.splitBy === 'layer' && item.name) {
+                const match = item.name.match(/\(Layer (\d+)\)/);
+                const currentLayer = match ? parseInt(match[1], 10) : 0;
+                const totalLayers = item.splitInfo.splitNo;
+
+                if (currentLayer > 0 && currentLayer === totalLayers) {
+                  isLastLayer = true;
+                }
+              }
+
+              const showActionSection =
+                !item.rfiGenerated &&
+                (item.splitByChainage || item.splitByLayer || isLastLayer);
+
+              return (
                 <View
-                  key={`${type}-${index}`}
+                  key={`${type}-${i}`}
                   style={[
                     styles.UserCategory,
                     {borderColor: workTypeColors.borderColor},
@@ -413,9 +568,10 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
                     ]}
                   />
 
-                  {/* Main content row */}
+                  {/* ---Main content row --- */}
                   <View style={styles.mainContentRow}>
-                    <View style={styles.FlexRowCenter}>
+                    <View
+                      style={[styles.FlexRowCenter, {flex: 1, marginRight: 8}]}>
                       <CheckBox
                         value={item.isChecked}
                         onValueChange={() =>
@@ -424,12 +580,13 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
                         style={styles.checkbox}
                         tintColors={{true: '#5A2AAF', false: '#000001'}}
                       />
-
-                      {/* Updated layout for name and task count */}
-                      <View>
+                      {/* This container ensures the text can wrap */}
+                      <View style={styles.nameContainer}>
                         <Text style={styles.UserRole}>{item.name || ''}</Text>
                       </View>
                     </View>
+
+                    {/* This container remains fixed on the right */}
                     <View style={styles.FlexRowCenter}>
                       <View style={styles.numberCircle}>
                         <Text
@@ -450,73 +607,107 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
                     </View>
                   </View>
 
-                  {/* Dashed line separator */}
-                  <View
-                    style={[
-                      styles.dashedLine,
-                      {borderBottomColor: workTypeColors.leftBorderColor},
-                    ]}
-                  />
+                  {showActionSection && (
+                    <>
+                      <View
+                        style={[
+                          styles.dashedLine,
+                          {borderBottomColor: workTypeColors.leftBorderColor},
+                        ]}
+                      />
 
-                  {/* Three buttons row */}
-                  <View style={styles.buttonsContainer}>
-                    <TouchableOpacity
-                      style={styles.actionButton}
-                      onPress={() => {
-                        console.log(
-                          'Split by Chainage pressed for:',
-                          item.name,
-                        );
-                        // Add your split by chainage logic here
-                      }}>
-                      <View style={styles.buttonContent}>
-                        <Image
-                          style={styles.buttonIcon}
-                          source={require('./../../images/userManagement/spliting.png')} // Replace with your actual icon
-                        />
-                        <Text style={styles.buttonText}>Split by Chainage</Text>
-                      </View>
-                    </TouchableOpacity>
+                      <View style={styles.buttonsContainer}>
+                        {/* 1. Split by Chainage Button */}
+                        {item.splitByChainage && (
+                          <TouchableOpacity
+                            style={[
+                              styles.actionButton,
+                              styles.actionButtonChainage,
+                            ]}
+                            onPress={() => openSplitChainageModal(item)}>
+                            <View style={styles.buttonContent}>
+                              <Image
+                                style={[
+                                  styles.buttonIcon,
+                                  {tintColor: '#5EAB4B'},
+                                ]}
+                                source={require('./../../images/userManagement/spliting.png')}
+                              />
+                              <Text
+                                style={[
+                                  styles.buttonText,
+                                  styles.buttonTextChainage,
+                                ]}>
+                                Split by Chainage
+                              </Text>
+                            </View>
+                          </TouchableOpacity>
+                        )}
 
-                    <TouchableOpacity
-                      style={styles.actionButton}
-                      onPress={() => {
-                        console.log('Split by Layer pressed for:', item.name);
-                        // Add your split by layer logic here
-                      }}>
-                      <View style={styles.buttonContent}>
-                        <Image
-                          style={styles.buttonIcon}
-                          source={require('./../../images/userManagement/spliting.png')} // Replace with your actual icon
-                        />
-                        <Text style={styles.buttonText}>Split by Layer</Text>
-                      </View>
-                    </TouchableOpacity>
+                        {/* 2. Split by Layer Button */}
+                        {item.splitByLayer && (
+                          <TouchableOpacity
+                            style={[
+                              styles.actionButton,
+                              styles.actionButtonLayer,
+                            ]}
+                            onPress={() => openSplitByLayerModal(item)}>
+                            <View style={styles.buttonContent}>
+                              <Image
+                                style={[
+                                  styles.buttonIcon,
+                                  {tintColor: '#5A2AAF'},
+                                ]}
+                                source={require('./../../images/userManagement/spliting.png')}
+                              />
+                              <Text
+                                style={[
+                                  styles.buttonText,
+                                  styles.buttonTextLayer,
+                                ]}>
+                                Split by Layer
+                              </Text>
+                            </View>
+                          </TouchableOpacity>
+                        )}
 
-                    <TouchableOpacity
-                      style={styles.actionButton}
-                      onPress={() => {
-                        console.log('Delete pressed for:', item.name);
-                        // Add your delete logic here
-                      }}>
-                      <View style={styles.buttonContent}>
-                        <Image
-                          style={styles.buttonIcon}
-                          source={require('./../../images/userManagement/delete.png')} // Replace with your actual icon
-                        />
-                        <Text style={styles.buttonText}>Delete</Text>
+                        {/* 3. Delete Button */}
+                        {isLastLayer && (
+                          <TouchableOpacity
+                            style={[
+                              styles.actionButton,
+                              styles.actionButtonDelete,
+                            ]}
+                            onPress={() => handleDeleteComponent(item)}>
+                            <View style={styles.buttonContent}>
+                              <Image
+                                style={[
+                                  styles.buttonIcon,
+                                  {tintColor: '#FF4747'},
+                                ]}
+                                source={require('./../../images/userManagement/delete.png')}
+                              />
+                              <Text
+                                style={[
+                                  styles.buttonText,
+                                  styles.buttonTextDelete,
+                                ]}>
+                                Delete
+                              </Text>
+                            </View>
+                          </TouchableOpacity>
+                        )}
                       </View>
-                    </TouchableOpacity>
-                  </View>
+                    </>
+                  )}
                 </View>
-              ))}
-            </View>
-          </>
+              );
+            })}
+          </View>
         )
       );
     },
   );
-  // End code for Grouping coponent types
 
   return (
     <View style={styles.Container}>
@@ -568,7 +759,8 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
           {repeatedComponentTypes}
         </>
       </ScrollView>
-      {/* Modal Start */}
+
+      {/* Assign User Modal Start */}
       <Modal
         animationType="fade"
         transparent={true}
@@ -597,7 +789,6 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
                     style={styles.modalTopButton}
                     onPress={() => {
                       console.log('Select All users');
-                      // Add logic to select all users
                     }}>
                     <Text style={styles.modalTopButtonText}>Select All</Text>
                   </TouchableOpacity>
@@ -610,7 +801,6 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
                     style={styles.modalTopButton}
                     onPress={() => {
                       console.log('Refresh users');
-                      // Add logic to refresh users
                     }}>
                     <Text style={styles.modalTopButtonText}>Refresh</Text>
                   </TouchableOpacity>
@@ -623,7 +813,6 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
                 <ScrollView style={styles.modalScrollView}>
                   {userData.map((item: any, index) => (
                     <View key={index} style={styles.CategoryType}>
-                      {/* Left side: Checkbox and user info */}
                       <View style={styles.FlexRowCenter}>
                         <CheckBox
                           value={item.isChecked}
@@ -645,14 +834,11 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
                           )}
                         </View>
                       </View>
-
-                      {/* Right side: Action buttons */}
                       <View style={styles.actionButtonsContainer}>
                         <TouchableOpacity
                           style={styles.updateButton}
                           onPress={() => {
                             console.log('Update user:', item.name);
-                            // Add logic to update user assignment
                           }}>
                           <Text style={styles.updateButtonText}>Update</Text>
                         </TouchableOpacity>
@@ -663,7 +849,6 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
                           style={styles.deassignButton}
                           onPress={() => {
                             console.log('Deassign user:', item.name);
-                            // Add logic to deassign user
                           }}>
                           <Text style={styles.deassignButtonText}>
                             Deassign
@@ -673,7 +858,6 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
                     </View>
                   ))}
                 </ScrollView>
-
                 <TouchableOpacity
                   style={styles.assignTagButoon}
                   onPress={() => onWorkAssignment()}>
@@ -684,6 +868,144 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
           </View>
         </View>
       </Modal>
+
+      {/* Split by Chainage Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isSplitChainageModalOpen}
+        onRequestClose={closeSplitChainageModal}>
+        <View style={styles.modalBackdrop}>
+          <View style={styles.splitChainageModalContainer}>
+            <View style={styles.splitChainageModalContent}>
+              <View style={styles.ModalHeader}>
+                <Text style={styles.modalText}>Split by Chainage</Text>
+                <TouchableOpacity
+                  style={styles.buttonClose}
+                  onPress={closeSplitChainageModal}>
+                  <Image
+                    style={styles.CloseIcon}
+                    tintColor={'#333'}
+                    source={require('./../../images/menu/close-icon.png')}
+                  />
+                </TouchableOpacity>
+              </View>
+
+              <View style={styles.splitChainageModalBody}>
+                <View style={styles.inputGroup}>
+                  <Text style={styles.inputLabel}>Name</Text>
+                  <TextInput
+                    style={[styles.splitInput, styles.readOnlyInput]}
+                    value={selectedComponentForSplit?.name || ''}
+                    editable={false}
+                  />
+                </View>
+
+                <View style={styles.inputGroup}>
+                  <Text style={styles.inputLabel}>Start Chainage</Text>
+                  <TextInput
+                    style={[styles.splitInput, styles.readOnlyInput]}
+                    value={splitChainageData.startChainage?.toString() ?? ''}
+                    editable={false}
+                  />
+                </View>
+
+                <View style={styles.inputGroup}>
+                  <Text style={styles.inputLabel}>End Chainage</Text>
+                  <TextInput
+                    style={[styles.splitInput, styles.readOnlyInput]}
+                    value={splitChainageData.endChainage?.toString() ?? ''}
+                    editable={false}
+                  />
+                </View>
+
+                <View style={styles.inputGroup}>
+                  <Text style={styles.inputLabel}>Split at</Text>
+                  <TextInput
+                    style={styles.splitInput}
+                    placeholder="Enter split value"
+                    value={splitChainageData.splitValue}
+                    onChangeText={(num: string) =>
+                      setSplitChainageData(prev => ({
+                        ...prev,
+                        splitValue: parseFloat(num) || 0,
+                      }))
+                    }
+                    keyboardType="numeric"
+                  />
+                </View>
+              </View>
+
+              <View style={styles.splitChainageModalFooter}>
+                <TouchableOpacity
+                  style={styles.splitButton}
+                  onPress={handleSplitByChainage}>
+                  <Text style={styles.splitButtonText}>Split</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Split by Layer Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isSplitLayerModalOpen}
+        onRequestClose={closeSplitByLayerModal}>
+        <View style={styles.modalBackdrop}>
+          <View style={styles.splitChainageModalContainer}>
+            <View style={styles.splitChainageModalContent}>
+              <View style={styles.ModalHeader}>
+                <Text style={styles.modalText}>Split by Layer</Text>
+                <TouchableOpacity
+                  style={styles.buttonClose}
+                  onPress={closeSplitByLayerModal}>
+                  <Image
+                    style={styles.CloseIcon}
+                    tintColor={'#333'}
+                    source={require('./../../images/menu/close-icon.png')}
+                  />
+                </TouchableOpacity>
+              </View>
+
+              <View style={styles.splitChainageModalBody}>
+                <View style={styles.inputGroup}>
+                  <Text style={styles.inputLabel}>Component Name</Text>
+                  <TextInput
+                    style={[styles.splitInput, styles.readOnlyInput]}
+                    value={selectedComponentForLayerSplit?.name || ''}
+                    editable={false}
+                  />
+                </View>
+
+                <View style={styles.inputGroup}>
+                  <Text style={styles.inputLabel}>Number of Layers</Text>
+                  <TextInput
+                    style={styles.splitInput}
+                    placeholder="Enter number of layers"
+                    keyboardType="numeric"
+                    value={splitLayerData.numberOfLayers?.toString()}
+                    onChangeText={text =>
+                      setSplitLayerData({numberOfLayers: Number(text)})
+                    }
+                  />
+                </View>
+              </View>
+
+              <View style={styles.splitChainageModalFooter}>
+                <TouchableOpacity
+                  style={styles.splitButton}
+                  onPress={handleSplitByLayer}>
+                  <Text style={styles.splitButtonText}>Split</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
       <LoadingAnimation
         loading={
           loading || loadingUsers || loadingComponent
@@ -692,6 +1014,7 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
   );
 };
 
+//NOTE: Your styles are not included here for brevity, but they should remain unchanged.
 const styles = StyleSheet.create({
   Container: {
     flexDirection: 'column',
@@ -706,64 +1029,9 @@ const styles = StyleSheet.create({
   errorText: {
     color: '#f11f1f',
   },
-  NoDataContainer: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    marginTop: '30%',
-  },
-  WthHeight: {
-    width: 150,
-    height: 150,
-  },
-  NodataHeadText: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#27272A',
-  },
-  NodataSubText: {
-    fontSize: 16,
-    color: '#27272A',
-  },
   FlexRowCenter: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  assignTag: {
-    backgroundColor: '#5A2AAF',
-    borderRadius: 15,
-    color: '#fff',
-    paddingHorizontal: 10,
-    paddingTop: 2,
-    paddingBottom: 3,
-    marginLeft: 10,
-  },
-  assignTagText: {
-    fontSize: 12,
-    color: '#fff',
-  },
-  TopHeaderFixed: {
-    marginBottom: 15,
-  },
-  TopButtonContainer: {
-    flexDirection: 'row',
-    marginBottom: 15,
-    marginTop: 10,
-    justifyContent: 'flex-end',
-    gap: 10,
-  },
-  ButtonStyle: {
-    backgroundColor: '#fff',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 4,
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderColor: '#333',
-  },
-  TextStyle: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#333',
   },
   inputStyle: {
     flex: 1,
@@ -785,7 +1053,6 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 0, height: 10},
     shadowOpacity: 0.25,
     shadowRadius: 20,
-    // Shadow for Android
     elevation: 10,
     alignItems: 'center',
     marginTop: -10,
@@ -833,33 +1100,15 @@ const styles = StyleSheet.create({
   checkbox: {
     transform: [{scaleX: 1}, {scaleY: 1}],
   },
-  label: {
-    margin: 8,
-  },
-  UserImage: {
-    width: 45,
-    height: 45,
-    borderWidth: 2,
-    borderColor: '#BECADA',
-    borderStyle: 'solid',
-    borderRadius: 36,
-    marginRight: 15,
-  },
-  UserName: {
-    fontSize: 18,
-    fontWeight: '500',
-    color: '#27272A',
-  },
   UserRole: {
     fontSize: 16,
     fontWeight: '400',
     color: '#000000',
-    paddingLeft: 10,
   },
-  contentContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+  nameContainer: {
+    // NEW STYLE
+    flex: 1,
+    paddingLeft: 10,
   },
   modalBackdrop: {
     flex: 1,
@@ -883,52 +1132,17 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 60,
   },
-  PopHeader: {},
   modalView: {
     minHeight: 150,
   },
   ModalInnerContainer: {
     paddingHorizontal: 15,
   },
-  button: {
-    borderRadius: 4,
-    borderBottomEndRadius: 0,
-    paddingVertical: 20,
-    marginHorizontal: -15,
-  },
-  buttonOpen: {
-    backgroundColor: '#F194FF',
-  },
-  buttonAssign: {
-    backgroundColor: '#5A2AAF',
-    paddingVertical: 20,
-    paddingHorizontal: 30,
-    width: '50%',
-  },
-  SeperatorBorder: {
-    borderRightWidth: 1,
-    borderColor: '#fff',
-  },
-  DisabledButton: {
-    opacity: 0.5,
-    backgroundColor: '#5A2AAF',
-    paddingVertical: 20,
-    paddingHorizontal: 30,
-    width: '50%',
-  },
-  textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
   modalText: {
     fontSize: 18,
     fontWeight: '700',
     color: '#27272A',
     textAlign: 'center',
-  },
-  Height80: {
-    height: '80%',
   },
   Height100: {
     height: '100%',
@@ -990,18 +1204,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#fff',
     fontWeight: '500',
-  },
-  userAlreadyAssigned: {
-    backgroundColor: '#5A2AAF',
-    borderRadius: 30,
-    fontSize: 12,
-    color: '#fff',
-    paddingLeft: 12,
-    marginLeft: 20,
-    width: 60,
-    paddingTop: 5,
-    paddingBottom: 5,
-    alignItems: 'center',
   },
   separatTaskType: {
     marginBottom: 10,
@@ -1097,7 +1299,7 @@ const styles = StyleSheet.create({
   },
   mainContentRow: {
     flexDirection: 'row',
-    alignContent: 'center',
+    alignItems: 'center', // Changed from alignContent
     justifyContent: 'space-between',
     paddingBottom: 10,
   },
@@ -1116,10 +1318,9 @@ const styles = StyleSheet.create({
     paddingTop: 5,
   },
   actionButton: {
-    //backgroundColor: '#fff',
     borderRadius: 20,
     paddingHorizontal: 6,
-    paddingVertical: 5,
+    paddingVertical: 6,
     borderWidth: 1,
     borderColor: '#5A2AAF',
   },
@@ -1136,6 +1337,89 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#5A2AAF',
     fontWeight: '500',
+  },
+  actionButtonChainage: {
+    borderColor: '#5EAB4B',
+    backgroundColor: '#EFFFEB',
+  },
+  actionButtonLayer: {
+    borderColor: '#5A2AAF',
+    backgroundColor: '#E8DBFF',
+  },
+  actionButtonDelete: {
+    borderColor: '#FF4747',
+    backgroundColor: '#F3DEDE',
+  },
+  buttonTextChainage: {
+    color: '#5EAB4B',
+  },
+  buttonTextLayer: {
+    color: '#5A2AAF',
+  },
+  buttonTextDelete: {
+    color: '#FF4747',
+  },
+  splitChainageModalContainer: {
+    flex: 1,
+    flexDirection: 'column-reverse',
+  },
+  splitChainageModalContent: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    width: '100%',
+    maxHeight: '80%',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  splitChainageModalBody: {
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+  },
+  inputGroup: {
+    marginBottom: 10,
+  },
+  inputLabel: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#333',
+    marginBottom: 5,
+  },
+  splitInput: {
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    fontSize: 14,
+    color: '#333',
+    backgroundColor: '#fff',
+  },
+  readOnlyInput: {
+    backgroundColor: '#F3F4F6',
+    color: '#6B7280',
+  },
+  splitChainageModalFooter: {
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    borderTopWidth: 1,
+    borderTopColor: '#E5E7EB',
+  },
+  splitButton: {
+    backgroundColor: '#5A2AAF',
+    borderRadius: 8,
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+  splitButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
 

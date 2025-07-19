@@ -840,6 +840,49 @@ const WorkAssignmentReducer = (state = workAssignmentState, action) => {
         error: action.error,
         loading: false,
       };
+    case 'SPLIT_COMPONENT_REQUEST':
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+
+    case 'SPLIT_COMPONENT_SUCCESS':
+      return {
+        ...state,
+        error: null,
+        loading: false,
+        //Doubt for data
+      };
+
+    case 'SPLIT_COMPONENT_FAILURE':
+      return {
+        ...state,
+        error: action.error,
+        loading: false,
+      };
+
+    case 'DELETE_SPLIT_COMPONENT_REQUEST':
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+
+    case 'DELETE_SPLIT_COMPONENT_SUCCESS':
+      //Doubt: for data
+      return {
+        ...state,
+        error: null,
+        loading: false,
+      };
+
+    case 'DELETE_SPLIT_COMPONENT_FAILURE':
+      return {
+        ...state,
+        error: action.error,
+        loading: false,
+      };
     case 'CLEAR_PROJECT_MODULE_WORK_ASSIGNMENT_USERS':
       return {
         ...state,

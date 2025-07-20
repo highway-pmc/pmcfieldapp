@@ -43,7 +43,6 @@ const SegmentsList = ({route, navigation}: {route: any; navigation: any}) => {
     subType,
     workType,
     taskCategory,
-    chainage,
   } = route.params;
 
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
@@ -322,10 +321,9 @@ const SegmentsList = ({route, navigation}: {route: any; navigation: any}) => {
         dispatch(
           getUsersForWorkAssignment({
             projectId: loggedInUser.projectId,
-            workType:
-              workType === PROJECT_TYPE.INITIAL_SURVEY
-                ? USER_CATEGORY.SURVEY_WORK
-                : workType,
+            workType: workType === PROJECT_TYPE.INITIAL_SURVEY
+                        ? USER_CATEGORY.SURVEY_WORK
+                        : workType,
           }),
         );
       }, 500);
@@ -425,7 +423,6 @@ const SegmentsList = ({route, navigation}: {route: any; navigation: any}) => {
           subType: subType,
           workType: workType,
           taskCategory: taskCategory,
-          chainage: chainage,
         });
       } else if (nextLevel.nextLevel === 'task') {
         navigation.navigate('AssignTasks', {

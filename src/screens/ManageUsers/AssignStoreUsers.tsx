@@ -278,16 +278,12 @@ const AssignStoreUsers = () => {
                     <Text style={styles.categoryText}>{item.name}</Text>
                   </View>
                 </View>
-                <View></View>
+                <View>
+                </View>
               </LinearGradient>
             </View>
           ))}
-        {testClassificationsData && (
-          <Image
-            style={styles.WthHeight}
-            source={require('./../../images/userManagement/store.png')}
-          />
-        )}
+
         {/* No Data Found */}
         {!loading && !testClassificationsData.length && (
           <View style={styles.NoDataContainer}>

@@ -86,7 +86,8 @@ const RFIsGenerateMyWork = ({ route, navigation }: { route: any, navigation: any
 }
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+  },
   tabBar: {
     flexDirection: 'row',
     backgroundColor: '#fff',
@@ -98,25 +99,25 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 20,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   activeTab: {
     borderBottomWidth: 3,
     borderStyle: 'solid',
-    borderColor: '#4E36A3',
+    borderColor: '#1C58C0',
   },
   activeFontColor: {
-    color: '#4E36A3',
+    color: '#1C58C0',
   },
   activeTabText: {
     color: '#000',
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: '500'
   },
   tabContent: {
     paddingHorizontal: 5,
     paddingTop: 10,
-    height: '100%',
+    height: '100%'
   },
 });
 

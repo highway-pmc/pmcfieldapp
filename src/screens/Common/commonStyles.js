@@ -29,8 +29,7 @@ const commonStyles = StyleSheet.create({
   iconsStyle: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    alignItems: 'flex-end',
-  },
+    alignItems: 'flex-end',  },
   rightStyle: {
     width: 50,
   },
@@ -140,6 +139,7 @@ const commonStyles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#FFF',
     alignSelf: 'center',
+    marginBottom: 10,
     color: '#fff',
   },
   toggleButton: {
@@ -150,9 +150,7 @@ const commonStyles = StyleSheet.create({
   },
   activeToggleButton: {
     borderBottomColor: '#4E36A3',
-    // borderTopWidth: 2,
-    // borderTopColor: '#4E36A3',
-    borderBottomWidth: 2,
+    borderBottomWidth: 3,
   },
   toggleText: {
     fontSize: 16,

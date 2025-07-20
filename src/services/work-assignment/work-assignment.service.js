@@ -328,36 +328,3 @@ export const tasksWorkAssignToUsersApi = async (
       throw new Error(errorMessge);
     });
 };
-
-export const splitComponentApi = async (projectModuleId, splitTo, body) => {
-  console.log(
-    `v1/auth/project-modules/${projectModuleId}/splits/${splitTo}======`,
-  );
-  return apiService
-    .postRequest(
-      `v1/auth/project-modules/${projectModuleId}/splits/${splitTo}`,
-      body,
-    )
-    .then(response => {
-      return response;
-    })
-    .catch(err => {
-      const errorMessage = err.message || 'Unable to split the component.';
-      throw new Error(errorMessage);
-    });
-};
-
-export const deleteSplitComponentApi = async (projectModuleId, type, id) => {
-  return apiService
-    .deleteRequest(
-      `v1/auth/project-modules/${projectModuleId}/splits/${type}/${id}`,
-    )
-    .then(response => {
-      return response;
-    })
-    .catch(err => {
-      const errorMessage =
-        err.message || 'Unable to delete the split component.';
-      throw new Error(errorMessage);
-    });
-};

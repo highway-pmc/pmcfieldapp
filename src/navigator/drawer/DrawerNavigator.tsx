@@ -18,6 +18,7 @@ import {
   EquipmentStackNavigator,
   StoreStackNavigator,
   ProductionStackNavigator,
+  SurveyStackNaigator,
 } from './StackNavigator';
 import ForgotPasswordStep3 from '../../screens/ForgotPassword/Step3';
 import {useSelector} from 'react-redux';
@@ -60,6 +61,13 @@ const DrawerNavigator = () => {
       <Drawer.Screen
         name="MyWorkType"
         component={MyWorkStackNavigator}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Drawer.Screen
+        name="SurveyHome"
+        component={SurveyStackNaigator}
         options={{
           headerShown: false,
         }}

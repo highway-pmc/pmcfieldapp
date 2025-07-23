@@ -19,6 +19,7 @@ import ComponentsList from '../../screens/ManageUsers/ComponentsList';
 import WorkType from '../../screens/ManageUsers/WorkType';
 import AssignTasks from '../../screens/ManageUsers/AssignTasks';
 import MyWorkType from '../../screens/MyWork/MyWorkType';
+import SurveyHome from '../../screens/Survey/SurveyHome';
 import RFIsDashboard from '../../screens/RFIs/RFIsDashboard';
 import RFIsGenerateMyWork from '../../screens/RFIs/RFIsGenerateMyWork';
 import SubComponentsList from '../../screens/ManageUsers/SubComponentsList';
@@ -85,7 +86,17 @@ const MyWorkStackNavigator = () => {
     </Stack.Navigator>
   );
 };
-
+const SurveyStackNaigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen
+        name="SurveyHome"
+        component={SurveyHome}
+        options={{headerShown: false}}
+      />
+    </Stack.Navigator>
+  );
+};
 const MyTaskStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
@@ -424,6 +435,7 @@ const ChangePasswordStackNavigator = () => {
 
 export {
   MyWorkStackNavigator,
+  SurveyStackNaigator,
   MyTaskStackNavigator,
   MixDesignStackNavigator,
   ProductionStackNavigator,

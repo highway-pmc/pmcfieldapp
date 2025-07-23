@@ -302,7 +302,7 @@ export const Dashboard_MENU = [
     iconMenu: require('./../images/homeDashbord/surveying.png'),
     title: 'Surveying',
     subTitle: 'Surveying',
-    route: '',
+    route: 'SurveyHome',
     backgroundColor: '#FFEFC8',
     titleColor: '#FBC02D',
     border: '#FFE094',

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React, {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 
 import {
   StyleSheet,
@@ -13,32 +13,35 @@ import {
   Image,
   Alert,
 } from 'react-native';
-import { loginUser } from './actions'
-import { emailOrMobileRequired, passwordRequired, validateEmailOrMobile } from '../../utils/Validations';
+import {loginUser} from './actions';
+import {
+  emailOrMobileRequired,
+  passwordRequired,
+  validateEmailOrMobile,
+} from '../../utils/Validations';
 import NetworkUtils from '../../utils/NetworkUtil';
-import { users } from '../../models/users';
-import { user } from '../../models/user';
+import {users} from '../../models/users';
+import {user} from '../../models/user';
 import LoadingAnimation from '../Common/LoadingAnimation';
 import appConfig from '../../common/app.config';
-import { mobilenoRegex } from '../../utils/RegexApp';
+import {mobilenoRegex} from '../../utils/RegexApp';
 
-
-const Login = ({ navigation }: { navigation: any }) => {
+const Login = ({navigation}: {navigation: any}) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [emailError, setEmailError] = useState("")
-  const [passwordError, setPasswordError] = useState("")
-  const [formSubmitted, setFormSubmitted] = useState(false)
-  const {user, loading, error} = useSelector((state: any) => state.Auth)
-  const [errorMessage, setErrorMessage] = useState("")
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const {user, loading, error} = useSelector((state: any) => state.Auth);
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  const onSubmit = async() => {
+  const onSubmit = async () => {
     setEmailError('');
     setPasswordError('');
     setFormSubmitted(true);
-    
+
     if (handleEmailError(username) || handlePasswordError(password)) {
       return false;
     }
@@ -46,139 +49,165 @@ const Login = ({ navigation }: { navigation: any }) => {
     const isInternetAvailable = await NetworkUtils.isNetworkAvailable();
 
     if (isInternetAvailable) {
-      console.log("======== Internet available ========");
+      console.log('======== Internet available ========');
       dispatch(loginUser(username, password, username.match(mobilenoRegex)));
     } else {
-      console.log("======== No Internet ========");
-      users.getAll().then((result) => { 
-        if (result.length === 0) {
-          Alert.alert("No internet", "Please connect to internet and try again");
-        } else {
-          users.login(username, password).then((result) => {
-            if (result) {
-              appConfig.setToken(result.authToken);
-              appConfig.setUserInfo(result);
+      console.log('======== No Internet ========');
+      users
+        .getAll()
+        .then(result => {
+          if (result.length === 0) {
+            Alert.alert(
+              'No internet',
+              'Please connect to internet and try again',
+            );
+          } else {
+            users
+              .login(username, password)
+              .then(result => {
+                if (result) {
+                  appConfig.setToken(result.authToken);
+                  appConfig.setUserInfo(result);
 
-              dispatch({
-                type: "LOGGED_IN_USER",
-                response: result,
+                  dispatch({
+                    type: 'LOGGED_IN_USER',
+                    response: result,
+                  });
+                } else {
+                  setErrorMessage('Invalid username or password.');
+                }
               })
-            } else {
-              setErrorMessage("Invalid username or password.");
-            }
-          }).catch((error) => {
-            setErrorMessage("E00001: An exception occurred. Please try again.");
-          });
-        }
-      }).catch((error) => {
-        setErrorMessage("E00002: An exception occurred. Please try again.");
-      });
-       
+              .catch(error => {
+                setErrorMessage(
+                  'E00001: An exception occurred. Please try again.',
+                );
+              });
+          }
+        })
+        .catch(error => {
+          setErrorMessage('E00002: An exception occurred. Please try again.');
+        });
     }
-  }
+  };
 
   useEffect(() => {
     if (user) {
-      users.findByEmail(user.email).then((userDb) => {
-        if (userDb) {
-          const userApi: user = {
-            _id: user._id,
-            id: userDb.id,
-            email: user.email,
-            name: user.name,
-            phone: user.phone,
-            projectId: user.projectId,
-            projectName: user.projectName || "",
-            designation: user.designation,
-            roles: user.roles,
-            isPasswordSet: user.isPasswordSet,
-            authToken: user.authToken,
-            categories: user.categories
-          };
+      users
+        .findByEmail(user.email)
+        .then(userDb => {
+          if (userDb) {
+            const userApi: user = {
+              _id: user._id,
+              id: userDb.id,
+              email: user.email,
+              name: user.name,
+              phone: user.phone,
+              projectId: user.projectId,
+              projectName: user.projectName || '',
+              designation: user.designation,
+              roles: user.roles,
+              isPasswordSet: user.isPasswordSet,
+              authToken: user.authToken,
+              categories: user.categories,
+            };
 
-          if (password) {
-            userApi.password = password;
-          }
-          users.update(userApi).then((rowsAffected) => {
-            if (rowsAffected) {
-              console.log("User updated successfully");
-            } else {
-              console.log("Unable to update user");
+            if (password) {
+              userApi.password = password;
             }
+            users
+              .update(userApi)
+              .then(rowsAffected => {
+                if (rowsAffected) {
+                  console.log('User updated successfully');
+                } else {
+                  console.log('Unable to update user');
+                }
 
-            dispatch({
-              type: "LOGGED_IN_USER",
-              response: user,
-            })
-          }).catch((error) => {
-            setErrorMessage("E00006: An exception occurred. Please try again.");
-          })
-        } else { //first time user loggedin
-          const userApi: user = {
-            _id: user._id,
-            email: user.email,
-            name: user.name,
-            phone: user.phone, 
-            roles: user.roles,
-            password: password,
-            projectId: user.projectId,
-            projectName: user.projectName || "",
-            designation: user.designation,
-            isPasswordSet: user.isPasswordSet,
-            authToken: user.authToken,
-            categories: user.categories
-          };
-          users.save(userApi).then((dbUser) => {
-            if (dbUser.id) {
-              console.log("User added sucessfully");
-              dispatch({
-                type: "LOGGED_IN_USER",
-                response: dbUser,
+                dispatch({
+                  type: 'LOGGED_IN_USER',
+                  response: user,
+                });
               })
-            } else {
-              setErrorMessage("E00003: An exception occurred. Please try again.");
-            }
-          }).catch((error) => {
-            setErrorMessage("E00004: An exception occurred. Please try again.");
-          })
-        }
-      }).catch((error) => {
-        setErrorMessage("E00005: An exception occurred. Please try again.");
-      });
-    } else if(error) {
+              .catch(error => {
+                setErrorMessage(
+                  'E00006: An exception occurred. Please try again.',
+                );
+              });
+          } else {
+            //first time user loggedin
+            const userApi: user = {
+              _id: user._id,
+              email: user.email,
+              name: user.name,
+              phone: user.phone,
+              roles: user.roles,
+              password: password,
+              projectId: user.projectId,
+              projectName: user.projectName || '',
+              designation: user.designation,
+              isPasswordSet: user.isPasswordSet,
+              authToken: user.authToken,
+              categories: user.categories,
+            };
+            users
+              .save(userApi)
+              .then(dbUser => {
+                if (dbUser.id) {
+                  console.log('User added sucessfully');
+                  dispatch({
+                    type: 'LOGGED_IN_USER',
+                    response: dbUser,
+                  });
+                } else {
+                  setErrorMessage(
+                    'E00003: An exception occurred. Please try again.',
+                  );
+                }
+              })
+              .catch(error => {
+                setErrorMessage(
+                  'E00004: An exception occurred. Please try again.',
+                );
+              });
+          }
+        })
+        .catch(error => {
+          setErrorMessage('E00005: An exception occurred. Please try again.');
+        });
+    } else if (error) {
       setErrorMessage(error);
     }
   }, [user, error]);
 
-  const handleEmailError = (email = "") => {
-    const emailError = emailOrMobileRequired(email)
-    if(emailError) {
+  const handleEmailError = (email = '') => {
+    const emailError = emailOrMobileRequired(email);
+    if (emailError) {
       setEmailError(emailError);
     } else {
-      setEmailError("");
+      setEmailError('');
     }
 
-    if(!emailError) {
+    if (!emailError) {
       const emailError = validateEmailOrMobile(email);
       if (emailError) {
         setEmailError(emailError);
       } else {
-        setEmailError("");
+        setEmailError('');
       }
     }
     return emailError;
-  }
+  };
 
-  const handlePasswordError = (pwd = "") => {
+  const handlePasswordError = (pwd = '') => {
     const pwdError = passwordRequired(pwd);
-    if(pwdError) {
+    if (pwdError) {
       setPasswordError(pwdError);
     } else {
-      setPasswordError("");
+      setPasswordError('');
     }
 
     return pwdError;
-  }
+  };
 
   const handleNavigateToDetails = () => {
     navigation.navigate('ForgotPasswordStep1');
@@ -194,11 +223,11 @@ const Login = ({ navigation }: { navigation: any }) => {
           alignContent: 'center',
         }}>
         <View>
-          <View style={{alignItems: 'center', marginBottom: 25,}}>
-          <Image
-            style={styles.HeaderTopMenuIcon}
-            source={require('./../../images/login-logo.png')} 
-          />
+          <View style={{alignItems: 'center', marginBottom: 25}}>
+            <Image
+              style={styles.HeaderTopMenuIcon}
+              source={require('./../../images/login-logo.png')}
+            />
           </View>
           <KeyboardAvoidingView enabled>
             <View style={styles.MainContainerStyle}>
@@ -211,12 +240,14 @@ const Login = ({ navigation }: { navigation: any }) => {
                     Please log in into your account
                   </Text>
                 </View>
-                {errorMessage && formSubmitted && <View style={{ alignItems: 'center', marginTop: 20 }}>
-                  <Text style={styles.errorText}>{errorMessage}</Text>
-                </View>}
+                {errorMessage && formSubmitted && (
+                  <View style={{alignItems: 'center', marginTop: 20}}>
+                    <Text style={styles.errorText}>{errorMessage}</Text>
+                  </View>
+                )}
               </View>
               <Text>Email</Text>
-              <View style={styles.SectionStyle}> 
+              <View style={styles.SectionStyle}>
                 <TextInput
                   style={styles.inputStyle}
                   placeholder="Enter Email or mobile"
@@ -225,15 +256,17 @@ const Login = ({ navigation }: { navigation: any }) => {
                   returnKeyType="next"
                   underlineColorAndroid="#f000"
                   blurOnSubmit={false}
-                  onChangeText={(text) => {
+                  onChangeText={text => {
                     setUsername(text);
                     handleEmailError(text);
                   }}
                 />
               </View>
-              {(emailError && formSubmitted) && <View style={styles.ErrorSectionStyle}>
+              {emailError && formSubmitted && (
+                <View style={styles.ErrorSectionStyle}>
                   <Text style={styles.errorText}>{emailError}</Text>
-                </View>}
+                </View>
+              )}
               <Text>Password</Text>
               <View style={styles.SectionStyle}>
                 <TextInput
@@ -245,21 +278,25 @@ const Login = ({ navigation }: { navigation: any }) => {
                   secureTextEntry={true}
                   underlineColorAndroid="#f000"
                   returnKeyType="next"
-                  onChangeText={(text) => {
+                  onChangeText={text => {
                     setPassword(text);
                     handlePasswordError(text);
                   }}
                 />
               </View>
-              {(passwordError && formSubmitted) && <View style={styles.ErrorSectionStyle}>
+              {passwordError && formSubmitted && (
+                <View style={styles.ErrorSectionStyle}>
                   <Text style={styles.errorText}>{passwordError}</Text>
-                </View>}
+                </View>
+              )}
               <View style={styles.AlignRight}>
                 <TouchableOpacity onPress={handleNavigateToDetails}>
                   <Text style={styles.orangeText}>Forgot Password?</Text>
                 </TouchableOpacity>
               </View>
-              <TouchableOpacity style={styles.buttonStyle} activeOpacity={0.5}
+              <TouchableOpacity
+                style={styles.buttonStyle}
+                activeOpacity={0.5}
                 onPress={() => onSubmit()}>
                 <Text style={styles.buttonTextStyle}>Sign In</Text>
               </TouchableOpacity>
@@ -270,10 +307,9 @@ const Login = ({ navigation }: { navigation: any }) => {
       <LoadingAnimation loading={loading}></LoadingAnimation>
     </View>
   );
-}
+};
 
 export default Login;
-
 
 const styles = StyleSheet.create({
   mainBody: {
@@ -288,7 +324,7 @@ const styles = StyleSheet.create({
   },
   SignInText: {
     fontSize: 28,
-    color: '#1C58C0',
+    color: '#5A2AAF',
     fontWeight: '700',
   },
   SubText: {
@@ -314,16 +350,16 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   buttonStyle: {
-    backgroundColor: '#1C58C0',
+    backgroundColor: '#5A2AAF',
     borderWidth: 0,
     color: '#FFFFFF',
     borderColor: '#7DE24E',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius:8,
+    borderRadius: 8,
     marginTop: 20,
     marginBottom: 25,
-    paddingVertical: 10
+    paddingVertical: 10,
   },
   buttonTextStyle: {
     color: '#FFFFFF',

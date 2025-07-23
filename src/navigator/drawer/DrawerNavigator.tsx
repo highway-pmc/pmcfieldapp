@@ -7,7 +7,6 @@ import {
   ManageUsersStackNavigator,
   MyTaskStackNavigator,
   MyQualityWorksStackNavigator,
-  MyWorkPHStackNavigator,
   MyWorkStackNavigator,
   ProfileStackNavigator,
   ProgressStackNavigator,

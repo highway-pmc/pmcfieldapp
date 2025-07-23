@@ -25,7 +25,7 @@ const SurveyHome = ({navigation}: {navigation: any}) => {
   useEffect(() => {
     if (focus == true) {
       const eventEmitter = new NativeEventEmitter();
-      eventEmitter.emit('headerEvent', HeaderItems.myWorkType);
+      eventEmitter.emit('headerEvent', HeaderItems.surveyHome);
       render();
     }
   }, [focus]);

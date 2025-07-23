@@ -1,12 +1,32 @@
-import { View, Text, Button, NativeEventEmitter, Alert, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { useFocusEffect, useIsFocused } from '@react-navigation/native';
-import { HeaderItems, PROJECT_TYPE, RFIs_TYPE, USER_CATEGORY_DISPLAY, WORK_TYPE } from "../../constants/constants"
+import {
+  View,
+  Text,
+  Button,
+  NativeEventEmitter,
+  Alert,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {useFocusEffect, useIsFocused} from '@react-navigation/native';
+import {
+  HeaderItems,
+  PROJECT_TYPE,
+  RFIs_TYPE,
+  USER_CATEGORY_DISPLAY,
+  WORK_TYPE,
+} from '../../constants/constants';
 import RFIsStructureTaskListing from './RFIsStructureTaskListing';
 
-const RFIsGenerateMyWork = ({ route, navigation }: { route: any, navigation: any }) => {
-
-  const { rfiType } = route.params;
+const RFIsGenerateMyWork = ({
+  route,
+  navigation,
+}: {
+  route: any;
+  navigation: any;
+}) => {
+  const {rfiType} = route.params;
 
   const [activeTab, setActiveTab] = useState(USER_CATEGORY_DISPLAY.STRUCTURE);
 
@@ -15,29 +35,27 @@ const RFIsGenerateMyWork = ({ route, navigation }: { route: any, navigation: any
     if (focus == true) {
       const eventEmitter = new NativeEventEmitter();
 
-
       eventEmitter.emit('headerEvent', getHeaderTitle());
     }
   }, [focus]);
 
   const getHeaderTitle = () => {
     if (rfiType === RFIs_TYPE.GENERATE) {
-      return HeaderItems.rfisGenerateTaskListing
+      return HeaderItems.rfisGenerateTaskListing;
     } else if (rfiType === RFIs_TYPE.CLOSED) {
-      return HeaderItems.rfisClosedTaskListing
+      return HeaderItems.rfisClosedTaskListing;
     } else if (rfiType === RFIs_TYPE.APPROVED) {
-      return HeaderItems.rfisApprovedTaskListing
+      return HeaderItems.rfisApprovedTaskListing;
     } else if (rfiType === RFIs_TYPE.REJECTED) {
-      HeaderItems.rfisRejectedTaskListing
+      HeaderItems.rfisRejectedTaskListing;
     }
 
     return {};
-  }
+  };
 
   const switchTab = (tabName: any) => {
     setActiveTab(tabName);
   };
-
 
   return (
     <View style={styles.container}>
@@ -47,9 +65,15 @@ const RFIsGenerateMyWork = ({ route, navigation }: { route: any, navigation: any
             styles.tabItem,
             activeTab === USER_CATEGORY_DISPLAY.STRUCTURE && styles.activeTab,
           ]}
-          onPress={() => switchTab(USER_CATEGORY_DISPLAY.STRUCTURE)}
-        >
-          <Text style={[styles.activeTabText, activeTab === USER_CATEGORY_DISPLAY.STRUCTURE && styles.activeFontColor]}>{USER_CATEGORY_DISPLAY.STRUCTURE}</Text>
+          onPress={() => switchTab(USER_CATEGORY_DISPLAY.STRUCTURE)}>
+          <Text
+            style={[
+              styles.activeTabText,
+              activeTab === USER_CATEGORY_DISPLAY.STRUCTURE &&
+                styles.activeFontColor,
+            ]}>
+            {USER_CATEGORY_DISPLAY.STRUCTURE}
+          </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -57,9 +81,15 @@ const RFIsGenerateMyWork = ({ route, navigation }: { route: any, navigation: any
             styles.tabItem,
             activeTab === USER_CATEGORY_DISPLAY.HIGHWAY && styles.activeTab,
           ]}
-          onPress={() => switchTab(USER_CATEGORY_DISPLAY.HIGHWAY)}
-        >
-          <Text style={[styles.activeTabText, activeTab === USER_CATEGORY_DISPLAY.HIGHWAY && styles.activeFontColor]}>{USER_CATEGORY_DISPLAY.HIGHWAY}</Text>
+          onPress={() => switchTab(USER_CATEGORY_DISPLAY.HIGHWAY)}>
+          <Text
+            style={[
+              styles.activeTabText,
+              activeTab === USER_CATEGORY_DISPLAY.HIGHWAY &&
+                styles.activeFontColor,
+            ]}>
+            {USER_CATEGORY_DISPLAY.HIGHWAY}
+          </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -67,27 +97,39 @@ const RFIsGenerateMyWork = ({ route, navigation }: { route: any, navigation: any
             styles.tabItem,
             activeTab === USER_CATEGORY_DISPLAY.OTHER && styles.activeTab,
           ]}
-          onPress={() => switchTab(USER_CATEGORY_DISPLAY.OTHER)}
-        >
-          <Text style={[styles.activeTabText, activeTab === USER_CATEGORY_DISPLAY.OTHER && styles.activeFontColor]}>{USER_CATEGORY_DISPLAY.OTHER}</Text>
+          onPress={() => switchTab(USER_CATEGORY_DISPLAY.OTHER)}>
+          <Text
+            style={[
+              styles.activeTabText,
+              activeTab === USER_CATEGORY_DISPLAY.OTHER &&
+                styles.activeFontColor,
+            ]}>
+            {USER_CATEGORY_DISPLAY.OTHER}
+          </Text>
         </TouchableOpacity>
       </View>
       <View style={styles.tabContent}>
-        {activeTab === USER_CATEGORY_DISPLAY.STRUCTURE &&
+        {activeTab === USER_CATEGORY_DISPLAY.STRUCTURE && (
           // <Text>STRUCTURE WORK</Text>
-          <RFIsStructureTaskListing rfiType={rfiType} projectType={PROJECT_TYPE.STRUCTURE_WORK}></RFIsStructureTaskListing>
-        }
-        {activeTab === USER_CATEGORY_DISPLAY.HIGHWAY && <RFIsStructureTaskListing rfiType={rfiType} projectType={PROJECT_TYPE.HIGHWAY_WORK}></RFIsStructureTaskListing>}
+          <RFIsStructureTaskListing
+            rfiType={rfiType}
+            projectType={
+              PROJECT_TYPE.STRUCTURE_WORK
+            }></RFIsStructureTaskListing>
+        )}
+        {activeTab === USER_CATEGORY_DISPLAY.HIGHWAY && (
+          <RFIsStructureTaskListing
+            rfiType={rfiType}
+            projectType={PROJECT_TYPE.HIGHWAY_WORK}></RFIsStructureTaskListing>
+        )}
         {activeTab === USER_CATEGORY_DISPLAY.OTHER && <Text>TBD</Text>}
       </View>
-
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
-  container: {
-  },
+  container: {},
   tabBar: {
     flexDirection: 'row',
     backgroundColor: '#fff',
@@ -99,26 +141,26 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 20,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   activeTab: {
     borderBottomWidth: 3,
     borderStyle: 'solid',
-    borderColor: '#1C58C0',
+    borderColor: '#4E36A3',
   },
   activeFontColor: {
-    color: '#1C58C0',
+    color: '#4E36A3',
   },
   activeTabText: {
     color: '#000',
     fontSize: 16,
-    fontWeight: '500'
+    fontWeight: '500',
   },
   tabContent: {
     paddingHorizontal: 5,
     paddingTop: 10,
-    height: '100%'
+    height: '100%',
   },
 });
 
-export default RFIsGenerateMyWork
+export default RFIsGenerateMyWork;

@@ -662,6 +662,9 @@ export const WORK_TYPE = {
 export const STORE_OPTION = {
   PURCHASING: 'Purchasing',
   INVENTORY: 'Inventory',
+  CONTINGENCY_REQUEST: 'Contingency Request',
+  SCRAP_DEPOSIT: 'Scrap Deposit',
+  SCRAP_INVENTORY: 'Scrap Inventory',
 };
 
 export const WORK_ASSIGNMENT_LEVEL = {

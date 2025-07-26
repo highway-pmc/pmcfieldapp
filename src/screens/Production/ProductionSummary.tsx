@@ -13,7 +13,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import KebabMenu from '../Common/KebabMenu';
 
 export default function ProductionSummary() {
-  const [orders, setOrders] = useState([
+  const [orders, setOrders] = useState<any>([
     {
       id: 1,
       module: 'Project Module/ Segment/ Component',
@@ -86,8 +86,8 @@ export default function ProductionSummary() {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [formData, setFormData] = useState({});
 
-  const handleEdit = (orderId:any) => {
-    const order = orders.find(o => o.id === orderId);
+  const handleEdit = (orderId: any) => {
+    const order = orders.find((o: any) => o.id === orderId);
     setSelectedOrder(order);
     setFormData({
       mixDesignCategory: order.mixDesignCategory,
@@ -154,7 +154,7 @@ export default function ProductionSummary() {
     setFormData({});
   };
 
-  const renderDropdown = (value, placeholder, isReadOnly = false) => (
+  const renderDropdown = (value: any, placeholder: any, isReadOnly = false) => (
     <View style={[styles.inputContainer, isReadOnly && styles.readOnlyInput]}>
       <Text style={[styles.inputText, isReadOnly && styles.readOnlyText]}>
         {value || placeholder}
@@ -164,9 +164,9 @@ export default function ProductionSummary() {
   );
 
   const renderTextInput = (
-    value,
-    placeholder,
-    onChangeText,
+    value: any,
+    placeholder: any,
+    onChangeText: any,
     isReadOnly = false,
   ) => (
     <TextInput
@@ -188,7 +188,7 @@ export default function ProductionSummary() {
       <ScrollView
         style={styles.listContainer}
         showsVerticalScrollIndicator={false}>
-        {orders.map(order => (
+        {orders.map((order:any) => (
           <View key={order.id} style={styles.orderCard}>
             <LinearGradient
               colors={['#FFFFFF', '#F0F4FF']}

@@ -13,6 +13,7 @@ import {
   CEMENT_TYPE_LIST,
   CONCRETE_GRADE_LIST,
   RFI_STATUS,
+  SEGMENT_TYPES_DISPLAY,
   TASK_TYPES,
   YES_NO_LIST,
   YES_NO_NA_LIST,
@@ -28,6 +29,7 @@ import {styles} from './Styles';
 import {Validates} from './Validates';
 import {Events} from './Events';
 import TableCommonStyles from '../../../../Common/TableCommonStyles';
+import { groupBy } from '../../../../../utils/Utils';
 
 export const CustomForms = (_v: any) => {
   const _validation = Validates(_v);
@@ -18883,19 +18885,19 @@ export const CustomForms = (_v: any) => {
   const tasksListing = (_v: any) => {
     return _v.currentTasksData
       .filter((task: any) => {
-        if (_v.searchText && task.displayName) {
-          return task.displayName
+        if (_v.searchText && task.taskId.displayName) {
+          return task.taskId.displayName
             .toLowerCase()
             .includes(_v.searchText.toLowerCase());
         } else {
           return true;
         }
       })
-      .map((item: any, index) => (
+      .map((item: any, index: number) => (
         <View style={_event.getStyle(item)}>
           <View style={styles.leftContainer}>
             <Text style={[styles.HeadText, {maxWidth: 300}]}>
-              {item.displayName}
+              {item.taskId.displayName}
             </Text>
             {/* <Text style={styles.MyWorkSubHead}>Sub Text</Text> */}
           </View>
@@ -18990,6 +18992,140 @@ export const CustomForms = (_v: any) => {
       ));
   };
 
+  const projectModuleListing = (_v: any, getMyWorksData: Function) => {
+    return _v.myWorksData.map((projModuleItem: any, projModuleIndex: number) => {
+      return (
+        <TouchableOpacity style={styles.MyWorkCard}
+          onPress={() => {
+            _v.setCurrentLevel(2);
+            _v.setSelectedProjectModuleData(projModuleItem);
+            getMyWorksData(2, projModuleItem.id);
+          }
+          }
+        >
+          <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
+          <View style={styles.TaskDetails}>
+            <Text style={[styles.SubHeadingText, styles.BoldText]}>
+              Assigned:
+            </Text>
+            <Text style={[styles.SubHeadingText, styles.SubActive]}>
+              {projModuleItem.name}
+            </Text>
+          </View>
+      </TouchableOpacity>
+      );
+    });
+  }
+
+  const segmentGroupListing = (_v: any) => {
+    if (_v.segmentsByGroupOnType) {
+      return Object.keys(_v.segmentsByGroupOnType).map(item => {
+        return (
+            <TouchableOpacity
+            style={[styles.StartWorkCard, styles.StartBorder]}
+            onPress={() => {
+              _v.setSelectedSegmentType(item); _v.setSegmentView(1);
+            }}>
+            <View style={styles.leftContainer}>
+              <Text style={styles.HeadText}>
+                {_v.segmentsByGroupOnType[item].length}
+              </Text>
+              <Text style={styles.MyWorkSubHead}>
+                {SEGMENT_TYPES_DISPLAY[item]}
+              </Text>
+            </View>
+          </TouchableOpacity>
+          )
+      })
+    }
+  }
+
+  const segmentListing = (_v: any, getMyWorksData: Function) => {
+    if (_v.selectedProjectModuleData?.segmentsData?.length) {
+        return _v.segmentsByGroupOnType[_v.selectedSegmentType]?.map((item: any, index: number) => {
+        return (
+          <TouchableOpacity style={styles.MyWorkCard}
+            onPress={() => {
+              _v.setCurrentLevel(3);
+              _v.setSelectedSegmentData(item);
+              getMyWorksData(3, '', item._id);
+            }
+          }>
+            <Text style={styles.HeadingText}>{item.name}</Text>
+            <View style={styles.TaskDetails}>
+              <Text style={[styles.SubHeadingText, styles.BoldText]}>
+                Assigned:
+              </Text>
+              <Text style={[styles.SubHeadingText, styles.SubActive]}>
+                {item.name}
+              </Text>
+            </View>
+        </TouchableOpacity>
+        );
+      })
+    }
+  }
+
+  const componentListing = (_v: any, getMyWorksData: Function) => {
+    if (_v.selectedSegmentData?.componentsData?.length) {
+      return _v.selectedSegmentData?.componentsData?.map((item: any, index: number) => {
+        return (
+          <TouchableOpacity style={styles.MyWorkCard}
+            onPress={() => {
+              if (item.hasSubcomponent) {
+                _v.setCurrentLevel(4);
+                _v.setSelectedComponentData(item);
+                getMyWorksData(4, '', '', item.id);
+              } else {
+                _v.setCurrentLevel(5);
+                _v.setSelectedComponentData(item);
+                getMyWorksData(5, '', '', item.id);
+              }
+            }
+            }
+          >
+            <Text style={styles.HeadingText}>{item.name}</Text>
+            <View style={styles.TaskDetails}>
+              <Text style={[styles.SubHeadingText, styles.BoldText]}>
+                Assigned:
+              </Text>
+              <Text style={[styles.SubHeadingText, styles.SubActive]}>
+                {item.name}
+              </Text>
+            </View>
+        </TouchableOpacity>
+        );
+      });
+    }
+  }
+
+  const subComponentListing = (_v: any, getMyWorksData: Function) => {
+    if (_v.selectedComponentData?.subComponentsData?.length) {
+      return _v.selectedComponentData?.subComponentsData?.map((item: any, index: number) => {
+        return (
+          <TouchableOpacity style={styles.MyWorkCard}
+            onPress={() => {
+              _v.setCurrentLevel(5);
+              _v.setSelectedSubComponentData(item);
+              getMyWorksData(5, '', '', '', item.id);
+            }
+            }
+          >
+            <Text style={styles.HeadingText}>{item.name}</Text>
+            <View style={styles.TaskDetails}>
+              <Text style={[styles.SubHeadingText, styles.BoldText]}>
+                Assigned:
+              </Text>
+              <Text style={[styles.SubHeadingText, styles.SubActive]}>
+                {item.name}
+              </Text>
+            </View>
+        </TouchableOpacity>
+        );
+      });
+    }
+  }
+
   return {
     CustomTextInput,
     CustomTextInputValue,
@@ -19006,5 +19142,10 @@ export const CustomForms = (_v: any) => {
     handleTimeChangeLayingOfDlc,
     taskForm,
     tasksListing,
+    projectModuleListing,
+    segmentGroupListing,
+    segmentListing,
+    componentListing,
+    subComponentListing,
   };
 };

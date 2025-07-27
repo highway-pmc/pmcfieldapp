@@ -15,6 +15,12 @@ export const Variables = () => {
     const { showSnackbar } = useSnackbar();
 
     const [myWorksData, setMyWorksData]: any = useState([]);
+    const [selectedProjectModuleData, setSelectedProjectModuleData]: any = useState(null);
+    const [selectedSegmentData, setSelectedSegmentData]: any = useState(null);
+    const [selectedComponentData, setSelectedComponentData]: any = useState(null);
+    const [selectedSubComponentData, setSelectedSubComponentData]: any = useState(null);
+    const [segmentView, setSegmentView]: any = useState(0);
+    const [selectedSegmentType, setSelectedSegmentType]: any = useState(null);
 
     const [fixingAndInstallationLTPanelData, setFixingAndInstallationLTPanelData]: any = useState([]);
     const [currentSegmentsData, setCurrentSegmentsData]: any = useState([]);
@@ -2696,6 +2702,12 @@ export const Variables = () => {
         showSnackbar,
         loggedInUser,
         myWorksData, setMyWorksData,
+        selectedProjectModuleData, setSelectedProjectModuleData,
+        selectedSegmentData, setSelectedSegmentData,
+        selectedComponentData, setSelectedComponentData,
+        selectedSubComponentData, setSelectedSubComponentData,
+        segmentView, setSegmentView,
+        selectedSegmentType, setSelectedSegmentType,
         imageObjectEmpty,
         fixingAndInstallationLTPanelData, setFixingAndInstallationLTPanelData,
         myWorks, rfiData, rfiChecklistSaved, loading, error,

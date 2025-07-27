@@ -68,7 +68,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
 
   const _customForms = CustomForms(_v);
 
-  const {workType} = route.params;
+  const {workType, taskCategory} = route.params;
 
   const focus = useIsFocused();
 
@@ -83,24 +83,59 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       _v.setCurrentSubComponentsData([]);
       _v.setCurrentTasksData([]);
       _v.setBreadcrumbData([]);
+      _v.setSelectedProjectModuleData([]);
+      _v.setSelectedSegmentData([]);
+      _v.setSelectedComponentData([]);
+      _v.setSelectedSubComponentData([]);
       getMyWorksData();
       _v.setSearchText('');
       _v.setOpenPopup(false);
     }
   }, [focus]);
 
-  const getMyWorksData = () => {
+  const getMyWorksData = (level: number = 1, projectModuleId = '', segmentId = '', componentId = '', subComponentId = '') => {
     _v.dispatch(
       getMyWorks({
         projectId: _v.loggedInUser.projectId,
         workType: workType,
+        taskCategory: taskCategory,
+        level: level,
+        projectModuleId: _v.selectedProjectModuleData?.id || projectModuleId,
+        segmentId: _v.selectedSegmentData?._id || segmentId,
+        componentId: _v.selectedComponentData?._id || componentId,
+        subComponentId: _v.selectedSubComponentData?._id || subComponentId,
       }),
     );
   };
 
   useEffect(() => {
     if (_v.myWorks) {
-      _v.setMyWorksData(_v.myWorks);
+      if (_v.currentLevel == 1) {
+        _v.setMyWorksData(_v.myWorks);
+      } else if (_v.currentLevel == 2) {
+        _v.setSelectedSegmentType(null);
+        _v.setSegmentView(0);
+        const data = Object.assign({}, _v.selectedProjectModuleData);
+        data.segmentsData = _v.myWorks;
+        _v.setSelectedProjectModuleData(data);
+
+        const gbSegmentTypes = groupBy(
+            _v.myWorks,
+            'type',
+        );
+        _v.setSegmentsByGroupOnType(gbSegmentTypes);
+      } else if (_v.currentLevel == 3) {
+        const data = Object.assign({}, _v.selectedSegmentData);
+        data.componentsData = _v.myWorks;
+        _v.setSelectedSegmentData(data);
+      } else if (_v.currentLevel == 4) {
+        const data = Object.assign({}, _v.selectedComponentData);
+        data.subComponentsData = _v.myWorks;
+        _v.setSelectedComponentData(data);
+      } else if (_v.currentLevel == 5) {
+        console.log('==================', _v.myWorks)
+        _v.setCurrentTasksData(_v.myWorks)
+      }
     }
 
     if (_v.rfiData) {
@@ -134,34 +169,6 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
   );
 
 
-
-
-  // const onAddMoreGlueing = () => {
-  //   setGlueingData([
-  //     ...glueingData,
-  //     {
-  //       jointNumbers: '',
-  //       ambientTemperature: 0,
-  //       batchNoResin: 0,
-  //       batchNoHardener: 0,
-  //       mixingStartTime: '',
-  //       mixingFinishTime: '',
-  //       applicationStartTime: '',
-  //       applicationFinishTime: '',
-  //       segmentJoiningTimeClosure: '',
-  //       segmentJoiningTimeTemporaryFinish: '',
-  //       segmentSurfaceArea: 0,
-  //       epoxyConsumptionTheoreticalResin: 0,
-  //       epoxyConsumptionTheoreticalHardener: 0,
-  //       epoxyConsumptionActualResin: 0,
-  //       epoxyConsumptionActualHardener: 0,
-  //       key: Guid.create(),
-  //     },
-  //   ]);
-  // };
-
-
-
   return (
     <View style={styles.Container}>
       {_v.breadcrumbData.length ? (
@@ -170,7 +177,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             showsHorizontalScrollIndicator={false}
             horizontal={true}
             style={styles.scrollView}>
-            {_v.breadcrumbData.map((item: any, index) => (
+            {_v.breadcrumbData.map((item: any, index: number) => (
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 {index == 0 ? (
                   <Text
@@ -219,512 +226,23 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         </View>
       ) : null}
       <ScrollView style={styles.Height100}>
-        {_v.currentLevel === 1
-          ? _v.myWorksData.map((projModuleItem: any, projModuleIndex) =>
-              projModuleItem.assignmentLevel === 1 ? (
-                <TouchableOpacity
-                  style={styles.MyWorkCard}
-                  onPress={() =>
-                    _event.onClick(
-                      2,
-                      projModuleItem.assignmentLevel,
-                      projModuleIndex,
-                    )
-                  }>
-                  <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
-                  <View style={styles.TaskDetails}>
-                    <Text style={[styles.SubHeadingText, styles.BoldText]}>
-                      Assigned:
-                    </Text>
-                    <Text style={[styles.SubHeadingText, styles.SubActive]}>
-                      {projModuleItem.name}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              ) : (
-                projModuleItem.segmentsData?.map(
-                  (segItem: any, segIndex: any) =>
-                    segItem.assignmentLevel === 2 ? (
-                      projModuleItem.segmentsData?.filter(
-                        (segItem: any) => segItem.assignmentLevel == 2,
-                      ).length === 1 ? (
-                        <TouchableOpacity
-                          style={styles.MyWorkCard}
-                          onPress={() =>
-                            _event.onClick(
-                              3,
-                              segItem.assignmentLevel,
-                              projModuleIndex,
-                              projModuleItem.segmentsData?.findIndex(
-                                (segItem: any) => segItem.assignmentLevel == 2,
-                              ),
-                            )
-                          }>
-                          <View style={styles.ContentContainer}>
-                            <Text style={styles.HeadingText}>
-                              {projModuleItem.name}
-                            </Text>
-                            <View style={styles.TaskDetails}>
-                              <Text
-                                style={[
-                                  styles.SubHeadingText,
-                                  styles.BoldText,
-                                ]}>
-                                Assigned:
-                              </Text>
-                            </View>
-                            <View style={styles.TaskDetails}>
-                              <Text style={styles.SubHeadingText}>
-                                {SEGMENT_TYPES_DISPLAY[segItem.type]} /
-                              </Text>
-                              <Text style={styles.SubHeadingText}>
-                                {segItem.name} /
-                              </Text>
-                            </View>
-                            <View style={styles.TaskDetails}>
-                              <Text
-                                style={[
-                                  styles.SubHeadingText,
-                                  styles.SubActive,
-                                ]}>
-                                {
-                                  projModuleItem.segmentsData?.filter(
-                                    (segItem: any) =>
-                                      segItem.assignmentLevel == 2,
-                                  )[0].name
-                                }
-                              </Text>
-                            </View>
-                          </View>
-                        </TouchableOpacity>
-                      ) : (
-                        Object.keys(groupBy([segItem], 'type')).map(
-                          (segType: any, index: any) => (
-                            <TouchableOpacity
-                              style={styles.MyWorkCard}
-                              onPress={() =>
-                                _event.onClick(
-                                  2,
-                                  segItem.assignmentLevel,
-                                  projModuleIndex,
-                                  -1,
-                                  -1,
-                                  -1,
-                                  -1,
-                                  segType,
-                                )
-                              }>
-                              <View style={styles.ContentContainer}>
-                                <Text style={styles.HeadingText}>
-                                  {projModuleItem.name}
-                                </Text>
-                                <View style={styles.TaskDetails}>
-                                  <Text
-                                    style={[
-                                      styles.SubHeadingText,
-                                      styles.BoldText,
-                                    ]}>
-                                    Assigned: {'' + index}
-                                  </Text>
-                                </View>
-                                <View style={styles.TaskDetails}>
-                                  <Text
-                                    style={[
-                                      styles.SubHeadingText,
-                                      styles.SubActive,
-                                    ]}>
-                                    {SEGMENT_TYPES_DISPLAY[segType]}{' '}
-                                    {
-                                      projModuleItem.segmentsData?.filter(
-                                        (segItem: any) =>
-                                          segItem.type == segType &&
-                                          segItem.assignmentLevel == 2,
-                                      ).length
-                                    }
-                                  </Text>
-                                </View>
-                              </View>
-                            </TouchableOpacity>
-                          ),
-                        )
-                      )
-                    ) : segItem.componentsData &&
-                      segItem.componentsData.length ? (
-                      segItem.componentsData?.map(
-                        (componentItem: any, componentIndex: number) =>
-                          componentItem.assignmentLevel === 3 ? (
-                            <TouchableOpacity
-                              style={styles.MyWorkCard}
-                              onPress={() =>
-                                _event.onClick(
-                                  4,
-                                  componentItem.assignmentLevel,
-                                  projModuleIndex,
-                                  segIndex,
-                                  componentIndex,
-                                )
-                              }>
-                              <View style={styles.ContentContainer}>
-                                <Text style={styles.HeadingText}>
-                                  {projModuleItem.name}
-                                </Text>
-                                <View style={styles.TaskDetails}>
-                                  <Text
-                                    style={[
-                                      styles.SubHeadingText,
-                                      styles.BoldText,
-                                    ]}>
-                                    Assigned:
-                                  </Text>
-                                </View>
-                                <View style={styles.TaskDetails}>
-                                  <Text style={styles.SubHeadingText}>
-                                    {SEGMENT_TYPES_DISPLAY[segItem.type]} /
-                                  </Text>
-                                  <Text style={styles.SubHeadingText}>
-                                    {segItem.name} /
-                                  </Text>
-                                </View>
-                                <View style={styles.TaskDetails}>
-                                  <Text style={styles.SubHeadingText}>
-                                    {componentItem.name}
-                                  </Text>
-                                </View>
-                              </View>
-                            </TouchableOpacity>
-                          ) : componentItem.subComponentsData &&
-                            componentItem.subComponentsData.length ? (
-                            componentItem.subComponentsData.map(
-                              (subComponentItem: any, subCompIndex: number) =>
-                                subComponentItem.assignmentLevel === 4 ? (
-                                  <TouchableOpacity
-                                    style={styles.MyWorkCard}
-                                    onPress={() =>
-                                      _event.onClick(
-                                        5,
-                                        subComponentItem.assignmentLevel,
-                                        projModuleIndex,
-                                        segIndex,
-                                        componentIndex,
-                                        subCompIndex,
-                                      )
-                                    }>
-                                    <View style={styles.ContentContainer}>
-                                      <Text style={styles.HeadingText}>
-                                        {projModuleItem.name}
-                                      </Text>
-                                      <View style={styles.TaskDetails}>
-                                        <Text
-                                          style={[
-                                            styles.SubHeadingText,
-                                            styles.BoldText,
-                                          ]}>
-                                          Assigned To:
-                                        </Text>
-                                      </View>
-                                      <View style={styles.TaskDetails}>
-                                        <Text style={styles.SubHeadingText}>
-                                          {SEGMENT_TYPES_DISPLAY[segItem.type]}{' '}
-                                          /
-                                        </Text>
-                                        <Text style={styles.SubHeadingText}>
-                                          {segItem.name} /
-                                        </Text>
-                                        <Text style={styles.SubHeadingText}>
-                                          {componentItem.name} /
-                                        </Text>
-                                      </View>
-                                      <View style={styles.TaskDetails}>
-                                        <Text
-                                          style={[
-                                            styles.SubHeadingText,
-                                            styles.SubActive,
-                                          ]}>
-                                          {subComponentItem.displayName}
-                                        </Text>
-                                      </View>
-                                    </View>
-                                  </TouchableOpacity>
-                                ) : (
-                                  subComponentItem.tasksData?.map(
-                                    (taskItem: any, taskIndex: number) =>
-                                      taskItem.assignmentLevel === 5 && (
-                                        <TouchableOpacity
-                                          style={styles.MyWorkCard}
-                                          onPress={() =>
-                                            _event.onClick(
-                                              6,
-                                              taskItem.assignmentLevel,
-                                              projModuleIndex,
-                                              segIndex,
-                                              componentIndex,
-                                              subCompIndex,
-                                              taskIndex,
-                                            )
-                                          }>
-                                          <View style={styles.ContentContainer}>
-                                            <Text style={styles.HeadingText}>
-                                              {projModuleItem.name}
-                                            </Text>
-                                            <View style={styles.TaskDetails}>
-                                              <Text
-                                                style={[
-                                                  styles.SubHeadingText,
-                                                  styles.BoldText,
-                                                ]}>
-                                                Assigned To:
-                                              </Text>
-                                            </View>
-                                            <View style={styles.TaskDetails}>
-                                              <Text
-                                                style={styles.SubHeadingText}>
-                                                {
-                                                  SEGMENT_TYPES_DISPLAY[
-                                                    segItem.type
-                                                  ]
-                                                }{' '}
-                                                /
-                                              </Text>
-                                              <Text
-                                                style={styles.SubHeadingText}>
-                                                {componentItem.name} /
-                                              </Text>
-                                              <Text
-                                                style={styles.SubHeadingText}>
-                                                {subComponentItem.name} /
-                                              </Text>
-                                            </View>
-                                            <View style={styles.TaskDetails}>
-                                              <Text
-                                                style={[
-                                                  styles.SubHeadingText,
-                                                  styles.SubActive,
-                                                ]}>
-                                                {taskItem.displayName}
-                                              </Text>
-                                            </View>
-                                          </View>
-                                        </TouchableOpacity>
-                                      ),
-                                  )
-                                ),
-                            )
-                          ) : (
-                            componentItem.tasksData?.map(
-                              (taskItem: any, taskIndex: number) =>
-                                taskItem.assignmentLevel === 5 && (
-                                  <TouchableOpacity
-                                    style={styles.MyWorkCard}
-                                    onPress={() =>
-                                      _event.onClick(
-                                        6,
-                                        taskItem.assignmentLevel,
-                                        projModuleIndex,
-                                        segIndex,
-                                        componentIndex,
-                                        -1,
-                                        taskIndex,
-                                      )
-                                    }>
-                                    <View style={styles.ContentContainer}>
-                                      <Text style={styles.HeadingText}>
-                                        {projModuleItem.name}
-                                      </Text>
-                                      <View style={styles.TaskDetails}>
-                                        <Text
-                                          style={[
-                                            styles.SubHeadingText,
-                                            styles.BoldText,
-                                          ]}>
-                                          Assigned To:
-                                        </Text>
-                                      </View>
-                                      <View style={styles.TaskDetails}>
-                                        <Text style={styles.SubHeadingText}>
-                                          {SEGMENT_TYPES_DISPLAY[segItem.type]}{' '}
-                                          /
-                                        </Text>
-                                        <Text style={styles.SubHeadingText}>
-                                          {segItem.name} /
-                                        </Text>
-                                        <Text style={styles.SubHeadingText}>
-                                          {componentItem.name} /
-                                        </Text>
-                                      </View>
-                                      <View style={styles.TaskDetails}>
-                                        <Text
-                                          style={[
-                                            styles.SubHeadingText,
-                                            styles.SubActive,
-                                          ]}>
-                                          {taskItem.displayName}
-                                        </Text>
-                                      </View>
-                                    </View>
-                                  </TouchableOpacity>
-                                ),
-                            )
-                          ),
-                      )
-                    ) : (
-                      segItem.tasksData?.map(
-                        (taskItem: any, taskIndex: number) =>
-                          taskItem.assignmentLevel === 5 && (
-                            <TouchableOpacity
-                              style={styles.MyWorkCard}
-                              onPress={() =>
-                                _event.onClick(
-                                  6,
-                                  taskItem.assignmentLevel,
-                                  projModuleIndex,
-                                  segIndex,
-                                  -1,
-                                  -1,
-                                  taskIndex,
-                                )
-                              }>
-                              <View style={styles.ContentContainer}>
-                                <Text style={styles.HeadingText}>
-                                  {projModuleItem.name}
-                                </Text>
-                                <View style={styles.TaskDetails}>
-                                  <Text
-                                    style={[
-                                      styles.SubHeadingText,
-                                      styles.BoldText,
-                                    ]}>
-                                    Assigned To:
-                                  </Text>
-                                </View>
-                                <View style={styles.TaskDetails}>
-                                  <Text style={styles.SubHeadingText}>
-                                    {SEGMENT_TYPES_DISPLAY[segItem.type]} /
-                                  </Text>
-                                  <Text style={styles.SubHeadingText}>
-                                    {segItem.name} /
-                                  </Text>
-                                </View>
-                                <View style={styles.TaskDetails}>
-                                  <Text
-                                    style={[
-                                      styles.SubHeadingText,
-                                      styles.SubActive,
-                                    ]}>
-                                    {taskItem.displayName}
-                                  </Text>
-                                </View>
-                              </View>
-                            </TouchableOpacity>
-                          ),
-                      )
-                    ),
-                )
-              ),
-            )
-          : null}
-        {_v.currentLevel === 7 &&
-        _v.segmentsByGroupOnType &&
-        Object.keys(_v.segmentsByGroupOnType).length
-          ? Object.keys(_v.segmentsByGroupOnType).map(item => (
-              <TouchableOpacity
-                style={[styles.StartWorkCard, styles.StartBorder]}
-                onPress={() => _event.onSegmentTypeClick(item)}>
-                <View style={styles.leftContainer}>
-                  <Text style={styles.HeadText}>
-                    {_v.segmentsByGroupOnType[item].length}
-                  </Text>
-                  <Text style={styles.MyWorkSubHead}>
-                    {SEGMENT_TYPES_DISPLAY[item]}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            ))
-          : null}
-        {_v.currentLevel === 2
-          ? _v.currentSegmentsData
-              .filter((seg: any) => {
-                if (_v.searchText && seg.name) {
-                  return seg.name
-                    .toLowerCase()
-                    .includes(_v.searchText.toLowerCase());
-                } else {
-                  return true;
-                }
-              })
-              .map((item: any, index) => (
-                <TouchableOpacity
-                  style={_event.getStyle(item)}
-                  onPress={() => _event.onClickNested(3, item)}>
-                  <View style={styles.leftContainer}>
-                    <Text style={styles.HeadText}>{item.name}</Text>
-                    {/* <Text style={styles.MyWorkSubHead}>Sub Text</Text> */}
-                  </View>
-                </TouchableOpacity>
-              ))
-          : null}
-        {_v.currentLevel === 3
-          ? _v.currentComponentsData && _v.currentComponentsData.length
-            ? _v.currentComponentsData
-                .filter((subSeg: any) => {
-                  if (_v.searchText && subSeg.name) {
-                    return subSeg.name
-                      .toLowerCase()
-                      .includes(_v.searchText.toLowerCase());
-                  } else {
-                    return true;
-                  }
-                })
-                .map((item: any, index) => (
-                  <TouchableOpacity
-                    style={_event.getStyle(item)}
-                    onPress={() => _event.onClickNested(4, item)}>
-                    <View style={styles.leftContainer}>
-                      <Text style={styles.HeadText}>{item.name}</Text>
-                    </View>
-                  </TouchableOpacity>
-                ))
-            : _customForms.tasksListing(_v)
-          : null}
-        {_v.currentLevel === 4
-          ? _v.currentSubComponentsData && _v.currentSubComponentsData.length
-            ? _v.currentSubComponentsData
-                .filter((subComponent: any) => {
-                  if (_v.searchText && subComponent.name) {
-                    return subComponent.name
-                      .toLowerCase()
-                      .includes(_v.searchText.toLowerCase());
-                  } else {
-                    return true;
-                  }
-                })
-                .map((item: any, index) => (
-                  <TouchableOpacity
-                    style={_event.getStyle(item)}
-                    onPress={() => _event.onClickNested(5, item)}>
-                    <View style={styles.leftContainer}>
-                      <Text style={styles.HeadText}>{item.name}</Text>
-                    </View>
-                  </TouchableOpacity>
-                ))
-            : _customForms.tasksListing(_v)
-          : null}
-        {_v.currentLevel === 5 || _v.currentLevel === 6
-          ? _customForms.tasksListing(_v)
-          : null}
-        {/* No Data Found */}
-        {!_v.loading && !_v.myWorksData.length ? (
-          <View style={styles.NoDataContainer}>
-            <Image
-              style={styles.WthHeight}
-              source={require('./../../images/no-data-found.png')}
-            />
-            <Text style={styles.NodataHeadText}>Sorry, no result found!</Text>
-            {/* {(searchText && <Text style={styles.NodataSubText}>
-              Please try to search another keywork...
-            </Text>
-            )} */}
-          </View>
-        ) : null}
+        {
+          (() => {
+            if (_v.currentLevel === 1) {
+              return _customForms.projectModuleListing(_v, getMyWorksData)
+            } else if (_v.currentLevel === 2 && _v.segmentView === 0 && _v.selectedProjectModuleData?.segmentsData?.length) {
+              return _customForms.segmentGroupListing(_v)
+            } else if (_v.currentLevel === 2 && _v.segmentView === 1) {
+              return _customForms.segmentListing(_v, getMyWorksData)
+            } else if (_v.currentLevel === 3) {
+              return _customForms.componentListing(_v, getMyWorksData)
+            } else if (_v.currentLevel === 4) {
+              return _customForms.subComponentListing(_v, getMyWorksData)
+            } else if (_v.currentLevel === 5) {
+              return _customForms.tasksListing(_v)
+            }
+          })()
+        }
       </ScrollView>
 
       <Modal

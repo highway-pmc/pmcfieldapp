@@ -1,7 +1,8 @@
 import apiService from '../api.service';
 
 export const getRFITasksData = async (projectId, userCategory, assignmentLevel) => {
-    return apiService.getRequest(`v1/auth/projects/${projectId}/users/${userCategory}/my-works/level/${assignmentLevel}`).then((response) => {
+    //return apiService.getRequest(`v1/auth/projects/${projectId}/users/${userCategory}/my-works/level/${assignmentLevel}`).then((response) => {
+    return apiService.getRequest(`v1/auth/projects/${projectId}/users/${userCategory}/my-works?level=${assignmentLevel}`).then((response) => {
         return response;
     }).catch((err) => {
         const errorMessge = err.message || 'Unable to get RFI tasks.';

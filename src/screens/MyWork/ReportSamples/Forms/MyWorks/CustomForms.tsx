@@ -19072,7 +19072,7 @@ export const CustomForms = (_v: any) => {
         return (
           <TouchableOpacity style={styles.MyWorkCard}
             onPress={() => {
-              if (item.hasSubcomponent) {
+              if (item.hasSubComponent) {
                 _v.setCurrentLevel(4);
                 _v.setSelectedComponentData(item);
                 getMyWorksData(4, '', '', item.id);

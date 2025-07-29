@@ -18993,7 +18993,15 @@ export const CustomForms = (_v: any) => {
   };
 
   const projectModuleListing = (_v: any, getMyWorksData: Function) => {
-    return _v.myWorksData.map((projModuleItem: any, projModuleIndex: number) => {
+    return _v.myWorksData.filter((item: any) => {
+        if (_v.searchText && item.name) {
+          return item.name
+            .toLowerCase()
+            .includes(_v.searchText.toLowerCase());
+        } else {
+          return true;
+        }
+      }).map((projModuleItem: any, projModuleIndex: number) => {
       return (
         <TouchableOpacity style={styles.MyWorkCard}
           onPress={() => {
@@ -19018,13 +19026,37 @@ export const CustomForms = (_v: any) => {
   }
 
   const segmentGroupListing = (_v: any) => {
+    const onSegmentTypeClick = (item: any) => {
+      const breadcrumbData = _v.breadcrumbData;
+      breadcrumbData[_v.breadcrumbData.length - 1] = {
+        name: SEGMENT_TYPES_DISPLAY[item],
+        level: 2,
+        segmentView: 0,
+      }
+
+      breadcrumbData.push({
+        name: 'Segments',
+        level: 0,
+        active: false,
+      });
+      _v.setBreadcrumbData(breadcrumbData);
+      _v.setSelectedSegmentType(item); _v.setSegmentView(1);
+    }
     if (_v.segmentsByGroupOnType) {
-      return Object.keys(_v.segmentsByGroupOnType).map(item => {
+      return Object.keys(_v.segmentsByGroupOnType).filter((item: any) => {
+        if (_v.searchText && item) {
+          return item
+            .toLowerCase()
+            .includes(_v.searchText.toLowerCase());
+        } else {
+          return true;
+        }
+      }).map(item => {
         return (
             <TouchableOpacity
             style={[styles.StartWorkCard, styles.StartBorder]}
             onPress={() => {
-              _v.setSelectedSegmentType(item); _v.setSegmentView(1);
+              onSegmentTypeClick(item)
             }}>
             <View style={styles.leftContainer}>
               <Text style={styles.HeadText}>
@@ -19042,7 +19074,15 @@ export const CustomForms = (_v: any) => {
 
   const segmentListing = (_v: any, getMyWorksData: Function) => {
     if (_v.selectedProjectModuleData?.segmentsData?.length) {
-        return _v.segmentsByGroupOnType[_v.selectedSegmentType]?.map((item: any, index: number) => {
+        return _v.segmentsByGroupOnType[_v.selectedSegmentType]?.filter((item: any) => {
+        if (_v.searchText && item.name) {
+          return item.name
+            .toLowerCase()
+            .includes(_v.searchText.toLowerCase());
+        } else {
+          return true;
+        }
+      }).map((item: any, index: number) => {
         return (
           <TouchableOpacity style={styles.MyWorkCard}
             onPress={() => {
@@ -19068,17 +19108,24 @@ export const CustomForms = (_v: any) => {
 
   const componentListing = (_v: any, getMyWorksData: Function) => {
     if (_v.selectedSegmentData?.componentsData?.length) {
-      return _v.selectedSegmentData?.componentsData?.map((item: any, index: number) => {
+      return _v.selectedSegmentData?.componentsData?.filter((item: any) => {
+        if (_v.searchText && item.name) {
+          return item.name
+            .toLowerCase()
+            .includes(_v.searchText.toLowerCase());
+        } else {
+          return true;
+        }
+      }).map((item: any, index: number) => {
         return (
           <TouchableOpacity style={styles.MyWorkCard}
             onPress={() => {
+              _v.setSelectedComponentData(item);
               if (item.hasSubComponent) {
                 _v.setCurrentLevel(4);
-                _v.setSelectedComponentData(item);
                 getMyWorksData(4, '', '', item.id);
               } else {
                 _v.setCurrentLevel(5);
-                _v.setSelectedComponentData(item);
                 getMyWorksData(5, '', '', item.id);
               }
             }
@@ -19101,7 +19148,15 @@ export const CustomForms = (_v: any) => {
 
   const subComponentListing = (_v: any, getMyWorksData: Function) => {
     if (_v.selectedComponentData?.subComponentsData?.length) {
-      return _v.selectedComponentData?.subComponentsData?.map((item: any, index: number) => {
+      return _v.selectedComponentData?.subComponentsData?.filter((item: any) => {
+        if (_v.searchText && item.name) {
+          return item.name
+            .toLowerCase()
+            .includes(_v.searchText.toLowerCase());
+        } else {
+          return true;
+        }
+      }).map((item: any, index: number) => {
         return (
           <TouchableOpacity style={styles.MyWorkCard}
             onPress={() => {

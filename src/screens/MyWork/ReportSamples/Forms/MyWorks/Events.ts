@@ -559,16 +559,16 @@ export const Events = (_v: any) => {
         }
     };
 
-    const getRFIDataByWorkAssignmentId = (task: any) => {
+    const getRFIDataByWorkAssignmentId = (wa: any) => {
         _v.setRFIDate('');
         _v.setComments('');
         _v.setImageObject(_v.imageObjectEmpty);
-        _v.setSelectedTask(task);
+        _v.setSelectedTask(wa.taskId); // wa.taskId - task object
         _v.dispatch(
             getRFIByWaId({
                 projectId: _v.loggedInUser.projectId,
                 projectModuleId: _v.projectModuleId,
-                waId: task.workAssignmentId,
+                waId: wa._id,//workAssignmentId,
             }),
         );
     };

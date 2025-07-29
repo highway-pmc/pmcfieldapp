@@ -94,6 +94,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
   }, [focus]);
 
   const getMyWorksData = (level: number = 1, projectModuleId = '', segmentId = '', componentId = '', subComponentId = '') => {
+    _v.setSearchText('');
     _v.dispatch(
       getMyWorks({
         projectId: _v.loggedInUser.projectId,
@@ -133,9 +134,10 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         data.subComponentsData = _v.myWorks;
         _v.setSelectedComponentData(data);
       } else if (_v.currentLevel == 5) {
-        console.log('==================', _v.myWorks)
         _v.setCurrentTasksData(_v.myWorks)
       }
+
+      setBreadcrumbItems();
     }
 
     if (_v.rfiData) {
@@ -168,6 +170,99 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     [],
   );
 
+  const setBreadcrumbItems = (currentLevel = _v.currentLevel, segmentView = _v.segmentView) => {
+    if (currentLevel == 1) {
+      _v.setBreadcrumbData([{
+        name: 'Project Modules',
+        level: 1,
+        active: false,
+      }]);
+    } else if (currentLevel == 2) {
+      if (!segmentView) {
+        _v.setBreadcrumbData([{
+          name: _v.selectedProjectModuleData.name,
+          level: 1,
+          active: true,
+        },
+        {
+          name: 'Segment Types',
+          level: 0,
+          active: false,
+        }]);
+      } else {
+        _v.setBreadcrumbData([]);
+        _v.setBreadcrumbData([{
+          name: _v.selectedProjectModuleData.name,
+          level: 1,
+          active: true,
+        },
+        {
+          name: SEGMENT_TYPES_DISPLAY[_v.selectedSegmentType],
+          level: 2,
+          segmentView: 0,
+          active: false,
+        },
+        {
+          name: 'Segments',
+          level: 0,
+          active: false,
+        }]);
+      }
+    } else if (currentLevel == 3) {
+      let breadcrumbData: any[] = _v.breadcrumbData;
+      breadcrumbData = breadcrumbData.slice(0, 2);
+      breadcrumbData[_v.breadcrumbData.length - 1] = {
+        name: _v.selectedSegmentData.name,
+        level: 2,
+        segmentView: 1,
+      }
+
+      breadcrumbData.push({
+        name: 'Components',
+        level: 0,
+        active: false,
+      });
+      _v.setBreadcrumbData(breadcrumbData);
+    } else if (currentLevel == 4) {
+      let breadcrumbData: any[] = _v.breadcrumbData;
+      breadcrumbData = breadcrumbData.slice(0, 3);
+      breadcrumbData[_v.breadcrumbData.length - 1] = {
+        name: _v.selectedComponentData.name,
+        level: 3,
+        active: false,
+      }
+
+      breadcrumbData.push({
+        name: 'Sub Components',
+        level: 0,
+        active: false,
+      });
+      _v.setBreadcrumbData(breadcrumbData);
+    } else if (currentLevel == 5) {
+      const breadcrumbData = _v.breadcrumbData;
+      breadcrumbData[_v.breadcrumbData.length - 1] = {
+        name: !_v.selectedComponentData.hasSubComponent ? _v.selectedComponentData.name : _v.selectedSubComponentData.name,
+        level: !_v.selectedComponentData.hasSubComponent ? 3 : 4,
+        active: false,
+      }
+
+      breadcrumbData.push({
+        name: 'Tasks',
+        level: 0,
+        active: false,
+      });
+      _v.setBreadcrumbData(breadcrumbData);
+    }
+  };
+
+  const onBreadcrumbItemClick = (item: any, index: number) => {
+    _v.setSearchText('');
+    if (item.level === 2) {
+      _v.setSegmentView(item.segmentView || 0);
+    }
+    _v.setCurrentLevel(item.level);
+    setBreadcrumbItems(item.level, item.segmentView);
+  }
 
   return (
     <View style={styles.Container}>
@@ -179,7 +274,8 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             style={styles.scrollView}>
             {_v.breadcrumbData.map((item: any, index: number) => (
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                {index == 0 ? (
+                {
+                /*index == 0 ? (
                   <Text
                     style={styles.BreadcrumbPrevTextUnderline}
                     onPress={() =>
@@ -188,10 +284,17 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                     }>
                     {item.name}
                   </Text>
-                ) : index === _v.breadcrumbData.length - 1 ? (
+                ) : */
+                index === _v.breadcrumbData.length - 1 ? (
                   <Text style={styles.BreadcrumbCurrentText}>{item.name}</Text>
                 ) : (
-                  <Text style={styles.BreadcrumbPrevText}>{item.name}</Text>
+                  <Text
+                    onPress={() =>
+                        onBreadcrumbItemClick(item, index)
+                      }
+                    style={styles.BreadcrumbPrevTextUnderline}>
+                    {item.name}
+                  </Text>
                 )}
                 {index < _v.breadcrumbData.length - 1 ? (
                   <Image

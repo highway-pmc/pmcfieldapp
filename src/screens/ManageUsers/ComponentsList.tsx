@@ -157,7 +157,6 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
               wa.assignmentLevelFrom === 5,
           )
         ) {
-          //console.log('=================', JSON.stringify(user.workAssignment));
           user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL5;
           user.isChecked = true;
         } else {

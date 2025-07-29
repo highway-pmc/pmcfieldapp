@@ -239,6 +239,10 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
       dispatch(clearMyWorksEvent());
       getMyWorksData(selectedValues?.type);
     }
+
+    if (error) {
+      showSnackbar(error || 'Something went wrong. Please try again.', 'error');
+    }
   }, [testSampleUpdated, rfiChecklistSaved, error]);
 
   // unmount

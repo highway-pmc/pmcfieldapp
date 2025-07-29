@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useIsFocused} from '@react-navigation/native';
-import {HeaderItems, PROJECT_TYPE, ROLES} from '../../constants/constants';
+import {HeaderItems, PROJECT_TYPE, ROLES, TASK_CATEGORY} from '../../constants/constants';
 import {useSelector} from 'react-redux';
 import TileCardComponent from '../Common/TileCardComponent';
 import {SURVEY_MODULE_TYPE} from '../Common/CommonConstantsTypes';
@@ -63,7 +63,7 @@ const SurveyHome = ({navigation}: {navigation: any}) => {
       }
     }
 
-    HeaderItems.myWork.showBack = false;
+    HeaderItems.initialSurvey.showBack = false;
     if (rolesArr.length === 1) {
       onPressWorkType(rolesArr[0].workType);
       return;
@@ -71,14 +71,14 @@ const SurveyHome = ({navigation}: {navigation: any}) => {
       onPressWorkType(ROLES.USER);
       return;
     }
-    HeaderItems.myWork.showBack = true;
+    HeaderItems.initialSurvey.showBack = true;
     setRoles(rolesArr);
   };
 
   const onPressWorkType = (workType: any) => {
-    navigation.navigate('MyWork', {
+    navigation.navigate('MyWorkSurvey', {
       workType: workType,
-      taskCategory: 'survey',
+      taskCategory: TASK_CATEGORY.SURVEY,
     });
   };
 

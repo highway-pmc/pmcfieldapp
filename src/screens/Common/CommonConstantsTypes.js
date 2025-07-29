@@ -290,7 +290,7 @@ export const WORK_MODULE_TYPE = [
 export const SURVEY_MODULE_TYPE = [
   {
     title: 'Initial Survey',
-    workType: 'initial-survey',
+    workType: PROJECT_TYPE.INITIAL_SURVEY,
     backgroundColor: '#ABBEFD',
     imageBg: '#5C5959',
     linearLight: '#FFFFFF',

@@ -94,6 +94,11 @@ const SurveyStackNaigator = () => {
         component={SurveyHome}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name="MyWorkSurvey"
+        component={MyWork}
+        options={{headerShown: false}}
+      />
     </Stack.Navigator>
   );
 };

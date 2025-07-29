@@ -323,7 +323,6 @@ function* taskWorkAssignToUsers({payload}) {
 }
 function* splitComponent({payload}) {
   try {
-    console.log('=================Saga==================', payload);
     console.log('projectModuleId:', payload.projectModuleId);
     console.log('splitTo:', payload.splitTo);
     console.log('body:', payload.body);

@@ -13,6 +13,7 @@ import {
   HeaderItems,
   PROJECT_TYPE,
   ROLES,
+  TASK_CATEGORY,
   WORK_TYPE,
 } from '../../constants/constants';
 import {useSelector} from 'react-redux';
@@ -88,11 +89,11 @@ const WorkType = ({navigation}: {navigation: any}) => {
       workType: workType,
       taskCategory:
         activeTab === WORK_TYPE.SITE_WORK
-          ? 'my-work'
+          ? TASK_CATEGORY.MY_WORK
           : activeTab === WORK_TYPE.SURVEY_WORK
-          ? 'survey'
+          ? TASK_CATEGORY.SURVEY
           : activeTab === WORK_TYPE.CASTING_YARD
-          ? 'casting-yard'
+          ? TASK_CATEGORY.CASTING_YARD
           : '',
     });
   };

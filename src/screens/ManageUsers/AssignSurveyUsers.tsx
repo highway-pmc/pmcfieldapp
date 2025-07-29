@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
-import {HeaderItems, PROJECT_TYPE} from '../../constants/constants';
+import {HeaderItems, PROJECT_TYPE, TASK_CATEGORY} from '../../constants/constants';
 import {ScrollView} from 'react-native-gesture-handler';
 import {useDispatch, useSelector} from 'react-redux';
 import {getUsersForTestAssignment} from './QualityWorks/actions';
@@ -42,7 +42,7 @@ const AssignSurveyUsers = () => {
     console.log('Work type pressed:', workType);
     navigation.navigate('AssignWork', {
       workType: workType,
-      taskCategory: 'survey',
+      taskCategory: TASK_CATEGORY.SURVEY,
     });
   };
 

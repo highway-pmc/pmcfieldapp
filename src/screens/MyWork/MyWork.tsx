@@ -27,6 +27,9 @@ import {
   CONCRETE_GRADE_LIST,
   CEMENT_GRADE_LIST,
   CEMENT_TYPE_LIST,
+  TASK_CATEGORY,
+  SURVEY_MODULE_TYPE,
+  WORK_TYPE,
 } from '../../constants/constants';
 import {useDispatch, useSelector} from 'react-redux';
 import {
@@ -75,7 +78,30 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
   useEffect(() => {
     if (focus == true) {
       const eventEmitter = new NativeEventEmitter();
-      eventEmitter.emit('headerEvent', HeaderItems.myWork);
+      let headerTitle: any;
+      
+      if (taskCategory === TASK_CATEGORY.MY_WORK) {
+        if (workType === PROJECT_TYPE.STRUCTURE_WORK) {
+          headerTitle = HeaderItems.myWorkStructureWork;
+        } else if (workType === PROJECT_TYPE.HIGHWAY_WORK) {
+          headerTitle = HeaderItems.myWorkHighwayWork;
+        } else if (workType === PROJECT_TYPE.OTHER_WORK) {
+          headerTitle = HeaderItems.myWorkOtherWork;
+        }
+      } else if (taskCategory === TASK_CATEGORY.SURVEY) {
+        if (workType === PROJECT_TYPE.INITIAL_SURVEY) {
+          headerTitle = HeaderItems.initialSurvey;
+        } if (workType === PROJECT_TYPE.STRUCTURE_WORK) {
+          headerTitle = HeaderItems.surveyStructureWork;
+        } else if (workType === PROJECT_TYPE.HIGHWAY_WORK) {
+          headerTitle = HeaderItems.surveyHighwayWork;
+        } else if (workType === PROJECT_TYPE.OTHER_WORK) {
+          headerTitle = HeaderItems.surveyOtherWork;
+        }
+      } else if (taskCategory === TASK_CATEGORY.CASTING_YARD) {
+        //
+      }
+      eventEmitter.emit('headerEvent', headerTitle);
       _v.setCurrentLevel(1);
       _v.setMyWorksData([]);
       _v.setCurrentSegmentsData([]);

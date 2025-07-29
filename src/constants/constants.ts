@@ -1,6 +1,14 @@
 export const HeaderItems = {
   dashboard: {showBack: false, title: 'Dashboard'},
   myWork: {showBack: true, title: 'My Work'},
+  myWorkStructureWork: {showBack: true, title: 'My Work - Structure Work'},
+  myWorkHighwayWork: {showBack: true, title: 'My Work - Highway Work'},
+  myWorkOtherWork: {showBack: true, title: 'My Work - Other Work'},
+  initialSurvey: {showBack: true, title: 'Initial Survey'},
+  surveyHome: {showBack: false, title: 'Survey'},
+  surveyStructureWork: {showBack: true, title: 'Survey - Structure Work'},
+  surveyHighwayWork: {showBack: true, title: 'Survey - Highway Work'},
+  surveyOtherWork: {showBack: true, title: 'Survey - Other Work'},
   myWork2: {showBack: true, title: 'My Work 2'},
   myWork3: {showBack: true, title: 'My Work 3'},
   myTask: {showBack: false, title: 'My Task'},
@@ -10,7 +18,6 @@ export const HeaderItems = {
   flyoverDetails: {showBack: true, title: 'Flyover Details'},
   manageWork: {showBack: false, title: 'Manage Works'},
   myWorkType: {showBack: false, title: 'My Work'},
-  surveyHome: {showBack: false, title: 'Survey'},
   assignWork: {showBack: true, title: 'Assign Works'},
   segmentsList: {showBack: true, title: 'Assign Works - Segment'},
   componentsList: {showBack: true, title: 'Assign Works - Component'},
@@ -475,6 +482,13 @@ export const PROJECT_TYPE = {
   EQUIPMENTS: 'equipments',
   INITIAL_SURVEY: 'initial-survey',
 };
+
+export const TASK_CATEGORY = {
+  MY_WORK: 'my-work',
+  CASTING_YARD: 'casting-yard',
+  SURVEY: 'survey'
+};
+
 export const SURVEY_MODULE_TYPE = [
   {
     title: 'Initial Survey',

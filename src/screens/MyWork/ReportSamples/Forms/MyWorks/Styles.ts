@@ -253,12 +253,12 @@ export const styles = StyleSheet.create({
     color: '#333',
   },
   BreadcrumbPrevTextUnderline: {
-    fontSize: 14,
-    textDecorationLine: 'underline',
+    fontSize: 13,
+    textDecorationLine: 'none',
     color: '#333',
   },
   BreadcrumbCurrentText: {
-    fontSize: 14,
+    fontSize: 13,
     color: '#333',
     fontWeight: '600',
   },
@@ -299,8 +299,8 @@ export const styles = StyleSheet.create({
   },
   HeadingText: {
     color: '#010101',
-    fontSize: 16,
-    fontWeight: '700',
+    fontSize: 14,
+    fontWeight: '400',
     marginBottom: 5,
   },
   TaskDetails: {
@@ -600,14 +600,13 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 20,
     paddingHorizontal: 15,
-    borderBottomLeftRadius: 16,
-    borderBottomRightRadius: 16,
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
     position: 'relative',
     marginBottom: 10,
     borderWidth: 1,
-    borderColor: '#8B8B8B',
   },
   leftBorder: {
     paddingVertical: 3,
@@ -626,7 +625,10 @@ export const styles = StyleSheet.create({
     bottom: 10,
     zIndex: 100,
     width: 2,
-    borderColor: '#8B8B8B'
+    backgroundColor: '#5a7ef8'
+  },
+  taskBorderColor: {
+    borderColor: '#cdd6f6'
   },
   FlexRowCenter: {
     flexDirection: 'row',
@@ -658,7 +660,7 @@ export const styles = StyleSheet.create({
     elevation: 2,
   },
   numberText: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '600',
   },
   countArrowRow: {
@@ -667,8 +669,8 @@ export const styles = StyleSheet.create({
     gap: 3,
   },
   colorForText: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#333',
-    fontWeight: '600',
+    fontWeight: '400',
   }
 });

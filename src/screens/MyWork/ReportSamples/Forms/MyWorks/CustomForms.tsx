@@ -18903,7 +18903,7 @@ export const CustomForms = (_v: any, workType: any, taskCategory: any) => {
             colors={['#FFFFFF', '#E0E7FF']}
             start={{x: 0, y: 0}}
             end={{x: 1, y: 0}}
-            style={styles.gradientContainer}>
+            style={[styles.gradientContainer, styles.taskBorderColor]}>
             <View style={styles.leftBorderForTask} />
             <View style={styles.FlexRowCenter}>
               <View>
@@ -19026,7 +19026,7 @@ export const CustomForms = (_v: any, workType: any, taskCategory: any) => {
           colors={workTypeColors.gradientColors}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 0}}
-          style={styles.gradientContainer}>
+          style={[styles.gradientContainer, {borderColor: workTypeColors.borderColor}]}>
           <View style={[
               styles.leftBorder,
               {backgroundColor: workTypeColors.leftBorderColor},
@@ -19087,7 +19087,7 @@ export const CustomForms = (_v: any, workType: any, taskCategory: any) => {
                 colors={workTypeColors.gradientColors}
                 start={{x: 0, y: 0}}
                 end={{x: 1, y: 0}}
-                style={styles.gradientContainer}>
+                style={[styles.gradientContainer, {borderColor: workTypeColors.borderColor}]}>
                 <View style={[
                     styles.leftBorder,
                     {backgroundColor: workTypeColors.leftBorderColor},
@@ -19148,21 +19148,21 @@ export const CustomForms = (_v: any, workType: any, taskCategory: any) => {
           colors={workTypeColors.gradientColors}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 0}}
-          style={styles.gradientContainer}>
+          style={[styles.gradientContainer, {borderColor: workTypeColors.borderColor}]}>
             <View style={[
                 styles.leftBorder,
                 {backgroundColor: workTypeColors.leftBorderColor},
               ]} />
             <View style={styles.FlexColumnCenter}>
               <Text style={styles.HeadingText}>{item.name}</Text>
-              <View style={styles.TaskDetails}>
+              {/* <View style={styles.TaskDetails}>
                 <Text style={[styles.SubHeadingText, styles.BoldText]}>
                   Assigned:
                 </Text>
                 <Text style={[styles.SubHeadingText, styles.SubActive]}>
                   {item.name}
                 </Text>
-              </View>
+              </View> */}
             </View>
             <View></View>
           </LinearGradient>
@@ -19201,21 +19201,21 @@ export const CustomForms = (_v: any, workType: any, taskCategory: any) => {
           colors={workTypeColors.gradientColors}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 0}}
-          style={styles.gradientContainer}>
+          style={[styles.gradientContainer, {borderColor: workTypeColors.borderColor}]}>
             <View style={[
                 styles.leftBorder,
                 {backgroundColor: workTypeColors.leftBorderColor},
               ]} />
             <View style={styles.FlexColumnCenter}>
               <Text style={styles.HeadingText}>{item.name}</Text>
-              <View style={styles.TaskDetails}>
+              {/* <View style={styles.TaskDetails}>
                 <Text style={[styles.SubHeadingText, styles.BoldText]}>
                   Assigned:
                 </Text>
                 <Text style={[styles.SubHeadingText, styles.SubActive]}>
                   {item.name}
                 </Text>
-              </View>
+              </View> */}
             </View>
             <View></View>
           </LinearGradient>
@@ -19250,21 +19250,21 @@ export const CustomForms = (_v: any, workType: any, taskCategory: any) => {
           colors={workTypeColors.gradientColors}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 0}}
-          style={styles.gradientContainer}>
+          style={[styles.gradientContainer, {borderColor: workTypeColors.borderColor}]}>
             <View style={[
                 styles.leftBorder,
                 {backgroundColor: workTypeColors.leftBorderColor},
               ]} />
             <View style={styles.FlexColumnCenter}>
               <Text style={styles.HeadingText}>{item.name}</Text>
-              <View style={styles.TaskDetails}>
+              {/* <View style={styles.TaskDetails}>
                 <Text style={[styles.SubHeadingText, styles.BoldText]}>
                   Assigned:
                 </Text>
                 <Text style={[styles.SubHeadingText, styles.SubActive]}>
                   {item.name}
                 </Text>
-              </View>
+              </View> */}
             </View>
             <View></View>
           </LinearGradient>

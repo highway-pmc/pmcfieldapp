@@ -30,11 +30,15 @@ import {Validates} from './Validates';
 import {Events} from './Events';
 import TableCommonStyles from '../../../../Common/TableCommonStyles';
 import { groupBy } from '../../../../../utils/Utils';
+import LinearGradient from 'react-native-linear-gradient';
+import { getWorkTypeColors } from '../../../../Common/CommonConstantsTypes';
 
-export const CustomForms = (_v: any) => {
+export const CustomForms = (_v: any, workType: any, taskCategory: any) => {
   const _validation = Validates(_v);
   const _event = Events(_v);
   const showSnackbar = _v.showSnackbar;
+
+  const workTypeColors = getWorkTypeColors(workType);
 
   const CustomTextInput = ({
     rowItem,
@@ -18894,13 +18898,20 @@ export const CustomForms = (_v: any) => {
         }
       })
       .map((item: any, index: number) => (
-        <View style={_event.getStyle(item)}>
-          <View style={styles.leftContainer}>
-            <Text style={[styles.HeadText, {maxWidth: 300}]}>
-              {item.taskId.displayName}
-            </Text>
-            {/* <Text style={styles.MyWorkSubHead}>Sub Text</Text> */}
-          </View>
+        <View>
+          <LinearGradient
+            colors={['#FFFFFF', '#E0E7FF']}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 0}}
+            style={styles.gradientContainer}>
+            <View style={styles.leftBorderForTask} />
+            <View style={styles.FlexRowCenter}>
+              <View>
+                <Text style={styles.colorForText}>{item.taskId.displayName}</Text>
+              </View>
+            </View>
+            <View></View>
+          </LinearGradient>
           {item.rfiStatus === RFI_STATUS.GENERATED ? (
             <TouchableOpacity
               style={[styles.MyWorkCta, styles.StartBorder]}
@@ -19003,7 +19014,7 @@ export const CustomForms = (_v: any) => {
         }
       }).map((projModuleItem: any, projModuleIndex: number) => {
       return (
-        <TouchableOpacity style={styles.MyWorkCard}
+        <TouchableOpacity
           onPress={() => {
             _v.setCurrentLevel(2);
             _v.setSelectedProjectModuleData(projModuleItem);
@@ -19011,15 +19022,28 @@ export const CustomForms = (_v: any) => {
           }
           }
         >
-          <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
-          <View style={styles.TaskDetails}>
-            <Text style={[styles.SubHeadingText, styles.BoldText]}>
-              Assigned:
-            </Text>
-            <Text style={[styles.SubHeadingText, styles.SubActive]}>
-              {projModuleItem.name}
-            </Text>
+        <LinearGradient
+          colors={workTypeColors.gradientColors}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 0}}
+          style={styles.gradientContainer}>
+          <View style={[
+              styles.leftBorder,
+              {backgroundColor: workTypeColors.leftBorderColor},
+            ]} />
+          <View style={styles.FlexColumnCenter}>
+            <Text style={styles.HeadingText}>{projModuleItem.name}</Text>
+            <View style={styles.TaskDetails}>
+              <Text style={[styles.SubHeadingText, styles.BoldText]}>
+                Assigned:
+              </Text>
+              <Text style={[styles.SubHeadingText, styles.SubActive]}>
+                {projModuleItem.name}
+              </Text>
+            </View>
           </View>
+          <View></View>
+        </LinearGradient>
       </TouchableOpacity>
       );
     });
@@ -19054,18 +19078,46 @@ export const CustomForms = (_v: any) => {
       }).map(item => {
         return (
             <TouchableOpacity
-            style={[styles.StartWorkCard, styles.StartBorder]}
             onPress={() => {
               onSegmentTypeClick(item)
             }}>
-            <View style={styles.leftContainer}>
-              <Text style={styles.HeadText}>
-                {_v.segmentsByGroupOnType[item].length}
-              </Text>
-              <Text style={styles.MyWorkSubHead}>
-                {SEGMENT_TYPES_DISPLAY[item]}
-              </Text>
-            </View>
+
+
+              <LinearGradient
+                colors={workTypeColors.gradientColors}
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 0}}
+                style={styles.gradientContainer}>
+                <View style={[
+                    styles.leftBorder,
+                    {backgroundColor: workTypeColors.leftBorderColor},
+                  ]} />
+                <View style={styles.FlexRowCenter}>
+                  <View>
+                  <Text style={styles.HeadingText}>{SEGMENT_TYPES_DISPLAY[item]}</Text>
+                  </View>
+                  <View style={styles.countArrowRow}>
+                    <View style={styles.numberCircle}>
+                      <Text
+                        style={[
+                          styles.numberText,
+                          {color: workTypeColors.leftBorderColor},
+                        ]}>
+                        {_v.segmentsByGroupOnType[item].length}
+                      </Text>
+                    </View>
+                    <View>
+                        <Image
+                          style={styles.CloseIcon}
+                          source={require('./../../../../../images/right-arrow.png')}
+                        />
+                    </View>
+                  </View>
+                </View>
+                <View>
+
+                </View>
+              </LinearGradient>
           </TouchableOpacity>
           )
       })
@@ -19084,22 +19136,36 @@ export const CustomForms = (_v: any) => {
         }
       }).map((item: any, index: number) => {
         return (
-          <TouchableOpacity style={styles.MyWorkCard}
+          <TouchableOpacity
             onPress={() => {
               _v.setCurrentLevel(3);
               _v.setSelectedSegmentData(item);
               getMyWorksData(3, '', item._id);
             }
           }>
-            <Text style={styles.HeadingText}>{item.name}</Text>
-            <View style={styles.TaskDetails}>
-              <Text style={[styles.SubHeadingText, styles.BoldText]}>
-                Assigned:
-              </Text>
-              <Text style={[styles.SubHeadingText, styles.SubActive]}>
-                {item.name}
-              </Text>
+
+          <LinearGradient
+          colors={workTypeColors.gradientColors}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 0}}
+          style={styles.gradientContainer}>
+            <View style={[
+                styles.leftBorder,
+                {backgroundColor: workTypeColors.leftBorderColor},
+              ]} />
+            <View style={styles.FlexColumnCenter}>
+              <Text style={styles.HeadingText}>{item.name}</Text>
+              <View style={styles.TaskDetails}>
+                <Text style={[styles.SubHeadingText, styles.BoldText]}>
+                  Assigned:
+                </Text>
+                <Text style={[styles.SubHeadingText, styles.SubActive]}>
+                  {item.name}
+                </Text>
+              </View>
             </View>
+            <View></View>
+          </LinearGradient>
         </TouchableOpacity>
         );
       })
@@ -19118,7 +19184,7 @@ export const CustomForms = (_v: any) => {
         }
       }).map((item: any, index: number) => {
         return (
-          <TouchableOpacity style={styles.MyWorkCard}
+          <TouchableOpacity
             onPress={() => {
               _v.setSelectedComponentData(item);
               if (item.hasSubComponent) {
@@ -19131,15 +19197,28 @@ export const CustomForms = (_v: any) => {
             }
             }
           >
-            <Text style={styles.HeadingText}>{item.name}</Text>
-            <View style={styles.TaskDetails}>
-              <Text style={[styles.SubHeadingText, styles.BoldText]}>
-                Assigned:
-              </Text>
-              <Text style={[styles.SubHeadingText, styles.SubActive]}>
-                {item.name}
-              </Text>
+          <LinearGradient
+          colors={workTypeColors.gradientColors}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 0}}
+          style={styles.gradientContainer}>
+            <View style={[
+                styles.leftBorder,
+                {backgroundColor: workTypeColors.leftBorderColor},
+              ]} />
+            <View style={styles.FlexColumnCenter}>
+              <Text style={styles.HeadingText}>{item.name}</Text>
+              <View style={styles.TaskDetails}>
+                <Text style={[styles.SubHeadingText, styles.BoldText]}>
+                  Assigned:
+                </Text>
+                <Text style={[styles.SubHeadingText, styles.SubActive]}>
+                  {item.name}
+                </Text>
+              </View>
             </View>
+            <View></View>
+          </LinearGradient>
         </TouchableOpacity>
         );
       });
@@ -19158,7 +19237,7 @@ export const CustomForms = (_v: any) => {
         }
       }).map((item: any, index: number) => {
         return (
-          <TouchableOpacity style={styles.MyWorkCard}
+          <TouchableOpacity
             onPress={() => {
               _v.setCurrentLevel(5);
               _v.setSelectedSubComponentData(item);
@@ -19166,15 +19245,29 @@ export const CustomForms = (_v: any) => {
             }
             }
           >
-            <Text style={styles.HeadingText}>{item.name}</Text>
-            <View style={styles.TaskDetails}>
-              <Text style={[styles.SubHeadingText, styles.BoldText]}>
-                Assigned:
-              </Text>
-              <Text style={[styles.SubHeadingText, styles.SubActive]}>
-                {item.name}
-              </Text>
+
+            <LinearGradient
+          colors={workTypeColors.gradientColors}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 0}}
+          style={styles.gradientContainer}>
+            <View style={[
+                styles.leftBorder,
+                {backgroundColor: workTypeColors.leftBorderColor},
+              ]} />
+            <View style={styles.FlexColumnCenter}>
+              <Text style={styles.HeadingText}>{item.name}</Text>
+              <View style={styles.TaskDetails}>
+                <Text style={[styles.SubHeadingText, styles.BoldText]}>
+                  Assigned:
+                </Text>
+                <Text style={[styles.SubHeadingText, styles.SubActive]}>
+                  {item.name}
+                </Text>
+              </View>
             </View>
+            <View></View>
+          </LinearGradient>
         </TouchableOpacity>
         );
       });

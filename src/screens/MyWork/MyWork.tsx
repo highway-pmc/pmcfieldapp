@@ -69,11 +69,14 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
 
   const _event = Events(_v);
 
-  const _customForms = CustomForms(_v);
-
   const {workType, taskCategory} = route.params;
 
+  const _customForms = CustomForms(_v, workType, taskCategory);
+
   const focus = useIsFocused();
+
+  const {height} = Dimensions.get('window');
+  const calculatedHeight = height * 0.77;
 
   useEffect(() => {
     if (focus == true) {
@@ -354,7 +357,8 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           />
         </View>
       ) : null}
-      <ScrollView style={styles.Height100}>
+      
+      <ScrollView style={[{paddingVertical: 15, height: calculatedHeight}]}>
         {
           (() => {
             if (_v.currentLevel === 1) {

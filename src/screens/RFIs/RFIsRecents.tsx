@@ -72,6 +72,7 @@ const RFIsRecents = (props: any) => {
         projectId: loggedInUser.projectId,
         status:
           props.rfiType === RFIs_TYPE.GENERATE ? 'generated' : props.rfiType,
+        taskCategory: props.taskCategory
       }),
     );
   };

@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import React, {useEffect, useState, useCallback} from 'react';
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
-import {HeaderItems, WORK_TYPE} from '../../constants/constants';
+import {HeaderItems, TASK_CATEGORY, WORK_TYPE} from '../../constants/constants';
 import RFIsRecents from './RFIsRecents';
 import RFIsRecentsMyQuality from './RFIsRecentsMyQuality';
 import RFIsSurveyWork from './RFIsSurveyWork';
@@ -51,13 +51,13 @@ const RFIsDashboard = ({route, navigation}: {route: any; navigation: any}) => {
   const renderTabContent = () => {
     switch (activeTab) {
       case WORK_TYPE.SITE_WORK:
-        return <RFIsRecents rfiType={rfiType} />;
+        return <RFIsRecents taskCategory={TASK_CATEGORY.MY_WORK} rfiType={rfiType} />;
       case WORK_TYPE.CASTING_YARD:
-        return <RFIsRecents rfiType={rfiType} />;
+        return <RFIsRecents taskCategory={TASK_CATEGORY.CASTING_YARD} rfiType={rfiType} />;
       case WORK_TYPE.LAB_WORK:
         return <RFIsRecentsMyQuality rfiType={rfiType} />;
       case WORK_TYPE.SURVEY_WORK:
-        return <RFIsSurveyWork rfiType={rfiType} />;
+        return <RFIsSurveyWork taskCategory={TASK_CATEGORY.SURVEY} rfiType={rfiType} />;
       default:
         return (
           <View style={styles.errorContainer}>

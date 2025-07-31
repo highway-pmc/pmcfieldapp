@@ -59,7 +59,7 @@ function* generateRFITask({payload}) {
 
 function* getRFIData({payload}) {
   try {
-    const response = yield getRFIs(payload.projectId, payload.status);
+    const response = yield getRFIs(payload.projectId, payload.status, payload.taskCategory);
     yield put({type: 'GET_RFI_SUCCESS', response});
   } catch (error) {
     yield put({type: 'GET_RFI_FAILURE', error: error.message});

@@ -1,7 +1,7 @@
 import apiService from '../api.service';
 
-export const getRFITasksData = async (projectId, userCategory, assignmentLevel) => {
-    return apiService.getRequest(`v1/auth/projects/${projectId}/users/${userCategory}/my-works/level/${assignmentLevel}`).then((response) => {
+export const getRFITasksData = async (projectId, userCategory, assignmentLevel, taskCategory) => {
+    return apiService.getRequest(`v1/auth/projects/${projectId}/users/${userCategory}/my-works/level/${assignmentLevel}?taskCategory=${taskCategory}`).then((response) => {
     // return apiService.getRequest(`v1/auth/projects/${projectId}/users/${userCategory}/my-works?level=${assignmentLevel}`).then((response) => {
         return response;
     }).catch((err) => {
@@ -28,8 +28,8 @@ export const generateRFI = async (projectId, projectModuleId, userCategory, body
     });
 }
 
-export const getRFIs = async (projectId, status, taskCategory) => {
-    return apiService.getRequest(`v1/auth/projects/${projectId}/status/${status}/rfis?taskCategory=${taskCategory}`).then((response) => {
+export const getRFIs = async (projectId, status, projectModuleType, taskCategory) => {
+    return apiService.getRequest(`v1/auth/projects/${projectId}/status/${status}/rfis?projectModuleType=${projectModuleType}&taskCategory=${taskCategory}`).then((response) => {
         return response;
     }).catch((err) => {
         const errorMessge = err.message || 'Unable to get RFI.';

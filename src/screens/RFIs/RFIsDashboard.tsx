@@ -51,13 +51,13 @@ const RFIsDashboard = ({route, navigation}: {route: any; navigation: any}) => {
   const renderTabContent = () => {
     switch (activeTab) {
       case WORK_TYPE.SITE_WORK:
-        return <RFIsRecents taskCategory={TASK_CATEGORY.MY_WORK} rfiType={rfiType} />;
+        return <RFIsRecents moduleType={WORK_TYPE.SITE_WORK} taskCategory={TASK_CATEGORY.MY_WORK} rfiType={rfiType} />;
       case WORK_TYPE.CASTING_YARD:
-        return <RFIsRecents taskCategory={TASK_CATEGORY.CASTING_YARD} rfiType={rfiType} />;
+        return <RFIsRecents moduleType={WORK_TYPE.CASTING_YARD} taskCategory={TASK_CATEGORY.CASTING_YARD} rfiType={rfiType} />;
       case WORK_TYPE.LAB_WORK:
         return <RFIsRecentsMyQuality rfiType={rfiType} />;
       case WORK_TYPE.SURVEY_WORK:
-        return <RFIsSurveyWork taskCategory={TASK_CATEGORY.SURVEY} rfiType={rfiType} />;
+        return <RFIsSurveyWork moduleType={WORK_TYPE.SURVEY_WORK} taskCategory={TASK_CATEGORY.SURVEY} rfiType={rfiType} />;
       default:
         return (
           <View style={styles.errorContainer}>

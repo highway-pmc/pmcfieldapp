@@ -26,7 +26,7 @@ const RFIsGenerateMyWork = ({
   route: any;
   navigation: any;
 }) => {
-  const {rfiType} = route.params;
+  const {rfiType, projectType, taskCategory, moduleType} = route.params;
 
   const [activeTab, setActiveTab] = useState(USER_CATEGORY_DISPLAY.STRUCTURE);
 
@@ -59,7 +59,7 @@ const RFIsGenerateMyWork = ({
 
   return (
     <View style={styles.container}>
-      <View style={styles.tabBar}>
+      {/* <View style={styles.tabBar}>
         <TouchableOpacity
           style={[
             styles.tabItem,
@@ -107,8 +107,8 @@ const RFIsGenerateMyWork = ({
             {USER_CATEGORY_DISPLAY.OTHER}
           </Text>
         </TouchableOpacity>
-      </View>
-      <View style={styles.tabContent}>
+      </View> */}
+      {/*<View style={styles.tabContent}>
         {activeTab === USER_CATEGORY_DISPLAY.STRUCTURE && (
           // <Text>STRUCTURE WORK</Text>
           <RFIsStructureTaskListing
@@ -123,7 +123,13 @@ const RFIsGenerateMyWork = ({
             projectType={PROJECT_TYPE.HIGHWAY_WORK}></RFIsStructureTaskListing>
         )}
         {activeTab === USER_CATEGORY_DISPLAY.OTHER && <Text>TBD</Text>}
-      </View>
+      </View>*/}
+    <Text>{moduleType} - {projectType}</Text>
+      <RFIsStructureTaskListing
+          rfiType={rfiType}
+          projectType={projectType}
+          taskCategory={taskCategory}>
+      </RFIsStructureTaskListing>
     </View>
   );
 };

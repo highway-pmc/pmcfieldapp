@@ -47,6 +47,8 @@ const RFIsStructureTaskListing = (props: any) => {
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
   //const userCategory = PROJECT_TYPE.STRUCTURE_WORK;
   const userCategory = props.projectType;
+  const taskCategory = props.taskCategory;
+
   const workTypeColors = getWorkTypeColors(userCategory);
   // const rfiType = props.rfiType;
 
@@ -103,6 +105,7 @@ const RFIsStructureTaskListing = (props: any) => {
         projectId: loggedInUser.projectId,
         userCategory: userCategory,
         level: 5, // Tasks
+        taskCategory: taskCategory,
       }),
     );
   };

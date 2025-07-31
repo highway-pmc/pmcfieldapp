@@ -22,6 +22,7 @@ function* getRFITasks({payload}) {
       payload.projectId,
       payload.userCategory,
       payload.level,
+      payload.taskCategory,
     );
     yield put({type: 'GET_RFI_TASKS_SUCCESS', response});
   } catch (error) {
@@ -59,7 +60,7 @@ function* generateRFITask({payload}) {
 
 function* getRFIData({payload}) {
   try {
-    const response = yield getRFIs(payload.projectId, payload.status, payload.taskCategory);
+    const response = yield getRFIs(payload.projectId, payload.status, payload.projectModuleType, payload.taskCategory);
     yield put({type: 'GET_RFI_SUCCESS', response});
   } catch (error) {
     yield put({type: 'GET_RFI_FAILURE', error: error.message});

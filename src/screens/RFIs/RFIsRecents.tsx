@@ -11,7 +11,7 @@ import {
   TextInput,
   Alert,
 } from 'react-native';
-import {RFI_STATUS, RFIs_TYPE, TASK_TYPES} from '../../constants/constants';
+import {PROJECT_TYPE, RFI_STATUS, RFIs_TYPE, TASK_TYPES, USER_CATEGORY_DISPLAY} from '../../constants/constants';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import React, {Fragment, useEffect, useLayoutEffect, useState} from 'react';
@@ -30,7 +30,7 @@ import LinearGradient from 'react-native-linear-gradient';
 const {height} = Dimensions.get('window');
 
 const RFIsRecents = (props: any) => {
-  const navigation = useNavigation();
+  const navigation: any = useNavigation();
 
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
   const {rfiDataList, rfiUpdated, reportGenerated, loading, error} =
@@ -40,6 +40,7 @@ const RFIsRecents = (props: any) => {
 
   const [openPopup, setOpenPopup] = useState(false);
   const [selectedRFI, setSelectedRFI]: any = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(PROJECT_TYPE.STRUCTURE_WORK);
 
   const [openCalendar, setOpenCalendar] = useState(false);
 
@@ -66,13 +67,14 @@ const RFIsRecents = (props: any) => {
     }
   }, [focus]);
 
-  const getRFIsData = () => {
+  const getRFIsData = (projModuleType = selectedCategory) => {
     dispatch(
       actionGetRFIs({
         projectId: loggedInUser.projectId,
         status:
           props.rfiType === RFIs_TYPE.GENERATE ? 'generated' : props.rfiType,
-        taskCategory: props.taskCategory
+        taskCategory: props.taskCategory,
+        projectModuleType: projModuleType,
       }),
     );
   };
@@ -9202,7 +9204,6 @@ const RFIsRecents = (props: any) => {
         );
     }
   };
-  const [selectedCategory, setSelectedCategory] = useState('structure');
   return (
     <View>
       <View
@@ -9213,45 +9214,51 @@ const RFIsRecents = (props: any) => {
         <TouchableOpacity
           style={[
             commonStyles.toggleButton,
-            selectedCategory === 'structure' && commonStyles.activeToggleButton,
+            selectedCategory === PROJECT_TYPE.STRUCTURE_WORK && commonStyles.activeToggleButton,
           ]}
-          onPress={() => setSelectedCategory('structure')}>
+          onPress={() => {
+            setSelectedCategory(PROJECT_TYPE.STRUCTURE_WORK); getRFIsData(PROJECT_TYPE.STRUCTURE_WORK);
+          }}>
           <Text
             style={[
               commonStyles.toggleText,
-              selectedCategory === 'structure' && commonStyles.activeToggleText,
+              selectedCategory === PROJECT_TYPE.STRUCTURE_WORK && commonStyles.activeToggleText,
             ]}>
-            Structure
+            {USER_CATEGORY_DISPLAY.STRUCTURE}
           </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={[
             commonStyles.toggleButton,
-            selectedCategory === 'highway' && commonStyles.activeToggleButton,
+            selectedCategory === PROJECT_TYPE.HIGHWAY_WORK && commonStyles.activeToggleButton,
           ]}
-          onPress={() => setSelectedCategory('highway')}>
+          onPress={() => {
+            setSelectedCategory(PROJECT_TYPE.HIGHWAY_WORK); getRFIsData(PROJECT_TYPE.HIGHWAY_WORK);
+          }}>
           <Text
             style={[
               commonStyles.toggleText,
-              selectedCategory === 'highway' && commonStyles.activeToggleText,
+              selectedCategory === PROJECT_TYPE.HIGHWAY_WORK && commonStyles.activeToggleText,
             ]}>
-            Highway
+            {USER_CATEGORY_DISPLAY.HIGHWAY}
           </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={[
             commonStyles.toggleButton,
-            selectedCategory === 'other' && commonStyles.activeToggleButton,
+            selectedCategory === PROJECT_TYPE.OTHER_WORK && commonStyles.activeToggleButton,
           ]}
-          onPress={() => setSelectedCategory('other')}>
+          onPress={() => {
+            setSelectedCategory(PROJECT_TYPE.OTHER_WORK); getRFIsData(PROJECT_TYPE.OTHER_WORK);
+          }}>
           <Text
             style={[
               commonStyles.toggleText,
-              selectedCategory === 'other' && commonStyles.activeToggleText,
+              selectedCategory === PROJECT_TYPE.OTHER_WORK && commonStyles.activeToggleText,
             ]}>
-            Other
+            {USER_CATEGORY_DISPLAY.OTHER}
           </Text>
         </TouchableOpacity>
       </View>
@@ -9268,6 +9275,9 @@ const RFIsRecents = (props: any) => {
               onPress={() =>
                 navigation.navigate('RFIsGenerateMyWork', {
                   rfiType: props.rfiType,
+                  projectType: selectedCategory,
+                  taskCategory: props.taskCategory,
+                  moduleType: props.moduleType
                 })
               }>
               <Text style={styles.btnCtaText}>Generate RFI's</Text>

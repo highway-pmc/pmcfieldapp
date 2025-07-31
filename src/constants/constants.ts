@@ -14,6 +14,7 @@ export const HeaderItems = {
   myTask: {showBack: false, title: 'My Task'},
   manageUsers: {showBack: false, title: 'Manage Users'},
   changePassword: {showBack: false, title: 'Change Password'},
+  controlPoint: {showBack: false, title: 'Control Point'},
   assignTask: {showBack: true, title: 'Assign Task'},
   flyoverDetails: {showBack: true, title: 'Flyover Details'},
   manageWork: {showBack: false, title: 'Manage Works'},
@@ -486,7 +487,7 @@ export const PROJECT_TYPE = {
 export const TASK_CATEGORY = {
   MY_WORK: 'my-work',
   CASTING_YARD: 'casting-yard',
-  SURVEY: 'survey'
+  SURVEY: 'survey',
 };
 
 export const SURVEY_MODULE_TYPE = [
@@ -892,6 +893,7 @@ export const TASK_TYPES = {
   SAND_LAYER: 'sand-layer',
   PLACING_AND_JOINTING_CHUTE_MEMBERS: 'placing-and-jointing-ofchute-members',
   LAYING_OF_PQC: 'N/A',
+  CONTROL_POINTS: 'control-points',
 };
 
 export const TEST_CLASSIFICATION_TYPES = {

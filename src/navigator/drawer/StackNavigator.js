@@ -50,6 +50,8 @@ import AddPurchase from '../../screens/Store/AddPurchase';
 import MixDesignCategoryList from '../../screens/MyWork/MixDesignCategory';
 import ProductionHome from '../../screens/Production/ProductionHome';
 import ProductionDetail from '../../screens/Production/ProductionDetail';
+import ControlPoints from '../../screens/Survey/ControlPoints';
+
 const Stack = createStackNavigator();
 
 const screenOptionStyle = {
@@ -97,6 +99,11 @@ const SurveyStackNaigator = () => {
       <Stack.Screen
         name="MyWorkSurvey"
         component={MyWork}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ControlPoints"
+        component={ControlPoints}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

@@ -970,71 +970,70 @@ export const CustomForms = (_v: any, workType: any, taskCategory: any) => {
 
   const renderHeadings = () => (
     <View style={TableCommonStyles.tableHeaderContainer}>
-      <View style={{ width: 50, ...TableCommonStyles.headerCell }}>
+      <View style={{width: 50, ...TableCommonStyles.headerCell}}>
         <Text style={TableCommonStyles.headerText}>TM No.</Text>
       </View>
 
-      <View style={{ width: 100, ...TableCommonStyles.headerCell }}>
+      <View style={{width: 100, ...TableCommonStyles.headerCell}}>
         <Text style={TableCommonStyles.headerText}>Vehicle No.</Text>
       </View>
 
-      <View style={{ width: 150, ...TableCommonStyles.headerCell }}>
+      <View style={{width: 150, ...TableCommonStyles.headerCell}}>
         <Text style={TableCommonStyles.headerText}>Time of arrival</Text>
       </View>
 
-      <View style={{ width: 130, ...TableCommonStyles.headerCell }}>
+      <View style={{width: 130, ...TableCommonStyles.headerCell}}>
         <Text style={TableCommonStyles.headerText}>Grade of Concrete</Text>
       </View>
 
       {_v.selectedTask.name === TASK_TYPES.CONCRETING && (
-        <View style={{ width: 130, ...TableCommonStyles.headerCell }}>
+        <View style={{width: 130, ...TableCommonStyles.headerCell}}>
           <Text style={TableCommonStyles.headerText}>Concrete temp in C</Text>
         </View>
       )}
 
       {_v.selectedTask.name === TASK_TYPES.CONCRETING && (
-        <View style={{ width: 130, ...TableCommonStyles.headerCell }}>
+        <View style={{width: 130, ...TableCommonStyles.headerCell}}>
           <Text style={TableCommonStyles.headerText}>Slump value in mm</Text>
         </View>
       )}
 
-      <View style={{ width: 150, ...TableCommonStyles.headerCell }}>
+      <View style={{width: 150, ...TableCommonStyles.headerCell}}>
         <Text style={TableCommonStyles.headerText}>Concrete start time</Text>
       </View>
 
-      <View style={{ width: 150, ...TableCommonStyles.headerCell }}>
+      <View style={{width: 150, ...TableCommonStyles.headerCell}}>
         <Text style={TableCommonStyles.headerText}>Concrete poured in cum</Text>
       </View>
 
-      <View style={{ width: 150, ...TableCommonStyles.headerCell }}>
+      <View style={{width: 150, ...TableCommonStyles.headerCell}}>
         <Text style={TableCommonStyles.headerText}>Concrete finish time</Text>
       </View>
 
-      <View style={{ width: 80, ...TableCommonStyles.headerCell }}>
+      <View style={{width: 80, ...TableCommonStyles.headerCell}}>
         <Text style={TableCommonStyles.headerText}>Actions</Text>
       </View>
     </View>
   );
   const renderHeadingsPQC = () => (
-    <View
-      style={TableCommonStyles.tableHeaderContainer}>
-      <View style={{width: 50, ...TableCommonStyles.headerCell }}>
-      <Text style={TableCommonStyles.headerText}>Sl. No.</Text>
+    <View style={TableCommonStyles.tableHeaderContainer}>
+      <View style={{width: 50, ...TableCommonStyles.headerCell}}>
+        <Text style={TableCommonStyles.headerText}>Sl. No.</Text>
       </View>
-      <View style={{width: 100,...TableCommonStyles.headerCell }}>
-      <Text style={TableCommonStyles.headerText}>Vehicle No.</Text>
+      <View style={{width: 100, ...TableCommonStyles.headerCell}}>
+        <Text style={TableCommonStyles.headerText}>Vehicle No.</Text>
       </View>
-      <View style={{width: 150, ...TableCommonStyles.headerCell }}>
-      <Text style={TableCommonStyles.headerText}>
+      <View style={{width: 150, ...TableCommonStyles.headerCell}}>
+        <Text style={TableCommonStyles.headerText}>
           Total qty of PQC in cum
         </Text>
       </View>
 
-      <View style={{width: 150, ...TableCommonStyles.headerCell }}>
-      <Text style={TableCommonStyles.headerText}>Laying start time</Text>
+      <View style={{width: 150, ...TableCommonStyles.headerCell}}>
+        <Text style={TableCommonStyles.headerText}>Laying start time</Text>
       </View>
-      <View style={{width: 150, ...TableCommonStyles.headerCell }}>
-      <Text style={TableCommonStyles.headerText}>Laying end time</Text>
+      <View style={{width: 150, ...TableCommonStyles.headerCell}}>
+        <Text style={TableCommonStyles.headerText}>Laying end time</Text>
       </View>
     </View>
   );
@@ -1940,14 +1939,20 @@ export const CustomForms = (_v: any, workType: any, taskCategory: any) => {
               <TouchableOpacity
                 onPress={launchCamera}
                 style={styles.btnSection}>
-                <Image style={styles.gallaryIconWidth} source={require('../../../../../images/cameraIcon.png')}/>
+                <Image
+                  style={styles.gallaryIconWidth}
+                  source={require('../../../../../images/cameraIcon.png')}
+                />
                 <Text style={styles.btnText}>Camera</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 onPress={launchImageLibrary}
                 style={styles.btnSection}>
-                <Image style={styles.gallaryIconWidth} source={require('../../../../../images/gallaryIcon.png')}/>
+                <Image
+                  style={styles.gallaryIconWidth}
+                  source={require('../../../../../images/gallaryIcon.png')}
+                />
                 <Text style={styles.btnText}>Gallery</Text>
               </TouchableOpacity>
             </View>
@@ -18916,6 +18921,7 @@ export const CustomForms = (_v: any, workType: any, taskCategory: any) => {
             <TouchableOpacity
               style={[styles.MyWorkCta, styles.StartBorder]}
               onPress={() => {
+                console.log('RFI Status:', item);
                 _event.getRFIDataByWorkAssignmentId(item);
               }}>
               <Image
@@ -19004,11 +19010,10 @@ export const CustomForms = (_v: any, workType: any, taskCategory: any) => {
   };
 
   const projectModuleListing = (_v: any, getMyWorksData: Function) => {
-    return _v.myWorksData.filter((item: any) => {
+    return _v.myWorksData
+      .filter((item: any) => {
         if (_v.searchText && item.name) {
-          return item.name
-            .toLowerCase()
-            .includes(_v.searchText.toLowerCase());
+          return item.name.toLowerCase().includes(_v.searchText.toLowerCase());
         } else {
           return true;
         }
@@ -19056,7 +19061,7 @@ export const CustomForms = (_v: any, workType: any, taskCategory: any) => {
         name: SEGMENT_TYPES_DISPLAY[item],
         level: 2,
         segmentView: 0,
-      }
+      };
 
       breadcrumbData.push({
         name: 'Segments',
@@ -19064,19 +19069,20 @@ export const CustomForms = (_v: any, workType: any, taskCategory: any) => {
         active: false,
       });
       _v.setBreadcrumbData(breadcrumbData);
-      _v.setSelectedSegmentType(item); _v.setSegmentView(1);
-    }
+      _v.setSelectedSegmentType(item);
+      _v.setSegmentView(1);
+    };
     if (_v.segmentsByGroupOnType) {
-      return Object.keys(_v.segmentsByGroupOnType).filter((item: any) => {
-        if (_v.searchText && item) {
-          return item
-            .toLowerCase()
-            .includes(_v.searchText.toLowerCase());
-        } else {
-          return true;
-        }
-      }).map(item => {
-        return (
+      return Object.keys(_v.segmentsByGroupOnType)
+        .filter((item: any) => {
+          if (_v.searchText && item) {
+            return item.toLowerCase().includes(_v.searchText.toLowerCase());
+          } else {
+            return true;
+          }
+        })
+        .map(item => {
+          return (
             <TouchableOpacity
             onPress={() => {
               onSegmentTypeClick(item)
@@ -19122,7 +19128,7 @@ export const CustomForms = (_v: any, workType: any, taskCategory: any) => {
           )
       })
     }
-  }
+  };
 
   const segmentListing = (_v: any, getMyWorksData: Function) => {
     if (_v.selectedProjectModuleData?.segmentsData?.length) {
@@ -19170,7 +19176,7 @@ export const CustomForms = (_v: any, workType: any, taskCategory: any) => {
         );
       })
     }
-  }
+  };
 
   const componentListing = (_v: any, getMyWorksData: Function) => {
     if (_v.selectedSegmentData?.componentsData?.length) {
@@ -19223,7 +19229,7 @@ export const CustomForms = (_v: any, workType: any, taskCategory: any) => {
         );
       });
     }
-  }
+  };
 
   const subComponentListing = (_v: any, getMyWorksData: Function) => {
     if (_v.selectedComponentData?.subComponentsData?.length) {
@@ -19272,7 +19278,7 @@ export const CustomForms = (_v: any, workType: any, taskCategory: any) => {
         );
       });
     }
-  }
+  };
 
   return {
     CustomTextInput,

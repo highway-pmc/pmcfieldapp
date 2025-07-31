@@ -2,7 +2,6 @@ import {
   View,
   Text,
   NativeEventEmitter,
-  StyleSheet,
   ScrollView,
   Image,
   TouchableOpacity,
@@ -21,48 +20,22 @@ import {
   PROJECT_TYPE,
   RFI_STATUS,
   SEGMENT_TYPES_DISPLAY,
-  TASK_TYPES,
-  YES_NO_LIST,
-  YES_NO_NA_LIST,
-  CONCRETE_GRADE_LIST,
-  CEMENT_GRADE_LIST,
-  CEMENT_TYPE_LIST,
   TASK_CATEGORY,
-  SURVEY_MODULE_TYPE,
-  WORK_TYPE,
 } from '../../constants/constants';
-import {useDispatch, useSelector} from 'react-redux';
 import {
   clearMyWorksEvent,
-  fillRFIsChecklist,
   getMyWorks,
-  getRFIByWaId,
 } from './actions';
 import LoadingAnimation from '../Common/LoadingAnimation';
 import {
-  getDbDate,
-  getDbDateFromDDMMYYYY,
-  getDisplayDate,
-  getDisplayTime,
   groupBy,
 } from '../../utils/Utils';
 
-import DropDownPicker from 'react-native-dropdown-picker';
-import DropdownPicker from '../../components/UI/DropdownPicker';
-import CalendarPicker from '../../components/UI/CalenderPicker';
-import TimePicker from '../../components/UI/TimePicker';
-import moment from 'moment';
-import {SwipeListView} from 'react-native-swipe-list-row';
-import {Guid} from 'guid-typescript';
-import {FlatList} from 'react-native-gesture-handler';
-import Input from '../../components/UI/Input';
 import {initRfiData} from './ReportSamples/Forms/MyWorks/initialize';
 import {styles} from './ReportSamples/Forms/MyWorks/Styles';
 import {Variables} from './ReportSamples/Forms/MyWorks/Variables'; // Assuming you still use other variables from here
 import {Events} from './ReportSamples/Forms/MyWorks/Events';
 import {CustomForms} from './ReportSamples/Forms/MyWorks/CustomForms';
-import commonStyles from '../Common/commonStyles';
-import {useNavigation} from '@react-navigation/native';
 
 const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
   const _v = Variables(); // Keep using Variables for other shared state and logic
@@ -108,23 +81,27 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         //
       }
       eventEmitter.emit('headerEvent', headerTitle);
-      _v.setCurrentLevel(1);
-      _v.setMyWorksData([]);
-      _v.setCurrentSegmentsData([]);
-      _v.setCurrentComponentsData([]);
-      _v.setCurrentSubComponentsData([]);
-      _v.setCurrentTasksData([]);
-      _v.setBreadcrumbData([]);
-      _v.setSelectedProjectModuleData([]);
-      _v.setSelectedSegmentData([]);
-      _v.setSelectedComponentData([]);
-      _v.setSelectedSubComponentData([]);
-      getMyWorksData();
-      _v.setSearchText('');
-      _v.setOpenPopup(false);
-      setChainageData(null);
+      initMywork();
     }
   }, [focus]);
+
+  const initMywork = () => {
+    _v.setCurrentLevel(1);
+    _v.setMyWorksData([]);
+    _v.setCurrentSegmentsData([]);
+    _v.setCurrentComponentsData([]);
+    _v.setCurrentSubComponentsData([]);
+    _v.setCurrentTasksData([]);
+    _v.setBreadcrumbData([]);
+    _v.setSelectedProjectModuleData([]);
+    _v.setSelectedSegmentData([]);
+    _v.setSelectedComponentData([]);
+    _v.setSelectedSubComponentData([]);
+    getMyWorksData();
+    _v.setSearchText('');
+    _v.setOpenPopup(false);
+    setChainageData(null);
+  }
 
   const getMyWorksData = (
     level: number = 1,
@@ -139,10 +116,10 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       workType: workType,
       taskCategory: taskCategory,
       level: level,
-      projectModuleId: _v.selectedProjectModuleData?.id || projectModuleId,
-      segmentId: _v.selectedSegmentData?._id || segmentId,
-      componentId: _v.selectedComponentData?._id || componentId,
-      subComponentId: _v.selectedSubComponentData?._id || subComponentId,
+      projectModuleId: projectModuleId || _v.selectedProjectModuleData?.id,
+      segmentId: segmentId || _v.selectedSegmentData?._id,
+      componentId: componentId || _v.selectedComponentData?._id,
+      subComponentId: subComponentId || _v.selectedSubComponentData?._id,
     });
     _v.dispatch(
       getMyWorks({
@@ -150,10 +127,10 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         workType: workType,
         taskCategory: taskCategory,
         level: level,
-        projectModuleId: _v.selectedProjectModuleData?.id || projectModuleId,
-        segmentId: _v.selectedSegmentData?._id || segmentId,
-        componentId: _v.selectedComponentData?._id || componentId,
-        subComponentId: _v.selectedSubComponentData?._id || subComponentId,
+        projectModuleId: projectModuleId || _v.selectedProjectModuleData?.id,
+        segmentId: segmentId || _v.selectedSegmentData?._id,
+        componentId: componentId || _v.selectedComponentData?._id,
+        subComponentId: subComponentId || _v.selectedSubComponentData?._id,
       }),
     );
   };
@@ -161,6 +138,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
   useEffect(() => {
     if (_v.myWorks) {
       if (_v.currentLevel == 1) {
+        _v.setSegmentView(0);
         _v.setMyWorksData(_v.myWorks);
         if (
           _v.myWorks &&
@@ -175,6 +153,10 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         } else {
           setChainageData(null); // Clear if no chainage data
         }
+        _v.setSelectedSegmentData([]);
+        _v.setSelectedComponentData([]);
+        _v.setSelectedSubComponentData([]);
+        setBreadcrumbItems();
       } else if (_v.currentLevel == 2) {
         _v.setSelectedSegmentType(null);
         _v.setSegmentView(0);
@@ -183,14 +165,29 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         _v.setSelectedProjectModuleData(data);
         const gbSegmentTypes = groupBy(_v.myWorks, 'type');
         _v.setSegmentsByGroupOnType(gbSegmentTypes);
+
+        if (Object.keys(gbSegmentTypes)?.length === 1) {
+          _v.setSelectedSegmentType(Object.keys(gbSegmentTypes)[0]);
+          _v.setSegmentView(1);
+
+          setBreadcrumbItems(_v.currentLevel, 1);
+        } else {
+          setBreadcrumbItems();
+        }
+        _v.setSelectedComponentData([]);
+        _v.setSelectedSubComponentData([]);
       } else if (_v.currentLevel == 3) {
         const data = Object.assign({}, _v.selectedSegmentData);
         data.componentsData = _v.myWorks;
         _v.setSelectedSegmentData(data);
+        setBreadcrumbItems();
+        _v.setSelectedComponentData([]);
       } else if (_v.currentLevel == 4) {
         const data = Object.assign({}, _v.selectedComponentData);
         data.subComponentsData = _v.myWorks;
         _v.setSelectedComponentData(data);
+        setBreadcrumbItems();
+        _v.setSelectedSubComponentData([]);
       } else if (_v.currentLevel == 5) {
         _v.setCurrentTasksData(_v.myWorks);
         if (chainageData) {
@@ -199,9 +196,8 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             chainageData,
           );
         }
+        setBreadcrumbItems();
       }
-
-      setBreadcrumbItems();
     }
 
     if (_v.rfiData) {
@@ -231,6 +227,10 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       _v.setCurrentComponentsData([]);
       _v.setCurrentSubComponentsData([]);
       _v.setCurrentTasksData([]);
+      _v.setSelectedProjectModuleData([]);
+      _v.setSelectedSegmentData([]);
+      _v.setSelectedComponentData([]);
+      _v.setSelectedSubComponentData([]);
       _v.setBreadcrumbData([]);
       _v.setSearchText('');
       setChainageData(null); // Clear local chainage data on unmount
@@ -250,6 +250,9 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           active: false,
         },
       ]);
+      _v.setSelectedSegmentData([]);
+      _v.setSelectedComponentData([]);
+      _v.setSelectedSubComponentData([]);
     } else if (currentLevel == 2) {
       if (!segmentView) {
         _v.setBreadcrumbData([
@@ -266,29 +269,42 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         ]);
       } else {
         _v.setBreadcrumbData([]);
-        _v.setBreadcrumbData([
-          {
-            name: _v.selectedProjectModuleData.name,
-            level: 1,
-            active: true,
-          },
-          {
-            name: SEGMENT_TYPES_DISPLAY[_v.selectedSegmentType],
-            level: 2,
-            segmentView: 0,
-            active: false,
-          },
+        const bredcrumdTemp = [];
+
+        bredcrumdTemp.push({
+          name: _v.selectedProjectModuleData.name,
+          level: 1,
+          active: true,
+        })
+        
+        if (_v.segmentsByGroupOnType && Object.keys(_v.segmentsByGroupOnType)?.length > 1) {
+          bredcrumdTemp.push(
+            {
+              name: SEGMENT_TYPES_DISPLAY[_v.selectedSegmentType],
+              level: 2,
+              segmentView: 0,
+              active: false,
+            },
+          )
+        }
+
+        bredcrumdTemp.push(
           {
             name: 'Segments',
             level: 0,
             active: false,
-          },
-        ]);
+          }
+        );
+
+        _v.setBreadcrumbData(bredcrumdTemp);
       }
+      _v.setSelectedComponentData([]);
+      _v.setSelectedSubComponentData([]);
     } else if (currentLevel == 3) {
       let breadcrumbData: any[] = _v.breadcrumbData;
-      breadcrumbData = breadcrumbData.slice(0, 2);
-      breadcrumbData[_v.breadcrumbData.length - 1] = {
+      breadcrumbData = _v.segmentsByGroupOnType && Object.keys(_v.segmentsByGroupOnType)?.length === 1 ? breadcrumbData.slice(0, 2) : breadcrumbData.slice(0, 3);
+
+      breadcrumbData[breadcrumbData.length - 1] = {
         name: _v.selectedSegmentData.name,
         level: 2,
         segmentView: 1,
@@ -299,11 +315,15 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         level: 0,
         active: false,
       });
-      _v.setBreadcrumbData(breadcrumbData);
+
+      _v.setBreadcrumbData([...breadcrumbData]);
+
+      _v.setSelectedComponentData([]);
+      _v.setSelectedSubComponentData([]);
     } else if (currentLevel == 4) {
       let breadcrumbData: any[] = _v.breadcrumbData;
-      breadcrumbData = breadcrumbData.slice(0, 3);
-      breadcrumbData[_v.breadcrumbData.length - 1] = {
+      breadcrumbData = _v.segmentsByGroupOnType && Object.keys(_v.segmentsByGroupOnType)?.length === 1 ? breadcrumbData.slice(0, 3) : breadcrumbData.slice(0, 4);
+      breadcrumbData[breadcrumbData.length - 1] = {
         name: _v.selectedComponentData.name,
         level: 3,
         active: false,
@@ -315,6 +335,8 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         active: false,
       });
       _v.setBreadcrumbData(breadcrumbData);
+
+      _v.setSelectedSubComponentData([]);
     } else if (currentLevel == 5) {
       const breadcrumbData = _v.breadcrumbData;
       breadcrumbData[_v.breadcrumbData.length - 1] = {

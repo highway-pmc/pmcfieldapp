@@ -65,7 +65,7 @@ export const styles = StyleSheet.create({
     padding: 20,
   },
   Height100: {
-    height: '100%',
+    height: Dimensions.get('screen').height - 200,
   },
   SearchBox: {
     flexDirection: 'row',
@@ -253,12 +253,12 @@ export const styles = StyleSheet.create({
     color: '#333',
   },
   BreadcrumbPrevTextUnderline: {
-    fontSize: 14,
-    textDecorationLine: 'underline',
+    fontSize: 13,
+    textDecorationLine: 'none',
     color: '#333',
   },
   BreadcrumbCurrentText: {
-    fontSize: 14,
+    fontSize: 13,
     color: '#333',
     fontWeight: '600',
   },
@@ -299,8 +299,8 @@ export const styles = StyleSheet.create({
   },
   HeadingText: {
     color: '#010101',
-    fontSize: 16,
-    fontWeight: '700',
+    fontSize: 14,
+    fontWeight: '400',
     marginBottom: 5,
   },
   TaskDetails: {
@@ -308,19 +308,18 @@ export const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   SubHeadingText: {
-    color: '#1C6BA4',
     fontSize: 12,
     fontWeight: '400',
     marginRight: 5,
   },
   SubActive: {
-    color: '#1C58C0',
+    color: '#333',
     fontWeight: '800',
   },
   BoldText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#27272A',
+    color: '#666',
   },
   HeadingContainer: {
     backgroundColor: '#e7ebf4',
@@ -595,4 +594,83 @@ export const styles = StyleSheet.create({
     width: 20,
     height: 20,
   },
+  gradientContainer: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    paddingVertical: 20,
+    paddingHorizontal: 15,
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+    position: 'relative',
+    marginBottom: 10,
+    borderWidth: 1,
+  },
+  leftBorder: {
+    paddingVertical: 3,
+    position: 'absolute',
+    left: 0,
+    top: 10,
+    bottom: 10,
+    zIndex: 100,
+    width: 2,
+  },
+  leftBorderForTask: {
+    paddingVertical: 3,
+    position: 'absolute',
+    left: 0,
+    top: 10,
+    bottom: 10,
+    zIndex: 100,
+    width: 2,
+    backgroundColor: '#5a7ef8'
+  },
+  taskBorderColor: {
+    borderColor: '#cdd6f6'
+  },
+  FlexRowCenter: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 20,
+    width: '100%',
+  },
+  FlexColumnCenter: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+  },
+  numberCircle: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  numberText: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  countArrowRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 3,
+  },
+  colorForText: {
+    fontSize: 14,
+    color: '#333',
+    fontWeight: '400',
+  }
 });

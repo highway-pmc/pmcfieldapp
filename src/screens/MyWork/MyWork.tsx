@@ -13,7 +13,7 @@ import {
   Alert,
 } from 'react-native';
 import {useSnackbar} from '../../context/SnackbarContext';
-import React, {Fragment, useEffect, useState} from 'react'; // Make sure useState is imported
+import React, {Fragment, useEffect, useState} from 'react';
 import {useIsFocused} from '@react-navigation/native';
 import {
   HeaderItems,
@@ -21,24 +21,20 @@ import {
   RFI_STATUS,
   SEGMENT_TYPES_DISPLAY,
   TASK_CATEGORY,
+  TASK_TYPES,
 } from '../../constants/constants';
-import {
-  clearMyWorksEvent,
-  getMyWorks,
-} from './actions';
+import {clearMyWorksEvent, getMyWorks} from './actions';
 import LoadingAnimation from '../Common/LoadingAnimation';
-import {
-  groupBy,
-} from '../../utils/Utils';
+import {groupBy} from '../../utils/Utils';
 
 import {initRfiData} from './ReportSamples/Forms/MyWorks/initialize';
 import {styles} from './ReportSamples/Forms/MyWorks/Styles';
-import {Variables} from './ReportSamples/Forms/MyWorks/Variables'; // Assuming you still use other variables from here
+import {Variables} from './ReportSamples/Forms/MyWorks/Variables';
 import {Events} from './ReportSamples/Forms/MyWorks/Events';
 import {CustomForms} from './ReportSamples/Forms/MyWorks/CustomForms';
 
 const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
-  const _v = Variables(); // Keep using Variables for other shared state and logic
+  const _v = Variables();
   const {showSnackbar} = useSnackbar();
   const _event = Events(_v);
 
@@ -47,7 +43,6 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
   const _customForms = CustomForms(_v, workType, taskCategory);
 
   const focus = useIsFocused();
-  // Declare chainageData state directly within MyWork component
   const [chainageData, setChainageData] = useState(null);
 
   const {height} = Dimensions.get('window');
@@ -101,7 +96,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     _v.setSearchText('');
     _v.setOpenPopup(false);
     setChainageData(null);
-  }
+  };
 
   const getMyWorksData = (
     level: number = 1,
@@ -145,13 +140,13 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           _v.myWorks.length > 0 &&
           _v.myWorks[0].metaData?.chainage
         ) {
-          setChainageData(_v.myWorks[0].metaData.chainage); // Use local setter
+          setChainageData(_v.myWorks[0].metaData.chainage);
           console.log(
             'Level 1 Chainage (Saved to local state):',
             _v.myWorks[0].metaData.chainage,
           );
         } else {
-          setChainageData(null); // Clear if no chainage data
+          setChainageData(null);
         }
         _v.setSelectedSegmentData([]);
         _v.setSelectedComponentData([]);
@@ -169,7 +164,6 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         if (Object.keys(gbSegmentTypes)?.length === 1) {
           _v.setSelectedSegmentType(Object.keys(gbSegmentTypes)[0]);
           _v.setSegmentView(1);
-
           setBreadcrumbItems(_v.currentLevel, 1);
         } else {
           setBreadcrumbItems();
@@ -201,9 +195,33 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     }
 
     if (_v.rfiData) {
-      console.log('RFI Data:', _v.rfiData);
-      initRfiData(_v, navigation, chainageData);
+      if (_v.selectedTask?.name === TASK_TYPES.CONTROL_POINTS) {
+        //console.log('===== All Data ======:', _v.rfiDate, _v.selectedTask,_v.rfiData);
+        navigation.navigate('ControlPoints', {
+          projectId: _v.loggedInUser.projectId,
+          projectModuleId: _v.selectedProjectModuleData?.id,
+          segmentId: _v.selectedSegmentData?._id,
+          componentId: _v.selectedComponentData?._id,
+          subComponentId: _v.selectedSubComponentData?._id,
+          chainageData: chainageData,
+        });
+        // navigation.navigate('BenchMark', {
+        //   projectId: _v.loggedInUser.projectId,
+        //   projectModuleId: _v.selectedProjectModuleData?.id,
+        //   segmentId: _v.selectedSegmentData?._id,
+        //   componentId: _v.selectedComponentData?._id,
+        //   subComponentId: _v.selectedSubComponentData?._id,
+        //   chainageData: chainageData,
+        // });
+
+        _v.dispatch(clearMyWorksEvent());
+      } else {
+        console.log('RFI Selected:', _v.selectedTask?.name);
+        initRfiData(_v);
+      }
     }
+    // --- MODIFICATION END ---
+
     if (_v.error) {
       showSnackbar(_v.error, 'error');
     }
@@ -215,9 +233,8 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       _v.dispatch(clearMyWorksEvent());
       getMyWorksData();
     }
-  }, [_v.myWorks, _v.rfiData, _v.rfiChecklistSaved, _v.error, chainageData]); // Add chainageData to dependency array if you access it here
+  }, [_v.myWorks, _v.rfiData, _v.rfiChecklistSaved, _v.error, chainageData]);
 
-  // unmount
   useEffect(
     () => () => {
       _v.dispatch(clearMyWorksEvent());
@@ -233,7 +250,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
       _v.setSelectedSubComponentData([]);
       _v.setBreadcrumbData([]);
       _v.setSearchText('');
-      setChainageData(null); // Clear local chainage data on unmount
+      setChainageData(null);
     },
     [],
   );
@@ -244,11 +261,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
   ) => {
     if (currentLevel == 1) {
       _v.setBreadcrumbData([
-        {
-          name: 'Project Modules',
-          level: 1,
-          active: false,
-        },
+        {name: 'Project Modules', level: 1, active: false},
       ]);
       _v.setSelectedSegmentData([]);
       _v.setSelectedComponentData([]);
@@ -256,86 +269,63 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     } else if (currentLevel == 2) {
       if (!segmentView) {
         _v.setBreadcrumbData([
-          {
-            name: _v.selectedProjectModuleData.name,
-            level: 1,
-            active: true,
-          },
-          {
-            name: 'Segment Types',
-            level: 0,
-            active: false,
-          },
+          {name: _v.selectedProjectModuleData.name, level: 1, active: true},
+          {name: 'Segment Types', level: 0, active: false},
         ]);
       } else {
         _v.setBreadcrumbData([]);
         const bredcrumdTemp = [];
-
         bredcrumdTemp.push({
           name: _v.selectedProjectModuleData.name,
           level: 1,
           active: true,
-        })
-        
-        if (_v.segmentsByGroupOnType && Object.keys(_v.segmentsByGroupOnType)?.length > 1) {
-          bredcrumdTemp.push(
-            {
-              name: SEGMENT_TYPES_DISPLAY[_v.selectedSegmentType],
-              level: 2,
-              segmentView: 0,
-              active: false,
-            },
-          )
-        }
-
-        bredcrumdTemp.push(
-          {
-            name: 'Segments',
-            level: 0,
+        });
+        if (
+          _v.segmentsByGroupOnType &&
+          Object.keys(_v.segmentsByGroupOnType)?.length > 1
+        ) {
+          bredcrumdTemp.push({
+            name: SEGMENT_TYPES_DISPLAY[_v.selectedSegmentType],
+            level: 2,
+            segmentView: 0,
             active: false,
-          }
-        );
-
+          });
+        }
+        bredcrumdTemp.push({name: 'Segments', level: 0, active: false});
         _v.setBreadcrumbData(bredcrumdTemp);
       }
       _v.setSelectedComponentData([]);
       _v.setSelectedSubComponentData([]);
     } else if (currentLevel == 3) {
       let breadcrumbData: any[] = _v.breadcrumbData;
-      breadcrumbData = _v.segmentsByGroupOnType && Object.keys(_v.segmentsByGroupOnType)?.length === 1 ? breadcrumbData.slice(0, 2) : breadcrumbData.slice(0, 3);
-
+      breadcrumbData =
+        _v.segmentsByGroupOnType &&
+        Object.keys(_v.segmentsByGroupOnType)?.length === 1
+          ? breadcrumbData.slice(0, 2)
+          : breadcrumbData.slice(0, 3);
       breadcrumbData[breadcrumbData.length - 1] = {
         name: _v.selectedSegmentData.name,
         level: 2,
         segmentView: 1,
       };
-
-      breadcrumbData.push({
-        name: 'Components',
-        level: 0,
-        active: false,
-      });
-
+      breadcrumbData.push({name: 'Components', level: 0, active: false});
       _v.setBreadcrumbData([...breadcrumbData]);
-
       _v.setSelectedComponentData([]);
       _v.setSelectedSubComponentData([]);
     } else if (currentLevel == 4) {
       let breadcrumbData: any[] = _v.breadcrumbData;
-      breadcrumbData = _v.segmentsByGroupOnType && Object.keys(_v.segmentsByGroupOnType)?.length === 1 ? breadcrumbData.slice(0, 3) : breadcrumbData.slice(0, 4);
+      breadcrumbData =
+        _v.segmentsByGroupOnType &&
+        Object.keys(_v.segmentsByGroupOnType)?.length === 1
+          ? breadcrumbData.slice(0, 3)
+          : breadcrumbData.slice(0, 4);
       breadcrumbData[breadcrumbData.length - 1] = {
         name: _v.selectedComponentData.name,
         level: 3,
         active: false,
       };
-
-      breadcrumbData.push({
-        name: 'Sub Components',
-        level: 0,
-        active: false,
-      });
+      breadcrumbData.push({name: 'Sub Components', level: 0, active: false});
       _v.setBreadcrumbData(breadcrumbData);
-
       _v.setSelectedSubComponentData([]);
     } else if (currentLevel == 5) {
       const breadcrumbData = _v.breadcrumbData;
@@ -346,12 +336,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
         level: !_v.selectedComponentData.hasSubComponent ? 3 : 4,
         active: false,
       };
-
-      breadcrumbData.push({
-        name: 'Tasks',
-        level: 0,
-        active: false,
-      });
+      breadcrumbData.push({name: 'Tasks', level: 0, active: false});
       _v.setBreadcrumbData(breadcrumbData);
     }
   };
@@ -375,29 +360,15 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
             style={styles.scrollView}>
             {_v.breadcrumbData.map((item: any, index: number) => (
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                {
-                  /*index == 0 ? (
-                    <Text
-                      style={styles.BreadcrumbPrevTextUnderline}
-                      onPress={() =>
-                        index === 0 &&
-                        (_v.setCurrentLevel(1), _v.setBreadcrumbData([]))
-                      }>
-                      {item.name}
-                    </Text>
-                  ) : */
-                  index === _v.breadcrumbData.length - 1 ? (
-                    <Text style={styles.BreadcrumbCurrentText}>
-                      {item.name}
-                    </Text>
-                  ) : (
-                    <Text
-                      onPress={() => onBreadcrumbItemClick(item, index)}
-                      style={styles.BreadcrumbPrevTextUnderline}>
-                      {item.name}
-                    </Text>
-                  )
-                }
+                {index === _v.breadcrumbData.length - 1 ? (
+                  <Text style={styles.BreadcrumbCurrentText}>{item.name}</Text>
+                ) : (
+                  <Text
+                    onPress={() => onBreadcrumbItemClick(item, index)}
+                    style={styles.BreadcrumbPrevTextUnderline}>
+                    {item.name}
+                  </Text>
+                )}
                 {index < _v.breadcrumbData.length - 1 ? (
                   <Image
                     style={styles.ArrowIcon}
@@ -430,25 +401,27 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           />
         </View>
       ) : null}
-      
+
       <ScrollView style={[{paddingVertical: 15, height: calculatedHeight}]}>
-        {
-          (() => {
-            if (_v.currentLevel === 1) {
-              return _customForms.projectModuleListing(_v, getMyWorksData)
-            } else if (_v.currentLevel === 2 && _v.segmentView === 0 && _v.selectedProjectModuleData?.segmentsData?.length) {
-              return _customForms.segmentGroupListing(_v)
-            } else if (_v.currentLevel === 2 && _v.segmentView === 1) {
-              return _customForms.segmentListing(_v, getMyWorksData)
-            } else if (_v.currentLevel === 3) {
-              return _customForms.componentListing(_v, getMyWorksData)
-            } else if (_v.currentLevel === 4) {
-              return _customForms.subComponentListing(_v, getMyWorksData)
-            } else if (_v.currentLevel === 5) {
-              return _customForms.tasksListing(_v)
-            }
-          })()
-        }
+        {(() => {
+          if (_v.currentLevel === 1) {
+            return _customForms.projectModuleListing(_v, getMyWorksData);
+          } else if (
+            _v.currentLevel === 2 &&
+            _v.segmentView === 0 &&
+            _v.selectedProjectModuleData?.segmentsData?.length
+          ) {
+            return _customForms.segmentGroupListing(_v);
+          } else if (_v.currentLevel === 2 && _v.segmentView === 1) {
+            return _customForms.segmentListing(_v, getMyWorksData);
+          } else if (_v.currentLevel === 3) {
+            return _customForms.componentListing(_v, getMyWorksData);
+          } else if (_v.currentLevel === 4) {
+            return _customForms.subComponentListing(_v, getMyWorksData);
+          } else if (_v.currentLevel === 5) {
+            return _customForms.tasksListing(_v);
+          }
+        })()}
       </ScrollView>
 
       <Modal
@@ -492,7 +465,6 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                     </SafeAreaView>
                   </Fragment>
                 </ScrollView>
-
                 <View
                   style={[
                     styles.btnParentSection,
@@ -515,7 +487,6 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
                       Save
                     </Text>
                   </TouchableOpacity>
-
                   <TouchableOpacity
                     style={styles.submitButton}
                     onPress={() =>

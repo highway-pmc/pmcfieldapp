@@ -883,6 +883,27 @@ const WorkAssignmentReducer = (state = workAssignmentState, action) => {
         error: action.error,
         loading: false,
       };
+    case 'GET_CONTROL_POINTS_REQUEST':
+      return {
+        ...state,
+        controlPoints: null,
+        error: null,
+        loading: true,
+      };
+    case 'GET_CONTROL_POINTS_SUCCESS':
+      return {
+        ...state,
+        controlPoints: action.response,
+        error: null,
+        loading: false,
+      };
+    case 'GET_CONTROL_POINTS_FAILURE':
+      return {
+        ...state,
+        controlPoints: null,
+        error: action.error,
+        loading: false,
+      };
     case 'CLEAR_PROJECT_MODULE_WORK_ASSIGNMENT_USERS':
       return {
         ...state,

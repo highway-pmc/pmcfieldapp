@@ -361,3 +361,24 @@ export const deleteSplitComponentApi = async (projectModuleId, type, id) => {
       throw new Error(errorMessage);
     });
 };
+
+export const getControlPointsData = async (
+  projectId,
+  projectModuleId,
+  segmentId,
+  componentId,
+  taskCategory,
+) => {
+  return apiService
+    .getRequest(
+      `v1/auth/projects/${projectId}/project-modules/${projectModuleId}/segments/${segmentId}/components/${componentId}/tasks/control-points?taskCategory=${taskCategory}`,
+    )
+    .then(response => {
+      return response;
+    })
+    .catch(err => {
+      const errorMessage =
+        err.message || 'Unable to get list of control points.';
+      throw new Error(errorMessage);
+    });
+};

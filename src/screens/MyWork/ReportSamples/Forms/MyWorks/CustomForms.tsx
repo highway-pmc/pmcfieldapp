@@ -1906,6 +1906,8 @@ export const CustomForms = (_v: any, workType: any, taskCategory: any) => {
 
   const taskForm = (taskName: any) => {
     switch (taskName) {
+      case TASK_TYPES.CONTROL_POINTS:
+        return;
       case TASK_TYPES.CNG_AND_SETTING_OUT:
       case TASK_TYPES.PLACING_OF_SHEATHING_DUCT:
       case TASK_TYPES.POST_CONCRETE_CHECK:

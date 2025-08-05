@@ -22,6 +22,7 @@ import {
   subComponentsWorkAssignToUsersApi,
   splitComponentApi,
   deleteSplitComponentApi,
+  getControlPointsData,
 } from '../../services/work-assignment/work-assignment.service';
 function* getUserCategories() {
   try {
@@ -358,6 +359,23 @@ function* deleteSplitComponent({payload}) {
     yield put({type: 'DELETE_SPLIT_COMPONENT_FAILURE', error: error.message});
   }
 }
+function* getControlPoints({payload}) {
+  try {
+    const response = yield getControlPointsData(
+      payload.projectId,
+      payload.projectModuleId,
+      payload.segmentId,
+      payload.componentId,
+      payload.taskCategory,
+    );
+    yield put({type: 'GET_CONTROL_POINTS_SUCCESS', response});
+  } catch (error) {
+    yield put({
+      type: 'GET_CONTROL_POINTS_FAILURE',
+      error: error.message,
+    });
+  }
+}
 export default function* userCategoriesAssignmentScreenSaga() {
   yield takeLatest('GET_USER_CATEGORY_REQUEST', getUserCategories);
   yield takeLatest('GET_USER_ASSIGNMENT_REQUEST', getUsers);
@@ -419,4 +437,5 @@ export default function* userCategoriesAssignmentScreenSaga() {
   );
   yield takeLatest('SPLIT_COMPONENT_REQUEST', splitComponent);
   yield takeLatest('DELETE_SPLIT_COMPONENT_REQUEST', deleteSplitComponent);
+  yield takeLatest('GET_CONTROL_POINTS_REQUEST', getControlPoints);
 }

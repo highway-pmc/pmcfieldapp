@@ -1,18 +1,13 @@
 import {Guid} from 'guid-typescript';
 import {TASK_TYPES} from '../../../../../constants/constants';
 import {getDbDate, getDisplayTime} from '../../../../../utils/Utils';
-import {useNavigation} from '@react-navigation/native';
 
-export const initRfiData = (_v: any, navigation: any, chainageData: any) => {
+export const initRfiData = (_v: any) => {
   _v.setRfiId(_v.rfiData._id);
   const rfiData = _v.rfiData;
   //if (rfiData.metaData) {
   console.log('RFI Seecte:', _v.selectedTask?.name);
   switch (_v.selectedTask?.name) {
-    case TASK_TYPES.CONTROL_POINTS:
-      console.log('Control Points Task Selected');
-      navigation.navigate('ControlPoints', {chainageData: chainageData});
-      break;
     case TASK_TYPES.CNG_AND_SETTING_OUT:
     case TASK_TYPES.PLACING_OF_SHEATHING_DUCT:
     case TASK_TYPES.POST_CONCRETE_CHECK:

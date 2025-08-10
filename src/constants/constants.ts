@@ -35,6 +35,7 @@ export const HeaderItems = {
   reportDashboard: {showBack: true, title: 'Reports'},
   reports: {showBack: false, title: 'Reports'},
   rfisHome: {showBack: false, title: 'RFIs'},
+  groundLevelRecording: {showBack: true, title: 'Ground Level Recording'},
   rfisDashboard: {showBack: true, title: 'RFIs'},
   rfisGenerateTaskListing: {showBack: true, title: 'Generate RFIs'},
   rfisClosedTaskListing: {showBack: true, title: 'Closed RFIs'},
@@ -43,7 +44,12 @@ export const HeaderItems = {
   projectInfo: {showBack: false, title: 'Project Info'},
   myQualityWorks: {showBack: false, title: 'Quality Works'},
   profile: {showBack: false, title: 'Edit Profile'},
-
+  alignmentMarking: {showBack: true, title: 'Alignment Marking'},
+  recordingOfActualRL: {showBack: true, title: 'Level Checking'},
+  recordingOfActualLayout: {
+    showBack: true,
+    title: 'Layout Check',
+  },
   assignTestClassification: {
     showBack: false,
     title: 'Assign Test Classification',
@@ -895,6 +901,11 @@ export const TASK_TYPES = {
   PLACING_AND_JOINTING_CHUTE_MEMBERS: 'placing-and-jointing-ofchute-members',
   LAYING_OF_PQC: 'N/A',
   CONTROL_POINTS: 'control-points',
+  LAYOUT_CHECK: 'layout-check',
+  LEVEL_CHECKING: 'level-checking',
+  ALIGNMENT_CHECK: 'alignment-check',
+  BENCH_MARK: 'bench-mark',
+  GROUND_LEVEL_RECORDING: 'ground-level-recording',
 };
 
 export const TEST_CLASSIFICATION_TYPES = {

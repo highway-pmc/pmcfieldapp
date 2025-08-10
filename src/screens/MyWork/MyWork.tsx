@@ -196,7 +196,6 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
 
     if (_v.rfiData) {
       if (_v.selectedTask?.name === TASK_TYPES.CONTROL_POINTS) {
-        //console.log('===== All Data ======:', _v.rfiDate, _v.selectedTask,_v.rfiData);
         navigation.navigate('ControlPoints', {
           projectId: _v.loggedInUser.projectId,
           projectModuleId: _v.selectedProjectModuleData?.id,
@@ -205,15 +204,56 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
           subComponentId: _v.selectedSubComponentData?._id,
           chainageData: chainageData,
         });
-        // navigation.navigate('BenchMark', {
-        //   projectId: _v.loggedInUser.projectId,
-        //   projectModuleId: _v.selectedProjectModuleData?.id,
-        //   segmentId: _v.selectedSegmentData?._id,
-        //   componentId: _v.selectedComponentData?._id,
-        //   subComponentId: _v.selectedSubComponentData?._id,
-        //   chainageData: chainageData,
-        // });
-
+        _v.dispatch(clearMyWorksEvent());
+      } else if (_v.selectedTask?.name === TASK_TYPES.LAYOUT_CHECK) {
+        navigation.navigate('LayoutCheck', {
+          projectId: _v.loggedInUser.projectId,
+          projectModuleId: _v.selectedProjectModuleData?.id,
+          segmentId: _v.selectedSegmentData?._id,
+          componentId: _v.selectedComponentData?._id,
+          subComponentId: _v.selectedSubComponentData?._id,
+          chainageData: chainageData,
+        });
+        _v.dispatch(clearMyWorksEvent());
+      } else if (_v.selectedTask?.name === TASK_TYPES.LEVEL_CHECKING) {
+        navigation.navigate('LevelChecking', {
+          projectId: _v.loggedInUser.projectId,
+          projectModuleId: _v.selectedProjectModuleData?.id,
+          segmentId: _v.selectedSegmentData?._id,
+          componentId: _v.selectedComponentData?._id,
+          subComponentId: _v.selectedSubComponentData?._id,
+          chainageData: chainageData,
+        });
+        _v.dispatch(clearMyWorksEvent());
+      } else if (_v.selectedTask?.name === TASK_TYPES.ALIGNMENT_CHECK) {
+        navigation.navigate('AlignmentMarking', {
+          projectId: _v.loggedInUser.projectId,
+          projectModuleId: _v.selectedProjectModuleData?.id,
+          segmentId: _v.selectedSegmentData?._id,
+          componentId: _v.selectedComponentData?._id,
+          subComponentId: _v.selectedSubComponentData?._id,
+          chainageData: chainageData,
+        });
+        _v.dispatch(clearMyWorksEvent());
+      } else if (_v.selectedTask?.name === TASK_TYPES.BENCH_MARK) {
+        navigation.navigate('BenchMark', {
+          projectId: _v.loggedInUser.projectId,
+          projectModuleId: _v.selectedProjectModuleData?.id,
+          segmentId: _v.selectedSegmentData?._id,
+          componentId: _v.selectedComponentData?._id,
+          subComponentId: _v.selectedSubComponentData?._id,
+          chainageData: chainageData,
+        });
+        _v.dispatch(clearMyWorksEvent());
+      } else if (_v.selectedTask?.name === TASK_TYPES.GROUND_LEVEL_RECORDING) {
+        navigation.navigate('GroundLevelRecording', {
+          projectId: _v.loggedInUser.projectId,
+          projectModuleId: _v.selectedProjectModuleData?.id,
+          segmentId: _v.selectedSegmentData?._id,
+          componentId: _v.selectedComponentData?._id,
+          subComponentId: _v.selectedSubComponentData?._id,
+          chainageData: chainageData,
+        });
         _v.dispatch(clearMyWorksEvent());
       } else {
         console.log('RFI Selected:', _v.selectedTask?.name);

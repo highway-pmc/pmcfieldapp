@@ -52,6 +52,10 @@ import ProductionHome from '../../screens/Production/ProductionHome';
 import ProductionDetail from '../../screens/Production/ProductionDetail';
 import ControlPoints from '../../screens/Survey/ControlPoints';
 import BenchMark from '../../screens/Survey/BenchMark';
+import AlignmentMarking from '../../screens/Survey/AlignmentMarking';
+import GroundLevelRecording from '../../screens/Survey/GroundLevelRecording';
+import LayoutCheck from '../../screens/Survey/LayoutCheck';
+import LevelChecking from '../../screens/Survey/LevelChecking';
 
 const Stack = createStackNavigator();
 
@@ -110,6 +114,26 @@ const SurveyStackNaigator = () => {
       <Stack.Screen
         name="BenchMark"
         component={BenchMark}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="AlignmentMarking"
+        component={AlignmentMarking}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="GroundLevelRecording"
+        component={GroundLevelRecording}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="LevelChecking"
+        component={LevelChecking}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="LayoutCheck"
+        component={LayoutCheck}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

@@ -186,3 +186,8 @@ export const clearSourceApprovals = () => ({
 export const clearProcurements = () => ({
   type: PROCUREMENTS.CLEAR_PROCUREMENT_FAILURE,
 });
+
+export const getControlPoints = payload => ({
+  type: 'GET_CONTROL_POINTS_REQUEST',
+  payload: payload,
+});

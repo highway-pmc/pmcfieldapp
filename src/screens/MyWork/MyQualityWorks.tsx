@@ -265,7 +265,14 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
   const onMyTestClick = (item: any) => {
     //setCurrentLevel(1);
     if (isTestInventoryClassification(item.type)) {
-      navigation.navigate('SelectTestWorkCategory', {
+      // navigation.navigate('SelectTestWorkCategory', {
+      //   testClassificationId: item.id,
+      //   testClassificationName: item.name,
+      //   testClassificationType: item.type,
+      //   testWorkCategoriesData: item.testWorkCategoriesData,
+      //   workType: workType,
+      // });
+      navigation.navigate('SourceHome', {
         testClassificationId: item.id,
         testClassificationName: item.name,
         testClassificationType: item.type,

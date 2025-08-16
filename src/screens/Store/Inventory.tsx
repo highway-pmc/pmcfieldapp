@@ -10,8 +10,10 @@ import {
   TextInput,
   Pressable,
 } from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 export default function Inventory() {
+  const navigation = useNavigation();
   const [inventoryData, setInventoryData] = useState([
     {
       id: '1',
@@ -35,45 +37,24 @@ export default function Inventory() {
     },
     {
       id: '3',
-      material: 'Cement',
-      qty: 10,
-      unit: 'KG',
-      rate: 50,
-      value: 500,
-      purchaseDate: '10 Apr 2025',
-      category: 'Raw Materials',
+      material: 'Bricks',
+      qty: 5000,
+      unit: 'Pieces',
+      rate: 8,
+      value: 40000,
+      purchaseDate: '22 Apr 2025',
+      category: 'Building Materials',
     },
     {
       id: '4',
-      material: 'Steel',
-      qty: 5,
-      unit: 'Tons',
-      rate: 2000,
-      value: 10000,
-      purchaseDate: '15 Apr 2025',
+      material: 'Sand',
+      qty: 2,
+      unit: 'Ton',
+      rate: 1500,
+      value: 3000,
+      purchaseDate: '25 Apr 2025',
       category: 'Raw Materials',
     },
-    {
-      id: '5',
-      material: 'Cement',
-      qty: 10,
-      unit: 'KG',
-      rate: 50,
-      value: 500,
-      purchaseDate: '10 Apr 2025',
-      category: 'Raw Materials',
-    },
-    {
-      id: '6',
-      material: 'Steel',
-      qty: 5,
-      unit: 'Tons',
-      rate: 2000,
-      value: 10000,
-      purchaseDate: '15 Apr 2025',
-      category: 'Raw Materials',
-    },
-    // Add more items as needed
   ]);
 
   const [originalData, setOriginalData] = useState([...inventoryData]);
@@ -81,53 +62,77 @@ export default function Inventory() {
   const [filterVisible, setFilterVisible] = useState(false);
   const [activeFilters, setActiveFilters] = useState(null);
 
+  // Added states for date filtering
+  const [fromDate, setFromDate] = useState('');
+  const [toDate, setToDate] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedMaterial, setSelectedMaterial] = useState(null);
 
-  // Function to handle edit action
   const handleEdit = (item: any) => {
     console.log('Edit item:', item);
     // Implement edit functionality
   };
 
-  // Function to handle filter
+  // Added delete handler to match Purchase component
+  const handleDelete = (id: any) => {
+    console.log('Delete item with id:', id);
+    const updatedData = inventoryData.filter(item => item.id !== id);
+    setInventoryData(updatedData);
+    setOriginalData(originalData.filter(item => item.id !== id));
+  };
+
   const handleFilter = () => {
-    console.log('Filter inventory');
     setFilterVisible(true);
   };
 
-  // Function to close filter modal
   const closeFilterModal = () => {
     setFilterVisible(false);
   };
 
-  // Reset filters
   const resetFilters = () => {
+    setFromDate('');
+    setToDate('');
     setSelectedCategory(null);
     setSelectedMaterial(null);
   };
 
-  // Function to apply filters
   const applyFilter = () => {
     const filters = {
+      fromDate,
+      toDate,
       category: selectedCategory,
       material: selectedMaterial,
     };
-
-    console.log('Applying filters:', filters);
     setActiveFilters(filters);
 
-    // Filter the data based on the selected criteria
     let filteredData = [...originalData];
 
-    // Filter by category
+    // Date range filtering logic
+    if (filters.fromDate) {
+      filteredData = filteredData.filter(item => {
+        const itemDate = new Date(item.purchaseDate);
+        const fromDateObj = new Date(
+          filters.fromDate.split('/').reverse().join('-'),
+        );
+        return itemDate >= fromDateObj;
+      });
+    }
+
+    if (filters.toDate) {
+      filteredData = filteredData.filter(item => {
+        const itemDate = new Date(item.purchaseDate);
+        const toDateObj = new Date(
+          filters.toDate.split('/').reverse().join('-'),
+        );
+        return itemDate <= toDateObj;
+      });
+    }
+
     if (filters.category) {
       filteredData = filteredData.filter(
         item => item.category === filters.category,
       );
     }
-
-    // Filter by material
     if (filters.material) {
       filteredData = filteredData.filter(
         item => item.material === filters.material,
@@ -138,17 +143,21 @@ export default function Inventory() {
     setFilterVisible(false);
   };
 
-  // Function to clear filters
   const clearFilters = () => {
     setInventoryData([...originalData]);
     setActiveFilters(null);
     resetFilters();
   };
 
-  // Table Header Component
-  const TableHeader = () => (
-    <View style={styles.headerRow}>
-      <Text style={[styles.headerCell, {width: 120}]}>Material</Text>
+  // Sub-components for the fixed column table structure
+  const FixedColumnHeader = () => (
+    <View style={styles.fixedHeaderCell}>
+      <Text style={styles.fixedHeaderText}>Material</Text>
+    </View>
+  );
+
+  const ScrollableHeaders = () => (
+    <View style={styles.scrollableHeaderRow}>
       <Text style={[styles.headerCell, {width: 60}]}>Qty</Text>
       <Text style={[styles.headerCell, {width: 80}]}>Unit</Text>
       <Text style={[styles.headerCell, {width: 100}]}>Rate/Unit</Text>
@@ -158,10 +167,26 @@ export default function Inventory() {
     </View>
   );
 
-  // Table Row Component
-  const renderItem = ({item}) => (
-    <View style={styles.row}>
-      <Text style={[styles.cell, {width: 120}]}>{item.material}</Text>
+  const ScrollableTable = () => (
+    <View>
+      <ScrollableHeaders />
+      <FlatList
+        data={inventoryData}
+        keyExtractor={item => item.id}
+        renderItem={({item}) => <ScrollableRow item={item} />}
+        scrollEnabled={false}
+      />
+    </View>
+  );
+
+  const FixedColumnRow = ({item}: any) => (
+    <View style={styles.fixedCell}>
+      <Text style={styles.fixedCellText}>{item.material}</Text>
+    </View>
+  );
+
+  const ScrollableRow = ({item}: any) => (
+    <View style={styles.scrollableRow}>
       <Text style={[styles.cell, {width: 60}]}>{item.qty}</Text>
       <Text style={[styles.cell, {width: 80}]}>{item.unit}</Text>
       <Text style={[styles.cell, {width: 100}]}>{item.rate}</Text>
@@ -169,11 +194,10 @@ export default function Inventory() {
       <Text style={[styles.cell, {width: 150}]}>{item.purchaseDate}</Text>
       <View
         style={[
-          styles.cell,
           {width: 80, flexDirection: 'row', justifyContent: 'space-around'},
         ]}>
         <TouchableOpacity onPress={() => handleEdit(item)}>
-          <Text>Edit</Text>
+          <Text style={styles.cell}>Edit</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -181,6 +205,7 @@ export default function Inventory() {
 
   return (
     <View style={styles.container}>
+      {/* Header with Add and Filter buttons */}
       <View style={styles.header}>
         <TouchableOpacity
           style={[
@@ -198,7 +223,6 @@ export default function Inventory() {
         </TouchableOpacity>
       </View>
 
-      {/* Active Filters Display */}
       {activeFilters && (
         <View style={styles.activeFiltersContainer}>
           <Text style={styles.activeFiltersText}>
@@ -211,24 +235,34 @@ export default function Inventory() {
         </View>
       )}
 
-      <ScrollView horizontal={true} style={styles.tableContainer}>
-        <View>
-          <TableHeader />
-
-          {inventoryData.length > 0 ? (
-            <FlatList
-              data={inventoryData}
-              keyExtractor={item => item.id}
-              renderItem={renderItem}
-              scrollEnabled={false}
-            />
-          ) : (
-            <View style={styles.emptyState}>
-              <Text style={styles.emptyStateText}>No inventory data found</Text>
+      {/* Table with Fixed First Column */}
+      <View style={styles.tableContainer}>
+        {inventoryData.length > 0 ? (
+          <View style={styles.dataContainer}>
+            {/* Fixed Column */}
+            <View style={styles.fixedColumn}>
+              <FixedColumnHeader />
+              <FlatList
+                data={inventoryData}
+                keyExtractor={item => item.id}
+                renderItem={({item}) => <FixedColumnRow item={item} />}
+                scrollEnabled={false}
+              />
             </View>
-          )}
-        </View>
-      </ScrollView>
+
+            {/* Scrollable Columns */}
+            <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}>
+              <ScrollableTable />
+            </ScrollView>
+          </View>
+        ) : (
+          <View style={styles.emptyState}>
+            <Text style={styles.emptyStateText}>No inventory data found</Text>
+          </View>
+        )}
+      </View>
 
       <Modal
         animationType="slide"
@@ -238,39 +272,52 @@ export default function Inventory() {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <View style={styles.modalHeader}>
-              <View></View>
+              <View style={{width: 30}} />
               <Text style={styles.modalTitle}>Filter</Text>
               <TouchableOpacity onPress={closeFilterModal}>
                 <Text style={styles.closeButton}>✕</Text>
               </TouchableOpacity>
             </View>
-
             <ScrollView style={styles.modalContent}>
+              {/* Date Filters */}
+              <View style={styles.filterSection}>
+                <Text style={styles.filterLabel}>From Date</Text>
+                <Pressable style={styles.dateInput}>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="23/04/2025"
+                    value={fromDate}
+                    onChangeText={setFromDate}
+                  />
+                  <Text style={styles.dateIcon}>📅</Text>
+                </Pressable>
+              </View>
+              <View style={styles.filterSection}>
+                <Text style={styles.filterLabel}>To Date</Text>
+                <Pressable style={styles.dateInput}>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="14/05/2025"
+                    value={toDate}
+                    onChangeText={setToDate}
+                  />
+                  <Text style={styles.dateIcon}>📅</Text>
+                </Pressable>
+              </View>
+
+              {/* Category and Material Filters */}
               <View style={styles.filterSection}>
                 <Text style={styles.filterLabel}>Category</Text>
-                <TouchableOpacity
-                  style={styles.dropdown}
-                  onPress={() => {
-                    // Simple toggle for this example
-                    setSelectedCategory(
-                      selectedCategory ? null : 'Raw Materials',
-                    );
-                  }}>
+                <TouchableOpacity style={styles.dropdown}>
                   <Text style={styles.dropdownText}>
                     {selectedCategory || 'Select Category'}
                   </Text>
                   <Text style={styles.dropdownIcon}>▼</Text>
                 </TouchableOpacity>
               </View>
-
               <View style={styles.filterSection}>
                 <Text style={styles.filterLabel}>Material</Text>
-                <TouchableOpacity
-                  style={styles.dropdown}
-                  onPress={() => {
-                    // Simple toggle for this example
-                    setSelectedMaterial(selectedMaterial ? null : 'Cement');
-                  }}>
+                <TouchableOpacity style={styles.dropdown}>
                   <Text style={styles.dropdownText}>
                     {selectedMaterial || 'Select Material'}
                   </Text>
@@ -279,7 +326,6 @@ export default function Inventory() {
               </View>
             </ScrollView>
 
-            {/* Action Buttons */}
             <View style={styles.footContainer}>
               <TouchableOpacity style={styles.goButton} onPress={applyFilter}>
                 <Text style={styles.goButtonText}>Go</Text>
@@ -292,6 +338,7 @@ export default function Inventory() {
   );
 }
 
+// Styles copied and merged from Purchase component
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -305,8 +352,17 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     paddingHorizontal: 10,
   },
-  tableContainer: {
-    flex: 1,
+  addButton: {
+    backgroundColor: '#fff',
+    paddingVertical: 4,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#4E36A3',
+    marginRight: 8,
+  },
+  addButtonText: {
+    color: '#4E36A3',
   },
   filterButton: {
     backgroundColor: '#fff',
@@ -320,44 +376,6 @@ const styles = StyleSheet.create({
   },
   activeFilterText: {
     color: '#fff',
-  },
-  headerRow: {
-    flexDirection: 'row',
-    backgroundColor: '#E3DEF6',
-    padding: 12,
-    borderTopLeftRadius: 5,
-    borderTopRightRadius: 5,
-    borderWidth: 1,
-    borderColor: '#E6E6E6',
-  },
-  headerCell: {
-    fontWeight: 'bold',
-    fontSize: 14,
-    paddingHorizontal: 3,
-    color: '#000000',
-  },
-  row: {
-    flexDirection: 'row',
-    paddingHorizontal: 12,
-    paddingVertical: 15,
-    borderWidth: 1,
-    borderColor: '#E6E6E6',
-    backgroundColor: '#F8F8F8',
-  },
-  cell: {
-    fontSize: 14,
-    paddingHorizontal: 5,
-    color: '#333333',
-  },
-  emptyState: {
-    padding: 30,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#E6E6E6',
-  },
-  emptyStateText: {
-    color: '#999',
-    fontSize: 16,
   },
   activeFiltersContainer: {
     flexDirection: 'row',
@@ -375,8 +393,86 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
   },
-
-  // Modal styles
+  tableContainer: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: '#E6E6E6',
+    borderRadius: 5,
+  },
+  dataContainer: {
+    flexDirection: 'row',
+    flex: 1,
+  },
+  fixedColumn: {
+    width: 120,
+  },
+  fixedHeaderCell: {
+    width: 120,
+    padding: 12,
+    backgroundColor: '#E3DEF6',
+    justifyContent: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E6E6E6',
+  },
+  fixedHeaderText: {
+    fontWeight: 'bold',
+    fontSize: 14,
+    color: '#000000',
+    paddingHorizontal: 3,
+  },
+  scrollableHeaderRow: {
+    flexDirection: 'row',
+    paddingVertical: 12,
+    backgroundColor: '#E3DEF6',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E6E6E6',
+  },
+  headerCell: {
+    fontWeight: 'bold',
+    fontSize: 14,
+    color: '#000000',
+    paddingHorizontal: 3,
+    textAlign: 'center',
+  },
+  fixedCell: {
+    paddingHorizontal: 12,
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E6E6E6',
+    backgroundColor: '#F8F8F8',
+    justifyContent: 'center',
+    minHeight: 50,
+  },
+  fixedCellText: {
+    fontSize: 14,
+    paddingHorizontal: 5,
+    color: '#333333',
+  },
+  scrollableRow: {
+    flexDirection: 'row',
+    paddingHorizontal: 12,
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E6E6E6',
+    backgroundColor: '#F8F8F8',
+    minHeight: 50,
+  },
+  cell: {
+    fontSize: 14,
+    paddingHorizontal: 5,
+    color: '#333333',
+    textAlign: 'center',
+  },
+  emptyState: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 30,
+  },
+  emptyStateText: {
+    color: '#999',
+    fontSize: 16,
+  },
   centeredView: {
     flex: 1,
     justifyContent: 'flex-end',
@@ -406,16 +502,33 @@ const styles = StyleSheet.create({
     color: '#000000',
   },
   modalContent: {
-    marginBottom: 5,
+    maxHeight: 400, // Limit height to prevent full-screen modal on larger devices
     marginHorizontal: 7,
+    paddingTop: 10,
   },
   filterSection: {
-    marginBottom: 6,
+    marginBottom: 15,
   },
   filterLabel: {
     fontSize: 16,
     marginBottom: 8,
     color: '#666',
+  },
+  dateInput: {
+    flexDirection: 'row',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 4,
+    height: 40,
+    alignItems: 'center',
+    paddingHorizontal: 10,
+  },
+  input: {
+    flex: 1,
+    height: '100%',
+  },
+  dateIcon: {
+    fontSize: 18,
   },
   dropdown: {
     flexDirection: 'row',
@@ -428,7 +541,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   dropdownText: {
-    color: '#999',
+    color: '#333',
   },
   dropdownIcon: {
     fontSize: 12,

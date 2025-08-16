@@ -91,8 +91,8 @@ const MixDesignListing = ({
           <TouchableOpacity
             style={styles.addButton}
             onPress={() => {
-              //navigation.navigate('MixDesign');
-              navigation.navigate('MixDesignForm');
+              navigation.navigate('MixDesign');
+              //navigation.navigate('MixDesignForm');
             }}>
             <Text style={styles.addButtonText}>Add Mix Design</Text>
           </TouchableOpacity>

@@ -7,10 +7,12 @@ import {
   TextInput,
   ScrollView,
   Alert,
+  NativeEventEmitter,
 } from 'react-native';
 import {useIsFocused} from '@react-navigation/native';
 // 1. Import your custom DropdownPicker component
-import DropdownPicker from '../../../components/UI/DropdownPicker';
+import DropdownPicker from '../../../../components/UI/DropdownPicker';
+import {HeaderItems} from '../../../../constants/constants';
 
 // --- MOCK DATA FOR THE FORM ---
 const sourceApprovalDataSource = {
@@ -53,10 +55,14 @@ const existingVendors = [
   'National Materials Inc.',
 ];
 
-export default function SourceApprovalForm({navigation}) {
+export default function SourceApprovalForm({navigation}: any) {
   const isFocused = useIsFocused();
-
-  // --- FORM STATE ---
+  useEffect(() => {
+    if (isFocused) {
+      const eventEmitter = new NativeEventEmitter();
+      eventEmitter.emit('headerEvent', HeaderItems.sourceApprovalForm);
+    }
+  }, [isFocused]);
   const [workCategory, setWorkCategory] = useState<string>('');
   const [materialName, setMaterialName] = useState<string>('');
   const [materialCategory, setMaterialCategory] = useState<string>('');

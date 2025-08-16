@@ -59,7 +59,7 @@ const inventoryRequests: RequestItem[] = [
     unit: 'Meter',
     requestQty: 500,
     status: MATERIAL_REQUEST_STATUS.REJECTED,
-    statusText: 'Rejected by Project Head',
+    statusText: 'Rejected',
   },
 ];
 
@@ -241,7 +241,7 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
   scrollContent: {
-    paddingBottom: 100, 
+    paddingBottom: 100,
   },
   recentWorkContainer: {
     marginTop: 16,

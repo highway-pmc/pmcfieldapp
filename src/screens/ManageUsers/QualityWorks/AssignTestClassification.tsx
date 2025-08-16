@@ -194,6 +194,7 @@ const AssignTestClassification = () => {
 
     setUserCheckboxes(updatedCheckboxes);
   };
+  
   const getTestClassificationIcon = (type: any) => {
     switch (type) {
       case 'field-lab-test':

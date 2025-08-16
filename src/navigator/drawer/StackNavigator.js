@@ -59,6 +59,8 @@ import LevelChecking from '../../screens/Survey/LevelChecking';
 import MaterialStoreRequestForm from '../../screens/Store/MaterialStoreRequestForm';
 import MaterialApprovalForm from '../../screens/Store/MaterialApprovalForm';
 import MixDesignForm from '../../screens/MyWork/MixDesignForm';
+import SourceHome from '../../screens/ManageUsers/QualityWorks/SourceApproval/SourceHome';
+import SourceApprovalForm from '../../screens/ManageUsers/QualityWorks/SourceApproval/SourceApprovalForm';
 
 const Stack = createStackNavigator();
 
@@ -231,6 +233,16 @@ const MyQualityWorksStackNavigator = () => {
       <Stack.Screen
         name="MixDesignCategoryList"
         component={MixDesignCategoryList}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="SourceHome"
+        component={SourceHome}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="SourceApprovalForm"
+        component={SourceApprovalForm}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

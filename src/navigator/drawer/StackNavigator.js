@@ -56,6 +56,9 @@ import AlignmentMarking from '../../screens/Survey/AlignmentMarking';
 import GroundLevelRecording from '../../screens/Survey/GroundLevelRecording';
 import LayoutCheck from '../../screens/Survey/LayoutCheck';
 import LevelChecking from '../../screens/Survey/LevelChecking';
+import MaterialStoreRequestForm from '../../screens/Store/MaterialStoreRequestForm';
+import MaterialApprovalForm from '../../screens/Store/MaterialApprovalForm';
+import MixDesignForm from '../../screens/MyWork/MixDesignForm';
 
 const Stack = createStackNavigator();
 
@@ -273,6 +276,16 @@ const StoreStackNavigator = () => {
         component={AddPurchase}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name="MaterialStoreRequestForm"
+        component={MaterialStoreRequestForm}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="MaterialApprovalForm"
+        component={MaterialApprovalForm}
+        options={{headerShown: false}}
+      />
     </Stack.Navigator>
   );
 };
@@ -284,7 +297,6 @@ const MixDesignStackNavigator = () => {
         component={MixDesignListing}
         options={{headerShown: false}}
       />
-
       <Stack.Screen
         name="MixDesign"
         component={MixDesign}
@@ -293,6 +305,11 @@ const MixDesignStackNavigator = () => {
       <Stack.Screen
         name="MixDesignCategoryList"
         component={MixDesignCategoryList}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="MixDesignForm"
+        component={MixDesignForm}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

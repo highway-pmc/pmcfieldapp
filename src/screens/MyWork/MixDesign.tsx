@@ -117,9 +117,6 @@ const MixDesign = ({navigation, route}: {navigation: any; route: any}) => {
     setSelectedMaterialTypeData({...selectedOption});
     setSelectedMaterialTypeCategoryData('');
     console.log('======', selectedOption);
-    // setTimeout(() => {
-    //   handleFormData();
-    // });
   };
 
   const handleMixDesignTypeCateorySelect = (selectedOption: any) => {

@@ -85,6 +85,22 @@ export const HeaderItems = {
   store: {showBack: false, title: 'Store'},
   addPurchase: {showBack: true, title: 'Add Purchase'},
   production: {showBack: false, title: 'Production'},
+  contigencyRequest: {
+    showBack: true,
+    title: 'Contingency Request',
+  },
+  inventryRequest: {
+    showBack: true,
+    title: 'Inventry Request',
+  },
+  materialApprove: {
+    showBack: true,
+    title: 'Material Approval',
+  },
+  materialDispatch: {
+    showBack: true,
+    title: 'Material Dispatch',
+  },
 };
 
 export const UserRoles = {
@@ -684,7 +700,7 @@ export const WORK_TYPE = {
 export const STORE_OPTION = {
   PURCHASING: 'Purchasing',
   INVENTORY: 'Inventory',
-  CONTINGENCY_REQUEST: 'Contingency Request',
+  REQUEST: 'Request',
   SCRAP_DEPOSIT: 'Scrap Deposit',
   SCRAP_INVENTORY: 'Scrap Inventory',
 };
@@ -982,7 +998,18 @@ export const TEST_MATERIALS_TYPES = {
   BRIDGE: '',
   BENTONITE_OTHER: '',
 };
-
+export const REQUEST_TYPES = {
+  INVENTORY_REQUEST: 'inventry-request',
+  CONTINGENCY_REQUEST: 'contingence-request',
+};
+export const MATERIAL_REQUEST_STATUS = {
+  PENDING_APPROVAL: 'pending_approval',
+  PENDING_DISPATCH: 'pending_dispatch',
+  PENDING_ACCEPTANCE: 'pending_acceptance',
+  ACCEPTED: 'accepted',
+  REJECTED: 'rejected',
+  DELIVERED: 'delivered',
+};
 export const TEST_TYPES = {
   CORE_TEST: 'core-test',
   CUBE_TEST: 'cube-test',

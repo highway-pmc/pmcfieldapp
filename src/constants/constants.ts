@@ -502,7 +502,7 @@ export const PROJECT_TYPE = {
   QUALITY_WORK: 'quality-work',
   SURVEY_WORK: 'survey-work',
   ADMIN_WORK: 'admin-work',
-  STORES: 'stores',
+  STORES: 'procurement-details',
   PRODUCTION: 'production',
   EQUIPMENTS: 'equipments',
   INITIAL_SURVEY: 'initial-survey',

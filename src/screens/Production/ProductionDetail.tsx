@@ -8,8 +8,8 @@ import {
 import React, {useState} from 'react';
 import {useIsFocused} from '@react-navigation/native';
 import {HeaderItems} from '../../constants/constants';
-import ProductionPending from './ProductionPending';
 import ProductionSummary from './ProductionSummary';
+import ProductionRequest from './ProductionRequest';
 
 const TABS = {
   PENDING_REQUEST: 'Pending Request',
@@ -63,17 +63,9 @@ const ProductionDetail = ({navigation}: {navigation: any}) => {
       </View>
 
       <View style={styles.tabContent}>
-        {activeTab === TABS.PENDING_REQUEST && (
-          <View style={styles.contentContainer}>
-            <ProductionPending />
-          </View>
-        )}
+        {activeTab === TABS.PENDING_REQUEST && <ProductionRequest />}
 
-        {activeTab === TABS.PRODUCTION_SUMMARY && (
-          <View style={styles.contentContainer}>
-            <ProductionSummary />
-          </View>
-        )}
+        {activeTab === TABS.PRODUCTION_SUMMARY && <ProductionSummary />}
       </View>
     </View>
   );
@@ -116,8 +108,7 @@ const styles = StyleSheet.create({
   },
   tabContent: {
     flex: 1,
-    paddingHorizontal: 15,
-    paddingTop: 20,
+    paddingTop: 10,
   },
   contentContainer: {
     flex: 1,

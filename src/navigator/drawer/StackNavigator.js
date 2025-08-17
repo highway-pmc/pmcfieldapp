@@ -61,6 +61,8 @@ import MaterialApprovalForm from '../../screens/Store/MaterialApprovalForm';
 import MixDesignForm from '../../screens/MyWork/MixDesignForm';
 import SourceHome from '../../screens/ManageUsers/QualityWorks/SourceApproval/SourceHome';
 import SourceApprovalForm from '../../screens/ManageUsers/QualityWorks/SourceApproval/SourceApprovalForm';
+import MaterialProductionRequestForm from '../../screens/Production/MaterialRequestProduction';
+import MaterialApprovalProductionForm from '../../screens/Production/MaterialApprovalProduction';
 
 const Stack = createStackNavigator();
 
@@ -338,6 +340,16 @@ const ProductionStackNavigator = () => {
       <Stack.Screen
         name="ProductionDetail"
         component={ProductionDetail}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="MaterialProductionRequestForm"
+        component={MaterialProductionRequestForm}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="MaterialApprovalProductionForm"
+        component={MaterialApprovalProductionForm}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

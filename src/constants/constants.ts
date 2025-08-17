@@ -933,7 +933,7 @@ export const TEST_CLASSIFICATION_TYPES = {
   SOURCE_APPROVALS: 'source-approvals',
   UPLOAD_MTC: 'upload-mtc',
   EQUIPMENT_CALIBRATION: 'equipment-calibration',
-  STORES: 'stores',
+  STORES: 'procurement-details',
   PRODUCTION: 'production',
   EQUIPMENTS: 'equipments',
 };

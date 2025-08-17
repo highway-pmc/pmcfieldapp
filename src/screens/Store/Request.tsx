@@ -206,7 +206,6 @@ const RequestPage = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#F4F7FF',
   },
   container: {
     flex: 1,
@@ -248,16 +247,12 @@ const styles = StyleSheet.create({
     marginHorizontal: 6,
     backgroundColor: '#FFFFFF',
     borderRadius: 12,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 1},
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
+   
   },
   recentWorkHead: {
     borderBottomWidth: 1,
     borderColor: '#DEE1E7',
-    padding: 15,
+    padding: 10,
   },
   headerText: {
     color: '#34343F',

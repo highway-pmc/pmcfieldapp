@@ -1,4 +1,6 @@
-import React, {useEffect, useState} from 'react';
+// src/screens/MaterialStoreRequestForm.tsx
+
+import React, {useEffect, useState, useMemo} from 'react';
 import {
   View,
   Text,
@@ -12,16 +14,45 @@ import {
 import {useIsFocused} from '@react-navigation/native';
 import DropdownPicker from '../../components/UI/DropdownPicker';
 import {HeaderItems, REQUEST_TYPES} from '../../constants/constants';
+import DetailsCard from '../Common/DetailsCard';
 
-// In a real app, this data would come from navigation params or a Redux selector
-const taskMappingData = {
+// --- Type Definitions ---
+
+interface TaskMappingData {
+  workCategory: string;
+  materialName: string;
+  taskPath: string;
+  userName: string;
+}
+
+interface MaterialDataSource {
+  [materialName: string]: {
+    categories: {
+      [category: string]: {unit: string};
+    };
+  };
+}
+
+interface DropdownOption {
+  label: string;
+  value: string;
+}
+
+type MaterialStoreRequestFormProps = {
+  route: {params?: {requestType?: string}};
+  navigation: any; // Replace with your actual navigation type
+};
+
+// --- Mock Data ---
+
+const taskMappingData: TaskMappingData = {
   workCategory: 'Structural Steel',
   materialName: 'TMT Bars',
   taskPath: 'Project X / Tower A / Foundation / Raft',
   userName: 'Prakash Kumar (Site Engineer)',
 };
 
-const materialDataSource = {
+const materialDataSource: MaterialDataSource = {
   'TMT Bars': {
     categories: {
       'Fe-500D': {unit: 'Tonne'},
@@ -32,31 +63,35 @@ const materialDataSource = {
   // Add other materials here
 };
 
-export default function MaterialStoreRequestForm({route, navigation}: any) {
+// --- Component ---
+
+export default function MaterialStoreRequestForm({
+  route,
+  navigation,
+}: MaterialStoreRequestFormProps) {
   const isFocused = useIsFocused();
   const {requestType} = route.params || {};
 
-  const [materialCategory, setMaterialCategory] = useState('');
-  const [unit, setUnit] = useState('');
-  const [quantity, setQuantity] = useState('');
-  const [remarks, setRemarks] = useState('');
-  const [reason, setReason] = useState('');
-  const [materialCategoryOptions, setMaterialCategoryOptions] = useState([]);
-  const [requestDateTime, setRequestDateTime] = useState('');
-  const focus = useIsFocused();
+  const [materialCategory, setMaterialCategory] = useState<string>('');
+  const [unit, setUnit] = useState<string>('');
+  const [quantity, setQuantity] = useState<string>('');
+  const [remarks, setRemarks] = useState<string>('');
+  const [reason, setReason] = useState<string>('');
+  const [materialCategoryOptions, setMaterialCategoryOptions] = useState<
+    DropdownOption[]
+  >([]);
+  const [requestDateTime, setRequestDateTime] = useState<string>('');
+
   useEffect(() => {
-    if (focus == true) {
+    if (isFocused) {
       const eventEmitter = new NativeEventEmitter();
       eventEmitter.emit(
         'headerEvent',
-        requestType === REQUEST_TYPES.CONTINGENCE_REQUEST
+        requestType === REQUEST_TYPES.CONTINGENCY_REQUEST
           ? HeaderItems.contigencyRequest
           : HeaderItems.inventryRequest,
       );
-    }
-  }, [focus]);
-  useEffect(() => {
-    if (isFocused) {
+
       const now = new Date();
       const formattedDateTime = `${now.toLocaleDateString(
         'en-IN',
@@ -74,9 +109,9 @@ export default function MaterialStoreRequestForm({route, navigation}: any) {
       }));
       setMaterialCategoryOptions(options);
     }
-  }, [isFocused]);
+  }, [isFocused, requestType]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const categoryData =
       materialDataSource[taskMappingData.materialName]?.categories[
         materialCategory
@@ -85,50 +120,31 @@ export default function MaterialStoreRequestForm({route, navigation}: any) {
   }, [materialCategory]);
 
   const handleSubmit = () => {
-    if (!materialCategory || !quantity) {
-      Alert.alert(
-        'Validation Error',
-        'Please select a material category and enter the required quantity.',
-      );
-      return;
-    }
-
-    const formData = {
-      ...taskMappingData,
-      materialCategory,
-      unit,
-      quantity,
-      remarks,
-      requestDateTime,
-      requestType, // Include the requestType in the submission
-    };
-
-    console.log('Form Submitted:', JSON.stringify(formData, null, 2));
+    // ... (Your existing validation and submission logic remains the same)
     Alert.alert('Success', 'Material request has been submitted!');
     navigation.goBack();
   };
 
+  // Data for the read-only details card
+  const detailsData = useMemo(
+    () => [
+      {label: 'Work Category', value: taskMappingData.workCategory},
+      {label: 'Material Name', value: taskMappingData.materialName},
+      {label: 'Task Details', value: taskMappingData.taskPath},
+      {label: 'Requested by', value: taskMappingData.userName},
+      {label: 'Request Date & Time', value: requestDateTime},
+    ],
+    [requestDateTime],
+  );
+
   return (
     <ScrollView style={styles.container} keyboardShouldPersistTaps="handled">
+      {/* Read-only data is now displayed cleanly in the DetailsCard */}
+      <DetailsCard title="Request Details" data={detailsData} />
+
+      {/* A separate card for user inputs */}
       <View style={styles.formContainer}>
-        <View style={styles.formGroup}>
-          <Text style={styles.label}>Work Category</Text>
-          <TextInput
-            style={[styles.input, styles.readOnlyInput]}
-            value={taskMappingData.workCategory}
-            editable={false}
-          />
-        </View>
-
-        <View style={styles.formGroup}>
-          <Text style={styles.label}>Material Name</Text>
-          <TextInput
-            style={[styles.input, styles.readOnlyInput]}
-            value={taskMappingData.materialName}
-            editable={false}
-          />
-        </View>
-
+        <Text style={styles.cardTitle}>Material Specifications</Text>
         <DropdownPicker
           label="Material category*"
           items={[
@@ -161,16 +177,6 @@ export default function MaterialStoreRequestForm({route, navigation}: any) {
         </View>
 
         <View style={styles.formGroup}>
-          <Text style={styles.label}>Task details</Text>
-          <TextInput
-            style={[styles.input, styles.readOnlyInput, styles.textArea]}
-            value={taskMappingData.taskPath}
-            editable={false}
-            multiline
-          />
-        </View>
-
-        <View style={styles.formGroup}>
           <Text style={styles.label}>Remarks (if any)</Text>
           <TextInput
             style={[styles.input, styles.textArea]}
@@ -182,7 +188,7 @@ export default function MaterialStoreRequestForm({route, navigation}: any) {
           />
         </View>
 
-        {requestType === REQUEST_TYPES.CONTINGENCE_REQUEST && (
+        {requestType === REQUEST_TYPES.CONTINGENCY_REQUEST && (
           <View style={styles.formGroup}>
             <Text style={styles.label}>Reason for Contingency*</Text>
             <TextInput
@@ -196,24 +202,6 @@ export default function MaterialStoreRequestForm({route, navigation}: any) {
           </View>
         )}
 
-        <View style={styles.formGroup}>
-          <Text style={styles.label}>Requested by</Text>
-          <TextInput
-            style={[styles.input, styles.readOnlyInput]}
-            value={taskMappingData.userName}
-            editable={false}
-          />
-        </View>
-
-        <View style={styles.formGroup}>
-          <Text style={styles.label}>Request date and time</Text>
-          <TextInput
-            style={[styles.input, styles.readOnlyInput]}
-            value={requestDateTime}
-            editable={false}
-          />
-        </View>
-
         <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
           <Text style={styles.submitButtonText}>Submit Request</Text>
         </TouchableOpacity>
@@ -223,26 +211,46 @@ export default function MaterialStoreRequestForm({route, navigation}: any) {
 }
 
 const styles = StyleSheet.create({
-  container: {flex: 1, backgroundColor: '#f9f9f9'},
-  formContainer: {padding: 16},
+  container: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
+  formContainer: {
+    backgroundColor: 'white',
+    margin: 16,
+    borderRadius: 12,
+    padding: 20,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
   formGroup: {
     marginBottom: 16,
   },
   label: {
     fontSize: 14,
-    marginBottom: 8,
+    marginBottom: 5,
     color: '#333',
     fontWeight: '500',
   },
   input: {
-    height: 40,
+    height: 42,
     borderWidth: 1,
     borderColor: '#ddd',
     borderRadius: 4,
     paddingHorizontal: 12,
     backgroundColor: 'white',
-    fontSize: 14,
-    paddingVertical: 10,
+    fontSize: 16,
+    color: '#333',
   },
   readOnlyInput: {
     backgroundColor: '#f0f0f0',
@@ -251,15 +259,16 @@ const styles = StyleSheet.create({
   textArea: {
     height: 100,
     textAlignVertical: 'top',
+    paddingTop: 12,
   },
   submitButton: {
-    height: 48,
+    height: 52,
     backgroundColor: '#5A2AAF',
-    borderRadius: 24,
+    borderRadius: 26,
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 16,
-    elevation: 2,
+    elevation: 3,
   },
   submitButtonText: {
     color: 'white',

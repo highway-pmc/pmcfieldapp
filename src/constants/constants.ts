@@ -1000,8 +1000,8 @@ export const TEST_MATERIALS_TYPES = {
   BENTONITE_OTHER: '',
 };
 export const REQUEST_TYPES = {
-  INVENTORY_REQUEST: 'inventry-request',
-  CONTINGENCY_REQUEST: 'contingence-request',
+  INVENTORY_REQUEST: 'inventry',
+  CONTINGENCY_REQUEST: 'contingency',
 };
 export const MATERIAL_REQUEST_STATUS = {
   PENDING_APPROVAL: 'pending_approval',

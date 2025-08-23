@@ -39,14 +39,12 @@ const Input = ({
 };
 
 const styles = StyleSheet.create({
-  container: {
-    marginBottom: 15,
-  },
+  container: {},
   label: {
     fontSize: 12,
     marginBottom: 5,
     color: '#666',
-    fontWeight: '500'
+    fontWeight: '500',
   },
   input: {
     backgroundColor: '#fff',
@@ -58,7 +56,7 @@ const styles = StyleSheet.create({
     color: '#2c2c2c',
     position: 'relative',
     height: 44,
-    paddingHorizontal: 15
+    paddingHorizontal: 15,
   },
   readOnly: {
     backgroundColor: '#f5f5f5',

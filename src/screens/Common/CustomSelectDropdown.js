@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -6,13 +6,19 @@ import {
   FlatList,
   TouchableOpacity,
   StyleSheet,
-  Image
-} from "react-native";
+  Image,
+} from 'react-native';
 
-const CustomSelectDropdown = ({ label, data, selectedValue, onSelect, itemTypeOf = 'object' }) => {
+const CustomSelectDropdown = ({
+  label,
+  data,
+  selectedValue,
+  onSelect,
+  itemTypeOf = 'object',
+}) => {
   const [modalVisible, setModalVisible] = useState(false);
 
-  const handleSelect = (item) => {
+  const handleSelect = item => {
     onSelect(item);
     setModalVisible(false);
   };
@@ -24,10 +30,11 @@ const CustomSelectDropdown = ({ label, data, selectedValue, onSelect, itemTypeOf
       {/* Dropdown Button */}
       <TouchableOpacity
         style={styles.dropdownButton}
-        onPress={() => setModalVisible(true)}
-      >
+        onPress={() => setModalVisible(true)}>
         <Text style={styles.selectedText} numberOfLines={1}>
-          {itemTypeOf === 'string' ? selectedValue || 'Select an option' : selectedValue?.name || "Select an option"}
+          {itemTypeOf === 'string'
+            ? selectedValue || 'Select an option'
+            : selectedValue?.name || 'Select an option'}
         </Text>
         <Image
           style={styles.CloseIcon}
@@ -40,42 +47,33 @@ const CustomSelectDropdown = ({ label, data, selectedValue, onSelect, itemTypeOf
         <TouchableOpacity
           style={styles.modalOverlay}
           activeOpacity={1}
-          onPress={() => setModalVisible(false)}
-        >
+          onPress={() => setModalVisible(false)}>
           <View style={styles.modalContainer}>
-            {
-              (itemTypeOf === 'string') ?
-                (
-                  <FlatList
-                    data={data}
-                    keyExtractor={(item) => item}
-                    renderItem={({ item }) => (
-                      <TouchableOpacity
-                        style={styles.item}
-                        onPress={() => handleSelect(item)}
-                      >
-                        <Text style={styles.itemText}>{item}</Text>
-                      </TouchableOpacity>
-                    )}
-                  />
-                )
-                :
-                (
-                  <FlatList
-                    data={data}
-                    keyExtractor={(item) => item._id}
-                    renderItem={({ item }) => (
-                      <TouchableOpacity
-                        style={styles.item}
-                        onPress={() => handleSelect(item)}
-                      >
-                        <Text style={styles.itemText}>{item.name}</Text>
-                      </TouchableOpacity>
-                    )}
-                  />
-                )
-            }
-
+            {itemTypeOf === 'string' ? (
+              <FlatList
+                data={data}
+                keyExtractor={item => item}
+                renderItem={({item}) => (
+                  <TouchableOpacity
+                    style={styles.item}
+                    onPress={() => handleSelect(item)}>
+                    <Text style={styles.itemText}>{item}</Text>
+                  </TouchableOpacity>
+                )}
+              />
+            ) : (
+              <FlatList
+                data={data}
+                keyExtractor={item => item._id}
+                renderItem={({item}) => (
+                  <TouchableOpacity
+                    style={styles.item}
+                    onPress={() => handleSelect(item)}>
+                    <Text style={styles.itemText}>{item.name}</Text>
+                  </TouchableOpacity>
+                )}
+              />
+            )}
           </View>
         </TouchableOpacity>
       </Modal>
@@ -85,9 +83,7 @@ const CustomSelectDropdown = ({ label, data, selectedValue, onSelect, itemTypeOf
 
 // Styles
 const styles = StyleSheet.create({
-  container: {
-    marginBottom: 15,
-  },
+  container: {},
   label: {
     fontSize: 12,
     color: '#666',
@@ -100,36 +96,36 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ddd',
     borderRadius: 8,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   selectedText: {
     color: '#2c2c2c',
     fontSize: 12,
-    width: '93%'
+    width: '93%',
   },
   modalOverlay: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContainer: {
-    width: "85%",
-    backgroundColor: "#fff",
+    width: '85%',
+    backgroundColor: '#fff',
     borderRadius: 8,
     padding: 10,
   },
   item: {
     padding: 12,
     borderBottomWidth: 1,
-    borderBottomColor: "#ddd",
+    borderBottomColor: '#ddd',
   },
   itemText: {
     fontSize: 14,
-    color: "#000",
+    color: '#000',
   },
   CloseIcon: {
     width: 28,

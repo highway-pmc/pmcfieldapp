@@ -15,7 +15,6 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import {HeaderItems, MATERIAL_REQUEST_STATUS} from '../../constants/constants';
 import DropdownPicker from '../../components/UI/DropdownPicker';
 import DetailsCard from '../Common/DetailsCard'; // Make sure this path is correct
-// import FilePickerComponent from '../../components/UI/FilePickerComponent'; // Placeholder for your file picker
 
 // --- Type Definitions ---
 interface RequestData {
@@ -33,6 +32,13 @@ interface RequestData {
 interface DropdownOption {
   label: string;
   value: string;
+}
+
+// New type for the mix design rows
+interface MixDesignRow {
+  id: number;
+  mixDesign: string;
+  quantity: string;
 }
 
 type MaterialApprovalFormProps = {
@@ -72,16 +78,18 @@ const MaterialApprovalProductionForm: React.FC<MaterialApprovalFormProps> = ({
   const [qtyApproved, setQtyApproved] = useState<string>(
     String(requestData.qtyApproved),
   );
+  const [qtyIssued, setQtyIssued] = useState<string>('');
 
   // Dispatch-specific State
-  const [mixDesign, setMixDesign] = useState<string>('');
-  const [qtyIssued, setQtyIssued] = useState<string>('');
+  const [mixDesigns, setMixDesigns] = useState<MixDesignRow[]>([
+    {id: 1, mixDesign: '', quantity: ''},
+  ]);
+  const [nextMixDesignId, setNextMixDesignId] = useState<number>(2);
   const [vehicleNumbers, setVehicleNumbers] = useState<string[]>([]);
   const [currentVehicleInput, setCurrentVehicleInput] = useState<string>('');
   const [batchNo, setBatchNo] = useState<string>('');
   const [dispatchTime, setDispatchTime] = useState<Date>(new Date());
   const [showDateTimePicker, setShowDateTimePicker] = useState<boolean>(false);
-  // const [batchSlip, setBatchSlip] = useState<any>(null); // State for the uploaded file
 
   useEffect(() => {
     if (isFocused) {
@@ -121,6 +129,49 @@ const MaterialApprovalProductionForm: React.FC<MaterialApprovalFormProps> = ({
     );
     return data;
   }, [status]);
+
+  // --- Mix Design Handlers ---
+  const handleMixDesignChange = (value: string, id: number) => {
+    const newMixDesigns = mixDesigns.map(item =>
+      item.id === id ? {...item, mixDesign: value} : item,
+    );
+    setMixDesigns(newMixDesigns);
+  };
+
+  const handleMixDesignQuantityChange = (text: string, id: number) => {
+    const newMixDesigns = mixDesigns.map(item =>
+      item.id === id ? {...item, quantity: text.replace(/[^0-9.]/g, '')} : item,
+    );
+    setMixDesigns(newMixDesigns);
+  };
+
+  const handleAddMixDesignRow = () => {
+    setMixDesigns(prev => [
+      ...prev,
+      {id: nextMixDesignId, mixDesign: '', quantity: ''},
+    ]);
+    setNextMixDesignId(prev => prev + 1);
+  };
+
+  const handleRemoveMixDesignRow = (id: number) => {
+    if (mixDesigns.length > 1) {
+      setMixDesigns(prev => prev.filter(item => item.id !== id));
+    }
+  };
+
+  const getAvailableMixDesigns = (currentRowId: number): DropdownOption[] => {
+    const selectedMixDesigns = mixDesigns
+      .filter(row => row.id !== currentRowId && row.mixDesign)
+      .map(row => row.mixDesign);
+    return mixDesignData.filter(opt => !selectedMixDesigns.includes(opt.value));
+  };
+
+  const totalMixDesignQuantity = useMemo(() => {
+    return mixDesigns.reduce(
+      (total, row) => total + (parseFloat(row.quantity) || 0),
+      0,
+    );
+  }, [mixDesigns]);
 
   // --- Vehicle Handlers ---
   const handleVehicleInputChange = (text: string) => {
@@ -164,12 +215,11 @@ const MaterialApprovalProductionForm: React.FC<MaterialApprovalFormProps> = ({
       status,
       qtyApproved,
       remarks,
-      mixDesign,
       qtyIssued,
+      mixDesigns,
       vehicleNumbers,
       batchNo,
       dispatchTime,
-      // batchSlip
     });
     Alert.alert('Success', 'Form has been submitted successfully!');
   };
@@ -209,12 +259,6 @@ const MaterialApprovalProductionForm: React.FC<MaterialApprovalFormProps> = ({
         {/* --- DISPATCH FORM --- */}
         {status === MATERIAL_REQUEST_STATUS.PENDING_DISPATCH && (
           <>
-            <DropdownPicker
-              label="Mix Design Details*"
-              items={mixDesignData}
-              value={mixDesign}
-              onChange={setMixDesign}
-            />
             <View style={styles.formGroup}>
               <Text style={styles.label}>
                 Qty Issued <Text style={styles.required}>*</Text>
@@ -230,6 +274,71 @@ const MaterialApprovalProductionForm: React.FC<MaterialApprovalFormProps> = ({
                 Max: {requestData.qtyApproved} {requestData.unit}
               </Text>
             </View>
+
+            {/* --- MIX DESIGN DROPDOWN WITH QUANTITY --- */}
+            <View style={styles.mixDesignTableContainer}>
+              <View style={styles.tableHeader}>
+                <Text style={[styles.tableHeaderText, {flex: 2}]}>
+                  Mix Design
+                </Text>
+                <Text style={[styles.tableHeaderText, {flex: 1.2}]}>
+                  Quantity
+                </Text>
+                <View style={{width: 30}} />
+              </View>
+              {mixDesigns.map(row => (
+                <View key={row.id} style={styles.tableRow}>
+                  <View style={{flex: 2, marginRight: 8}}>
+                    <DropdownPicker
+                      items={getAvailableMixDesigns(row.id)}
+                      value={row.mixDesign}
+                      onChange={(value: any) =>
+                        handleMixDesignChange(value, row.id)
+                      }
+                    />
+                  </View>
+                  <TextInput
+                    style={[styles.input, {flex: 1.2, height: 42}]}
+                    value={row.quantity}
+                    onChangeText={text =>
+                      handleMixDesignQuantityChange(text, row.id)
+                    }
+                    keyboardType="decimal-pad"
+                    placeholder="Qty"
+                  />
+                  <TouchableOpacity
+                    onPress={() => handleRemoveMixDesignRow(row.id)}
+                    style={styles.removeButton}
+                    disabled={mixDesigns.length === 1}>
+                    <Text
+                      style={[
+                        styles.removeButtonText,
+                        mixDesigns.length === 1 && {color: '#ccc'},
+                      ]}>
+                      ✕
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              ))}
+              <TouchableOpacity
+                onPress={handleAddMixDesignRow}
+                style={styles.addButton}>
+                <Text style={styles.addButtonText}>+ Add Mix Design</Text>
+              </TouchableOpacity>
+              <View style={styles.totalContainer}>
+                <Text style={styles.totalLabel}>Sum of Mix Design Qty:</Text>
+                <Text
+                  style={[
+                    styles.totalValue,
+                    totalMixDesignQuantity > parseFloat(qtyIssued) &&
+                      styles.errorText,
+                  ]}>
+                  {totalMixDesignQuantity.toFixed(2)}
+                </Text>
+              </View>
+            </View>
+
+            {/* --- VEHICLE NUMBER INPUT --- */}
             <View style={styles.formGroup}>
               <Text style={styles.label}>
                 Vehicle 4 Digit No. <Text style={styles.required}>*</Text>
@@ -261,6 +370,8 @@ const MaterialApprovalProductionForm: React.FC<MaterialApprovalFormProps> = ({
                 ))}
               </View>
             </View>
+
+            {/* --- BATCH NO AND SLIP UPLOAD --- */}
             <View style={styles.formGroup}>
               <Text style={styles.label}>Batch No.</Text>
               <TextInput
@@ -273,7 +384,6 @@ const MaterialApprovalProductionForm: React.FC<MaterialApprovalFormProps> = ({
             </View>
             <View style={styles.formGroup}>
               <Text style={styles.label}>Upload Batch Slip</Text>
-              {/* <FilePickerComponent onFileSelect={setBatchSlip} /> */}
               <TouchableOpacity style={styles.uploadButton}>
                 <Text style={styles.uploadButtonText}>Choose File</Text>
               </TouchableOpacity>
@@ -360,10 +470,10 @@ const styles = StyleSheet.create({
     color: '#e74c3c',
   },
   input: {
-    height: 48,
-    borderWidth: 1.5,
+    height: 42,
+    borderWidth: 1,
     borderColor: '#ddd',
-    borderRadius: 8,
+    borderRadius: 4,
     paddingHorizontal: 12,
     backgroundColor: 'white',
     fontSize: 16,
@@ -387,7 +497,7 @@ const styles = StyleSheet.create({
   addButton: {
     backgroundColor: '#5A2AAF',
     paddingHorizontal: 20,
-    height: 48,
+    height: 40,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 8,
@@ -423,12 +533,12 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   uploadButton: {
-    height: 48,
+    height: 42,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 1.5,
+    borderWidth: 1,
     borderColor: '#ddd',
-    borderRadius: 8,
+    borderRadius: 4,
     borderStyle: 'dashed',
   },
   uploadButtonText: {
@@ -448,6 +558,60 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  // New styles for the mix design table
+  mixDesignTableContainer: {
+    borderColor: '#eee',
+    borderRadius: 8,
+    marginBottom: 16,
+  },
+  tableHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingBottom: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+    paddingHorizontal: 5,
+    paddingVertical: 10,
+  },
+  tableHeaderText: {
+    fontWeight: '600',
+    color: '#333',
+  },
+  tableRow: {
+    flexDirection: 'row',
+    marginTop: 5,
+  },
+  removeButton: {
+    width: 30,
+    height: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 8,
+  },
+  removeButtonText: {
+    fontSize: 20,
+    color: '#e74c3c',
+  },
+  totalContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    marginTop: 15,
+    paddingTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#eee',
+  },
+  totalLabel: {
+    marginRight: 10,
+    fontWeight: '600',
+    color: '#333',
+  },
+  totalValue: {
+    fontWeight: 'bold',
+    color: 'green',
+  },
+  errorText: {
+    color: '#e74c3c',
   },
 });
 

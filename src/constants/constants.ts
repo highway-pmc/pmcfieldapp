@@ -75,6 +75,7 @@ export const HeaderItems = {
   assignTestMaterials: {showBack: true, title: 'Assign Test Materials'},
   assignTestTypes: {showBack: true, title: 'Assign Test Types'},
   sourceApprovals: {showBack: true, title: 'Source Approvals'},
+  sourceApprovalForm: {showBack: true, title: 'Source Approvals Form'},
   procurements: {showBack: true, title: 'Procurements'},
   mixDesignListing: {showBack: true, title: 'Mix Design'},
   mixDesignInfo: {showBack: true, title: 'Mix Design'},
@@ -85,6 +86,22 @@ export const HeaderItems = {
   store: {showBack: false, title: 'Store'},
   addPurchase: {showBack: true, title: 'Add Purchase'},
   production: {showBack: false, title: 'Production'},
+  contigencyRequest: {
+    showBack: true,
+    title: 'Contingency Request',
+  },
+  inventryRequest: {
+    showBack: true,
+    title: 'Inventry Request',
+  },
+  materialApprove: {
+    showBack: true,
+    title: 'Material Approval',
+  },
+  materialDispatch: {
+    showBack: true,
+    title: 'Material Dispatch',
+  },
 };
 
 export const UserRoles = {
@@ -485,7 +502,7 @@ export const PROJECT_TYPE = {
   QUALITY_WORK: 'quality-work',
   SURVEY_WORK: 'survey-work',
   ADMIN_WORK: 'admin-work',
-  STORES: 'stores',
+  STORES: 'procurement-details',
   PRODUCTION: 'production',
   EQUIPMENTS: 'equipments',
   INITIAL_SURVEY: 'initial-survey',
@@ -684,7 +701,7 @@ export const WORK_TYPE = {
 export const STORE_OPTION = {
   PURCHASING: 'Purchasing',
   INVENTORY: 'Inventory',
-  CONTINGENCY_REQUEST: 'Contingency Request',
+  REQUEST: 'Request',
   SCRAP_DEPOSIT: 'Scrap Deposit',
   SCRAP_INVENTORY: 'Scrap Inventory',
 };
@@ -916,7 +933,7 @@ export const TEST_CLASSIFICATION_TYPES = {
   SOURCE_APPROVALS: 'source-approvals',
   UPLOAD_MTC: 'upload-mtc',
   EQUIPMENT_CALIBRATION: 'equipment-calibration',
-  STORES: 'stores',
+  STORES: 'procurement-details',
   PRODUCTION: 'production',
   EQUIPMENTS: 'equipments',
 };
@@ -982,7 +999,18 @@ export const TEST_MATERIALS_TYPES = {
   BRIDGE: '',
   BENTONITE_OTHER: '',
 };
-
+export const REQUEST_TYPES = {
+  INVENTORY_REQUEST: 'inventry',
+  CONTINGENCY_REQUEST: 'contingency',
+};
+export const MATERIAL_REQUEST_STATUS = {
+  PENDING_APPROVAL: 'pending_approval',
+  PENDING_DISPATCH: 'pending_dispatch',
+  PENDING_ACCEPTANCE: 'pending_acceptance',
+  ACCEPTED: 'accepted',
+  REJECTED: 'rejected',
+  DELIVERED: 'delivered',
+};
 export const TEST_TYPES = {
   CORE_TEST: 'core-test',
   CUBE_TEST: 'cube-test',

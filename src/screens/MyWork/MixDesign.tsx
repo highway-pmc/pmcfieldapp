@@ -5,63 +5,45 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Dimensions,
-  TextInput,
+  KeyboardAvoidingView,
+  Platform,
   NativeEventEmitter,
 } from 'react-native';
-import {
-  HeaderItems,
-  RFIs_TYPE,
-  SAMPLE_BY_LIST,
-  TEST_CONDUCTED_BY_LIST,
-} from '../../constants/constants';
+import {useDispatch, useSelector} from 'react-redux';
+import {useIsFocused} from '@react-navigation/native';
+
+// --- UI Components ---
 import CustomSelectDropdown from '../Common/CustomSelectDropdown';
 import CalendarPicker from '../../components/UI/CalenderPicker';
 import TimePicker from '../../components/UI/TimePicker';
-import {useSnackbar} from '../../context/SnackbarContext';
-import {useDispatch, useSelector} from 'react-redux';
-import {useIsFocused} from '@react-navigation/native';
+import Input from '../../components/UI/Input';
 import LoadingAnimation from '../Common/LoadingAnimation';
+
+// --- Context & Actions ---
+import {useSnackbar} from '../../context/SnackbarContext';
 import {
   getQualityMasterList,
   getMixDesignFormInfo,
   saveMixDesignFormInfo,
   clearRFITasksEvent,
 } from '../RFIs/actions';
-import appConfig from '../../common/app.config';
-import {set} from 'date-fns';
-import DropdownPicker from '../../components/UI/DropdownPicker';
-import Input from '../../components/UI/Input';
+
+// --- Constants & Utilities ---
+import {
+  HeaderItems,
+  SAMPLE_BY_LIST,
+  TEST_CONDUCTED_BY_LIST,
+} from '../../constants/constants';
 import {getDbDateFromDDMMYYYY} from '../../utils/Utils';
+import DropdownPicker from '../../components/UI/DropdownPicker';
 
-const MixDesign = ({navigation, route}: {navigation: any; route: any}) => {
-  const {height} = Dimensions.get('window');
-  const calculatedHeight = height * 0.75;
+// --- Component ---
+const MixDesign = ({navigation}: {navigation: any}) => {
   const {showSnackbar} = useSnackbar();
-  const focus = useIsFocused();
-
-  const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-
-  const [selectedTestCategoryData, setSelectedTestCategoryData] = useState<any>(
-    {},
-  );
-  const [selectedMaterialTypeData, setSelectedMaterialTypeData] = useState<any>(
-    {},
-  );
-  const [
-    selectedMaterialTypeCategoryData,
-    setSelectedMaterialTypeCategoryData,
-  ] = useState<any>('');
-  const [dateOfSampling, setDateOfSampling] = useState('');
-  const [totalQty, setTotalQty] = useState('');
-  const [sampleBy, setSampleBy] = useState('Concessionaire');
-  const [mixDesignConductedBy, setMixDesignConductedBy] =
-    useState('Concessionaire');
-  const [qualityMixDesignFormInfoData, setQualityMixDesignFormInfoData]: any =
-    useState(null);
-  const [recommend, setRecommend] = useState<any>();
+  const isFocused = useIsFocused();
   const dispatch = useDispatch();
 
+  // --- Redux State ---
   const {
     savedMixDesignFormInfo,
     qualityMasterListing,
@@ -69,387 +51,443 @@ const MixDesign = ({navigation, route}: {navigation: any; route: any}) => {
     loading,
     error,
   } = useSelector((state: any) => state.RFIs);
+  const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
 
-  if (useIsFocused()) {
+  // --- Component State ---
+  const [mixDesignShortName, setMixDesignShortName] = useState('');
+  const [dateOfSampling, setDateOfSampling] = useState('');
+  const [timeOfSampling, setTimeOfSampling] = useState('');
+  const [sampleBy, setSampleBy] = useState('Concessionaire');
+  const [mixDesignConductedBy, setMixDesignConductedBy] =
+    useState('Concessionaire');
+  const [totalQty, setTotalQty] = useState('');
+  const [recommend, setRecommend] = useState('');
+
+  const [selectedWorkCategory, setSelectedWorkCategory] = useState<any>(null);
+  const [selectedMaterialType, setSelectedMaterialType] = useState<any>(null);
+  const [selectedMaterialCategory, setSelectedMaterialCategory] =
+    useState<any>('');
+
+  const [materialsData, setMaterialsData] = useState<any[]>([]);
+
+  // --- Effects ---
+
+  // Set header title on focus
+  if (isFocused) {
     const eventEmitter = new NativeEventEmitter();
     eventEmitter.emit('headerEvent', HeaderItems.mixDesignInfo);
   }
 
+  // Initial data load and form reset on focus
   useEffect(() => {
-    if (focus == true) {
+    if (isFocused) {
       dispatch(clearRFITasksEvent());
       dispatch(getQualityMasterList({testType: 'mix-design'}));
+      // Reset all state variables
+      setMixDesignShortName('');
       setDateOfSampling('');
-      setTotalQty('');
+      setTimeOfSampling('');
       setSampleBy('Concessionaire');
       setMixDesignConductedBy('Concessionaire');
-      setSelectedTestCategoryData(null);
-      setSelectedMaterialTypeData(null);
-      setSelectedMaterialTypeCategoryData('');
-      setQualityMixDesignFormInfoData(null);
+      setTotalQty('');
+      setRecommend('');
+      setSelectedWorkCategory(null);
+      setSelectedMaterialType(null);
+      setSelectedMaterialCategory('');
+      setMaterialsData([]);
     }
-  }, [focus]);
+  }, [isFocused, dispatch]);
 
+  // Handle API responses
   useEffect(() => {
     if (savedMixDesignFormInfo) {
-      showSnackbar('Data saved Succesfull');
+      showSnackbar('Mix Design saved successfully!', 'success');
       setTimeout(() => {
         navigation.navigate('MixDesignListing');
-      }, 3000);
-    }
-    if (qualityMixDesignFormInfo) {
-      setQualityMixDesignFormInfoData(qualityMixDesignFormInfo);
+      }, 2000);
     }
     if (error) {
-      showSnackbar('Unable to saveMix design data');
-      console.log('=======ERROR=======', error);
+      showSnackbar(error.message || 'Unable to save Mix Design data.', 'error');
     }
-  }, [savedMixDesignFormInfo, qualityMixDesignFormInfo, error]);
+  }, [savedMixDesignFormInfo, error, navigation, showSnackbar]);
 
-  const handleCategorySelect = (selectedOption: any) => {
-    setSelectedTestCategoryData({...selectedOption});
-    setSelectedMaterialTypeData(null);
-    handleFormData(selectedOption);
-    console.log('======', selectedOption);
+  // Populate materials list when form info is fetched
+  useEffect(() => {
+    if (qualityMixDesignFormInfo) {
+      const initializedMaterials = qualityMixDesignFormInfo.map(
+        (item: any) => ({
+          ...item,
+          selectedSource: null,
+          qty: '',
+        }),
+      );
+      setMaterialsData(initializedMaterials);
+    }
+  }, [qualityMixDesignFormInfo]);
+
+  // --- Handlers ---
+
+  const handleFetchFormInfo = (workCategory: any, materialType: any) => {
+    if (workCategory?.type && materialType?._id) {
+      dispatch(
+        getMixDesignFormInfo({
+          projectId: loggedInUser.projectId,
+          testWorkCategoryType: workCategory.type,
+          testMaterialId: materialType._id,
+        }),
+      );
+    }
   };
 
-  const handleMixDesignTypeSelect = (selectedOption: any) => {
-    setSelectedMaterialTypeData({...selectedOption});
-    setSelectedMaterialTypeCategoryData('');
-    console.log('======', selectedOption);
-    // setTimeout(() => {
-    //   handleFormData();
-    // });
+  const handleWorkCategorySelect = (selectedOption: any) => {
+    setSelectedWorkCategory(selectedOption);
+    setSelectedMaterialType(null);
+    setSelectedMaterialCategory('');
+    setMaterialsData([]);
   };
 
-  const handleMixDesignTypeCateorySelect = (selectedOption: any) => {
-    setSelectedMaterialTypeCategoryData(selectedOption);
-    console.log('======', selectedOption);
+  const handleMaterialTypeSelect = (selectedOption: any) => {
+    setSelectedMaterialType(selectedOption);
+    setSelectedMaterialCategory('');
+    setMaterialsData([]);
+    handleFetchFormInfo(selectedWorkCategory, selectedOption);
   };
 
-  const handleFormData = async (testCategoryData: any) => {
-    dispatch(
-      getMixDesignFormInfo({
-        projectId: loggedInUser.projectId,
-        testWorkCategoryType: testCategoryData.type,
-        testMaterialId: selectedMaterialTypeData?._id || 'NA',
-      }),
-    );
-  };
-
-  const handleSourceSelect = (item: any, selectedOption: any) => {
-    item.selectedSource = selectedOption;
-
-    setQualityMixDesignFormInfoData([...qualityMixDesignFormInfoData]);
-  };
-
-  const handleInputChange = (item: any, value: string, fieldName: string) => {
-    item[fieldName] = value;
+  const handleMaterialItemChange = (
+    index: number,
+    field: string,
+    value: any,
+  ) => {
+    const updatedMaterials = [...materialsData];
+    updatedMaterials[index][field] = value;
+    setMaterialsData(updatedMaterials);
   };
 
   const onSubmit = () => {
-    const materialsData: any = [];
-    qualityMixDesignFormInfoData.forEach((item: any) => {
-      console.log('selectedSource', item.selectedSource);
-      console.log('selectedMaterialQty', item.qty);
-      materialsData.push({
-        _id: item._id,
-        materialType: item.materialType,
-        name: item.name,
-        selectedSource: item.selectedSource
-          ? {
-              _id: item.selectedSource._id,
-              name: item.selectedSource.name,
-            }
-          : null,
-        qty: item.qty,
-      });
-    });
-
-    console.log(
-      '===============',
-      selectedTestCategoryData,
-      selectedMaterialTypeData,
-      selectedMaterialTypeCategoryData,
-    );
+    // --- Validation ---
+    if (!mixDesignShortName.trim()) {
+      showSnackbar('Please enter a Mix Design Short Name.', 'error');
+      return;
+    }
     if (
-      !selectedTestCategoryData ||
-      !selectedMaterialTypeData ||
-      !selectedMaterialTypeCategoryData
+      !selectedWorkCategory ||
+      !selectedMaterialType ||
+      !selectedMaterialCategory
     ) {
+      showSnackbar('Please complete all Mix Design details.', 'error');
+      return;
+    }
+    if (!dateOfSampling || !timeOfSampling) {
+      showSnackbar(
+        'Please provide the full date and time of sampling.',
+        'error',
+      );
+      return;
+    }
+    if (!totalQty) {
+      showSnackbar('Please enter the total quantity.', 'error');
       return;
     }
 
-    // save mix design data
-    dispatch(
-      saveMixDesignFormInfo({
-        projectId: loggedInUser.projectId,
-        testWorkCategoryType: selectedTestCategoryData?.type,
-        testMaterialId: selectedMaterialTypeData?._id,
-        body: {
-          name: `${selectedTestCategoryData.name}-${selectedMaterialTypeData.name}-${selectedMaterialTypeCategoryData}`,
-          comments: recommend,
-          mixDesignData: {
-            dateOfSampling: getDbDateFromDDMMYYYY(dateOfSampling),
-            sampleBy: sampleBy,
-            conductedBy: mixDesignConductedBy,
-            materialCategory: selectedMaterialTypeCategoryData,
-            totalQty: totalQty,
-            materialsData: materialsData,
-          },
+    // --- Payload Preparation ---
+    const finalMaterialsData = materialsData.map(item => ({
+      _id: item._id,
+      materialType: item.materialType,
+      name: item.name,
+      selectedSource: item.selectedSource
+        ? {_id: item.selectedSource._id, name: item.selectedSource.name}
+        : null,
+      qty: item.qty,
+    }));
+
+    const payload = {
+      projectId: loggedInUser.projectId,
+      testWorkCategoryType: selectedWorkCategory?.type,
+      testMaterialId: selectedMaterialType?._id,
+      body: {
+        name: mixDesignShortName,
+        comments: recommend,
+        mixDesignData: {
+          dateOfSampling: getDbDateFromDDMMYYYY(dateOfSampling),
+          timeOfSampling: timeOfSampling,
+          sampleBy: sampleBy,
+          conductedBy: mixDesignConductedBy,
+          materialCategory: selectedMaterialCategory,
+          totalQty: totalQty,
+          materialsData: finalMaterialsData,
         },
-      }),
-    );
+      },
+    };
+
+    dispatch(saveMixDesignFormInfo(payload));
   };
 
-  const renderMixDesign = () => {
-    return (
-      <View style={styles.mixDesignContainer}>
-        <View style={styles.inputContainer}>
-          <Text style={styles.inputLabel}>
-            Total qty of {selectedMaterialTypeData?.name} in Kg considered for
-            composition
-          </Text>
-          <View style={styles.inputWrapper}>
-            <Input
-              value={totalQty}
-              style={styles.input}
-              label=""
-              onChange={(value: string) => setTotalQty(value)}
-              isRequired={true}
-            />
-          </View>
-        </View>
-
-        <View style={styles.tableContainer}>
-          <View style={styles.tableHeader}>
-            <Text style={[styles.tableHeaderCell, {flex: 2}]}>
+  // --- Render Methods ---
+  const renderMaterialsTable = () => (
+    <View style={styles.card}>
+      <Text style={styles.sectionTitle}>Material Composition</Text>
+      <ScrollView horizontal showsHorizontalScrollIndicator={true}>
+        <View>
+          {/* Table Header */}
+          <View style={styles.tableRow}>
+            <Text style={[styles.tableHeader, {width: 150}]}>
               Description of Material
             </Text>
-            <Text style={[styles.tableHeaderCell, {flex: 3}]}>
+            <Text style={[styles.tableHeader, {width: 150}]}>
+              Material Category
+            </Text>
+            <Text style={[styles.tableHeader, {width: 200}]}>
               Source of Material
             </Text>
-            <Text style={[styles.tableHeaderCell, {flex: 1}]}>Qty in Kg</Text>
+            <Text style={[styles.tableHeader, {width: 100}]}>Unit</Text>
+            <Text style={[styles.tableHeader, {width: 120}]}>Quantity</Text>
           </View>
 
-          {qualityMixDesignFormInfoData?.map((item: any, index: number) => {
-            return (
-              <View key={index} style={styles.tableRow}>
-                <Text style={[styles.tableCell, {flex: 2}]}>{item.name}</Text>
-                <View style={[styles.tableCellDropdown, {flex: 3}]}>
-                  <CustomSelectDropdown
-                    label=""
-                    data={item.sourceApprovals}
-                    selectedValue={item.selectedSource}
-                    onSelect={(selectedItem: any) =>
-                      handleSourceSelect(item, selectedItem)
-                    }
-                  />
-                </View>
-                <View style={[styles.tableCellInput, {flex: 1}]}>
-                  {/* <TextInput
-                      value={item.selectedQty}
-                      style={styles.qtyInput}
-                      placeholder=">0, 3 dec, max limit 10000"
-                      keyboardType="numeric"
-                      placeholderTextColor="#999"
-                    /> */}
-
-                  <Input
-                    label=""
-                    value={item.qty}
-                    onChange={(value: string) =>
-                      handleInputChange(item, value, 'qty')
-                    }
-                  />
-                </View>
+          {/* Table Body */}
+          {materialsData.map((item, index) => (
+            <View key={item._id || index} style={styles.tableRow}>
+              <Text style={[styles.tableCell, {width: 150}]}>{item.name}</Text>
+              <Text style={[styles.tableCell, {width: 150}]}>
+                {item.materialType || 'N/A'}
+              </Text>
+              <View style={{width: 200, paddingHorizontal: 5}}>
+                <CustomSelectDropdown
+                  label=""
+                  data={item.sourceApprovals}
+                  selectedValue={item.selectedSource}
+                  onSelect={(selectedItem: any) =>
+                    handleMaterialItemChange(
+                      index,
+                      'selectedSource',
+                      selectedItem,
+                    )
+                  }
+                />
               </View>
-            );
-          })}
-          <View style={styles.inputWrapper}>
-            <Text style={styles.inputLabel}>Recommendation</Text>
-            <Input
-              value={recommend}
-              style={styles.input}
-              label=""
-              onChange={(value: string) => setRecommend(value)}
-              isRequired={true}
-            />
-          </View>
-        </View>
-      </View>
-    );
-  };
-
-  return (
-    <View style={styles.recentWorkContainer}>
-      <ScrollView>
-        <View style={styles.innerScrollView}>
-          <View>
-            <CalendarPicker
-              label="Date of sampling"
-              value={dateOfSampling}
-              onChange={(value: any) => {
-                setDateOfSampling(value);
-              }}
-            />
-            <DropdownPicker
-              label="Sampled By"
-              items={SAMPLE_BY_LIST}
-              value={sampleBy}
-              onChange={(value: any) => {
-                setSampleBy(value);
-              }}
-            />
-            <DropdownPicker
-              label="Conducted By"
-              items={TEST_CONDUCTED_BY_LIST}
-              value={mixDesignConductedBy}
-              onChange={(value: any) => {
-                setMixDesignConductedBy(value);
-              }}
-            />
-          </View>
-
-          <CustomSelectDropdown
-            label="Test Category"
-            data={qualityMasterListing?.testWorkCategoryData}
-            selectedValue={selectedTestCategoryData}
-            onSelect={handleCategorySelect}
-          />
-          <CustomSelectDropdown
-            label="Mix Design Type"
-            data={selectedTestCategoryData?.materialTypeData}
-            selectedValue={selectedMaterialTypeData}
-            onSelect={handleMixDesignTypeSelect}
-          />
-          <CustomSelectDropdown
-            label="Mix Design Type Category"
-            data={selectedMaterialTypeData?.category}
-            selectedValue={selectedMaterialTypeCategoryData}
-            itemTypeOf="string"
-            onSelect={handleMixDesignTypeCateorySelect}
-          />
-          {qualityMixDesignFormInfoData?.length && renderMixDesign()}
-        </View>
-        <View style={styles.footerButton}>
-          <TouchableOpacity style={styles.btnCtaOutline} onPress={onSubmit}>
-            <Text style={styles.btnCtaTextOutline}>Submit</Text>
-          </TouchableOpacity>
+              <Text style={[styles.tableCell, {width: 100}]}>
+                {item.unit || 'Kg'}
+              </Text>
+              <View style={{width: 120, paddingHorizontal: 5}}>
+                <Input
+                  label=""
+                  value={item.qty}
+                  onChange={(value: string) =>
+                    handleMaterialItemChange(index, 'qty', value)
+                  }
+                  keyboardType="numeric"
+                  placeholder="e.g., 150.5"
+                />
+              </View>
+            </View>
+          ))}
         </View>
       </ScrollView>
-      <LoadingAnimation loading={loading} />
     </View>
+  );
+
+  return (
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.card}>
+          <Text style={styles.sectionTitle}>Sampling Information</Text>
+          <View style={{flex: 1}}>
+            <CalendarPicker
+              label="Date of Sampling"
+              value={dateOfSampling}
+              onChange={setDateOfSampling}
+            />
+          </View>
+          <View style={{flex: 1}}>
+            <TimePicker
+              label="Time of Sampling"
+              value={timeOfSampling}
+              onChange={setTimeOfSampling}
+            />
+          </View>
+
+          <DropdownPicker
+            label="Sampled By"
+            items={SAMPLE_BY_LIST}
+            value={sampleBy}
+            onChange={setSampleBy}
+            isRequired
+          />
+          <DropdownPicker
+            label="Conducted By"
+            items={TEST_CONDUCTED_BY_LIST}
+            value={mixDesignConductedBy}
+            onChange={setMixDesignConductedBy}
+            isRequired
+          />
+        </View>
+        <View style={styles.card}>
+          <Text style={styles.sectionTitle}>Mix Design Details</Text>
+          <Input
+            label="Mix Design Name"
+            value={mixDesignShortName}
+            onChange={setMixDesignShortName}
+            maxLength={50}
+            isRequired
+          />
+          <CustomSelectDropdown
+            label="Work Category"
+            data={qualityMasterListing?.testWorkCategoryData}
+            selectedValue={selectedWorkCategory}
+            onSelect={handleWorkCategorySelect}
+          />
+          <CustomSelectDropdown
+            label="Material Type"
+            data={selectedWorkCategory?.materialTypeData}
+            selectedValue={selectedMaterialType}
+            onSelect={handleMaterialTypeSelect}
+          />
+          <CustomSelectDropdown
+            label="Material Category"
+            data={selectedMaterialType?.category}
+            selectedValue={selectedMaterialCategory}
+            itemTypeOf="string"
+            onSelect={setSelectedMaterialCategory}
+          />
+          <View style={styles.formGroup}>
+            <Text style={styles.label}>Unit</Text>
+            <Text style={styles.textDisplay}>
+              {selectedMaterialType?.unit || 'Not Selected'}
+            </Text>
+          </View>
+          <Input
+            label={`Total Qty of ${
+              selectedMaterialType?.name || 'Material'
+            } Considered (in Kg)`}
+            value={totalQty}
+            onChange={setTotalQty}
+            keyboardType="numeric"
+            placeholder=">0, up to 3 decimal places"
+            isRequired
+          />
+        </View>
+        {materialsData.length > 0 && renderMaterialsTable()}
+
+        <View style={styles.card}>
+          <Text style={styles.sectionTitle}>Recommendation</Text>
+          <Input
+            label=""
+            value={recommend}
+            onChange={setRecommend}
+            multiline
+            numberOfLines={4}
+            placeholder="Enter recommendations..."
+          />
+        </View>
+
+        <TouchableOpacity style={styles.submitButton} onPress={onSubmit}>
+          <Text style={styles.submitButtonText}>Submit Mix Design</Text>
+        </TouchableOpacity>
+      </ScrollView>
+      <LoadingAnimation loading={loading} />
+    </KeyboardAvoidingView>
   );
 };
 
+// --- Styles ---
+const COLORS = {
+  primary: '#5EAB4B',
+  background: '#F4F7FC',
+  card: '#FFFFFF',
+  text: '#333333',
+  textLight: '#777777',
+  border: '#E0E0E0',
+  headerBg: '#F8F9FA',
+};
+
 const styles = StyleSheet.create({
-  recentWorkContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    padding: 20,
-    backgroundColor: '#FFFFFF',
-    height: Dimensions.get('window').height,
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.background,
+    paddingHorizontal: 16,
+    paddingTop: 16,
   },
-  innerScrollView: {
-    paddingTop: 15,
+  card: {
+    backgroundColor: COLORS.card,
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 3,
   },
-  footerButton: {
-    paddingHorizontal: 20,
-    backgroundColor: '#fff',
-    marginBottom:40,
-    height: 78,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 10,
-  },
-  btnCtaOutline: {
-    borderRadius: 30,
-    borderWidth: 1,
-    borderColor: '#5EAB4B',
-    backgroundColor: '#fff',
-    paddingHorizontal: 30,
-    paddingVertical: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    minWidth: 130,
-  },
-  btnCtaTextOutline: {
-    color: '#5EAB4B',
-    fontSize: 14,
-    fontWeight: '500',
-  },
-  mixDesignContainer: {
-    marginTop: 15,
-  },
-  inputContainer: {
-    marginBottom: 20,
-  },
-  inputLabel: {
-    fontSize: 14,
-    fontWeight: '500',
-    marginBottom: 8,
-    color: '#333',
-  },
-  inputWrapper: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    paddingHorizontal: 10,
-  },
-  input: {
-    height: 40,
-    fontSize: 14,
-  },
-  tableContainer: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    overflow: 'hidden',
-    marginBottom: 20,
-  },
-  tableHeader: {
-    flexDirection: 'row',
-    backgroundColor: '#f5f5f5',
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
-  },
-  tableHeaderCell: {
+  sectionTitle: {
+    fontSize: 18,
     fontWeight: '600',
-    fontSize: 14,
-    color: '#333',
+    color: COLORS.text,
+    marginBottom: 16,
+    paddingBottom: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.border,
   },
+  formGroup: {
+    marginBottom: 16,
+  },
+  label: {
+    fontSize: 14,
+    color: COLORS.textLight,
+    marginBottom: 8,
+  },
+  textDisplay: {
+    fontSize: 16,
+    color: COLORS.text,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    backgroundColor: '#F9F9F9',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  // --- Table Styles ---
   tableRow: {
     flexDirection: 'row',
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
     alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.border,
+    paddingVertical: 8,
+  },
+  tableHeader: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: COLORS.text,
+    paddingHorizontal: 5,
   },
   tableCell: {
     fontSize: 14,
-    color: '#333',
-    paddingRight: 5,
-  },
-  tableCellDropdown: {
+    color: COLORS.textLight,
     paddingHorizontal: 5,
+    paddingVertical: 10,
   },
-  tableCellInput: {
-    paddingLeft: 5,
+  // --- Submit Button ---
+  submitButton: {
+    backgroundColor: COLORS.primary,
+    borderRadius: 30,
+    paddingVertical: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 24,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 4},
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 6,
   },
-  qtyInput: {
-    height: 40,
-    fontSize: 14,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 6,
-    paddingHorizontal: 8,
-  },
-  materialDropdown: {
-    width: '100%',
+  submitButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '700',
   },
 });
 

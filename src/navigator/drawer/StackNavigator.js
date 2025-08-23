@@ -56,6 +56,13 @@ import AlignmentMarking from '../../screens/Survey/AlignmentMarking';
 import GroundLevelRecording from '../../screens/Survey/GroundLevelRecording';
 import LayoutCheck from '../../screens/Survey/LayoutCheck';
 import LevelChecking from '../../screens/Survey/LevelChecking';
+import MaterialStoreRequestForm from '../../screens/Store/MaterialStoreRequestForm';
+import MaterialApprovalForm from '../../screens/Store/MaterialApprovalForm';
+import MixDesignForm from '../../screens/MyWork/MixDesignForm';
+import SourceHome from '../../screens/ManageUsers/QualityWorks/SourceApproval/SourceHome';
+import SourceApprovalForm from '../../screens/ManageUsers/QualityWorks/SourceApproval/SourceApprovalForm';
+import MaterialProductionRequestForm from '../../screens/Production/MaterialRequestProduction';
+import MaterialApprovalProductionForm from '../../screens/Production/MaterialApprovalProduction';
 
 const Stack = createStackNavigator();
 
@@ -230,6 +237,16 @@ const MyQualityWorksStackNavigator = () => {
         component={MixDesignCategoryList}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name="SourceHome"
+        component={SourceHome}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="SourceApprovalForm"
+        component={SourceApprovalForm}
+        options={{headerShown: false}}
+      />
     </Stack.Navigator>
   );
 };
@@ -273,6 +290,16 @@ const StoreStackNavigator = () => {
         component={AddPurchase}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name="MaterialStoreRequestForm"
+        component={MaterialStoreRequestForm}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="MaterialApprovalForm"
+        component={MaterialApprovalForm}
+        options={{headerShown: false}}
+      />
     </Stack.Navigator>
   );
 };
@@ -284,7 +311,6 @@ const MixDesignStackNavigator = () => {
         component={MixDesignListing}
         options={{headerShown: false}}
       />
-
       <Stack.Screen
         name="MixDesign"
         component={MixDesign}
@@ -293,6 +319,11 @@ const MixDesignStackNavigator = () => {
       <Stack.Screen
         name="MixDesignCategoryList"
         component={MixDesignCategoryList}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="MixDesignForm"
+        component={MixDesignForm}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
@@ -309,6 +340,16 @@ const ProductionStackNavigator = () => {
       <Stack.Screen
         name="ProductionDetail"
         component={ProductionDetail}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="MaterialProductionRequestForm"
+        component={MaterialProductionRequestForm}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="MaterialApprovalProductionForm"
+        component={MaterialApprovalProductionForm}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

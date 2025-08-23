@@ -1,9 +1,7 @@
 import {
   View,
   Text,
-  Button,
   NativeEventEmitter,
-  Alert,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
@@ -30,15 +28,13 @@ const ScrapInventory = () => (
 export default function StoreHome() {
   const [activeTab, setActiveTab] = useState(STORE_OPTION.PURCHASING);
 
-  // Extended tab options including the new ones
   const tabOptions = [
     STORE_OPTION.PURCHASING,
     STORE_OPTION.INVENTORY,
-    'Request',
-    'Scrap Deposit',
-    'Scrap Inventory',
+    STORE_OPTION.REQUEST,
+    STORE_OPTION.SCRAP_DEPOSIT,
+    STORE_OPTION.SCRAP_INVENTORY,
   ];
-
   const switchTab = (tabName: any) => {
     setActiveTab(tabName);
   };
@@ -59,7 +55,7 @@ export default function StoreHome() {
       case STORE_OPTION.INVENTORY:
         return <Inventory />;
       case 'Request':
-        return <Request/>;
+        return <Request />;
       case 'Scrap Deposit':
         return <ScrapDeposit />;
       case 'Scrap Inventory':
@@ -99,7 +95,10 @@ export default function StoreHome() {
 }
 
 const styles = StyleSheet.create({
-  container: {backgroundColor: '#fff', flex: 1},
+  container: {
+    backgroundColor: '#fff',
+    flex: 1,
+  },
   tabBarContainer: {
     margin: 10,
     backgroundColor: '#D2C5FF',
@@ -119,7 +118,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginHorizontal: 2,
-    minWidth: 100, // Ensures consistent minimum width for tabs
+    minWidth: 100,
   },
   activeTab: {
     backgroundColor: '#F1F1FE',
@@ -135,7 +134,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   tabContent: {
-    height: '100%',
+    flex: 1, // This is the corrected style
   },
   tabContentContainer: {
     flex: 1,

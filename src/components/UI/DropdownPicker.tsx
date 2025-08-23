@@ -67,9 +67,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   label: {
-    fontSize: 12,
+    fontSize: 14,
     marginBottom: 5,
-    color: '#666',
+    color: '#333',
     fontWeight: '500',
   },
   pickerContainer: {
@@ -81,17 +81,17 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#2c2c2c',
     position: 'relative',
-    height: 40
-},
-picker: {
-  width: '100%',
-  color: '#2c2c2c',
-  fontSize: 12,
-},
-error: {
-  color: '#d9534f',
-  marginTop: 5,
-},
+    height: 42,
+  },
+  picker: {
+    width: '100%',
+    color: '#2c2c2c',
+    fontSize: 12,
+  },
+  error: {
+    color: '#d9534f',
+    marginTop: 5,
+  },
 });
 
 export default DropdownPicker;

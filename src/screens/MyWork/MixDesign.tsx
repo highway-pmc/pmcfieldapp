@@ -150,6 +150,8 @@ const MixDesign = ({navigation}: {navigation: any}) => {
     setSelectedMaterialType(selectedOption);
     setSelectedMaterialCategory('');
     setMaterialsData([]);
+    console.log('Selected Work Category:', selectedWorkCategory);
+    console.log('Selected Material Type:', selectedOption);
     handleFetchFormInfo(selectedWorkCategory, selectedOption);
   };
 

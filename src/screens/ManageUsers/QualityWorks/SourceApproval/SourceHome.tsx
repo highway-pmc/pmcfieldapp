@@ -39,6 +39,7 @@ const SourceHome = ({route, navigation}: SourceHomeProps) => {
 
   // This function will be passed to the child component
   const onTestWorkCategoryNextClick = (item: any) => {
+    console.log('Selected item:', item);
     navigation.navigate('AssignTestMaterialsPurchage', {
       // Adjust screen name
       testClassificationId,

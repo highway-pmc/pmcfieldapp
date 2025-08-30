@@ -63,6 +63,7 @@ import SourceHome from '../../screens/ManageUsers/QualityWorks/SourceApproval/So
 import SourceApprovalForm from '../../screens/ManageUsers/QualityWorks/SourceApproval/SourceApprovalForm';
 import MaterialProductionRequestForm from '../../screens/Production/MaterialRequestProduction';
 import MaterialApprovalProductionForm from '../../screens/Production/MaterialApprovalProduction';
+import SourceTestMeterial from '../../screens/ManageUsers/QualityWorks/SourceApproval/SourceTestMeterial';
 
 const Stack = createStackNavigator();
 
@@ -245,6 +246,11 @@ const MyQualityWorksStackNavigator = () => {
       <Stack.Screen
         name="SourceApprovalForm"
         component={SourceApprovalForm}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="SourceTestMeterial"
+        component={SourceTestMeterial}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

@@ -20,7 +20,10 @@ const SourceDetail = ({workCategories}: any) => {
   };
 
   const handleMaterialClick = (material: any) => {
-    console.log(`Selected Material: ${material.name}`);
+    navigation.navigate('SourceTestMeterial', {
+        meterialId: material._id,
+      });
+    console.log(`Selected Material:`, material);
   };
 
   if (selectedCategory) {

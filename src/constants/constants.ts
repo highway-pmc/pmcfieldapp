@@ -1390,3 +1390,13 @@ export const CEMENT_TYPE_LIST = [
     value: 'II ISOPC',
   },
 ];
+
+export const MATERIAL_TEST_STATUS = {
+  PENDING_APPROVAL: 'pending_approval',
+  PENDING_DISPATCH: 'pending_dispatch',
+  PENDING_ACCEPTANCE: 'pending_acceptance',
+  ACCEPTED: 'accepted',
+  REJECTED: 'rejected',
+  DELIVERED: 'delivered',
+  PENDING: 'pending',
+};

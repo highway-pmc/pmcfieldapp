@@ -118,6 +118,11 @@ export const getSourceApprovals = payload => ({
   payload: payload,
 });
 
+export const getSourceCategoriesWithCount = payload => ({
+  type: SOURCE_APPROVALS.GET_SOURCE_CATEGORIES_WITH_COUNT_REQUEST,
+  payload: payload,
+});
+
 export const getSourceApprovalsByStatus = payload => ({
   type: SOURCE_APPROVALS.GET_SOURCE_APPROVALS_BY_STATUS_REQUEST,
   payload: payload,

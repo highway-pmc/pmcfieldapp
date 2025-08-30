@@ -74,6 +74,7 @@ const sourceApprovalsState = {
   addedSourceDetail: null,
   updatedSourceDetail: null,
   deletedSourceDetail: null,
+  sourceCategoriesWithCount: null,
   error: null,
 };
 
@@ -1766,6 +1767,26 @@ const RFIsReducer = (state = myWorksState, action) => {
 };
 const SourceApprovalsReducer = (state = sourceApprovalsState, action) => {
   switch (action.type) {
+    case SOURCE_APPROVALS.GET_SOURCE_CATEGORIES_WITH_COUNT_REQUEST:
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case SOURCE_APPROVALS.GET_SOURCE_CATEGORIES_WITH_COUNT_SUCCESS:
+      return {
+        ...state,
+        sourceCategoriesWithCount: action.response,
+        error: null,
+        loading: false,
+      };
+    case SOURCE_APPROVALS.GET_SOURCE_CATEGORIES_WITH_COUNT_FAILURE:
+      return {
+        ...state,
+        sourceCategoriesWithCount: null,
+        error: action.error,
+        loading: false,
+      };
     case SOURCE_APPROVALS.GET_SOURCE_APPROVALS_REQUEST:
       return {
         ...state,
@@ -1949,6 +1970,7 @@ const SourceApprovalsReducer = (state = sourceApprovalsState, action) => {
     case SOURCE_APPROVALS.CLEAR_SOURCE_APPROVALS_REQUEST:
       return {
         ...state,
+        sourceCategoriesWithCount: null,
         sourceApprovals: null,
         sourceApprovalsByStatus: null,
         addedSourceApproval: null,

@@ -1,51 +1,62 @@
-import { useNavigation } from '@react-navigation/native';
-import React, { useEffect } from 'react'
-import { StyleSheet, ScrollView } from 'react-native'
-import { useDispatch, useSelector } from 'react-redux';
-import { getSourceApprovals } from '../../actions';
+import {useNavigation} from '@react-navigation/native';
+import React, {useEffect} from 'react';
+import {StyleSheet, ScrollView} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+import {getSourceApprovals} from '../../actions';
 import TestMeterialCard from '../../../Common/TestMeterialCard';
 
-const SourceTestMeterial = ({route, navigation}: {route: any; navigation: any}) => {
-    const { meterialId } = route.params; 
-    const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-    const {sourceApprovals, loading, error} = useSelector((state: any) => state.SourceApprovals);
-    const dispatch = useDispatch();
-    useEffect(() => {
-        getMeterialData(meterialId);
-        if (sourceApprovals) {
-            console.log('source meterial DATA: ', meterialId, loggedInUser.projectId, sourceApprovals)
-        }
-    },[]);
+const SourceTestMeterial = ({
+  route,
+  navigation,
+}: {
+  route: any;
+  navigation: any;
+}) => {
+  const {meterialId} = route.params;
+  const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
+  const {sourceApprovals, loading, error} = useSelector(
+    (state: any) => state.SourceApprovals,
+  );
+  const dispatch = useDispatch();
+  useEffect(() => {
+    getMeterialData(meterialId);
+    if (sourceApprovals) {
+      console.log(
+        'source meterial DATA: ',
+        meterialId,
+        loggedInUser.projectId,
+        sourceApprovals,
+      );
+    }
+  }, []);
 
-    const getMeterialData = (meterialId: any) => {
-        dispatch(
-          getSourceApprovals({
-            projectId: loggedInUser.projectId,
-            testMaterialId: meterialId || '',
-          }),
-        );
-      };
+  const getMeterialData = (meterialId: any) => {
+    dispatch(
+      getSourceApprovals({
+        projectId: loggedInUser.projectId,
+        testMaterialId: meterialId || '',
+      }),
+    );
+  };
 
-      const handleActionPress = (request: any) => {
-        // Implement your action logic here
-        console.log('Action pressed for request:', request);
-      };
-
+  const handleActionPress = (request: any) => {
+    // Implement your action logic here
+    console.log('Action pressed for request:', request);
+  };
 
   return (
     <ScrollView style={styles.listContainer}>
-        {sourceApprovals?.length > 0 &&
-              sourceApprovals.map((request: any) => (
-                <TestMeterialCard
-                  key={request._id}
-                  request={request}
-                  onActionPress={handleActionPress}
-                />
-              ))
-        }
+      {sourceApprovals?.length > 0 &&
+        sourceApprovals.map((request: any) => (
+          <TestMeterialCard
+            key={request._id}
+            request={request}
+            onActionPress={handleActionPress}
+          />
+        ))}
     </ScrollView>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -86,4 +97,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SourceTestMeterial
+export default SourceTestMeterial;

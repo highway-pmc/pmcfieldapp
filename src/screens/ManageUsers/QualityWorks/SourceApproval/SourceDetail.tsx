@@ -21,8 +21,8 @@ const SourceDetail = ({workCategories}: any) => {
 
   const handleMaterialClick = (material: any) => {
     navigation.navigate('SourceTestMeterial', {
-        meterialId: material._id,
-      });
+      meterialId: material._id,
+    });
     console.log(`Selected Material:`, material);
   };
 
@@ -33,14 +33,15 @@ const SourceDetail = ({workCategories}: any) => {
           <TouchableOpacity onPress={() => setSelectedCategory(null)}>
             <Text style={styles.backButton}>{'< Back'}</Text>
           </TouchableOpacity>
-          <Text style={styles.title}>{selectedCategory.name}</Text>
+          <Text style={styles.subTitle}>{selectedCategory.name}</Text>
         </View>
 
         <ScrollView style={styles.listContainer}>
-          {selectedCategory?.testMaterialsData?.map((material: any) => (
+          {selectedCategory?.materialsData?.map((material: any) => (
             <ListItem
               key={material._id}
-              item={material}
+              name={material.name}
+              number={material.sourceCount}
               onPress={() => handleMaterialClick(material)}
             />
           ))}
@@ -62,10 +63,11 @@ const SourceDetail = ({workCategories}: any) => {
       </View>
 
       <ScrollView style={styles.listContainer}>
-        {workCategories.map((category: any) => (
+        {workCategories?.map((category: any) => (
           <ListItem
             key={category._id}
-            item={category}
+            name={category.name}
+            number={category.sourceCount}
             onPress={() => {
               console.log('Selected category:', category);
               setSelectedCategory(category);
@@ -77,13 +79,13 @@ const SourceDetail = ({workCategories}: any) => {
   );
 };
 
-// Styles remain the same
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
   listContainer: {
-    padding: 16,
+    paddingVertical: 16,
+    paddingHorizontal: 8,
   },
   header: {
     flexDirection: 'row',
@@ -96,6 +98,10 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
+    fontWeight: '400',
+  },
+  subTitle: {
+    fontSize: 14,
     fontWeight: '400',
   },
   backButton: {

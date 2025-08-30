@@ -3,13 +3,12 @@ import {Text, StyleSheet, TouchableOpacity, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 type ItemProps = {
-  item: {
-    name: string;
-  };
+  name: string;
+  number?: number;
   onPress: () => void;
 };
 
-const ListItem = ({item, onPress}: ItemProps) => {
+const ListItem = ({name, number, onPress}: ItemProps) => {
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <LinearGradient
@@ -18,7 +17,12 @@ const ListItem = ({item, onPress}: ItemProps) => {
         end={{x: 1, y: 1}}
         style={styles.gradientContainer}>
         <View style={styles.leftBorder} />
-        <Text style={styles.itemText}>{item.name}</Text>
+        <View style={styles.contentContainer}>
+          <Text style={styles.itemText}>{name}</Text>
+          {number != null && number >= 0 && (
+            <Text style={styles.numberText}>{number}</Text>
+          )}
+        </View>
       </LinearGradient>
     </TouchableOpacity>
   );
@@ -44,10 +48,27 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     marginRight: 15,
   },
+  contentContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingRight: 15,
+  },
   itemText: {
     fontSize: 16,
     fontWeight: '400',
     color: '#27272A',
+  },
+  numberText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#5A7EF8',
+    backgroundColor: '#F0F3FF',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+    overflow: 'hidden',
   },
 });
 

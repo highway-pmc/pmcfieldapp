@@ -13,6 +13,8 @@ import {useIsFocused} from '@react-navigation/native';
 // 1. Import your custom DropdownPicker component
 import DropdownPicker from '../../../../components/UI/DropdownPicker';
 import {HeaderItems} from '../../../../constants/constants';
+import { getVendorForm } from '../../actions';
+import { useDispatch, useSelector } from 'react-redux';
 
 // --- MOCK DATA FOR THE FORM ---
 const sourceApprovalDataSource = {
@@ -49,14 +51,15 @@ const sourceProposedForOptions = [
   'SMA',
   'Micro Surfacing',
 ];
-const existingVendors = [
-  'Reliable Builders Ltd.',
-  'Infra Suppliers Co.',
-  'National Materials Inc.',
-];
+
 
 export default function SourceApprovalForm({navigation}: any) {
   const isFocused = useIsFocused();
+  const {
+        getVendorFormData,
+        loading,
+        error,
+      } = useSelector((state: any) => state.VendorForm);
   useEffect(() => {
     if (isFocused) {
       const eventEmitter = new NativeEventEmitter();
@@ -75,6 +78,7 @@ export default function SourceApprovalForm({navigation}: any) {
   const [unitRate, setUnitRate] = useState<string>('');
   const [approxQty, setApproxQty] = useState<string>('');
   const [remarks, setRemarks] = useState<string>('');
+  const dispatch = useDispatch();
 
   // Dropdown options state
   const [materialOptions, setMaterialOptions] = useState<string[]>([]);
@@ -106,7 +110,11 @@ export default function SourceApprovalForm({navigation}: any) {
       sourceApprovalDataSource[workCategory]?.materials[materialName]
         ?.categories[materialCategory];
     setUnit(categoryData?.unit || '');
-  }, [materialCategory, materialName, workCategory]);
+    dispatch(getVendorForm());
+    if (getVendorFormData) {
+      return
+    }
+  }, [materialCategory, materialName, workCategory, getVendorFormData]);
 
   // --- HANDLER FUNCTIONS ---
   const handleUpload = (fileName: string) =>
@@ -229,12 +237,12 @@ export default function SourceApprovalForm({navigation}: any) {
           label="Select an existing vendor*"
           items={[
             {label: 'Select an existing vendor', value: ''},
-            ...existingVendors.map(v => ({label: v, value: v})),
+            ...getVendorFormData.map((v: any) => ({label: v.name, value: v.name})),
           ]}
           value={selectedVendor}
           onChange={setSelectedVendor}
         />
-        <Text style={styles.orText}>OR</Text>
+        {/* <Text style={styles.orText}>OR</Text>
         <View style={styles.formGroup}>
           <Text style={styles.label}>Enter New Vendor Name</Text>
           <TextInput
@@ -243,7 +251,7 @@ export default function SourceApprovalForm({navigation}: any) {
             onChangeText={setNewVendor}
             placeholder="Enter if vendor is new"
           />
-        </View>
+        </View> */}
 
         <View style={styles.formGroup}>
           <Text style={styles.label}>Unit*</Text>

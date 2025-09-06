@@ -3,6 +3,7 @@ import {reducer as formReducer} from 'redux-form';
 import {
   PROCUREMENTS,
   SOURCE_APPROVALS,
+  VENDOR_FORM,
 } from '../screens/ManageUsers/QualityWorks/constants';
 
 const initialState = {
@@ -75,6 +76,17 @@ const sourceApprovalsState = {
   updatedSourceDetail: null,
   deletedSourceDetail: null,
   sourceCategoriesWithCount: null,
+  sourceByStatusData: null,
+  putSourceApprovalData: null,
+  error: null,
+};
+
+const vendorFormState = {
+  loading: false,
+  postVendorFormData: null,
+  getVendorFormData: null,
+  putVendorFormData: null,
+  deleteVendorFormData: null,
   error: null,
 };
 
@@ -1767,6 +1779,46 @@ const RFIsReducer = (state = myWorksState, action) => {
 };
 const SourceApprovalsReducer = (state = sourceApprovalsState, action) => {
   switch (action.type) {
+    case SOURCE_APPROVALS.PUT_SOURCE_APPROVAL_REQUEST:
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case SOURCE_APPROVALS.PUT_SOURCE_APPROVAL_SUCCESS:
+      return {
+        ...state,
+        putSourceApprovalData: action.response,
+        error: null,
+        loading: false,
+      };
+    case SOURCE_APPROVALS.PUT_SOURCE_APPROVAL_FAILURE:
+      return {
+        ...state,
+        putSourceApprovalData: null,
+        error: action.error,
+        loading: false,
+      };
+    case SOURCE_APPROVALS.GET_SOURCE_BY_STATUS_REQUEST:
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case SOURCE_APPROVALS.GET_SOURCE_BY_STATUS_SUCCESS:
+      return {
+        ...state,
+        sourceByStatusData: action.response,
+        error: null,
+        loading: false,
+      };
+    case SOURCE_APPROVALS.GET_SOURCE_BY_STATUS_FAILURE:
+      return {
+        ...state,
+        sourceByStatusData: null,
+        error: action.error,
+        loading: false,
+      };
     case SOURCE_APPROVALS.GET_SOURCE_CATEGORIES_WITH_COUNT_REQUEST:
       return {
         ...state,
@@ -1970,6 +2022,8 @@ const SourceApprovalsReducer = (state = sourceApprovalsState, action) => {
     case SOURCE_APPROVALS.CLEAR_SOURCE_APPROVALS_REQUEST:
       return {
         ...state,
+        putSourceApprovalData: null,
+        sourceByStatusData: null,
         sourceCategoriesWithCount: null,
         sourceApprovals: null,
         sourceApprovalsByStatus: null,
@@ -2339,6 +2393,104 @@ const ProcurementsReducer = (state = procurementsState, action) => {
   }
 };
 
+const VendorFormReducer = (state = vendorFormState, action) => {
+  switch (action.type) {
+    case VENDOR_FORM.DELETE_VENDOR_FORM_REQUEST:
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case VENDOR_FORM.DELETE_VENDOR_FORM_SUCCESS:
+      return {
+        ...state,
+        deleteVendorFormData: action.response,
+        error: null,
+        loading: false,
+      };
+    case VENDOR_FORM.DELETE_VENDOR_FORM_FAILURE:
+      return {
+        ...state,
+        deleteVendorFormData: null,
+        error: action.error,
+        loading: false,
+      };
+    case VENDOR_FORM.PUT_VENDOR_FORM_REQUEST:
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case VENDOR_FORM.PUT_VENDOR_FORM_SUCCESS:
+      return {
+        ...state,
+        putVendorFormData: action.response,
+        error: null,
+        loading: false,
+      };
+    case VENDOR_FORM.PUT_VENDOR_FORM_FAILURE:
+      return {
+        ...state,
+        putVendorFormData: null,
+        error: action.error,
+        loading: false,
+      };
+    case VENDOR_FORM.GET_VENDOR_FORM_REQUEST:
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case VENDOR_FORM.GET_VENDOR_FORM_SUCCESS:
+      return {
+        ...state,
+        getVendorFormData: action.response,
+        error: null,
+        loading: false,
+      };
+    case VENDOR_FORM.GET_VENDOR_FORM_FAILURE:
+      return {
+        ...state,
+        getVendorFormData: null,
+        error: action.error,
+        loading: false,
+      };
+    case VENDOR_FORM.POST_VENDOR_FORM_REQUEST:
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case VENDOR_FORM.POST_VENDOR_FORM_SUCCESS:
+      return {
+        ...state,
+        postVendorFormData: action.response,
+        error: null,
+        loading: false,
+      };
+    case VENDOR_FORM.POST_VENDOR_FORM_FAILURE:
+      return {
+        ...state,
+        postVendorFormData: null,
+        error: action.error,
+        loading: false,
+      };
+    case VENDOR_FORM.CLEAR_VENDOR_FORM_REQUEST:
+      return {
+        ...state,
+        postVendorFormData: null,
+        getVendorFormData: null,
+        putVendorFormData: null,
+        deleteVendorFormData: null,
+        error: action.error,
+        error: null,
+        loading: true,
+      };
+    default:
+      return state;
+    }
+  };
+
 export const combinedReducers = combineReducers({
   form: formReducer,
   Auth: AuthReducer,
@@ -2355,4 +2507,5 @@ export const combinedReducers = combineReducers({
   SourceApprovals: SourceApprovalsReducer,
   Procurements: ProcurementsReducer,
   EquipmentsCalibration: EquimentCalibrationReducer,
+  VendorForm: VendorFormReducer,
 });

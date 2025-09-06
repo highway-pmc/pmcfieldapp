@@ -30,8 +30,13 @@ import {
   updateSourceApprovalApi,
   updateSourceDetailApi,
   getSourceCategoriesWithCountApi,
+  putSourceApprovalApi,
+  postVendorFormApi,
+  getVendorFormApi,
+  putVendorFormApi,
+  deleteVendorFormApi,
 } from '../../../services/source-procurements/source-procurements.service';
-import {PROCUREMENTS, SOURCE_APPROVALS} from './constants';
+import {PROCUREMENTS, SOURCE_APPROVALS, VENDOR_FORM} from './constants';
 function* getUserCategories() {
   try {
     const response = yield getUserCategory();
@@ -251,12 +256,12 @@ function* getSourceApprovalsByStatus({payload}) {
     );
     console.log('===response===', response);
     yield put({
-      type: SOURCE_APPROVALS.GET_SOURCE_APPROVALS_BY_STATUS_SUCCESS,
+      type: SOURCE_APPROVALS.GET_SOURCE_BY_STATUS_SUCCESS,
       response,
     });
   } catch (error) {
     yield put({
-      type: SOURCE_APPROVALS.GET_SOURCE_APPROVALS_BY_STATUS_FAILURE,
+      type: SOURCE_APPROVALS.GET_SOURCE_BY_STATUS_FAILURE,
       error: error.message,
     });
   }
@@ -274,6 +279,23 @@ function* addSourceApproval({payload}) {
   } catch (error) {
     yield put({
       type: SOURCE_APPROVALS.ADD_SOURCE_APPROVAL_FAILURE,
+      error: error.message,
+    });
+  }
+}
+
+function* putSourceApproval({payload}) {
+  try {
+    const response = yield putSourceApprovalApi(
+      payload.projectId,
+      payload.testMaterialId,
+      payload.id,
+      payload.body,
+    );
+    yield put({type: SOURCE_APPROVALS.PUT_SOURCE_APPROVAL_SUCCESS, response});
+  } catch (error) {
+    yield put({
+      type: SOURCE_APPROVALS.PUT_SOURCE_APPROVAL_FAILURE,
       error: error.message,
     });
   }
@@ -468,7 +490,59 @@ function* deleteProcurement({payload}) {
   }
 }
 
+function* postVendorForm({payload}) {
+  try {
+    const response = yield postVendorFormApi(payload.body);
+    yield put({type: VENDOR_FORM.POST_VENDOR_FORM_SUCCESS, response});
+  } catch (error) {
+    yield put({
+      type: VENDOR_FORM.POST_VENDOR_FORM_FAILURE,
+      error: error.message,
+    });
+  }
+}
+
+function* getVendorForm() {
+  try {
+    const response = yield getVendorFormApi();
+    yield put({type: VENDOR_FORM.GET_VENDOR_FORM_SUCCESS, response});
+  } catch (error) {
+    yield put({
+      type: VENDOR_FORM.GET_VENDOR_FORM_FAILURE,
+      error: error.message,
+    });
+  }
+}
+
+function* putVendorForm({payload}) {
+  try {
+    const response = yield putVendorFormApi(payload.id, payload.body);
+    yield put({type: VENDOR_FORM.PUT_VENDOR_FORM_SUCCESS, response});
+  } catch (error) {
+    yield put({
+      type: VENDOR_FORM.PUT_VENDOR_FORM_FAILURE,
+      error: error.message,
+    });
+  }
+}
+
+function* deleteVendorForm({payload}) {
+  try {
+    const response = yield deleteVendorFormApi(payload.id);
+    yield put({type: VENDOR_FORM.DELETE_VENDOR_FORM_SUCCESS, response});
+  } catch (error) {
+    yield put({
+      type: VENDOR_FORM.DELETE_VENDOR_FORM_FAILURE,
+      error: error.message,
+    });
+  }
+}
+
 export default function* testAssignmentScreenSaga() {
+  yield takeLatest(VENDOR_FORM.POST_VENDOR_FORM_REQUEST, postVendorForm);
+  yield takeLatest(VENDOR_FORM.GET_VENDOR_FORM_REQUEST, getVendorForm);
+  yield takeLatest(VENDOR_FORM.PUT_VENDOR_FORM_REQUEST, putVendorForm);
+  yield takeLatest(VENDOR_FORM.DELETE_VENDOR_FORM_REQUEST, deleteVendorForm);
   yield takeLatest('GET_USER_CATEGORY_REQUEST', getUserCategories);
   yield takeLatest('GET_USER_ASSIGNMENT_REQUEST', getUsers);
   yield takeLatest('GET_TEST_CLASSIFICATION_REQUEST', getTestClassifications);
@@ -509,12 +583,16 @@ export default function* testAssignmentScreenSaga() {
     getSourceCategoriesWithCount,
   );
   yield takeLatest(
-    SOURCE_APPROVALS.GET_SOURCE_APPROVALS_BY_STATUS_REQUEST,
+    SOURCE_APPROVALS.GET_SOURCE_BY_STATUS_REQUEST,
     getSourceApprovalsByStatus,
   );
   yield takeLatest(
     SOURCE_APPROVALS.ADD_SOURCE_APPROVAL_REQUEST,
     addSourceApproval,
+  );
+  yield takeLatest(
+    SOURCE_APPROVALS.PUT_SOURCE_APPROVAL_REQUEST,
+    putSourceApproval,
   );
   yield takeLatest(
     SOURCE_APPROVALS.PATCH_SOURCE_APPROVAL_REQUEST,

@@ -1,4 +1,4 @@
-import {PROCUREMENTS, SOURCE_APPROVALS} from './QualityWorks/constants';
+import {PROCUREMENTS, SOURCE_APPROVALS, VENDOR_FORM} from './QualityWorks/constants';
 
 export const getUserCategories = () => ({
   type: 'GET_USER_CATEGORY_REQUEST',
@@ -112,6 +112,26 @@ export const clearNextLevel = () => ({
   type: 'CLEAR_NEXT_LEVEL',
 });
 
+/*VENDOR FORM*/ 
+export const postVendorForm = payload => ({
+  type: VENDOR_FORM.POST_VENDOR_FORM_REQUEST,
+  payload: payload,
+});
+
+export const putVendorForm = payload => ({
+  type: VENDOR_FORM.PUT_VENDOR_FORM_REQUEST,
+  payload: payload,
+});
+
+export const deleteVendorForm = payload => ({
+  type: VENDOR_FORM.DELETE_VENDOR_FORM_REQUEST,
+  payload: payload,
+});
+
+export const getVendorForm = () => ({
+  type: VENDOR_FORM.GET_VENDOR_FORM_REQUEST,
+});
+
 /* Source Approvals */
 export const getSourceApprovals = payload => ({
   type: SOURCE_APPROVALS.GET_SOURCE_APPROVALS_REQUEST,
@@ -124,12 +144,17 @@ export const getSourceCategoriesWithCount = payload => ({
 });
 
 export const getSourceApprovalsByStatus = payload => ({
-  type: SOURCE_APPROVALS.GET_SOURCE_APPROVALS_BY_STATUS_REQUEST,
+  type: SOURCE_APPROVALS.GET_SOURCE_BY_STATUS_REQUEST,
   payload: payload,
 });
 
 export const addSourceApproval = payload => ({
   type: SOURCE_APPROVALS.ADD_SOURCE_APPROVAL_REQUEST,
+  payload: payload,
+});
+
+export const putSourceApproval = payload => ({
+  type: SOURCE_APPROVALS.PUT_SOURCE_APPROVAL_REQUEST,
   payload: payload,
 });
 

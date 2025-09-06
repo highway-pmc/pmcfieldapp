@@ -1,5 +1,50 @@
 import apiService from '../api.service';
 
+/*VENDOR FORM*/
+export const postVendorFormApi = async (body) => {
+  return apiService.postRequest(`v1/auth/vendors/addVender`, body)
+    .then(response => {
+      return response;
+    })
+    .catch(err => {
+      const errorMessge = err?.message || 'Unable to add Vendor.';
+      throw new Error(errorMessge);
+    });
+};
+
+export const putVendorFormApi = async (id, body) => {
+  return apiService.putRequest(`v1/auth/vendors/updateVendor/${id}`, body)
+    .then(response => {
+      return response;
+    })
+    .catch(err => {
+      const errorMessge = err?.message || 'Unable to add Vendor.';
+      throw new Error(errorMessge);
+    });
+};
+
+export const deleteVendorFormApi = async (id) => {
+  return apiService.deleteRequest(`v1/auth/vendors/deleteVendor/${id}`)
+    .then(response => {
+      return response;
+    })
+    .catch(err => {
+      const errorMessge = err?.message || 'Unable to add Vendor.';
+      throw new Error(errorMessge);
+    });
+};
+
+export const getVendorFormApi = async () => {
+  return apiService.getRequest(`v1/auth/vendors`)
+    .then(response => {
+      return response;
+    })
+    .catch(err => {
+      const errorMessge = err?.message || 'Unable to add Vendor.';
+      throw new Error(errorMessge);
+    });
+};
+
 /* Source Approvals APIs */
 export const getSourceApprovalsApi = async (projectId, testMaterialId) => {
   return apiService
@@ -33,13 +78,9 @@ export const getSourceApprovalsByStatusApi = async (
   testMaterialId,
   status,
 ) => {
-  console.log(
-    '=========',
-    `v1/auth/projects/${projectId}/test-material/${testMaterialId}/source-approvals/status/${status}`,
-  );
   return apiService
     .getRequest(
-      `v1/auth/projects/${projectId}/test-material/${testMaterialId}/source-approvals/status/${status}`,
+      `v1/auth/projects/${projectId}/test-materials/${testMaterialId}/source-approvals/status/${status}`,
     )
     .then(response => {
       return response;
@@ -68,6 +109,27 @@ export const addSourceApprovalApi = async (
     })
     .catch(err => {
       const errorMessge = err?.message || 'Unable to add source.';
+      throw new Error(errorMessge);
+    });
+};
+
+
+export const putSourceApprovalApi = async (
+  projectId,
+  testMaterialId,
+  id,
+  body,
+) => {
+  return apiService
+    .putRequest(
+      `v1/auth/projects/${projectId}/test-materials/${testMaterialId}/source-approvals/${id}`,
+      body,
+    )
+    .then(response => {
+      return response;
+    })
+    .catch(err => {
+      const errorMessge = err.message || 'Unable to update source.';
       throw new Error(errorMessge);
     });
 };
@@ -121,7 +183,7 @@ export const deleteSourceApprovalApi = async (
 ) => {
   return apiService
     .deleteRequest(
-      `v1/auth/projects/${projectId}/test-material/${testMaterialId}/source-approvals/${id}`,
+      `v1/auth/projects/${projectId}/test-materials/${testMaterialId}/source-approvals/${id}`,
     )
     .then(response => {
       return response;

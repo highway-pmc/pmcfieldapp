@@ -1,22 +1,34 @@
-import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import React, { useState } from 'react';
+import {View, Text, StyleSheet, TouchableOpacity, Modal} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {MATERIAL_TEST_STATUS} from '../../constants/constants';
+import { formatDate } from './formatDate';
 
 interface RequestCardProps {
   request: {
+    id?: string;
+    status: string;
+    name?: string;
+    location?: string;
+    vendorName?: string;
+    engineerApproval?: boolean;
+    createdAt?: string;
     [key: string]: any; // make request flexible
   };
-  onActionPress: (action: string, status: string) => void;
+  onView?: (requestData: any) => void;
+  onEdit?: (requestData: any) => void;
+  onDelete?: (requestData: any) => void;
 }
 
-const TestMeterialCard = ({request, onActionPress}: RequestCardProps) => {
+const TestMaterialCard = ({request, onView, onEdit, onDelete}: RequestCardProps) => {
+  const [menuVisible, setMenuVisible] = useState(false);
+
   const getCardStyle = (status: string) => {
     switch (status) {
       case MATERIAL_TEST_STATUS.PENDING_ACCEPTANCE:
         return styles.pendingAcceptanceCard;
       case MATERIAL_TEST_STATUS.PENDING:
-        return styles.pendingAcceptanceCard;
+        return styles.pendingCard;
       case MATERIAL_TEST_STATUS.PENDING_DISPATCH:
         return styles.pendingDispatchCard;
       case MATERIAL_TEST_STATUS.REJECTED:
@@ -31,7 +43,7 @@ const TestMeterialCard = ({request, onActionPress}: RequestCardProps) => {
       case MATERIAL_TEST_STATUS.PENDING_ACCEPTANCE:
         return styles.pendingAcceptanceStatus;
       case MATERIAL_TEST_STATUS.PENDING:
-        return styles.pendingAcceptanceStatus;
+        return styles.pendingStatus;
       case MATERIAL_TEST_STATUS.PENDING_DISPATCH:
         return styles.pendingDispatchStatus;
       case MATERIAL_TEST_STATUS.REJECTED:
@@ -55,49 +67,18 @@ const TestMeterialCard = ({request, onActionPress}: RequestCardProps) => {
     }
   };
 
-  const getActionButtons = (status: string) => {
-    switch (status) {
-      case MATERIAL_TEST_STATUS.PENDING_ACCEPTANCE:
-        return (
-          <View style={styles.actionButtonsContainer}>
-            <TouchableOpacity
-              onPress={() => onActionPress('accept', status)}
-              style={styles.acceptButton}>
-              <Text style={styles.acceptButtonText}>Accept</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.rejectButton}
-              onPress={() => onActionPress('reject', status)}>
-              <Text style={styles.rejectButtonText}>Reject</Text>
-            </TouchableOpacity>
-          </View>
-        );
-      case MATERIAL_TEST_STATUS.PENDING:
-        return (
-          <TouchableOpacity
-            style={styles.approvalButton}
-            onPress={() => onActionPress('request_approval', status)}>
-            <Text style={styles.approvalButtonText}>Request for Approval</Text>
-          </TouchableOpacity>
-        );
-      case MATERIAL_TEST_STATUS.PENDING_DISPATCH:
-        return (
-          <TouchableOpacity
-            style={styles.dispatchButton}
-            onPress={() => onActionPress('dispatch_material', status)}>
-            <Text style={styles.dispatchButtonText}>Dispatch Material</Text>
-          </TouchableOpacity>
-        );
-      case MATERIAL_TEST_STATUS.REJECTED:
-        return (
-          <TouchableOpacity
-            style={styles.newRequestButton}
-            onPress={() => onActionPress('create_new', status)}>
-            <Text style={styles.newRequestButtonText}>Create New Request</Text>
-          </TouchableOpacity>
-        );
-      default:
-        return null;
+  const handleMenuAction = (action: string) => {
+    setMenuVisible(false);
+    switch (action) {
+      case 'view':
+        onView?.(request);
+        break;
+      case 'edit':
+        onEdit?.(request);
+        break;
+      case 'delete':
+        onDelete?.(request);
+        break;
     }
   };
 
@@ -109,48 +90,105 @@ const TestMeterialCard = ({request, onActionPress}: RequestCardProps) => {
   };
 
   return (
-    <LinearGradient
-      colors={['#FFFFFF', '#E0E7FF']}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 1}}
-      style={[styles.requestCard, getCardStyle(request.status)]}>
-      {/* Left border */}
-      <View
-        style={[
-          styles.leftBorder,
-          {backgroundColor: getLeftBorderColor(request.status)},
-        ]}
-      />
+    <>
+      <LinearGradient
+        colors={['#FFFFFF', '#E0E7FF']}
+        start={{x: 0, y: 0}}
+        end={{x: 1, y: 1}}
+        style={[styles.requestCard, getCardStyle(request.status)]}>
+        {/* Left border */}
+        <View
+          style={[
+            styles.leftBorder,
+            {backgroundColor: getLeftBorderColor(request.status)},
+          ]}
+        />
 
-      <View>
-        {/* Card Content (Only mapped fields) */}
-        <View style={styles.cardContent}>
-          {Object.entries(fieldMapping).map(([key, label]) => {
-            console.log(key, getCardStyle(request.status))
-            //if (!request[key]) return null;
-            return (
-              <Text key={key} style={styles.workCategory}>
-                {label}: 
-                <Text style={styles.categoryValue}> {label === 'Engineer Approval' ? (request[key] === false ? 'No' : 'Yes') : `${String(request[key])}`} </Text>
+        {/* Kebab Menu Button */}
+        <TouchableOpacity 
+          style={styles.kebabButton}
+          onPress={() => setMenuVisible(true)}
+          hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
+        >
+          <Text style={styles.kebabDots}>⋮</Text>
+        </TouchableOpacity>
+
+          <View style={styles.cardContentWrapper}>
+            {/* Card Content (Only mapped fields) */}
+            <View style={styles.cardContent}>
+              {Object.entries(fieldMapping).map(([key, label]) => {
+                if (request[key] === undefined || request[key] === null) return null;
+                return (
+                  <Text key={key} style={styles.workCategory}>
+                    {label}: 
+                    <Text style={styles.categoryValue}>
+                      {' '}
+                      {label === 'Engineer Approval' 
+                        ? (request[key] === false ? 'No' : 'Yes') 
+                        : String(request[key])
+                      }
+                    </Text>
+                  </Text>
+                );
+              })}
+            </View>
+
+            <View style={styles.divider} />
+
+            {/* Footer with Actions */}
+            <View style={styles.cardFooter}>
+              {request.createdAt && (
+                <Text style={styles.workCategory}>
+                  Created At: 
+                  <Text style={styles.categoryValue}> {formatDate(request.createdAt)}</Text>
+                </Text>
+              )}
+              <Text style={styles.workCategory}>
+                <Text style={[styles.statusText, getStatusStyle(request.status)]}>
+                  {request.status}
+                </Text>
               </Text>
-            );
-          })}
-        </View>
+            </View>
+          </View>
+      </LinearGradient>
 
-        <View style={styles.divider} />
-
-        {/* Footer with Actions */}
-        <View style={styles.cardFooter}>
-            <Text style={styles.workCategory}>
-                Created At: 
-                <Text style={styles.categoryValue}> {request.createdAt} </Text>
-            </Text>
-          <Text style={[styles.statusText, getStatusStyle(request.status)]}>
-            {request.status}
-          </Text>
-        </View>
-      </View>
-    </LinearGradient>
+      {/* Kebab Menu Modal */}
+      <Modal
+        visible={menuVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setMenuVisible(false)}
+      >
+        <TouchableOpacity 
+          style={styles.menuOverlay}
+          activeOpacity={1}
+          onPress={() => setMenuVisible(false)}
+        >
+          <View style={styles.menuContainer}>
+            <TouchableOpacity 
+              style={styles.menuItem}
+              onPress={() => handleMenuAction('view')}
+            >
+              <Text style={styles.menuItemText}>View</Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity 
+              style={styles.menuItem}
+              onPress={() => handleMenuAction('edit')}
+            >
+              <Text style={styles.menuItemText}>Edit</Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity 
+              style={styles.menuItem}
+              onPress={() => handleMenuAction('delete')}
+            >
+              <Text style={[styles.menuItemText, styles.deleteText]}>Delete</Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      </Modal>
+    </>
   );
 };
 
@@ -160,11 +198,12 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     borderWidth: 1,
     overflow: 'hidden',
+    position: 'relative',
   },
   pendingAcceptanceCard: {
     borderColor: '#FF9800',
   },
-  pendingApprovalCard: {
+  pendingCard: {
     borderColor: '#FF9800',
   },
   pendingDispatchCard: {
@@ -177,8 +216,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5F5F5',
     borderColor: '#CCCCCC',
   },
+  cardContentWrapper: {
+    marginLeft: 8, // Add margin to account for left border
+  },
   cardContent: {
     padding: 15,
+    paddingRight: 45, // Add padding to avoid kebab menu overlap
   },
   materialType: {
     fontSize: 14,
@@ -229,11 +272,12 @@ const styles = StyleSheet.create({
   statusText: {
     fontSize: 13,
     fontWeight: '500',
+    textTransform: 'capitalize',
   },
   pendingAcceptanceStatus: {
     color: '#FF8C00',
   },
-  pendingApprovalStatus: {
+  pendingStatus: {
     color: '#FF8C00',
   },
   pendingDispatchStatus: {
@@ -247,7 +291,9 @@ const styles = StyleSheet.create({
   },
   actionButtonsContainer: {
     flexDirection: 'row',
-    gap: 5,
+    gap: 10,
+    paddingHorizontal: 15,
+    paddingBottom: 15,
   },
   acceptButton: {
     borderColor: '#28A745',
@@ -255,6 +301,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 8,
     borderRadius: 20,
+    flex: 1,
+    alignItems: 'center',
   },
   acceptButtonText: {
     color: '#28A745',
@@ -267,6 +315,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 8,
     borderRadius: 20,
+    flex: 1,
+    alignItems: 'center',
   },
   rejectButtonText: {
     color: '#DC3545',
@@ -279,6 +329,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 8,
     borderRadius: 20,
+    marginHorizontal: 15,
+    marginBottom: 15,
+    alignItems: 'center',
   },
   approvalButtonText: {
     color: '#28A745',
@@ -291,6 +344,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 8,
     borderRadius: 20,
+    marginHorizontal: 15,
+    marginBottom: 15,
+    alignItems: 'center',
   },
   dispatchButtonText: {
     color: '#28A745',
@@ -303,6 +359,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 8,
     borderRadius: 20,
+    marginHorizontal: 15,
+    marginBottom: 15,
+    alignItems: 'center',
   },
   newRequestButtonText: {
     color: '#28A745',
@@ -310,14 +369,60 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   leftBorder: {
-    paddingVertical: 3,
     position: 'absolute',
     left: 0,
     top: '15%',
     bottom: '15%',
-    zIndex: 100,
-    width: 2,
+    width: 4,
+    borderTopRightRadius: 2,
+    borderBottomRightRadius: 2,
+  },
+  // Kebab menu styles
+  kebabButton: {
+    position: 'absolute',
+    top: 12,
+    right: 12,
+    padding: 8,
+    zIndex: 1,
+  },
+  kebabDots: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#666',
+    lineHeight: 18,
+  },
+  menuOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  menuContainer: {
+    backgroundColor: 'white',
+    borderRadius: 8,
+    padding: 4,
+    minWidth: 120,
+    elevation: 8,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  menuItem: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 4,
+  },
+  menuItemText: {
+    fontSize: 16,
+    color: '#333',
+  },
+  deleteText: {
+    color: '#FF4444',
   },
 });
 
-export default TestMeterialCard;
+export default TestMaterialCard;

@@ -18,6 +18,7 @@ import {
   StoreStackNavigator,
   ProductionStackNavigator,
   SurveyStackNaigator,
+  AddVendorStackNavigator,
 } from './StackNavigator';
 import ForgotPasswordStep3 from '../../screens/ForgotPassword/Step3';
 import {useSelector} from 'react-redux';
@@ -44,7 +45,7 @@ const DrawerNavigator = () => {
       screenOptions={{drawerStyle: {width: '100%'}}}
       drawerContent={props => <CustomDrawer {...props} />}>
       <Drawer.Screen
-        name="Home"
+        name="Homedsada"
         component={Main}
         options={{
           headerShown: false,
@@ -67,6 +68,13 @@ const DrawerNavigator = () => {
       <Drawer.Screen
         name="SurveyHome"
         component={SurveyStackNaigator}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Drawer.Screen
+        name="VendorFormLists"
+        component={AddVendorStackNavigator}
         options={{
           headerShown: false,
         }}

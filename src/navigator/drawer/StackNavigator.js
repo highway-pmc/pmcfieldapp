@@ -64,6 +64,9 @@ import SourceApprovalForm from '../../screens/ManageUsers/QualityWorks/SourceApp
 import MaterialProductionRequestForm from '../../screens/Production/MaterialRequestProduction';
 import MaterialApprovalProductionForm from '../../screens/Production/MaterialApprovalProduction';
 import SourceTestMeterial from '../../screens/ManageUsers/QualityWorks/SourceApproval/SourceTestMeterial';
+import SourceApprovalEditForm from '../../screens/ManageUsers/QualityWorks/SourceApproval/SourceApprovalEditForm';
+import AddVendorForm from '../../screens/AddVendor/AddVendorForm';
+import VendorFormLists from '../../screens/AddVendor/VendorFormLists';
 
 const Stack = createStackNavigator();
 
@@ -253,9 +256,31 @@ const MyQualityWorksStackNavigator = () => {
         component={SourceTestMeterial}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name="SourceApprovalEditForm"
+        component={SourceApprovalEditForm}
+        options={{headerShown: false}}
+      />
     </Stack.Navigator>
   );
 };
+
+const AddVendorStackNavigator = () => {
+  return (
+  <Stack.Navigator screenOptions={screenOptionStyle}>
+    <Stack.Screen
+        name="VendorFormLists"
+        component={VendorFormLists}
+        options={{headerShown: false}}
+      />
+    <Stack.Screen
+        name="AddVendorForm"
+        component={AddVendorForm}
+        options={{headerShown: false}}
+      />
+  </Stack.Navigator>
+  );
+}
 
 const EquipmentStackNavigator = () => {
   return (
@@ -539,4 +564,5 @@ export {
   ChangePasswordStackNavigator,
   EquipmentStackNavigator,
   StoreStackNavigator,
+  AddVendorStackNavigator,
 };

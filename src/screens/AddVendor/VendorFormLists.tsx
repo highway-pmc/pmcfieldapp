@@ -185,9 +185,9 @@ const VendorFormLists = ({route, navigation}: {route: any; navigation: any;}) =>
           onPress={() => setMenuVisible(false)}
         >
           <View style={styles.menuContainer}>
-            <TouchableOpacity style={styles.menuItem} onPress={() => handleMenuAction("view")}>
+            {/* <TouchableOpacity style={styles.menuItem} onPress={() => handleMenuAction("view")}>
               <Text style={styles.menuItemText}>View</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
             <TouchableOpacity style={styles.menuItem} onPress={() => handleMenuAction("edit")}>
               <Text style={styles.menuItemText}>Edit</Text>

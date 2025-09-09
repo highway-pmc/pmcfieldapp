@@ -15,9 +15,7 @@ import {HeaderItems} from '../../../../constants/constants';
 import {getSourceApprovals, getVendorForm} from '../../actions';
 import {useDispatch, useSelector} from 'react-redux';
 
-// --- REMOVED MOCK DATA ---
-// const sourceApprovalDataSource = { ... }; // This has been removed
-
+// Static options for the 'Source Proposed For' dropdown
 const sourceProposedForOptions = [
   'Concrete',
   'DBM',
@@ -38,45 +36,39 @@ export default function SourceApprovalForm({
   route: any;
   navigation: any;
 }) {
-  // 1. Get the dynamic data from route params
-  const {testWorkCategoriesData} = route.params.workCategories; // Use default empty array for safety
+  const testWorkCategoriesData = route.params.workCategories || [];
   const isFocused = useIsFocused();
-  const {getVendorFormData, loading, error} = useSelector(
-    (state: any) => state.VendorForm,
-  );
+  const {getVendorFormData} = useSelector((state: any) => state.VendorForm);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (isFocused) {
       const eventEmitter = new NativeEventEmitter();
       eventEmitter.emit('headerEvent', HeaderItems.sourceApprovalForm);
+      // Fetch initial data needed for the form
+      dispatch(getVendorForm());
+      dispatch(getSourceApprovals());
     }
-  }, [isFocused]);
+  }, [isFocused, dispatch]);
 
-  // 2. Process the dynamic data into a usable format with useMemo
+  // 2. PROCESS DYNAMIC DATA FOR DROPDOWNS
+  // `useMemo` is used to transform the API data into a format that's easy for the dropdowns to use.
+  // This calculation only re-runs if the `testWorkCategoriesData` prop changes.
   const processedData = useMemo(() => {
     if (!testWorkCategoriesData || testWorkCategoriesData.length === 0) {
       return {};
     }
     const formattedData = {};
-    testWorkCategoriesData.forEach(workCat => {
+    testWorkCategoriesData.forEach((workCat: any) => {
       const materials = {};
       workCat.materialsData.forEach(mat => {
-        const categories = {};
-        // Handle materials with defined categories
-        if (mat.category && mat.category.length > 0) {
-          mat.category.forEach(catName => {
-            categories[catName] = {unit: mat.materialUnit || ''};
-          });
-        } else {
-            // Handle materials with no categories (e.g., WMM)
-            // Use a placeholder if needed, or allow it to be empty
-            // For this example, we'll allow an empty category list.
-        }
-        materials[mat.name] = {categories};
+        // Store the sub-categories for each material
+        materials[mat.name] = {
+          categories: mat.category || [],
+        };
       });
-
       formattedData[workCat.name] = {
-        // Condition for the "Source Proposed For" dropdown
+        // A flag to conditionally show the "Source Proposed For" dropdown
         isAggregate: workCat.type === 'aggregates',
         materials,
       };
@@ -84,6 +76,7 @@ export default function SourceApprovalForm({
     return formattedData;
   }, [testWorkCategoriesData]);
 
+  // Form state management
   const [workCategory, setWorkCategory] = useState<string>('');
   const [materialName, setMaterialName] = useState<string>('');
   const [materialCategory, setMaterialCategory] = useState<string>('');
@@ -91,72 +84,71 @@ export default function SourceApprovalForm({
   const [sourceProposedFor, setSourceProposedFor] = useState<string>('');
   const [location, setLocation] = useState<string>('');
   const [selectedVendor, setSelectedVendor] = useState<string>('');
-  const [newVendor, setNewVendor] = useState<string>('');
   const [unit, setUnit] = useState<string>('');
   const [unitRate, setUnitRate] = useState<string>('');
   const [approxQty, setApproxQty] = useState<string>('');
   const [remarks, setRemarks] = useState<string>('');
-  const dispatch = useDispatch();
 
+  // State for dynamic dropdown options
   const [materialOptions, setMaterialOptions] = useState<string[]>([]);
-  const [materialCategoryOptions, setMaterialCategoryOptions] = useState<string[]>([]);
+  const [materialCategoryOptions, setMaterialCategoryOptions] = useState<
+    string[]
+  >([]);
   const [showSourceProposedFor, setShowSourceProposedFor] = useState(false);
 
-  // 3. Update useEffect hooks to use the new `processedData`
+  // 3. UPDATE MATERIAL DROPDOWN WHEN WORK CATEGORY CHANGES
   useEffect(() => {
     if (workCategory && processedData[workCategory]) {
       const categoryData = processedData[workCategory];
       setShowSourceProposedFor(categoryData.isAggregate || false);
       setMaterialOptions(Object.keys(categoryData.materials || {}));
     } else {
+      setShowSourceProposedFor(false);
       setMaterialOptions([]);
     }
-    setMaterialName(''); // Reset downstream fields
+    // Reset dependent fields when the parent dropdown changes
+    setMaterialName('');
+    setMaterialCategory('');
+    setUnit('');
   }, [workCategory, processedData]);
 
+  // 4. UPDATE CATEGORY DROPDOWN AND UNIT WHEN MATERIAL CHANGES
   useEffect(() => {
-    if (materialName && processedData[workCategory]) {
-      const categories =
-        processedData[workCategory].materials[materialName]?.categories || {};
-      setMaterialCategoryOptions(Object.keys(categories));
-    } else {
-      setMaterialCategoryOptions([]);
-    }
-    setMaterialCategory(''); // Reset downstream fields
-  }, [materialName, workCategory, processedData]);
+    let options: string[] = [];
+    let unitValue = '';
 
-  useEffect(() => {
-    if (materialCategory && materialName && processedData[workCategory]) {
-      const categoryData =
-        processedData[workCategory].materials[materialName]?.categories[
-          materialCategory
-        ];
-      setUnit(categoryData?.unit || '');
-    } else {
-        // If there's no specific category, check if the material itself has a unit.
-        // This handles cases like WMM where `category` array is empty.
-        const materialData = testWorkCategoriesData.find(wc => wc.name === workCategory)
-          ?.materialsData.find(m => m.name === materialName);
-        setUnit(materialData?.materialUnit || '');
-    }
-    // You might want to move these dispatches to a more suitable place,
-    // e.g., when the component mounts or the form is submitted.
-    dispatch(getVendorForm());
-    dispatch(getSourceApprovals());
-  }, [materialCategory, materialName, workCategory, processedData, testWorkCategoriesData]);
+    if (materialName && workCategory && processedData[workCategory]) {
+      // Get the sub-category options for the selected material
+      options =
+        processedData[workCategory].materials[materialName]?.categories || [];
 
-  // --- HANDLER FUNCTIONS (No changes needed here) ---
+      // Find the selected material in the original data to get its unit
+      const materialData = testWorkCategoriesData
+        .find(wc => wc.name === workCategory)
+        ?.materialsData.find(m => m.name === materialName);
+
+      unitValue = materialData?.materialUnit || '';
+    }
+
+    setMaterialCategoryOptions(options);
+    setUnit(unitValue);
+    setMaterialCategory(''); // Reset sub-category selection
+  }, [materialName, workCategory, processedData, testWorkCategoriesData]);
+
   const handleUpload = (fileName: string) =>
     Alert.alert('Upload', `Simulating upload for: ${fileName}`);
 
   const handleSubmit = () => {
+    // Enhanced validation
     if (
       !workCategory ||
       !materialName ||
-      // materialCategory is now optional for items with no sub-categories
-      (materialCategoryOptions.length > 0 && !materialCategory) ||
+      (materialCategoryOptions.length > 0 && !materialCategory) || // Category is required only if options exist
       !sourceName ||
-      !location
+      !location ||
+      !selectedVendor ||
+      !unitRate ||
+      !approxQty
     ) {
       Alert.alert(
         'Validation Error',
@@ -164,22 +156,15 @@ export default function SourceApprovalForm({
       );
       return;
     }
-    if (!selectedVendor && !newVendor) {
-      Alert.alert(
-        'Validation Error',
-        'Please select an existing vendor or enter a new one.',
-      );
-      return;
-    }
 
     const formData = {
       workCategory,
       materialName,
-      materialCategory: materialCategory || 'N/A', // Send N/A if not applicable
+      materialCategory: materialCategory || 'N/A', // Send 'N/A' if not applicable
       sourceName,
       sourceProposedFor: showSourceProposedFor ? sourceProposedFor : 'N/A',
       location,
-      vendor: selectedVendor || newVendor,
+      vendor: selectedVendor,
       unit,
       unitRate,
       approxQty,
@@ -192,7 +177,7 @@ export default function SourceApprovalForm({
   return (
     <ScrollView style={styles.container} keyboardShouldPersistTaps="handled">
       <View style={styles.formContainer}>
-        {/* 4. Update Dropdowns to use the dynamic data */}
+        {/* 5. RENDER DYNAMIC DROPDOWNS */}
         <DropdownPicker
           label="Work Category*"
           items={[
@@ -214,10 +199,11 @@ export default function SourceApprovalForm({
           value={materialName}
           onChange={setMaterialName}
         />
-        {/* Only show material category dropdown if there are options */}
+
+        {/* Conditionally render the Material Category dropdown */}
         {materialCategoryOptions.length > 0 && (
           <DropdownPicker
-            label="Material category*"
+            label="Material Category*"
             items={[
               {label: 'Select Material Category', value: ''},
               ...materialCategoryOptions.map(cat => ({label: cat, value: cat})),
@@ -226,7 +212,6 @@ export default function SourceApprovalForm({
             onChange={setMaterialCategory}
           />
         )}
-
 
         <View style={styles.formGroup}>
           <Text style={styles.label}>Source Name*</Text>
@@ -358,7 +343,7 @@ export default function SourceApprovalForm({
   );
 }
 
-// Styles (No changes needed here)
+// Styles remain unchanged
 const styles = StyleSheet.create({
   container: {flex: 1, backgroundColor: '#f9f9f9'},
   formContainer: {padding: 16},

@@ -195,7 +195,7 @@ const EquipmentAdd = ({navigation, route}: {navigation: any; route: any}) => {
   const handleMixDesignTypeSelect = (selectedOption: any) => {
     setSelectedMaterialTypeData({...selectedOption});
     setSelectedMaterialTypeCategoryData(null);
-    //console.log('======', selectedOption);
+    console.log('======', selectedOption);
   };
 
   const handleMixDesignTypeCateorySelect = (selectedOption: any) => {
@@ -212,6 +212,7 @@ const EquipmentAdd = ({navigation, route}: {navigation: any; route: any}) => {
 
     const equipmentBody = {
       name: name,
+      testEquipmentType: selectedMaterialTypeData?.equipmentType,
       dateOfPurchase: dateOfPurchase
         ? getDbDateFromDDMMYYYY(dateOfPurchase)
         : null,
@@ -221,6 +222,7 @@ const EquipmentAdd = ({navigation, route}: {navigation: any; route: any}) => {
         subType: selectedMaterialTypeCategoryData || null,
       },
     };
+    console.log('======', equipmentBody);
 
     if (isEditMode && equipmentData) {
       // Call edit equipment API

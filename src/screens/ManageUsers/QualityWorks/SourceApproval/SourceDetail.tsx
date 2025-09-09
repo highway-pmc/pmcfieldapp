@@ -16,7 +16,8 @@ const SourceDetail = ({workCategories}: any) => {
   const [selectedCategory, setSelectedCategory] = useState<any>(null);
 
   const addSouceFormNavigation = () => {
-    navigation.navigate('SourceApprovalForm');
+    console.log('add source', workCategories)
+    navigation.navigate('SourceApprovalForm', {workCategories});
   };
 
   const handleMaterialClick = (material: any) => {

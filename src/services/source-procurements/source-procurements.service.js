@@ -1,5 +1,30 @@
 import apiService from '../api.service';
 
+export const getMeterialRequestFormApi = async (projectId, id) => {
+  console.log('---!!!', projectId, id)
+  return apiService.getRequest(`v1/auth/projects/${projectId}/tasks/${id}/prepare-request`)
+    .then(response => {
+  console.log('---!!!', response)
+
+      return response;
+    })
+    .catch(err => {
+      const errorMessge = err?.message || 'Unable to add Vendor.';
+      throw new Error(errorMessge);
+    });
+};
+
+export const postMeterialRequestFormApi = async (projectId, body) => {
+  return apiService.postRequest(`v1/auth/projects/${projectId}/material-requests`, body)
+    .then(response => {
+      return response;
+    })
+    .catch(err => {
+      const errorMessge = err?.message || 'Unable to Create Meterial Request.';
+      throw new Error(errorMessge);
+    });
+};
+
 /*VENDOR FORM*/
 export const postVendorFormApi = async (body) => {
   return apiService.postRequest(`v1/auth/vendors/addVender`, body)

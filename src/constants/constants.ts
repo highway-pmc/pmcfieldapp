@@ -79,6 +79,7 @@ export const HeaderItems = {
   sourceApprovalEditForm: {showBack: true, title: 'Edit Source Approvals'},
   addVendorForm: {showBack: true, title: 'Add Vendor Form'},
   vendorFormLists: {showBack: true, title: 'Vendor Details'},
+  materialRequestFormLists: {showBack: true, title: 'Material Request'},
   procurements: {showBack: true, title: 'Procurements'},
   mixDesignListing: {showBack: true, title: 'Mix Design'},
   mixDesignInfo: {showBack: true, title: 'Mix Design'},

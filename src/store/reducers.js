@@ -1,6 +1,7 @@
 import {combineReducers} from 'redux';
 import {reducer as formReducer} from 'redux-form';
 import {
+  METERIAL_REQUEST,
   PROCUREMENTS,
   SOURCE_APPROVALS,
   VENDOR_FORM,
@@ -87,6 +88,13 @@ const vendorFormState = {
   getVendorFormData: null,
   putVendorFormData: null,
   deleteVendorFormData: null,
+  error: null,
+};
+
+const meterialRequestFormState = {
+  loading: false,
+  postMeterialRequestFormData: null,
+  getMeterialRequestFormData: null,
   error: null,
 };
 
@@ -2491,6 +2499,62 @@ const VendorFormReducer = (state = vendorFormState, action) => {
     }
   };
 
+const MeterialRequestFormReducer = (state = meterialRequestFormState, action) => {
+  switch (action.type) {
+    case METERIAL_REQUEST.POST_SUBMIT_MATERIAL_REQUEST:
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case METERIAL_REQUEST.POST_SUBMIT_MATERIAL_REQUEST_SUCCESS:
+      return {
+        ...state,
+        postMeterialRequestFormData: action.response,
+        error: null,
+        loading: false,
+      };
+    case METERIAL_REQUEST.POST_SUBMIT_MATERIAL_REQUEST_FAILURE:
+      return {
+        ...state,
+        postMeterialRequestFormData: null,
+        error: action.error,
+        loading: false,
+      };
+    case METERIAL_REQUEST.GET_MATERIAL_REQUEST:
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case METERIAL_REQUEST.GET_MATERIAL_REQUEST_SUCCESS:
+      return {
+        ...state,
+        getMeterialRequestFormData: action.response,
+        error: null,
+        loading: false,
+      };
+    case METERIAL_REQUEST.GET_MATERIAL_REQUEST_FAILURE:
+      return {
+        ...state,
+        getMeterialRequestFormData: null,
+        error: action.error,
+        loading: false,
+      };
+    case METERIAL_REQUEST.CLEAR_SUBMIT_MATERIAL_FORM_REQUEST:
+      return {
+        ...state,
+        getMeterialRequestFormData: null,
+        postMeterialRequestFormData: null,
+        error: action.error,
+        error: null,
+        loading: true,
+      };
+    default:
+      return state;
+    }
+  };
+
 export const combinedReducers = combineReducers({
   form: formReducer,
   Auth: AuthReducer,
@@ -2508,4 +2572,5 @@ export const combinedReducers = combineReducers({
   Procurements: ProcurementsReducer,
   EquipmentsCalibration: EquimentCalibrationReducer,
   VendorForm: VendorFormReducer,
+  MeterialRequest: MeterialRequestFormReducer
 });

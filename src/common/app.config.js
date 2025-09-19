@@ -3,8 +3,8 @@ const appConfig = {};
 //appConfig.API_URL = "https://api.highwaypmc.in"
 //appConfig.API_URL = 'https://client-auth.highwaypmc.in';
 //appConfig.API_URL = 'http://192.168.9.71:4000';
-//appConfig.API_URL = 'http://192.168.1.125:4000';
-appConfig.API_URL = 'http://10.201.144.184:4000';//suyash local ip
+appConfig.API_URL = 'http://192.168.1.125:4000';
+//appConfig.API_URL = 'http://10.201.144.184:4000';//suyash local ip
 appConfig.setUserInfo = userInfo => {
   this.userInfo = userInfo;
 };

@@ -35,8 +35,10 @@ import {
   getVendorFormApi,
   putVendorFormApi,
   deleteVendorFormApi,
+  getMeterialRequestFormApi,
+  postMeterialRequestFormApi,
 } from '../../../services/source-procurements/source-procurements.service';
-import {PROCUREMENTS, SOURCE_APPROVALS, VENDOR_FORM} from './constants';
+import {METERIAL_REQUEST, PROCUREMENTS, SOURCE_APPROVALS, VENDOR_FORM} from './constants';
 function* getUserCategories() {
   try {
     const response = yield getUserCategory();
@@ -538,6 +540,32 @@ function* deleteVendorForm({payload}) {
   }
 }
 
+
+
+function* getMeterialRequestForm({payload}) {
+  try {
+    const response = yield getMeterialRequestFormApi(payload.projectId, payload.id);
+    yield put({type: METERIAL_REQUEST.GET_MATERIAL_REQUEST_SUCCESS, response});
+  } catch (error) {
+    yield put({
+      type: METERIAL_REQUEST.GET_MATERIAL_REQUEST_FAILURE,
+      error: error.message,
+    });
+  }
+}
+
+function* postMeterialRequestForm({payload}) {
+  try {
+    const response = yield postMeterialRequestFormApi(payload.projectId, payload.body);
+    yield put({type: METERIAL_REQUEST.POST_SUBMIT_MATERIAL_REQUEST_SUCCESS, response});
+  } catch (error) {
+    yield put({
+      type: METERIAL_REQUEST.POST_SUBMIT_MATERIAL_REQUEST_FAILURE,
+      error: error.message,
+    });
+  }
+}
+
 export default function* testAssignmentScreenSaga() {
   yield takeLatest(VENDOR_FORM.POST_VENDOR_FORM_REQUEST, postVendorForm);
   yield takeLatest(VENDOR_FORM.GET_VENDOR_FORM_REQUEST, getVendorForm);
@@ -572,6 +600,16 @@ export default function* testAssignmentScreenSaga() {
   yield takeLatest(
     'GET_TEST_CLASSIFICATION_NEXT_LEVEL_REQUEST',
     getTestClassificationNextLevel,
+  );
+
+  yield takeLatest(
+    METERIAL_REQUEST.GET_MATERIAL_REQUEST,
+    getMeterialRequestForm,
+  );
+
+  yield takeLatest(
+    METERIAL_REQUEST.POST_SUBMIT_MATERIAL_REQUEST,
+    postMeterialRequestForm,
   );
 
   yield takeLatest(

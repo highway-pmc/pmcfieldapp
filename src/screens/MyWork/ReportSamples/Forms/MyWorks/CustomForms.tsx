@@ -32,6 +32,7 @@ import TableCommonStyles from '../../../../Common/TableCommonStyles';
 import { groupBy } from '../../../../../utils/Utils';
 import LinearGradient from 'react-native-linear-gradient';
 import { getWorkTypeColors } from '../../../../Common/CommonConstantsTypes';
+import { useNavigation } from '@react-navigation/native';
 
 export const CustomForms = (_v: any, workType: any, taskCategory: any) => {
   const _validation = Validates(_v);
@@ -18896,8 +18897,8 @@ export const CustomForms = (_v: any, workType: any, taskCategory: any) => {
   const tasksListing = (_v: any) => {
     return _v.currentTasksData
       .filter((task: any) => {
-        if (_v.searchText && task.taskId.displayName) {
-          return task.taskId.displayName
+        if (_v.searchText && task?.taskId?.displayName) {
+          return task?.taskId?.displayName
             .toLowerCase()
             .includes(_v.searchText.toLowerCase());
         } else {
@@ -18914,7 +18915,7 @@ export const CustomForms = (_v: any, workType: any, taskCategory: any) => {
             <View style={styles.leftBorderForTask} />
             <View style={styles.FlexRowCenter}>
               <View>
-                <Text style={styles.colorForText}>{item.taskId.displayName}</Text>
+                <Text style={styles.colorForText}>{item?.taskId?.displayName}</Text>
               </View>
             </View>
             <View></View>
@@ -19132,6 +19133,8 @@ export const CustomForms = (_v: any, workType: any, taskCategory: any) => {
     }
   };
 
+  const navigation = useNavigation<any>();
+
   const segmentListing = (_v: any, getMyWorksData: Function) => {
     if (_v.selectedProjectModuleData?.segmentsData?.length) {
         return _v.segmentsByGroupOnType[_v.selectedSegmentType]?.filter((item: any) => {
@@ -19144,6 +19147,7 @@ export const CustomForms = (_v: any, workType: any, taskCategory: any) => {
         }
       }).map((item: any, index: number) => {
         return (
+          <>
           <TouchableOpacity
             onPress={() => {
               _v.setCurrentLevel(3);
@@ -19175,6 +19179,12 @@ export const CustomForms = (_v: any, workType: any, taskCategory: any) => {
             <View></View>
           </LinearGradient>
         </TouchableOpacity>
+        
+        <TouchableOpacity onPress={() => {navigation.navigate('MaterialRequestComponent')}}>
+                <Text>sdfdsafas</Text>
+        </TouchableOpacity>
+        </>
+
         );
       })
     }

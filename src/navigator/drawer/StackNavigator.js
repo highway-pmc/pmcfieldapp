@@ -67,6 +67,7 @@ import SourceTestMeterial from '../../screens/ManageUsers/QualityWorks/SourceApp
 import SourceApprovalEditForm from '../../screens/ManageUsers/QualityWorks/SourceApproval/SourceApprovalEditForm';
 import AddVendorForm from '../../screens/AddVendor/AddVendorForm';
 import VendorFormLists from '../../screens/AddVendor/VendorFormLists';
+import MaterialRequestComponent from '../../screens/MyWork/MaterialRequestComponent';
 
 const Stack = createStackNavigator();
 
@@ -99,6 +100,11 @@ const MyWorkStackNavigator = () => {
       <Stack.Screen
         name="MyWork3"
         component={MyWork3}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="MaterialRequestComponent"
+        component={MaterialRequestComponent}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

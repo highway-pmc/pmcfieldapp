@@ -1,4 +1,4 @@
-import {PROCUREMENTS, SOURCE_APPROVALS, VENDOR_FORM} from './QualityWorks/constants';
+import {PROCUREMENTS, SOURCE_APPROVALS, VENDOR_FORM, METERIAL_REQUEST} from './QualityWorks/constants';
 
 export const getUserCategories = () => ({
   type: 'GET_USER_CATEGORY_REQUEST',
@@ -110,6 +110,16 @@ export const clearProjectModulesWorkAssignmentData = () => ({
 
 export const clearNextLevel = () => ({
   type: 'CLEAR_NEXT_LEVEL',
+});
+
+export const submitMaterialRequest = (payload) => ({
+  type: METERIAL_REQUEST.POST_SUBMIT_MATERIAL_REQUEST,
+  payload,
+});
+
+export const getMaterialRequest = payload => ({
+  type: METERIAL_REQUEST.GET_MATERIAL_REQUEST,
+  payload,
 });
 
 /*VENDOR FORM*/ 

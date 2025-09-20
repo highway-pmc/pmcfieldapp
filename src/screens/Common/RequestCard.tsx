@@ -12,8 +12,9 @@ interface RequestCardProps {
     requestQty: number;
     status: string;
     statusText: string;
+    items: [],
   };
-  onActionPress: (action: string, status: string) => void;
+  onActionPress: (action: string, status: string, items: any) => void;
 }
 
 const RequestCard = ({request, onActionPress}: RequestCardProps) => {
@@ -61,19 +62,19 @@ const RequestCard = ({request, onActionPress}: RequestCardProps) => {
     }
   };
 
-  const getActionButtons = (status: string) => {
+  const getActionButtons = (status: string, item: any) => {
     switch (status) {
       case MATERIAL_REQUEST_STATUS.PENDING_ACCEPTANCE:
         return (
           <View style={styles.actionButtonsContainer}>
             <TouchableOpacity
-              onPress={() => onActionPress('accept', status)}
+              onPress={() => onActionPress('accept', status, item)}
               style={styles.acceptButton}>
               <Text style={styles.acceptButtonText}>Accept</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.rejectButton}
-              onPress={() => onActionPress('reject', status)}>
+              onPress={() => onActionPress('reject', status, item)}>
               <Text style={styles.rejectButtonText}>Reject</Text>
             </TouchableOpacity>
           </View>
@@ -82,7 +83,7 @@ const RequestCard = ({request, onActionPress}: RequestCardProps) => {
         return (
           <TouchableOpacity
             style={styles.approvalButton}
-            onPress={() => onActionPress('request_approval', status)}>
+            onPress={() => onActionPress('request_approval', status, item)}>
             <Text style={styles.approvalButtonText}>Request for Approval</Text>
           </TouchableOpacity>
         );
@@ -90,7 +91,7 @@ const RequestCard = ({request, onActionPress}: RequestCardProps) => {
         return (
           <TouchableOpacity
             style={styles.dispatchButton}
-            onPress={() => onActionPress('dispatch_material', status)}>
+            onPress={() => onActionPress('dispatch_material', status, item)}>
             <Text style={styles.dispatchButtonText}>Dispatch Material</Text>
           </TouchableOpacity>
         );
@@ -98,7 +99,7 @@ const RequestCard = ({request, onActionPress}: RequestCardProps) => {
         return (
           <TouchableOpacity
             style={styles.newRequestButton}
-            onPress={() => onActionPress('create_new', status)}>
+            onPress={() => onActionPress('create_new', status, item)}>
             <Text style={styles.newRequestButtonText}>Create New Request</Text>
           </TouchableOpacity>
         );
@@ -131,13 +132,13 @@ const RequestCard = ({request, onActionPress}: RequestCardProps) => {
             Work Category:{' '}
             <Text style={styles.categoryValue}>{request.workCategory}</Text>
           </Text>
-          <Text style={styles.unit}>
+          {/* <Text style={styles.unit}>
             Unit: <Text style={styles.unitValue}>{request.unit}</Text>
           </Text>
           <Text style={styles.requestQty}>
             Request qty:{' '}
             <Text style={styles.qtyValue}>{request.requestQty}</Text>
-          </Text>
+          </Text> */}
         </View>
 
         <View style={styles.divider} />
@@ -147,7 +148,7 @@ const RequestCard = ({request, onActionPress}: RequestCardProps) => {
           <Text style={[styles.statusText, getStatusStyle(request.status)]}>
             {request.statusText}
           </Text>
-          {getActionButtons(request.status)}
+          {getActionButtons(request.status, request)}
         </View>
       </View>
     </LinearGradient>

@@ -112,6 +112,16 @@ export const clearNextLevel = () => ({
   type: 'CLEAR_NEXT_LEVEL',
 });
 
+export const patchMaterialRequestStatus = (payload) => ({
+  type: METERIAL_REQUEST.PATCH_MATERIAL_REQUEST_STATUS,
+  payload,
+});
+
+export const getMaterialRequestTo = (payload) => ({
+  type: METERIAL_REQUEST.GET_MATERIAL_REQUEST_TO,
+  payload,
+});
+
 export const submitMaterialRequest = (payload) => ({
   type: METERIAL_REQUEST.POST_SUBMIT_MATERIAL_REQUEST,
   payload,

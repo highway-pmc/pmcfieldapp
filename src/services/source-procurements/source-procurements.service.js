@@ -25,6 +25,34 @@ export const postMeterialRequestFormApi = async (projectId, body) => {
     });
 };
 
+export const getMeterialRequestToFormApi = async (projectId, type) => {
+  console.log('---!!!', projectId, type)
+  return apiService.getRequest(`v1/auth/projects/${projectId}/material-requests?requestTo=${type}`)
+    .then(response => {
+  console.log('---!!!', response)
+
+      return response;
+    })
+    .catch(err => {
+      const errorMessge = err?.message || 'Unable to add Vendor.';
+      throw new Error(errorMessge);
+    });
+};
+
+export const patchMeterialRequestStatusApi = async (projectId, id, body) => {
+  console.log('patch---!!!', projectId, id, body)
+  return apiService.patchRequest(`v1/auth/projects/${projectId}/material-requests/${id}/status`, body)
+    .then(response => {
+  console.log('---!!!', response)
+
+      return response;
+    })
+    .catch(err => {
+      const errorMessge = err?.message || 'Unable to mark meterial status.';
+      throw new Error(errorMessge);
+    });
+};
+
 /*VENDOR FORM*/
 export const postVendorFormApi = async (body) => {
   return apiService.postRequest(`v1/auth/vendors/addVender`, body)

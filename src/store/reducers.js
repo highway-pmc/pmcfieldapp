@@ -95,6 +95,8 @@ const meterialRequestFormState = {
   loading: false,
   postMeterialRequestFormData: null,
   getMeterialRequestFormData: null,
+  getMeterialRequestToFormData: null,
+  patchMeterialRequestStatusData: null,
   error: null,
 };
 
@@ -2501,6 +2503,46 @@ const VendorFormReducer = (state = vendorFormState, action) => {
 
 const MeterialRequestFormReducer = (state = meterialRequestFormState, action) => {
   switch (action.type) {
+    case METERIAL_REQUEST.PATCH_MATERIAL_REQUEST_STATUS:
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case METERIAL_REQUEST.PATCH_MATERIAL_REQUEST_STATUS_SUCCESS:
+      return {
+        ...state,
+        patchMeterialRequestStatusData: action.response,
+        error: null,
+        loading: false,
+      };
+    case METERIAL_REQUEST.PATCH_MATERIAL_REQUEST_STATUS_FAILURE:
+      return {
+        ...state,
+        patchMeterialRequestStatusData: null,
+        error: action.error,
+        loading: false,
+      };
+    case METERIAL_REQUEST.GET_MATERIAL_REQUEST_TO:
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case METERIAL_REQUEST.GET_MATERIAL_REQUEST_TO_SUCCESS:
+      return {
+        ...state,
+        getMeterialRequestToFormData: action.response,
+        error: null,
+        loading: false,
+      };
+    case METERIAL_REQUEST.GET_MATERIAL_REQUEST_TO_FAILURE:
+      return {
+        ...state,
+        getMeterialRequestToFormData: null,
+        error: action.error,
+        loading: false,
+      };
     case METERIAL_REQUEST.POST_SUBMIT_MATERIAL_REQUEST:
       return {
         ...state,
@@ -2546,6 +2588,8 @@ const MeterialRequestFormReducer = (state = meterialRequestFormState, action) =>
         ...state,
         getMeterialRequestFormData: null,
         postMeterialRequestFormData: null,
+        getMeterialRequestToFormData: null,
+        patchMeterialRequestStatusData: null,
         error: action.error,
         error: null,
         loading: true,

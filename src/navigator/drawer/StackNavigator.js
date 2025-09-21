@@ -68,6 +68,7 @@ import SourceApprovalEditForm from '../../screens/ManageUsers/QualityWorks/Sourc
 import AddVendorForm from '../../screens/AddVendor/AddVendorForm';
 import VendorFormLists from '../../screens/AddVendor/VendorFormLists';
 import MaterialRequestComponent from '../../screens/MyWork/MaterialRequestComponent';
+import TestDetailsScreen from '../../screens/ManageUsers/QualityWorks/FieldLabTest/TestDetailsScreen';
 
 const Stack = createStackNavigator();
 
@@ -177,6 +178,11 @@ const MyQualityWorksStackNavigator = () => {
         options={{headerShown: false}}
       />
       <Stack.Screen
+        name="TestDetailsScreen"
+        component={TestDetailsScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
         name="SelectTestWorkCategory"
         component={SelectTestWorkCategory}
         options={{headerShown: false}}
@@ -273,20 +279,20 @@ const MyQualityWorksStackNavigator = () => {
 
 const AddVendorStackNavigator = () => {
   return (
-  <Stack.Navigator screenOptions={screenOptionStyle}>
-    <Stack.Screen
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen
         name="VendorFormLists"
         component={VendorFormLists}
         options={{headerShown: false}}
       />
-    <Stack.Screen
+      <Stack.Screen
         name="AddVendorForm"
         component={AddVendorForm}
         options={{headerShown: false}}
       />
-  </Stack.Navigator>
+    </Stack.Navigator>
   );
-}
+};
 
 const EquipmentStackNavigator = () => {
   return (

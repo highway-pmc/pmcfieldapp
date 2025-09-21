@@ -2498,10 +2498,13 @@ const VendorFormReducer = (state = vendorFormState, action) => {
       };
     default:
       return state;
-    }
-  };
+  }
+};
 
-const MeterialRequestFormReducer = (state = meterialRequestFormState, action) => {
+const MeterialRequestFormReducer = (
+  state = meterialRequestFormState,
+  action,
+) => {
   switch (action.type) {
     case METERIAL_REQUEST.PATCH_MATERIAL_REQUEST_STATUS:
       return {
@@ -2596,9 +2599,49 @@ const MeterialRequestFormReducer = (state = meterialRequestFormState, action) =>
       };
     default:
       return state;
-    }
-  };
+  }
+};
 
+const testDetailsInitialState = {
+  tab1TestDetails: null,
+  tab2TestDetails: null,
+  error: null,
+  loading: false,
+};
+
+const TestDetailsReducer = (state = testDetailsInitialState, action) => {
+  switch (action.type) {
+    case 'GET_TEST_DETAILS_TAB1_REQUEST':
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case 'GET_TEST_DETAILS_TAB1_SUCCESS':
+      return {
+        ...state,
+        tab1TestDetails: action.response,
+        error: null,
+        loading: false,
+      };
+    case 'GET_TEST_DETAILS_TAB1_FAILURE':
+      return {
+        ...state,
+        tab1TestDetails: null,
+        error: action.error,
+        loading: false,
+      };
+    case 'CLEAR_TEST_DETAILS_TAB1':
+      return {
+        ...state,
+        tab1TestDetails: null,
+        error: null,
+        loading: false,
+      };
+    default:
+      return state;
+  }
+};
 export const combinedReducers = combineReducers({
   form: formReducer,
   Auth: AuthReducer,
@@ -2616,5 +2659,6 @@ export const combinedReducers = combineReducers({
   Procurements: ProcurementsReducer,
   EquipmentsCalibration: EquimentCalibrationReducer,
   VendorForm: VendorFormReducer,
-  MeterialRequest: MeterialRequestFormReducer
+  MeterialRequest: MeterialRequestFormReducer,
+  TestDetails: TestDetailsReducer,
 });

@@ -1,4 +1,4 @@
-import { all } from 'redux-saga/effects';
+import {all} from 'redux-saga/effects';
 import loginScreenSaga from '../screens/Login/saga';
 import forgotPasswordScreenSaga from '../screens/ForgotPassword/saga';
 import userScreenSaga from '../screens/SetPassword/saga';
@@ -12,23 +12,24 @@ import myRFISScreenSaga from '../screens/RFIs/saga';
 import myReportsScreenSaga from '../screens/Reports/saga';
 import testAssignmentScreenSaga from '../screens/ManageUsers/QualityWorks/saga';
 import equipmentCalibrationScreenSaga from '../screens/ManageUsers/QualityWorks/Equipment/saga';
-
+import testDetailSaga from '../screens/ManageUsers/QualityWorks/FieldLabTest/saga';
 function* rootSaga() {
-    yield all([
-        loginScreenSaga(),
-        forgotPasswordScreenSaga(),
-        userScreenSaga(),
-        userProfileScreenSaga(),
-        userCategoriesAssignmentScreenSaga(),
-        projectInfoScreenSaga(),
-        changePassowrdScreenSaga(),
-        myWorksScreenSaga(),
-        dashboardScreenSaga(),
-        myRFISScreenSaga(),
-        myReportsScreenSaga(),
-        testAssignmentScreenSaga(),
-        equipmentCalibrationScreenSaga()
-      ])
+  yield all([
+    loginScreenSaga(),
+    forgotPasswordScreenSaga(),
+    userScreenSaga(),
+    userProfileScreenSaga(),
+    userCategoriesAssignmentScreenSaga(),
+    projectInfoScreenSaga(),
+    changePassowrdScreenSaga(),
+    myWorksScreenSaga(),
+    dashboardScreenSaga(),
+    myRFISScreenSaga(),
+    myReportsScreenSaga(),
+    testAssignmentScreenSaga(),
+    equipmentCalibrationScreenSaga(),
+    testDetailSaga(),
+  ]);
 }
 
 export default rootSaga;

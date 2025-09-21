@@ -272,6 +272,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
       //   testWorkCategoriesData: item.testWorkCategoriesData,
       //   workType: workType,
       // });
+      //navigation.navigate('TestDetailsScreen');
       navigation.navigate('SourceHome');
       return;
     }
@@ -445,6 +446,8 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
             setCurrentLevel(6);
             setCurrentSubTestTypeRFIsData(testTypeData.testRFIsData);
             setSelectedTestSample(testTypeData);
+            //========Testing Purpose========
+
             // const testObservations: any = [];
             // testObservations.push(getTestSampleCementFineAggregateObject(1, testTypeData.type));
             // setConcreteSampleTestItems(testObservations);

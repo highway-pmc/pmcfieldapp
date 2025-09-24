@@ -69,6 +69,9 @@ import AddVendorForm from '../../screens/AddVendor/AddVendorForm';
 import VendorFormLists from '../../screens/AddVendor/VendorFormLists';
 import MaterialRequestComponent from '../../screens/MyWork/MaterialRequestComponent';
 import TestDetailsScreen from '../../screens/ManageUsers/QualityWorks/FieldLabTest/TestDetailsScreen';
+import ContingencyRequestComponent from '../../screens/Store/ContingencyRequestComponent';
+import ProductionRequestFormComponent from '../../screens/Production/ProductionRequestFormComponent';
+import MaterialApprovalProduction from '../../screens/Production/MaterialApprovalProduction';
 
 const Stack = createStackNavigator();
 
@@ -343,6 +346,11 @@ const StoreStackNavigator = () => {
         component={MaterialApprovalForm}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name="ContingencyRequestComponent"
+        component={ContingencyRequestComponent}
+        options={{headerShown: false}}
+      />
     </Stack.Navigator>
   );
 };
@@ -391,8 +399,13 @@ const ProductionStackNavigator = () => {
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="MaterialApprovalProductionForm"
-        component={MaterialApprovalProductionForm}
+        name="MaterialApprovalProduction"
+        component={MaterialApprovalProduction}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ProductionRequestFormComponent"
+        component={ProductionRequestFormComponent}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

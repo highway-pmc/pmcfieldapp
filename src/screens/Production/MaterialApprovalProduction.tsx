@@ -1,4 +1,6 @@
-import {useIsFocused} from '@react-navigation/native';
+// src/screens/MaterialApprovalProduction.tsx
+
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState, useMemo} from 'react';
 import {
   View,
@@ -9,14 +11,16 @@ import {
   ScrollView,
   Alert,
   NativeEventEmitter,
-  Platform,
 } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import {HeaderItems, MATERIAL_REQUEST_STATUS} from '../../constants/constants';
 import DropdownPicker from '../../components/UI/DropdownPicker';
-import DetailsCard from '../Common/DetailsCard'; // Make sure this path is correct
+import DetailsCard from '../Common/DetailsCard';
+import { getSourceApprovals, patchDispatchRequest, patchMaterialRequestStatus } from '../ManageUsers/actions';
+import { useDispatch, useSelector } from 'react-redux';
+import { useSnackbar } from '../../context/SnackbarContext';
 
 // --- Type Definitions ---
+
 interface RequestData {
   workCategory: string;
   materialName: string;
@@ -29,24 +33,25 @@ interface RequestData {
   requestDateTime: string;
 }
 
-interface DropdownOption {
+interface SourceOption {
   label: string;
   value: string;
 }
 
-// New type for the mix design rows
-interface MixDesignRow {
+interface DispatchSource {
   id: number;
-  mixDesign: string;
+  source: string;
   quantity: string;
 }
 
-type MaterialApprovalFormProps = {
-  route: {params?: {status?: string}};
-  navigation: any;
-};
+// Assuming React Navigation types
+// type MaterialApprovalFormProps = {
+//   route: {params?: {status?: string, item: any}};
+//   navigation: any; // Replace 'any' with your actual navigation type for better safety
+// };
 
 // --- Mock Data ---
+
 const requestData: RequestData = {
   workCategory: 'Structural Steel',
   materialName: 'TMT Bars',
@@ -59,37 +64,41 @@ const requestData: RequestData = {
   requestDateTime: '15/08/2025 10:30 AM',
 };
 
-const mixDesignData: DropdownOption[] = [
-  {label: 'Select Mix Design', value: ''},
-  {label: 'M25-Grade Concrete', value: 'm25'},
-  {label: 'M30-Grade Concrete', value: 'm30'},
-  {label: 'M40-Grade Concrete', value: 'm40'},
+const sourcesData: SourceOption[] = [
+  {label: 'Select Source', value: ''},
+  {label: 'Main Warehouse', value: 'main_warehouse'},
+  {label: 'Site Storage A', value: 'site_storage_a'},
+  {label: 'Vendor Direct Supply', value: 'vendor_direct'},
+  {label: 'Local Purchase', value: 'local_purchase'},
 ];
 
 // --- Component ---
-const MaterialApprovalProductionForm: React.FC<MaterialApprovalFormProps> = ({
-  route,
-}) => {
-  const {status} = route.params || {};
-  const isFocused = useIsFocused();
 
-  // Common State
-  const [remarks, setRemarks] = useState<string>('');
-  const [qtyApproved, setQtyApproved] = useState<string>(
-    String(requestData.qtyApproved),
-  );
+const MaterialApprovalProduction = ({route, navigation}) => {
+  const {status} = route.params?.item || {};
+  console.log('Statysdsfmldsk: ', route.params?.item?.items)
   const [qtyIssued, setQtyIssued] = useState<string>('');
+  const [qtyApproved, setQtyApproved] = useState(route.params?.item);
+  const [remarks, setRemarks] = useState<string>('');
+  const [dispatchSources, setDispatchSources] = useState<any[]>([]);
+  // initial state: one row
+  const [localApprovals, setLocalApprovals] = useState<any[]>([]);
+  const [nextId, setNextId] = useState<number>(2);
+  const isFocused = useIsFocused();
+  const dispatch = useDispatch();
+  const { showSnackbar } = useSnackbar();
+  const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
+  const [approvedQty, setApprovedQty] = useState({}); // object keyed by id
+  const { patchMeterialRequestStatusData, loading: any, error } = useSelector((state) => state.MeterialRequest);
+  const {sourceApprovals} = useSelector((state: any) => state.SourceApprovals);
 
-  // Dispatch-specific State
-  const [mixDesigns, setMixDesigns] = useState<MixDesignRow[]>([
-    {id: 1, mixDesign: '', quantity: ''},
-  ]);
-  const [nextMixDesignId, setNextMixDesignId] = useState<number>(2);
-  const [vehicleNumbers, setVehicleNumbers] = useState<string[]>([]);
-  const [currentVehicleInput, setCurrentVehicleInput] = useState<string>('');
-  const [batchNo, setBatchNo] = useState<string>('');
-  const [dispatchTime, setDispatchTime] = useState<Date>(new Date());
-  const [showDateTimePicker, setShowDateTimePicker] = useState<boolean>(false);
+  useEffect(() => {
+        if (patchMeterialRequestStatusData) {
+          showSnackbar("Meterial status updated successfully", "success");
+        } else if (error) {
+          showSnackbar(error, "error");
+        }
+      }, [patchMeterialRequestStatusData, error]);
 
   useEffect(() => {
     if (isFocused) {
@@ -103,12 +112,23 @@ const MaterialApprovalProductionForm: React.FC<MaterialApprovalFormProps> = ({
     }
   }, [isFocused, status]);
 
-  // Read-only data for the top card
+  useEffect(() => {
+  if (route.params?.item?.items?.length > 0 && localApprovals.length === 0) {
+    const initialApprovals = route.params.item.items.map((request: any) => ({
+      id: `${request._id || request.testMaterialId}_${Date.now()}`,
+      testMaterialId: request.testMaterialId || request._id,
+      name: '',
+      quantity: '',
+    }));
+    setLocalApprovals(initialApprovals);
+  }
+}, [route.params?.item?.items]);
+
   const detailsData = useMemo(() => {
     const data = [
-      {label: 'Work Category', value: requestData.workCategory},
       {label: 'Material Name', value: requestData.materialName},
-      {label: 'Material Category', value: requestData.materialCategory},
+      {label: 'Category', value: requestData.materialCategory},
+      {label: 'Work Category', value: requestData.workCategory},
       {label: 'Unit', value: requestData.unit},
       {
         label: 'Qty Requested',
@@ -125,108 +145,174 @@ const MaterialApprovalProductionForm: React.FC<MaterialApprovalFormProps> = ({
     data.push(
       {label: 'Task Details', value: requestData.taskPath},
       {label: 'Requested by', value: requestData.userName},
-      {label: 'Request Date & Time', value: requestData.requestDateTime},
+      {label: 'Request Date', value: requestData.requestDateTime},
     );
     return data;
   }, [status]);
 
-  // --- Mix Design Handlers ---
-  const handleMixDesignChange = (value: string, id: number) => {
-    const newMixDesigns = mixDesigns.map(item =>
-      item.id === id ? {...item, mixDesign: value} : item,
+
+  const handleQtyChange = (id, value) => {
+    setApprovedQty(prev => ({ ...prev, [id]: value }));
+  };
+
+  const handleSubmit = (type:any) => {
+    let payload = {
+      status: type === 'dispatch' ? MATERIAL_REQUEST_STATUS.DISPATCHED : MATERIAL_REQUEST_STATUS.PENDING_DISPATCH,
+      comments: remarks,
+      approvalData: route.params?.item?.items?.map((req: any) => ({
+        materialRequestItemId: req._id,
+        quantityApproved: approvedQty[req._id] ?? Number(req.qty_requested),
+      })),
+    };
+console.log('dsjskljf!!!----',{projectId: loggedInUser.projectId,
+      id: route.params?.item?.id,
+      body: payload,})
+  dispatch(
+    patchMaterialRequestStatus({
+      projectId: loggedInUser.projectId,
+      id: route.params?.item?.id,
+      body: payload,
+    })
+  );
+
+  Alert.alert('Success', 'Form has been submitted successfully!');
+};
+
+
+
+
+// Fetch available sources only if not already in Redux
+const getAvailableSources = (currentRowId: any) => {
+  //Alert.alert('Error', 'Please fill in all source details');
+  const existingApprovals = sourceApprovals?.filter(
+    (row: any) => row.testMaterialId === currentRowId
+  );
+
+  console.log('Test Data: ----', existingApprovals?.length)
+  if (existingApprovals?.length === 0 || existingApprovals?.length === undefined) {
+    dispatch(
+      getSourceApprovals({
+        projectId: loggedInUser.projectId,
+        testMaterialId: currentRowId,
+      })
     );
-    setMixDesigns(newMixDesigns);
+  }
+
+  // Build dropdown list
+  const allSources = sourceApprovals?.map((opt: any) => ({
+    label: opt.name,
+    value: opt.name,
+  }));
+
+  setDispatchSources(allSources);
+};
+
+// Handle source dropdown change
+const handleSourceChange = (newValue: string, rowId: string) => {
+  setLocalApprovals(prev =>
+    prev.map(row =>
+      row.testMaterialId === rowId ? { ...row, name: newValue } : row
+    )
+  );
+};
+
+// Handle qty input
+const handleQuantityChange = (value: string, rowId: string) => {
+  setLocalApprovals(prev =>
+    prev.map(row => (row.id === rowId ? { ...row, quantity: value } : row))
+  );
+};
+
+// Remove row
+// Updated remove function to ensure at least one row per material
+const handleRemoveSourceRow = (id: string, materialId: any) => {
+  const materialRows = localApprovals?.filter(row => row.testMaterialId === materialId);
+  
+  // Don't remove if it's the last row for this material
+  if (materialRows.length <= 1) {
+    return;
+  }
+  
+  setLocalApprovals(prev => prev?.filter(row => row.id !== id));
+};
+
+
+const totalSourceQuantityForMaterial = (materialId: any) => {
+  return localApprovals?.filter(row => row.testMaterialId === materialId)?.reduce((total, row) => total + (parseFloat(row.quantity) || 0), 0);
+};
+
+// Add source row for specific material
+const handleAddSourceRowForMaterial = (materialId: any) => {
+  setLocalApprovals((prev: any) => [
+    ...prev,
+    {
+      id: `${materialId}_${Date.now()}`,
+      testMaterialId: materialId,
+      name: '',
+      quantity: '',
+    },
+  ]);
+};
+
+// Helper function to get default row for a material if none exists
+const getSourceRowsForMaterial = (materialId: any) => {
+  return localApprovals?.filter(row => row.testMaterialId === materialId);
+};
+
+// Handle dispatch for single material
+const handleDispatchSingleMaterial = (request: any) => {
+  const materialSources = localApprovals?.filter(row => row.testMaterialId === request.testMaterialId);
+  const totalQty = totalSourceQuantityForMaterial(request.testMaterialId);
+  const approvedQtyForMaterial = parseFloat(approvedQty[request._id] ?? String(request.qty_approved ?? request.qty_requested));
+
+  // Validate quantities
+  if (totalQty !== approvedQtyForMaterial) {
+    Alert.alert('Error', `Source quantities (${totalQty}) must equal approved quantity (${approvedQtyForMaterial}) for ${request.testMaterialType}`);
+    return;
+  }
+
+  // // Validate all sources are selected
+  // const incompleteRows = materialSources?.filter(row => !row.name || !row.quantity);
+  // if (incompleteRows.length > 0) {
+  //   Alert.alert('Error', 'Please fill in all source details');
+  //   return;
+  // }
+
+  // Create payload for single material dispatch
+  let payload = {
+    qty_issued: request.qty_requested,
+    vehicleDetails: [],
+    batchNo: '',
+    batchSlip: '',
+    comments_issued: remarks,
+    source: [{
+      materialRequestItemId: request._id,
+      quantityDispatched: approvedQtyForMaterial,
+      mixDesign: materialSources.map(source => ({
+        mixDesignName: source.name,
+        mixDesignId: source?._id,
+        qty: parseFloat(source.quantity)
+      }))
+    }]
   };
+  dispatch(
+    patchDispatchRequest({
+      projectId: loggedInUser.projectId,
+      id: route.params?.item?.id,
+      body: payload,
+    })
+  );
 
-  const handleMixDesignQuantityChange = (text: string, id: number) => {
-    const newMixDesigns = mixDesigns.map(item =>
-      item.id === id ? {...item, quantity: text.replace(/[^0-9.]/g, '')} : item,
-    );
-    setMixDesigns(newMixDesigns);
-  };
+  Alert.alert('Success', `${request.testMaterialType} has been dispatched successfully!`);
+};
 
-  const handleAddMixDesignRow = () => {
-    setMixDesigns(prev => [
-      ...prev,
-      {id: nextMixDesignId, mixDesign: '', quantity: ''},
-    ]);
-    setNextMixDesignId(prev => prev + 1);
-  };
 
-  const handleRemoveMixDesignRow = (id: number) => {
-    if (mixDesigns.length > 1) {
-      setMixDesigns(prev => prev.filter(item => item.id !== id));
-    }
-  };
 
-  const getAvailableMixDesigns = (currentRowId: number): DropdownOption[] => {
-    const selectedMixDesigns = mixDesigns
-      .filter(row => row.id !== currentRowId && row.mixDesign)
-      .map(row => row.mixDesign);
-    return mixDesignData.filter(opt => !selectedMixDesigns.includes(opt.value));
-  };
 
-  const totalMixDesignQuantity = useMemo(() => {
-    return mixDesigns.reduce(
-      (total, row) => total + (parseFloat(row.quantity) || 0),
-      0,
-    );
-  }, [mixDesigns]);
-
-  // --- Vehicle Handlers ---
-  const handleVehicleInputChange = (text: string) => {
-    setCurrentVehicleInput(text.replace(/[^0-9]/g, ''));
-  };
-
-  const addVehicle = () => {
-    if (currentVehicleInput.length === 4) {
-      if (!vehicleNumbers.includes(currentVehicleInput)) {
-        setVehicleNumbers([...vehicleNumbers, currentVehicleInput]);
-        setCurrentVehicleInput('');
-      } else {
-        Alert.alert(
-          'Duplicate Entry',
-          'This vehicle number has already been added.',
-        );
-      }
-    } else {
-      Alert.alert(
-        'Invalid Input',
-        'Please enter exactly 4 digits for the vehicle number.',
-      );
-    }
-  };
-
-  const removeVehicle = (index: number) => {
-    setVehicleNumbers(vehicleNumbers.filter((_, i) => i !== index));
-  };
-
-  // --- DateTime Picker Handler ---
-  const onDateTimeChange = (event: any, selectedDate?: Date) => {
-    const currentDate = selectedDate || dispatchTime;
-    setShowDateTimePicker(Platform.OS === 'ios');
-    setDispatchTime(currentDate);
-  };
-
-  // --- Form Submission ---
-  const handleSubmit = () => {
-    // Implement your validation and submission logic here based on status
-    console.log({
-      status,
-      qtyApproved,
-      remarks,
-      qtyIssued,
-      mixDesigns,
-      vehicleNumbers,
-      batchNo,
-      dispatchTime,
-    });
-    Alert.alert('Success', 'Form has been submitted successfully!');
-  };
-
+//File Upload Code
   return (
     <ScrollView style={styles.container} keyboardShouldPersistTaps="handled">
-      <DetailsCard title="Material Request Details" data={detailsData} />
+      {/* <DetailsCard title="Material Request Details" data={detailsData} /> */}
 
       <View style={styles.formContainer}>
         <Text style={styles.sectionTitle}>
@@ -235,184 +321,199 @@ const MaterialApprovalProductionForm: React.FC<MaterialApprovalFormProps> = ({
             : 'Dispatch Details'}
         </Text>
 
-        {/* --- APPROVAL FORM --- */}
-        {status === MATERIAL_REQUEST_STATUS.PENDING_APPROVAL && (
-          <>
+        {status === MATERIAL_REQUEST_STATUS.PENDING_APPROVAL && route.params?.item?.items?.length > 0 &&
+          route.params?.item?.items?.map((request: any) => (
             <View style={styles.formGroup}>
-              <Text style={styles.label}>
-                Qty Approved <Text style={styles.required}>*</Text>
-              </Text>
-              <TextInput
-                style={styles.input}
-                value={qtyApproved}
-                onChangeText={setQtyApproved}
-                keyboardType="decimal-pad"
-                placeholder="Enter approved quantity"
-              />
-              <Text style={styles.helperText}>
-                Max: {requestData.qtyRequested} {requestData.unit}
-              </Text>
+              <View style={styles.mainContainer}>
+                <View style={styles.columnContainer}>
+                  {request?.testMaterialType && (
+                    <View style={styles.fieldContainer}>
+                      <Text style={styles.fieldLabel}>Material Name</Text>
+                      <Text style={styles.fieldValue}>{request?.testMaterialType}</Text>
+                    </View>
+                  )}
+                  {request?.testWorkCategoryType && (
+                    <View style={styles.fieldContainer}>
+                      <Text style={styles.fieldLabel}>Work Category</Text>
+                      <Text style={styles.fieldValue}>{request?.testWorkCategoryType}</Text>
+                    </View>
+                  )}
+                </View>
+                
+                <View style={styles.columnContainer}>
+                  {request?.name && (
+                    <View style={styles.fieldContainer}>
+                      <Text style={styles.fieldLabel}>Requested By</Text>
+                      <Text style={styles.fieldValue}>{request?.name}</Text>
+                    </View>
+                  )}
+                  {request?.createdAt && (
+                    <View style={styles.fieldContainer}>
+                      <Text style={styles.fieldLabel}>Request Date</Text>
+                      <Text style={styles.fieldValue}>{request?.createdAt}</Text>
+                    </View>
+                  )}
+                </View>
+                {/* ... Approval Section JSX ... */}
+                <View>
+                  <Text style={styles.label}>
+                    Total Qty Approve <Text style={styles.required}>*</Text>
+                  </Text>
+                  <TextInput
+                    style={styles.input}
+                    // 👇 controlled by state
+                    value={approvedQty[request._id] ?? String(request.qty_requested ?? '')}
+                    onChangeText={val => handleQtyChange(request._id, val)}
+                    keyboardType="decimal-pad"
+                    placeholder="Enter total issued quantity"
+                  />
+                  <Text style={styles.helperText}>
+                    Maximum: {request?.qty_requested} {requestData.unit}  (Requested
+                    quantity)
+                  </Text>
+                </View>
+              </View>
             </View>
-          </>
-        )}
+          ))
+        }
 
-        {/* --- DISPATCH FORM --- */}
         {status === MATERIAL_REQUEST_STATUS.PENDING_DISPATCH && (
           <>
-            <View style={styles.formGroup}>
-              <Text style={styles.label}>
-                Qty Issued <Text style={styles.required}>*</Text>
-              </Text>
-              <TextInput
-                style={styles.input}
-                value={qtyIssued}
-                onChangeText={setQtyIssued}
-                keyboardType="decimal-pad"
-                placeholder="e.g., 120.500"
-              />
-              <Text style={styles.helperText}>
-                Max: {requestData.qtyApproved} {requestData.unit}
-              </Text>
-            </View>
+            {route.params?.item?.items?.map((request: any, index: number) => (
+              <View key={request._id || index} style={styles.mainContainer}>
+                <View style={styles.columnContainer}>
+                  {request?.testMaterialType && (
+                    <View style={styles.fieldContainer}>
+                      <Text style={styles.fieldLabel}>Material Name</Text>
+                      <Text style={styles.fieldValue}>{request?.testMaterialType}</Text>
+                    </View>
+                  )}
+                  {request?.testWorkCategoryType && (
+                    <View style={styles.fieldContainer}>
+                      <Text style={styles.fieldLabel}>Work Category</Text>
+                      <Text style={styles.fieldValue}>{request?.testWorkCategoryType}</Text>
+                    </View>
+                  )}
+                </View>
+                
+                <View style={styles.columnContainer}>
+                  {request?.name && (
+                    <View style={styles.fieldContainer}>
+                      <Text style={styles.fieldLabel}>Requested By</Text>
+                      <Text style={styles.fieldValue}>{request?.name}</Text>
+                    </View>
+                  )}
+                  {request?.createdAt && (
+                    <View style={styles.fieldContainer}>
+                      <Text style={styles.fieldLabel}>Request Date</Text>
+                      <Text style={styles.fieldValue}>{request?.createdAt}</Text>
+                    </View>
+                  )}
+                </View>
 
-            {/* --- MIX DESIGN DROPDOWN WITH QUANTITY --- */}
-            <View style={styles.mixDesignTableContainer}>
-              <View style={styles.tableHeader}>
-                <Text style={[styles.tableHeaderText, {flex: 2}]}>
-                  Mix Design
-                </Text>
-                <Text style={[styles.tableHeaderText, {flex: 1.2}]}>
-                  Quantity
-                </Text>
-                <View style={{width: 30}} />
-              </View>
-              {mixDesigns.map(row => (
-                <View key={row.id} style={styles.tableRow}>
-                  <View style={{flex: 2, marginRight: 8}}>
-                    <DropdownPicker
-                      items={getAvailableMixDesigns(row.id)}
-                      value={row.mixDesign}
-                      onChange={(value: any) =>
-                        handleMixDesignChange(value, row.id)
-                      }
-                    />
-                  </View>
+                <View style={styles.formGroup}>
+                  <Text style={styles.label}>
+                    Total Qty Issued <Text style={styles.required}>*</Text>
+                  </Text>
                   <TextInput
-                    style={[styles.input, {flex: 1.2, height: 42}]}
-                    value={row.quantity}
-                    onChangeText={text =>
-                      handleMixDesignQuantityChange(text, row.id)
-                    }
+                    style={styles.input}
+                    value={approvedQty[request._id] ?? String(request.qty_approved ?? request.qty_requested ?? '')}
+                    onChangeText={val => handleQtyChange(request._id, val)}
                     keyboardType="decimal-pad"
-                    placeholder="Qty"
+                    placeholder="Enter total issued quantity"
                   />
-                  <TouchableOpacity
-                    onPress={() => handleRemoveMixDesignRow(row.id)}
-                    style={styles.removeButton}
-                    disabled={mixDesigns.length === 1}>
+                  <Text style={styles.helperText}>
+                    Maximum: {request?.qty_approved ?? request?.qty_requested} {request?.unit ?? requestData.unit} (Approved quantity)
+                  </Text>
+                </View>
+
+                <View style={styles.sourceTableContainer}>
+                  <View style={styles.tableHeader}>
+                    <Text style={[styles.tableHeaderText, {flex: 2}]}>Source</Text>
+                    <Text style={[styles.tableHeaderText, {flex: 1.2}]}>Quantity</Text>
+                    <View style={{width: 30}} />
+                  </View>
+
+                  {getSourceRowsForMaterial(request.testMaterialId)?.map(row => {
+                    // Collect already selected names except current row for this specific material
+                    const selectedNames = localApprovals?.filter(r => r.id !== row.id && r.name && r.testMaterialId === request.testMaterialId)
+                      ?.map(r => r.name);
+
+                    const availableOptions = dispatchSources?.filter(
+                      opt => !selectedNames.includes(opt.value)
+                    );
+
+                    return (
+                      <View key={row.id} style={styles.tableRow}>
+                        <View style={{ flex: 2, marginRight: 8 }}>
+                           <TouchableOpacity
+                          onPress={() => getAvailableSources(request.testMaterialId)}>
+                          <DropdownPicker
+                            items={availableOptions}
+                            value={row.name}
+                            onChange={(value: any) => handleSourceChange(value, row.testMaterialId)}
+                          />
+                          </TouchableOpacity>
+                        </View>
+                        <TextInput
+                          style={[styles.input, { flex: 1.2, height: 42 }]}
+                          value={row.quantity}
+                          onChangeText={text => handleQuantityChange(text, row.id)}
+                          keyboardType="decimal-pad"
+                          placeholder="Qty"
+                        />
+
+                        <TouchableOpacity
+                          onPress={() => handleRemoveSourceRow(row.id, request.testMaterialId)}
+                          style={styles.removeButton}
+                          disabled={getSourceRowsForMaterial(request.testMaterialId).length === 1}
+                        >
+                          <Text
+                            style={[
+                              styles.removeButtonText,
+                              getSourceRowsForMaterial(request.testMaterialId).length === 1 && { color: '#ccc' },
+                            ]}
+                          >
+                            ✕
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                    );
+                  })}
+
+                  <TouchableOpacity 
+                    onPress={() => handleAddSourceRowForMaterial(request.testMaterialId)} 
+                    style={styles.addButton}
+                  >
+                    <Text style={styles.addButtonText}>+ Add Source</Text>
+                  </TouchableOpacity>
+
+                  <View style={styles.totalContainer}>
+                    <Text style={styles.totalLabel}>Sum of Source Qty:</Text>
                     <Text
                       style={[
-                        styles.removeButtonText,
-                        mixDesigns.length === 1 && {color: '#ccc'},
+                        styles.totalValue,
+                        totalSourceQuantityForMaterial(request.testMaterialId) > parseFloat(approvedQty[request._id] ?? '0') &&
+                          styles.errorText,
                       ]}>
-                      ✕
+                      {totalSourceQuantityForMaterial(request.testMaterialId)}
                     </Text>
-                  </TouchableOpacity>
+                  </View>
                 </View>
-              ))}
-              <TouchableOpacity
-                onPress={handleAddMixDesignRow}
-                style={styles.addButton}>
-                <Text style={styles.addButtonText}>+ Add Mix Design</Text>
-              </TouchableOpacity>
-              <View style={styles.totalContainer}>
-                <Text style={styles.totalLabel}>Sum of Mix Design Qty:</Text>
-                <Text
-                  style={[
-                    styles.totalValue,
-                    totalMixDesignQuantity > parseFloat(qtyIssued) &&
-                      styles.errorText,
-                  ]}>
-                  {totalMixDesignQuantity.toFixed(2)}
-                </Text>
-              </View>
-            </View>
 
-            {/* --- VEHICLE NUMBER INPUT --- */}
-            <View style={styles.formGroup}>
-              <Text style={styles.label}>
-                Vehicle 4 Digit No. <Text style={styles.required}>*</Text>
-              </Text>
-              <View style={styles.vehicleInputContainer}>
-                <TextInput
-                  style={[styles.input, {flex: 1}]}
-                  value={currentVehicleInput}
-                  onChangeText={handleVehicleInputChange}
-                  keyboardType="number-pad"
-                  maxLength={4}
-                  placeholder="e.g., 1234"
-                />
-                <TouchableOpacity
-                  onPress={addVehicle}
-                  style={styles.addButton}
-                  disabled={currentVehicleInput.length !== 4}>
-                  <Text style={styles.addButtonText}>+ Add</Text>
+                <TouchableOpacity 
+                  style={styles.submitButtonSingle} 
+                  onPress={() => handleDispatchSingleMaterial(request)}
+                >
+                  <Text style={styles.submitButtonTextSingle}>Dispatch Material</Text>
                 </TouchableOpacity>
               </View>
-              <View style={styles.tagContainer}>
-                {vehicleNumbers.map((vehicle, index) => (
-                  <View key={index} style={styles.tag}>
-                    <Text style={styles.tagText}>{vehicle}</Text>
-                    <TouchableOpacity onPress={() => removeVehicle(index)}>
-                      <Text style={styles.tagRemove}> ✕</Text>
-                    </TouchableOpacity>
-                  </View>
-                ))}
-              </View>
-            </View>
-
-            {/* --- BATCH NO AND SLIP UPLOAD --- */}
-            <View style={styles.formGroup}>
-              <Text style={styles.label}>Batch No.</Text>
-              <TextInput
-                style={styles.input}
-                value={batchNo}
-                onChangeText={setBatchNo}
-                maxLength={100}
-                placeholder="Enter batch number"
-              />
-            </View>
-            <View style={styles.formGroup}>
-              <Text style={styles.label}>Upload Batch Slip</Text>
-              <TouchableOpacity style={styles.uploadButton}>
-                <Text style={styles.uploadButtonText}>Choose File</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.formGroup}>
-              <Text style={styles.label}>Material Dispatch Time</Text>
-              <TouchableOpacity onPress={() => setShowDateTimePicker(true)}>
-                <TextInput
-                  style={styles.input}
-                  value={dispatchTime.toLocaleString('en-IN')}
-                  editable={false}
-                  placeholder="Select Date & Time"
-                />
-              </TouchableOpacity>
-              {showDateTimePicker && (
-                <DateTimePicker
-                  value={dispatchTime}
-                  mode="datetime"
-                  display="default"
-                  onChange={onDateTimeChange}
-                />
-              )}
-            </View>
+            ))}
           </>
         )}
 
-        {/* --- COMMON REMARKS FIELD --- */}
         <View style={styles.formGroup}>
-          <Text style={styles.label}>Remarks (if any)</Text>
+          <Text style={styles.label}>Remarks (Optional)</Text>
           <TextInput
             style={[styles.input, styles.textArea]}
             value={remarks}
@@ -421,15 +522,19 @@ const MaterialApprovalProductionForm: React.FC<MaterialApprovalFormProps> = ({
             multiline
             maxLength={500}
           />
+          <Text style={styles.helperText}>{remarks.length}/500 characters</Text>
         </View>
-
-        <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-          <Text style={styles.submitButtonText}>
-            {status === MATERIAL_REQUEST_STATUS.PENDING_APPROVAL
-              ? 'Approve Material'
-              : 'Dispatch Material'}
-          </Text>
-        </TouchableOpacity>
+        {status === MATERIAL_REQUEST_STATUS.PENDING_APPROVAL ?
+          <TouchableOpacity style={styles.submitButton} onPress={() => handleSubmit('approve')}>
+            <Text style={styles.submitButtonText}>
+              Approve Material
+            </Text>
+          </TouchableOpacity>
+          :
+          <TouchableOpacity style={styles.submitButton} onPress={() => handleSubmit('dispatch')}>
+            <Text style={styles.submitButtonText}>Dispatch All Material</Text>
+          </TouchableOpacity>
+        }
       </View>
     </ScrollView>
   );
@@ -446,6 +551,10 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 20,
     elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
   sectionTitle: {
     fontSize: 18,
@@ -458,7 +567,7 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
   },
   formGroup: {
-    marginBottom: 16,
+    marginBottom: 10,
   },
   label: {
     fontSize: 14,
@@ -470,17 +579,17 @@ const styles = StyleSheet.create({
     color: '#e74c3c',
   },
   input: {
-    height: 42,
-    borderWidth: 1,
+    height: 48,
+    borderWidth: 1.5,
     borderColor: '#ddd',
-    borderRadius: 4,
-    paddingHorizontal: 12,
+    borderRadius: 8,
+    paddingHorizontal: 10,
     backgroundColor: 'white',
     fontSize: 16,
     color: '#333',
   },
   textArea: {
-    height: 100,
+    height: 80,
     textAlignVertical: 'top',
     paddingTop: 12,
   },
@@ -489,61 +598,6 @@ const styles = StyleSheet.create({
     color: '#666',
     marginTop: 4,
     fontStyle: 'italic',
-  },
-  vehicleInputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  addButton: {
-    backgroundColor: '#5A2AAF',
-    paddingHorizontal: 20,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 8,
-    marginLeft: 10,
-  },
-  addButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-  tagContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginTop: 10,
-  },
-  tag: {
-    flexDirection: 'row',
-    backgroundColor: '#e8deff',
-    borderRadius: 15,
-    paddingVertical: 5,
-    paddingHorizontal: 12,
-    marginRight: 8,
-    marginBottom: 8,
-    alignItems: 'center',
-  },
-  tagText: {
-    color: '#5A2AAF',
-    fontWeight: '500',
-  },
-  tagRemove: {
-    color: '#5A2AAF',
-    fontWeight: 'bold',
-    marginLeft: 5,
-  },
-  uploadButton: {
-    height: 42,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 4,
-    borderStyle: 'dashed',
-  },
-  uploadButtonText: {
-    color: '#5A2AAF',
-    fontWeight: '500',
   },
   submitButton: {
     height: 52,
@@ -554,16 +608,30 @@ const styles = StyleSheet.create({
     marginTop: 20,
     elevation: 3,
   },
+  submitButtonSingle: {
+    height: 40,
+    backgroundColor: '#5A2AAF',
+    borderRadius: 26,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 0,
+    marginBottom: 10,
+    elevation: 3,
+  },
+  submitButtonTextSingle: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
   submitButtonText: {
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
   },
-  // New styles for the mix design table
-  mixDesignTableContainer: {
+  sourceTableContainer: {
     borderColor: '#eee',
     borderRadius: 8,
-    marginBottom: 16,
+    marginBottom: 5,
   },
   tableHeader: {
     flexDirection: 'row',
@@ -593,6 +661,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#e74c3c',
   },
+  addButton: {
+    marginTop: 15,
+    alignSelf: 'flex-start',
+  },
+  addButtonText: {
+    color: '#5A2AAF',
+    fontWeight: 'bold',
+  },
   totalContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
@@ -613,6 +689,174 @@ const styles = StyleSheet.create({
   errorText: {
     color: '#e74c3c',
   },
+  mainContainer: {
+    flexDirection: 'column',
+    gap: 10,
+    padding: 10,
+    marginBottom: 10,
+    backgroundColor: '#ffffff',
+    borderRadius: 6,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3, // Android shadow
+  },
+
+  // Left and right column containers
+  columnContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 10,
+  },
+
+  // Individual field containers
+  fieldContainer: {
+    flex: 1,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    backgroundColor: '#f8f9fa',
+  },
+
+  // Field labels
+  fieldLabel: {
+    fontSize: 13,
+    fontWeight: '500',
+    color: '#6c757d',
+    textTransform: "capitalize",
+  },
+
+  // Field values
+  fieldValue: {
+    fontSize: 12,
+    fontWeight: '400',
+    color: '#212529',
+  },
+
+  // Alternative: Card style with gradient background
+  cardContainer: {
+    flexDirection: 'row',
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    backgroundColor: '#667eea', // Fallback color
+    marginHorizontal: 16,
+    marginVertical: 8,
+    borderRadius: 15,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+
+  cardFieldContainer: {
+    marginBottom: 16,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    borderRadius: 10,
+    borderLeftWidth: 3,
+    borderLeftColor: 'rgba(255, 255, 255, 0.5)',
+  },
+
+  cardFieldLabel: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: 'rgba(255, 255, 255, 0.8)',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    marginBottom: 4,
+  },
+
+  cardFieldValue: {
+    fontSize: 11,
+    fontWeight: '500',
+    color: '#ffffff',
+    lineHeight: 20,
+  },
+
+  // Alternative: Minimal style
+  minimalContainer: {
+    flexDirection: 'row',
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    backgroundColor: '#ffffff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e9ecef',
+  },
+
+  minimalColumnContainer: {
+    flex: 1,
+    paddingHorizontal: 12,
+  },
+
+  minimalFieldContainer: {
+    marginBottom: 16,
+    paddingVertical: 4,
+  },
+
+  minimalFieldLabel: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#868e96',
+    marginBottom: 2,
+  },
+
+  minimalFieldValue: {
+    fontSize: 14,
+    fontWeight: '400',
+    color: '#343a40',
+    lineHeight: 22,
+  },
+
+  // Responsive styles (for smaller screens)
+  smallScreenContainer: {
+    flexDirection: 'column',
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+  },
+
+  smallScreenColumn: {
+    marginBottom: 12,
+  },
+
+  // Loading/skeleton styles
+  skeletonField: {
+    height: 16,
+    backgroundColor: '#e9ecef',
+    borderRadius: 4,
+    marginBottom: 8,
+  },
+
+  skeletonLabel: {
+    height: 12,
+    width: '60%',
+    backgroundColor: '#f8f9fa',
+    borderRadius: 3,
+    marginBottom: 4,
+  },
+
+  // Status-based field styling
+  successField: {
+    borderLeftColor: '#28a745',
+    backgroundColor: '#f8fff9',
+  },
+
+  warningField: {
+    borderLeftColor: '#ffc107',
+    backgroundColor: '#fffef7',
+  },
+
+  errorField: {
+    borderLeftColor: '#dc3545',
+    backgroundColor: '#fff8f8',
+  },
 });
 
-export default MaterialApprovalProductionForm;
+export default MaterialApprovalProduction;

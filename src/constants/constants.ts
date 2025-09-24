@@ -80,6 +80,8 @@ export const HeaderItems = {
   addVendorForm: {showBack: true, title: 'Add Vendor Form'},
   vendorFormLists: {showBack: true, title: 'Vendor Details'},
   materialRequestFormLists: {showBack: true, title: 'Material Request'},
+  newContingencyRequestFormLists: {showBack: true, title: 'New Contingency Request'},
+  ProductionRequestFormLists: {showBack: true, title: 'Production Material Request'},
   procurements: {showBack: true, title: 'Procurements'},
   mixDesignListing: {showBack: true, title: 'Mix Design'},
   mixDesignInfo: {showBack: true, title: 'Mix Design'},
@@ -1033,6 +1035,7 @@ export const MATERIAL_REQUEST_STATUS = {
   ACCEPTED: 'accepted',
   REJECTED: 'rejected',
   DELIVERED: 'delivered',
+  DISPATCHED: 'dispatched',
 };
 export const TEST_TYPES = {
   CORE_TEST: 'core-test',

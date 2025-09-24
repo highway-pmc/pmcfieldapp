@@ -50,7 +50,7 @@ const DropdownPicker: React.FC<DropdownPickerProps> = ({
           style={styles.picker}
           onBlur={handleBlur}
           onValueChange={onChange}>
-          {items.map((option, index) => (
+          {items?.map((option, index) => (
               <Picker.Item style={{fontSize: 13}} key={index} label={option[lableField]} value={option[valueField]} />
           ))}
         </Picker>

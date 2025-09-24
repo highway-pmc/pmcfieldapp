@@ -97,6 +97,7 @@ const meterialRequestFormState = {
   getMeterialRequestFormData: null,
   getMeterialRequestToFormData: null,
   patchMeterialRequestStatusData: null,
+  patchDispatchRequestData: null,
   error: null,
 };
 
@@ -2506,6 +2507,46 @@ const MeterialRequestFormReducer = (
   action,
 ) => {
   switch (action.type) {
+    case METERIAL_REQUEST.POST_BATCH_SLIP_REQUEST:
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case METERIAL_REQUEST.POST_BATCH_SLIP_REQUEST_SUCCESS:
+      return {
+        ...state,
+        uploadingBatchData: action.response,
+        error: null,
+        loading: false,
+      };
+    case METERIAL_REQUEST.POST_BATCH_SLIP_REQUEST_FAILURE:
+      return {
+        ...state,
+        uploadingBatchData: null,
+        error: action.error,
+        loading: false,
+      };
+    case METERIAL_REQUEST.PATCH_DISPATCH_REQUEST:
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case METERIAL_REQUEST.PATCH_DISPATCH_REQUEST_SUCCESS:
+      return {
+        ...state,
+        patchDispatchRequestData: action.response,
+        error: null,
+        loading: false,
+      };
+    case METERIAL_REQUEST.PATCH_DISPATCH_REQUEST_FAILURE:
+      return {
+        ...state,
+        patchDispatchRequestData: null,
+        error: action.error,
+        loading: false,
+      };
     case METERIAL_REQUEST.PATCH_MATERIAL_REQUEST_STATUS:
       return {
         ...state,
@@ -2593,6 +2634,8 @@ const MeterialRequestFormReducer = (
         postMeterialRequestFormData: null,
         getMeterialRequestToFormData: null,
         patchMeterialRequestStatusData: null,
+        patchDispatchRequestData: null,
+        uploadingBatchData: null,
         error: action.error,
         error: null,
         loading: true,

@@ -14,6 +14,17 @@ export const getMeterialRequestFormApi = async (projectId, id) => {
     });
 };
 
+export const postUploadBatchSlipApi = async (projectId, id) => {
+  return apiService.postRequest(`v1/auth/projects/${projectId}/material-requests/items/${id}/upload-batch-slip`)
+    .then(response => {
+      return response;
+    })
+    .catch(err => {
+      const errorMessge = err?.message || 'Unable to Create Meterial Request.';
+      throw new Error(errorMessge);
+    });
+};
+
 export const postMeterialRequestFormApi = async (projectId, body) => {
   return apiService.postRequest(`v1/auth/projects/${projectId}/material-requests`, body)
     .then(response => {
@@ -25,9 +36,9 @@ export const postMeterialRequestFormApi = async (projectId, body) => {
     });
 };
 
-export const getMeterialRequestToFormApi = async (projectId, type) => {
-  console.log('---!!!', projectId, type)
-  return apiService.getRequest(`v1/auth/projects/${projectId}/material-requests?requestTo=${type}`)
+export const getMeterialRequestToFormApi = async (projectId, type, requestType) => {
+  console.log('---!!!', projectId, type, requestType)
+  return apiService.getRequest(`v1/auth/projects/${projectId}/material-requests?requestTo=${type}&requestType${requestType}`)
     .then(response => {
   console.log('---!!!', response)
 
@@ -49,6 +60,20 @@ export const patchMeterialRequestStatusApi = async (projectId, id, body) => {
     })
     .catch(err => {
       const errorMessge = err?.message || 'Unable to mark meterial status.';
+      throw new Error(errorMessge);
+    });
+};
+
+export const patchDipatchRequestApi = async (projectId, id, body) => {
+  console.log('patch---!!!', projectId, id, body)
+  return apiService.patchRequest(`v1/auth/projects/${projectId}/material-requests/items/${id}/dispatch-store`, body)
+    .then(response => {
+  console.log('---!!!', response)
+
+      return response;
+    })
+    .catch(err => {
+      const errorMessge = err?.message || 'Unable to Dispatch meterial.';
       throw new Error(errorMessge);
     });
 };
@@ -102,7 +127,7 @@ export const getVendorFormApi = async () => {
 export const getSourceApprovalsApi = async (projectId, testMaterialId) => {
   return apiService
     .getRequest(
-      `v1/auth/projects/${projectId}/test-material/${testMaterialId}/source-approvals`,
+      `v1/auth/projects/${projectId}/test-materials/${testMaterialId}/source-approvals`,
     )
     .then(response => {
       return response;

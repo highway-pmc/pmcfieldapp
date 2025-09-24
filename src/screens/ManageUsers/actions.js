@@ -112,6 +112,16 @@ export const clearNextLevel = () => ({
   type: 'CLEAR_NEXT_LEVEL',
 });
 
+export const patchDispatchRequest = (payload) => ({
+  type: METERIAL_REQUEST.PATCH_DISPATCH_REQUEST,
+  payload,
+});
+
+export const postUploadBatchSlip = (payload) => ({
+  type: METERIAL_REQUEST.POST_BATCH_SLIP_REQUEST,
+  payload,
+});
+
 export const patchMaterialRequestStatus = (payload) => ({
   type: METERIAL_REQUEST.PATCH_MATERIAL_REQUEST_STATUS,
   payload,

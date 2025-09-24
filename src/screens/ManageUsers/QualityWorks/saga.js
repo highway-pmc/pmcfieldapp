@@ -39,6 +39,8 @@ import {
   postMeterialRequestFormApi,
   getMeterialRequestToFormApi,
   patchMeterialRequestStatusApi,
+  patchDipatchRequestApi,
+  postUploadBatchSlipApi,
 } from '../../../services/source-procurements/source-procurements.service';
 import {METERIAL_REQUEST, PROCUREMENTS, SOURCE_APPROVALS, VENDOR_FORM} from './constants';
 function* getUserCategories() {
@@ -570,7 +572,7 @@ function* postMeterialRequestForm({payload}) {
 
 function* getMeterialRequestToForm({payload}) {
   try {
-    const response = yield getMeterialRequestToFormApi(payload.projectId, payload.type);
+    const response = yield getMeterialRequestToFormApi(payload.projectId, payload.type, payload.requestType);
     yield put({type: METERIAL_REQUEST.GET_MATERIAL_REQUEST_TO_SUCCESS, response});
   } catch (error) {
     yield put({
@@ -588,6 +590,30 @@ function* patchMeterialRequestStatus({payload}) {
   } catch (error) {
     yield put({
       type: METERIAL_REQUEST.PATCH_MATERIAL_REQUEST_STATUS_FAILURE,
+      error: error.message,
+    });
+  }
+}
+
+function* patchDipatchRequest({payload}) {
+  try {
+    const response = yield patchDipatchRequestApi(payload.projectId, payload.id, payload.body);
+    yield put({type: METERIAL_REQUEST.PATCH_DISPATCH_REQUEST_SUCCESS, response});
+  } catch (error) {
+    yield put({
+      type: METERIAL_REQUEST.PATCH_DISPATCH_REQUEST_FAILURE,
+      error: error.message,
+    });
+  }
+}
+
+function* postUploadBatchSlip({payload}) {
+  try {
+    const response = yield postUploadBatchSlipApi(payload.projectId, payload.id);
+    yield put({type: METERIAL_REQUEST.POST_BATCH_SLIP_REQUEST_SUCCESS, response});
+  } catch (error) {
+    yield put({
+      type: METERIAL_REQUEST.PATCH_DISPATCH_REQUEST_FAILURE,
       error: error.message,
     });
   }
@@ -627,6 +653,16 @@ export default function* testAssignmentScreenSaga() {
   yield takeLatest(
     'GET_TEST_CLASSIFICATION_NEXT_LEVEL_REQUEST',
     getTestClassificationNextLevel,
+  );
+
+  yield takeLatest(
+    METERIAL_REQUEST.PATCH_DISPATCH_REQUEST,
+    patchDipatchRequest,
+  );
+
+  yield takeLatest(
+    METERIAL_REQUEST.POST_BATCH_SLIP_REQUEST,
+    postUploadBatchSlip,
   );
 
   yield takeLatest(

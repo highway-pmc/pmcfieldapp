@@ -36,10 +36,6 @@ const statusType = [
   {status: MATERIAL_REQUEST_STATUS.REJECTED, statusText: 'Rejected'},
 ]
 
-const contingencyRequests: RequestItem[] = [
-  // Add contingency requests data here if needed. For now, it's empty.
-];
-
 const RequestPage = () => {
   const [selectedTab, setSelectedTab] = useState(
     REQUEST_TYPES.INVENTORY_REQUEST,
@@ -52,19 +48,22 @@ const RequestPage = () => {
   const [inventoryRequests, setInventoryRequests] = useState<any[]>([]);
   const [contingencyRequests, setContingencyRequests] = useState<any[]>([]);
 
-
+const currentRequests =
+  selectedTab === REQUEST_TYPES.INVENTORY_REQUEST
+    ? inventoryRequests
+    : contingencyRequests;
   useEffect(() => {
       if (patchMeterialRequestStatusData) {
         showSnackbar("Meterial status updated successfully", "success");
-        dispatch(getMaterialRequestTo({ projectId: loggedInUser.projectId, type: 'procurement-details' }));
+        dispatch(getMaterialRequestTo({ projectId: loggedInUser.projectId, type: 'procurement-details', requestType: selectedTab === REQUEST_TYPES.INVENTORY_REQUEST ? REQUEST_TYPES.INVENTORY_REQUEST : REQUEST_TYPES.CONTINGENCY_REQUEST }));
       } else if (error) {
         showSnackbar(error, "error");
       }
     }, [patchMeterialRequestStatusData, error]);
 
   useEffect(() => {
-    dispatch(getMaterialRequestTo({ projectId: loggedInUser.projectId, type: 'procurement-details' }));
-  }, [])
+    dispatch(getMaterialRequestTo({ projectId: loggedInUser.projectId, type: 'procurement-details', requestType: selectedTab === REQUEST_TYPES.INVENTORY_REQUEST ? REQUEST_TYPES.INVENTORY_REQUEST : REQUEST_TYPES.CONTINGENCY_REQUEST }));
+  }, [selectedTab])
 
   useEffect(() => {
   if (getMeterialRequestToFormData?.length) {
@@ -89,20 +88,20 @@ const RequestPage = () => {
           obj.workCategory === value.workCategory
       )
   );
-
-    setInventoryRequests(mapped); // ✅ update state
+    if (selectedTab === REQUEST_TYPES.INVENTORY_REQUEST) {
+      setContingencyRequests([]);
+      setInventoryRequests(mapped); // ✅ update state
+    } else {
+      setInventoryRequests([]);
+      setContingencyRequests(mapped);
+    }
     console.log("inventoryRequests mapped:", mapped);
   }
-}, [getMeterialRequestToFormData]);
-
-const currentRequests =
-  selectedTab === REQUEST_TYPES.INVENTORY_REQUEST
-    ? inventoryRequests
-    : contingencyRequests;
+}, [getMeterialRequestToFormData, selectedTab]);
 
   // Handles navigation when a new request button is pressed
   const navigateToRequestForm = () => {
-    navigation.navigate('MaterialStoreRequestForm', {requestType: selectedTab});
+    navigation.navigate('ContingencyRequestComponent', {requestType: selectedTab});
   };
 
   // Handles actions from the RequestCard component (e.g., accept, reject, navigate)
@@ -211,17 +210,17 @@ const currentRequests =
         </ScrollView>
 
         {/* Footer Button */}
-        {/* <View style={styles.footerContainer}>
+        {selectedTab === REQUEST_TYPES.CONTINGENCY_REQUEST &&
+        <View style={styles.footerContainer}>
           <TouchableOpacity
             style={styles.newRequestButton}
             onPress={navigateToRequestForm}>
             <Text style={styles.newRequestButtonText}>
-              {selectedTab === REQUEST_TYPES.INVENTORY_REQUEST
-                ? 'New Inventory Request'
-                : 'New Contingency Request'}
+               New Contingency Request
             </Text>
           </TouchableOpacity>
-        </View> */}
+        </View>
+        }
       </View>
     </SafeAreaView>
   );

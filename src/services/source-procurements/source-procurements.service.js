@@ -1,11 +1,8 @@
 import apiService from '../api.service';
 
 export const getMeterialRequestFormApi = async (projectId, id) => {
-  console.log('---!!!', projectId, id)
   return apiService.getRequest(`v1/auth/projects/${projectId}/tasks/${id}/prepare-request`)
     .then(response => {
-  console.log('---!!!', response)
-
       return response;
     })
     .catch(err => {
@@ -14,13 +11,13 @@ export const getMeterialRequestFormApi = async (projectId, id) => {
     });
 };
 
-export const postUploadBatchSlipApi = async (projectId, id) => {
-  return apiService.postRequest(`v1/auth/projects/${projectId}/material-requests/items/${id}/upload-batch-slip`)
+export const postUploadBatchSlipApi = async (projectId, id, body) => {
+  return apiService.postRequest(`v1/auth/projects/${projectId}/material-requests/items/${id}/upload-batch-slip`, body)
     .then(response => {
       return response;
     })
     .catch(err => {
-      const errorMessge = err?.message || 'Unable to Create Meterial Request.';
+      const errorMessge = err?.message || 'Unable to upload Batch Slip.';
       throw new Error(errorMessge);
     });
 };

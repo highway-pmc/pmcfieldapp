@@ -609,11 +609,11 @@ function* patchDipatchRequest({payload}) {
 
 function* postUploadBatchSlip({payload}) {
   try {
-    const response = yield postUploadBatchSlipApi(payload.projectId, payload.id);
+    const response = yield postUploadBatchSlipApi(payload.projectId, payload.id, payload.body);
     yield put({type: METERIAL_REQUEST.POST_BATCH_SLIP_REQUEST_SUCCESS, response});
   } catch (error) {
     yield put({
-      type: METERIAL_REQUEST.PATCH_DISPATCH_REQUEST_FAILURE,
+      type: METERIAL_REQUEST.POST_BATCH_SLIP_REQUEST_FAILURE,
       error: error.message,
     });
   }

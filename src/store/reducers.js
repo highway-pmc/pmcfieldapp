@@ -98,6 +98,7 @@ const meterialRequestFormState = {
   getMeterialRequestToFormData: null,
   patchMeterialRequestStatusData: null,
   patchDispatchRequestData: null,
+  uploadingBatchData: null,
   error: null,
 };
 

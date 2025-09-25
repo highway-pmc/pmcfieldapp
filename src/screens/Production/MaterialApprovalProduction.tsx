@@ -15,9 +15,12 @@ import {
 import {HeaderItems, MATERIAL_REQUEST_STATUS} from '../../constants/constants';
 import DropdownPicker from '../../components/UI/DropdownPicker';
 import DetailsCard from '../Common/DetailsCard';
-import { getSourceApprovals, patchDispatchRequest, patchMaterialRequestStatus } from '../ManageUsers/actions';
+import { getSourceApprovals, patchDispatchRequest, patchMaterialRequestStatus, postUploadBatchSlip } from '../ManageUsers/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSnackbar } from '../../context/SnackbarContext';
+import { getMixDesignListInfo } from '../RFIs/actions';
+import DocumentPicker from 'react-native-document-picker';
+import appConfig from '../../common/app.config';
 
 // --- Type Definitions ---
 
@@ -83,14 +86,21 @@ const MaterialApprovalProduction = ({route, navigation}) => {
   const [dispatchSources, setDispatchSources] = useState<any[]>([]);
   // initial state: one row
   const [localApprovals, setLocalApprovals] = useState<any[]>([]);
-  const [nextId, setNextId] = useState<number>(2);
+    // Add these state variables at the top of your component
+  const [vehicleNumbers, setVehicleNumbers] = useState<{[key: string]: string[]}>({});
+  const [currentVehicleInput, setCurrentVehicleInput] = useState<{[key: string]: string}>({});
+  const [batchNumbers, setBatchNumbers] = useState<{[key: string]: string}>({});
+  const [batchSlips, setBatchSlips]: any = useState(null);
+  const [fileUrlData, setfileUrlData]: any = useState('');
+  const [selectedMixDesigns, setSelectedMixDesigns] = useState<{[key: string]: string}>({});
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
   const { showSnackbar } = useSnackbar();
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
   const [approvedQty, setApprovedQty] = useState({}); // object keyed by id
-  const { patchMeterialRequestStatusData, loading: any, error } = useSelector((state) => state.MeterialRequest);
+  const { patchMeterialRequestStatusData, uploadingBatchData, loading: any, error } = useSelector((state) => state.MeterialRequest);
   const {sourceApprovals} = useSelector((state: any) => state.SourceApprovals);
+  const {qualityMixDesignListInfo} = useSelector((state: any) => state.RFIs);
 
   useEffect(() => {
         if (patchMeterialRequestStatusData) {
@@ -121,35 +131,9 @@ const MaterialApprovalProduction = ({route, navigation}) => {
       quantity: '',
     }));
     setLocalApprovals(initialApprovals);
+    dispatch(getMixDesignListInfo({projectId: loggedInUser.projectId, testWorkCategoryType: route.params?.item?.items[0]?.testWorkCategoryType, testMaterialId: route.params?.item?.items[0]?.testMaterialId}));
   }
-}, [route.params?.item?.items]);
-
-  const detailsData = useMemo(() => {
-    const data = [
-      {label: 'Material Name', value: requestData.materialName},
-      {label: 'Category', value: requestData.materialCategory},
-      {label: 'Work Category', value: requestData.workCategory},
-      {label: 'Unit', value: requestData.unit},
-      {
-        label: 'Qty Requested',
-        value: `${requestData.qtyRequested} ${requestData.unit}`,
-      },
-    ];
-    if (status === MATERIAL_REQUEST_STATUS.PENDING_DISPATCH) {
-      data.push({
-        label: 'Qty Approved',
-        value: `${requestData.qtyApproved} ${requestData.unit}`,
-      });
-    }
-    data.push({type: 'divider' as const});
-    data.push(
-      {label: 'Task Details', value: requestData.taskPath},
-      {label: 'Requested by', value: requestData.userName},
-      {label: 'Request Date', value: requestData.requestDateTime},
-    );
-    return data;
-  }, [status]);
-
+}, [route.params?.item?.items, qualityMixDesignListInfo]);
 
   const handleQtyChange = (id, value) => {
     setApprovedQty(prev => ({ ...prev, [id]: value }));
@@ -207,94 +191,164 @@ const getAvailableSources = (currentRowId: any) => {
   setDispatchSources(allSources);
 };
 
-// Handle source dropdown change
-const handleSourceChange = (newValue: string, rowId: string) => {
-  setLocalApprovals(prev =>
-    prev.map(row =>
-      row.testMaterialId === rowId ? { ...row, name: newValue } : row
-    )
-  );
-};
 
-// Handle qty input
-const handleQuantityChange = (value: string, rowId: string) => {
-  setLocalApprovals(prev =>
-    prev.map(row => (row.id === rowId ? { ...row, quantity: value } : row))
-  );
-};
 
-// Remove row
-// Updated remove function to ensure at least one row per material
-const handleRemoveSourceRow = (id: string, materialId: any) => {
-  const materialRows = localApprovals?.filter(row => row.testMaterialId === materialId);
-  
-  // Don't remove if it's the last row for this material
-  if (materialRows.length <= 1) {
+// Add vehicle number functions
+const handleAddVehicle = (requestId: string) => {
+  const vehicleNumber = currentVehicleInput[requestId]?.trim();
+  if (!vehicleNumber || vehicleNumber.length !== 4) {
+    Alert.alert('Error', 'Please enter a valid 4-digit vehicle number');
     return;
   }
-  
-  setLocalApprovals(prev => prev?.filter(row => row.id !== id));
-};
 
-
-const totalSourceQuantityForMaterial = (materialId: any) => {
-  return localApprovals?.filter(row => row.testMaterialId === materialId)?.reduce((total, row) => total + (parseFloat(row.quantity) || 0), 0);
-};
-
-// Add source row for specific material
-const handleAddSourceRowForMaterial = (materialId: any) => {
-  setLocalApprovals((prev: any) => [
+  setVehicleNumbers(prev => ({
     ...prev,
-    {
-      id: `${materialId}_${Date.now()}`,
-      testMaterialId: materialId,
-      name: '',
-      quantity: '',
-    },
-  ]);
+    [requestId]: [...(prev[requestId] || []), vehicleNumber]
+  }));
+
+  setCurrentVehicleInput(prev => ({
+    ...prev,
+    [requestId]: ''
+  }));
 };
 
-// Helper function to get default row for a material if none exists
-const getSourceRowsForMaterial = (materialId: any) => {
-  return localApprovals?.filter(row => row.testMaterialId === materialId);
+const handleRemoveVehicle = (requestId: string, vehicleNumber: string) => {
+  setVehicleNumbers(prev => ({
+    ...prev,
+    [requestId]: prev[requestId]?.filter(v => v !== vehicleNumber) || []
+  }));
 };
 
-// Handle dispatch for single material
+// Handle batch slip upload (you'll need to implement file picker)
+const handleBatchSlipUpload = async (requestId: string) => {
+      try {
+      const result: any = await DocumentPicker.pick({
+        type: [DocumentPicker.types.images, DocumentPicker.types.pdf],
+        allowMultiSelection: false,
+      });
+      const res = result[0];
+      setBatchSlips(res);
+      console.log('==res===', batchSlips);
+    } catch (err) {
+      console.log('======err2===', err);
+      if (DocumentPicker.isCancel(err)) {
+        showSnackbar('No document selected');
+      } else {
+        throw err;
+      }
+    }
+
+
+
+      if (!batchSlips) {
+        return;
+      }
+
+
+      let urlOfS = `${appConfig.API_URL}/v1/auth/projects/${
+        loggedInUser.projectId
+      }/material-requests/items/${route.params?.item?.items[0]?.testMaterialId}/upload-batch-slip`;
+      if (batchSlips.size < 5000000) {
+        let data = new FormData();
+        data.append('file', batchSlips);
+        try {
+          const responseOfFileUpload = await fetch(urlOfS, {
+            method: 'POST',
+            headers: {
+              Authorization: appConfig.getToken(),
+            },
+            body: data,
+          });
+          console.log('===responseOfFileUpload====', responseOfFileUpload);
+          if (responseOfFileUpload.status == 200) {
+            let responseInJs = await responseOfFileUpload.json();
+            console.log('===responseInJs====', responseInJs);
+            let fileName = responseInJs.data.fileUrl; // file name which will be        sent from backend
+            setfileUrlData(fileName)
+            showSnackbar('Upload Succesfull');
+            setBatchSlips(null);
+          } else {
+            showSnackbar('Upload Failed');
+          }
+        } catch (err) {
+          console.log('========err==', err);
+          showSnackbar('Upload Failed');
+          console.log(err, 'error in upload');
+        }
+      } else {
+        showSnackbar('File size should not exceed 4 MB');
+      }
+};
+
+// Handle mix design selection
+const handleMixDesignChange = (requestId: string, value: string) => {
+  setSelectedMixDesigns(prev => ({
+    ...prev,
+    [requestId]: value
+  }));
+};
+
+// Handle quantity issued change
+const handleQtyIssuedChange = (requestId: string, value: string) => {
+  setQtyIssued(prev => ({
+    ...prev,
+    [requestId]: value
+  }));
+};
+
+// Handle batch number change
+const handleBatchNumberChange = (requestId: string, value: string) => {
+  setBatchNumbers(prev => ({
+    ...prev,
+    [requestId]: value
+  }));
+};
+
+// Updated dispatch function with proper API payload
 const handleDispatchSingleMaterial = (request: any) => {
-  const materialSources = localApprovals?.filter(row => row.testMaterialId === request.testMaterialId);
-  const totalQty = totalSourceQuantityForMaterial(request.testMaterialId);
-  const approvedQtyForMaterial = parseFloat(approvedQty[request._id] ?? String(request.qty_approved ?? request.qty_requested));
+  const requestId = request._id;
+  const issiedQty = qtyIssued[requestId];
+  const selectedMixDesign = selectedMixDesigns[requestId];
+  const vehicleList = vehicleNumbers[requestId] || [];
+  const batchNo = batchNumbers[requestId];
 
-  // Validate quantities
-  if (totalQty !== approvedQtyForMaterial) {
-    Alert.alert('Error', `Source quantities (${totalQty}) must equal approved quantity (${approvedQtyForMaterial}) for ${request.testMaterialType}`);
+  // Validation
+  if (!issiedQty || parseFloat(issiedQty) <= 0) {
+    Alert.alert('Error', 'Please enter a valid quantity to issue');
     return;
   }
 
-  // // Validate all sources are selected
-  // const incompleteRows = materialSources?.filter(row => !row.name || !row.quantity);
-  // if (incompleteRows.length > 0) {
-  //   Alert.alert('Error', 'Please fill in all source details');
+  // if (!selectedMixDesign) {
+  //   Alert.alert('Error', 'Please select a mix design');
   //   return;
   // }
 
-  // Create payload for single material dispatch
-  let payload = {
-    qty_issued: request.qty_requested,
-    vehicleDetails: [],
-    batchNo: '',
-    batchSlip: '',
+  if (vehicleList.length === 0) {
+    Alert.alert('Error', 'Please add at least one vehicle number');
+    return;
+  }
+
+  if (!batchNo) {
+    Alert.alert('Error', 'Please enter batch number');
+    return;
+  }
+
+  // Create API payload
+  const payload = {
+    qty_issued: parseFloat(issiedQty),
+    vehicleDetails: vehicleList.map(vehicle => (vehicle)),
+    batchNo: batchNo,
+    batchSlip: fileUrlData || '', // File path or base64
     comments_issued: remarks,
-    source: [{
-      materialRequestItemId: request._id,
-      quantityDispatched: approvedQtyForMaterial,
-      mixDesign: materialSources.map(source => ({
-        mixDesignName: source.name,
-        mixDesignId: source?._id,
-        qty: parseFloat(source.quantity)
-      }))
+    mixDesign: [{
+      mixDesignName: selectedMixDesign,
+      mixDesignId: selectedMixDesigns?._id || selectedMixDesigns?.id,
+      qty: parseFloat(issiedQty)
     }]
   };
+
+  console.log('Dispatch Payload:', payload);
+
   dispatch(
     patchDispatchRequest({
       projectId: loggedInUser.projectId,
@@ -302,8 +356,6 @@ const handleDispatchSingleMaterial = (request: any) => {
       body: payload,
     })
   );
-
-  Alert.alert('Success', `${request.testMaterialType} has been dispatched successfully!`);
 };
 
 
@@ -379,161 +431,216 @@ const handleDispatchSingleMaterial = (request: any) => {
 
         {status === MATERIAL_REQUEST_STATUS.PENDING_DISPATCH && (
           <>
-            {route.params?.item?.items?.map((request: any, index: number) => (
-              <View key={request._id || index} style={styles.mainContainer}>
-                <View style={styles.columnContainer}>
-                  {request?.testMaterialType && (
-                    <View style={styles.fieldContainer}>
-                      <Text style={styles.fieldLabel}>Material Name</Text>
-                      <Text style={styles.fieldValue}>{request?.testMaterialType}</Text>
-                    </View>
-                  )}
-                  {request?.testWorkCategoryType && (
-                    <View style={styles.fieldContainer}>
-                      <Text style={styles.fieldLabel}>Work Category</Text>
-                      <Text style={styles.fieldValue}>{request?.testWorkCategoryType}</Text>
-                    </View>
-                  )}
-                </View>
-                
-                <View style={styles.columnContainer}>
-                  {request?.name && (
-                    <View style={styles.fieldContainer}>
-                      <Text style={styles.fieldLabel}>Requested By</Text>
-                      <Text style={styles.fieldValue}>{request?.name}</Text>
-                    </View>
-                  )}
-                  {request?.createdAt && (
-                    <View style={styles.fieldContainer}>
-                      <Text style={styles.fieldLabel}>Request Date</Text>
-                      <Text style={styles.fieldValue}>{request?.createdAt}</Text>
-                    </View>
-                  )}
-                </View>
-
-                <View style={styles.formGroup}>
-                  <Text style={styles.label}>
-                    Total Qty Issued <Text style={styles.required}>*</Text>
-                  </Text>
-                  <TextInput
-                    style={styles.input}
-                    value={approvedQty[request._id] ?? String(request.qty_approved ?? request.qty_requested ?? '')}
-                    onChangeText={val => handleQtyChange(request._id, val)}
-                    keyboardType="decimal-pad"
-                    placeholder="Enter total issued quantity"
-                  />
-                  <Text style={styles.helperText}>
-                    Maximum: {request?.qty_approved ?? request?.qty_requested} {request?.unit ?? requestData.unit} (Approved quantity)
-                  </Text>
-                </View>
-
-                <View style={styles.sourceTableContainer}>
-                  <View style={styles.tableHeader}>
-                    <Text style={[styles.tableHeaderText, {flex: 2}]}>Source</Text>
-                    <Text style={[styles.tableHeaderText, {flex: 1.2}]}>Quantity</Text>
-                    <View style={{width: 30}} />
+            {route.params?.item?.items?.map((request: any, index: number) => {
+              const requestId = request._id;
+              return (
+                <View key={requestId || index} style={styles.mainContainerDispatch}>
+                  {/* Header Information */}
+                  <View style={styles.columnContainer}>
+                    {request?.testMaterialType && (
+                      <View style={styles.fieldContainer}>
+                        <Text style={styles.fieldLabel}>Material Name</Text>
+                        <Text style={styles.fieldValue}>{request?.testMaterialType}</Text>
+                      </View>
+                    )}
+                    {request?.testWorkCategoryType && (
+                      <View style={styles.fieldContainer}>
+                        <Text style={styles.fieldLabel}>Work Category</Text>
+                        <Text style={styles.fieldValue}>{request?.testWorkCategoryType || 'NA'}</Text>
+                      </View>
+                    )}
+                  </View>
+                  
+                  <View style={styles.columnContainer}>
+                      <View style={styles.fieldContainer}>
+                        <Text style={styles.fieldLabel}>Requested By</Text>
+                        <Text style={styles.fieldValue}>{request?.name || 'NA'}</Text>
+                      </View>
+                      <View style={styles.fieldContainer}>
+                        <Text style={styles.fieldLabel}>Request Date</Text>
+                        <Text style={styles.fieldValue}>{new Date(request?.createdAt).toLocaleDateString()}</Text>
+                      </View>
                   </View>
 
-                  {getSourceRowsForMaterial(request.testMaterialId)?.map(row => {
-                    // Collect already selected names except current row for this specific material
-                    const selectedNames = localApprovals?.filter(r => r.id !== row.id && r.name && r.testMaterialId === request.testMaterialId)
-                      ?.map(r => r.name);
+                  <View style={styles.columnContainer}>
+                      <View style={styles.fieldContainer}>
+                        <Text style={styles.fieldLabel}>Material category*</Text>
+                        <Text style={styles.fieldValue}>{request?.materialCategory || request?.testMaterialCategory || 'Aggregate'}</Text>
+                      </View>
+                      <View style={styles.fieldContainer}>
+                        <Text style={styles.fieldLabel}>Unit</Text>
+                        <Text style={styles.fieldValue}>{request?.unit || 'Ton'}</Text>
+                      </View>
+                  </View>
 
-                    const availableOptions = dispatchSources?.filter(
-                      opt => !selectedNames.includes(opt.value)
-                    );
+                  <View style={styles.columnContainer}>
+                      <View style={styles.fieldContainer}>
+                        <Text style={styles.fieldLabel}>Qty requested</Text>
+                        <Text style={styles.fieldValue}>{request?.qty_requested || 0}</Text>
+                      </View>
+                      <View style={styles.fieldContainer}>
+                        <Text style={styles.fieldLabel}>Qty Approved</Text>
+                        <Text style={styles.fieldValue}>{request?.qty_approved || request?.qty_requested || 0}</Text>
+                      </View>
+                  </View>
 
-                    return (
-                      <View key={row.id} style={styles.tableRow}>
-                        <View style={{ flex: 2, marginRight: 8 }}>
-                           <TouchableOpacity
+                  {/* Mix Design Details Section */}
+                  <View style={styles.mixDesignSection}>
+                    <Text style={styles.mixDesignTitle}>Mix Design Details</Text>
+                    
+                    <View style={styles.mixDesignRow}>
+                      <View style={styles.mixDesignDropdown}>
+                        <TouchableOpacity
                           onPress={() => getAvailableSources(request.testMaterialId)}>
                           <DropdownPicker
-                            items={availableOptions}
-                            value={row.name}
-                            onChange={(value: any) => handleSourceChange(value, row.testMaterialId)}
+                            label={'Mix Design Details*'}
+                            items={qualityMixDesignListInfo}
+                            value={selectedMixDesigns[requestId] || ''}
+                            onChange={(value: any) => handleMixDesignChange(requestId, value)}
+                            placeholder="Select"
                           />
-                          </TouchableOpacity>
-                        </View>
-                        <TextInput
-                          style={[styles.input, { flex: 1.2, height: 42 }]}
-                          value={row.quantity}
-                          onChangeText={text => handleQuantityChange(text, row.id)}
-                          keyboardType="decimal-pad"
-                          placeholder="Qty"
-                        />
-
-                        <TouchableOpacity
-                          onPress={() => handleRemoveSourceRow(row.id, request.testMaterialId)}
-                          style={styles.removeButton}
-                          disabled={getSourceRowsForMaterial(request.testMaterialId).length === 1}
-                        >
-                          <Text
-                            style={[
-                              styles.removeButtonText,
-                              getSourceRowsForMaterial(request.testMaterialId).length === 1 && { color: '#ccc' },
-                            ]}
-                          >
-                            ✕
-                          </Text>
                         </TouchableOpacity>
                       </View>
-                    );
-                  })}
+                      
+                      <View style={styles.qtyIssuedContainer}>
+                        <Text style={styles.qtyIssuedLabel}>Qty issued*</Text>
+                        <TextInput
+                          style={styles.qtyIssuedInput}
+                          placeholder="Qty issued*"
+                          keyboardType="decimal-pad"
+                          value={qtyIssued[requestId] || ''}
+                          onChangeText={(value) => handleQtyIssuedChange(requestId, value)}
+                        />
+                      </View>
+                    </View>
+                  </View>
 
-                  <TouchableOpacity 
-                    onPress={() => handleAddSourceRowForMaterial(request.testMaterialId)} 
-                    style={styles.addButton}
-                  >
-                    <Text style={styles.addButtonText}>+ Add Source</Text>
-                  </TouchableOpacity>
+                  {/* Vehicle Details Section */}
+                  <View style={styles.vehicleSection}>
+                    <Text style={styles.vehicleSectionTitle}>Vehicle No (Last 4 digit)</Text>
+                    
+                    <View style={styles.vehicleInputRow}>
+                      <TextInput
+                        style={styles.vehicleInput}
+                        placeholder="Enter last 4 digit"
+                        keyboardType="numeric"
+                        maxLength={4}
+                        value={currentVehicleInput[requestId] || ''}
+                        onChangeText={(value) => setCurrentVehicleInput(prev => ({
+                          ...prev,
+                          [requestId]: value
+                        }))}
+                      />
+                      <TouchableOpacity 
+                        style={styles.addVehicleButton}
+                        onPress={() => handleAddVehicle(requestId)}
+                      >
+                        <Text style={styles.addVehicleButtonText}>+ Add</Text>
+                      </TouchableOpacity>
+                    </View>
 
-                  <View style={styles.totalContainer}>
-                    <Text style={styles.totalLabel}>Sum of Source Qty:</Text>
-                    <Text
-                      style={[
-                        styles.totalValue,
-                        totalSourceQuantityForMaterial(request.testMaterialId) > parseFloat(approvedQty[request._id] ?? '0') &&
-                          styles.errorText,
-                      ]}>
-                      {totalSourceQuantityForMaterial(request.testMaterialId)}
-                    </Text>
+                    {/* Added Vehicles Display */}
+                    {vehicleNumbers[requestId]?.length > 0 && (
+                      <View style={styles.addedVehiclesContainer}>
+                        <Text style={styles.addedVehiclesTitle}>Added Vehicles</Text>
+                        <View style={styles.vehicleTagsContainer}>
+                          {vehicleNumbers[requestId].map((vehicle, vehicleIndex) => (
+                            <View key={vehicleIndex} style={styles.vehicleTag}>
+                              <Text style={styles.vehicleTagText}>{vehicle}</Text>
+                              <TouchableOpacity 
+                                style={styles.removeVehicleButton}
+                                onPress={() => handleRemoveVehicle(requestId, vehicle)}
+                              >
+                                <Text style={styles.removeVehicleButtonText}>×</Text>
+                              </TouchableOpacity>
+                            </View>
+                          ))}
+                        </View>
+                      </View>
+                    )}
+                  </View>
+
+                  {/* Batch Details Section */}
+                  <View style={styles.batchSection}>
+                    <View style={styles.batchInputContainer}>
+                      <Text style={styles.batchLabel}>Batch No.</Text>
+                      <TextInput
+                        style={styles.batchInput}
+                        placeholder="Enter batch number"
+                        value={batchNumbers[requestId] || ''}
+                        onChangeText={(value) => handleBatchNumberChange(requestId, value)}
+                      />
+                    </View>
+
+                    <View style={styles.batchSlipContainer}>
+                      <Text style={styles.batchSlipLabel}>Upload Batch Slip</Text>
+                      <TouchableOpacity 
+                        style={styles.batchSlipButton}
+                        onPress={() => handleBatchSlipUpload(requestId)}
+                      >
+                        <Text style={styles.batchSlipIcon}>📄</Text>
+                        <Text style={styles.batchSlipText}>
+                          {batchSlips?.name || 'Select Batch Slip'}
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+
+                  {/* Remarks Section */}
+                  <View style={styles.remarksSection}>
+                    <Text style={styles.remarksLabel}>Remarks</Text>
+                    <TextInput
+                      style={styles.remarksInput}
+                      placeholder="Enter remarks..."
+                      multiline
+                      numberOfLines={3}
+                      value={remarks}
+                      onChangeText={setRemarks}
+                    />
+                  </View>
+
+                  {/* Action Buttons */}
+                  <View style={styles.actionButtonsContainer}>
+                    <TouchableOpacity 
+                      style={styles.cancelButton}
+                      onPress={() => navigation.goBack()}
+                    >
+                      <Text style={styles.cancelButtonText}>Cancel</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity 
+                      style={styles.dispatchButton}
+                      onPress={() => handleDispatchSingleMaterial(request)}
+                    >
+                      <Text style={styles.dispatchButtonText}>Dispatch</Text>
+                    </TouchableOpacity>
                   </View>
                 </View>
-
-                <TouchableOpacity 
-                  style={styles.submitButtonSingle} 
-                  onPress={() => handleDispatchSingleMaterial(request)}
-                >
-                  <Text style={styles.submitButtonTextSingle}>Dispatch Material</Text>
-                </TouchableOpacity>
-              </View>
-            ))}
+              );
+            })}
           </>
         )}
-
-        <View style={styles.formGroup}>
-          <Text style={styles.label}>Remarks (Optional)</Text>
-          <TextInput
-            style={[styles.input, styles.textArea]}
-            value={remarks}
-            onChangeText={setRemarks}
-            placeholder="Enter any remarks or notes..."
-            multiline
-            maxLength={500}
-          />
-          <Text style={styles.helperText}>{remarks.length}/500 characters</Text>
-        </View>
-        {status === MATERIAL_REQUEST_STATUS.PENDING_APPROVAL ?
-          <TouchableOpacity style={styles.submitButton} onPress={() => handleSubmit('approve')}>
-            <Text style={styles.submitButtonText}>
-              Approve Material
-            </Text>
-          </TouchableOpacity>
-          :
-          <TouchableOpacity style={styles.submitButton} onPress={() => handleSubmit('dispatch')}>
-            <Text style={styles.submitButtonText}>Dispatch All Material</Text>
-          </TouchableOpacity>
+        {status === MATERIAL_REQUEST_STATUS.PENDING_APPROVAL && (
+          <>
+          <View style={styles.formGroup}>
+            <Text style={styles.label}>Remarks (Optional)</Text>
+            <TextInput
+              style={[styles.input, styles.textArea]}
+              value={remarks}
+              onChangeText={setRemarks}
+              placeholder="Enter any remarks or notes..."
+              multiline
+              maxLength={500}
+            />
+            <Text style={styles.helperText}>{remarks.length}/500 characters</Text>
+          </View>
+          
+            <TouchableOpacity style={styles.submitButton} onPress={() => handleSubmit('approve')}>
+              <Text style={styles.submitButtonText}>
+                Approve Material
+              </Text>
+            </TouchableOpacity>
+          </>
+        )
         }
       </View>
     </ScrollView>
@@ -706,6 +813,12 @@ const styles = StyleSheet.create({
     elevation: 3, // Android shadow
   },
 
+  mainContainerDispatch: {
+    flexDirection: 'column',
+    gap: 10,
+    backgroundColor: '#ffffff',
+  },
+
   // Left and right column containers
   columnContainer: {
     flexDirection: 'row',
@@ -857,6 +970,273 @@ const styles = StyleSheet.create({
     borderLeftColor: '#dc3545',
     backgroundColor: '#fff8f8',
   },
+
+
+  materialDetailsRow: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  backgroundColor: '#f8f9fa',
+  padding: 12,
+  borderRadius: 8,
+  marginBottom: 12,
+},
+materialDetailItem: {
+  flex: 1,
+  marginHorizontal: 4,
+},
+materialDetailLabel: {
+  fontSize: 12,
+  color: '#666',
+  marginBottom: 4,
+  fontWeight: '500',
+},
+materialDetailValue: {
+  fontSize: 14,
+  fontWeight: '600',
+  color: '#333',
+},
+quantityRow: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  backgroundColor: '#f8f9fa',
+  padding: 12,
+  borderRadius: 8,
+  marginBottom: 16,
+},
+quantityItem: {
+  flex: 1,
+  alignItems: 'center',
+},
+quantityLabel: {
+  fontSize: 12,
+  color: '#666',
+  marginBottom: 4,
+  fontWeight: '500',
+},
+quantityValue: {
+  fontSize: 16,
+  fontWeight: 'bold',
+  color: '#333',
+},
+mixDesignSection: {
+  marginBottom: 16,
+},
+mixDesignTitle: {
+  fontSize: 16,
+  fontWeight: '600',
+  color: '#333',
+  marginBottom: 12,
+},
+mixDesignRow: {
+  flexDirection: 'row',
+  alignItems: 'flex-start',
+  gap: 12,
+},
+mixDesignDropdown: {
+  flex: 1,
+},
+qtyIssuedContainer: {
+  flex: 1,
+},
+qtyIssuedLabel: {
+  fontSize: 14,
+  color: '#333',
+  marginBottom: 5,
+  fontWeight: '500',
+},
+qtyIssuedInput: {
+  height: 44,
+  borderWidth: 1,
+  borderColor: '#ddd',
+  borderRadius: 8,
+  paddingHorizontal: 12,
+  fontSize: 16,
+  backgroundColor: 'white',
+},
+vehicleSection: {
+  marginBottom: 16,
+},
+vehicleSectionTitle: {
+  fontSize: 16,
+  fontWeight: '600',
+  color: '#333',
+  marginBottom: 12,
+},
+vehicleInputRow: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  gap: 12,
+  marginBottom: 16,
+},
+vehicleInput: {
+  flex: 1,
+  height: 44,
+  borderWidth: 1,
+  borderColor: '#ddd',
+  borderRadius: 8,
+  paddingHorizontal: 12,
+  fontSize: 16,
+  backgroundColor: 'white',
+},
+addVehicleButton: {
+  backgroundColor: '#5A2AAF',
+  paddingHorizontal: 16,
+  paddingVertical: 12,
+  borderRadius: 8,
+  minHeight: 48,
+  justifyContent: 'center',
+},
+addVehicleButtonText: {
+  color: 'white',
+  fontWeight: '600',
+  fontSize: 14,
+},
+addedVehiclesContainer: {
+  marginTop: 8,
+},
+addedVehiclesTitle: {
+  fontSize: 14,
+  color: '#666',
+  marginBottom: 8,
+  fontWeight: '500',
+},
+vehicleTagsContainer: {
+  flexDirection: 'row',
+  flexWrap: 'wrap',
+  gap: 8,
+},
+vehicleTag: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  backgroundColor: '#e9ecef',
+  borderRadius: 20,
+  paddingHorizontal: 12,
+  paddingVertical: 6,
+},
+vehicleTagText: {
+  fontSize: 14,
+  color: '#333',
+  marginRight: 8,
+  fontWeight: '500',
+},
+removeVehicleButton: {
+  width: 20,
+  height: 20,
+  borderRadius: 10,
+  backgroundColor: '#dc3545',
+  justifyContent: 'center',
+  alignItems: 'center',
+},
+removeVehicleButtonText: {
+  color: 'white',
+  fontSize: 12,
+  fontWeight: 'bold',
+  lineHeight: 12,
+},
+batchSection: {
+  marginBottom: 16,
+},
+batchInputContainer: {
+  marginBottom: 16,
+},
+batchLabel: {
+  fontSize: 14,
+  color: '#333',
+  marginBottom: 8,
+  fontWeight: '500',
+},
+batchInput: {
+  height: 44,
+  borderWidth: 1,
+  borderColor: '#ddd',
+  borderRadius: 8,
+  paddingHorizontal: 12,
+  fontSize: 16,
+  backgroundColor: 'white',
+},
+batchSlipContainer: {
+  marginBottom: 7,
+},
+batchSlipLabel: {
+  fontSize: 14,
+  color: '#333',
+  marginBottom: 8,
+  fontWeight: '500',
+},
+batchSlipButton: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  padding: 16,
+  borderWidth: 2,
+  borderColor: '#ddd',
+  borderStyle: 'dashed',
+  borderRadius: 8,
+  backgroundColor: '#f8f9fa',
+  justifyContent: 'center',
+  minHeight: 60,
+},
+batchSlipIcon: {
+  fontSize: 24,
+  marginRight: 8,
+},
+batchSlipText: {
+  fontSize: 16,
+  color: '#666',
+  fontWeight: '500',
+},
+remarksSection: {
+  marginBottom: 20,
+},
+remarksLabel: {
+  fontSize: 14,
+  color: '#333',
+  marginBottom: 8,
+  fontWeight: '500',
+},
+remarksInput: {
+  borderWidth: 1,
+  borderColor: '#ddd',
+  borderRadius: 8,
+  paddingHorizontal: 12,
+  paddingVertical: 12,
+  fontSize: 16,
+  textAlignVertical: 'top',
+  minHeight: 80,
+  backgroundColor: 'white',
+},
+actionButtonsContainer: {
+  flexDirection: 'row',
+  gap: 12,
+  marginTop: 16,
+},
+cancelButton: {
+  flex: 1,
+  height: 48,
+  borderWidth: 1,
+  borderColor: '#ddd',
+  borderRadius: 24,
+  justifyContent: 'center',
+  alignItems: 'center',
+  backgroundColor: 'white',
+},
+cancelButtonText: {
+  fontSize: 16,
+  color: '#666',
+  fontWeight: '600',
+},
+dispatchButton: {
+  flex: 1,
+  height: 48,
+  backgroundColor: '#5A2AAF',
+  borderRadius: 24,
+  justifyContent: 'center',
+  alignItems: 'center',
+},
+dispatchButtonText: {
+  fontSize: 16,
+  color: 'white',
+  fontWeight: 'bold',
+},
 });
 
 export default MaterialApprovalProduction;

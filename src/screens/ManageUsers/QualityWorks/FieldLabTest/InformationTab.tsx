@@ -45,6 +45,65 @@ const InformationTab = () => {
         //notes: 'All information is pre-filled and non-editable.',
       },
       {
+        title: 'Safety and Logistics Review',
+        sectionInfo: 'Mandatory checks before starting work on site.',
+        type: 'expandable', // Expandable with inputs directly inside
+        inputs: [
+          {
+            id: 'trafficDiversionApproved',
+            label: 'Traffic diversion plan approved',
+            type: 'radio',
+            value: 'Yes', // Initial value
+            placeholder: 'Select Status',
+            validations: {
+              required: true,
+              type: 'string',
+              errorMessage: 'Traffic diversion status must be confirmed.',
+            },
+          },
+          {
+            id: 'safetyArrangements',
+            label:
+              'Whether all the safety arrangements including barricading are as per IRC SP 55',
+            type: 'radio',
+            value: 'NO', // Initial value
+            placeholder: 'Select Status',
+            validations: {
+              required: true,
+              type: 'string',
+              errorMessage:
+                'Safety arrangements compliance (IRC SP 55) must be confirmed.',
+            },
+          },
+          {
+            id: 'groundImprovementDone',
+            label: 'Ground improvement is done if required',
+            type: 'radio',
+            value: 'NA', // Initial value
+            placeholder: 'Select Status',
+            validations: {
+              required: true,
+              type: 'string',
+              errorMessage: 'Ground improvement status must be selected.',
+            },
+          },
+          {
+            id: 'gradeSurveyStakes1',
+            label:
+              'Adequate grade and survey stakes available for control of layer placement',
+            type: 'radio',
+            value: 'NO', // Initial value
+            placeholder: 'Select Status',
+            validations: {
+              required: true,
+              type: 'string',
+              errorMessage:
+                'Grade and survey stake availability must be checked.',
+            },
+          },
+        ],
+      },
+      {
         title: 'Test Parameters & Results',
         // sectionInfo:
         //   'Please enter the required test values and select the test type.',
@@ -83,6 +142,7 @@ const InformationTab = () => {
               errorMessage: 'A valid test type must be selected.',
             },
           },
+
           {
             id: 'humidity',
             label: 'Humidity (%)',
@@ -109,6 +169,20 @@ const InformationTab = () => {
               type: 'string',
               maxLength: 50,
               errorMessage: 'Name is required and limited to 50 characters.',
+            },
+          },
+          {
+            id: 'gradeSurveyStakes',
+            label:
+              'Adequate grade and survey stakes available for control of layer placement',
+            type: 'radio',
+            value: 'NO', // Initial value
+            placeholder: 'Select Status',
+            validations: {
+              required: true,
+              type: 'string',
+              errorMessage:
+                'Grade and survey stake availability must be checked.',
             },
           },
         ],

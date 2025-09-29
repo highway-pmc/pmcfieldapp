@@ -272,8 +272,8 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
       //   testWorkCategoriesData: item.testWorkCategoriesData,
       //   workType: workType,
       // });
-      navigation.navigate('TestDetailsScreen');
-      //navigation.navigate('SourceHome');
+      //navigation.navigate('TestDetailsScreen');
+      navigation.navigate('SourceHome');
       return;
     }
     if (isMixDesignClassification(item.type)) {

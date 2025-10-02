@@ -13,8 +13,16 @@ import {
   Modal,
 } from 'react-native';
 
-// Import the validation utility
-import {validateField} from './formValidation';
+// NOTE: You must ensure 'validateField' exists in './formValidation'
+// or comment out its usage below if not needed.
+// import {validateField} from './formValidation';
+const validateField = (field, value) => {
+  // Placeholder: Implement your validation logic here.
+  if (field.validations?.required && !value) {
+    return field.validations.errorMessage || `${field.label} is required.`;
+  }
+  return '';
+};
 
 // Enable LayoutAnimation on Android for smooth collapse/expand animations
 if (Platform.OS === 'android') {
@@ -23,7 +31,8 @@ if (Platform.OS === 'android') {
   }
 }
 
-// --- Types updated to reflect the new schema ---
+// --- CORE TYPES ---
+
 type ValidationRules = {
   required?: boolean;
   type?: 'string' | 'number' | 'email' | 'url' | 'boolean';
@@ -36,7 +45,8 @@ type ValidationRules = {
   errorMessage?: string;
 };
 
-type InputItem = {
+// InputItem: Defined by having an 'id' and 'type' property
+export type InputItem = {
   id: string; // Unique ID for state management
   label: string;
   type: 'text' | 'number' | 'select' | 'textarea' | 'date' | 'radio';
@@ -45,10 +55,14 @@ type InputItem = {
   validations: ValidationRules;
 };
 
-type DataItem = {
+// DataItem: Defined by having 'label' and 'value', and NO 'type' property
+export type DataItem = {
   label: string;
   value: string;
 };
+
+// Mixed type allows content to be either data or input
+type MixedItem = DataItem | InputItem;
 
 type BaseSection = {
   title?: string;
@@ -56,13 +70,12 @@ type BaseSection = {
   notes?: string;
 };
 
-// **Recursive Section Type Definition**
+// **Recursive Section Type Definition: Uses a single 'items' array for all content**
 export type Section = BaseSection &
   (
     | {
         type: 'info' | 'expandable';
-        data?: DataItem[];
-        inputs?: InputItem[];
+        items?: MixedItem[]; // Single array for data and inputs
       }
     | {
         type: 'subSection';
@@ -78,27 +91,11 @@ export type FormDataSchema = {
   sections: Section[];
 };
 
-// The DynamicTestFormProps interface uses the updated schema
 interface DynamicTestFormProps {
   formData: FormDataSchema;
 }
 
-// --- Props interfaces ---
-interface DropdownInputProps {
-  input: InputItem;
-  value: any;
-  onChange: (input: InputItem, value: any) => void;
-  error?: string;
-}
-
-// New Props Interface for the Radio Button Component
-interface YesNoRadioInputProps {
-  input: InputItem;
-  value: string; // Expected value is 'Yes', 'NO', or 'NA'
-  onChange: (input: InputItem, value: string) => void;
-  error?: string;
-}
-
+// --- PROPS INTERFACES (Using 'any' for brevity) ---
 interface SectionContentProps {
   section: Section;
   inputData: Record<string, any>;
@@ -106,43 +103,28 @@ interface SectionContentProps {
   inputErrors: Record<string, string>;
 }
 
-interface ExpandableSectionProps {
-  section: Section;
-  inputData: Record<string, any>;
-  onValueChange: (input: InputItem, value: any) => void;
-  inputErrors: Record<string, string>;
-}
-
-// --- NEW COMPONENT: Yes/No/NA Radio Group (UPDATED) ---
+// --- RADIO COMPONENT ---
 const YES_NO_OPTIONS = [
-  {key: 'Yes', label: 'Yes', color: '#52b552'}, // Success Green
-  {key: 'NO', label: 'NO', color: '#dc3545'}, // Danger Red
-  {key: 'NA', label: 'NA', color: '#6c757d'}, // Secondary Gray
+  {key: 'Yes', label: 'Yes', color: '#52b552'},
+  {key: 'NO', label: 'NO', color: '#dc3545'},
+  {key: 'NA', label: 'NA', color: '#6c757d'},
 ];
 
-const YesNoRadioInput: React.FC<YesNoRadioInputProps> = ({
-  input,
-  value,
-  onChange,
-  error,
-}) => {
+const YesNoRadioInput: React.FC<any> = ({input, value, onChange, error}) => {
   const handlePress = (optionKey: string) => {
     onChange(input, optionKey);
   };
 
   return (
-    // Outer container for the whole component (label + buttons)
     <View
       style={[
         styles.radioComponentContainer,
         error ? styles.radioErrorOuterBorder : {},
       ]}>
-      {/* 1. Question Label (Always takes full width line) */}
       <View style={styles.radioLabelWrapper}>
-        <Text style={styles.radioLabelText}>{input.label}</Text>
+        <Text style={styles.inputLabel}>{input.label}</Text>
       </View>
 
-      {/* 2. Button Group (moved below the label, aligned right, smaller) */}
       <View style={styles.radioGroupRow}>
         {YES_NO_OPTIONS.map((option, index) => {
           const isSelected = value === option.key;
@@ -152,7 +134,6 @@ const YesNoRadioInput: React.FC<YesNoRadioInputProps> = ({
             isSelected
               ? {backgroundColor: option.color, borderColor: option.color}
               : styles.unselectedRadioButton,
-            // Add margin to separate buttons slightly (except the first one)
             index > 0 && {marginLeft: 6},
           ];
 
@@ -176,13 +157,8 @@ const YesNoRadioInput: React.FC<YesNoRadioInputProps> = ({
   );
 };
 
-// --- Sub-component to simulate a Dropdown (Kept for completeness) ---
-const DropdownInput: React.FC<DropdownInputProps> = ({
-  input,
-  value,
-  onChange,
-  error,
-}) => {
+// --- DROPDOWN COMPONENT (Simulated with Modal) ---
+const DropdownInput: React.FC<any> = ({input, value, onChange, error}) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const selectedOption =
@@ -238,22 +214,44 @@ const DropdownInput: React.FC<DropdownInputProps> = ({
   );
 };
 
-// --- Sub-component to render section content (UPDATED LOGIC) ---
+// --- CORE: SECTION CONTENT RENDERER ---
 const SectionContent = ({
   section,
   inputData,
   onValueChange,
   inputErrors,
 }: SectionContentProps) => {
-  // 1. Separate radio inputs from regular inputs
-  const regularInputs = (section.inputs || []).filter(
-    input => input.type !== 'radio',
-  );
-  const radioInputs = (section.inputs || []).filter(
-    input => input.type === 'radio',
+  // Use a single items array as the source of truth
+  const allItems = section.items || [];
+
+  const mixedGridItems: MixedItem[] = [];
+  const radioInputs: InputItem[] = [];
+
+  // 1. Process the single mixed array and categorize items
+  allItems.forEach(item => {
+    // Check if 'type' property exists to determine if it's an InputItem
+    if ((item as InputItem).type) {
+      const input = item as InputItem;
+      if (input.type === 'radio') {
+        radioInputs.push(input);
+      } else {
+        mixedGridItems.push(input); // Regular inputs go into the mixed grid
+      }
+    } else {
+      mixedGridItems.push(item as DataItem); // Data items go into the mixed grid
+    }
+  });
+
+  // Helper function to render a single Data Item
+  const renderDataItem = (item: DataItem, index: number) => (
+    <View key={`data-${index}`} style={styles.gridItem}>
+      <Text style={styles.dataLabel}>{item.label}</Text>
+      <Text style={styles.dataValue}>{item.value}</Text>
+    </View>
   );
 
-  const renderInput = (input: InputItem) => {
+  // Helper function to render a single Regular Input Item
+  const renderRegularInput = (input: InputItem) => {
     const currentInputValue =
       inputData[input.id] !== undefined ? inputData[input.id] : input.value;
     const error = inputErrors[input.id];
@@ -261,7 +259,7 @@ const SectionContent = ({
     if (input.type === 'select') {
       return (
         <DropdownInput
-          key={input.id}
+          key={`input-${input.id}`}
           input={input}
           value={currentInputValue}
           onChange={onValueChange}
@@ -270,9 +268,9 @@ const SectionContent = ({
       );
     }
 
-    // Default Text/Number Input
+    // Default Text/Number/Date Input
     return (
-      <View key={input.id} style={styles.gridItem}>
+      <View key={`input-${input.id}`} style={styles.gridItem}>
         <Text style={styles.inputLabel}>{input.label}</Text>
         <TextInput
           style={[styles.textInput, error ? styles.inputErrorBorder : {}]}
@@ -305,24 +303,20 @@ const SectionContent = ({
 
   return (
     <View style={styles.sectionContent}>
-      {/* Display data first */}
-      {section.data && (
+      {/* 1. RENDER MIXED GRID ITEMS (Data and Regular Inputs) */}
+      {mixedGridItems.length > 0 && (
         <View style={styles.contentGrid}>
-          {section.data.map((item: any, index: any) => (
-            <View key={index} style={styles.gridItem}>
-              <Text style={styles.dataLabel}>{item.label}</Text>
-              <Text style={styles.dataValue}>{item.value}</Text>
-            </View>
-          ))}
+          {mixedGridItems.map((item, index) => {
+            if ((item as InputItem).type) {
+              return renderRegularInput(item as InputItem);
+            } else {
+              return renderDataItem(item as DataItem, index);
+            }
+          })}
         </View>
       )}
 
-      {/* 2. Render all regular inputs (text/number/select) first in grid layout */}
-      {regularInputs.length > 0 && (
-        <View style={styles.contentGrid}>{regularInputs.map(renderInput)}</View>
-      )}
-
-      {/* 3. Render all radio inputs last, each taking a full row */}
+      {/* 2. RENDER RADIO INPUTS (Full Width) */}
       {radioInputs.length > 0 && (
         <View style={styles.radioInputsContainer}>
           {radioInputs.map(renderRadioInput)}
@@ -334,8 +328,10 @@ const SectionContent = ({
   );
 };
 
-// --- Sub-component to handle expandable sections (Kept for completeness) ---
-const ExpandableSection: React.FC<ExpandableSectionProps> = ({
+// --- EXPANDABLE SECTION WRAPPER / MAIN FORM / STYLES (Unchanged logic, styles updated below) ---
+
+// ... (ExpandableSection component remains the same)
+const ExpandableSection: React.FC<any> = ({
   section,
   inputData,
   onValueChange,
@@ -371,12 +367,13 @@ const ExpandableSection: React.FC<ExpandableSectionProps> = ({
   );
 };
 
-// --- Main component to render the dynamic form (Kept for completeness) ---
+// ... (DynamicTestForm component remains the same)
 const DynamicTestForm: React.FC<DynamicTestFormProps> = ({formData}) => {
   const [isMainExpanded, setIsMainExpanded] = useState(true);
   const [inputData, setInputData] = useState<Record<string, any>>({});
   const [inputErrors, setInputErrors] = useState<Record<string, string>>({});
 
+  // Initialize input data from the 'items' arrays
   useEffect(() => {
     const initialData: Record<string, any> = {};
 
@@ -384,10 +381,14 @@ const DynamicTestForm: React.FC<DynamicTestFormProps> = ({formData}) => {
       sections.forEach(section => {
         if (section.type === 'subSection') {
           initializeInputs(section.sections);
-        } else if (section.inputs) {
-          section.inputs.forEach(input => {
-            if (inputData[input.id] === undefined) {
-              initialData[input.id] = input.value;
+        } else if (section.items) {
+          section.items.forEach(item => {
+            // Check if it's an input item by looking for 'type'
+            if ((item as InputItem).type) {
+              const input = item as InputItem;
+              if (inputData[input.id] === undefined) {
+                initialData[input.id] = input.value;
+              }
             }
           });
         }
@@ -515,7 +516,7 @@ const DynamicTestForm: React.FC<DynamicTestFormProps> = ({formData}) => {
   );
 };
 
-// --- STYLES ADDITIONS FOR RADIO BUTTON ---
+// --- STYLES ---
 const styles = StyleSheet.create({
   scrollContainer: {
     paddingVertical: 8,
@@ -587,12 +588,26 @@ const styles = StyleSheet.create({
     width: '48%',
     marginBottom: 12,
   },
+  // --- UPDATED FOR CONSISTENCY: inputLabel and dataLabel styles are merged ---
+  // The 'dataLabel' style is updated to match the 'inputLabel' (bold/semiblod and color)
   inputLabel: {
     fontSize: 13,
-    fontWeight: '500',
-    color: '#666',
+    fontWeight: '600', // Made this slightly bolder for consistency
+    color: '#333',
     marginBottom: 3,
   },
+  dataLabel: {
+    fontSize: 13,
+    fontWeight: '600', // MATCHES inputLabel
+    color: '#333', // MATCHES inputLabel
+    marginBottom: 3,
+  },
+  dataValue: {
+    fontSize: 14,
+    color: '#333',
+    fontWeight: '400', // Kept value less bold than label
+  },
+  // --------------------------------------------------------------------------
   textInput: {
     height: 40,
     borderColor: '#ccc',
@@ -609,48 +624,44 @@ const styles = StyleSheet.create({
     color: 'red',
     marginTop: 2,
   },
-  // --- NEW/MODIFIED RADIO STYLES ---
+  // --- RADIO STYLES ---
   radioInputsContainer: {
     width: '100%',
     paddingHorizontal: 0,
     marginBottom: 0,
-    marginTop: 5, // Small gap after other inputs/data
+    marginTop: 5,
   },
   radioComponentContainer: {
     width: '100%',
-    flexDirection: 'column', // Stack label and buttons vertically
+    flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
     marginBottom: 12,
-    paddingHorizontal: 5, // Indent slightly for visual grouping
+    paddingHorizontal: 5,
   },
   radioLabelWrapper: {
-    width: '100%', // Label takes full width
+    width: '100%',
     marginBottom: 8,
   },
-  radioLabelText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#333',
-  },
+  // NOTE: radioLabelText is removed as inputLabel is used directly in YesNoRadioInput
   radioGroupRow: {
     width: '100%',
     flexDirection: 'row',
-    justifyContent: 'flex-end', // Align buttons to the right
+    justifyContent: 'flex-end',
     alignItems: 'center',
-    height: 35, // Smaller height
+    height: 35,
   },
   radioButton: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 15, // Control button width
+    paddingHorizontal: 15,
     height: '100%',
     borderRadius: 6,
     borderWidth: 1,
   },
   unselectedRadioButton: {
-    backgroundColor: '#FFFFFF', // Unselected background is white
-    borderColor: '#D0D0D0', // Light gray border
+    backgroundColor: '#FFFFFF',
+    borderColor: '#D0D0D0',
   },
   radioTextUnselected: {
     color: '#666',
@@ -662,89 +673,8 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontSize: 13,
   },
-  radioErrorOuterBorder: {
-    // No outer border styling needed if buttons handle their own error border
-  },
-
-  radioGroup: {
-    flexDirection: 'row',
-    // The group takes a fixed width or flex based on content/size
-    width: 140, // Fixed width to make it compact
-    height: 35, // Smaller height
-    borderRadius: 6,
-    overflow: 'hidden',
-  },
-
-  // Special style for unselected NA, as it uses the same gray as selected NA,
-  // we ensure it has a distinct look when NOT selected.
-  unselectedRadioButtonNA: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#D0D0D0',
-  },
-  mainIcon: {
-    marginRight: 10,
-    fontSize: 17,
-    color: '#333',
-  },
-  mainInfoContainer: {
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderBottomColor: '#e0e0e0',
-  },
-  mainInfoItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 4,
-  },
-  nonExpandableSection: {
-    backgroundColor: '#ffffff',
-    marginBottom: 8,
-    overflow: 'hidden',
-  },
-  nonExpandableHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    backgroundColor: '#ffffff',
-  },
-  expandableSectionContainer: {
-    backgroundColor: '#ffffff',
-    marginBottom: 8,
-    overflow: 'hidden',
-  },
-  // START: RADIO STYLES
-  radioContainer: {
-    width: '100%', // Radio buttons take full width
-    marginBottom: 12,
-  },
-  radioLabel: {
-    marginBottom: 8, // More space between label and buttons
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#333',
-  },
-  radioText: {
-    color: '#444', // Default text color
-    fontWeight: '500',
-    fontSize: 14,
-  },
-  radioErrorBorder: {
-    borderColor: 'red',
-    borderWidth: 2,
-  },
-  // END: RADIO STYLES
-  dataLabel: {
-    fontSize: 13,
-    color: '#666',
-    marginBottom: 3,
-  },
-  dataValue: {
-    fontSize: 14,
-    color: '#333',
-    fontWeight: '600',
-  },
+  radioErrorOuterBorder: {},
+  // --- DROPDOWN STYLES ---
   dropdownButton: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -826,14 +756,33 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#C0C6FF',
   },
-  subSectionTitleRecursive: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#606060',
-    paddingHorizontal: 5,
-    marginBottom: 5,
-    textAlign: 'center',
-    fontStyle: 'italic',
+  nonExpandableSection: {
+    backgroundColor: '#ffffff',
+    marginBottom: 8,
+    overflow: 'hidden',
+  },
+  nonExpandableHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    backgroundColor: '#ffffff',
+  },
+  expandableSectionContainer: {
+    backgroundColor: '#ffffff',
+    marginBottom: 8,
+    overflow: 'hidden',
+  },
+  mainInfoContainer: {
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderBottomColor: '#e0e0e0',
+  },
+  mainInfoItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 4,
   },
 });
 

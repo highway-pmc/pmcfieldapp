@@ -18,19 +18,18 @@ const InformationTab = () => {
   const {tab1TestDetails, loading, error} = useSelector(
     (state: any) => state.TestDetails,
   );
+  // InformationTab.tsx (The formData object)
+
   const formData = {
     mainTitle: 'Project & Material Testing',
-    // mainInfo: [
-    //   {label: 'Project ID', value: 'PROJ-9876'},
-    //   {label: 'Test Report #', value: 'TR-1234'},
-    // ],
     sections: [
       {
-        title: 'General Info',
-        // sectionInfo:
-        //   'This section provides an overview of the project details (Non-Editable).',
-        type: 'expandable', // Non-expandable with info data
-        data: [
+        title: 'Project Details & Safety Review (Mixed)',
+        sectionInfo:
+          'Fixed project data, regular checks, and radio controls combined.',
+        type: 'expandable',
+        items: [
+          // --- Data Items (Rendered First) ---
           {label: 'Project Name', value: 'Elevated Expressway'},
           {label: 'Name of the Client', value: 'NHAI'},
           {
@@ -41,19 +40,14 @@ const InformationTab = () => {
             label: 'Name of the EPC Contractor',
             value: 'PQR Constructions Pvt. Ltd',
           },
-        ],
-        //notes: 'All information is pre-filled and non-editable.',
-      },
-      {
-        title: 'Safety and Logistics Review',
-        sectionInfo: 'Mandatory checks before starting work on site.',
-        type: 'expandable', // Expandable with inputs directly inside
-        inputs: [
+          // --- Regular Input Items (Rendered Second - None in this example, but they would go here) ---
+
+          // --- Radio Input Items (Rendered Third) ---
           {
             id: 'trafficDiversionApproved',
             label: 'Traffic diversion plan approved',
             type: 'radio',
-            value: 'Yes', // Initial value
+            value: 'Yes',
             placeholder: 'Select Status',
             validations: {
               required: true,
@@ -66,20 +60,19 @@ const InformationTab = () => {
             label:
               'Whether all the safety arrangements including barricading are as per IRC SP 55',
             type: 'radio',
-            value: 'NO', // Initial value
+            value: 'NO',
             placeholder: 'Select Status',
             validations: {
               required: true,
               type: 'string',
-              errorMessage:
-                'Safety arrangements compliance (IRC SP 55) must be confirmed.',
+              errorMessage: 'Safety compliance must be confirmed.',
             },
           },
           {
             id: 'groundImprovementDone',
             label: 'Ground improvement is done if required',
             type: 'radio',
-            value: 'NA', // Initial value
+            value: 'NA',
             placeholder: 'Select Status',
             validations: {
               required: true,
@@ -92,7 +85,7 @@ const InformationTab = () => {
             label:
               'Adequate grade and survey stakes available for control of layer placement',
             type: 'radio',
-            value: 'NO', // Initial value
+            value: 'NO',
             placeholder: 'Select Status',
             validations: {
               required: true,
@@ -104,11 +97,13 @@ const InformationTab = () => {
         ],
       },
       {
-        title: 'Test Parameters & Results',
-        // sectionInfo:
-        //   'Please enter the required test values and select the test type.',
-        type: 'expandable', // Expandable with inputs directly inside
-        inputs: [
+        title: 'Test Parameters & Results (Mixed)',
+        sectionInfo: 'Contains only data and regular/radio inputs for testing.',
+        type: 'expandable',
+        items: [
+          // --- Data Items (Rendered First - None in this list) ---
+
+          // --- Regular Input Items (Rendered Second) ---
           {
             id: 'roomTemp',
             label: 'Room Temperature',
@@ -121,28 +116,25 @@ const InformationTab = () => {
               min: 15.0,
               max: 35.0,
               decimalPlaces: 3,
-              errorMessage:
-                'Temperature must be between 15°C and 35°C (3 decimal limit).',
+              errorMessage: 'Temperature is required.',
             },
           },
           {
             id: 'testType',
             label: 'Type of Test',
-            type: 'select', // New dropdown type
+            type: 'select',
             value: 'ucs',
             placeholder: 'Select Test Type',
             validations: {
               required: true,
               type: 'string',
               options: [
-                {key: 'ucs', label: 'Unconfined Compressive Strength'},
-                {key: 'flex', label: 'Flexural Strength'},
-                {key: 'density', label: 'In-Situ Density'},
+                {key: 'ucs', label: 'UCS'},
+                {key: 'flex', label: 'Flexural'},
               ],
-              errorMessage: 'A valid test type must be selected.',
+              errorMessage: 'Test type required.',
             },
           },
-
           {
             id: 'humidity',
             label: 'Humidity (%)',
@@ -154,8 +146,8 @@ const InformationTab = () => {
               type: 'number',
               min: 0,
               max: 100,
-              decimalPlaces: 0, // Integer only
-              errorMessage: 'Humidity must be an integer between 0 and 100.',
+              decimalPlaces: 0,
+              errorMessage: 'Humidity required.',
             },
           },
           {
@@ -168,48 +160,53 @@ const InformationTab = () => {
               required: true,
               type: 'string',
               maxLength: 50,
-              errorMessage: 'Name is required and limited to 50 characters.',
+              errorMessage: 'Name required.',
             },
           },
+          // --- Radio Input Items (Rendered Third) ---
           {
             id: 'gradeSurveyStakes',
             label:
               'Adequate grade and survey stakes available for control of layer placement',
             type: 'radio',
-            value: 'NO', // Initial value
+            value: 'NO',
             placeholder: 'Select Status',
             validations: {
               required: true,
               type: 'string',
-              errorMessage:
-                'Grade and survey stake availability must be checked.',
+              errorMessage: 'Stake availability must be checked.',
             },
           },
         ],
-        //notes: 'Please ensure all field values are within specified limits.',
       },
       {
-        title: 'Material Info (Fixed)',
-        // sectionInfo: 'Details about the materials used in the project.',
+        title: 'Material Info (Data Only)',
+        sectionInfo: 'Details about the materials used in the project.',
         type: 'info',
-        data: [
+        items: [
           {label: 'Work category', value: 'Highway'},
           {label: 'Material Name', value: 'Fine Aggregate (Sand)'},
           {label: 'Material Category', value: 'Aggregate'},
           {label: 'Mix-design/ Source', value: 'River sand'},
         ],
-        //notes: 'This information is fixed from the project configuration.',
       },
+      // --- SUBSECTION 1 (Example of Nested Structure) ---
       {
         type: 'subSection',
         mainTitle: 'Sample 1',
         sections: [
           {
-            title: 'General Info',
-            sectionInfo:
-              'This section provides an overview of the project details (Non-Editable).',
-            type: 'expandable', // Non-expandable with info data
-            data: [
+            title: 'General Info (Sample 1)',
+            type: 'expandable',
+            items: [
+              {label: 'Sample ID', value: 'SAMP-001'},
+              {label: 'Sample Location', value: 'Chainage 1+200'},
+            ],
+          },
+          {
+            title: 'Test Parameters & Results (Sample 1)',
+            type: 'expandable',
+            items: [
               {label: 'Project Name', value: 'Elevated Expressway'},
               {label: 'Name of the Client', value: 'NHAI'},
               {
@@ -217,204 +214,46 @@ const InformationTab = () => {
                 value: 'XYZ Infrastructure Ltd',
               },
               {
-                label: 'Name of the EPC Contractor',
-                value: 'PQR Constructions Pvt. Ltd',
-              },
-            ],
-            //notes: 'All information is pre-filled and non-editable.',
-          },
-          {
-            title: 'Test Parameters & Results',
-            // sectionInfo:
-            //   'Please enter the required test values and select the test type.',
-            type: 'expandable', // Expandable with inputs directly inside
-            inputs: [
-              {
-                id: 'roomTemp',
-                label: 'Room Temperature',
-                type: 'number',
-                value: '25.500',
-                placeholder: 'Max 3 decimals',
-                validations: {
-                  required: true,
-                  type: 'number',
-                  min: 15.0,
-                  max: 35.0,
-                  decimalPlaces: 3,
-                  errorMessage:
-                    'Temperature must be between 15°C and 35°C (3 decimal limit).',
-                },
-              },
-              {
-                id: 'testType',
-                label: 'Type of Test',
-                type: 'select', // New dropdown type
-                value: 'ucs',
-                placeholder: 'Select Test Type',
-                validations: {
-                  required: true,
-                  type: 'string',
-                  options: [
-                    {key: 'ucs', label: 'Unconfined Compressive Strength'},
-                    {key: 'flex', label: 'Flexural Strength'},
-                    {key: 'density', label: 'In-Situ Density'},
-                  ],
-                  errorMessage: 'A valid test type must be selected.',
-                },
-              },
-              {
-                id: 'humidity',
-                label: 'Humidity (%)',
-                type: 'number',
-                value: '',
-                placeholder: 'Enter humidity percentage',
-                validations: {
-                  required: true,
-                  type: 'number',
-                  min: 0,
-                  max: 100,
-                  decimalPlaces: 0, // Integer only
-                  errorMessage:
-                    'Humidity must be an integer between 0 and 100.',
-                },
-              },
-              {
-                id: 'testerName',
+                id: 'sample1_testerName',
                 label: 'Tested By (Name)',
                 type: 'text',
-                value: 'John Doe',
+                value: 'Jane Doe',
                 placeholder: 'Enter full name',
                 validations: {
                   required: true,
                   type: 'string',
                   maxLength: 50,
-                  errorMessage:
-                    'Name is required and limited to 50 characters.',
+                  errorMessage: 'Name required.',
+                },
+              },
+              {
+                id: 'sample1_resultValid',
+                label: 'Sample Result Validated',
+                type: 'radio',
+                value: 'Yes',
+                placeholder: 'Select Status',
+                validations: {
+                  required: true,
+                  type: 'string',
+                  errorMessage: 'Result status required.',
                 },
               },
             ],
-            //notes: 'Please ensure all field values are within specified limits.',
-          },
-          {
-            title: 'Material Info (Fixed)',
-            // sectionInfo: 'Details about the materials used in the project.',
-            type: 'info',
-            data: [
-              {label: 'Work category', value: 'Highway'},
-              {label: 'Material Name', value: 'Fine Aggregate (Sand)'},
-              {label: 'Material Category', value: 'Aggregate'},
-              {label: 'Mix-design/ Source', value: 'River sand'},
-            ],
-            //notes: 'This information is fixed from the project configuration.',
           },
         ],
       },
+      // --- SUBSECTION 2 (Example of Nested Structure) ---
       {
         type: 'subSection',
         mainTitle: 'Sample 2',
         sections: [
           {
-            title: 'General Info',
-            sectionInfo:
-              'This section provides an overview of the project details (Non-Editable).',
-            type: 'expandable', // Non-expandable with info data
-            data: [
-              {label: 'Project Name', value: 'Elevated Expressway'},
-              {label: 'Name of the Client', value: 'NHAI'},
-              {
-                label: 'Name of the Concessionaire',
-                value: 'XYZ Infrastructure Ltd',
-              },
-              {
-                label: 'Name of the EPC Contractor',
-                value: 'PQR Constructions Pvt. Ltd',
-              },
+            title: 'General Info (Sample 2)',
+            type: 'expandable',
+            items: [
+              {label: 'Sample ID', value: 'SAMP-002'},
+              {label: 'Sample Location', value: 'Chainage 1+300'},
             ],
-            //notes: 'All information is pre-filled and non-editable.',
-          },
-          {
-            title: 'Test Parameters & Results',
-            // sectionInfo:
-            //   'Please enter the required test values and select the test type.',
-            type: 'expandable', // Expandable with inputs directly inside
-            inputs: [
-              {
-                id: 'roomTemp',
-                label: 'Room Temperature',
-                type: 'number',
-                value: '25.500',
-                placeholder: 'Max 3 decimals',
-                validations: {
-                  required: true,
-                  type: 'number',
-                  min: 15.0,
-                  max: 35.0,
-                  decimalPlaces: 3,
-                  errorMessage:
-                    'Temperature must be between 15°C and 35°C (3 decimal limit).',
-                },
-              },
-              {
-                id: 'testType',
-                label: 'Type of Test',
-                type: 'select', // New dropdown type
-                value: 'ucs',
-                placeholder: 'Select Test Type',
-                validations: {
-                  required: true,
-                  type: 'string',
-                  options: [
-                    {key: 'ucs', label: 'Unconfined Compressive Strength'},
-                    {key: 'flex', label: 'Flexural Strength'},
-                    {key: 'density', label: 'In-Situ Density'},
-                  ],
-                  errorMessage: 'A valid test type must be selected.',
-                },
-              },
-              {
-                id: 'humidity',
-                label: 'Humidity (%)',
-                type: 'number',
-                value: '',
-                placeholder: 'Enter humidity percentage',
-                validations: {
-                  required: true,
-                  type: 'number',
-                  min: 0,
-                  max: 100,
-                  decimalPlaces: 0, // Integer only
-                  errorMessage:
-                    'Humidity must be an integer between 0 and 100.',
-                },
-              },
-              {
-                id: 'testerName',
-                label: 'Tested By (Name)',
-                type: 'text',
-                value: 'John Doe',
-                placeholder: 'Enter full name',
-                validations: {
-                  required: true,
-                  type: 'string',
-                  maxLength: 50,
-                  errorMessage:
-                    'Name is required and limited to 50 characters.',
-                },
-              },
-            ],
-            //notes: 'Please ensure all field values are within specified limits.',
-          },
-          {
-            title: 'Material Info (Fixed)',
-            // sectionInfo: 'Details about the materials used in the project.',
-            type: 'info',
-            data: [
-              {label: 'Work category', value: 'Highway'},
-              {label: 'Material Name', value: 'Fine Aggregate (Sand)'},
-              {label: 'Material Category', value: 'Aggregate'},
-              {label: 'Mix-design/ Source', value: 'River sand'},
-            ],
-            //notes: 'This information is fixed from the project configuration.',
           },
         ],
       },

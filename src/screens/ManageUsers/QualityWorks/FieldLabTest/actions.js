@@ -3,6 +3,11 @@ export const getTestDetailsTab1 = payload => ({
   payload: payload,
 });
 
-export const clearTestDetailsTab1 = () => ({
-  type: 'CLEAR_TEST_DETAILS_TAB1',
+export const getInspectionChecklist = payload => ({
+  type: 'GET_INSPECTION_CHECKLIST_REQUEST',
+  payload: payload, // Expected: { projectId, checklistName }
+});
+
+export const clearFormDetails = () => ({
+  type: 'CLEAR_FORM_DETAILS',
 });

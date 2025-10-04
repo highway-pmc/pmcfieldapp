@@ -2649,11 +2649,12 @@ const MeterialRequestFormReducer = (
 const testDetailsInitialState = {
   tab1TestDetails: null,
   tab2TestDetails: null,
+  inspectionChecklist: null,
   error: null,
   loading: false,
 };
 
-const TestDetailsReducer = (state = testDetailsInitialState, action) => {
+const FormDetailsReducer = (state = testDetailsInitialState, action) => {
   switch (action.type) {
     case 'GET_TEST_DETAILS_TAB1_REQUEST':
       return {
@@ -2675,10 +2676,31 @@ const TestDetailsReducer = (state = testDetailsInitialState, action) => {
         error: action.error,
         loading: false,
       };
-    case 'CLEAR_TEST_DETAILS_TAB1':
+    case 'GET_INSPECTION_CHECKLIST_REQUEST':
+      return {
+        ...state,
+        error: null,
+        loading: true, // Optionally use a separate loading state if needed
+      };
+    case 'GET_INSPECTION_CHECKLIST_SUCCESS':
+      return {
+        ...state,
+        inspectionChecklist: action.response,
+        error: null,
+        loading: false,
+      };
+    case 'GET_INSPECTION_CHECKLIST_FAILURE':
+      return {
+        ...state,
+        inspectionChecklist: null,
+        error: action.error,
+        loading: false,
+      };
+    case 'CLEAR_FORM_DETAILS':
       return {
         ...state,
         tab1TestDetails: null,
+        inspectionChecklist: null,
         error: null,
         loading: false,
       };
@@ -2704,5 +2726,5 @@ export const combinedReducers = combineReducers({
   EquipmentsCalibration: EquimentCalibrationReducer,
   VendorForm: VendorFormReducer,
   MeterialRequest: MeterialRequestFormReducer,
-  TestDetails: TestDetailsReducer,
+  FormDetails: FormDetailsReducer,
 });

@@ -36,3 +36,11 @@ export const fillRFIsChecklistForTestSample = (payload) => ({
     type: "TEST_SAMPLE_FILL_RFI_CHECK_LIST_REQUEST",
     payload: payload
 });
+export const getInspectionChecklist = payload => ({
+  type: 'GET_INSPECTION_CHECKLIST_REQUEST',
+  payload: payload, // Expected: { projectId, checklistName }
+});
+
+export const clearFormDetails = () => ({
+  type: 'CLEAR_FORM_DETAILS',
+});

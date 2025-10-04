@@ -80,8 +80,14 @@ export const HeaderItems = {
   addVendorForm: {showBack: true, title: 'Add Vendor Form'},
   vendorFormLists: {showBack: true, title: 'Vendor Details'},
   materialRequestFormLists: {showBack: true, title: 'Material Request'},
-  newContingencyRequestFormLists: {showBack: true, title: 'New Contingency Request'},
-  ProductionRequestFormLists: {showBack: true, title: 'Production Material Request'},
+  newContingencyRequestFormLists: {
+    showBack: true,
+    title: 'New Contingency Request',
+  },
+  ProductionRequestFormLists: {
+    showBack: true,
+    title: 'Production Material Request',
+  },
   procurements: {showBack: true, title: 'Procurements'},
   mixDesignListing: {showBack: true, title: 'Mix Design'},
   mixDesignInfo: {showBack: true, title: 'Mix Design'},
@@ -107,6 +113,10 @@ export const HeaderItems = {
   materialDispatch: {
     showBack: true,
     title: 'Material Dispatch',
+  },
+  taskForm: {
+    showBack: true,
+    title: 'Task',
   },
 };
 

@@ -15,7 +15,7 @@ import {
 
 // NOTE: You must ensure 'validateField' exists in './formValidation'
 // or comment out its usage below if not needed.
-// import {validateField} from './formValidation';
+// import {validateField} from './formValidation';sssssn*bsn*ssssss
 const validateField = (field, value) => {
   // Placeholder: Implement your validation logic here.
   if (field.validations?.required && !value) {
@@ -215,6 +215,9 @@ const DropdownInput: React.FC<any> = ({input, value, onChange, error}) => {
 };
 
 // --- CORE: SECTION CONTENT RENDERER ---
+// ... (imports and types remain the same)
+
+// --- CORE: SECTION CONTENT RENDERER ---
 const SectionContent = ({
   section,
   inputData,
@@ -224,24 +227,43 @@ const SectionContent = ({
   // Use a single items array as the source of truth
   const allItems = section.items || [];
 
-  const mixedGridItems: MixedItem[] = [];
-  const radioInputs: InputItem[] = [];
+  // Categorize items
+  const dataItems: DataItem[] = []; // 1. Data-Only Items
+  const regularInputs: InputItem[] = []; // 2. Regular Input Items
+  // 3 & 4: Titles and Radio Inputs must maintain their original sequence.
+  const sequencedTitlesAndRadios: Array<
+    {title: string} | InputItem
+  > = [];
 
-  // 1. Process the single mixed array and categorize items
+  // Map to hold items that go into the grid (Data & Regular Inputs)
+  const mixedGridItems: MixedItem[] = [];
+
+  // 1. Process and categorize all items based on your sorting rules
   allItems.forEach(item => {
-    // Check if 'type' property exists to determine if it's an InputItem
-    if ((item as InputItem).type) {
+    // Check for 'type' to distinguish between DataItem and InputItem
+    const isInput = (item as InputItem).type !== undefined;
+
+    if (!isInput && (item as any).title) {
+      // 3. Title-Only Item: Has 'title' but no 'type'
+      sequencedTitlesAndRadios.push(item as {title: string});
+    } else if (isInput) {
       const input = item as InputItem;
       if (input.type === 'radio') {
-        radioInputs.push(input);
+        // 4. Radio Input Item
+        sequencedTitlesAndRadios.push(input);
       } else {
-        mixedGridItems.push(input); // Regular inputs go into the mixed grid
+        // 2. Regular Input Item
+        regularInputs.push(input);
       }
     } else {
-      mixedGridItems.push(item as DataItem); // Data items go into the mixed grid
+      // 1. Data-Only Item
+      dataItems.push(item as DataItem);
     }
   });
 
+  // Combine Data and Regular Inputs for the grid display (at the top)
+  mixedGridItems.push(...dataItems, ...regularInputs);
+  
   // Helper function to render a single Data Item
   const renderDataItem = (item: DataItem, index: number) => (
     <View key={`data-${index}`} style={styles.gridItem}>
@@ -301,9 +323,15 @@ const SectionContent = ({
     );
   };
 
+  const renderTitleItem = (item: {title: string}, index: number) => (
+    <Text key={`title-${index}`} style={styles.itemTitle}>
+      {item.title}
+    </Text>
+  );
+
   return (
     <View style={styles.sectionContent}>
-      {/* 1. RENDER MIXED GRID ITEMS (Data and Regular Inputs) */}
+      {/* 1 & 2. RENDER MIXED GRID ITEMS (Data-Only and Regular Inputs - Displayed at top) */}
       {mixedGridItems.length > 0 && (
         <View style={styles.contentGrid}>
           {mixedGridItems.map((item, index) => {
@@ -316,10 +344,18 @@ const SectionContent = ({
         </View>
       )}
 
-      {/* 2. RENDER RADIO INPUTS (Full Width) */}
-      {radioInputs.length > 0 && (
+      {/* 3 & 4. RENDER SEQUENCED ITEMS (Titles and Radio Inputs) */}
+      {sequencedTitlesAndRadios.length > 0 && (
         <View style={styles.radioInputsContainer}>
-          {radioInputs.map(renderRadioInput)}
+          {sequencedTitlesAndRadios.map((item, index) => {
+            if ((item as any).title) {
+              // It's a Title-Only item
+              return renderTitleItem(item as {title: string}, index);
+            } else {
+              // It's a Radio Input item
+              return renderRadioInput(item as InputItem);
+            }
+          })}
         </View>
       )}
 
@@ -783,6 +819,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 4,
+  },
+  itemTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#333',
+    paddingVertical: 5,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    marginTop: 10,
+    marginBottom: 8,
+    width: '100%',
   },
 });
 

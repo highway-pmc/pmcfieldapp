@@ -16,7 +16,7 @@ import {
 // NOTE: You must ensure 'validateField' exists in './formValidation'
 // or comment out its usage below if not needed.
 // import {validateField} from './formValidation';sssssn*bsn*ssssss
-const validateField = (field, value) => {
+const validateField = (field: any, value: any) => {
   // Placeholder: Implement your validation logic here.
   if (field.validations?.required && !value) {
     return field.validations.errorMessage || `${field.label} is required.`;
@@ -106,7 +106,7 @@ interface SectionContentProps {
 // --- RADIO COMPONENT ---
 const YES_NO_OPTIONS = [
   {key: 'Yes', label: 'Yes', color: '#52b552'},
-  {key: 'NO', label: 'NO', color: '#dc3545'},
+  {key: 'No', label: 'No', color: '#dc3545'},
   {key: 'NA', label: 'NA', color: '#6c757d'},
 ];
 
@@ -231,9 +231,7 @@ const SectionContent = ({
   const dataItems: DataItem[] = []; // 1. Data-Only Items
   const regularInputs: InputItem[] = []; // 2. Regular Input Items
   // 3 & 4: Titles and Radio Inputs must maintain their original sequence.
-  const sequencedTitlesAndRadios: Array<
-    {title: string} | InputItem
-  > = [];
+  const sequencedTitlesAndRadios: Array<{title: string} | InputItem> = [];
 
   // Map to hold items that go into the grid (Data & Regular Inputs)
   const mixedGridItems: MixedItem[] = [];
@@ -263,7 +261,7 @@ const SectionContent = ({
 
   // Combine Data and Regular Inputs for the grid display (at the top)
   mixedGridItems.push(...dataItems, ...regularInputs);
-  
+
   // Helper function to render a single Data Item
   const renderDataItem = (item: DataItem, index: number) => (
     <View key={`data-${index}`} style={styles.gridItem}>

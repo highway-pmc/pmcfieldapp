@@ -6,40 +6,24 @@ import {
   TouchableOpacity,
   SafeAreaView,
   NativeEventEmitter,
-  ActivityIndicator, // Import ActivityIndicator for loading state
+  ActivityIndicator,
+  Alert,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import InformationTab from './MyWorkDynamicFrom/InformationTab';
-import InspectionTab from './MyWorkDynamicFrom/InspectionTab';
-import TaskDetailsTab from './MyWorkDynamicFrom/TaskDetailsTab';
+import React, {useEffect, useState, useRef} from 'react';
 import {useIsFocused} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {HeaderItems} from '../../constants/constants';
 import {getInspectionChecklist, clearFormDetails} from './actions';
+import InformationTab from './MyWorkDynamicFrom/InformationTab';
+import InspectionTab from './MyWorkDynamicFrom/InspectionTab';
+import TaskDetailsTab from './MyWorkDynamicFrom/TaskDetailsTab';
+import {DynamicFormRef} from '../../components/Form/DynamicForm';
 
 // Define the structure for form data to be passed to tabs
 interface FormData {
   mainTitle: string;
   sections: any[];
 }
-
-// 1. DUMMY_INSPECTION_DATA has been removed.
-
-// Placeholder data structure for the other tabs (keep until API is ready for them)
-const DUMMY_FORM_DATA: FormData = {
-  mainTitle: 'Project & Material Testing',
-  sections: [
-    {
-      title: 'Project Details',
-      sectionInfo: 'Key project details.',
-      type: 'info',
-      items: [
-        {label: 'Project Name', value: 'Elevated Expressway'},
-        {label: 'Client', value: 'NHAI'},
-      ],
-    },
-  ],
-};
 
 const DUMMY_TASK_DETAILS: FormData = {
   mainTitle: 'Concrete Pour Task',
@@ -79,20 +63,27 @@ const TaskForm = () => {
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
 
-  // Destructure the data, loading, and error states from Redux
+  // 1. Refs for collecting data from each tab's DynamicForm
+  const informationRef = useRef<DynamicFormRef>(null);
+  const inspectionRef = useRef<DynamicFormRef>(null);
+  const taskDetailsRef = useRef<DynamicFormRef>(null);
+
   const {inspectionChecklist, loading, error} = useSelector(
     (state: any) => state.FormDetails,
   );
 
   const [activeTab, setActiveTab] = useState(TABS.INFORMATION);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // --- LIFECYCLE / REDUX FETCHING ---
   useEffect(() => {
     if (isFocused) {
       const payload = {
         projectId: '684181d57a306ccd976d8374',
         checklistName: 'lifting-transportation-and-erection-at-site',
+        rfiId: '6841ecdec00f933c0c179699',
       };
-      // Fetch the checklist when the component is focused
       dispatch(getInspectionChecklist(payload));
     }
     return () => {
@@ -108,19 +99,107 @@ const TaskForm = () => {
       eventEmitter.emit('headerEvent', HeaderItems.taskForm);
     }
   }, [isFocused]);
-  useEffect(() => {
-    if (inspectionChecklist && !loading && !error) {
-      console.log('API Inspection Checklist Data:', inspectionChecklist);
-      // You can now view this data in your Metro/Chrome debugger console
-    }
-  }, [inspectionChecklist, loading, error]);
+
   const switchTab = (tabName: string) => {
     setActiveTab(tabName);
   };
 
-  // Function to render content based on tab and data availability
+  // --- SAVE AND SUBMIT LOGIC ---
+
+  const getFormDataFromTabs = () => {
+    let allInputs: Record<string, any> = {};
+    let allErrors: Record<string, string> = {};
+    let hasError = false;
+
+    const refs = {
+      [TABS.INFORMATION]: informationRef.current,
+      [TABS.INSPECTION]: inspectionRef.current,
+      [TABS.TASK_DETAILS]: taskDetailsRef.current,
+    };
+
+    // Iterate through all refs and call the exposed function to collect data
+    for (const tabName in refs) {
+      const ref = refs[tabName as keyof typeof refs];
+      if (ref) {
+        const {inputData, inputErrors} = ref.collectAllInputs();
+        allInputs[tabName] = inputData;
+        allErrors = {...allErrors, ...inputErrors};
+
+        if (Object.values(inputErrors).some(err => err)) {
+          hasError = true;
+        }
+      }
+    }
+
+    // CONSOLE ALL TAB INPUTS IN ORGANIZED WAY SIMULTANEOUSLY
+    console.log('--- COLLECTED INPUTS (ALL TABS) SIMULTANEOUSLY ---');
+    console.log('Information Tab Data:', allInputs[TABS.INFORMATION] || 'N/A');
+    console.log('Inspection Tab Data:', allInputs[TABS.INSPECTION] || 'N/A');
+    console.log(
+      'Task Details Tab Data:',
+      allInputs[TABS.TASK_DETAILS] || 'N/A',
+    );
+    console.log('--- ALL COLLECTED ERRORS ---');
+    console.log(allErrors);
+    console.log('----------------------------------------------------');
+
+    // The final payload includes all inputs and a flag for errors
+    return {allInputs, allErrors, hasError};
+  };
+
+  const handleSave = async () => {
+    // Check if submitting is already in progress to prevent double action
+    if (isSaving || isSubmitting) return;
+
+    // Calls getFormDataFromTabs, which logs all data
+    const {allInputs, hasError} = getFormDataFromTabs();
+
+    if (hasError) {
+      Alert.alert(
+        'Warning',
+        'Some fields have validation errors. Please check the form before saving.',
+      );
+    }
+
+    // --- API CALL FOR SAVE ---
+    console.log('Saving Data Payload (Full):', allInputs);
+
+    setIsSaving(true);
+    // Replace with actual API call / Redux dispatch and await
+    await new Promise(resolve => setTimeout(resolve, 1500));
+
+    setIsSaving(false);
+    Alert.alert('Success', 'Form data has been saved.');
+  };
+
+  const handleSubmit = async () => {
+    // Check if saving is already in progress to prevent double action
+    if (isSaving || isSubmitting) return;
+
+    // Calls getFormDataFromTabs, which logs all data
+    const {allInputs, hasError} = getFormDataFromTabs();
+
+    if (hasError) {
+      // Block submission if there are validation errors
+      Alert.alert(
+        'Validation Error',
+        'Please correct all validation errors before submitting.',
+      );
+      return;
+    }
+
+    // --- API CALL FOR SUBMIT ---
+    console.log('Submitting Data Payload (Full):', allInputs);
+
+    setIsSubmitting(true); // Set submitting state
+    // Replace with actual API call / Redux dispatch and await
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    setIsSubmitting(false); // Clear submitting state
+    Alert.alert('Success', 'Form data has been submitted.');
+  };
+
   const renderTabContent = () => {
-    // 3. Handle loading and error states globally or specific to the Inspection tab
     if (loading) {
       return (
         <View style={styles.centered}>
@@ -139,18 +218,42 @@ const TaskForm = () => {
         </View>
       );
     }
-
+    console.log(inspectionChecklist);
     switch (activeTab) {
       case TABS.INFORMATION:
-        return <InformationTab formData={DUMMY_FORM_DATA} />;
+        const projectInfo = inspectionChecklist?.projectInfoSection;
+        const materialConsumption =
+          inspectionChecklist?.materialConsumptionSection;
+        console.log('Rendering InformationTab with data:', {
+          projectInfo,
+          materialConsumption,
+        });
+        if (projectInfo && materialConsumption) {
+          return (
+            <InformationTab
+              ref={informationRef}
+              projectInfoSection={projectInfo}
+              materialConsumptionSection={materialConsumption}
+            />
+          );
+        }
+        return (
+          <View style={styles.centered}>
+            <Text style={styles.statusText}>
+              Project info data is not available.
+            </Text>
+          </View>
+        );
 
       case TABS.INSPECTION:
         if (
           inspectionChecklist &&
           inspectionChecklist.inspectionChecklistSection
         ) {
+          // Pass ref to the InspectionTab wrapper
           return (
             <InspectionTab
+              ref={inspectionRef}
               formData={
                 inspectionChecklist.inspectionChecklistSection as FormData
               }
@@ -166,19 +269,21 @@ const TaskForm = () => {
         );
 
       case TABS.TASK_DETAILS:
-        return <TaskDetailsTab formData={DUMMY_TASK_DETAILS} />;
+        return (
+          <TaskDetailsTab ref={taskDetailsRef} formData={DUMMY_TASK_DETAILS} />
+        );
 
       default:
         return null;
     }
   };
 
+  const isActionInProgress = isSaving || isSubmitting;
+
   return (
     <SafeAreaView style={styles.container}>
       {/* Tab Bar for navigation */}
       <View style={styles.tabBar}>
-        {/* ... (Your TouchableOpacity elements for tabs remain the same) ... */}
-        {/* INFORMATION Tab */}
         <TouchableOpacity
           style={[
             styles.tabItem,
@@ -230,7 +335,32 @@ const TaskForm = () => {
       {/* Scrollable Content Area */}
       <ScrollView style={styles.contentContainer}>
         {renderTabContent()}
+        <View style={styles.scrollViewPadding} />
       </ScrollView>
+
+      {/* --- SAVE AND SUBMIT BUTTON BAR --- */}
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={[styles.button, styles.saveButton]}
+          onPress={handleSave}
+          disabled={isActionInProgress}>
+          {isSaving ? (
+            <ActivityIndicator color="#5A2AAF" />
+          ) : (
+            <Text style={styles.saveButtonText}>Save</Text>
+          )}
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.button, styles.submitButton]}
+          onPress={handleSubmit}
+          disabled={isActionInProgress}>
+          {isSubmitting ? (
+            <ActivityIndicator color="#FFFFFF" /> // Use isSubmitting for Submit button indicator
+          ) : (
+            <Text style={styles.submitButtonText}>Submit</Text>
+          )}
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };
@@ -274,18 +404,61 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
   },
-  // Added new styles for loading/error state visibility
   centered: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    minHeight: 200, // Ensure it's visible even on short lists
+    minHeight: 200,
   },
   statusText: {
     marginTop: 10,
     fontSize: 16,
     color: '#5A2AAF',
+  },
+  scrollViewPadding: {
+    height: 60,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 50,
+    paddingVertical: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#f0f0f0',
+    backgroundColor: '#F7F3FF',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: -2},
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 10,
+  },
+  button: {
+    flex: 1,
+    height: 40,
+    borderRadius: 30, // More rounded corners
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: 8,
+  },
+  saveButton: {
+    backgroundColor: '#FFFFFF',
+    borderWidth: 2,
+    borderColor: '#5A2AAF',
+  },
+  submitButton: {
+    backgroundColor: '#5A2AAF',
+    borderWidth: 0,
+  },
+  saveButtonText: {
+    color: '#5A2AAF',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  submitButtonText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
 });
 

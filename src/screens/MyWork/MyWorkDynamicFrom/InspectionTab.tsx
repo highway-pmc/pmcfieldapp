@@ -1,27 +1,23 @@
 import {View, StyleSheet, ScrollView, Text} from 'react-native';
-import React from 'react';
-import DynamicForm from '../../../components/Form/DynamicForm';
+import React, {forwardRef} from 'react'; // Import forwardRef
+import DynamicForm, {
+  DynamicFormRef,
+} from '../../../components/Form/DynamicForm'; // Import DynamicFormRef
 
 interface InspectionTabProps {
   formData: any;
 }
 
-const InspectionTab: React.FC<InspectionTabProps> = ({formData}) => {
-
-  if (!formData || Object.keys(formData).length === 0) {
+const InspectionTab = forwardRef<DynamicFormRef, InspectionTabProps>(
+  ({formData}, ref) => {
     return (
-      <View style={[styles.tabContent, styles.centered]}>
-        <Text style={styles.dataText}>No Inspection data available.</Text>
-      </View>
+      <ScrollView contentContainerStyle={styles.tabContent}>
+        {/* Pass the ref down to DynamicForm */}
+        <DynamicForm ref={ref} formData={formData} />
+      </ScrollView>
     );
-  }
-
-  return (
-    <ScrollView contentContainerStyle={styles.tabContent}>
-      <DynamicForm formData={formData} />
-    </ScrollView>
-  );
-};
+  },
+);
 
 const styles = StyleSheet.create({
   tabContent: {

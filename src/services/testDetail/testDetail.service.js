@@ -21,10 +21,14 @@ export const getFormDetailsTab1Api = async (
     });
 };
 
-export const getInspectionChecklistApi = async (projectId, checklistName) => {
+export const getInspectionChecklistApi = async (
+  projectId,
+  checklistName,
+  rfiId,
+) => {
   return apiService
     .getRequest(
-      `v1/auth/projects/${projectId}/my-work-task-form/inspection-checklist?name=${checklistName}`,
+      `v1/auth/projects/${projectId}/my-work-task-form/inspection-checklist?name=${checklistName}&rfiId=${rfiId}`,
     )
     .then(response => {
       return response;

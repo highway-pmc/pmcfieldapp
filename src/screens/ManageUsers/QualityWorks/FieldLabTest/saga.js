@@ -27,6 +27,7 @@ function* getInspectionChecklist({payload}) {
     const response = yield getInspectionChecklistApi(
       payload.projectId,
       payload.checklistName,
+      payload.rfiId, 
     );
     yield put({type: 'GET_INSPECTION_CHECKLIST_SUCCESS', response});
   } catch (error) {

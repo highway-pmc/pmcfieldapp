@@ -213,7 +213,20 @@ const TaskForm = () => {
     setIsSaving(false);
 
     if (hasError) {
-      Alert.alert('Validation Warning', 'One or more fields have errors.');
+      const errorMessages = Object.values(allErrors).filter(
+        (
+          message,
+          index,
+          self, // 2. Filter out any falsey values and show only unique messages
+        ) => message && self.indexOf(message) === index,
+      ); // 3. Join the unique messages into a single string, separated by newlines
+
+      const formattedErrorList = errorMessages.join('\n\n');
+
+      Alert.alert(
+        'Validation Warning',
+        formattedErrorList || 'One or more fields have errors.',
+      );
     } else {
       Alert.alert('Success', 'Form data has been saved.');
     }
@@ -221,12 +234,17 @@ const TaskForm = () => {
 
   const handleSubmit = async () => {
     if (isSaving || isSubmitting) return;
-    const {allInputs, hasError} = getFormDataFromTabs();
+    const {allInputs, hasError, allErrors} = getFormDataFromTabs();
 
     if (hasError) {
+      const errorMessages = Object.values(allErrors).filter(
+        (message, index, self) => message && self.indexOf(message) === index,
+      );
+      const formattedErrorList = errorMessages.join('\n\n');
+
       Alert.alert(
-        'Validation Error',
-        'Please correct all validation errors before submitting.',
+        'Validation Warning',
+        formattedErrorList || 'One or more fields have errors.',
       );
       return;
     }

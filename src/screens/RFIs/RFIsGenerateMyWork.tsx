@@ -27,7 +27,6 @@ const RFIsGenerateMyWork = ({
   navigation: any;
 }) => {
   const {rfiType, projectType, taskCategory, moduleType} = route.params;
-
   const [activeTab, setActiveTab] = useState(USER_CATEGORY_DISPLAY.STRUCTURE);
 
   const focus = useIsFocused();
@@ -124,12 +123,13 @@ const RFIsGenerateMyWork = ({
         )}
         {activeTab === USER_CATEGORY_DISPLAY.OTHER && <Text>TBD</Text>}
       </View>*/}
-    <Text>{moduleType} - {projectType}</Text>
+      <Text>
+        {moduleType} - {projectType}
+      </Text>
       <RFIsStructureTaskListing
-          rfiType={rfiType}
-          projectType={projectType}
-          taskCategory={taskCategory}>
-      </RFIsStructureTaskListing>
+        rfiType={rfiType}
+        projectType={projectType}
+        taskCategory={taskCategory}></RFIsStructureTaskListing>
     </View>
   );
 };

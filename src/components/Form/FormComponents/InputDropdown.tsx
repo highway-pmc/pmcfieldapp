@@ -22,7 +22,7 @@ const DropdownInput: React.FC<InputComponentProps> = ({
   };
 
   return (
-    <View style={styles.gridItem}>
+    <View style={styles.inputGridItem}>
       <Text style={styles.inputLabel}>{input.label}</Text>
       <TouchableOpacity
         style={[

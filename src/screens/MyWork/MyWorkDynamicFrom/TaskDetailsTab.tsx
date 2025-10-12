@@ -6,10 +6,12 @@ import DynamicForm, {
 
 interface TaskDetailsTabProps {
   formData: any;
+  globalFormData: Record<string, any>;
+  onGlobalValueChange: (fieldId: string, newValue: any) => void;
 }
 
 const TaskDetailsTab = forwardRef<DynamicFormRef, TaskDetailsTabProps>(
-  ({formData}, ref) => {
+  ({formData, globalFormData, onGlobalValueChange}, ref) => {
     if (!formData || Object.keys(formData).length === 0) {
       return (
         <View style={[styles.tabContent, styles.centered]}>
@@ -20,7 +22,12 @@ const TaskDetailsTab = forwardRef<DynamicFormRef, TaskDetailsTabProps>(
 
     return (
       <ScrollView contentContainerStyle={styles.tabContent}>
-        <DynamicForm ref={ref} formData={formData} />
+        <DynamicForm
+          ref={ref}
+          formData={formData}
+          globalFormData={globalFormData}
+          onGlobalValueChange={onGlobalValueChange}
+        />
       </ScrollView>
     );
   },

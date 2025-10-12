@@ -1,55 +1,54 @@
 import {View, StyleSheet, ScrollView, Text} from 'react-native';
-import React, {forwardRef, useRef, useImperativeHandle} from 'react'; // <--- Import useRef and useImperativeHandle
+import React, {forwardRef, useRef, useImperativeHandle} from 'react';
 import DynamicForm, {
   DynamicFormRef,
 } from '../../../components/Form/DynamicForm';
 
 interface InformationTabProps {
-  // Update interface to use the two specific props instead of a single formData
   projectInfoSection: any;
   materialConsumptionSection: any;
+  projectInfoData: Record<string, any>;
+  onProjectInfoChange: (fieldId: string, newValue: any) => void;
+  materialConsumptionData: Record<string, any>;
+  onMaterialConsumptionChange: (fieldId: string, newValue: any) => void;
 }
 
 const InformationTab = forwardRef<DynamicFormRef, InformationTabProps>(
-  ({projectInfoSection, materialConsumptionSection}, ref) => {
-    // 1. Create separate internal refs for each DynamicForm
+  (
+    {
+      projectInfoSection,
+      materialConsumptionSection,
+      projectInfoData,
+      onProjectInfoChange,
+      materialConsumptionData,
+      onMaterialConsumptionChange,
+    },
+    ref,
+  ) => {
+    // Refs for collecting validation errors remain necessary
     const projectInfoRef = useRef<DynamicFormRef>(null);
     const materialConsumptionRef = useRef<DynamicFormRef>(null);
-    console.log(
-      'InformationTab - projectInfoSection:',
-      projectInfoSection,
-      'materialConsumptionSection:',
-      materialConsumptionSection,
-    );
-    // 2. Use useImperativeHandle to expose the combined logic to the outside world (TaskForm)
+
+    // Use useImperativeHandle to expose the combined logic to the outside world (TaskForm)
     useImperativeHandle(ref, () => ({
       collectAllInputs: () => {
-        let combinedInputData: Record<string, any> = {};
         let combinedInputErrors: Record<string, string> = {};
 
-        // Collect data from Project Info Form
+        // Collect ERRORS from Project Info Form via ref
         if (projectInfoRef.current) {
-          const {inputData, inputErrors} =
-            projectInfoRef.current.collectAllInputs();
-          // The data structure of Project Info is typically key-value pairs without specific IDs,
-          // but we still include any potential input fields.
-          combinedInputData = {...combinedInputData, ...inputData};
+          const {inputErrors} = projectInfoRef.current.collectAllInputs();
           combinedInputErrors = {...combinedInputErrors, ...inputErrors};
         }
 
-        // Collect data from Material Consumption Form
+        // Collect ERRORS from Material Consumption Form via ref
         if (materialConsumptionRef.current) {
-          const {inputData, inputErrors} =
+          const {inputErrors} =
             materialConsumptionRef.current.collectAllInputs();
-          // The Material Consumption section has actual input fields (qty_consumed),
-          // so this data and any errors will be merged here.
-          combinedInputData = {...combinedInputData, ...inputData};
           combinedInputErrors = {...combinedInputErrors, ...inputErrors};
         }
 
-        // Return the combined result
         return {
-          inputData: combinedInputData,
+          inputData: {...projectInfoData, ...materialConsumptionData},
           inputErrors: combinedInputErrors,
         };
       },
@@ -70,16 +69,23 @@ const InformationTab = forwardRef<DynamicFormRef, InformationTabProps>(
 
     return (
       <ScrollView contentContainerStyle={styles.tabContent}>
-        {/* Render Project Info Section, passing its internal ref */}
+        {/* Render Project Info Section, passing state and setter */}
         {projectInfoSection && (
-          <DynamicForm ref={projectInfoRef} formData={projectInfoSection} />
+          <DynamicForm
+            ref={projectInfoRef}
+            formData={projectInfoSection}
+            globalFormData={projectInfoData}
+            onGlobalValueChange={onProjectInfoChange}
+          />
         )}
 
-        {/* Render Material Consumption Section, passing its internal ref */}
+        {/* Render Material Consumption Section, passing state and setter */}
         {materialConsumptionSection && (
           <DynamicForm
             ref={materialConsumptionRef}
             formData={materialConsumptionSection}
+            globalFormData={materialConsumptionData}
+            onGlobalValueChange={onMaterialConsumptionChange}
           />
         )}
       </ScrollView>

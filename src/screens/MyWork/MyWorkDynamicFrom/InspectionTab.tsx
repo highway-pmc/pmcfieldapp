@@ -1,19 +1,27 @@
 import {View, StyleSheet, ScrollView, Text} from 'react-native';
-import React, {forwardRef} from 'react'; // Import forwardRef
+import React, {forwardRef} from 'react';
 import DynamicForm, {
   DynamicFormRef,
-} from '../../../components/Form/DynamicForm'; // Import DynamicFormRef
+} from '../../../components/Form/DynamicForm';
 
 interface InspectionTabProps {
   formData: any;
+  // NEW PROPS from TaskForm
+  globalFormData: Record<string, any>;
+  onGlobalValueChange: (fieldId: string, newValue: any) => void;
 }
 
 const InspectionTab = forwardRef<DynamicFormRef, InspectionTabProps>(
-  ({formData}, ref) => {
+  ({formData, globalFormData, onGlobalValueChange}, ref) => {
     return (
       <ScrollView contentContainerStyle={styles.tabContent}>
-        {/* Pass the ref down to DynamicForm */}
-        <DynamicForm ref={ref} formData={formData} />
+        {/* Pass the centralized state and setter down to DynamicForm */}
+        <DynamicForm
+          ref={ref}
+          formData={formData}
+          globalFormData={globalFormData}
+          onGlobalValueChange={onGlobalValueChange}
+        />
       </ScrollView>
     );
   },

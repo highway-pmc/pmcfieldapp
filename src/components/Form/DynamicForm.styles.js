@@ -71,13 +71,18 @@ const styles = StyleSheet.create({
     width: '48%',
     marginBottom: 12,
   },
+  inputGridItem: {
+    width: '100%',
+    marginBottom: 12,
+  },
   // --- UPDATED FOR CONSISTENCY: inputLabel and dataLabel styles are merged ---
   // The 'dataLabel' style is updated to match the 'inputLabel' (bold/semiblod and color)
   inputLabel: {
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: '600', // Made this slightly bolder for consistency
     color: '#333',
     marginBottom: 3,
+    // fontStyle: 'italic',
   },
   dataLabel: {
     fontSize: 13,

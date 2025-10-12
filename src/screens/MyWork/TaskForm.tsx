@@ -63,7 +63,48 @@ const TaskForm = () => {
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
 
-  // 1. Refs for collecting data from each tab's DynamicForm
+  // --- NEW: SECTION-WISE CENTRALIZED STATE ---
+  const [projectInfoData, setProjectInfoData] = useState<Record<string, any>>(
+    {},
+  );
+  const [materialConsumptionData, setMaterialConsumptionData] = useState<
+    Record<string, any>
+  >({});
+  const [inspectionChecklistData, setInspectionChecklistData] = useState<
+    Record<string, any>
+  >({});
+  const [taskDetailsData, setTaskDetailsData] = useState<Record<string, any>>(
+    {},
+  );
+
+  // Helper to map section identifiers to their state setters
+  const stateSetters = {
+    projectInfoSection: setProjectInfoData,
+    materialConsumptionSection: setMaterialConsumptionData,
+    inspectionChecklistSection: setInspectionChecklistData,
+    taskDetails: setTaskDetailsData,
+  };
+
+  // The universal update handler passed down to all DynamicForms
+  const handleUniversalValueChange = (
+    sectionKey: keyof typeof stateSetters,
+    fieldId: string,
+    newValue: any,
+  ) => {
+    const setter = stateSetters[sectionKey];
+    if (setter) {
+      setter(prev => ({
+        ...prev,
+        [fieldId]: newValue,
+      }));
+
+      // *** FUTURE CROSS-CALCULATION/REACTION LOGIC GOES HERE ***
+      // if (fieldId === 'some_input_id') { ... }
+    }
+  };
+  // ---------------------------------------------
+
+  // 1. Refs for collecting validation errors from each tab
   const informationRef = useRef<DynamicFormRef>(null);
   const inspectionRef = useRef<DynamicFormRef>(null);
   const taskDetailsRef = useRef<DynamicFormRef>(null);
@@ -76,7 +117,7 @@ const TaskForm = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // --- LIFECYCLE / REDUX FETCHING ---
+  // --- LIFECYCLE / REDUX FETCHING --- (No change)
   useEffect(() => {
     if (isFocused) {
       const payload = {
@@ -107,7 +148,6 @@ const TaskForm = () => {
   // --- SAVE AND SUBMIT LOGIC ---
 
   const getFormDataFromTabs = () => {
-    let allInputs: Record<string, any> = {};
     let allErrors: Record<string, string> = {};
     let hasError = false;
 
@@ -117,12 +157,12 @@ const TaskForm = () => {
       [TABS.TASK_DETAILS]: taskDetailsRef.current,
     };
 
-    // Iterate through all refs and call the exposed function to collect data
+    // 1. Collect all ERRORS via refs (The refs handle the recursive validation)
     for (const tabName in refs) {
       const ref = refs[tabName as keyof typeof refs];
       if (ref) {
-        const {inputData, inputErrors} = ref.collectAllInputs();
-        allInputs[tabName] = inputData;
+        // We only use the inputErrors part of the return value
+        const {inputErrors} = ref.collectAllInputs();
         allErrors = {...allErrors, ...inputErrors};
 
         if (Object.values(inputErrors).some(err => err)) {
@@ -131,56 +171,63 @@ const TaskForm = () => {
       }
     }
 
+    // 2. Aggregate the centralized STATE DATA for the final payload
+    // *** MODIFIED LOGIC HERE: Using specific section keys as requested ***
+    const allInputs = {
+      // These keys directly match your Redux/API structure for saving metadata
+      projectInfoSection: projectInfoData,
+      materialConsumptionSection: materialConsumptionData,
+      inspectionChecklistSection: inspectionChecklistData,
+      taskDetails: taskDetailsData,
+    };
+
     // CONSOLE ALL TAB INPUTS IN ORGANIZED WAY SIMULTANEOUSLY
-    console.log('--- COLLECTED INPUTS (ALL TABS) SIMULTANEOUSLY ---');
-    console.log('Information Tab Data:', allInputs[TABS.INFORMATION] || 'N/A');
-    console.log('Inspection Tab Data:', allInputs[TABS.INSPECTION] || 'N/A');
-    console.log(
-      'Task Details Tab Data:',
-      allInputs[TABS.TASK_DETAILS] || 'N/A',
-    );
-    console.log('--- ALL COLLECTED ERRORS ---');
+    console.log('--- COLLECTED INPUTS (ALL SECTIONS) SIMULTANEOUSLY ---');
+    // console.log(
+    //   'Project Info Section Data:',
+    //   allInputs.projectInfoSection || 'N/A',
+    // );
+    // console.log(
+    //   'Material Consumption Section Data:',
+    //   allInputs.materialConsumptionSection || 'N/A',
+    // );
+    // console.log(
+    //   'Inspection Checklist Section Data:',
+    //   allInputs.inspectionChecklistSection || 'N/A',
+    // );
+    // console.log('Task Details Data:', allInputs.taskDetails || 'N/A');
+    console.log(allInputs);
+    console.log('--- ALL COLLECTED ERRORS (from DynamicForm refs) ---');
     console.log(allErrors);
     console.log('----------------------------------------------------');
 
-    // The final payload includes all inputs and a flag for errors
     return {allInputs, allErrors, hasError};
   };
 
   const handleSave = async () => {
-    // Check if submitting is already in progress to prevent double action
     if (isSaving || isSubmitting) return;
-
-    // Calls getFormDataFromTabs, which logs all data
     const {allInputs, hasError} = getFormDataFromTabs();
+
+    // ... (rest of handleSave logic)
+    setIsSaving(true);
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    setIsSaving(false);
 
     if (hasError) {
       Alert.alert(
         'Warning',
         'Some fields have validation errors. Please check the form before saving.',
       );
+    } else {
+      Alert.alert('Success', 'Form data has been saved.');
     }
-
-    // --- API CALL FOR SAVE ---
-    console.log('Saving Data Payload (Full):', allInputs);
-
-    setIsSaving(true);
-    // Replace with actual API call / Redux dispatch and await
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
-    setIsSaving(false);
-    Alert.alert('Success', 'Form data has been saved.');
   };
 
   const handleSubmit = async () => {
-    // Check if saving is already in progress to prevent double action
     if (isSaving || isSubmitting) return;
-
-    // Calls getFormDataFromTabs, which logs all data
     const {allInputs, hasError} = getFormDataFromTabs();
 
     if (hasError) {
-      // Block submission if there are validation errors
       Alert.alert(
         'Validation Error',
         'Please correct all validation errors before submitting.',
@@ -188,14 +235,10 @@ const TaskForm = () => {
       return;
     }
 
-    // --- API CALL FOR SUBMIT ---
-    console.log('Submitting Data Payload (Full):', allInputs);
-
-    setIsSubmitting(true); // Set submitting state
-    // Replace with actual API call / Redux dispatch and await
+    // ... (rest of handleSubmit logic)
+    setIsSubmitting(true);
     await new Promise(resolve => setTimeout(resolve, 2000));
-
-    setIsSubmitting(false); // Clear submitting state
+    setIsSubmitting(false);
     Alert.alert('Success', 'Form data has been submitted.');
   };
 
@@ -218,22 +261,35 @@ const TaskForm = () => {
         </View>
       );
     }
-    console.log(inspectionChecklist);
+
     switch (activeTab) {
       case TABS.INFORMATION:
         const projectInfo = inspectionChecklist?.projectInfoSection;
         const materialConsumption =
           inspectionChecklist?.materialConsumptionSection;
-        console.log('Rendering InformationTab with data:', {
-          projectInfo,
-          materialConsumption,
-        });
+
         if (projectInfo && materialConsumption) {
           return (
             <InformationTab
               ref={informationRef}
               projectInfoSection={projectInfo}
               materialConsumptionSection={materialConsumption}
+              projectInfoData={projectInfoData}
+              onProjectInfoChange={(fieldId, newValue) =>
+                handleUniversalValueChange(
+                  'projectInfoSection',
+                  fieldId,
+                  newValue,
+                )
+              }
+              materialConsumptionData={materialConsumptionData}
+              onMaterialConsumptionChange={(fieldId, newValue) =>
+                handleUniversalValueChange(
+                  'materialConsumptionSection',
+                  fieldId,
+                  newValue,
+                )
+              }
             />
           );
         }
@@ -250,12 +306,20 @@ const TaskForm = () => {
           inspectionChecklist &&
           inspectionChecklist.inspectionChecklistSection
         ) {
-          // Pass ref to the InspectionTab wrapper
           return (
             <InspectionTab
               ref={inspectionRef}
               formData={
                 inspectionChecklist.inspectionChecklistSection as FormData
+              }
+              // --- PASS STATE & CURRIED SETTER ---
+              globalFormData={inspectionChecklistData}
+              onGlobalValueChange={(fieldId, newValue) =>
+                handleUniversalValueChange(
+                  'inspectionChecklistSection',
+                  fieldId,
+                  newValue,
+                )
               }
             />
           );
@@ -270,7 +334,14 @@ const TaskForm = () => {
 
       case TABS.TASK_DETAILS:
         return (
-          <TaskDetailsTab ref={taskDetailsRef} formData={DUMMY_TASK_DETAILS} />
+          <TaskDetailsTab
+            ref={taskDetailsRef}
+            formData={DUMMY_TASK_DETAILS}
+            globalFormData={taskDetailsData}
+            onGlobalValueChange={(fieldId, newValue) =>
+              handleUniversalValueChange('taskDetails', fieldId, newValue)
+            }
+          />
         );
 
       default:
@@ -280,6 +351,7 @@ const TaskForm = () => {
 
   const isActionInProgress = isSaving || isSubmitting;
 
+  // ... (rest of the component view remains unchanged)
   return (
     <SafeAreaView style={styles.container}>
       {/* Tab Bar for navigation */}

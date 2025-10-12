@@ -11,7 +11,7 @@ const InputText: React.FC<InputComponentProps> = ({
   error,
 }) => {
   return (
-    <View key={`input-${input.id}`} style={styles.gridItem}>
+    <View key={`input-${input.id}`} style={styles.inputGridItem}>
       <Text style={styles.inputLabel}>{input.label}</Text>
       <TextInput
         style={[styles.textInput, error ? styles.inputErrorBorder : {}]}

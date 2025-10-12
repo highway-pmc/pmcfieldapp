@@ -3,7 +3,7 @@ import React, {
   useEffect,
   forwardRef,
   useImperativeHandle,
-} from 'react'; // Import forwardRef and useImperativeHandle
+} from 'react';
 import {
   View,
   Text,
@@ -11,7 +11,6 @@ import {
   ScrollView,
   LayoutAnimation,
 } from 'react-native';
-// @ts-ignore
 import styles from './DynamicForm.styles';
 import {
   Section,
@@ -25,7 +24,11 @@ import {validateField} from './utils/formValidation';
 import ExpandableSection from './SectionRenderers/ExpandableSection';
 import SectionContent from './SectionRenderers/SectionContent';
 
-// Define the interface for the methods the parent component can call via ref
+export interface DynamicFormProps extends DynamicTestFormProps {
+  globalFormData: Record<string, any>;
+  onGlobalValueChange: (fieldId: string, newValue: any) => void;
+}
+
 export interface DynamicFormRef {
   collectAllInputs: () => {
     inputData: Record<string, any>;
@@ -33,28 +36,21 @@ export interface DynamicFormRef {
   };
 }
 
-// Wrap the component with forwardRef
-const DynamicForm = forwardRef<DynamicFormRef, DynamicTestFormProps>(
-  ({formData}, ref) => {
-    // Use 'ref' here
+const DynamicForm = forwardRef<DynamicFormRef, DynamicFormProps>(
+  ({formData, globalFormData, onGlobalValueChange}, ref) => {
     const [isMainExpanded, setIsMainExpanded] = useState(true);
-    const [inputData, setInputData] = useState<Record<string, any>>({});
     const [inputErrors, setInputErrors] = useState<Record<string, string>>({});
 
-    // Use a ref to hold references to nested DynamicForms (for subSections)
     const nestedFormRefs = React.useRef<Record<string, DynamicFormRef>>({});
 
-    // Expose methods to the parent component via ref
     useImperativeHandle(ref, () => ({
       collectAllInputs,
     }));
 
-    // Recursive function to collect data from nested DynamicForms
     const collectAllInputs = () => {
-      let allData: Record<string, any> = {...inputData};
+      let allData: Record<string, any> = {...globalFormData};
       let allErrors: Record<string, string> = {...inputErrors};
 
-      // Recursively collect data from subSections
       formData.sections.forEach((section, index) => {
         if (section.type === 'subSection') {
           const subFormRef = nestedFormRefs.current[section.mainTitle];
@@ -69,9 +65,7 @@ const DynamicForm = forwardRef<DynamicFormRef, DynamicTestFormProps>(
       return {inputData: allData, inputErrors: allErrors};
     };
 
-    // 1. Initialize input data (Logic remains the same)
     useEffect(() => {
-      // ... (existing initialization logic)
       const initialData: Record<string, any> = {};
 
       const initializeInputs = (sections: Section[]) => {
@@ -82,7 +76,7 @@ const DynamicForm = forwardRef<DynamicFormRef, DynamicTestFormProps>(
             section.items.forEach(item => {
               if ((item as InputItem).type) {
                 const input = item as InputItem;
-                if (inputData[input.id] === undefined) {
+                if (globalFormData[input.id] === undefined) {
                   initialData[input.id] = input.value;
                 }
               }
@@ -93,20 +87,18 @@ const DynamicForm = forwardRef<DynamicFormRef, DynamicTestFormProps>(
 
       initializeInputs(formData.sections);
 
-      setInputData(prev => ({...prev, ...initialData}));
-    }, [formData]);
+      Object.keys(initialData).forEach(id => {
+        onGlobalValueChange(id, initialData[id]);
+      });
+    }, [formData, globalFormData]);
 
     const toggleMainExpand = () => {
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
       setIsMainExpanded(!isMainExpanded);
     };
 
-    // 2. State/Validation Handler (Logic remains the same)
     const handleValueChange = (field: InputItem, newValue: any) => {
-      setInputData(prev => ({
-        ...prev,
-        [field.id]: newValue,
-      }));
+      onGlobalValueChange(field.id, newValue);
 
       const error = validateField(field, newValue);
 
@@ -116,9 +108,8 @@ const DynamicForm = forwardRef<DynamicFormRef, DynamicTestFormProps>(
       }));
     };
 
-    const isNested = formData.mainTitle !== 'Project & Material Testing'; // Heuristic for nested form
+    const isNested = formData.mainTitle !== 'Project & Material Testing';
 
-    // Function to set the ref for a nested DynamicForm
     const setNestedRef = (key: string, instance: DynamicFormRef | null) => {
       if (instance) {
         nestedFormRefs.current[key] = instance;
@@ -135,7 +126,6 @@ const DynamicForm = forwardRef<DynamicFormRef, DynamicTestFormProps>(
         ]}>
         <View
           style={[styles.mainContainer, isNested && styles.recursiveContainer]}>
-          {/* ... Main Header ... */}
           <TouchableOpacity onPress={toggleMainExpand} style={styles.header}>
             <View style={styles.headerTitleContainer}>
               <Text style={styles.headerText}>
@@ -147,10 +137,8 @@ const DynamicForm = forwardRef<DynamicFormRef, DynamicTestFormProps>(
             </Text>
           </TouchableOpacity>
 
-          {/* Collapsible Content */}
           {isMainExpanded && (
             <View>
-              {/* ... Main Info ... */}
               {formData.mainInfo && formData.mainInfo.length > 0 && (
                 <View style={styles.mainInfoContainer}>
                   {formData.mainInfo.map((item, index) => (
@@ -162,11 +150,9 @@ const DynamicForm = forwardRef<DynamicFormRef, DynamicTestFormProps>(
                 </View>
               )}
 
-              {/* Sections */}
               <View style={styles.sectionsContainer}>
                 {formData.sections.map((section, index) => {
                   if (section.type === 'subSection') {
-                    // Recursion: Render another DynamicForm with a ref
                     return (
                       <View key={index}>
                         <DynamicForm
@@ -178,24 +164,24 @@ const DynamicForm = forwardRef<DynamicFormRef, DynamicTestFormProps>(
                             mainInfo: section.mainInfo,
                             sections: section.sections,
                           }}
+                          globalFormData={globalFormData}
+                          onGlobalValueChange={onGlobalValueChange}
                         />
                       </View>
                     );
                   }
 
                   if (section.type === 'expandable') {
-                    // Expandable Section
                     return (
                       <ExpandableSection
                         key={index}
                         section={section as Section}
-                        inputData={inputData}
+                        inputData={globalFormData}
                         onValueChange={handleValueChange}
                         inputErrors={inputErrors}
                       />
                     );
                   } else {
-                    // Non-Expandable/Info Section
                     return (
                       <View key={index} style={styles.nonExpandableSection}>
                         <View style={styles.nonExpandableHeader}>
@@ -212,7 +198,7 @@ const DynamicForm = forwardRef<DynamicFormRef, DynamicTestFormProps>(
                         </View>
                         <SectionContent
                           section={section as Section}
-                          inputData={inputData}
+                          inputData={globalFormData}
                           onValueChange={handleValueChange}
                           inputErrors={inputErrors}
                         />

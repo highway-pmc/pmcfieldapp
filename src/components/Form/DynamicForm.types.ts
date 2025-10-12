@@ -67,10 +67,9 @@ export type FormDataSchema = {
   sections: Section[];
 };
 
-// --- PROPS INTERFACES ---
 
 export interface DynamicTestFormProps {
-  formData: FormDataSchema;
+  formData: any;
 }
 
 export interface SectionContentProps {

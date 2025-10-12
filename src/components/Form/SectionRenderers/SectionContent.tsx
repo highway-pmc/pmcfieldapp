@@ -13,6 +13,7 @@ import {
 import DropdownInput from '../FormComponents/InputDropdown';
 import YesNoRadioInput from '../FormComponents/InputRadioYesNo';
 import InputText from '../FormComponents/InputText';
+import InputDate from '../FormComponents/InputDate'; // Using the new name
 
 const renderDataItem = (item: DataItem, index: number) => (
   <View key={`data-${index}`} style={styles.gridItem}>
@@ -43,7 +44,19 @@ const renderRegularInput = (
     );
   }
 
-  // Default Text/Number/Date Input
+  if (input.type === 'date') {
+    return (
+      <InputDate
+        key={`input-${input.id}`}
+        input={input}
+        value={currentInputValue}
+        onChange={onValueChange}
+        error={error}
+      />
+    );
+  }
+
+  // Default Text/Number Input
   return (
     <InputText
       key={`input-${input.id}`}
@@ -105,6 +118,7 @@ const SectionContent: React.FC<SectionContentProps> = ({
       if (input.type === 'radio') {
         sequencedTitlesAndRadios.push(input);
       } else {
+        // Now includes 'select', 'date', 'text', and 'number'
         regularInputs.push(input);
       }
     } else {
@@ -112,6 +126,7 @@ const SectionContent: React.FC<SectionContentProps> = ({
     }
   });
 
+  // The 'data-only' and 'regular inputs' (text, number, select, date) are mixed into the grid
   mixedGridItems.push(...dataItems, ...regularInputs);
 
   return (

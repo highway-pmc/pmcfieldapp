@@ -14,44 +14,17 @@ import {useIsFocused} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {HeaderItems} from '../../constants/constants';
 import {getInspectionChecklist, clearFormDetails} from './actions';
+// Import Tab Components
 import InformationTab from './MyWorkDynamicFrom/InformationTab';
 import InspectionTab from './MyWorkDynamicFrom/InspectionTab';
 import TaskDetailsTab from './MyWorkDynamicFrom/TaskDetailsTab';
 import {DynamicFormRef} from '../../components/Form/DynamicForm';
-
+import {validateChainageIntervals} from '../../components/Form/utils/formValidation';
 // Define the structure for form data to be passed to tabs
 interface FormData {
   mainTitle: string;
   sections: any[];
 }
-
-const DUMMY_TASK_DETAILS: FormData = {
-  mainTitle: 'Concrete Pour Task',
-  sections: [
-    {
-      title: 'Task Info',
-      type: 'info',
-      items: [
-        {label: 'Task ID', value: 'C-001'},
-        {label: 'Start Date', value: '2025-01-10'},
-        {label: 'Location', value: 'Pillar 15'},
-      ],
-    },
-    {
-      title: 'Task Inputs',
-      type: 'expandable',
-      items: [
-        {
-          id: 'mix_design_approved',
-          label: 'Mix design approved',
-          type: 'radio',
-          value: 'Yes',
-          validations: {required: true, type: 'string'},
-        },
-      ],
-    },
-  ],
-};
 
 const TABS = {
   INFORMATION: 'Information',
@@ -63,7 +36,7 @@ const TaskForm = () => {
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
 
-  // --- NEW: SECTION-WISE CENTRALIZED STATE ---
+  // --- SECTION-WISE CENTRALIZED STATE (PERSISTS) ---
   const [projectInfoData, setProjectInfoData] = useState<Record<string, any>>(
     {},
   );
@@ -97,14 +70,12 @@ const TaskForm = () => {
         ...prev,
         [fieldId]: newValue,
       }));
-
       // *** FUTURE CROSS-CALCULATION/REACTION LOGIC GOES HERE ***
-      // if (fieldId === 'some_input_id') { ... }
     }
   };
   // ---------------------------------------------
 
-  // 1. Refs for collecting validation errors from each tab
+  // 1. Refs for collecting validation errors from each tab (NOW PERSIST)
   const informationRef = useRef<DynamicFormRef>(null);
   const inspectionRef = useRef<DynamicFormRef>(null);
   const taskDetailsRef = useRef<DynamicFormRef>(null);
@@ -122,7 +93,7 @@ const TaskForm = () => {
     if (isFocused) {
       const payload = {
         projectId: '684181d57a306ccd976d8374',
-        checklistName: 'lifting-transportation-and-erection-at-site',
+        checklistName: 'dumping-soil',
         rfiId: '6841ecdec00f933c0c179699',
       };
       dispatch(getInspectionChecklist(payload));
@@ -145,56 +116,96 @@ const TaskForm = () => {
     setActiveTab(tabName);
   };
 
-  // --- SAVE AND SUBMIT LOGIC ---
-
   const getFormDataFromTabs = () => {
-    let allErrors: Record<string, string> = {};
+    let allErrors = {};
     let hasError = false;
 
+    // --- 1. Collect initial errors from DynamicForm refs ---
     const refs = {
       [TABS.INFORMATION]: informationRef.current,
       [TABS.INSPECTION]: inspectionRef.current,
       [TABS.TASK_DETAILS]: taskDetailsRef.current,
     };
 
-    // 1. Collect all ERRORS via refs (The refs handle the recursive validation)
     for (const tabName in refs) {
       const ref = refs[tabName as keyof typeof refs];
       if (ref) {
-        // We only use the inputErrors part of the return value
         const {inputErrors} = ref.collectAllInputs();
         allErrors = {...allErrors, ...inputErrors};
-
         if (Object.values(inputErrors).some(err => err)) {
           hasError = true;
         }
       }
     }
 
-    // 2. Aggregate the centralized STATE DATA for the final payload
-    // The collected data is already in the states:
-    // projectInfoData, materialConsumptionData, inspectionChecklistData, taskDetailsData
+    const projectStartChainage = Number(
+      inspectionChecklist?.info?.startChainage,
+    ); // Expected to be a number (e.g., 0)
+    const projectEndChainage = Number(inspectionChecklist?.info?.endChainage); // Expected to be a number (e.g., 100)
+
+    // Check if project chainage is valid before proceeding
+    if (projectStartChainage >= projectEndChainage) {
+      // If project limits are invalid, skip chainage validation but log/handle the error
+      console.error('Project chainage limits are invalid or missing.');
+    } else {
+      // B. Extract all specimen chainage inputs from the centralized state (taskDetailsData)
+      const specimenSections = inspectionChecklist?.taskDetails?.sections || []; // Use checklist config for structure
+
+      const chainageInputs = specimenSections.flatMap(
+        (section: any, sectionIndex: any) => {
+          const items = section.sections.flatMap(
+            (subSection: any) => subSection.items || [],
+          );
+
+          const startItem = items.find((item: any) =>
+            item.id.startsWith('start_chainage_'),
+          );
+          const endItem = items.find((item: any) =>
+            item.id.startsWith('end_chainage_'),
+          );
+
+          // Use the value from the centralized component state (taskDetailsData) which is the source of truth
+          const startValue = taskDetailsData[startItem.id] || startItem.value;
+          const endValue = taskDetailsData[endItem.id] || endItem.value;
+
+          const index = sectionIndex + 1;
+
+          if (startValue && endValue) {
+            return [{start: startValue, end: endValue, index: index}];
+          }
+          return [];
+        },
+      );
+
+      // C. Run Validation
+      const chainageErrors = validateChainageIntervals(
+        chainageInputs,
+        projectStartChainage,
+        projectEndChainage,
+      );
+
+      // D. Populate Errors
+      chainageErrors.forEach((err: any) => {
+        allErrors[err.fieldId] = err.message;
+        hasError = true;
+      });
+    }
+
+    // --- 3. Aggregate the centralized STATE DATA for the final payload ---
     const allInputs = {
-      // These keys directly match your Redux/API structure for saving metadata
       projectInfoSection: projectInfoData,
       materialConsumptionSection: materialConsumptionData,
       inspectionChecklistSection: inspectionChecklistData,
       taskDetails: taskDetailsData,
     };
-
-    // CONSOLE ALL TAB INPUTS IN ORGANIZED WAY SIMULTANEOUSLY
-    console.log('--- COLLECTED INPUTS (ALL SECTIONS) SIMULTANEOUSLY ---');
-    console.log(allInputs);
-    console.log('--- ALL COLLECTED ERRORS (from DynamicForm refs) ---');
-    console.log(allErrors);
-    console.log('----------------------------------------------------');
-
+    console.log('All Inputs Collected:', allInputs);
+    console.log('All Errors Collected:', allErrors);
     return {allInputs, allErrors, hasError};
   };
 
   const handleSave = async () => {
     if (isSaving || isSubmitting) return;
-    const {allInputs, hasError} = getFormDataFromTabs();
+    const {allInputs, hasError, allErrors} = getFormDataFromTabs();
 
     // ... (rest of handleSave logic)
     setIsSaving(true);
@@ -202,10 +213,7 @@ const TaskForm = () => {
     setIsSaving(false);
 
     if (hasError) {
-      Alert.alert(
-        'Warning',
-        'Some fields have validation errors. Please check the form before saving.',
-      );
+      Alert.alert('Validation Warning', 'One or more fields have errors.');
     } else {
       Alert.alert('Success', 'Form data has been saved.');
     }
@@ -250,32 +258,31 @@ const TaskForm = () => {
       );
     }
 
-    // --- START: Destructure the new material-related flags/data
     const {
       isMaterialRequested,
       materialConsumptionSection,
       prepareMaterialConsumption,
       projectInfoSection,
     } = inspectionChecklist || {};
-    // --- END: Destructure the new material-related flags/data
 
-    switch (activeTab) {
-      case TABS.INFORMATION:
-        // Use the destructured variables
-        if (
-          projectInfoSection ||
+    // --- NEW LOGIC: Render all tabs conditionally visible based on activeTab state ---
+    return (
+      <>
+        {/* INFORMATION TAB */}
+        <View
+          style={{
+            display: activeTab === TABS.INFORMATION ? 'flex' : 'none',
+            flex: 1,
+          }}>
+          {projectInfoSection ||
           materialConsumptionSection ||
-          prepareMaterialConsumption
-        ) {
-          return (
+          prepareMaterialConsumption ? (
             <InformationTab
               ref={informationRef}
               projectInfoSection={projectInfoSection}
               materialConsumptionSection={materialConsumptionSection}
-              // --- PASS NEW PROPS ---
               prepareMaterialConsumption={prepareMaterialConsumption}
               isMaterialRequested={isMaterialRequested} // Ensure boolean type
-              // ----------------------
               projectInfoData={projectInfoData}
               onProjectInfoChange={(fieldId, newValue) =>
                 handleUniversalValueChange(
@@ -293,28 +300,28 @@ const TaskForm = () => {
                 )
               }
             />
-          );
-        }
-        return (
-          <View style={styles.centered}>
-            <Text style={styles.statusText}>
-              Project info data is not available.
-            </Text>
-          </View>
-        );
+          ) : (
+            <View style={styles.centered}>
+              <Text style={styles.statusText}>
+                Project info data is not available.
+              </Text>
+            </View>
+          )}
+        </View>
 
-      case TABS.INSPECTION:
-        if (
-          inspectionChecklist &&
-          inspectionChecklist.inspectionChecklistSection
-        ) {
-          return (
+        {/* INSPECTION TAB */}
+        <View
+          style={{
+            display: activeTab === TABS.INSPECTION ? 'flex' : 'none',
+            flex: 1,
+          }}>
+          {inspectionChecklist &&
+          inspectionChecklist.inspectionChecklistSection ? (
             <InspectionTab
               ref={inspectionRef}
               formData={
                 inspectionChecklist.inspectionChecklistSection as FormData
               }
-              // --- PASS STATE & CURRIED SETTER ---
               globalFormData={inspectionChecklistData}
               onGlobalValueChange={(fieldId, newValue) =>
                 handleUniversalValueChange(
@@ -324,35 +331,33 @@ const TaskForm = () => {
                 )
               }
             />
-          );
-        }
-        return (
-          <View style={styles.centered}>
-            <Text style={styles.statusText}>
-              Inspection checklist data is not available.
-            </Text>
-          </View>
-        );
+          ) : (
+            <View style={styles.centered}>
+              <Text style={styles.statusText}>
+                Inspection checklist data is not available.
+              </Text>
+            </View>
+          )}
+        </View>
 
-      case TABS.TASK_DETAILS:
-        // Pass taskDetails from checklist if available, otherwise use DUMMY_TASK_DETAILS
-        const taskDetailsConfig =
-          inspectionChecklist?.taskDetails || DUMMY_TASK_DETAILS;
-
-        return (
+        {/* TASK DETAILS TAB */}
+        <View
+          style={{
+            display: activeTab === TABS.TASK_DETAILS ? 'flex' : 'none',
+            flex: 1,
+          }}>
+          {/* Pass taskDetails from checklist if available, otherwise use DUMMY_TASK_DETAILS */}
           <TaskDetailsTab
             ref={taskDetailsRef}
-            formData={taskDetailsConfig}
+            formData={inspectionChecklist?.taskDetails || null}
             globalFormData={taskDetailsData}
             onGlobalValueChange={(fieldId, newValue) =>
               handleUniversalValueChange('taskDetails', fieldId, newValue)
             }
           />
-        );
-
-      default:
-        return null;
-    }
+        </View>
+      </>
+    );
   };
 
   const isActionInProgress = isSaving || isSubmitting;
@@ -410,6 +415,7 @@ const TaskForm = () => {
       </View>
 
       {/* Scrollable Content Area */}
+      {/* ScrollView now wraps the container for all tab content */}
       <ScrollView style={styles.contentContainer}>
         {renderTabContent()}
         <View style={styles.scrollViewPadding} />

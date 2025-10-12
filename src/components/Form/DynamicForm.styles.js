@@ -283,6 +283,77 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     width: '100%',
   },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    marginBottom: 10,
+    marginHorizontal: 15,
+    borderBottomWidth: 1,
+    paddingBottom: 5,
+    borderBottomColor: '#ABBEFD',
+  },
+  addButton: {
+    backgroundColor: '#4CAF50', // Example green
+    padding: 10,
+    borderRadius: 5,
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    alignItems: 'center',
+    margin: 15,
+  },
+  addButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  removeButton: {
+    borderColor: '#F44336',
+    borderWidth: 1,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 5,
+  },
+  removeButtonText: {
+    color: '#F44336',
+    fontWeight: 'bold',
+  },
+  CalendarIcon: {
+    width: 24,
+    height: 24,
+    position: 'absolute',
+    right: 12, // Adjusted slightly to match general padding
+    top: 8,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  calendarContainer: {
+    backgroundColor: '#fff',
+    margin: 20,
+    borderRadius: 10,
+    padding: 10,
+  },
+  closeButton: {
+    backgroundColor: '#007BFF',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  closeButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  dateInputText: {
+    color: '#333', // Using a dark color for consistency
+    fontSize: 14, // Consistent with textInput style
+  },
+  datePlaceholderText: {
+    color: '#999', // Consistent with placeholderTextColor
+    fontSize: 14, // Consistent with textInput style
+  },
 });
 
 export default styles;

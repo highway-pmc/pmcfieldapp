@@ -172,7 +172,8 @@ const TaskForm = () => {
     }
 
     // 2. Aggregate the centralized STATE DATA for the final payload
-    // *** MODIFIED LOGIC HERE: Using specific section keys as requested ***
+    // The collected data is already in the states:
+    // projectInfoData, materialConsumptionData, inspectionChecklistData, taskDetailsData
     const allInputs = {
       // These keys directly match your Redux/API structure for saving metadata
       projectInfoSection: projectInfoData,
@@ -183,19 +184,6 @@ const TaskForm = () => {
 
     // CONSOLE ALL TAB INPUTS IN ORGANIZED WAY SIMULTANEOUSLY
     console.log('--- COLLECTED INPUTS (ALL SECTIONS) SIMULTANEOUSLY ---');
-    // console.log(
-    //   'Project Info Section Data:',
-    //   allInputs.projectInfoSection || 'N/A',
-    // );
-    // console.log(
-    //   'Material Consumption Section Data:',
-    //   allInputs.materialConsumptionSection || 'N/A',
-    // );
-    // console.log(
-    //   'Inspection Checklist Section Data:',
-    //   allInputs.inspectionChecklistSection || 'N/A',
-    // );
-    // console.log('Task Details Data:', allInputs.taskDetails || 'N/A');
     console.log(allInputs);
     console.log('--- ALL COLLECTED ERRORS (from DynamicForm refs) ---');
     console.log(allErrors);
@@ -262,18 +250,32 @@ const TaskForm = () => {
       );
     }
 
+    // --- START: Destructure the new material-related flags/data
+    const {
+      isMaterialRequested,
+      materialConsumptionSection,
+      prepareMaterialConsumption,
+      projectInfoSection,
+    } = inspectionChecklist || {};
+    // --- END: Destructure the new material-related flags/data
+
     switch (activeTab) {
       case TABS.INFORMATION:
-        const projectInfo = inspectionChecklist?.projectInfoSection;
-        const materialConsumption =
-          inspectionChecklist?.materialConsumptionSection;
-
-        if (projectInfo && materialConsumption) {
+        // Use the destructured variables
+        if (
+          projectInfoSection ||
+          materialConsumptionSection ||
+          prepareMaterialConsumption
+        ) {
           return (
             <InformationTab
               ref={informationRef}
-              projectInfoSection={projectInfo}
-              materialConsumptionSection={materialConsumption}
+              projectInfoSection={projectInfoSection}
+              materialConsumptionSection={materialConsumptionSection}
+              // --- PASS NEW PROPS ---
+              prepareMaterialConsumption={prepareMaterialConsumption}
+              isMaterialRequested={isMaterialRequested} // Ensure boolean type
+              // ----------------------
               projectInfoData={projectInfoData}
               onProjectInfoChange={(fieldId, newValue) =>
                 handleUniversalValueChange(
@@ -333,10 +335,14 @@ const TaskForm = () => {
         );
 
       case TABS.TASK_DETAILS:
+        // Pass taskDetails from checklist if available, otherwise use DUMMY_TASK_DETAILS
+        const taskDetailsConfig =
+          inspectionChecklist?.taskDetails || DUMMY_TASK_DETAILS;
+
         return (
           <TaskDetailsTab
             ref={taskDetailsRef}
-            formData={DUMMY_TASK_DETAILS}
+            formData={taskDetailsConfig}
             globalFormData={taskDetailsData}
             onGlobalValueChange={(fieldId, newValue) =>
               handleUniversalValueChange('taskDetails', fieldId, newValue)
@@ -351,7 +357,6 @@ const TaskForm = () => {
 
   const isActionInProgress = isSaving || isSubmitting;
 
-  // ... (rest of the component view remains unchanged)
   return (
     <SafeAreaView style={styles.container}>
       {/* Tab Bar for navigation */}

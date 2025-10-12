@@ -7,6 +7,8 @@ import DynamicForm, {
 interface InformationTabProps {
   projectInfoSection: any;
   materialConsumptionSection: any;
+  prepareMaterialConsumption: any;
+  isMaterialRequested: boolean;
   projectInfoData: Record<string, any>;
   onProjectInfoChange: (fieldId: string, newValue: any) => void;
   materialConsumptionData: Record<string, any>;
@@ -22,6 +24,8 @@ const InformationTab = forwardRef<DynamicFormRef, InformationTabProps>(
       onProjectInfoChange,
       materialConsumptionData,
       onMaterialConsumptionChange,
+      prepareMaterialConsumption,
+      isMaterialRequested,
     },
     ref,
   ) => {

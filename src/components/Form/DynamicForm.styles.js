@@ -162,7 +162,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   radioErrorOuterBorder: {},
-  // --- DROPDOWN STYLES ---
   dropdownButton: {
     flexDirection: 'row',
     alignItems: 'center',

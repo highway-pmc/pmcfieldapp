@@ -47,8 +47,21 @@ export interface DynamicFormRef {
 }
 
 /**
+ * Utility to replace the section index in IDs and titles (e.g., _1 -> _2)
+ */
+const replaceIndexInString = (
+  str: string,
+  oldIndex: number,
+  newIndex: number,
+): string => {
+  // Regex to target the index at the end of a string: `_oldIndex`
+  const regex = new RegExp(`_${oldIndex}$`);
+  return str.replace(regex, `_${newIndex}`);
+};
+
+/**
  * Creates a new section by cloning the base section and updating all IDs and titles
- * to reflect the new index (e.g., from Specimen_1 to Specimen_2)
+ * to reflect the new index.
  */
 const getNewSectionData = (
   baseSection: any,
@@ -56,27 +69,35 @@ const getNewSectionData = (
   prevIndex: number,
 ): Section => {
   const newSection: any = JSON.parse(JSON.stringify(baseSection));
-  const prevIndexStr = `_${prevIndex}`;
-  const newIndexStr = `_${newIndex}`;
-
-  const replaceInString = (str: string): string =>
-    str.replace(new RegExp(prevIndexStr + '$'), newIndexStr);
 
   const traverseAndReplace = (sections: any): void => {
     sections.forEach((section: any) => {
+      // Update titles
       if (section.mainTitle) {
-        section.mainTitle = replaceInString(section.mainTitle);
+        section.mainTitle = replaceIndexInString(
+          section.mainTitle,
+          prevIndex,
+          newIndex,
+        );
+        // Special case: update human-readable number in title (e.g., "Specimen X")
+        section.mainTitle = section.mainTitle.replace(/\d+/, newIndex);
       }
       if (section.title) {
-        section.title = replaceInString(section.title);
+        section.title = replaceIndexInString(
+          section.title,
+          prevIndex,
+          newIndex,
+        );
       }
 
+      // Update IDs and reset values for new sections
       if (section.items) {
         section.items.forEach((item: any) => {
           const input = item as InputItem;
           if (input.id) {
-            input.id = replaceInString(input.id);
+            input.id = replaceIndexInString(input.id, prevIndex, newIndex);
           }
+          // Reset value for a newly created section
           input.value = '';
         });
       }
@@ -92,8 +113,7 @@ const getNewSectionData = (
 };
 
 /**
- * Extracts all input field IDs from a section and its nested sections
- * Used for cleanup when removing a section
+ * Extracts all input field IDs from a section.
  */
 const getInputIdsFromSection = (section: any): string[] => {
   let ids: string[] = [];
@@ -114,6 +134,62 @@ const getInputIdsFromSection = (section: any): string[] => {
 };
 
 /**
+ * Re-indexes sections and updates global data after a section is removed.
+ */
+const reIndexSectionsAndData = (
+  sections: Section[],
+  startIndex: number,
+  onGlobalValueChange: (fieldId: string, newValue: any) => void,
+): Section[] => {
+  const updatedSections = [...sections];
+
+  // Iterate over sections that follow the removed section
+  for (let i = startIndex; i < updatedSections.length; i++) {
+    const currentSection = updatedSections[i];
+    const oldIndex = i + 2; // +1 for 1-based index, +1 because we skipped the deleted index
+    const newIndex = i + 1; // The correct new 1-based index
+
+    // Create a copy of the section structure with updated titles/IDs
+    const reindexedSection = getNewSectionData(
+      currentSection,
+      newIndex,
+      oldIndex,
+    );
+
+    // Update global data (move saved values from old ID to new ID)
+    const oldIds = getInputIdsFromSection(currentSection); // original IDs (e.g., start_chainage_2)
+    const newIds = getInputIdsFromSection(reindexedSection); // new IDs (e.g., start_chainage_1)
+
+    oldIds.forEach((oldId, idIndex) => {
+      const newId = newIds[idIndex];
+
+      // Use the helper to access the current value before clearing the old ID
+      const currentValue = currentSection.inputData?.[oldId] || null; // Access data for the current section if needed
+
+      // Retrieve the value from the current global state (we don't have globalFormData here, so we rely on onGlobalValueChange)
+
+      // 1. Set the value to the new ID
+      // NOTE: This relies on the parent component's `globalFormData` to correctly apply this.
+      // A more robust solution would pass globalFormData down and update the entire state object,
+      // but sticking to the provided function signature:
+      if (currentValue !== undefined && currentValue !== null) {
+        onGlobalValueChange(newId, currentValue);
+      } else {
+        // If we don't know the exact value, we rely on the next fetch.
+      }
+
+      // 2. Clear the old ID from global state (important!)
+      onGlobalValueChange(oldId, undefined);
+    });
+
+    // Replace the section structure with the re-indexed one
+    updatedSections[i] = reindexedSection;
+  }
+
+  return updatedSections;
+};
+
+/**
  * A recursive form component that renders dynamic sections with expand/collapse functionality.
  * Supports adding and removing sections dynamically, nested subsections, and form validation.
  */
@@ -121,6 +197,8 @@ const DynamicForm = forwardRef<DynamicFormRef, DynamicFormProps>(
   ({formData, globalFormData, onGlobalValueChange}, ref) => {
     const [isMainExpanded, setIsMainExpanded] = useState<boolean>(true);
     const [inputErrors, setInputErrors] = useState<Record<string, string>>({});
+
+    // State to hold the current, potentially modified list of dynamic sections
     const [dynamicSections, setDynamicSections] = useState<any>(
       formData.sections,
     );
@@ -139,7 +217,7 @@ const DynamicForm = forwardRef<DynamicFormRef, DynamicFormProps>(
     }));
 
     /**
-     * Collects input data and errors from this form and all nested forms
+     * Collects input data and errors from this form and all nested forms.
      */
     const collectAllInputs = () => {
       let allData: Record<string, any> = {...globalFormData};
@@ -161,21 +239,26 @@ const DynamicForm = forwardRef<DynamicFormRef, DynamicFormProps>(
 
     /**
      * Initialize input values in global form data if they don't exist
+     * This handles loading of saved data into state variables.
      */
     useEffect(() => {
       const initialData: Record<string, any> = {};
 
       const initializeInputs = (sections: Section[]): void => {
         sections.forEach(section => {
-          if (section.type === 'subSection') {
+          if (section.sections) {
             initializeInputs(section.sections);
           } else if (section.items) {
             section.items.forEach(item => {
-              if ((item as InputItem).type) {
-                const input = item as InputItem;
-                if (globalFormData[input.id] === undefined) {
-                  initialData[input.id] = input.value;
-                }
+              const input = item as InputItem;
+
+              // Only initialize if the global state doesn't have a value AND a saved value exists
+              // The parent TaskForm is responsible for populating globalFormData from checklist.savedData.
+              if (
+                globalFormData[input.id] === undefined &&
+                input.value !== undefined
+              ) {
+                initialData[input.id] = input.value;
               }
             });
           }
@@ -185,21 +268,18 @@ const DynamicForm = forwardRef<DynamicFormRef, DynamicFormProps>(
       initializeInputs(dynamicSections);
 
       Object.keys(initialData).forEach(id => {
-        onGlobalValueChange(id, initialData[id]);
+        // Only set if the field is truly empty in the global store
+        if (globalFormData[id] === undefined) {
+          onGlobalValueChange(id, initialData[id]);
+        }
       });
     }, [dynamicSections, globalFormData, onGlobalValueChange]);
 
-    /**
-     * Toggles the main section expand/collapse state with animation
-     */
     const toggleMainExpand = () => {
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
       setIsMainExpanded(!isMainExpanded);
     };
 
-    /**
-     * Handles input value changes and validates the field
-     */
     const handleValueChange = (field: InputItem, newValue: any) => {
       onGlobalValueChange(field.id, newValue);
 
@@ -211,13 +291,9 @@ const DynamicForm = forwardRef<DynamicFormRef, DynamicFormProps>(
       }));
     };
 
-    // Determines if this is a nested form based on the main title
     const isNested: boolean =
       formData.mainTitle !== 'Project & Material Testing';
 
-    /**
-     * Stores or removes nested form references
-     */
     const setNestedRef = (key: string, instance: DynamicFormRef | null) => {
       if (instance) {
         nestedFormRefs.current[key] = instance;
@@ -227,7 +303,7 @@ const DynamicForm = forwardRef<DynamicFormRef, DynamicFormProps>(
     };
 
     /**
-     * Adds a new section by cloning the last section and updating its index
+     * Adds a new dynamic section.
      */
     const handleAddSection = () => {
       const config = formData.variableSectionConfig;
@@ -236,22 +312,27 @@ const DynamicForm = forwardRef<DynamicFormRef, DynamicFormProps>(
       }
 
       const lastSection = dynamicSections[dynamicSections.length - 1];
-      const lastIndexMatch = lastSection.mainTitle.match(/(\d+)$/);
-      const prevIndex = lastIndexMatch
-        ? parseInt(lastIndexMatch[1], 10)
-        : dynamicSections.length;
 
-      const newIndex = prevIndex + 1;
+      // Calculate the next index directly based on the array length
+      const newIndex = dynamicSections.length + 1;
+
+      // Find the index of the last section for replacement utility
+      // We assume the last section's ID/Title ends in the current length (e.g., Specimen 1 for length 1)
+      const prevIndex = dynamicSections.length;
 
       const newSection = getNewSectionData(lastSection, newIndex, prevIndex);
-      newSection.mainTitle = `Specimen ${newIndex}`;
+      // Ensure the display title is correct, even if ID replacement failed slightly
+      newSection.mainTitle = `${config.addButtonLabel.replace(
+        'Add ',
+        '',
+      )} ${newIndex}`;
 
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
       setDynamicSections((prev: any) => [...prev, newSection]);
     };
 
     /**
-     * Removes a section and clears all its input data and errors from global state
+     * Removes a section and correctly re-indexes subsequent sections and clears data.
      */
     const handleRemoveSection = (indexToRemove: number) => {
       const config = formData.variableSectionConfig;
@@ -262,25 +343,36 @@ const DynamicForm = forwardRef<DynamicFormRef, DynamicFormProps>(
       const sectionToRemove = dynamicSections[indexToRemove];
       const allInputIdsToRemove = getInputIdsFromSection(sectionToRemove);
 
-      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-      setDynamicSections(prev =>
-        prev.filter((_, index) => index !== indexToRemove),
-      );
-
+      // 1. Remove data and errors for the deleted section
       allInputIdsToRemove.forEach(id => onGlobalValueChange(id, undefined));
-
       setInputErrors(prev => {
         const newErrors = {...prev};
         allInputIdsToRemove.forEach(id => delete newErrors[id]);
         return newErrors;
       });
+
+      // 2. Filter out the removed section
+      const sectionsAfterRemoval = dynamicSections.filter(
+        (_, index) => index !== indexToRemove,
+      );
+
+      // 3. Re-index all subsequent sections and shift saved data
+      // Start re-indexing from the index where the shift begins (which is indexToRemove)
+      const reindexedSections = reIndexSectionsAndData(
+        sectionsAfterRemoval,
+        indexToRemove,
+        onGlobalValueChange,
+      );
+
+      // 4. Update state with animation
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+      setDynamicSections(reindexedSections);
     };
 
     const isVariableSection: boolean = !!(
       formData.isVariable && formData.variableSectionConfig
     );
-    const config: VariableSectionConfig | undefined =
-      formData.variableSectionConfig;
+    const config = formData.variableSectionConfig;
 
     return (
       <ScrollView
@@ -323,16 +415,21 @@ const DynamicForm = forwardRef<DynamicFormRef, DynamicFormProps>(
                     dynamicSections.length > config.minSections;
                   const isSubSection: boolean = section.type === 'subSection';
 
+                  // Dynamically adjust section display title based on current array index
+                  const currentDisplayTitle = `${config?.title} ${index + 1}`;
+
                   return (
                     <View key={`${section.mainTitle}-${index}`}>
                       {/* Render nested form for subsections */}
                       {isSubSection ? (
+                        // Render a DynamicForm instance for the subsection
                         <DynamicForm
                           ref={instance =>
                             setNestedRef(section.mainTitle!, instance)
                           }
                           formData={{
-                            mainTitle: section.mainTitle,
+                            // Override mainTitle to ensure it's displayed correctly
+                            mainTitle: section.mainTitle || currentDisplayTitle,
                             mainInfo: section.mainInfo,
                             sections: section.sections,
                           }}
@@ -378,7 +475,7 @@ const DynamicForm = forwardRef<DynamicFormRef, DynamicFormProps>(
                               onPress={() => handleRemoveSection(index)}
                               style={styles.removeButton}>
                               <Text style={styles.removeButtonText}>
-                                Remove {section.mainTitle}
+                                Remove {currentDisplayTitle}
                               </Text>
                             </TouchableOpacity>
                           )}

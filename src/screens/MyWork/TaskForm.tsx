@@ -416,6 +416,7 @@ const TaskForm = () => {
       </ScrollView>
 
       {/* --- SAVE AND SUBMIT BUTTON BAR --- */}
+        {!inspectionChecklist?.isMaterialRequested && (
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={[styles.button, styles.saveButton]}
@@ -427,17 +428,18 @@ const TaskForm = () => {
             <Text style={styles.saveButtonText}>Save</Text>
           )}
         </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.button, styles.submitButton]}
-          onPress={handleSubmit}
-          disabled={isActionInProgress}>
-          {isSubmitting ? (
-            <ActivityIndicator color="#FFFFFF" /> // Use isSubmitting for Submit button indicator
-          ) : (
-            <Text style={styles.submitButtonText}>Submit</Text>
-          )}
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.button, styles.submitButton]}
+            onPress={handleSubmit}
+            disabled={isActionInProgress}>
+            {isSubmitting ? (
+              <ActivityIndicator color="#FFFFFF" /> // Use isSubmitting for Submit button indicator
+            ) : (
+              <Text style={styles.submitButtonText}>Submit</Text>
+            )}
+          </TouchableOpacity>
       </View>
+        )}
     </SafeAreaView>
   );
 };

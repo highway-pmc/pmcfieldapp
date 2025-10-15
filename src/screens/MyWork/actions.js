@@ -38,9 +38,15 @@ export const fillRFIsChecklistForTestSample = (payload) => ({
 });
 export const getInspectionChecklist = payload => ({
   type: 'GET_INSPECTION_CHECKLIST_REQUEST',
-  payload: payload, // Expected: { projectId, checklistName }
+  payload: payload, 
 });
-
+export const saveRfiFormData = payload => ({
+  type: 'SAVE_RFI_FORM_DATA_REQUEST',
+  payload: payload,
+});
 export const clearFormDetails = () => ({
   type: 'CLEAR_FORM_DETAILS',
+});
+export const saveRfiFormDataClear = () => ({
+  type: 'SAVE_RFI_FORM_DATA_CLEAR',
 });

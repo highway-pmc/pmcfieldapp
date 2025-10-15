@@ -13,45 +13,23 @@ import React, {useEffect, useState, useRef} from 'react';
 import {useIsFocused} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {HeaderItems} from '../../constants/constants';
-import {getInspectionChecklist, clearFormDetails} from './actions';
+import {
+  getInspectionChecklist,
+  clearFormDetails,
+  saveRfiFormData,
+  saveRfiFormDataClear, // Import the new action
+} from './actions';
+// Import Tab Components
 import InformationTab from './MyWorkDynamicFrom/InformationTab';
 import InspectionTab from './MyWorkDynamicFrom/InspectionTab';
 import TaskDetailsTab from './MyWorkDynamicFrom/TaskDetailsTab';
 import {DynamicFormRef} from '../../components/Form/DynamicForm';
+import {validateChainageIntervals} from '../../components/Form/utils/formValidation';
 
-// Define the structure for form data to be passed to tabs
 interface FormData {
   mainTitle: string;
   sections: any[];
 }
-
-const DUMMY_TASK_DETAILS: FormData = {
-  mainTitle: 'Concrete Pour Task',
-  sections: [
-    {
-      title: 'Task Info',
-      type: 'info',
-      items: [
-        {label: 'Task ID', value: 'C-001'},
-        {label: 'Start Date', value: '2025-01-10'},
-        {label: 'Location', value: 'Pillar 15'},
-      ],
-    },
-    {
-      title: 'Task Inputs',
-      type: 'expandable',
-      items: [
-        {
-          id: 'mix_design_approved',
-          label: 'Mix design approved',
-          type: 'radio',
-          value: 'Yes',
-          validations: {required: true, type: 'string'},
-        },
-      ],
-    },
-  ],
-};
 
 const TABS = {
   INFORMATION: 'Information',
@@ -63,7 +41,7 @@ const TaskForm = () => {
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
 
-  // --- NEW: SECTION-WISE CENTRALIZED STATE ---
+  // --- SECTION-WISE CENTRALIZED STATE ---
   const [projectInfoData, setProjectInfoData] = useState<Record<string, any>>(
     {},
   );
@@ -77,7 +55,6 @@ const TaskForm = () => {
     {},
   );
 
-  // Helper to map section identifiers to their state setters
   const stateSetters = {
     projectInfoSection: setProjectInfoData,
     materialConsumptionSection: setMaterialConsumptionData,
@@ -85,7 +62,6 @@ const TaskForm = () => {
     taskDetails: setTaskDetailsData,
   };
 
-  // The universal update handler passed down to all DynamicForms
   const handleUniversalValueChange = (
     sectionKey: keyof typeof stateSetters,
     fieldId: string,
@@ -97,35 +73,45 @@ const TaskForm = () => {
         ...prev,
         [fieldId]: newValue,
       }));
-
-      // *** FUTURE CROSS-CALCULATION/REACTION LOGIC GOES HERE ***
-      // if (fieldId === 'some_input_id') { ... }
     }
   };
-  // ---------------------------------------------
 
-  // 1. Refs for collecting validation errors from each tab
   const informationRef = useRef<DynamicFormRef>(null);
   const inspectionRef = useRef<DynamicFormRef>(null);
   const taskDetailsRef = useRef<DynamicFormRef>(null);
 
-  const {inspectionChecklist, loading, error} = useSelector(
-    (state: any) => state.FormDetails,
-  );
+  const {
+    inspectionChecklist,
+    loading,
+    error,
+    rfiFormDataSaveResponse,
+    saveError,
+  } = useSelector((state: any) => state.FormDetails);
+
+  const PROJECT_ID = '684181d57a306ccd976d8374';
+  const RFI_ID = '68ec0473f124eedac12b23a1';
+  const CHECKLIST_NAME = 'laying-and-compaction';
 
   const [activeTab, setActiveTab] = useState(TABS.INFORMATION);
   const [isSaving, setIsSaving] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // --- LIFECYCLE / REDUX FETCHING --- (No change)
+  const fetchChecklist = () => {
+    dispatch(
+      getInspectionChecklist({
+        projectId: PROJECT_ID,
+        checklistName: CHECKLIST_NAME,
+        rfiId: RFI_ID,
+      }),
+    );
+  };
+
+  // 1. Initial Load & Cleanup
   useEffect(() => {
     if (isFocused) {
-      const payload = {
-        projectId: '684181d57a306ccd976d8374',
-        checklistName: 'lifting-transportation-and-erection-at-site',
-        rfiId: '6841ecdec00f933c0c179699',
-      };
-      dispatch(getInspectionChecklist(payload));
+      fetchChecklist();
+      const eventEmitter = new NativeEventEmitter();
+      eventEmitter.emit('headerEvent', HeaderItems.taskForm);
     }
     return () => {
       if (!isFocused) {
@@ -134,96 +120,172 @@ const TaskForm = () => {
     };
   }, [isFocused, dispatch]);
 
+  // 2. Initialize state with saved data after fetch
   useEffect(() => {
-    if (isFocused) {
-      const eventEmitter = new NativeEventEmitter();
-      eventEmitter.emit('headerEvent', HeaderItems.taskForm);
+    if (inspectionChecklist && inspectionChecklist.savedData) {
+      const savedData = inspectionChecklist.savedData;
+      console.log('Saved Data:', savedData);
+      setProjectInfoData(savedData.projectInfoSection || {});
+      setMaterialConsumptionData(savedData.materialConsumptionSection || {});
+      setInspectionChecklistData(savedData.inspectionChecklistSection || {});
+      setTaskDetailsData(savedData.taskDetails || {});
     }
-  }, [isFocused]);
+  }, [inspectionChecklist]);
+
+  // 3. Handle Save Success/Failure
+  useEffect(() => {
+    if (rfiFormDataSaveResponse) {
+      // SUCCESS
+      setIsSaving(false);
+      Alert.alert(
+        'Success',
+        rfiFormDataSaveResponse.message ||
+          'Form data has been saved successfully.',
+      );
+
+      // RECALL API TO RE-FETCH THE LATEST DATA
+      fetchChecklist();
+
+      // Clear the response data
+      dispatch(saveRfiFormDataClear());
+    } else if (saveError) {
+      // FAILURE (using the dedicated saveError field)
+      setIsSaving(false);
+      Alert.alert(
+        'Save Failed',
+        saveError.message ||
+          'The form data could not be saved. Please try again.',
+      );
+      // Clear the error data (though the reducer should handle this on next request)
+      dispatch(saveRfiFormDataClear());
+    }
+  }, [rfiFormDataSaveResponse, saveError, dispatch]);
 
   const switchTab = (tabName: string) => {
     setActiveTab(tabName);
   };
 
-  // --- SAVE AND SUBMIT LOGIC ---
-
   const getFormDataFromTabs = () => {
-    let allErrors: Record<string, string> = {};
+    let allErrors = {};
     let hasError = false;
 
+    // Collect validation errors from DynamicForm refs
     const refs = {
       [TABS.INFORMATION]: informationRef.current,
       [TABS.INSPECTION]: inspectionRef.current,
       [TABS.TASK_DETAILS]: taskDetailsRef.current,
     };
 
-    // 1. Collect all ERRORS via refs (The refs handle the recursive validation)
     for (const tabName in refs) {
       const ref = refs[tabName as keyof typeof refs];
       if (ref) {
-        // We only use the inputErrors part of the return value
         const {inputErrors} = ref.collectAllInputs();
         allErrors = {...allErrors, ...inputErrors};
-
         if (Object.values(inputErrors).some(err => err)) {
           hasError = true;
         }
       }
     }
 
-    // 2. Aggregate the centralized STATE DATA for the final payload
-    // The collected data is already in the states:
-    // projectInfoData, materialConsumptionData, inspectionChecklistData, taskDetailsData
+    const projectStartChainage = Number(
+      inspectionChecklist?.info?.startChainage,
+    );
+    const projectEndChainage = Number(inspectionChecklist?.info?.endChainage);
+
+    // Chainage validation logic
+    if (projectStartChainage < projectEndChainage) {
+      const specimenSections = inspectionChecklist?.taskDetails?.sections || [];
+
+      const chainageInputs = specimenSections.flatMap(
+        (section: any, sectionIndex: any) => {
+          const items = section.sections.flatMap(
+            (subSection: any) => subSection.items || [],
+          );
+          const startItem = items.find((item: any) =>
+            item.id.startsWith('start_chainage_'),
+          );
+          const endItem = items.find((item: any) =>
+            item.id.startsWith('end_chainage_'),
+          );
+          const startValue = taskDetailsData[startItem?.id] || startItem?.value;
+          const endValue = taskDetailsData[endItem?.id] || endItem?.value;
+          const index = sectionIndex + 1;
+
+          return startValue && endValue
+            ? [{start: startValue, end: endValue, index: index}]
+            : [];
+        },
+      );
+
+      const chainageErrors = validateChainageIntervals(
+        chainageInputs,
+        projectStartChainage,
+        projectEndChainage,
+      );
+
+      chainageErrors.forEach((err: any) => {
+        allErrors[err.fieldId] = err.message;
+        hasError = true;
+      });
+    } else {
+      console.error('Project chainage limits are invalid or missing.');
+    }
+
+    // Aggregate the centralized STATE DATA for the final payload
     const allInputs = {
-      // These keys directly match your Redux/API structure for saving metadata
       projectInfoSection: projectInfoData,
       materialConsumptionSection: materialConsumptionData,
       inspectionChecklistSection: inspectionChecklistData,
       taskDetails: taskDetailsData,
     };
-
-    // CONSOLE ALL TAB INPUTS IN ORGANIZED WAY SIMULTANEOUSLY
-    console.log('--- COLLECTED INPUTS (ALL SECTIONS) SIMULTANEOUSLY ---');
-    console.log(allInputs);
-    console.log('--- ALL COLLECTED ERRORS (from DynamicForm refs) ---');
-    console.log(allErrors);
-    console.log('----------------------------------------------------');
-
     return {allInputs, allErrors, hasError};
   };
 
-  const handleSave = async () => {
-    if (isSaving || isSubmitting) return;
-    const {allInputs, hasError} = getFormDataFromTabs();
+  const handleSave = () => {
+    if (isSaving || isSubmitting || loading) return; // Disable if loading the checklist initially
+    const {allInputs, hasError, allErrors} = getFormDataFromTabs();
 
-    // ... (rest of handleSave logic)
+    // if (hasError) {
+    //   const errorMessages = Object.values(allErrors).filter(
+    //     (message, index, self) => message && self.indexOf(message) === index,
+    //   );
+
+    //   const formattedErrorList = errorMessages.join('\n\n');
+
+    //   Alert.alert(
+    //     'Validation Warning',
+    //     formattedErrorList || 'One or more fields have errors.',
+    //   );
+    //   return;
+    // }
+
     setIsSaving(true);
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setIsSaving(false);
-
-    if (hasError) {
-      Alert.alert(
-        'Warning',
-        'Some fields have validation errors. Please check the form before saving.',
-      );
-    } else {
-      Alert.alert('Success', 'Form data has been saved.');
-    }
+    dispatch(
+      saveRfiFormData({
+        projectId: PROJECT_ID,
+        rfiId: RFI_ID,
+        formData: allInputs, // Pass the aggregated form data
+      }),
+    );
   };
 
   const handleSubmit = async () => {
-    if (isSaving || isSubmitting) return;
-    const {allInputs, hasError} = getFormDataFromTabs();
+    if (isSaving || isSubmitting || loading || error) return;
+    const {allInputs, hasError, allErrors} = getFormDataFromTabs();
 
     if (hasError) {
+      const errorMessages = Object.values(allErrors).filter(
+        (message, index, self) => message && self.indexOf(message) === index,
+      );
+      const formattedErrorList = errorMessages.join('\n\n');
+
       Alert.alert(
-        'Validation Error',
-        'Please correct all validation errors before submitting.',
+        'Validation Warning',
+        formattedErrorList || 'One or more fields have errors.',
       );
       return;
     }
 
-    // ... (rest of handleSubmit logic)
     setIsSubmitting(true);
     await new Promise(resolve => setTimeout(resolve, 2000));
     setIsSubmitting(false);
@@ -231,6 +293,7 @@ const TaskForm = () => {
   };
 
   const renderTabContent = () => {
+    // Check initial load error (error fetching checklist)
     if (loading) {
       return (
         <View style={styles.centered}>
@@ -250,32 +313,32 @@ const TaskForm = () => {
       );
     }
 
-    // --- START: Destructure the new material-related flags/data
     const {
       isMaterialRequested,
       materialConsumptionSection,
       prepareMaterialConsumption,
       projectInfoSection,
+      inspectionChecklistSection,
+      taskDetails,
     } = inspectionChecklist || {};
-    // --- END: Destructure the new material-related flags/data
 
-    switch (activeTab) {
-      case TABS.INFORMATION:
-        // Use the destructured variables
-        if (
-          projectInfoSection ||
+    return (
+      <>
+        {/* INFORMATION TAB */}
+        <View
+          style={{
+            display: activeTab === TABS.INFORMATION ? 'flex' : 'none',
+            flex: 1,
+          }}>
+          {projectInfoSection ||
           materialConsumptionSection ||
-          prepareMaterialConsumption
-        ) {
-          return (
+          prepareMaterialConsumption ? (
             <InformationTab
               ref={informationRef}
               projectInfoSection={projectInfoSection}
               materialConsumptionSection={materialConsumptionSection}
-              // --- PASS NEW PROPS ---
               prepareMaterialConsumption={prepareMaterialConsumption}
-              isMaterialRequested={isMaterialRequested} // Ensure boolean type
-              // ----------------------
+              isMaterialRequested={isMaterialRequested}
               projectInfoData={projectInfoData}
               onProjectInfoChange={(fieldId, newValue) =>
                 handleUniversalValueChange(
@@ -293,28 +356,25 @@ const TaskForm = () => {
                 )
               }
             />
-          );
-        }
-        return (
-          <View style={styles.centered}>
-            <Text style={styles.statusText}>
-              Project info data is not available.
-            </Text>
-          </View>
-        );
+          ) : (
+            <View style={styles.centered}>
+              <Text style={styles.statusText}>
+                Project info data is not available.
+              </Text>
+            </View>
+          )}
+        </View>
 
-      case TABS.INSPECTION:
-        if (
-          inspectionChecklist &&
-          inspectionChecklist.inspectionChecklistSection
-        ) {
-          return (
+        {/* INSPECTION TAB */}
+        <View
+          style={{
+            display: activeTab === TABS.INSPECTION ? 'flex' : 'none',
+            flex: 1,
+          }}>
+          {inspectionChecklistSection ? (
             <InspectionTab
               ref={inspectionRef}
-              formData={
-                inspectionChecklist.inspectionChecklistSection as FormData
-              }
-              // --- PASS STATE & CURRIED SETTER ---
+              formData={inspectionChecklistSection as FormData}
               globalFormData={inspectionChecklistData}
               onGlobalValueChange={(fieldId, newValue) =>
                 handleUniversalValueChange(
@@ -324,35 +384,32 @@ const TaskForm = () => {
                 )
               }
             />
-          );
-        }
-        return (
-          <View style={styles.centered}>
-            <Text style={styles.statusText}>
-              Inspection checklist data is not available.
-            </Text>
-          </View>
-        );
+          ) : (
+            <View style={styles.centered}>
+              <Text style={styles.statusText}>
+                Inspection checklist data is not available.
+              </Text>
+            </View>
+          )}
+        </View>
 
-      case TABS.TASK_DETAILS:
-        // Pass taskDetails from checklist if available, otherwise use DUMMY_TASK_DETAILS
-        const taskDetailsConfig =
-          inspectionChecklist?.taskDetails || DUMMY_TASK_DETAILS;
-
-        return (
+        {/* TASK DETAILS TAB */}
+        <View
+          style={{
+            display: activeTab === TABS.TASK_DETAILS ? 'flex' : 'none',
+            flex: 1,
+          }}>
           <TaskDetailsTab
             ref={taskDetailsRef}
-            formData={taskDetailsConfig}
+            formData={taskDetails || null}
             globalFormData={taskDetailsData}
             onGlobalValueChange={(fieldId, newValue) =>
               handleUniversalValueChange('taskDetails', fieldId, newValue)
             }
           />
-        );
-
-      default:
-        return null;
-    }
+        </View>
+      </>
+    );
   };
 
   const isActionInProgress = isSaving || isSubmitting;
@@ -421,23 +478,23 @@ const TaskForm = () => {
         <TouchableOpacity
           style={[styles.button, styles.saveButton]}
           onPress={handleSave}
-          disabled={isActionInProgress}>
+          disabled={isActionInProgress || loading || error}>
           {isSaving ? (
             <ActivityIndicator color="#5A2AAF" />
           ) : (
             <Text style={styles.saveButtonText}>Save</Text>
           )}
         </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.button, styles.submitButton]}
-            onPress={handleSubmit}
-            disabled={isActionInProgress}>
-            {isSubmitting ? (
-              <ActivityIndicator color="#FFFFFF" /> // Use isSubmitting for Submit button indicator
-            ) : (
-              <Text style={styles.submitButtonText}>Submit</Text>
-            )}
-          </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.button, styles.submitButton]}
+          onPress={handleSubmit}
+          disabled={isActionInProgress || loading || error}>
+          {isSubmitting ? (
+            <ActivityIndicator color="#FFFFFF" />
+          ) : (
+            <Text style={styles.submitButtonText}>Submit</Text>
+          )}
+        </TouchableOpacity>
       </View>
         )}
     </SafeAreaView>

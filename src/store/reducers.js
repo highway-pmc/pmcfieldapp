@@ -2650,7 +2650,9 @@ const testDetailsInitialState = {
   tab1TestDetails: null,
   tab2TestDetails: null,
   inspectionChecklist: null,
+  rfiFormDataSaveResponse: null,
   error: null,
+  saveError: null,
   loading: false,
 };
 
@@ -2696,11 +2698,39 @@ const FormDetailsReducer = (state = testDetailsInitialState, action) => {
         error: action.error,
         loading: false,
       };
+    case 'SAVE_RFI_FORM_DATA_REQUEST':
+      return {
+        ...state,
+        saveError: null,
+        rfiFormDataSaveResponse: null,
+        loading: true,
+      };
+    case 'SAVE_RFI_FORM_DATA_SUCCESS':
+      return {
+        ...state,
+        rfiFormDataSaveResponse: action.response,
+        saveError: null,
+        loading: false,
+      };
+    case 'SAVE_RFI_FORM_DATA_FAILURE':
+      return {
+        ...state,
+        rfiFormDataSaveResponse: null,
+        saveError: action.error,
+        loading: false,
+      };
+    case 'SAVE_RFI_FORM_DATA_CLEAR':
+      return {
+        ...state,
+        rfiFormDataSaveResponse: null,
+      };
     case 'CLEAR_FORM_DETAILS':
       return {
         ...state,
         tab1TestDetails: null,
         inspectionChecklist: null,
+        rfiFormDataSaveResponse: null,
+        saveError: null,
         error: null,
         loading: false,
       };

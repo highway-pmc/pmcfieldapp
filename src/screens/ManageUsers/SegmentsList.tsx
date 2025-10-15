@@ -92,7 +92,6 @@ const SegmentsList = ({route, navigation}: {route: any; navigation: any}) => {
   useEffect(() => {
     setSelectedSegmentType('');
     setSearchText('');
-    console.log('====taskCategory=======', taskCategory);
     dispatch(
       getProjectModuleSegments({
         projectId: loggedInUser.projectId,

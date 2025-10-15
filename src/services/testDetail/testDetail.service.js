@@ -39,3 +39,19 @@ export const getInspectionChecklistApi = async (
       throw new Error(errorMessage);
     });
 };
+
+export const saveRfiFormDataApi = async (projectId, rfiId, formData) => {
+  return apiService
+    .postRequest(
+      `v1/auth/projects/${projectId}/my-work-task-form/${rfiId}/save-data`,
+      formData,
+    )
+    .then(response => {
+      return response;
+    })
+    .catch(err => {
+      const errorMessage =
+        err.message || 'Unable to save RFI form data to metadata.';
+      throw new Error(errorMessage);
+    });
+};

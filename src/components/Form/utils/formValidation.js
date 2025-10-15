@@ -1,9 +1,3 @@
-/**
- * Validates a single input field against its defined rules.
- * @param {object} field The complete input object from the form schema.
- * @param {any} value The new value entered by the user.
- * @returns {string | null} Returns an error message string if invalid, otherwise null.
- */
 export const validateField = (field, value) => {
   const {validations, type} = field;
   const val = value; // Use a simpler alias for the value being validated
@@ -113,4 +107,109 @@ export const validateField = (field, value) => {
 
   // No errors found
   return null;
+};
+export const validateChainageIntervals = (
+  chainageInputs,
+  projectStartChainage,
+  projectEndChainage,
+) => {
+  const errors = [];
+  const minRange = 0.001; // Tolerance for floating point checks
+
+  // --- 1. PRE-CHECK AND NORMALIZATION (including range constraints) ---
+  const intervals = chainageInputs
+    .map(input => {
+      const index = input.index;
+      // Attempt to parse input values
+      const start = parseFloat(input.start);
+      const end = parseFloat(input.end);
+
+      // Basic numerical validation
+      if (isNaN(start) || isNaN(end)) {
+        errors.push({
+          fieldId: `start_chainage_${index}`,
+          message: 'Chainage must be a valid number.',
+        });
+        return null;
+      }
+
+      // Check if Start is before End for the current specimen
+      if (start >= end) {
+        errors.push({
+          fieldId: `end_chainage_${index}`,
+          message: 'End Chainage must be greater than Start Chainage.',
+        });
+        return null;
+      }
+
+      // Check range containment within overall project limits
+      if (start < projectStartChainage || end > projectEndChainage) {
+        errors.push({
+          fieldId: `start_chainage_${index}`,
+          message: `Must be within project range ${projectStartChainage} - ${projectEndChainage}.`,
+        });
+        return null;
+      }
+
+      return {start, end, index};
+    })
+    .filter(input => input !== null)
+    .sort((a, b) => a.start - b.start); // Sort by start chainage for sequential checks
+
+  // If initial checks failed, return those errors immediately
+  if (errors.length > 0) return errors;
+
+  // --- 2. OVERLAP AND CONSECUTIVE GAP CHECK ---
+  let currentCoveredEnd = projectStartChainage;
+
+  // A. Check the gap before the first interval
+  if (
+    intervals.length > 0 &&
+    intervals[0].start > currentCoveredEnd + minRange
+  ) {
+    errors.push({
+      fieldId: `start_chainage_${intervals[0].index}`,
+      message: `Gap found! Must start at ${currentCoveredEnd}.`,
+    });
+  }
+
+  // B. Check for overlap or gap between consecutive intervals
+  for (let i = 0; i < intervals.length; i++) {
+    const current = intervals[i];
+
+    // 2a. Overlap check (current start must be equal to or greater than the end of the previous covered segment)
+    if (current.start < currentCoveredEnd - minRange) {
+      errors.push({
+        fieldId: `start_chainage_${current.index}`,
+        message: `Overlap detected with previous segment. Must start at or after ${currentCoveredEnd}.`,
+      });
+    }
+
+    // 2b. Gap check (current start must be equal to the end of the previous covered segment)
+    // We only check for a gap if we are beyond the first segment's start (already checked in A)
+    if (i > 0 && current.start > intervals[i - 1].end + minRange) {
+      errors.push({
+        fieldId: `start_chainage_${current.index}`,
+        message: `Gap found! Segment must start at ${
+          intervals[i - 1].end
+        } to maintain coverage.`,
+      });
+    }
+
+    // Update the end of the continuously covered area
+    currentCoveredEnd = Math.max(currentCoveredEnd, current.end);
+  }
+
+  // C. Final coverage check (must reach project end)
+  if (currentCoveredEnd < projectEndChainage - minRange) {
+    // Point the error to the last entry's end chainage, or the first if there are no entries
+    const lastIndex =
+      intervals.length > 0 ? intervals[intervals.length - 1].index : 1;
+    errors.push({
+      fieldId: `end_chainage_${lastIndex}`,
+      message: `Range is incomplete. Total coverage must reach ${projectEndChainage}.`,
+    });
+  }
+
+  return errors;
 };

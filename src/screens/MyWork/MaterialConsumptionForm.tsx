@@ -12,12 +12,11 @@ import {
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSnackbar } from '../../context/SnackbarContext';
-import { getSourceApprovals, patchDispatchRequest } from '../ManageUsers/actions';
+import { getSourceApprovals, patchDispatchRequest, submitMaterialRequest } from '../ManageUsers/actions';
 import { getMixDesignListInfo } from '../RFIs/actions';
 
 const MaterialConsumptionForm = ({materialData}) => {
   const [prepareMaterialConsumption] = useState(materialData);
-  console.log('Test Data', prepareMaterialConsumption)
 
    const [selectedMixDesigns, setSelectedMixDesigns] = useState<{[key: string]: string}>({});
    const {qualityMixDesignListInfo} = useSelector((state: any) => state.RFIs);
@@ -43,8 +42,8 @@ const MaterialConsumptionForm = ({materialData}) => {
     { id: 4, name: 'Mix Design M35' }
   ];
   
-  // Dropdown data from API (initialize with static data)
-  const [sourceOptions, setSourceOptions] = useState(STATIC_SOURCES);
+  // Store sources by testMaterialId
+  const [sourceOptionsByMaterial, setSourceOptionsByMaterial] = useState({});
   const [mixDesignOptions, setMixDesignOptions] = useState(STATIC_MIX_DESIGNS);
   
   // Modal state
@@ -57,23 +56,24 @@ const MaterialConsumptionForm = ({materialData}) => {
   const { showSnackbar } = useSnackbar();
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
   const sourceApprovalsData = useSelector((state: any) => state.sourceApprovals);
-  const { patchMeterialRequestStatusData, loading: any, error } = useSelector((state) => state.MeterialRequest)
+  const { postMeterialRequestFormData, loading: any, error } = useSelector((state) => state.MeterialRequest)
 
   useEffect(() => {
-    if (patchMeterialRequestStatusData) {
+    if (postMeterialRequestFormData) {
       showSnackbar("Meterial status updated successfully", "success");
     } else if (error) {
       showSnackbar(error, "error");
     }
-  }, [patchMeterialRequestStatusData, error]);
-  // Fetch Source data from API
-  const fetchSourceOptions =  () => {
+  }, [postMeterialRequestFormData, error]);
+
+  // Fetch Source data for a specific testMaterialId
+  const fetchSourceOptionsForMaterial = (testMaterialId: string) => {
     dispatch(
-          getSourceApprovals({
-            projectId: loggedInUser.projectId,
-            testMaterialId: prepareMaterialConsumption[0]?.materialRequests[0]?.materials[0]?.testMaterialId,
-          })
-        );
+      getSourceApprovals({
+        projectId: loggedInUser.projectId,
+        testMaterialId: testMaterialId,
+      })
+    );
   };
 
   // Fetch Mix Design data from API
@@ -88,7 +88,17 @@ const MaterialConsumptionForm = ({materialData}) => {
   // Update source options when API data arrives
   useEffect(() => {
     if (sourceApprovalsData && Array.isArray(sourceApprovalsData) && sourceApprovalsData.length > 0) {
-      setSourceOptions(sourceApprovalsData);
+      // You need to track which testMaterialId this data is for
+      // This requires modifying how you store the response
+      // For now, we'll store it with a key if you can identify it from the response
+      
+      // Assuming the response might include testMaterialId or you track it separately
+      // Store sources grouped by material
+      setSourceOptionsByMaterial(prev => ({
+        ...prev,
+        // You may need to adjust this based on your API response structure
+        [sourceApprovalsData[0]?.testMaterialId || 'default']: sourceApprovalsData
+      }));
     }
   }, [sourceApprovalsData]);
 
@@ -99,8 +109,25 @@ const MaterialConsumptionForm = ({materialData}) => {
     }
   }, [qualityMixDesignListInfo]);
 
+  // Fetch sources for all unique testMaterialIds on mount
   useEffect(() => {
-    fetchSourceOptions();
+    const uniqueMaterialIds = new Set();
+    
+    prepareMaterialConsumption.forEach((item) => {
+      item.materialRequests?.forEach((request) => {
+        request.materials?.forEach((material) => {
+          if (material.testMaterialId) {
+            uniqueMaterialIds.add(material.testMaterialId);
+          }
+        });
+      });
+    });
+
+    // Fetch sources for each unique material
+    uniqueMaterialIds.forEach((testMaterialId) => {
+      fetchSourceOptionsForMaterial(testMaterialId);
+    });
+
     fetchMixDesignOptions();
   }, []);
 
@@ -169,8 +196,13 @@ const MaterialConsumptionForm = ({materialData}) => {
     }
   }, [prepareMaterialConsumption]);
 
+  // Get source options for a specific testMaterialId
+  const getSourceOptionsForMaterial = (testMaterialId: string) => {
+    return sourceOptionsByMaterial[testMaterialId] || STATIC_SOURCES;
+  };
+
   // Get filtered source options excluding already selected sources for the same category
-  const getFilteredSourceOptions = (currentKey: string, baseKey: string) => {
+  const getFilteredSourceOptions = (currentKey: string, baseKey: string, testMaterialId: string) => {
     const entries = sourceEntries[baseKey] || [0];
     const selectedSourceIds = entries
       .map((entryIndex) => {
@@ -179,6 +211,7 @@ const MaterialConsumptionForm = ({materialData}) => {
       })
       .filter(id => id !== null);
 
+    const sourceOptions = getSourceOptionsForMaterial(testMaterialId);
     return sourceOptions.filter(option => !selectedSourceIds.includes(option.id));
   };
 
@@ -195,13 +228,13 @@ const MaterialConsumptionForm = ({materialData}) => {
     return mixDesignOptions.filter(option => !selectedMixDesignIds.includes(option.id));
   };
 
-  const openDropdown = (type, key) => {
-    setCurrentDropdown({ type, key });
+  const openDropdown = (type, key, testMaterialId) => {
+    setCurrentDropdown({ type, key, testMaterialId });
     
     if (type === 'source') {
       // Extract baseKey from the current key (remove the entry index)
       const baseKey = key.substring(0, key.lastIndexOf('-'));
-      const filteredOptions = getFilteredSourceOptions(key, baseKey);
+      const filteredOptions = getFilteredSourceOptions(key, baseKey, testMaterialId);
       setDropdownOptions(filteredOptions);
     } else {
       // Extract baseKey for mix design as well
@@ -235,14 +268,14 @@ const MaterialConsumptionForm = ({materialData}) => {
     }));
   };
 
-  const handleAddMore = (requestTo, materialId, category) => {
+  const handleAddMore = (requestTo, materialId, category, testMaterialId) => {
     const key = `${requestTo}-${materialId}-${category}`;
     const currentEntries = sourceEntries[key] || [0];
     
     // Check if there are available options left based on request type
     let availableOptions;
     if (requestTo === 'procurement-details') {
-      availableOptions = getFilteredSourceOptions('', key);
+      availableOptions = getFilteredSourceOptions('', key, testMaterialId);
     } else if (requestTo === 'production') {
       availableOptions = getFilteredMixDesignOptions('', key);
     }
@@ -297,20 +330,27 @@ const MaterialConsumptionForm = ({materialData}) => {
 
 const handleSubmit = async () => {
   try {
+    // Validate prepareMaterialConsumption exists
+    if (!prepareMaterialConsumption || prepareMaterialConsumption.length === 0) {
+      return;
+    }
+
     const materialRequests = [];
 
     prepareMaterialConsumption.forEach((item) => {
+      // Initialize request object based on requestTo type
       const requestObj = {
         requestTo: item.requestTo,
       };
 
-      // Add equipment ID if applicable
-      if (item.requestTo === 'production' && item.testEquipmentId) {
-        requestObj.testEquipmentId = item.testEquipmentId;
+      // Add testEquipmentId only for production requests
+      if (item.requestTo === 'production') {
+        requestObj.testEquipmentId = item.testEquipmentId || '67f6d3664aaee99e1d3e7749';
       }
 
       const testWorkCategories = [];
 
+      // Process each material request
       item.materialRequests.forEach((request) => {
         const testWorkCategoryObj = {
           testWorkCategoryId: request.testWorkCategoryId,
@@ -318,6 +358,7 @@ const handleSubmit = async () => {
           materialTypes: [],
         };
 
+        // Process each material
         request.materials.forEach((material) => {
           const materialTypeObj = {
             testMaterialId: material.testMaterialId,
@@ -325,79 +366,108 @@ const handleSubmit = async () => {
             materialCategory: [],
           };
 
+          // Process each material request (category)
           material.materialRequests.forEach((req) => {
             const baseKey = `${item.requestTo}-${material.testMaterialId}-${req.category}`;
-            const categoryObj = { category: req.category, source: [] };
-
-            // Get entries for both procurement and production
             const entries = sourceEntries[baseKey] || [0];
+            
+            // Remove duplicates from entries
+            const uniqueEntries = [...new Set(entries)];
 
-            entries.forEach((entryIndex) => {
-              const key = `${baseKey}-${entryIndex}`;
-              const quantity = formData[key];
+            // Initialize category object
+            const categoryObj = {
+              category: req.category,
+            };
 
-              // For procurement — multiple sources per category
-              if (item.requestTo === 'procurement-details') {
+            // Initialize appropriate array based on requestTo type
+            if (item.requestTo === 'procurement-details') {
+              categoryObj.source = [];
+              
+              // Process each source entry
+              uniqueEntries.forEach((entryIndex) => {
+                const key = `${baseKey}-${entryIndex}`;
+                const quantity = formData[key];
                 const source = selectedSource[key];
-                if (quantity && source) {
-                  categoryObj.source.push({
-                    sourceName: source.name,
-                    sourceApprovalId: source.id || source._id,
-                    qty: parseFloat(quantity),
-                  });
-                }
-              }
-              // For production — multiple mix designs per category
-              else if (item.requestTo === 'production') {
-                const mixDesign = selectedMixDesign[key];
-                if (quantity && mixDesign) {
-                  categoryObj.source.push({
-                    sourceName: mixDesign.name,
-                    sourceApprovalId: mixDesign.id || mixDesign._id,
-                    qty: parseFloat(quantity),
-                  });
-                }
-              }
-            });
 
-            // Only include category if sources exist
-            if (categoryObj.source.length > 0) {
-              materialTypeObj.materialCategory.push(categoryObj);
+                // Add source if quantity and source are valid
+                if (quantity && parseFloat(quantity) > 0 && source) {
+                  categoryObj.source.push({
+                    sourceName: source.name || source.sourceName,
+                    sourceApprovalId: source.id || source._id || source.sourceApprovalId,
+                    qty: parseFloat(quantity),
+                  });
+                }
+              });
+
+              // Only add category if it has sources
+              if (categoryObj.source.length > 0) {
+                materialTypeObj.materialCategory.push(categoryObj);
+              }
+            } 
+            else if (item.requestTo === 'production') {
+              categoryObj.mixDesign = [];
+              
+              // Process each mix design entry
+              uniqueEntries.forEach((entryIndex) => {
+                const key = `${baseKey}-${entryIndex}`;
+                const quantity = formData[key];
+                const mixDesign = selectedMixDesign[key];
+
+                // Add mix design if quantity and mixDesign are valid
+                if (quantity && parseFloat(quantity) > 0 && mixDesign) {
+                  categoryObj.mixDesign.push({
+                    mixDesignId: mixDesign.id || mixDesign._id || mixDesign.mixDesignId,
+                    mixDesignName: mixDesign.name || mixDesign.mixDesignName,
+                    qty: parseFloat(quantity),
+                  });
+                }
+              });
+
+              // Only add category if it has mix designs
+              if (categoryObj.mixDesign.length > 0) {
+                materialTypeObj.materialCategory.push(categoryObj);
+              }
             }
           });
 
-          // Include material only if it has filled categories
+          // Add material type only if it has categories
           if (materialTypeObj.materialCategory.length > 0) {
             testWorkCategoryObj.materialTypes.push(materialTypeObj);
           }
         });
 
+        // Add work category only if it has material types
         if (testWorkCategoryObj.materialTypes.length > 0) {
           testWorkCategories.push(testWorkCategoryObj);
         }
       });
 
+      // Add request only if it has work categories
       if (testWorkCategories.length > 0) {
         requestObj.testWorkCategories = testWorkCategories;
         materialRequests.push(requestObj);
       }
     });
 
-    // ✅ Final payload (matches your latest structure)
+    // Validate we have material requests
+    if (materialRequests.length === 0) {
+      return;
+    }
+
+    // Build final payload
     const payload = {
-      rfiId: "68ec0473f124eedac12b23a1", // Replace dynamically as needed
+      rfiId: prepareMaterialConsumption[0]?.rfiId || '68ec0473f124eedac12b23a1',
       isMaterialRequested: false,
       comments: "Postman test request using prepared data.",
       materialRequests,
     };
 
-    console.log("📦 Final Submit Payload:", JSON.stringify(payload, null, 2));
+    console.log("✅ Final Submit Payload:", JSON.stringify(payload, null, 2));
 
-    // 🔥 Dispatch API request
+    // Dispatch API request
     dispatch(
-      patchDispatchRequest({
+      submitMaterialRequest({
         projectId: loggedInUser.projectId,
-        id: "",
         body: payload,
       })
     );
@@ -432,13 +502,13 @@ const handleSubmit = async () => {
           ) : (
             <FlatList
               data={dropdownOptions}
-              keyExtractor={(item) => item.id.toString()}
+              keyExtractor={(item) => (item?.id || item?._id || Math.random()).toString()}
               renderItem={({ item }) => (
                 <TouchableOpacity
                   style={styles.dropdownItem}
                   onPress={() => selectDropdownItem(item)}
                 >
-                  <Text style={styles.dropdownItemText}>{item.name}</Text>
+                  <Text style={styles.dropdownItemText}>{item?.name}</Text>
                 </TouchableOpacity>
               )}
               ListEmptyComponent={
@@ -521,7 +591,7 @@ const handleSubmit = async () => {
                                       styles.dropdownButton,
                                       prefilledEntries[key] && styles.dropdownButtonDisabled
                                     ]}
-                                    onPress={() => !prefilledEntries[key] && openDropdown('source', key)}
+                                    onPress={() => !prefilledEntries[key] && openDropdown('source', key, material.testMaterialId)}
                                     disabled={prefilledEntries[key]}
                                   >
                                     <Text style={[
@@ -546,7 +616,7 @@ const handleSubmit = async () => {
                                       styles.dropdownButton,
                                       prefilledEntries[key] && styles.dropdownButtonDisabled
                                     ]}
-                                    onPress={() => !prefilledEntries[key] && openDropdown('mixDesign', key)}
+                                    onPress={() => !prefilledEntries[key] && openDropdown('mixDesign', key, material.testMaterialId)}
                                     disabled={prefilledEntries[key]}
                                   >
                                     <Text style={[
@@ -586,35 +656,35 @@ const handleSubmit = async () => {
                         })}
 
                         {/* Add More button for both procurement-details and production */}
-                        {item.requestTo === 'procurement-details' && 
-                         getFilteredSourceOptions('', baseKey).length > 0 && (
+                        {item.requestTo === 'procurement-details' && (
                           <TouchableOpacity
                             style={styles.addMoreButton}
                             onPress={() =>
                               handleAddMore(
                                 item.requestTo,
                                 material.testMaterialId,
-                                req.category
+                                req.category,
+                                material.testMaterialId
                               )
                             }
                           >
-                            <Text style={styles.addMoreText}>+ Add More Source</Text>
+                            <Text style={styles.addMoreText}>+ Add More</Text>
                           </TouchableOpacity>
                         )}
 
-                        {item.requestTo === 'production' && 
-                         getFilteredMixDesignOptions('', baseKey).length > 0 && (
+                        {item.requestTo === 'production' && (
                           <TouchableOpacity
                             style={styles.addMoreButton}
                             onPress={() =>
                               handleAddMore(
                                 item.requestTo,
                                 material.testMaterialId,
-                                req.category
+                                req.category,
+                                material.testMaterialId
                               )
                             }
                           >
-                            <Text style={styles.addMoreText}>+ Add More Mix Design</Text>
+                            <Text style={styles.addMoreText}>+ Add More</Text>
                           </TouchableOpacity>
                         )}
                       </View>

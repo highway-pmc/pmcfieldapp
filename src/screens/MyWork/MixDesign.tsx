@@ -26,6 +26,7 @@ import {
   getMixDesignFormInfo,
   saveMixDesignFormInfo,
   clearRFITasksEvent,
+  getMixDesignList,
 } from '../RFIs/actions';
 
 // --- Constants & Utilities ---
@@ -46,7 +47,7 @@ const MixDesign = ({navigation}: {navigation: any}) => {
   // --- Redux State ---
   const {
     savedMixDesignFormInfo,
-    qualityMasterListing,
+    mixDesignListData,
     qualityMixDesignFormInfo,
     loading,
     error,
@@ -83,6 +84,8 @@ const MixDesign = ({navigation}: {navigation: any}) => {
     if (isFocused) {
       dispatch(clearRFITasksEvent());
       dispatch(getQualityMasterList({testType: 'mix-design'}));
+      dispatch(getMixDesignList({projectId: loggedInUser.projectId, testType: 'mix-design'}));
+      console.log('sdsaeda', mixDesignListData)
       // Reset all state variables
       setMixDesignShortName('');
       setDateOfSampling('');
@@ -102,14 +105,12 @@ const MixDesign = ({navigation}: {navigation: any}) => {
   useEffect(() => {
     if (savedMixDesignFormInfo) {
       showSnackbar('Mix Design saved successfully!', 'success');
-      setTimeout(() => {
-        navigation.navigate('MixDesignListing');
-      }, 2000);
+      navigation.navigate('MixDesignListing');
     }
     if (error) {
       showSnackbar(error.message || 'Unable to save Mix Design data.', 'error');
     }
-  }, [savedMixDesignFormInfo, error, navigation, showSnackbar]);
+  }, [savedMixDesignFormInfo, navigation, error]);
 
   // Populate materials list when form info is fetched
   useEffect(() => {
@@ -141,6 +142,7 @@ const MixDesign = ({navigation}: {navigation: any}) => {
 
   const handleWorkCategorySelect = (selectedOption: any) => {
     setSelectedWorkCategory(selectedOption);
+    console.log('98734982374', selectedWorkCategory)
     setSelectedMaterialType(null);
     setSelectedMaterialCategory('');
     setMaterialsData([]);
@@ -206,9 +208,13 @@ const MixDesign = ({navigation}: {navigation: any}) => {
       projectId: loggedInUser.projectId,
       testWorkCategoryType: selectedWorkCategory?.type,
       testMaterialId: selectedMaterialType?._id,
+      
       body: {
         name: mixDesignShortName,
+        shortName:mixDesignShortName,
+        totalMixDesignQty: totalQty,
         comments: recommend,
+        testMaterialType: selectedMaterialType?.materialType,
         mixDesignData: {
           dateOfSampling: getDbDateFromDDMMYYYY(dateOfSampling),
           timeOfSampling: timeOfSampling,
@@ -220,6 +226,8 @@ const MixDesign = ({navigation}: {navigation: any}) => {
         },
       },
     };
+
+    console.log('payload', payload, finalMaterialsData)
 
     dispatch(saveMixDesignFormInfo(payload));
   };
@@ -327,21 +335,28 @@ const MixDesign = ({navigation}: {navigation: any}) => {
         <View style={styles.card}>
           <Text style={styles.sectionTitle}>Mix Design Details</Text>
           <Input
-            label="Mix Design Name"
+            label="Mix Design Short Name"
             value={mixDesignShortName}
             onChange={setMixDesignShortName}
             maxLength={50}
             isRequired
           />
+          {/* <Input
+            label="Mix Design Name"
+            value={mixDesignShortName}
+            onChange={setMixDesignShortName}
+            maxLength={50}
+            isRequired
+          /> */}
           <CustomSelectDropdown
             label="Work Category"
-            data={qualityMasterListing?.testWorkCategoryData}
+            data={mixDesignListData?.testWorkCategoriesData}
             selectedValue={selectedWorkCategory}
             onSelect={handleWorkCategorySelect}
           />
           <CustomSelectDropdown
             label="Material Type"
-            data={selectedWorkCategory?.materialTypeData}
+            data={selectedWorkCategory?.materialsData}
             selectedValue={selectedMaterialType}
             onSelect={handleMaterialTypeSelect}
           />

@@ -71,7 +71,7 @@ const getNewSectionData = (
   const newSection: any = JSON.parse(JSON.stringify(baseSection));
 
   const traverseAndReplace = (sections: any): void => {
-    sections.forEach((section: any) => {
+    sections?.forEach((section: any) => {
       // Update titles
       if (section.mainTitle) {
         section.mainTitle = replaceIndexInString(
@@ -408,11 +408,11 @@ const DynamicForm = forwardRef<DynamicFormRef, DynamicFormProps>(
               )}
 
               <View style={styles.sectionsContainer}>
-                {dynamicSections.map((section: any, index: any) => {
+                {dynamicSections?.map((section: any, index: any) => {
                   const isRemovable: boolean =
                     isVariableSection &&
                     config !== undefined &&
-                    dynamicSections.length > config.minSections;
+                    dynamicSections?.length > config.minSections;
                   const isSubSection: boolean = section.type === 'subSection';
 
                   // Dynamically adjust section display title based on current array index
@@ -489,7 +489,7 @@ const DynamicForm = forwardRef<DynamicFormRef, DynamicFormProps>(
               {/* Show add button when sections can still be added */}
               {isVariableSection &&
                 config !== undefined &&
-                dynamicSections.length < config.maxSections && (
+                dynamicSections?.length < config.maxSections && (
                   <TouchableOpacity
                     onPress={handleAddSection}
                     style={styles.addButton}>

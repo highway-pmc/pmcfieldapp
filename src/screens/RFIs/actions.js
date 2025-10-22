@@ -71,3 +71,8 @@ export const getMixDesignListInfo = payload => ({
   type: 'GET_MIX_DESIGN_LIST_INFO_REQUEST',
   payload: payload,
 });
+
+export const getMixDesignList = (payload) => ({
+    type: "GET_MIX_DESIGN_REQUEST",
+    payload: payload
+});

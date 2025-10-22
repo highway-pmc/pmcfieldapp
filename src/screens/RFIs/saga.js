@@ -14,6 +14,7 @@ import {
   getTestRFIs,
   postLabTestRFI,
   saveMixDesignFormInfoApi,
+  getMixDesignDataApi,
 } from '../../services/rfi/rfis.service';
 
 function* getRFITasks({payload}) {
@@ -152,6 +153,15 @@ function* getQualityMaster({payload}) {
   }
 }
 
+function* getMixDesign({payload}) {
+  try {
+    const response = yield getMixDesignDataApi(payload.projectId, payload.testType);
+    yield put({type: 'GET_MIX_DESIGN_SUCCESS', response});
+  } catch (error) {
+    yield put({type: 'GET_MIX_DESIGN_FAILURE', error: error.message});
+  }
+}
+
 function* getMixDesignFormInfo({payload}) {
   try {
     const response = yield getMixDesignFormInfoApi(
@@ -202,6 +212,7 @@ export default function* myRFISScreenSaga() {
   yield takeLatest('GENERATE_TEST_REPORT_REQUEST', generateTestRFIReport);
   yield takeLatest('GENERATE_LAB_TEST_RFI_REQUEST', generateLabTestRFIReport);
   yield takeLatest('GET_QUALITY_MASTER_REQUEST', getQualityMaster);
+  yield takeLatest('GET_MIX_DESIGN_REQUEST', getMixDesign)
   yield takeLatest('GET_MIX_DESIGN_FORM_INFO_REQUEST', getMixDesignFormInfo);
   yield takeLatest('SAVE_MIX_DESIGN_FORM_INFO_REQUEST', saveMixDesignFormInfo);
   yield takeLatest('GET_MIX_DESIGN_LIST_INFO_REQUEST', getMixDesignListInfo);

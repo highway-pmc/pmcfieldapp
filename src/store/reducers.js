@@ -1682,6 +1682,7 @@ const RFIsReducer = (state = myWorksState, action) => {
         qualityMixDesignFormInfo: null,
         savedMixDesignFormInfo: null,
         qualityMixDesignListInfo: null,
+        mixDesignListData: null,
         error: null,
         loading: false,
       };
@@ -1725,6 +1726,28 @@ const RFIsReducer = (state = myWorksState, action) => {
         error: action.error,
         loading: false,
       };
+
+    case 'GET_MIX_DESIGN_REQUEST':
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case 'GET_MIX_DESIGN_SUCCESS':
+      return {
+        ...state,
+        mixDesignListData: action.response,
+        error: null,
+        loading: false,
+      };
+    case 'GET_MIX_DESIGN_FAILURE':
+      return {
+        ...state,
+        mixDesignListData: null,
+        error: action.error,
+        loading: false,
+      };
+
     case 'GET_MIX_DESIGN_FORM_INFO_REQUEST':
       return {
         ...state,

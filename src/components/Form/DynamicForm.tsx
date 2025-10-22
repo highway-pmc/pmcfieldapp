@@ -14,6 +14,7 @@ import {
   Platform,
   UIManager,
 } from 'react-native';
+// Assuming the following files/types exist
 import styles from './DynamicForm.styles';
 import {Section, InputItem, DynamicTestFormProps} from './DynamicForm.types';
 import {validateField} from './utils/formValidation';
@@ -47,42 +48,56 @@ export interface DynamicFormRef {
 }
 
 /**
- * Utility to replace the section index in IDs and titles (e.g., _1 -> _2)
+ * Utility to replace the section index in IDs and titles (e.g., _S1 -> _S2 or Specimen 1 -> Specimen 2)
  */
 const replaceIndexInString = (
   str: string,
   oldIndex: number,
   newIndex: number,
 ): string => {
-  // Regex to target the index at the end of a string: `_oldIndex`
-  const regex = new RegExp(`_${oldIndex}$`);
-  return str.replace(regex, `_${newIndex}`);
+  // Regex to target the index at the end of an ID: `_SoldIndex`
+  const idRegex = new RegExp(`_S${oldIndex}$`);
+  if (str.match(idRegex)) {
+    return str.replace(idRegex, `_S${newIndex}`);
+  }
+
+  // Regex to target the human-readable index in a title: `Specimen N`
+  // This is safer to assume the title format uses the index directly.
+  const titleRegex = new RegExp(`Specimen ${oldIndex}`, 'i');
+  if (str.match(titleRegex)) {
+    return str.replace(new RegExp(`\\s*${oldIndex}$`), ` ${newIndex}`);
+  }
+
+  // Fallback, should not happen for well-formed data
+  return str;
 };
 
 /**
  * Creates a new section by cloning the base section and updating all IDs and titles
  * to reflect the new index.
+ * It is critical that it also resets the value property for the cloned structure.
  */
 const getNewSectionData = (
   baseSection: any,
   newIndex: number,
-  prevIndex: number,
+  prevIndex: number, // The 1-based index to replace (e.g., 1 if cloning Specimen 1)
+  isCloningForAdd: boolean = true, // Flag to control value reset
 ): Section => {
   const newSection: any = JSON.parse(JSON.stringify(baseSection));
 
   const traverseAndReplace = (sections: any): void => {
-    sections?.forEach((section: any) => {
-      // Update titles
+    sections.forEach((section: any) => {
+      // 1. Update titles (mainTitle, which holds "Specimen X")
       if (section.mainTitle) {
         section.mainTitle = replaceIndexInString(
           section.mainTitle,
           prevIndex,
           newIndex,
         );
-        // Special case: update human-readable number in title (e.g., "Specimen X")
-        section.mainTitle = section.mainTitle.replace(/\d+/, newIndex);
       }
+      // Update titles (title, typically static but included for safety)
       if (section.title) {
+        // Only replace the index if it's part of the title's structure
         section.title = replaceIndexInString(
           section.title,
           prevIndex,
@@ -90,15 +105,19 @@ const getNewSectionData = (
         );
       }
 
-      // Update IDs and reset values for new sections
+      // 2. Update IDs and reset values for new sections
       if (section.items) {
         section.items.forEach((item: any) => {
           const input = item as InputItem;
           if (input.id) {
             input.id = replaceIndexInString(input.id, prevIndex, newIndex);
           }
-          // Reset value for a newly created section
-          input.value = '';
+          // Critical Data Reset (The Fix): Reset value for a newly created section
+          if (isCloningForAdd) {
+            input.value = '';
+          }
+          // NOTE: When re-indexing (isCloningForAdd = false), we keep the structural value as-is,
+          // as the actual value is transferred via onGlobalValueChange.
         });
       }
 
@@ -135,54 +154,67 @@ const getInputIdsFromSection = (section: any): string[] => {
 
 /**
  * Re-indexes sections and updates global data after a section is removed.
+ * @param sections The array of sections *after* the section to be removed has been filtered out.
+ * @param startIndex The array index from which the re-indexing must begin.
+ * @param onGlobalValueChange Function to update/clear globalFormData.
+ * @param globalFormData The current global data map (needed for value lookup).
  */
 const reIndexSectionsAndData = (
   sections: Section[],
   startIndex: number,
   onGlobalValueChange: (fieldId: string, newValue: any) => void,
+  globalFormData: Record<string, any>,
 ): Section[] => {
   const updatedSections = [...sections];
 
-  // Iterate over sections that follow the removed section
+  // Iterate over sections that follow the removal point (from startIndex onwards)
   for (let i = startIndex; i < updatedSections.length; i++) {
-    const currentSection = updatedSections[i];
-    const oldIndex = i + 2; // +1 for 1-based index, +1 because we skipped the deleted index
-    const newIndex = i + 1; // The correct new 1-based index
+    const sectionToPromote = updatedSections[i];
 
-    // Create a copy of the section structure with updated titles/IDs
+    // The section's original 1-based index (e.g., if Specimen 3 is now at index 1 after removing Specimen 2)
+    // The original array length was N. After removal, it is N-1.
+    // Index i in the new array corresponds to the original index i+1's new position.
+    // The index to be replaced in the data structure is the 'old' index.
+    // If we removed index 1 (Specimen 2), and i=1 (Specimen 3), the old index is i+2 (3).
+    // The new index is i+1 (2).
+
+    // OldIndex is the 1-based index this section originally had (before re-indexing).
+    // In a zero-indexed array after removal, the item at index 'i' was at original index 'i+1',
+    // but the ID suffix refers to its *original* index before the removal.
+    // If we remove section at array index `indexToRemove` (1-based index `indexToRemove+1`),
+    // the item currently at array index `i` (where `i >= indexToRemove`)
+    // originally had the 1-based index `i + 2`.
+    const oldIndex = i + 2;
+
+    // NewIndex is the correct 1-based index it should have now (after re-indexing)
+    const newIndex = i + 1;
+
+    // 1. Get the re-indexed structure (only changing IDs and Titles, NOT resetting values)
     const reindexedSection = getNewSectionData(
-      currentSection,
+      sectionToPromote,
       newIndex,
       oldIndex,
+      false, // Set to false to prevent structural value reset
     );
 
-    // Update global data (move saved values from old ID to new ID)
-    const oldIds = getInputIdsFromSection(currentSection); // original IDs (e.g., start_chainage_2)
-    const newIds = getInputIdsFromSection(reindexedSection); // new IDs (e.g., start_chainage_1)
+    // 2. Transfer Data (The Core Fix)
+    const oldIds = getInputIdsFromSection(sectionToPromote);
+    const newIds = getInputIdsFromSection(reindexedSection);
 
     oldIds.forEach((oldId, idIndex) => {
       const newId = newIds[idIndex];
 
-      // Use the helper to access the current value before clearing the old ID
-      const currentValue = currentSection.inputData?.[oldId] || null; // Access data for the current section if needed
+      // Retrieve the value from globalFormData using the Old Input ID
+      const valueToTransfer = globalFormData[oldId];
 
-      // Retrieve the value from the current global state (we don't have globalFormData here, so we rely on onGlobalValueChange)
+      // a) Write that retrieved value to globalFormData using the New Input ID
+      onGlobalValueChange(newId, valueToTransfer);
 
-      // 1. Set the value to the new ID
-      // NOTE: This relies on the parent component's `globalFormData` to correctly apply this.
-      // A more robust solution would pass globalFormData down and update the entire state object,
-      // but sticking to the provided function signature:
-      if (currentValue !== undefined && currentValue !== null) {
-        onGlobalValueChange(newId, currentValue);
-      } else {
-        // If we don't know the exact value, we rely on the next fetch.
-      }
-
-      // 2. Clear the old ID from global state (important!)
+      // b) Call onGlobalValueChange(oldId, undefined) again to clear the old key from globalFormData.
       onGlobalValueChange(oldId, undefined);
     });
 
-    // Replace the section structure with the re-indexed one
+    // 3. Replace the section structure with the re-indexed one
     updatedSections[i] = reindexedSection;
   }
 
@@ -239,7 +271,6 @@ const DynamicForm = forwardRef<DynamicFormRef, DynamicFormProps>(
 
     /**
      * Initialize input values in global form data if they don't exist
-     * This handles loading of saved data into state variables.
      */
     useEffect(() => {
       const initialData: Record<string, any> = {};
@@ -252,9 +283,8 @@ const DynamicForm = forwardRef<DynamicFormRef, DynamicFormProps>(
             section.items.forEach(item => {
               const input = item as InputItem;
 
-              // Only initialize if the global state doesn't have a value AND a saved value exists
-              // The parent TaskForm is responsible for populating globalFormData from checklist.savedData.
               if (
+                input.id &&
                 globalFormData[input.id] === undefined &&
                 input.value !== undefined
               ) {
@@ -268,7 +298,6 @@ const DynamicForm = forwardRef<DynamicFormRef, DynamicFormProps>(
       initializeInputs(dynamicSections);
 
       Object.keys(initialData).forEach(id => {
-        // Only set if the field is truly empty in the global store
         if (globalFormData[id] === undefined) {
           onGlobalValueChange(id, initialData[id]);
         }
@@ -303,47 +332,63 @@ const DynamicForm = forwardRef<DynamicFormRef, DynamicFormProps>(
     };
 
     /**
-     * Adds a new dynamic section.
+     * Adds a new dynamic section. (FIXED)
      */
     const handleAddSection = () => {
       const config = formData.variableSectionConfig;
-      if (!config || dynamicSections.length >= config.maxSections) {
+      // Find the first index that is a variable section (to handle the static "Source Info" section)
+      const firstVariableSectionIndex = dynamicSections.findIndex(
+        (s: any) => s.type === 'subSection',
+      );
+
+      if (
+        !config ||
+        dynamicSections.length - firstVariableSectionIndex >= config.maxSections
+      ) {
         return;
       }
 
-      const lastSection = dynamicSections[dynamicSections.length - 1];
+      // Get the last variable section (the one we want to clone)
+      const lastVariableSection = dynamicSections[dynamicSections.length - 1];
 
-      // Calculate the next index directly based on the array length
-      const newIndex = dynamicSections.length + 1;
+      // Determine the New 1-based Index
+      const newIndex = dynamicSections.length - firstVariableSectionIndex + 1; // Correctly calculates the next index
 
-      // Find the index of the last section for replacement utility
-      // We assume the last section's ID/Title ends in the current length (e.g., Specimen 1 for length 1)
-      const prevIndex = dynamicSections.length;
+      // The last section's index for replacement utility
+      // This assumes the last section's ID/Title ends in its current 1-based index.
+      const prevIndex = newIndex - 1;
 
-      const newSection = getNewSectionData(lastSection, newIndex, prevIndex);
-      // Ensure the display title is correct, even if ID replacement failed slightly
-      newSection.mainTitle = `${config.addButtonLabel.replace(
-        'Add ',
-        '',
-      )} ${newIndex}`;
+      // Clone structure, update IDs/Titles, and CRITICAL DATA RESET: reset all structural input.value to ''
+      const newSection = getNewSectionData(
+        lastVariableSection,
+        newIndex,
+        prevIndex,
+        true,
+      );
 
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
       setDynamicSections((prev: any) => [...prev, newSection]);
     };
 
     /**
-     * Removes a section and correctly re-indexes subsequent sections and clears data.
+     * Removes a section and correctly re-indexes subsequent sections and clears data. (FIXED)
      */
-    const handleRemoveSection = (indexToRemove: number) => {
+    const handleRemoveSection = (arrayIndexToRemove: number) => {
       const config = formData.variableSectionConfig;
-      if (!config || dynamicSections.length <= config.minSections) {
+
+      // Calculate the number of variable sections
+      const variableSections = dynamicSections.filter(
+        (s: any) => s.type === 'subSection',
+      );
+
+      if (!config || variableSections.length <= config.minSections) {
         return;
       }
 
-      const sectionToRemove = dynamicSections[indexToRemove];
+      const sectionToRemove = dynamicSections[arrayIndexToRemove];
       const allInputIdsToRemove = getInputIdsFromSection(sectionToRemove);
 
-      // 1. Remove data and errors for the deleted section
+      // 1. Immediate Data Cleanup (Old ID)
       allInputIdsToRemove.forEach(id => onGlobalValueChange(id, undefined));
       setInputErrors(prev => {
         const newErrors = {...prev};
@@ -353,15 +398,16 @@ const DynamicForm = forwardRef<DynamicFormRef, DynamicFormProps>(
 
       // 2. Filter out the removed section
       const sectionsAfterRemoval = dynamicSections.filter(
-        (_, index) => index !== indexToRemove,
+        (_, index) => index !== arrayIndexToRemove,
       );
 
       // 3. Re-index all subsequent sections and shift saved data
-      // Start re-indexing from the index where the shift begins (which is indexToRemove)
+      // We pass the globalFormData so the reIndexSectionsAndData utility can look up the old values.
       const reindexedSections = reIndexSectionsAndData(
         sectionsAfterRemoval,
-        indexToRemove,
+        arrayIndexToRemove, // Start re-indexing from the point of removal
         onGlobalValueChange,
+        globalFormData,
       );
 
       // 4. Update state with animation
@@ -408,15 +454,30 @@ const DynamicForm = forwardRef<DynamicFormRef, DynamicFormProps>(
               )}
 
               <View style={styles.sectionsContainer}>
-                {dynamicSections?.map((section: any, index: any) => {
-                  const isRemovable: boolean =
-                    isVariableSection &&
-                    config !== undefined &&
-                    dynamicSections?.length > config.minSections;
+                {dynamicSections.map((section: any, index: any) => {
                   const isSubSection: boolean = section.type === 'subSection';
 
-                  // Dynamically adjust section display title based on current array index
-                  const currentDisplayTitle = `${config?.title} ${index + 1}`;
+                  // Only consider for variable logic if it's a subsection
+                  const isVariableSubSection =
+                    isVariableSection && isSubSection;
+
+                  const isRemovable: boolean =
+                    isVariableSubSection &&
+                    config !== undefined &&
+                    // Check array length (total sections) against the minimum limit
+                    dynamicSections.filter((s: any) => s.type === 'subSection')
+                      .length > config.minSections;
+
+                  // Dynamically adjust section display title based on current array index (1-based, relative to other subsections)
+                  let currentDisplayTitle = section.mainTitle;
+
+                  if (isVariableSubSection) {
+                    const variableIndex = dynamicSections.filter(
+                      (_, i) =>
+                        i <= index && dynamicSections[i].type === 'subSection',
+                    ).length;
+                    currentDisplayTitle = `${config?.title} ${variableIndex}`;
+                  }
 
                   return (
                     <View key={`${section.mainTitle}-${index}`}>
@@ -462,13 +523,14 @@ const DynamicForm = forwardRef<DynamicFormRef, DynamicFormProps>(
                             section={section}
                             inputData={globalFormData}
                             onValueChange={handleValueChange}
+                            onGlobalValueChange={onGlobalValueChange} // Pass down for nested forms if needed, though this is SectionContent
                             inputErrors={inputErrors}
                           />
                         </View>
                       )}
 
                       {/* Show remove button for dynamic subsections when allowed */}
-                      {isVariableSection && isSubSection && (
+                      {isVariableSubSection && (
                         <View style={styles.buttonContainer}>
                           {isRemovable && (
                             <TouchableOpacity
@@ -489,7 +551,8 @@ const DynamicForm = forwardRef<DynamicFormRef, DynamicFormProps>(
               {/* Show add button when sections can still be added */}
               {isVariableSection &&
                 config !== undefined &&
-                dynamicSections?.length < config.maxSections && (
+                dynamicSections.filter((s: any) => s.type === 'subSection')
+                  .length < config.maxSections && (
                   <TouchableOpacity
                     onPress={handleAddSection}
                     style={styles.addButton}>

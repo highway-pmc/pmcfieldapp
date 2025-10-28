@@ -275,12 +275,12 @@ const DynamicForm = forwardRef<DynamicFormRef, DynamicFormProps>(
     useEffect(() => {
       const initialData: Record<string, any> = {};
 
-      const initializeInputs = (sections: Section[]): void => {
-        sections.forEach(section => {
+      const initializeInputs = (sections: any): void => {
+        sections.forEach((section: any) => {
           if (section.sections) {
             initializeInputs(section.sections);
           } else if (section.items) {
-            section.items.forEach(item => {
+            section.items.forEach((item: any) => {
               const input = item as InputItem;
 
               if (

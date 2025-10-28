@@ -9,6 +9,7 @@ interface InformationTabProps {
   projectInfoSection: any;
   materialConsumptionSection: any;
   prepareMaterialConsumption: any;
+  rfiId: string;
   isMaterialRequested: boolean;
   projectInfoData: Record<string, any>;
   onProjectInfoChange: (fieldId: string, newValue: any) => void;
@@ -27,13 +28,14 @@ const InformationTab = forwardRef<DynamicFormRef, InformationTabProps>(
       onMaterialConsumptionChange,
       prepareMaterialConsumption,
       isMaterialRequested,
+      rfiId,
     },
     ref,
   ) => {
     // Refs for collecting validation errors remain necessary
     const projectInfoRef = useRef<DynamicFormRef>(null);
     const materialConsumptionRef = useRef<DynamicFormRef>(null);
-    console.log('sadas', prepareMaterialConsumption, isMaterialRequested)
+    console.log('sadas', prepareMaterialConsumption, isMaterialRequested);
     // Use useImperativeHandle to expose the combined logic to the outside world (TaskForm)
     useImperativeHandle(ref, () => ({
       collectAllInputs: () => {
@@ -93,7 +95,10 @@ const InformationTab = forwardRef<DynamicFormRef, InformationTabProps>(
             onGlobalValueChange={onMaterialConsumptionChange}
           />
         ) : (
-          <MaterialConsumptionForm materialData={prepareMaterialConsumption} />
+          <MaterialConsumptionForm
+            materialData={prepareMaterialConsumption}
+            rfiId={rfiId}
+          />
         )}
       </ScrollView>
     );

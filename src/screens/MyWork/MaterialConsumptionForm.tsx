@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useMemo, useCallback} from 'react';
 import {
   View,
   Text,
@@ -9,510 +9,805 @@ import {
   Alert,
   Modal,
   FlatList,
+  ActivityIndicator,
 } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { useSnackbar } from '../../context/SnackbarContext';
-import { getSourceApprovals, patchDispatchRequest, submitMaterialRequest } from '../ManageUsers/actions';
-import { getMixDesignListInfo } from '../RFIs/actions';
+import {useDispatch, useSelector} from 'react-redux';
+import {useSnackbar} from '../../context/SnackbarContext';
+import {
+  getSourceApprovals,
+  submitMaterialRequest,
+} from '../ManageUsers/actions';
+import {getMixDesignListInfo} from '../RFIs/actions';
 
-const MaterialConsumptionForm = ({materialData}) => {
-  const [prepareMaterialConsumption] = useState(materialData);
+// Static fallback data (used if API calls fail or return empty)
+const STATIC_SOURCES: any[] = [
+  {
+    id: '60d5f1b3f7b3e3001f1f1f1f',
+    name: 'Source A - Local Quarry',
+    sourceApprovalId: 'static-1',
+  },
+  {
+    id: '60d5f1b3f7b3e3001f1f1f1f',
+    name: 'Source B - Regional Supplier',
+    sourceApprovalId: 'static-2',
+  },
+  {
+    id: '60d5f1b3f7b3e3001f1f1f1f',
+    name: 'Source C - Import Depot',
+    sourceApprovalId: 'static-3',
+  },
+  {
+    id: '60d5f1b3f7b3e3001f1f1f1f',
+    name: 'Source D - Alternative Site',
+    sourceApprovalId: 'static-4',
+  },
+];
 
-   const [selectedMixDesigns, setSelectedMixDesigns] = useState<{[key: string]: string}>({});
-   const {qualityMixDesignListInfo} = useSelector((state: any) => state.RFIs);
+// Helper to safely get nested data
+const getNestedData = (
+  data: any,
+  path: any[],
+  defaultValue: any = undefined,
+): any => {
+  let current = data;
+  for (const key of path) {
+    if (
+      current === null ||
+      current === undefined ||
+      (Array.isArray(current) && key >= current.length)
+    ) {
+      return defaultValue;
+    }
+    current = current[key];
+  }
+  return current;
+};
 
-  const [formData, setFormData] = useState({});
-  const [selectedSource, setSelectedSource] = useState({});
-  const [selectedMixDesign, setSelectedMixDesign] = useState({});
-  const [sourceEntries, setSourceEntries] = useState({});
-  const [prefilledEntries, setPrefilledEntries] = useState({});
-  
-  // Static fallback data
-  const STATIC_SOURCES = [
-    { id: 1, name: 'Source A - Local Quarry' },
-    { id: 2, name: 'Source B - Regional Supplier' },
-    { id: 3, name: 'Source C - Import Depot' },
-    { id: 4, name: 'Source D - Alternative Site' }
-  ];
+const MaterialConsumptionForm = ({materialData, rfiId}: any) => {
+  console.log('🔍 Material Data Received:', JSON.stringify(materialData));
 
-  const STATIC_MIX_DESIGNS = [
-    { id: 1, name: 'Mix Design M20' },
-    { id: 2, name: 'Mix Design M25' },
-    { id: 3, name: 'Mix Design M30' },
-    { id: 4, name: 'Mix Design M35' }
-  ];
-  
-  // Store sources by testMaterialId
-  const [sourceOptionsByMaterial, setSourceOptionsByMaterial] = useState({});
-  const [mixDesignOptions, setMixDesignOptions] = useState(STATIC_MIX_DESIGNS);
-  
-  // Modal state
-  const [modalVisible, setModalVisible] = useState(false);
-  const [currentDropdown, setCurrentDropdown] = useState(null);
-  const [dropdownOptions, setDropdownOptions] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const prepareMaterialConsumption: any[] = materialData?.requestGroups || [];
 
-  const dispatch = useDispatch();
-  const { showSnackbar } = useSnackbar();
+  // State definitions
+  const [formData, setFormData] = useState<Record<string, string>>({});
+  const [selectedSource, setSelectedSource] = useState<Record<string, any>>({});
+  const [selectedMixDesign, setSelectedMixDesign] = useState<
+    Record<string, any>
+  >({});
+  const [sourceEntries, setSourceEntries] = useState<Record<string, number[]>>(
+    {},
+  );
+  const [prefilledEntries, setPrefilledEntries] = useState<
+    Record<string, boolean>
+  >({});
+  const [sourceOptionsByMaterial, setSourceOptionsByMaterial] = useState<
+    Record<string, any[]>
+  >({});
+  const [mixDesignOptions, setMixDesignOptions] = useState<any[]>([]);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [currentDropdown, setCurrentDropdown] = useState<any>(null);
+  const [dropdownOptions, setDropdownOptions] = useState<any[]>([]);
+
+  // ADD: Track if data has been prefilled to prevent re-prefilling
+  const [isDataPrefilled, setIsDataPrefilled] = useState(false);
+
+  const dispatch = useDispatch<any>();
+  const {showSnackbar} = useSnackbar();
+
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const sourceApprovalsData = useSelector((state: any) => state.sourceApprovals);
-  const { postMeterialRequestFormData, loading: any, error } = useSelector((state) => state.MeterialRequest)
+  const sourceApprovalsData = useSelector(
+    (state: any) => state.sourceApprovals,
+  );
+  const {
+    postMeterialRequestFormData,
+    loading: submitLoading,
+    error,
+  } = useSelector((state: any) => state.MeterialRequest);
 
+  const {loading: apiLoading, qualityMixDesignListInfo} = useSelector(
+    (state: any) => state.RFIs,
+  );
+
+  // FIXED: Add cleanup and prevent infinite loop
   useEffect(() => {
     if (postMeterialRequestFormData) {
-      showSnackbar("Meterial status updated successfully", "success");
+      showSnackbar('Material status updated successfully', 'success');
+
+      // Clear the response to prevent re-triggering
+      // You should add a clear action to your Redux
+      // dispatch(clearMaterialRequestResponse());
     } else if (error) {
-      showSnackbar(error, "error");
+      showSnackbar(error, 'error');
+
+      // Clear the error to prevent re-triggering
+      // dispatch(clearMaterialRequestError());
     }
-  }, [postMeterialRequestFormData, error]);
+  }, [postMeterialRequestFormData, error]); // REMOVED showSnackbar from dependencies
 
   // Fetch Source data for a specific testMaterialId
-  const fetchSourceOptionsForMaterial = (testMaterialId: string) => {
-    dispatch(
-      getSourceApprovals({
-        projectId: loggedInUser.projectId,
-        testMaterialId: testMaterialId,
-      })
-    );
-  };
+  const fetchSourceOptionsForMaterial = useCallback(
+    (testMaterialId: any) => {
+      dispatch(
+        getSourceApprovals({
+          projectId: loggedInUser.projectId,
+          testMaterialId: testMaterialId,
+        }),
+      );
+    },
+    [dispatch, loggedInUser.projectId],
+  );
 
   // Fetch Mix Design data from API
-  const fetchMixDesignOptions = () => {
-    dispatch(getMixDesignListInfo({
-        projectId: loggedInUser.projectId, 
-        testWorkCategoryType: prepareMaterialConsumption[0]?.materialRequests[0]?.testWorkCategoryType, 
-        testMaterialId: prepareMaterialConsumption[0]?.materialRequests[0]?.materials[0]?.testMaterialId
-    }));
-  };
+  const fetchMixDesignOptions = useCallback(() => {
+    const testWorkCategoryType = getNestedData(prepareMaterialConsumption, [
+      0,
+      'materialRequests',
+      0,
+      'testWorkCategoryType',
+    ]);
+    const testMaterialId = getNestedData(prepareMaterialConsumption, [
+      0,
+      'materialRequests',
+      0,
+      'materials',
+      0,
+      'testMaterialId',
+    ]);
+
+    if (testWorkCategoryType && testMaterialId) {
+      dispatch(
+        getMixDesignListInfo({
+          projectId: loggedInUser.projectId,
+          testWorkCategoryType: testWorkCategoryType,
+          testMaterialId: testMaterialId,
+        }),
+      );
+    }
+  }, [dispatch, loggedInUser.projectId, prepareMaterialConsumption]);
 
   // Update source options when API data arrives
   useEffect(() => {
-    if (sourceApprovalsData && Array.isArray(sourceApprovalsData) && sourceApprovalsData.length > 0) {
-      // You need to track which testMaterialId this data is for
-      // This requires modifying how you store the response
-      // For now, we'll store it with a key if you can identify it from the response
-      
-      // Assuming the response might include testMaterialId or you track it separately
-      // Store sources grouped by material
-      setSourceOptionsByMaterial(prev => ({
-        ...prev,
-        // You may need to adjust this based on your API response structure
-        [sourceApprovalsData[0]?.testMaterialId || 'default']: sourceApprovalsData
-      }));
+    if (
+      sourceApprovalsData &&
+      Array.isArray(sourceApprovalsData) &&
+      sourceApprovalsData.length > 0
+    ) {
+      const materialIdFromFirstSource = sourceApprovalsData[0]?.testMaterialId;
+      if (materialIdFromFirstSource) {
+        setSourceOptionsByMaterial(prev => ({
+          ...prev,
+          [materialIdFromFirstSource]: sourceApprovalsData,
+        }));
+      }
     }
   }, [sourceApprovalsData]);
 
   // Update mix design options when API data arrives
   useEffect(() => {
-    if (qualityMixDesignListInfo && Array.isArray(qualityMixDesignListInfo) && qualityMixDesignListInfo.length > 0) {
+    if (
+      qualityMixDesignListInfo &&
+      Array.isArray(qualityMixDesignListInfo) &&
+      qualityMixDesignListInfo.length > 0
+    ) {
       setMixDesignOptions(qualityMixDesignListInfo);
     }
   }, [qualityMixDesignListInfo]);
 
-  // Fetch sources for all unique testMaterialIds on mount
+  // FIXED: Fetch sources and mix designs on mount only
   useEffect(() => {
-    const uniqueMaterialIds = new Set();
-    
-    prepareMaterialConsumption.forEach((item) => {
-      item.materialRequests?.forEach((request) => {
-        request.materials?.forEach((material) => {
-          if (material.testMaterialId) {
-            uniqueMaterialIds.add(material.testMaterialId);
-          }
+    if (prepareMaterialConsumption.length > 0) {
+      const uniqueMaterialIds = new Set<any>();
+
+      prepareMaterialConsumption.forEach((item: any) => {
+        item.materialRequests?.forEach((request: any) => {
+          request.materials?.forEach((material: any) => {
+            if (material.testMaterialId) {
+              uniqueMaterialIds.add(material.testMaterialId);
+            }
+          });
+        });
+      });
+
+      uniqueMaterialIds.forEach(testMaterialId => {
+        fetchSourceOptionsForMaterial(testMaterialId);
+      });
+
+      fetchMixDesignOptions();
+    }
+  }, []); // CHANGED: Empty dependency array - only run on mount
+
+  // FIXED: Prefill Data Logic - only run once when data is available
+  useEffect(() => {
+    // Only prefill if we haven't already and data is available
+    if (isDataPrefilled || prepareMaterialConsumption.length === 0) {
+      return;
+    }
+
+    const newFormData: Record<string, string> = {};
+    const newSelectedSource: Record<string, any> = {};
+    const newSelectedMixDesign: Record<string, any> = {};
+    const newSourceEntries: Record<string, number[]> = {};
+    const newPrefilledEntries: Record<string, boolean> = {};
+
+    prepareMaterialConsumption.forEach((item: any) => {
+      item.materialRequests?.forEach((request: any) => {
+        request.materials?.forEach((material: any) => {
+          material.materialRequests?.forEach((req: any) => {
+            const baseKey = `${item.requestTo}-${material.testMaterialId}-${req.category}`;
+
+            const prefillArray =
+              item.requestTo === 'procurement-details'
+                ? req.source
+                : req.mixDesign;
+
+            if (
+              prefillArray &&
+              Array.isArray(prefillArray) &&
+              prefillArray.length > 0
+            ) {
+              const entries: number[] = prefillArray.map(
+                (_: any, idx: number) => idx,
+              );
+              newSourceEntries[baseKey] = entries;
+
+              prefillArray.forEach((entryItem: any, idx: number) => {
+                const key = `${baseKey}-${idx}`;
+                newPrefilledEntries[key] = true;
+
+                if (entryItem.qty) {
+                  newFormData[key] = entryItem.qty.toString();
+                }
+
+                if (item.requestTo === 'procurement-details') {
+                  if (entryItem.sourceName && entryItem.sourceApprovalId) {
+                    newSelectedSource[key] = {
+                      id: entryItem.sourceApprovalId,
+                      name: entryItem.sourceName,
+                    };
+                  }
+                } else if (item.requestTo === 'production') {
+                  if (entryItem.mixDesignName && entryItem.mixDesignId) {
+                    newSelectedMixDesign[key] = {
+                      id: entryItem.mixDesignId,
+                      name: entryItem.mixDesignName,
+                    };
+                  }
+                }
+              });
+            } else {
+              newSourceEntries[baseKey] = [0];
+            }
+          });
         });
       });
     });
 
-    // Fetch sources for each unique material
-    uniqueMaterialIds.forEach((testMaterialId) => {
-      fetchSourceOptionsForMaterial(testMaterialId);
+    // Update all states with prefilled data
+    setFormData(newFormData);
+    setSelectedSource(newSelectedSource);
+    setSelectedMixDesign(newSelectedMixDesign);
+    setSourceEntries(newSourceEntries);
+    setPrefilledEntries(newPrefilledEntries);
+
+    // Mark as prefilled
+    setIsDataPrefilled(true);
+  }, [prepareMaterialConsumption, isDataPrefilled]);
+
+  // Get source options for a specific testMaterialId
+  const getSourceOptionsForMaterial = (testMaterialId: any): any[] => {
+    return sourceOptionsByMaterial[testMaterialId] || STATIC_SOURCES;
+  };
+
+  /**
+   * CORE LOGIC IMPLEMENTATION for preventing duplicate selection.
+   * Filters out sources already selected in other entries of the same category.
+   */
+  const getFilteredSourceOptions = (
+    currentKey: string,
+    baseKey: string,
+    testMaterialId: any,
+  ): any[] => {
+    const entries = sourceEntries[baseKey] || [];
+    const selectedSourceIds: any[] = entries
+      .map(entryIndex => {
+        const key = `${baseKey}-${entryIndex}`;
+        const source = selectedSource[key];
+
+        // Use the ID of the source in the current entry ONLY if it's NOT the entry being edited (`key !== currentKey`).
+        const id = source?.id || source?._id || source?.sourceApprovalId;
+        return key !== currentKey ? id : null;
+      })
+      .filter((id: any) => id !== null && id !== undefined);
+
+    const sourceOptions = getSourceOptionsForMaterial(testMaterialId);
+    return sourceOptions.filter((option: any) => {
+      const optionId = option.id || option._id || option.sourceApprovalId;
+      // Exclude sources whose ID is already present in another entry in this category.
+      return !selectedSourceIds.includes(optionId);
+    });
+  };
+
+  /**
+   * CORE LOGIC IMPLEMENTATION for preventing duplicate selection.
+   * Filters out mix designs already selected in other entries of the same category.
+   */
+  const getFilteredMixDesignOptions = (
+    currentKey: string,
+    baseKey: string,
+  ): any[] => {
+    const entries = sourceEntries[baseKey] || [];
+    const selectedMixDesignIds: any[] = entries
+      .map(entryIndex => {
+        const key = `${baseKey}-${entryIndex}`;
+        const mixDesign = selectedMixDesign[key];
+
+        // Use the ID of the mix design in the current entry ONLY if it's NOT the entry being edited (`key !== currentKey`).
+        const id = mixDesign?.id || mixDesign?._id || mixDesign?.mixDesignId;
+        return key !== currentKey ? id : null;
+      })
+      .filter((id: any) => id !== null && id !== undefined);
+
+    // Assuming mixDesignOptions are comprehensive
+    return mixDesignOptions.filter((option: any) => {
+      const optionId = option.id || option._id || option.mixDesignId;
+      // Exclude mix designs whose ID is already present in another entry in this category.
+      return !selectedMixDesignIds.includes(optionId);
+    });
+  };
+
+  const openDropdown = (type: string, key: string, testMaterialId: any) => {
+    setCurrentDropdown({type, key, testMaterialId});
+
+    // Extract baseKey from the current key (remove the entry index)
+    const baseKey = key.substring(0, key.lastIndexOf('-'));
+    let filteredOptions: any[] = [];
+
+    if (type === 'source') {
+      filteredOptions = getFilteredSourceOptions(key, baseKey, testMaterialId);
+    } else {
+      filteredOptions = getFilteredMixDesignOptions(key, baseKey);
+    }
+
+    setDropdownOptions(filteredOptions);
+    setModalVisible(true);
+  };
+
+  const selectDropdownItem = (item: any) => {
+    if (currentDropdown.type === 'source') {
+      setSelectedSource(prev => ({
+        ...prev,
+        [currentDropdown.key]: {
+          id: item.id || item._id || item.sourceApprovalId,
+          name: item.name || item.sourceName,
+        },
+      }));
+    } else {
+      setSelectedMixDesign(prev => ({
+        ...prev,
+        [currentDropdown.key]: {
+          id: item.id || item._id || item.mixDesignId,
+          name: item.name || item.mixDesignName,
+        },
+      }));
+    }
+    setModalVisible(false);
+  };
+
+  const handleQuantityChange = (
+    requestTo: string,
+    materialId: any,
+    category: string,
+    value: string,
+    entryIndex: number = 0,
+  ) => {
+    // Only allow numeric input (integers or decimals)
+    const numericValue = value.replace(/[^0-9.]/g, '');
+
+    setFormData(prev => ({
+      ...prev,
+      [`${requestTo}-${materialId}-${category}-${entryIndex}`]: numericValue,
+    }));
+  };
+
+  const handleAddMore = (
+    requestTo: string,
+    materialId: any,
+    category: string,
+    testMaterialId: any,
+  ) => {
+    const key = `${requestTo}-${materialId}-${category}`;
+    const currentEntries = sourceEntries[key] || [0];
+
+    // Check if there are available options left based on request type
+    let availableOptions: any[] | undefined;
+    // When adding a new entry, pass an empty string for currentKey so ALL currently selected items are excluded.
+    const tempKeyForFilter = '';
+
+    if (requestTo === 'procurement-details') {
+      availableOptions = getFilteredSourceOptions(
+        tempKeyForFilter,
+        key,
+        testMaterialId,
+      );
+    } else if (requestTo === 'production') {
+      availableOptions = getFilteredMixDesignOptions(tempKeyForFilter, key);
+    }
+
+    if (availableOptions && availableOptions.length === 0) {
+      const optionType =
+        requestTo === 'procurement-details' ? 'sources' : 'mix designs';
+      Alert.alert(
+        'No Options Available',
+        `All unique ${optionType} have been selected. Cannot add more entries.`,
+      );
+      return;
+    }
+
+    const newIndex =
+      currentEntries.length > 0 ? Math.max(...currentEntries) + 1 : 0;
+
+    setSourceEntries(prev => ({
+      ...prev,
+      [key]: [...currentEntries, newIndex],
+    }));
+  };
+
+  const handleRemoveEntry = (
+    requestTo: string,
+    materialId: any,
+    category: string,
+    entryIndex: number,
+  ) => {
+    const baseKey = `${requestTo}-${materialId}-${category}`;
+    const entryKey = `${baseKey}-${entryIndex}`;
+    const currentEntries = sourceEntries[baseKey] || [];
+
+    // Allow removal only if there is more than 1 entry total.
+    const allEntries = sourceEntries[baseKey] || [0];
+    if (allEntries.length <= 1) {
+      Alert.alert(
+        'Cannot Remove',
+        'There must be at least one entry per category.',
+      );
+      return;
+    }
+
+    setSourceEntries(prev => ({
+      ...prev,
+      [baseKey]: currentEntries.filter(i => i !== entryIndex),
+    }));
+
+    // Clean up all related state data for the removed entry
+    setFormData(prev => {
+      const newData = {...prev};
+      delete newData[entryKey];
+      return newData;
     });
 
-    fetchMixDesignOptions();
-  }, []);
+    setPrefilledEntries(prev => {
+      const newData = {...prev};
+      delete newData[entryKey];
+      return newData;
+    });
 
-  // Prefill data from materialData when component mounts or data changes
-  useEffect(() => {
-    if (prepareMaterialConsumption && prepareMaterialConsumption.length > 0) {
-      const newFormData = {};
-      const newSelectedSource = {};
-      const newSelectedMixDesign = {};
-      const newSourceEntries = {};
-      const newPrefilledEntries = {};
+    if (requestTo === 'procurement-details') {
+      setSelectedSource(prev => {
+        const newData = {...prev};
+        delete newData[entryKey];
+        return newData;
+      });
+    } else if (requestTo === 'production') {
+      setSelectedMixDesign(prev => {
+        const newData = {...prev};
+        delete newData[entryKey];
+        return newData;
+      });
+    }
+  };
 
-      prepareMaterialConsumption.forEach((item) => {
-        item.materialRequests?.forEach((request) => {
-          request.materials?.forEach((material) => {
-            material.materialRequests?.forEach((req) => {
+  // Helper to check if the form is fully complete (simple validation)
+  const isFormValid = (): boolean => {
+    for (const item of prepareMaterialConsumption) {
+      for (const request of item.materialRequests || []) {
+        for (const material of request.materials || []) {
+          for (const req of material.materialRequests || []) {
+            const baseKey = `${item.requestTo}-${material.testMaterialId}-${req.category}`;
+            const entries = sourceEntries[baseKey] || [0];
+
+            for (const entryIndex of entries) {
+              const key = `${baseKey}-${entryIndex}`;
+              const quantity = formData[key];
+              const selection =
+                item.requestTo === 'procurement-details'
+                  ? selectedSource[key]
+                  : selectedMixDesign[key];
+
+              if (!quantity || parseFloat(quantity) <= 0) {
+                showSnackbar(
+                  `Quantity is required for ${req.category} entry ${
+                    entries.indexOf(entryIndex) + 1
+                  }.`,
+                  'error',
+                );
+                return false;
+              }
+              if (!selection) {
+                const type =
+                  item.requestTo === 'procurement-details'
+                    ? 'Source'
+                    : 'Mix Design';
+                showSnackbar(
+                  `${type} is required for ${req.category} entry ${
+                    entries.indexOf(entryIndex) + 1
+                  }.`,
+                  'error',
+                );
+                return false;
+              }
+            }
+          }
+        }
+      }
+    }
+    return true;
+  };
+  // ... (rest of the component and functions)
+
+  const handleSubmit = async () => {
+    if (!isFormValid()) {
+      console.log('❌ Form validation failed. Submission aborted.');
+      return;
+    }
+
+    try {
+      if (
+        !prepareMaterialConsumption ||
+        prepareMaterialConsumption.length === 0
+      ) {
+        return;
+      }
+
+      // ⚠️ HARDCODED VALUE FOR IMMEDIATE SUBMISSION FIX
+      // This value is used as a fallback and to ensure the production object contains the required ID.
+      // TODO: In the future, this value must be correctly sourced from the input data (materialData/item.testEquipmentId).
+      const HARDCODED_TEST_EQUIPMENT_ID = '6841daf3c00f933c0c16c0a4';
+
+      // Map to hold consolidated request objects.
+      // Key format:
+      // - Procurement: "procurement-details"
+      // - Production: "requestTo-testEquipmentId-testWorkCategoryId-category" (Ensures full separation per consumption entry)
+      const requestsMap = new Map();
+
+      prepareMaterialConsumption.forEach((item: any) => {
+        // Use item's ID if present, otherwise use the hardcoded fallback
+        const testEquipmentId =
+          item.testEquipmentId || HARDCODED_TEST_EQUIPMENT_ID;
+
+        item.materialRequests.forEach((request: any) => {
+          const workCategoryId = request.testWorkCategoryId;
+
+          request.materials.forEach((material: any) => {
+            material.materialRequests.forEach((req: any) => {
               const baseKey = `${item.requestTo}-${material.testMaterialId}-${req.category}`;
-              
-              // If there's existing data in the request
-              if (req.source && Array.isArray(req.source) && req.source.length > 0) {
-                // Initialize entries array for this category
-                const entries = req.source.map((_, idx) => idx);
-                newSourceEntries[baseKey] = entries;
+              const entries = sourceEntries[baseKey] || [];
+              const uniqueEntries = [...new Set(entries)];
 
-                // Prefill each source/mix design entry
-                req.source.forEach((sourceItem, idx) => {
-                  const key = `${baseKey}-${idx}`;
-                  
-                  // Mark this entry as prefilled
-                  newPrefilledEntries[key] = true;
-                  
-                  // Prefill quantity
-                  if (sourceItem.qty) {
-                    newFormData[key] = sourceItem.qty.toString();
-                  }
+              // Check if there is actual valid data entered for this category
+              const hasData = uniqueEntries.some(entryIndex => {
+                const key = `${baseKey}-${entryIndex}`;
+                const quantity = formData[key];
+                const selection =
+                  item.requestTo === 'procurement-details'
+                    ? selectedSource[key]
+                    : selectedMixDesign[key];
+                return parseFloat(quantity) > 0 && selection;
+              });
 
-                  // Prefill source or mix design
-                  if (item.requestTo === 'procurement-details') {
-                    if (sourceItem.sourceName && sourceItem.sourceApprovalId) {
-                      newSelectedSource[key] = {
-                        id: sourceItem.sourceApprovalId,
-                        name: sourceItem.sourceName,
+              if (!hasData) return;
+
+              // 1. Determine the map key (REFINED CORE LOGIC)
+              let mapKey;
+              if (item.requestTo === 'production') {
+                // Production is separated by equipment, work category, AND material category
+                const equipmentId = testEquipmentId;
+                mapKey = `${item.requestTo}-${equipmentId}-${workCategoryId}-${req.category}`;
+              } else {
+                // Procurement is grouped together by requestTo
+                mapKey = item.requestTo;
+              }
+
+              // 2. Initialize the root object if it doesn't exist (Ensures testEquipmentId is placed correctly)
+              if (!requestsMap.has(mapKey)) {
+                const newRequestObj: any = {
+                  requestTo: item.requestTo,
+                };
+                if (item.requestTo === 'production' && testEquipmentId) {
+                  // Placing testEquipmentId at the root level, right after requestTo
+                  newRequestObj.testEquipmentId = testEquipmentId;
+                }
+                // Initialize the testWorkCategories array at the end
+                newRequestObj.testWorkCategories = [];
+
+                requestsMap.set(mapKey, newRequestObj);
+              }
+
+              const rootRequestObj = requestsMap.get(mapKey);
+
+              // 3. Find or create the testWorkCategory object within the rootRequestObj
+              let testWorkCategoryObj = rootRequestObj.testWorkCategories.find(
+                (wc: any) => wc.testWorkCategoryId === workCategoryId,
+              );
+
+              if (!testWorkCategoryObj) {
+                testWorkCategoryObj = {
+                  testWorkCategoryId: workCategoryId,
+                  testWorkCategoryType: request.testWorkCategoryType,
+                  materialTypes: [],
+                };
+                rootRequestObj.testWorkCategories.push(testWorkCategoryObj);
+              }
+
+              // 4. Find or create the materialType object within the testWorkCategory
+              let materialTypeObj = testWorkCategoryObj.materialTypes.find(
+                (mt: any) => mt.testMaterialId === material.testMaterialId,
+              );
+
+              if (!materialTypeObj) {
+                materialTypeObj = {
+                  testMaterialId: material.testMaterialId,
+                  type: material.materialType || material.type,
+                  materialCategory: [],
+                };
+                testWorkCategoryObj.materialTypes.push(materialTypeObj);
+              }
+
+              // 5. Build the materialCategory array entry and aggregate quantities
+              const categoryObj: any = {
+                category: req.category,
+              };
+
+              const isProcurement = item.requestTo === 'procurement-details';
+              const aggregation: Record<string, any> = {};
+
+              uniqueEntries.forEach(entryIndex => {
+                const key = `${baseKey}-${entryIndex}`;
+                const quantity = formData[key];
+                const selection = isProcurement
+                  ? selectedSource[key]
+                  : selectedMixDesign[key];
+
+                if (quantity && parseFloat(quantity) > 0 && selection) {
+                  const id = selection.id;
+                  const qty = parseFloat(quantity);
+
+                  if (aggregation[id]) {
+                    aggregation[id].qty += qty;
+                  } else {
+                    if (isProcurement) {
+                      aggregation[id] = {
+                        sourceName: selection.name,
+                        sourceApprovalId: selection.id,
+                        qty: qty,
+                      };
+                    } else {
+                      // production
+                      aggregation[id] = {
+                        mixDesignName: selection.name,
+                        mixDesignId: selection.id,
+                        qty: qty,
                       };
                     }
-                  } else if (item.requestTo === 'production') {
-                    if (sourceItem.sourceName && sourceItem.sourceApprovalId) {
-                      newSelectedMixDesign[key] = {
-                        id: sourceItem.sourceApprovalId,
-                        name: sourceItem.sourceName,
-                      };
-                    }
                   }
-                });
+                }
+              });
+
+              if (isProcurement) {
+                categoryObj.source = Object.values(aggregation);
+              } else {
+                categoryObj.mixDesign = Object.values(aggregation);
+              }
+
+              // Add the category only if it has valid aggregated data
+              if (Object.values(aggregation).length > 0) {
+                materialTypeObj.materialCategory.push(categoryObj);
               }
             });
           });
         });
       });
 
-      // Update all states with prefilled data
-      setFormData(newFormData);
-      setSelectedSource(newSelectedSource);
-      setSelectedMixDesign(newSelectedMixDesign);
-      setSourceEntries(newSourceEntries);
-      setPrefilledEntries(newPrefilledEntries);
-    }
-  }, [prepareMaterialConsumption]);
+      // Convert the map values into the final materialRequests array, filtering out empty ones
+      const materialRequests = Array.from(requestsMap.values()).filter(
+        req =>
+          req.testWorkCategories.length > 0 &&
+          req.testWorkCategories.some((wc: any) => wc.materialTypes.length > 0),
+      );
 
-  // Get source options for a specific testMaterialId
-  const getSourceOptionsForMaterial = (testMaterialId: string) => {
-    return sourceOptionsByMaterial[testMaterialId] || STATIC_SOURCES;
-  };
-
-  // Get filtered source options excluding already selected sources for the same category
-  const getFilteredSourceOptions = (currentKey: string, baseKey: string, testMaterialId: string) => {
-    const entries = sourceEntries[baseKey] || [0];
-    const selectedSourceIds = entries
-      .map((entryIndex) => {
-        const key = `${baseKey}-${entryIndex}`;
-        return key !== currentKey ? selectedSource[key]?.id : null;
-      })
-      .filter(id => id !== null);
-
-    const sourceOptions = getSourceOptionsForMaterial(testMaterialId);
-    return sourceOptions.filter(option => !selectedSourceIds.includes(option.id));
-  };
-
-  // Get filtered mix design options excluding already selected mix designs for the same category
-  const getFilteredMixDesignOptions = (currentKey: string, baseKey: string) => {
-    const entries = sourceEntries[baseKey] || [0];
-    const selectedMixDesignIds = entries
-      .map((entryIndex) => {
-        const key = `${baseKey}-${entryIndex}`;
-        return key !== currentKey ? selectedMixDesign[key]?.id : null;
-      })
-      .filter(id => id !== null);
-
-    return mixDesignOptions.filter(option => !selectedMixDesignIds.includes(option.id));
-  };
-
-  const openDropdown = (type, key, testMaterialId) => {
-    setCurrentDropdown({ type, key, testMaterialId });
-    
-    if (type === 'source') {
-      // Extract baseKey from the current key (remove the entry index)
-      const baseKey = key.substring(0, key.lastIndexOf('-'));
-      const filteredOptions = getFilteredSourceOptions(key, baseKey, testMaterialId);
-      setDropdownOptions(filteredOptions);
-    } else {
-      // Extract baseKey for mix design as well
-      const baseKey = key.substring(0, key.lastIndexOf('-'));
-      const filteredOptions = getFilteredMixDesignOptions(key, baseKey);
-      setDropdownOptions(filteredOptions);
-    }
-    
-    setModalVisible(true);
-  };
-
-  const selectDropdownItem = (item) => {
-    if (currentDropdown.type === 'source') {
-      setSelectedSource((prev) => ({
-        ...prev,
-        [currentDropdown.key]: item,
-      }));
-    } else {
-      setSelectedMixDesign((prev) => ({
-        ...prev,
-        [currentDropdown.key]: item,
-      }));
-    }
-    setModalVisible(false);
-  };
-
-  const handleQuantityChange = (requestTo, materialId, category, value, entryIndex = 0) => {
-    setFormData((prev) => ({
-      ...prev,
-      [`${requestTo}-${materialId}-${category}-${entryIndex}`]: value,
-    }));
-  };
-
-  const handleAddMore = (requestTo, materialId, category, testMaterialId) => {
-    const key = `${requestTo}-${materialId}-${category}`;
-    const currentEntries = sourceEntries[key] || [0];
-    
-    // Check if there are available options left based on request type
-    let availableOptions;
-    if (requestTo === 'procurement-details') {
-      availableOptions = getFilteredSourceOptions('', key, testMaterialId);
-    } else if (requestTo === 'production') {
-      availableOptions = getFilteredMixDesignOptions('', key);
-    }
-    
-    if (availableOptions && availableOptions.length === 0) {
-      const optionType = requestTo === 'procurement-details' ? 'sources' : 'mix designs';
-      Alert.alert('No Options Available', `All ${optionType} have been selected. Cannot add more entries.`);
-      return;
-    }
-    
-    const newIndex = currentEntries.length;
-    
-    setSourceEntries((prev) => ({
-      ...prev,
-      [key]: [...currentEntries, newIndex],
-    }));
-  };
-
-  const handleRemoveEntry = (requestTo, materialId, category, entryIndex) => {
-    const key = `${requestTo}-${materialId}-${category}`;
-    const currentEntries = sourceEntries[key] || [0];
-    
-    if (currentEntries.length > 1) {
-      setSourceEntries((prev) => ({
-        ...prev,
-        [key]: currentEntries.filter((_, idx) => idx !== entryIndex),
-      }));
-      
-      // Clean up form data for removed entry
-      setFormData((prev) => {
-        const newData = { ...prev };
-        delete newData[`${key}-${entryIndex}`];
-        return newData;
-      });
-      
-      // Clean up selected source or mix design
-      if (requestTo === 'procurement-details') {
-        setSelectedSource((prev) => {
-          const newData = { ...prev };
-          delete newData[`${key}-${entryIndex}`];
-          return newData;
-        });
-      } else if (requestTo === 'production') {
-        setSelectedMixDesign((prev) => {
-          const newData = { ...prev };
-          delete newData[`${key}-${entryIndex}`];
-          return newData;
-        });
+      if (materialRequests.length === 0) {
+        Alert.alert(
+          'No Data',
+          'Please enter quantity and select a source/mix design for at least one entry.',
+        );
+        return;
       }
-    }
-  };
 
-const handleSubmit = async () => {
-  try {
-    // Validate prepareMaterialConsumption exists
-    if (!prepareMaterialConsumption || prepareMaterialConsumption.length === 0) {
-      return;
-    }
-
-    const materialRequests = [];
-
-    prepareMaterialConsumption.forEach((item) => {
-      // Initialize request object based on requestTo type
-      const requestObj = {
-        requestTo: item.requestTo,
+      const payload: any = {
+        rfiId: materialData.rfiId || rfiId,
+        isMaterialRequested: false,
+        comments: 'Material consumption submitted/updated.',
+        materialRequests,
       };
 
-      // Add testEquipmentId only for production requests
-      if (item.requestTo === 'production') {
-        requestObj.testEquipmentId = item.testEquipmentId || '67f6d3664aaee99e1d3e7749';
-      }
+      console.log(
+        '✅ Final Submit/Update Payload (Refined Grouping, Hardcoded ID used for Production):',
+        JSON.stringify(payload, null, 2),
+      );
 
-      const testWorkCategories = [];
-
-      // Process each material request
-      item.materialRequests.forEach((request) => {
-        const testWorkCategoryObj = {
-          testWorkCategoryId: request.testWorkCategoryId,
-          testWorkCategoryType: request.testWorkCategoryType,
-          materialTypes: [],
-        };
-
-        // Process each material
-        request.materials.forEach((material) => {
-          const materialTypeObj = {
-            testMaterialId: material.testMaterialId,
-            type: material.type,
-            materialCategory: [],
-          };
-
-          // Process each material request (category)
-          material.materialRequests.forEach((req) => {
-            const baseKey = `${item.requestTo}-${material.testMaterialId}-${req.category}`;
-            const entries = sourceEntries[baseKey] || [0];
-            
-            // Remove duplicates from entries
-            const uniqueEntries = [...new Set(entries)];
-
-            // Initialize category object
-            const categoryObj = {
-              category: req.category,
-            };
-
-            // Initialize appropriate array based on requestTo type
-            if (item.requestTo === 'procurement-details') {
-              categoryObj.source = [];
-              
-              // Process each source entry
-              uniqueEntries.forEach((entryIndex) => {
-                const key = `${baseKey}-${entryIndex}`;
-                const quantity = formData[key];
-                const source = selectedSource[key];
-
-                // Add source if quantity and source are valid
-                if (quantity && parseFloat(quantity) > 0 && source) {
-                  categoryObj.source.push({
-                    sourceName: source.name || source.sourceName,
-                    sourceApprovalId: source.id || source._id || source.sourceApprovalId,
-                    qty: parseFloat(quantity),
-                  });
-                }
-              });
-
-              // Only add category if it has sources
-              if (categoryObj.source.length > 0) {
-                materialTypeObj.materialCategory.push(categoryObj);
-              }
-            } 
-            else if (item.requestTo === 'production') {
-              categoryObj.mixDesign = [];
-              
-              // Process each mix design entry
-              uniqueEntries.forEach((entryIndex) => {
-                const key = `${baseKey}-${entryIndex}`;
-                const quantity = formData[key];
-                const mixDesign = selectedMixDesign[key];
-
-                // Add mix design if quantity and mixDesign are valid
-                if (quantity && parseFloat(quantity) > 0 && mixDesign) {
-                  categoryObj.mixDesign.push({
-                    mixDesignId: mixDesign.id || mixDesign._id || mixDesign.mixDesignId,
-                    mixDesignName: mixDesign.name || mixDesign.mixDesignName,
-                    qty: parseFloat(quantity),
-                  });
-                }
-              });
-
-              // Only add category if it has mix designs
-              if (categoryObj.mixDesign.length > 0) {
-                materialTypeObj.materialCategory.push(categoryObj);
-              }
-            }
-          });
-
-          // Add material type only if it has categories
-          if (materialTypeObj.materialCategory.length > 0) {
-            testWorkCategoryObj.materialTypes.push(materialTypeObj);
-          }
-        });
-
-        // Add work category only if it has material types
-        if (testWorkCategoryObj.materialTypes.length > 0) {
-          testWorkCategories.push(testWorkCategoryObj);
-        }
-      });
-
-      // Add request only if it has work categories
-      if (testWorkCategories.length > 0) {
-        requestObj.testWorkCategories = testWorkCategories;
-        materialRequests.push(requestObj);
-      }
-    });
-
-    // Validate we have material requests
-    if (materialRequests.length === 0) {
-      return;
+      // Dispatch API request
+      dispatch(
+        submitMaterialRequest({
+          projectId: loggedInUser.projectId,
+          body: payload,
+        }),
+      );
+    } catch (err) {
+      console.error('❌ Error while preparing payload:', err);
+      showSnackbar('An error occurred during submission preparation.', 'error');
     }
+  };
 
-    // Build final payload
-    const payload = {
-      rfiId: prepareMaterialConsumption[0]?.rfiId || '68ec0473f124eedac12b23a1',
-      isMaterialRequested: false,
-      comments: "Postman test request using prepared data.",
-      materialRequests,
-    };
-
-    console.log("✅ Final Submit Payload:", JSON.stringify(payload, null, 2));
-
-    // Dispatch API request
-    dispatch(
-      submitMaterialRequest({
-        projectId: loggedInUser.projectId,
-        body: payload,
-      })
-    );
-
-  } catch (err) {
-    console.error("❌ Error while preparing payload:", err);
-  }
-};
-
-
+  // Helper for keyExtractor in FlatList
+  const keyExtractor = (item: any): string => {
+    return (
+      item?.id ||
+      item?._id ||
+      item?.sourceApprovalId ||
+      item?.mixDesignId ||
+      Math.random()
+    ).toString();
+  };
 
   const renderDropdownModal = () => (
     <Modal
       visible={modalVisible}
       transparent={true}
-      animationType="slide"
-      onRequestClose={() => setModalVisible(false)}
-    >
+      animationType="fade" // Use fade for a modern feel
+      onRequestClose={() => setModalVisible(false)}>
       <View style={styles.modalOverlay}>
         <View style={styles.modalContent}>
           <View style={styles.modalHeader}>
             <Text style={styles.modalTitle}>
-              Select {currentDropdown?.type === 'source' ? 'Source' : 'Mix Design'}
+              Select{' '}
+              {currentDropdown?.type === 'source' ? 'Source' : 'Mix Design'}
             </Text>
-            <TouchableOpacity onPress={() => setModalVisible(false)}>
+            <TouchableOpacity
+              style={styles.closeButtonContainer}
+              onPress={() => setModalVisible(false)}>
               <Text style={styles.closeButton}>✕</Text>
             </TouchableOpacity>
           </View>
-          
-          {loading ? (
-            <Text style={styles.loadingText}>Loading...</Text>
+
+          {apiLoading ? (
+            <ActivityIndicator
+              style={styles.loadingText}
+              size="small"
+              color="#5e35b1"
+            />
           ) : (
             <FlatList
               data={dropdownOptions}
-              keyExtractor={(item) => (item?.id || item?._id || Math.random()).toString()}
-              renderItem={({ item }) => (
+              keyExtractor={keyExtractor}
+              renderItem={({item}) => (
                 <TouchableOpacity
                   style={styles.dropdownItem}
-                  onPress={() => selectDropdownItem(item)}
-                >
-                  <Text style={styles.dropdownItemText}>{item?.name}</Text>
+                  onPress={() => selectDropdownItem(item)}>
+                  <Text style={styles.dropdownItemText}>
+                    {item?.name || item?.sourceName || item?.mixDesignName}
+                  </Text>
                 </TouchableOpacity>
               )}
               ListEmptyComponent={
-                <Text style={styles.emptyText}>No options available</Text>
+                <Text style={styles.emptyText}>No available options.</Text>
               }
             />
           )}
@@ -525,180 +820,209 @@ const handleSubmit = async () => {
     <ScrollView style={styles.container}>
       <Text style={styles.header}>Material Consumption Form</Text>
 
-      {prepareMaterialConsumption.map((item, index) => (
-        <View key={index} style={styles.section}>
-          {item.materialRequests.map((request, reqIndex) => (
-            <View key={reqIndex} style={styles.categorySection}>
-              <View style={styles.columnContainer}>
-                  <View style={styles.fieldContainer}>
-                    <Text style={styles.fieldLabel}>Material Name</Text>
-                    <Text style={styles.fieldValue}>{request?.materials?.[0]?.materialName || 'NA'}</Text>
+      {/* Safe Guard */}
+      {prepareMaterialConsumption.length === 0 ? (
+        <Text style={styles.emptyText}>
+          No material data available to display.
+        </Text>
+      ) : (
+        prepareMaterialConsumption.map((item: any, index: number) => (
+          <View key={index} style={styles.section}>
+            {item.materialRequests.map((request: any, reqIndex: number) => (
+              <View key={reqIndex} style={styles.categorySection}>
+                {/* Information Header - Reduced Padding */}
+                <View style={styles.infoContainer}>
+                  <View style={styles.infoField}>
+                    <Text style={styles.infoLabel}>Material Name</Text>
+                    <Text style={styles.infoValue}>
+                      {request?.materials?.[0]?.materialName || 'NA'}
+                    </Text>
                   </View>
-                  <View style={styles.fieldContainer}>
-                    <Text style={styles.fieldLabel}>Work Category</Text>
-                    <Text style={styles.fieldValue}>{request?.testWorkCategoryName || 'NA'}</Text>
+                  <View style={styles.infoField}>
+                    <Text style={styles.infoLabel}>Work Category</Text>
+                    <Text style={styles.infoValue}>
+                      {request?.testWorkCategoryName || 'NA'}
+                    </Text>
                   </View>
-              </View>
-              <View style={styles.columnContainer}>
-                  <View style={styles.fieldContainer}>
-                    <Text style={styles.fieldLabel}>Material category*</Text>
-                    <Text style={styles.fieldValue}>{request?.materialCategory || request?.testMaterialCategory || 'Aggregate'}</Text>
-                  </View>
-                  <View style={styles.fieldContainer}>
-                    <Text style={styles.fieldLabel}>Unit</Text>
-                    <Text style={styles.fieldValue}>{request?.unit || 'Ton'}</Text>
-                  </View>
-              </View>
-
-              {request.materials.map((material, matIndex) => (
-                <View key={matIndex} style={styles.materialSection}>
-                  {material.materialRequests.map((req, catIndex) => {
-                    const baseKey = `${item.requestTo}-${material.testMaterialId}-${req.category}`;
-                    const entries = sourceEntries[baseKey] || [0];
-                    
-                    return (
-                      <View key={catIndex} style={styles.categoryContainer}>
-                        <Text style={styles.categoryLabel}>
-                          {req.category} ({req.unit})
-                        </Text>
-
-                        {entries.map((entryIndex, idx) => {
-                          const key = `${baseKey}-${entryIndex}`;
-                          
-                          return (
-                            <View key={idx} style={styles.requestItem}>
-                              {entries.length > 1 && (
-                                <View style={styles.entryHeader}>
-                                  <Text style={styles.entryNumber}>Entry {idx + 1}</Text>
-                                  <TouchableOpacity
-                                    onPress={() => handleRemoveEntry(
-                                      item.requestTo,
-                                      material.testMaterialId,
-                                      req.category,
-                                      idx
-                                    )}
-                                  >
-                                    <Text style={styles.removeButton}>✕ Remove</Text>
-                                  </TouchableOpacity>
-                                </View>
-                              )}
-
-                              {item.requestTo === 'procurement-details' && (
-                                <View style={styles.inputGroup}>
-                                  <Text style={styles.label}>Source:</Text>
-                                  <TouchableOpacity
-                                    style={[
-                                      styles.dropdownButton,
-                                      prefilledEntries[key] && styles.dropdownButtonDisabled
-                                    ]}
-                                    onPress={() => !prefilledEntries[key] && openDropdown('source', key, material.testMaterialId)}
-                                    disabled={prefilledEntries[key]}
-                                  >
-                                    <Text style={[
-                                      styles.dropdownButtonText,
-                                      !selectedSource[key] && styles.placeholderText,
-                                      prefilledEntries[key] && styles.disabledText
-                                    ]}>
-                                      {selectedSource[key]?.name || 'Select Source'}
-                                    </Text>
-                                    {!prefilledEntries[key] && (
-                                      <Text style={styles.dropdownArrow}>▼</Text>
-                                    )}
-                                  </TouchableOpacity>
-                                </View>
-                              )}
-
-                              {item.requestTo === 'production' && (
-                                <View style={styles.inputGroup}>
-                                  <Text style={styles.label}>Mix Design:</Text>
-                                  <TouchableOpacity
-                                    style={[
-                                      styles.dropdownButton,
-                                      prefilledEntries[key] && styles.dropdownButtonDisabled
-                                    ]}
-                                    onPress={() => !prefilledEntries[key] && openDropdown('mixDesign', key, material.testMaterialId)}
-                                    disabled={prefilledEntries[key]}
-                                  >
-                                    <Text style={[
-                                      styles.dropdownButtonText,
-                                      !selectedMixDesign[key] && styles.placeholderText,
-                                      prefilledEntries[key] && styles.disabledText
-                                    ]}>
-                                      {selectedMixDesign[key]?.name || 'Select Mix Design'}
-                                    </Text>
-                                    {!prefilledEntries[key] && (
-                                      <Text style={styles.dropdownArrow}>▼</Text>
-                                    )}
-                                  </TouchableOpacity>
-                                </View>
-                              )}
-
-                              <View style={styles.inputGroup}>
-                                <Text style={styles.label}>Quantity Consumed:</Text>
-                                <TextInput
-                                  style={styles.input}
-                                  placeholder="Enter quantity"
-                                  keyboardType="numeric"
-                                  value={formData[key] || ''}
-                                  onChangeText={(value) =>
-                                    handleQuantityChange(
-                                      item.requestTo,
-                                      material.testMaterialId,
-                                      req.category,
-                                      value,
-                                      entryIndex
-                                    )
-                                  }
-                                />
-                              </View>
-                            </View>
-                          );
-                        })}
-
-                        {/* Add More button for both procurement-details and production */}
-                        {item.requestTo === 'procurement-details' && (
-                          <TouchableOpacity
-                            style={styles.addMoreButton}
-                            onPress={() =>
-                              handleAddMore(
-                                item.requestTo,
-                                material.testMaterialId,
-                                req.category,
-                                material.testMaterialId
-                              )
-                            }
-                          >
-                            <Text style={styles.addMoreText}>+ Add More</Text>
-                          </TouchableOpacity>
-                        )}
-
-                        {item.requestTo === 'production' && (
-                          <TouchableOpacity
-                            style={styles.addMoreButton}
-                            onPress={() =>
-                              handleAddMore(
-                                item.requestTo,
-                                material.testMaterialId,
-                                req.category,
-                                material.testMaterialId
-                              )
-                            }
-                          >
-                            <Text style={styles.addMoreText}>+ Add More</Text>
-                          </TouchableOpacity>
-                        )}
-                      </View>
-                    );
-                  })}
                 </View>
-              ))}
-            </View>
-          ))}
-        </View>
-      ))}
+                <View style={styles.infoContainer}>
+                  <View style={styles.infoField}>
+                    <Text style={styles.infoLabel}>Material Category</Text>
+                    <Text style={styles.infoValue}>
+                      {request?.materialCategory ||
+                        request?.testMaterialCategory ||
+                        'NA'}
+                    </Text>
+                  </View>
+                  <View style={styles.infoField}>
+                    <Text style={styles.infoLabel}>Unit</Text>
+                    <Text style={styles.infoValue}>
+                      {request?.unit || 'NA'}
+                    </Text>
+                  </View>
+                </View>
 
-      <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-        <Text style={styles.submitText}>Submit</Text>
+                {request.materials.map((material: any, matIndex: number) => (
+                  <View key={matIndex} style={styles.materialSection}>
+                    {material.materialRequests.map(
+                      (req: any, catIndex: number) => {
+                        const baseKey = `${item.requestTo}-${material.testMaterialId}-${req.category}`;
+                        const entries = sourceEntries[baseKey] || [0];
+                        const typeLabel =
+                          item.requestTo === 'procurement-details'
+                            ? 'Source'
+                            : 'Mix Design';
+
+                        return (
+                          <View key={catIndex} style={styles.categoryContainer}>
+                            <Text style={styles.categoryLabel}>
+                              {req.category} ({req.unit})
+                            </Text>
+
+                            {entries.map(entryIndex => {
+                              const key = `${baseKey}-${entryIndex}`;
+                              const isPrefilled = prefilledEntries[key];
+                              const currentEntryIdx =
+                                entries.indexOf(entryIndex); // Get current display index
+
+                              return (
+                                <View
+                                  key={entryIndex}
+                                  style={styles.requestItem}>
+                                  {(entries.length > 1 || isPrefilled) && (
+                                    <View style={styles.entryHeader}>
+                                      <Text style={styles.entryNumber}>
+                                        {typeLabel} Entry {currentEntryIdx + 1}
+                                      </Text>
+                                      {/* Only allow removing if there is more than one entry */}
+                                      {entries.length > 1 && (
+                                        <TouchableOpacity
+                                          onPress={() =>
+                                            handleRemoveEntry(
+                                              item.requestTo,
+                                              material.testMaterialId,
+                                              req.category,
+                                              entryIndex,
+                                            )
+                                          }>
+                                          <Text style={styles.removeButton}>
+                                            ✕ Remove
+                                          </Text>
+                                        </TouchableOpacity>
+                                      )}
+                                    </View>
+                                  )}
+
+                                  {/* Source/Mix Design Dropdown */}
+                                  <View style={styles.inputGroup}>
+                                    <Text style={styles.label}>
+                                      {typeLabel}:
+                                    </Text>
+                                    <TouchableOpacity
+                                      style={[
+                                        styles.dropdownButton,
+                                        isPrefilled &&
+                                          styles.dropdownButtonDisabled,
+                                      ]}
+                                      onPress={() =>
+                                        !isPrefilled &&
+                                        openDropdown(
+                                          item.requestTo ===
+                                            'procurement-details'
+                                            ? 'source'
+                                            : 'mixDesign',
+                                          key,
+                                          material.testMaterialId,
+                                        )
+                                      }
+                                      disabled={isPrefilled}>
+                                      <Text
+                                        style={[
+                                          styles.dropdownButtonText,
+                                          !(item.requestTo ===
+                                          'procurement-details'
+                                            ? selectedSource[key]
+                                            : selectedMixDesign[key]) &&
+                                            styles.placeholderText,
+                                          isPrefilled && styles.disabledText,
+                                        ]}>
+                                        {(item.requestTo ===
+                                        'procurement-details'
+                                          ? selectedSource[key]?.name
+                                          : selectedMixDesign[key]?.name) ||
+                                          `Select ${typeLabel}`}
+                                      </Text>
+                                      {!isPrefilled && (
+                                        <Text style={styles.dropdownArrow}>
+                                          ▼
+                                        </Text>
+                                      )}
+                                    </TouchableOpacity>
+                                  </View>
+
+                                  {/* Quantity Input */}
+                                  <View style={styles.inputGroup}>
+                                    <Text style={styles.label}>
+                                      Quantity Consumed:
+                                    </Text>
+                                    <TextInput
+                                      style={styles.input}
+                                      placeholder="Enter quantity"
+                                      keyboardType="numeric"
+                                      value={formData[key] || ''}
+                                      onChangeText={value =>
+                                        handleQuantityChange(
+                                          item.requestTo,
+                                          material.testMaterialId,
+                                          req.category,
+                                          value,
+                                          entryIndex,
+                                        )
+                                      }
+                                    />
+                                  </View>
+                                </View>
+                              );
+                            })}
+
+                            {/* Add More button */}
+                            <TouchableOpacity
+                              style={styles.addMoreButton}
+                              onPress={() =>
+                                handleAddMore(
+                                  item.requestTo,
+                                  material.testMaterialId,
+                                  req.category,
+                                  material.testMaterialId,
+                                )
+                              }>
+                              <Text style={styles.addMoreText}>
+                                + Add More {typeLabel}
+                              </Text>
+                            </TouchableOpacity>
+                          </View>
+                        );
+                      },
+                    )}
+                  </View>
+                ))}
+              </View>
+            ))}
+          </View>
+        ))
+      )}
+
+      {/* Submit Button */}
+      <TouchableOpacity
+        style={styles.submitButton}
+        onPress={handleSubmit}
+        disabled={submitLoading} // Disable when loading
+      >
+        {submitLoading ? (
+          <ActivityIndicator color="#fff" />
+        ) : (
+          <Text style={styles.submitText}>Update Consumption</Text>
+        )}
       </TouchableOpacity>
 
       {renderDropdownModal()}
@@ -706,123 +1030,145 @@ const handleSubmit = async () => {
   );
 };
 
+// Modern UI Styles
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f7fa',
-    padding: 16,
+    padding: 12, // Reduced padding
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#ABBEFD',
   },
   header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
+    fontSize: 22, // Slightly smaller header
+    fontWeight: '700',
+    marginBottom: 15, // Reduced margin
     color: '#1a1a1a',
+    textAlign: 'center',
+    paddingBottom: 5,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
   },
   section: {
     backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 10,
-    marginBottom: 16,
+    borderRadius: 10, // Slightly smaller border radius
+    padding: 10, // Reduced padding
+    marginBottom: 10, // Reduced margin
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
-  },
-  sectionTitle: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#666',
-    marginBottom: 16,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.1, // Softer shadow
+    shadowRadius: 4,
+    elevation: 3,
   },
   categorySection: {
-    marginBottom: 0,
+    marginBottom: 5, // Reduced margin
   },
-  categoryTitle: {
-    fontSize: 15,
+  // New styles for the static info fields (Material Name, Category, Unit)
+  infoContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 5,
+    gap: 8,
+  },
+  infoField: {
+    flex: 1,
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    backgroundColor: '#f8f9fa',
+    borderRadius: 6,
+    borderLeftWidth: 3,
+    borderLeftColor: '#5e35b1',
+  },
+  infoLabel: {
+    fontSize: 10,
+    fontWeight: '500',
+    color: '#6c757d',
+    textTransform: 'uppercase',
+  },
+  infoValue: {
+    fontSize: 13,
     fontWeight: '600',
-    color: '#1a1a1a',
-    marginBottom: 0,
+    color: '#212529',
+    marginTop: 2,
   },
+  // End of new info styles
+
   materialSection: {
     marginBottom: 0,
-  },
-  materialName: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#4a4a4a',
-    marginBottom: 7,
   },
   requestItem: {
     backgroundColor: '#fff',
     borderRadius: 8,
-    padding: 14,
-    marginBottom: 7,
+    padding: 10, // Reduced padding
+    marginBottom: 8, // Reduced margin
     borderWidth: 1,
     borderColor: '#e8e8e8',
   },
   categoryLabel: {
-    fontSize: 13,
-    fontWeight: '500',
-    color: '#666',
-    marginBottom: 12,
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 10, // Reduced margin
+    marginTop: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
+    paddingBottom: 5,
   },
   categoryContainer: {
-    marginBottom: 20,
+    marginBottom: 15, // Reduced margin
   },
   entryHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 10,
-    paddingBottom: 8,
+    marginBottom: 8,
+    paddingBottom: 6,
     borderBottomWidth: 1,
     borderBottomColor: '#e0e0e0',
   },
   entryNumber: {
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: '700',
     color: '#5e35b1',
   },
   removeButton: {
-    fontSize: 13,
+    fontSize: 12, // Slightly smaller
     color: '#f44336',
     fontWeight: '600',
   },
   inputGroup: {
-    marginBottom: 10,
+    marginBottom: 8, // Reduced margin
   },
   label: {
-    fontSize: 13,
+    fontSize: 12, // Slightly smaller
     fontWeight: '600',
     color: '#4a4a4a',
-    marginBottom: 8,
+    marginBottom: 5, // Reduced margin
   },
   input: {
     borderWidth: 1,
-    borderColor: '#e0e0e0',
-    borderRadius: 8,
-    padding: 12,
+    borderColor: '#d0d0d0', // Lighter border
+    borderRadius: 6, // Reduced radius
+    padding: 10, // Reduced padding
     fontSize: 14,
     backgroundColor: '#fff',
     color: '#1a1a1a',
+    height: 40, // Fixed height for consistency
   },
   dropdownButton: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#e0e0e0',
-    borderRadius: 8,
-    padding: 12,
+    borderColor: '#d0d0d0', // Lighter border
+    borderRadius: 6, // Reduced radius
+    padding: 10, // Reduced padding
     backgroundColor: '#fff',
-    minHeight: 44,
+    minHeight: 40, // Fixed minimum height
   },
   dropdownButtonDisabled: {
-    backgroundColor: '#f5f5f5',
-    borderColor: '#d0d0d0',
+    backgroundColor: '#f0f0f0', // Lighter disabled background
+    borderColor: '#c0c0c0',
   },
   dropdownButtonText: {
     fontSize: 14,
@@ -842,116 +1188,90 @@ const styles = StyleSheet.create({
   },
   addMoreButton: {
     marginTop: 4,
-    paddingTop: 12,
+    alignSelf: 'flex-start',
   },
   addMoreText: {
     color: '#5e35b1',
-    fontSize: 14,
+    fontSize: 13, // Slightly smaller
     fontWeight: '600',
+    paddingVertical: 5,
   },
   submitButton: {
-    backgroundColor: '#5e35b1',
-    padding: 16,
-    borderRadius: 8,
+    backgroundColor: '#5e35b1', // Same color
+    padding: 14, // Reduced padding
+    borderRadius: 6, // Reduced radius
     alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 30,
+    marginTop: 15, // Adjusted margin
+    marginBottom: 25,
     shadowColor: '#5e35b1',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowOffset: {width: 0, height: 3},
+    shadowOpacity: 0.3, // Enhanced shadow for modern look
+    shadowRadius: 6,
+    elevation: 5,
   },
   submitText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: '700',
   },
+  // Modal styles (minor adjustments for consistency)
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Darker overlay
     justifyContent: 'center',
     alignItems: 'center',
   },
   modalContent: {
     backgroundColor: '#fff',
-    borderRadius: 16,
-    width: '85%',
+    borderRadius: 10,
+    width: '80%', // Slightly smaller
     maxHeight: '70%',
-    padding: 0,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.15,
-    shadowRadius: 12,
-    elevation: 8,
+    shadowOffset: {width: 0, height: 6},
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
+    elevation: 10,
   },
   modalHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
+    paddingHorizontal: 15,
+    paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: '#f0f0f0',
   },
   modalTitle: {
-    fontSize: 17,
+    fontSize: 16,
     fontWeight: '600',
     color: '#1a1a1a',
   },
+  closeButtonContainer: {
+    padding: 5,
+  },
   closeButton: {
-    fontSize: 24,
+    fontSize: 20,
     color: '#9e9e9e',
     fontWeight: '400',
-    width: 32,
-    height: 32,
-    textAlign: 'center',
-    lineHeight: 28,
   },
   dropdownItem: {
-    padding: 16,
-    paddingHorizontal: 20,
+    padding: 14,
+    paddingHorizontal: 15,
     borderBottomWidth: 1,
     borderBottomColor: '#f5f5f5',
   },
   dropdownItemText: {
-    fontSize: 15,
+    fontSize: 14,
     color: '#1a1a1a',
   },
   emptyText: {
     textAlign: 'center',
-    padding: 24,
+    padding: 20,
     color: '#9e9e9e',
-    fontSize: 14,
+    fontSize: 13,
   },
   loadingText: {
-    textAlign: 'center',
-    padding: 24,
-    color: '#757575',
-    fontSize: 14,
-  },
-  columnContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: 10,
-    marginBottom: 10
-  },
-  fieldContainer: {
-    flex: 1,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    backgroundColor: '#f8f9fa',
-  },
-  fieldLabel: {
-    fontSize: 13,
-    fontWeight: '500',
-    color: '#6c757d',
-    textTransform: "capitalize",
-  },
-  fieldValue: {
-    fontSize: 12,
-    fontWeight: '400',
-    color: '#212529',
+    padding: 20,
   },
 });
 

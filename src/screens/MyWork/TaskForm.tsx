@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState, useRef, useMemo} from 'react';
 import {useIsFocused} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {HeaderItems} from '../../constants/constants';
@@ -87,7 +87,17 @@ const TaskForm = () => {
     rfiFormDataSaveResponse,
     saveError,
   } = useSelector((state: any) => state.FormDetails);
-
+  const {
+    isMaterialRequested,
+    materialConsumptionSection,
+    prepareMaterialConsumption,
+    projectInfoSection,
+    inspectionChecklistSection,
+    taskDetails,
+  } = inspectionChecklist || {};
+  const memoizedMaterialData = useMemo(() => {
+    return prepareMaterialConsumption;
+  }, [prepareMaterialConsumption]);
   const PROJECT_ID = '684181d57a306ccd976d8374';
   const RFI_ID = '68ec0473f124eedac12b23a1';
   const CHECKLIST_NAME = 'laying-and-compaction';
@@ -313,15 +323,6 @@ const TaskForm = () => {
       );
     }
 
-    const {
-      isMaterialRequested,
-      materialConsumptionSection,
-      prepareMaterialConsumption,
-      projectInfoSection,
-      inspectionChecklistSection,
-      taskDetails,
-    } = inspectionChecklist || {};
-
     return (
       <>
         {/* INFORMATION TAB */}
@@ -337,9 +338,10 @@ const TaskForm = () => {
               ref={informationRef}
               projectInfoSection={projectInfoSection}
               materialConsumptionSection={materialConsumptionSection}
-              prepareMaterialConsumption={prepareMaterialConsumption}
+              prepareMaterialConsumption={memoizedMaterialData}
               isMaterialRequested={isMaterialRequested}
               projectInfoData={projectInfoData}
+              rfiId={RFI_ID}
               onProjectInfoChange={(fieldId, newValue) =>
                 handleUniversalValueChange(
                   'projectInfoSection',
@@ -473,7 +475,7 @@ const TaskForm = () => {
       </ScrollView>
 
       {/* --- SAVE AND SUBMIT BUTTON BAR --- */}
-        {!inspectionChecklist?.isMaterialRequested && (
+
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={[styles.button, styles.saveButton]}
@@ -496,7 +498,6 @@ const TaskForm = () => {
           )}
         </TouchableOpacity>
       </View>
-        )}
     </SafeAreaView>
   );
 };

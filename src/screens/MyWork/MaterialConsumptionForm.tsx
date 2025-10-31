@@ -26,21 +26,6 @@ const STATIC_SOURCES: any[] = [
     name: 'Source A - Local Quarry',
     sourceApprovalId: 'static-1',
   },
-  {
-    id: '60d5f1b3f7b3e3001f1f1f1f',
-    name: 'Source B - Regional Supplier',
-    sourceApprovalId: 'static-2',
-  },
-  {
-    id: '60d5f1b3f7b3e3001f1f1f1f',
-    name: 'Source C - Import Depot',
-    sourceApprovalId: 'static-3',
-  },
-  {
-    id: '60d5f1b3f7b3e3001f1f1f1f',
-    name: 'Source D - Alternative Site',
-    sourceApprovalId: 'static-4',
-  },
 ];
 
 // Helper to safely get nested data
@@ -63,8 +48,12 @@ const getNestedData = (
   return current;
 };
 
-const MaterialConsumptionForm = ({materialData, rfiId}: any) => {
-  console.log('🔍 Material Data Received:', JSON.stringify(materialData));
+const MaterialConsumptionForm = ({
+  materialData,
+  rfiId,
+  onSubmissionSuccess,
+}: any) => {
+  //console.log('🔍 Material Data Received:', JSON.stringify(materialData));
 
   const prepareMaterialConsumption: any[] = materialData?.requestGroups || [];
 
@@ -112,7 +101,9 @@ const MaterialConsumptionForm = ({materialData, rfiId}: any) => {
   useEffect(() => {
     if (postMeterialRequestFormData) {
       showSnackbar('Material status updated successfully', 'success');
-
+      if (onSubmissionSuccess) {
+        onSubmissionSuccess();
+      }
       // Clear the response to prevent re-triggering
       // You should add a clear action to your Redux
       // dispatch(clearMaterialRequestResponse());
@@ -122,7 +113,7 @@ const MaterialConsumptionForm = ({materialData, rfiId}: any) => {
       // Clear the error to prevent re-triggering
       // dispatch(clearMaterialRequestError());
     }
-  }, [postMeterialRequestFormData, error]); // REMOVED showSnackbar from dependencies
+  }, [postMeterialRequestFormData, error]);
 
   // Fetch Source data for a specific testMaterialId
   const fetchSourceOptionsForMaterial = useCallback(

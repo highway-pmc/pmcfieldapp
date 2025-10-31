@@ -19,7 +19,6 @@ import {
   saveRfiFormData,
   saveRfiFormDataClear, // Import the new action
 } from './actions';
-// Import Tab Components
 import InformationTab from './MyWorkDynamicFrom/InformationTab';
 import InspectionTab from './MyWorkDynamicFrom/InspectionTab';
 import TaskDetailsTab from './MyWorkDynamicFrom/TaskDetailsTab';
@@ -129,7 +128,10 @@ const TaskForm = () => {
       }
     };
   }, [isFocused, dispatch]);
-
+  const handleMaterialSubmitSuccess = () => {
+    // Trigger the form save logic, which also calls fetchChecklist on success (as per your existing code)
+    handleSave();
+  };
   // 2. Initialize state with saved data after fetch
   useEffect(() => {
     if (inspectionChecklist && inspectionChecklist.savedData) {
@@ -342,6 +344,7 @@ const TaskForm = () => {
               isMaterialRequested={isMaterialRequested}
               projectInfoData={projectInfoData}
               rfiId={RFI_ID}
+              onMaterialSubmitSuccess={handleMaterialSubmitSuccess}
               onProjectInfoChange={(fieldId, newValue) =>
                 handleUniversalValueChange(
                   'projectInfoSection',

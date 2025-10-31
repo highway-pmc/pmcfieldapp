@@ -11,6 +11,7 @@ interface InformationTabProps {
   prepareMaterialConsumption: any;
   rfiId: string;
   isMaterialRequested: boolean;
+  onMaterialSubmitSuccess?: () => void;
   projectInfoData: Record<string, any>;
   onProjectInfoChange: (fieldId: string, newValue: any) => void;
   materialConsumptionData: Record<string, any>;
@@ -28,6 +29,7 @@ const InformationTab = forwardRef<DynamicFormRef, InformationTabProps>(
       onMaterialConsumptionChange,
       prepareMaterialConsumption,
       isMaterialRequested,
+      onMaterialSubmitSuccess,
       rfiId,
     },
     ref,
@@ -98,6 +100,7 @@ const InformationTab = forwardRef<DynamicFormRef, InformationTabProps>(
           <MaterialConsumptionForm
             materialData={prepareMaterialConsumption}
             rfiId={rfiId}
+            onSubmissionSuccess={onMaterialSubmitSuccess}
           />
         )}
       </ScrollView>

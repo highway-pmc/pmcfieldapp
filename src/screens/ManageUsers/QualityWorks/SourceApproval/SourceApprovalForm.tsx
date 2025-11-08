@@ -38,7 +38,7 @@ const sourceApprovalDataSource = {
 };
 
 const sourceProposedForOptions = [
-  'Concrete',
+  'CONCRETE',
   'DBM',
   'BC',
   'CTSB',
@@ -47,7 +47,7 @@ const sourceProposedForOptions = [
   'DLC',
   'PQC',
   'SMA',
-  'Micro Surfacing',
+  'MICRO-SURFACING',
 ];
 const existingVendors = [
   'Reliable Builders Ltd.',

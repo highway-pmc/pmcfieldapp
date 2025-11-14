@@ -99,7 +99,7 @@ const TaskForm = () => {
   }, [prepareMaterialConsumption]);
   const PROJECT_ID = '684181d57a306ccd976d8374';
   const RFI_ID = '68ec0473f124eedac12b23a1';
-  const CHECKLIST_NAME = 'laying-and-compaction';
+  const CHECKLIST_NAME = 'gluing';
 
   const [activeTab, setActiveTab] = useState(TABS.INFORMATION);
   const [isSaving, setIsSaving] = useState(false);

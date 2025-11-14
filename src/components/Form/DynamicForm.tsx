@@ -62,10 +62,29 @@ const replaceIndexInString = (
   }
 
   // Regex to target the human-readable index in a title: `Specimen N`
-  // This is safer to assume the title format uses the index directly.
-  const titleRegex = new RegExp(`Specimen ${oldIndex}`, 'i');
-  if (str.match(titleRegex)) {
-    return str.replace(new RegExp(`\\s*${oldIndex}$`), ` ${newIndex}`);
+  // Updated Regex: Target the number preceded by a space or start of string and followed by a word boundary.
+  // This is a much safer way to replace the section number in the title.
+  // It handles "Specimen N" directly.
+  const titleNumberRegex = new RegExp(`(\\s|\\b)${oldIndex}(\\b)`);
+
+  if (str.match(titleNumberRegex)) {
+    // Attempt to replace the number associated with the variable title part (e.g., "Specimen 1")
+    // Note: This relies on the convention that the variable part ends with the number.
+    // The replace logic needs to ensure the word "Specimen" or the variable section title is kept.
+
+    // A more direct and specific approach for titles like "Specimen N":
+    // The previous implementation was already functional for the *title* based on the context.
+    // The simplest and safest update is to fix the replacement logic which was potentially flawed
+    // in the original (using `\\s*${oldIndex}$`):
+
+    // Original Title Replacement Logic (updated to be explicit about the word 'Specimen' or 'Section Title'):
+    // We will assume the title format is `Title N` (e.g., `Specimen 1`)
+    const specimenTitleRegex = new RegExp(`(\\s)${oldIndex}(\\b|$)`, 'i');
+
+    // If the string contains the index as a separate word, replace it.
+    if (str.match(specimenTitleRegex)) {
+      return str.replace(specimenTitleRegex, ` $${newIndex}`);
+    }
   }
 
   // Fallback, should not happen for well-formed data

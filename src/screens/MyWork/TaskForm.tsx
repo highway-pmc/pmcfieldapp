@@ -24,6 +24,7 @@ import InspectionTab from './MyWorkDynamicFrom/InspectionTab';
 import TaskDetailsTab from './MyWorkDynamicFrom/TaskDetailsTab';
 import {DynamicFormRef} from '../../components/Form/DynamicForm';
 import {validateChainageIntervals} from '../../components/Form/utils/formValidation';
+import TaskDetailsTabPreTensioningOfWires from '../../components/Form/MyWorkTaskDetails/TaskDetailsTabPreTensioningOfWires';
 
 interface FormData {
   mainTitle: string;
@@ -36,10 +37,13 @@ const TABS = {
   TASK_DETAILS: 'Task Details',
 };
 
-const TaskForm = () => {
+const TaskForm = ({route, navigation, taskData}: any) => {
+  const taskFromRoute =
+    route && route.params ? route.params.taskData : undefined;
+  const taskInfo = taskFromRoute || taskData || {};
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
-
+  //console.log('Task Info in TaskForm:', taskInfo);
   // --- SECTION-WISE CENTRALIZED STATE ---
   const [projectInfoData, setProjectInfoData] = useState<Record<string, any>>(
     {},
@@ -93,13 +97,14 @@ const TaskForm = () => {
     projectInfoSection,
     inspectionChecklistSection,
     taskDetails,
+    taskDetailHeader,
   } = inspectionChecklist || {};
   const memoizedMaterialData = useMemo(() => {
     return prepareMaterialConsumption;
   }, [prepareMaterialConsumption]);
-  const PROJECT_ID = '684181d57a306ccd976d8374';
-  const RFI_ID = '68ec0473f124eedac12b23a1';
-  const CHECKLIST_NAME = 'gluing';
+  const PROJECT_ID = taskInfo.projectId;
+  const RFI_ID = taskInfo._id;
+  const CHECKLIST_NAME = taskInfo.taskId.name; //TODO rfi id is wrong as it is not coming from taskInfo
 
   const [activeTab, setActiveTab] = useState(TABS.INFORMATION);
   const [isSaving, setIsSaving] = useState(false);
@@ -155,13 +160,14 @@ const TaskForm = () => {
           'Form data has been saved successfully.',
       );
 
-      // RECALL API TO RE-FETCH THE LATEST DATA
+      //RECALL API TO RE-FETCH THE LATEST DATA
       fetchChecklist();
 
       // Clear the response data
       dispatch(saveRfiFormDataClear());
     } else if (saveError) {
       // FAILURE (using the dedicated saveError field)
+      console.error('Save Error:', saveError);
       setIsSaving(false);
       Alert.alert(
         'Save Failed',
@@ -178,7 +184,7 @@ const TaskForm = () => {
   };
 
   const getFormDataFromTabs = () => {
-    let allErrors = {};
+    let allErrors: Record<string, any> = {};
     let hasError = false;
 
     // Collect validation errors from DynamicForm refs
@@ -272,11 +278,13 @@ const TaskForm = () => {
     // }
 
     setIsSaving(true);
+    console.log('Saving form data:', allInputs);
+    console.log('With projectId:', PROJECT_ID, 'and rfiId:', RFI_ID);
     dispatch(
       saveRfiFormData({
         projectId: PROJECT_ID,
         rfiId: RFI_ID,
-        formData: allInputs, // Pass the aggregated form data
+        formData: allInputs,
       }),
     );
   };
@@ -404,9 +412,17 @@ const TaskForm = () => {
             display: activeTab === TABS.TASK_DETAILS ? 'flex' : 'none',
             flex: 1,
           }}>
+          {/* <TaskDetailsTabPreTensioningOfWires
+            formData={taskDetails || null}
+            globalFormData={taskDetailsData}
+            onGlobalValueChange={(fieldId, newValue) =>
+              handleUniversalValueChange('taskDetails', fieldId, newValue)
+            }
+          /> */}
           <TaskDetailsTab
             ref={taskDetailsRef}
             formData={taskDetails || null}
+            header={taskDetailHeader || null}
             globalFormData={taskDetailsData}
             onGlobalValueChange={(fieldId, newValue) =>
               handleUniversalValueChange('taskDetails', fieldId, newValue)

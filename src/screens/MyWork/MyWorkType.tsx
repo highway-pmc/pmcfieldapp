@@ -76,11 +76,10 @@ const MyWorkType = ({navigation}: {navigation: any}) => {
   };
 
   const onPressWorkType = (workType: any) => {
-    navigation.navigate('TaskForm');
-    // navigation.navigate('MyWork', {
-    //   workType: workType,
-    //   taskCategory: 'my-work',
-    // });
+    navigation.navigate('MyWork', {
+      workType: workType,
+      taskCategory: 'my-work',
+    });
   };
 
   return (

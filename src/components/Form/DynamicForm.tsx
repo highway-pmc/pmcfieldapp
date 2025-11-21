@@ -424,7 +424,7 @@ const DynamicForm = forwardRef<DynamicFormRef, DynamicFormProps>(
       // We pass the globalFormData so the reIndexSectionsAndData utility can look up the old values.
       const reindexedSections = reIndexSectionsAndData(
         sectionsAfterRemoval,
-        arrayIndexToRemove, // Start re-indexing from the point of removal
+        arrayIndexToRemove, 
         onGlobalValueChange,
         globalFormData,
       );

@@ -37,7 +37,6 @@ const InformationTab = forwardRef<DynamicFormRef, InformationTabProps>(
     // Refs for collecting validation errors remain necessary
     const projectInfoRef = useRef<DynamicFormRef>(null);
     const materialConsumptionRef = useRef<DynamicFormRef>(null);
-    console.log('sadas', prepareMaterialConsumption, isMaterialRequested);
     // Use useImperativeHandle to expose the combined logic to the outside world (TaskForm)
     useImperativeHandle(ref, () => ({
       collectAllInputs: () => {

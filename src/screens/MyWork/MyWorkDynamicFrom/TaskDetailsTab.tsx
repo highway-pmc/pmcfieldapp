@@ -7,6 +7,7 @@ import DynamicForm, {
 // Assuming formData can be a single object or an array of objects
 interface TaskDetailsTabProps {
   formData: any;
+  header?: any;
   globalFormData: Record<string, any>;
   onGlobalValueChange: (fieldId: string, newValue: any) => void;
 }
@@ -16,7 +17,7 @@ interface TaskDetailsTabProps {
 // TaskForm will only be able to call methods (like collectAllInputs) on the *last* // DynamicForm if formData is an array, due to the nature of a single forwarded ref.
 
 const TaskDetailsTab = forwardRef<DynamicFormRef, TaskDetailsTabProps>(
-  ({formData, globalFormData, onGlobalValueChange}, ref) => {
+  ({formData, header, globalFormData, onGlobalValueChange}, ref) => {
     // 1. Handle missing/empty data
     if (
       !formData ||
@@ -34,12 +35,18 @@ const TaskDetailsTab = forwardRef<DynamicFormRef, TaskDetailsTabProps>(
 
     return (
       <ScrollView contentContainerStyle={styles.tabContent}>
+        {header && (
+          <DynamicForm
+            ref={ref}
+            formData={header}
+            globalFormData={globalFormData}
+            onGlobalValueChange={onGlobalValueChange}
+          />
+        )}
         {formData.map((element: any, index: any) => (
           <DynamicForm
-            // WARNING: The single forwarded ref ('ref') will only point
-            // to the last rendered DynamicForm instance.
             ref={ref}
-            formData={element} // Pass the individual object
+            formData={element}
             globalFormData={globalFormData}
             onGlobalValueChange={onGlobalValueChange}
           />

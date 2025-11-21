@@ -176,7 +176,7 @@ const MixDesign = ({navigation}: {navigation: any}) => {
     if (
       !selectedWorkCategory ||
       !selectedMaterialType ||
-      !selectedMaterialCategory
+      (selectedMaterialType?.category && selectedMaterialType?.category.length) ? !selectedMaterialCategory : false
     ) {
       showSnackbar('Please complete all Mix Design details.', 'error');
       return;
@@ -197,11 +197,13 @@ const MixDesign = ({navigation}: {navigation: any}) => {
     const finalMaterialsData = materialsData.map(item => ({
       _id: item._id,
       materialType: item.materialType,
+      materialUnit: item.materialUnit,
+      materialCategory: item.selectedMaterialCategory,
       name: item.name,
       selectedSource: item.selectedSource
         ? {_id: item.selectedSource._id, name: item.selectedSource.name}
         : null,
-      qty: item.qty,
+      qty: item.qty ? Number(item.qty) : 0,
     }));
 
     const payload = {
@@ -212,16 +214,16 @@ const MixDesign = ({navigation}: {navigation: any}) => {
       body: {
         name: mixDesignShortName,
         shortName:mixDesignShortName,
-        totalMixDesignQty: totalQty,
+        totalMixDesignQty: Number(totalQty),
         comments: recommend,
         testMaterialType: selectedMaterialType?.materialType,
+        materialCategory: selectedMaterialCategory,
+        materialUnit: selectedMaterialType?.materialUnit,
+        dateOfSampling: `${getDbDateFromDDMMYYYY(dateOfSampling)} ${timeOfSampling}`,
+        timeOfSampling: timeOfSampling,
+        sampleBy: sampleBy,
+        conductedBy: mixDesignConductedBy,
         mixDesignData: {
-          dateOfSampling: getDbDateFromDDMMYYYY(dateOfSampling),
-          timeOfSampling: timeOfSampling,
-          sampleBy: sampleBy,
-          conductedBy: mixDesignConductedBy,
-          materialCategory: selectedMaterialCategory,
-          totalQty: totalQty,
           materialsData: finalMaterialsData,
         },
       },
@@ -258,7 +260,21 @@ const MixDesign = ({navigation}: {navigation: any}) => {
             <View key={item._id || index} style={styles.tableRow}>
               <Text style={[styles.tableCell, {width: 150}]}>{item.name}</Text>
               <Text style={[styles.tableCell, {width: 150}]}>
-                {item.materialType || 'N/A'}
+                {item.category && item.category.length ?
+                  <CustomSelectDropdown
+                    label=""
+                    data={item.category}
+                    selectedValue={item.selectedMaterialCategory}
+                    itemTypeOf="string"
+                    onSelect={(selectedItem: any) =>
+                      handleMaterialItemChange(
+                        index,
+                        'selectedMaterialCategory',
+                        selectedItem,
+                      )
+                    }
+                  />
+                  : 'N/A'}
               </Text>
               <View style={{width: 200, paddingHorizontal: 5}}>
                 <CustomSelectDropdown
@@ -275,7 +291,7 @@ const MixDesign = ({navigation}: {navigation: any}) => {
                 />
               </View>
               <Text style={[styles.tableCell, {width: 100}]}>
-                {item.unit || 'Kg'}
+                {item.materialUnit || 'N/A'}
               </Text>
               <View style={{width: 120, paddingHorizontal: 5}}>
                 <Input
@@ -360,17 +376,25 @@ const MixDesign = ({navigation}: {navigation: any}) => {
             selectedValue={selectedMaterialType}
             onSelect={handleMaterialTypeSelect}
           />
-          <CustomSelectDropdown
-            label="Material Category"
-            data={selectedMaterialType?.category}
-            selectedValue={selectedMaterialCategory}
-            itemTypeOf="string"
-            onSelect={setSelectedMaterialCategory}
-          />
+          {selectedMaterialType?.category && selectedMaterialType?.category.length ?
+            <CustomSelectDropdown
+              label="Material Category"
+              data={selectedMaterialType?.category}
+              selectedValue={selectedMaterialCategory}
+              itemTypeOf="string"
+              onSelect={setSelectedMaterialCategory}
+            />
+            : <View style={styles.formGroup}>
+                <Text style={styles.label}>Material Category</Text>
+                <Text style={styles.textDisplay}>
+                  N/A
+                </Text>
+              </View>
+            }
           <View style={styles.formGroup}>
             <Text style={styles.label}>Unit</Text>
             <Text style={styles.textDisplay}>
-              {selectedMaterialType?.unit || 'Not Selected'}
+              {selectedMaterialType?.materialUnit || ''}
             </Text>
           </View>
           <Input

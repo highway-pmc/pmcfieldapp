@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -11,18 +11,24 @@ import {
   NativeEventEmitter,
   StyleSheet,
 } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { getMaterialRequest, submitMaterialRequest } from '../ManageUsers/actions';
-import { useIsFocused } from '@react-navigation/native';
-import { HeaderItems } from '../../constants/constants';
-import { useSnackbar } from '../../context/SnackbarContext';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  getMaterialRequest,
+  submitMaterialRequest,
+} from '../ManageUsers/actions';
+import {useIsFocused} from '@react-navigation/native';
+import {HeaderItems} from '../../constants/constants';
+import {useSnackbar} from '../../context/SnackbarContext';
 
-const MaterialRequestComponent = () => {
+const MaterialRequestComponent = ({route, navigation}: any) => {
+  console.log('MaterialRequestComponent route params:', route.params);
+  const taskId = route && route.params ? route.params.taskId : undefined;
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
-  const { showSnackbar } = useSnackbar();
+  const {showSnackbar} = useSnackbar();
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const { getMeterialRequestFormData, postMeterialRequestFormData, error } = useSelector((state: any) => state.MeterialRequest);
+  const {getMeterialRequestFormData, postMeterialRequestFormData, error} =
+    useSelector((state: any) => state.MeterialRequest);
 
   const [materialRequests, setMaterialRequests] = useState<any[]>([]);
   const [dropdownVisible, setDropdownVisible] = useState(false);
@@ -36,21 +42,23 @@ const MaterialRequestComponent = () => {
     }
   }, [isFocused]);
 
-   useEffect(() => {
-      if (postMeterialRequestFormData) {
-        showSnackbar("Material Request submitted successfully", "success");
-      } else if (error) {
-        showSnackbar(error, "error");
-      }
-    }, [postMeterialRequestFormData, error]);
+  useEffect(() => {
+    if (postMeterialRequestFormData) {
+      showSnackbar('Material Request submitted successfully', 'success');
+    } else if (error) {
+      showSnackbar(error, 'error');
+    }
+  }, [postMeterialRequestFormData, error]);
 
   useEffect(() => {
-    dispatch(
-      getMaterialRequest({
-        projectId: loggedInUser?.projectId,
-        id: '68a61165cb6297d89de38a28',
-      })
-    );
+    if (taskId) {
+      dispatch(
+        getMaterialRequest({
+          projectId: loggedInUser?.projectId,
+          id: taskId,
+        }),
+      );
+    }
   }, []);
 
   useEffect(() => {
@@ -87,66 +95,76 @@ const MaterialRequestComponent = () => {
   }, [getMeterialRequestFormData]);
 
   const toggleExpanded = (requestId: any) => {
-    setMaterialRequests((prev) =>
-      prev.map((request) =>
+    setMaterialRequests(prev =>
+      prev.map(request =>
         request.id === requestId
-          ? { ...request, expanded: !request.expanded }
-          : request
-      )
+          ? {...request, expanded: !request.expanded}
+          : request,
+      ),
     );
   };
 
   const updateRequest = (requestId: any, field: any, value: any) => {
-    setMaterialRequests((prev) =>
-      prev.map((request) =>
-        request.id === requestId ? { ...request, [field]: value } : request
-      )
+    setMaterialRequests(prev =>
+      prev.map(request =>
+        request.id === requestId ? {...request, [field]: value} : request,
+      ),
     );
   };
 
-  const updateCategory = (requestId: any, categoryId: any, field: any, value: any) => {
-    setMaterialRequests((prev) =>
-      prev.map((request) =>
+  const updateCategory = (
+    requestId: any,
+    categoryId: any,
+    field: any,
+    value: any,
+  ) => {
+    setMaterialRequests(prev =>
+      prev.map(request =>
         request.id === requestId
           ? {
               ...request,
               selectedCategories: request.selectedCategories.map((cat: any) =>
-                cat.id === categoryId ? { ...cat, [field]: value } : cat
+                cat.id === categoryId ? {...cat, [field]: value} : cat,
               ),
             }
-          : request
-      )
+          : request,
+      ),
     );
   };
 
   const addCategory = (requestId: any) => {
-    setMaterialRequests((prev) =>
-      prev.map((request) =>
+    setMaterialRequests(prev =>
+      prev.map(request =>
         request.id === requestId
           ? {
               ...request,
               selectedCategories: [
                 ...request.selectedCategories,
-                { id: Date.now(), category: '', quantity: '', unit: request.unit },
+                {
+                  id: Date.now(),
+                  category: '',
+                  quantity: '',
+                  unit: request.unit,
+                },
               ],
             }
-          : request
-      )
+          : request,
+      ),
     );
   };
 
   const removeCategory = (requestId: any, categoryId: any) => {
-    setMaterialRequests((prev) =>
-      prev.map((request) =>
+    setMaterialRequests(prev =>
+      prev.map(request =>
         request.id === requestId
           ? {
               ...request,
               selectedCategories: request.selectedCategories.filter(
-                (catItem: any) => catItem.id !== categoryId
+                (catItem: any) => catItem.id !== categoryId,
               ),
             }
-          : request
-      )
+          : request,
+      ),
     );
   };
 
@@ -155,133 +173,147 @@ const MaterialRequestComponent = () => {
   };
 
   const handleSubmitAlternative = () => {
-  // Group requests by requestTo, testWorkCategoryId, and testEquipmentId for submission
-  const groupedRequests = {};
-  
-  materialRequests.forEach((request) => {
-    if (request.selectedCategories.length === 0) return;
-    
-    // Include testEquipmentId in the grouping key if it exists
-    const key = `${request.requestTo}-${request.testWorkCategoryId}-${request.testEquipmentId || 'no-equipment'}`;
-    
-    if (!groupedRequests[key]) {
-      groupedRequests[key] = {
-        requestTo: request.requestTo,
-        testWorkCategoryId: request.testWorkCategoryId,
-        testWorkCategoryType: request.testWorkCategoryType,
-        testEquipmentId: request.testEquipmentId, // Include equipment ID
-        materialTypes: {},
-      };
-    }
-    
-    if (!groupedRequests[key].materialTypes[request.testMaterialId]) {
-      groupedRequests[key].materialTypes[request.testMaterialId] = {
-        testMaterialId: request.testMaterialId,
-        type: request.materialType,
-        materialCategory: [],
-      };
-    }
-    
-    request.selectedCategories.forEach((cat) => {
-      if (cat.category && cat.quantity) {
-        groupedRequests[key].materialTypes[request.testMaterialId].materialCategory.push({
+    // Group requests by requestTo, testWorkCategoryId, and testEquipmentId for submission
+    const groupedRequests = {};
+
+    materialRequests.forEach(request => {
+      if (request.selectedCategories.length === 0) return;
+
+      // Include testEquipmentId in the grouping key if it exists
+      const key = `${request.requestTo}-${request.testWorkCategoryId}-${
+        request.testEquipmentId || 'no-equipment'
+      }`;
+
+      if (!groupedRequests[key]) {
+        groupedRequests[key] = {
+          requestTo: request.requestTo,
+          testWorkCategoryId: request.testWorkCategoryId,
+          testWorkCategoryType: request.testWorkCategoryType,
+          testEquipmentId: request.testEquipmentId, // Include equipment ID
+          materialTypes: {},
+        };
+      }
+
+      if (!groupedRequests[key].materialTypes[request.testMaterialId]) {
+        groupedRequests[key].materialTypes[request.testMaterialId] = {
+          testMaterialId: request.testMaterialId,
+          type: request.materialType,
+          materialCategory: [],
+        };
+      }
+
+      request.selectedCategories.forEach(cat => {
+        if (cat.category && cat.quantity) {
+          groupedRequests[key].materialTypes[
+            request.testMaterialId
+          ].materialCategory.push({
+            category: cat.category,
+            qty: Number(cat.quantity),
+          });
+        }
+      });
+    });
+
+    const payload = {
+      rfiId: '6841ecdec00f933c0c1796c2',
+      comments: 'Material request submitted from mobile app.',
+      materialRequests: Object.values(groupedRequests).map((group: any) => {
+        const materialRequest = {
+          requestTo: group.requestTo,
+          testWorkCategories: [
+            {
+              testWorkCategoryId: group.testWorkCategoryId,
+              testWorkCategoryType: group.testWorkCategoryType,
+              materialTypes: Object.values(group.materialTypes),
+            },
+          ],
+        };
+
+        // Only include testEquipmentId if it exists
+        if (group.testEquipmentId && group.testEquipmentId !== 'no-equipment') {
+          materialRequest.testEquipmentId = group.testEquipmentId;
+        }
+
+        return materialRequest;
+      }),
+    };
+
+    console.log('Submitting payload:', JSON.stringify(payload, null, 2));
+    dispatch(
+      submitMaterialRequest({
+        projectId: loggedInUser?.projectId,
+        body: payload,
+      }),
+    );
+  };
+
+  // Alternative approach if you need to prevent over-grouping:
+  const handleSubmit = () => {
+    const materialRequestsMap = new Map();
+
+    materialRequests.forEach(request => {
+      if (request.selectedCategories.length === 0) return;
+
+      const materialCategories = request.selectedCategories
+        .filter(cat => cat.category && cat.quantity)
+        .map(cat => ({
           category: cat.category,
           qty: Number(cat.quantity),
+        }));
+
+      if (materialCategories.length === 0) return;
+
+      const requestKey = `${request.requestTo}-${
+        request.testEquipmentId || 'no-equipment'
+      }`;
+
+      if (!materialRequestsMap.has(requestKey)) {
+        materialRequestsMap.set(requestKey, {
+          requestTo: request.requestTo,
+          ...(request.testEquipmentId && {
+            testEquipmentId: request.testEquipmentId,
+          }),
+          testWorkCategories: new Map(),
         });
       }
-    });
-  });
 
-  const payload = {
-    rfiId: '6841ecdec00f933c0c1796c2',
-    comments: 'Material request submitted from mobile app.',
-    materialRequests: Object.values(groupedRequests).map((group: any) => {
-      const materialRequest = {
-        requestTo: group.requestTo,
-        testWorkCategories: [
-          {
-            testWorkCategoryId: group.testWorkCategoryId,
-            testWorkCategoryType: group.testWorkCategoryType,
-            materialTypes: Object.values(group.materialTypes),
-          }
-        ],
-      };
-      
-      // Only include testEquipmentId if it exists
-      if (group.testEquipmentId && group.testEquipmentId !== 'no-equipment') {
-        materialRequest.testEquipmentId = group.testEquipmentId;
+      const materialRequest = materialRequestsMap.get(requestKey);
+      const categoryKey = `${request.testWorkCategoryId}`;
+
+      if (!materialRequest.testWorkCategories.has(categoryKey)) {
+        materialRequest.testWorkCategories.set(categoryKey, {
+          testWorkCategoryId: request.testWorkCategoryId,
+          testWorkCategoryType: request.testWorkCategoryType,
+          materialTypes: [],
+        });
       }
-      
-      return materialRequest;
-    }),
-  };
 
-  console.log('Submitting payload:', JSON.stringify(payload, null, 2));
-  dispatch(submitMaterialRequest({ 
-    projectId: loggedInUser?.projectId,  
-    body: payload
-  }));
-};
-
-// Alternative approach if you need to prevent over-grouping:
-const handleSubmit = () => {
-  const materialRequestsMap = new Map();
-  
-  materialRequests.forEach((request) => {
-    if (request.selectedCategories.length === 0) return;
-    
-    const materialCategories = request.selectedCategories
-      .filter(cat => cat.category && cat.quantity)
-      .map(cat => ({
-        category: cat.category,
-        qty: Number(cat.quantity),
-      }));
-    
-    if (materialCategories.length === 0) return;
-    
-    const requestKey = `${request.requestTo}-${request.testEquipmentId || 'no-equipment'}`;
-    
-    if (!materialRequestsMap.has(requestKey)) {
-      materialRequestsMap.set(requestKey, {
-        requestTo: request.requestTo,
-        ...(request.testEquipmentId && { testEquipmentId: request.testEquipmentId }),
-        testWorkCategories: new Map(),
+      materialRequest.testWorkCategories.get(categoryKey).materialTypes.push({
+        testMaterialId: request.testMaterialId,
+        type: request.materialType,
+        materialCategory: materialCategories,
       });
-    }
-    
-    const materialRequest = materialRequestsMap.get(requestKey);
-    const categoryKey = `${request.testWorkCategoryId}`;
-    
-    if (!materialRequest.testWorkCategories.has(categoryKey)) {
-      materialRequest.testWorkCategories.set(categoryKey, {
-        testWorkCategoryId: request.testWorkCategoryId,
-        testWorkCategoryType: request.testWorkCategoryType,
-        materialTypes: [],
-      });
-    }
-    
-    materialRequest.testWorkCategories.get(categoryKey).materialTypes.push({
-      testMaterialId: request.testMaterialId,
-      type: request.materialType,
-      materialCategory: materialCategories,
     });
-  });
 
-  const payload = {
-    rfiId: '6841ecdec00f933c0c1796c2',
-    comments: 'Material request submitted from mobile app.',
-    materialRequests: Array.from(materialRequestsMap.values()).map(request => ({
-      ...request,
-      testWorkCategories: Array.from(request.testWorkCategories.values()),
-    })),
+    const payload = {
+      rfiId: '6841ecdec00f933c0c1796c2',
+      comments: 'Material request submitted from mobile app.',
+      materialRequests: Array.from(materialRequestsMap.values()).map(
+        request => ({
+          ...request,
+          testWorkCategories: Array.from(request.testWorkCategories.values()),
+        }),
+      ),
+    };
+
+    console.log('Submitting payload:', JSON.stringify(payload, null, 2));
+    dispatch(
+      submitMaterialRequest({
+        projectId: loggedInUser?.projectId,
+        body: payload,
+      }),
+    );
   };
-
-  console.log('Submitting payload:', JSON.stringify(payload, null, 2));
-  dispatch(submitMaterialRequest({ 
-    projectId: loggedInUser?.projectId,  
-    body: payload
-  }));
-};
 
   const openDropdown = (requestId: any, categoryId: any) => {
     setCurrentRequestId(requestId);
@@ -290,13 +322,23 @@ const handleSubmit = () => {
   };
 
   const handleSelectCategory = (selectedCategory: any) => {
-    updateCategory(currentRequestId, currentCategoryId, 'category', selectedCategory.category);
-    updateCategory(currentRequestId, currentCategoryId, 'unit', selectedCategory.unit);
+    updateCategory(
+      currentRequestId,
+      currentCategoryId,
+      'category',
+      selectedCategory.category,
+    );
+    updateCategory(
+      currentRequestId,
+      currentCategoryId,
+      'unit',
+      selectedCategory.unit,
+    );
     setDropdownVisible(false);
   };
 
   const getAvailableCategories = (requestId: any) => {
-    const request = materialRequests.find((r) => r.id === requestId);
+    const request = materialRequests.find(r => r.id === requestId);
     if (!request) return [];
 
     const selectedCategories = request.selectedCategories
@@ -304,23 +346,26 @@ const handleSubmit = () => {
       .filter(Boolean);
 
     return request.availableCategories.filter(
-      (cat: any) => !selectedCategories.includes(cat.category)
+      (cat: any) => !selectedCategories.includes(cat.category),
     );
   };
 
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}>
         <Text style={styles.description}>
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s
+          Lorem Ipsum is simply dummy text of the printing and typesetting
+          industry. Lorem Ipsum has been the industry's standard dummy text ever
+          since the 1500s
         </Text>
 
-        {materialRequests.map((request) => (
+        {materialRequests.map(request => (
           <View key={request.id} style={styles.requestCard}>
             <TouchableOpacity
               style={styles.requestHeader}
-              onPress={() => toggleExpanded(request.id)}
-            >
+              onPress={() => toggleExpanded(request.id)}>
               <View style={styles.requestHeaderLeft}>
                 <View style={styles.requestIcon}>
                   <Text style={styles.requestIconText}>{request.id}</Text>
@@ -361,58 +406,65 @@ const handleSubmit = () => {
                   </View>
                 </View>
 
-                {request.selectedCategories.map((category: any, index: number) => (
-                  <View key={category.id} style={styles.categorySection}>
-                    <View style={styles.categorySectionHeader}>
-                      <Text style={styles.categorySectionTitle}>
-                        Material Category {index + 1}
-                      </Text>
-                      <TouchableOpacity
-                        onPress={() => removeCategory(request.id, category.id)}
-                        style={styles.deleteButton}
-                      >
-                        <Text style={styles.deleteButtonText}>🗑️</Text>
-                      </TouchableOpacity>
-                    </View>
-
-                    <View style={styles.categoryInputRow}>
-                      <TouchableOpacity
-                        style={styles.categoryDropdown}
-                        onPress={() => openDropdown(request.id, category.id)}
-                      >
-                        <View style={styles.dropdown}>
-                          <Text
-                            style={[
-                              styles.dropdownText,
-                              category.category ? styles.dropdownTextSelected : {},
-                            ]}
-                          >
-                            {category.category || 'Select Category'}
-                          </Text>
-                          <Text style={styles.dropdownArrow}>▼</Text>
-                        </View>
-                      </TouchableOpacity>
-
-                      <View style={styles.quantityInput}>
-                        <TextInput
-                          style={styles.textInput}
-                          value={category.quantity}
-                          onChangeText={(text) =>
-                            updateCategory(request.id, category.id, 'quantity', text)
+                {request.selectedCategories.map(
+                  (category: any, index: number) => (
+                    <View key={category.id} style={styles.categorySection}>
+                      <View style={styles.categorySectionHeader}>
+                        <Text style={styles.categorySectionTitle}>
+                          Material Category {index + 1}
+                        </Text>
+                        <TouchableOpacity
+                          onPress={() =>
+                            removeCategory(request.id, category.id)
                           }
-                          placeholder="Qty"
-                          placeholderTextColor="#999"
-                          keyboardType="numeric"
-                        />
+                          style={styles.deleteButton}>
+                          <Text style={styles.deleteButtonText}>🗑️</Text>
+                        </TouchableOpacity>
+                      </View>
+
+                      <View style={styles.categoryInputRow}>
+                        <TouchableOpacity
+                          style={styles.categoryDropdown}
+                          onPress={() => openDropdown(request.id, category.id)}>
+                          <View style={styles.dropdown}>
+                            <Text
+                              style={[
+                                styles.dropdownText,
+                                category.category
+                                  ? styles.dropdownTextSelected
+                                  : {},
+                              ]}>
+                              {category.category || 'Select Category'}
+                            </Text>
+                            <Text style={styles.dropdownArrow}>▼</Text>
+                          </View>
+                        </TouchableOpacity>
+
+                        <View style={styles.quantityInput}>
+                          <TextInput
+                            style={styles.textInput}
+                            value={category.quantity}
+                            onChangeText={text =>
+                              updateCategory(
+                                request.id,
+                                category.id,
+                                'quantity',
+                                text,
+                              )
+                            }
+                            placeholder="Qty"
+                            placeholderTextColor="#999"
+                            keyboardType="numeric"
+                          />
+                        </View>
                       </View>
                     </View>
-                  </View>
-                ))}
+                  ),
+                )}
 
                 <TouchableOpacity
                   style={styles.addMoreButton}
-                  onPress={() => addCategory(request.id)}
-                >
+                  onPress={() => addCategory(request.id)}>
                   <Text style={styles.addMoreText}>+ Add More</Text>
                 </TouchableOpacity>
 
@@ -422,7 +474,9 @@ const handleSubmit = () => {
                     placeholder="Comments, if any"
                     value={request.comments}
                     multiline
-                    onChangeText={(text) => updateRequest(request.id, 'comments', text)}
+                    onChangeText={text =>
+                      updateRequest(request.id, 'comments', text)
+                    }
                   />
                 </View>
               </View>
@@ -444,13 +498,11 @@ const handleSubmit = () => {
         transparent
         visible={dropdownVisible}
         animationType="fade"
-        onRequestClose={() => setDropdownVisible(false)}
-      >
+        onRequestClose={() => setDropdownVisible(false)}>
         <TouchableOpacity
           style={styles.modalOverlay}
           activeOpacity={1}
-          onPressOut={() => setDropdownVisible(false)}
-        >
+          onPressOut={() => setDropdownVisible(false)}>
           <View style={styles.dropdownModal}>
             <View style={styles.dropdownHeader}>
               <Text style={styles.dropdownHeaderText}>Select Category</Text>
@@ -460,13 +512,14 @@ const handleSubmit = () => {
             </View>
 
             <FlatList
-              data={currentRequestId ? getAvailableCategories(currentRequestId) : []}
+              data={
+                currentRequestId ? getAvailableCategories(currentRequestId) : []
+              }
               keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item }) => (
+              renderItem={({item}) => (
                 <TouchableOpacity
                   style={styles.dropdownItem}
-                  onPress={() => handleSelectCategory(item)}
-                >
+                  onPress={() => handleSelectCategory(item)}>
                   <Text style={styles.dropdownItemText}>{item.category}</Text>
                   <Text style={styles.dropdownItemSubtext}>
                     Unit: {item.unit}
@@ -502,7 +555,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginBottom: 12,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
@@ -699,7 +752,7 @@ const styles = StyleSheet.create({
     maxHeight: '70%',
     width: '90%',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,

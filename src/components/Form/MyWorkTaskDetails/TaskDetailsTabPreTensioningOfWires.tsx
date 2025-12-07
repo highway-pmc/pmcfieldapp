@@ -170,7 +170,7 @@ const getBaseANConfig = (taskUniqueId: string) => ({
     title: 'Specimen',
     minSections: 1,
     maxSections: 10,
-    addButtonLabel: 'Add Specimen AN',
+    addButtonLabel: 'Add Specimen',
   },
   sections: [
     {
@@ -296,7 +296,7 @@ const getBaseBNConfig = (taskUniqueId: string) => ({
     title: 'Specimen',
     minSections: 1,
     maxSections: 10,
-    addButtonLabel: 'Add Specimen BN',
+    addButtonLabel: 'Add Specimen',
   },
   sections: [
     {

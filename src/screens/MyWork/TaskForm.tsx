@@ -43,7 +43,7 @@ const TaskForm = ({route, navigation, taskData}: any) => {
   const taskInfo = taskFromRoute || taskData || {};
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
-  //console.log('Task Info in TaskForm:', taskInfo);
+  console.log('Task Info in TaskForm:', taskInfo);
   // --- SECTION-WISE CENTRALIZED STATE ---
   const [projectInfoData, setProjectInfoData] = useState<Record<string, any>>(
     {},
@@ -105,7 +105,7 @@ const TaskForm = ({route, navigation, taskData}: any) => {
   const PROJECT_ID = taskInfo.projectId;
   const RFI_ID = taskInfo._id;
   const CHECKLIST_NAME = taskInfo.taskId.name;
-
+  //const CHECKLIST_NAME = 'torquing';
   const [activeTab, setActiveTab] = useState(TABS.INFORMATION);
   const [isSaving, setIsSaving] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -412,14 +412,14 @@ const TaskForm = ({route, navigation, taskData}: any) => {
             display: activeTab === TABS.TASK_DETAILS ? 'flex' : 'none',
             flex: 1,
           }}>
-          <TaskDetailsTabPreTensioningOfWires
+          {/* <TaskDetailsTabPreTensioningOfWires
             formData={taskDetails || null}
             globalFormData={taskDetailsData}
             onGlobalValueChange={(fieldId, newValue) =>
               handleUniversalValueChange('taskDetails', fieldId, newValue)
             }
-          />
-          {/* <TaskDetailsTab
+          /> */}
+          <TaskDetailsTab
             ref={taskDetailsRef}
             formData={taskDetails || null}
             header={taskDetailHeader || null}
@@ -427,7 +427,7 @@ const TaskForm = ({route, navigation, taskData}: any) => {
             onGlobalValueChange={(fieldId, newValue) =>
               handleUniversalValueChange('taskDetails', fieldId, newValue)
             }
-          /> */}
+          />
         </View>
       </>
     );

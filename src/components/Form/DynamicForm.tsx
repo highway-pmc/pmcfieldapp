@@ -61,29 +61,22 @@ const replaceIndexInString = (
     return str.replace(idRegex, `_S${newIndex}`);
   }
 
-  // Regex to target the human-readable index in a title: `Specimen N`
-  // Updated Regex: Target the number preceded by a space or start of string and followed by a word boundary.
-  // This is a much safer way to replace the section number in the title.
-  // It handles "Specimen N" directly.
+  // Regex to target "Specimen" followed by a number (e.g., "Specimen1" or "Specimen 1")
+  // This handles IDs like: {{task unique id}}_Specimen1_applied_pressure_BN
+  const specimenInIdRegex = new RegExp(`Specimen${oldIndex}`, 'g');
+  if (str.match(specimenInIdRegex)) {
+    return str.replace(specimenInIdRegex, `Specimen${newIndex}`);
+  }
+  
   const titleNumberRegex = new RegExp(`(\\s|\\b)${oldIndex}(\\b)`);
 
   if (str.match(titleNumberRegex)) {
-    // Attempt to replace the number associated with the variable title part (e.g., "Specimen 1")
-    // Note: This relies on the convention that the variable part ends with the number.
-    // The replace logic needs to ensure the word "Specimen" or the variable section title is kept.
-
-    // A more direct and specific approach for titles like "Specimen N":
-    // The previous implementation was already functional for the *title* based on the context.
-    // The simplest and safest update is to fix the replacement logic which was potentially flawed
-    // in the original (using `\\s*${oldIndex}$`):
-
-    // Original Title Replacement Logic (updated to be explicit about the word 'Specimen' or 'Section Title'):
-    // We will assume the title format is `Title N` (e.g., `Specimen 1`)
+  
     const specimenTitleRegex = new RegExp(`(\\s)${oldIndex}(\\b|$)`, 'i');
 
     // If the string contains the index as a separate word, replace it.
     if (str.match(specimenTitleRegex)) {
-      return str.replace(specimenTitleRegex, ` $${newIndex}`);
+      return str.replace(specimenTitleRegex, ` ${newIndex}`);
     }
   }
 
@@ -103,6 +96,7 @@ const getNewSectionData = (
   isCloningForAdd: boolean = true, // Flag to control value reset
 ): Section => {
   const newSection: any = JSON.parse(JSON.stringify(baseSection));
+  console.log('getNewSectionData called with:', JSON.stringify(baseSection));
 
   const traverseAndReplace = (sections: any): void => {
     sections.forEach((section: any) => {
@@ -147,6 +141,10 @@ const getNewSectionData = (
   };
 
   traverseAndReplace([newSection]);
+  console.log(
+    'New section data after replacement:',
+    JSON.stringify(newSection),
+  );
   return newSection;
 };
 
@@ -424,7 +422,7 @@ const DynamicForm = forwardRef<DynamicFormRef, DynamicFormProps>(
       // We pass the globalFormData so the reIndexSectionsAndData utility can look up the old values.
       const reindexedSections = reIndexSectionsAndData(
         sectionsAfterRemoval,
-        arrayIndexToRemove, 
+        arrayIndexToRemove,
         onGlobalValueChange,
         globalFormData,
       );

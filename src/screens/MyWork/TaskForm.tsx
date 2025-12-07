@@ -104,7 +104,7 @@ const TaskForm = ({route, navigation, taskData}: any) => {
   }, [prepareMaterialConsumption]);
   const PROJECT_ID = taskInfo.projectId;
   const RFI_ID = taskInfo._id;
-  const CHECKLIST_NAME = taskInfo.taskId.name; //TODO rfi id is wrong as it is not coming from taskInfo
+  const CHECKLIST_NAME = taskInfo.taskId.name;
 
   const [activeTab, setActiveTab] = useState(TABS.INFORMATION);
   const [isSaving, setIsSaving] = useState(false);
@@ -412,14 +412,14 @@ const TaskForm = ({route, navigation, taskData}: any) => {
             display: activeTab === TABS.TASK_DETAILS ? 'flex' : 'none',
             flex: 1,
           }}>
-          {/* <TaskDetailsTabPreTensioningOfWires
+          <TaskDetailsTabPreTensioningOfWires
             formData={taskDetails || null}
             globalFormData={taskDetailsData}
             onGlobalValueChange={(fieldId, newValue) =>
               handleUniversalValueChange('taskDetails', fieldId, newValue)
             }
-          /> */}
-          <TaskDetailsTab
+          />
+          {/* <TaskDetailsTab
             ref={taskDetailsRef}
             formData={taskDetails || null}
             header={taskDetailHeader || null}
@@ -427,7 +427,7 @@ const TaskForm = ({route, navigation, taskData}: any) => {
             onGlobalValueChange={(fieldId, newValue) =>
               handleUniversalValueChange('taskDetails', fieldId, newValue)
             }
-          />
+          /> */}
         </View>
       </>
     );

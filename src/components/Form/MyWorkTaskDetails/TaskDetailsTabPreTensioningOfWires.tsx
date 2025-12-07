@@ -19,8 +19,9 @@ const pre_tensioning_headerTaskDetailsConfig = {
   sections: [
     {
       title: 'Basic Details (Header)',
-      type: 'expandable',
+      type: 'nonExpandable',
       items: [
+        // 1. INPUT Field: Bed No.
         {
           id: '{{task unique id}}_Header_Bed_No',
           label: 'Bed No.',
@@ -36,30 +37,19 @@ const pre_tensioning_headerTaskDetailsConfig = {
             errorMessage: 'Required: Must be a positive integer, Max 999.',
           },
         },
+        // 2. READONLY Field: Theoretical Area of Strand (mm²) (A)
         {
           label: 'Theoretical Area of Strand (mm²) (A)',
-          value: 'N/A',
+          value: 'N/A (From web app)',
+          readOnly: true, // Explicitly marked as readOnly for clarity
         },
+        // 3. READONLY Field: Theoretical Modulus of Elasticity (N/mm²) (B)
         {
           label: 'Theoretical Modulus of Elasticity (N/mm²) (B)',
-          value: 'N/A',
+          value: 'N/A (From web app)',
+          readOnly: true,
         },
-        {
-          label: 'Theoretical Jack Force (kN/Strand)(F)',
-          value: 'N/A',
-        },
-        {
-          label: 'Theoretical Elongation (mm/m)(E)',
-          value: 'N/A',
-        },
-        {
-          label: 'No. of Cables above Neutral Axis (n1)',
-          value: 'N/A',
-        },
-        {
-          label: 'No. of Cables below Neutral Axis (n2)',
-          value: 'N/A',
-        },
+        // 4. INPUT Field: Actual Area of Strand (mm²) (C)
         {
           id: '{{task unique id}}_Header_Actual_Area_of_Strand_C',
           label: 'Actual Area of Strand (mm²) (C)',
@@ -76,6 +66,7 @@ const pre_tensioning_headerTaskDetailsConfig = {
               'Required: Must be > 0, Max 500000, Max 2 decimal places.',
           },
         },
+        // 5. INPUT Field: Actual Modulus of Elasticity (N/mm²) (D)
         {
           id: '{{task unique id}}_Header_Actual_Modulus_of_Elasticity_D',
           label: 'Actual Modulus of Elasticity (N/mm²) (D)',
@@ -92,22 +83,41 @@ const pre_tensioning_headerTaskDetailsConfig = {
               'Required: Must be > 0, Max 500000, Max 2 decimal places.',
           },
         },
+        // 6. READONLY Field: Theoretical Jack Force (kN/Strand)(F)
+        {
+          label: 'Theoretical Jack Force (kN/Strand)(F)',
+          value: 'N/A (From web app)',
+          readOnly: true,
+        },
+        // 7. READONLY Field: Theoretical Elongation (mm/m)(E)
+        {
+          label: 'Theoretical Elongation (mm/m)(E)',
+          value: 'N/A (From web app)',
+          readOnly: true,
+        },
       ],
     },
   ],
 };
-const pre_tensioning_below_neutral_TaskDetailsConfig = {
-  mainTitle: 'Pre-Tensioning Basic Details',
-  isMultiTask: false,
+const pre_tensioning_above_neutral_axisTaskDetailsConfig = {
+  mainTitle: 'Pre-Tensioning Readings: Above Neutral Axis (AN)',
+  isMultiTask: true,
   isVariable: false,
   sections: [
     {
-      title: 'BN Inputs',
-      type: 'non-expandable',
+      title: 'AN Basic Data',
+      type: 'expandable',
       items: [
+        // READONLY Field: No. of Cables above Neutral Axis (n1)
         {
-          id: '{{task unique id}}_Specimen1_L2',
-          label: 'Length of HTS Wire (m) -Master grip to Master Grip (L2)',
+          label: 'No. of Cables above Neutral Axis (n1)',
+          value: 'N/A (From web app)',
+          readOnly: true,
+        },
+        // INPUT Field: Length of HTS Wire (m) (L1)
+        {
+          id: 'length_of_hts_wire_m_for_above_neutral_L1',
+          label: 'Length of HTS Wire (m) (L1)',
           type: 'number',
           value: 0,
           placeholder: 'e.g., 50.000 (Max 3 decimals, Max 100)',
@@ -121,6 +131,138 @@ const pre_tensioning_below_neutral_TaskDetailsConfig = {
               'Required: Must be > 0, Max 100, Max 3 decimal places.',
           },
         },
+        // INPUT Field: Jack Ram Area (cm²)(A1)
+        {
+          id: 'jack_ram_area_cm2_a1_for_above_neutral_axis_A1',
+          label: 'Jack Ram Area (cm²)(A1)',
+          type: 'number',
+          value: 0,
+          placeholder: 'e.g., 100.00 (Max 2 decimals, Max 50000)',
+          validations: {
+            required: true,
+            type: 'number',
+            min: 0.01,
+            max: 50000.0,
+            decimalPlaces: 2,
+            errorMessage:
+              'Required: Must be > 0, Max 50000, Max 2 decimal places.',
+          },
+        },
+        // INPUT Field: No. of Jacks are used(N1)
+        {
+          id: 'jack_efficiency_i1_for_above_neutral_axis_N1',
+          label: 'No. of Jacks are used(N1)',
+          type: 'number',
+          value: 1,
+          placeholder: 'e.g., 2 (Positive Integer, Max 100)',
+          validations: {
+            required: true,
+            type: 'number',
+            min: 1,
+            max: 100.0,
+            decimalPlaces: 0,
+            errorMessage: 'Required: Must be a positive integer, Max 100.',
+          },
+        },
+        // INPUT Field: Jack Efficiency (%)(I1)
+        {
+          id: 'jack_efficiency_i1_for_above_neutral_axis_I1',
+          label: 'Jack Efficiency (%)(I1)',
+          type: 'number',
+          value: 0,
+          placeholder: 'e.g., 90.00 (Max 2 decimals, Max 100)',
+          validations: {
+            required: true,
+            type: 'number',
+            min: 0.01,
+            max: 100.0,
+            decimalPlaces: 2,
+            errorMessage:
+              'Required: Must be > 0, Max 100, Max 2 decimal places.',
+          },
+        },
+      ],
+    },
+    {
+      title: 'AN Calculated Results',
+      type: 'expandable',
+      items: [
+        // READONLY Field: Modified Elongation (mm)(x1) - Formula: (A*L1*B*E)/(C*D)
+        {
+          label: 'Modified Elongation (mm)(x1)',
+          value: 'N/A (Calculated: (A*L1*B*E)/(C*D))',
+          readOnly: true,
+        },
+        // READONLY Field: Minimum allowable elongation x1 (min)
+        {
+          label: 'Minimum allowable elongation x1 (min)',
+          value: 'N/A (Calculated: .95* x1)',
+          readOnly: true,
+        },
+        // READONLY Field: Maximum allowable elongation x1 (max)
+        {
+          label: 'Maximum allowable elongation x1 (max)',
+          value: 'N/A (Calculated: 1.05* x1)',
+          readOnly: true,
+        },
+        // READONLY Field: Modified Pressure (Kg/cm²)(P1) - Formula: (n1*F*100000)/(A1*N1*I1)
+        {
+          label: 'Modified Pressure (Kg/cm²)(P1)',
+          value: 'N/A (Calculated: (n1*F*100000)/(A1*N1*I1))',
+          readOnly: true,
+        },
+        // READONLY Field: Minimum allowable pressure P1 (min)
+        {
+          label: 'Minimum allowable pressure P1 (min)',
+          value: 'N/A (Calculated: .95* P1)',
+          readOnly: true,
+        },
+        // READONLY Field: Maximum allowable pressure P1 (max)
+        {
+          label: 'Maximum allowable pressure P1 (max)',
+          value: 'N/A (Calculated: 1.05* P1)',
+          readOnly: true,
+        },
+        // Placeholder for User Input (e.g., Applied Pressure/Reading Field)
+        // (Note: The provided list for AN only lists input fields L1, A1, N1, I1, which are included above)
+      ],
+    },
+  ],
+};
+
+const pre_tensioning_below_neutral_axisTaskDetailsConfig = {
+  mainTitle: 'Pre-Tensioning Readings: Below Neutral Axis (BN)',
+  isMultiTask: true,
+  isVariable: false,
+  sections: [
+    {
+      title: 'BN Basic Data',
+      type: 'expandable',
+      items: [
+        // READONLY Field: No. of Cables below Neutral Axis (n2)
+        {
+          label: 'No. of Cables below Neutral Axis (n2)',
+          value: 'N/A (From web app)',
+          readOnly: true,
+        },
+        // INPUT Field: Length of HTS Wire (m) (L2)
+        {
+          id: '{{task unique id}}_Specimen1_L2',
+          label: 'Length of HTS Wire (m) (L2)',
+          type: 'number',
+          value: 0,
+          placeholder: 'e.g., 50.000 (Max 3 decimals, Max 100)',
+          validations: {
+            required: true,
+            type: 'number',
+            min: 0.001,
+            max: 100.0,
+            decimalPlaces: 3,
+            errorMessage:
+              'Required: Must be > 0, Max 100, Max 3 decimal places.',
+          },
+        },
+        // INPUT Field: Jack Ram Area (cm²)(A2)
         {
           id: '{{task unique id}}_Specimen1_A2',
           label: 'Jack Ram Area (cm²)(A2)',
@@ -137,6 +279,7 @@ const pre_tensioning_below_neutral_TaskDetailsConfig = {
               'Required: Must be > 0, Max 50000, Max 2 decimal places.',
           },
         },
+        // INPUT Field: No. of Jacks are used(N2)
         {
           id: '{{task unique id}}_Specimen1_N2',
           label: 'No. of Jacks are used(N2)',
@@ -152,6 +295,7 @@ const pre_tensioning_below_neutral_TaskDetailsConfig = {
             errorMessage: 'Required: Must be a positive integer, Max 100.',
           },
         },
+        // INPUT Field: Jack Efficiency (%)(I2)
         {
           id: '{{task unique id}}_Specimen1_I2',
           label: 'Jack Efficiency (%)(I2)',
@@ -168,233 +312,50 @@ const pre_tensioning_below_neutral_TaskDetailsConfig = {
               'Required: Must be > 0, Max 100, Max 2 decimal places.',
           },
         },
-        {
-          id: '{{task unique id}}_Specimen1_applied_pressure',
-          label: 'Applied pressure (Kg/cm²)',
-          type: 'number',
-          value: 0,
-          placeholder: 'e.g., 1500.00 (Max 2 decimals)',
-          validations: {
-            required: true,
-            type: 'number',
-            min: 0.01,
-            max: 100000.0,
-            decimalPlaces: 2,
-            errorMessage:
-              'Required: Must be > 0, Max 100000, Max 2 decimal places.',
-          },
-        },
       ],
     },
-  ],
-};
-
-const pre_tensioning_below_neutral_axisTaskDetailsConfig = {
-  mainTitle: 'Pre-Tensioning Readings: Below Neutral Axis (BN)',
-  isMultiTask: true,
-  isVariable: true,
-  variableSectionConfig: {
-    addButtonLabel: 'Add Set of BN Readings',
-    minSections: 1,
-    maxSections: 10,
-    title: 'BN Reading Set',
-    cta: 'addSection',
-  },
-  sections: [
     {
-      mainTitle: 'BN Readings 1',
-      type: 'subSection',
-      sections: [
+      title: 'BN Calculated Results',
+      type: 'expandable',
+      items: [
+        // READONLY Field: Modified Elongation (mm)(x2) - Formula: (A*L2*B*E)/(C*D)
         {
-          title: 'Elongation Readings (Dynamically Generated)',
-          type: 'expandable',
-          items: [
-            {
-              id: '{{task unique id}}_Specimen1_elongation_jack_1',
-              label: 'Elongation (mm)- jack 1',
-              type: 'number',
-              value: 0,
-              placeholder: 'e.g., 50.00 (Max 2 decimals)',
-              validations: {
-                required: true,
-                type: 'number',
-                min: 0.01,
-                max: 50000000.0,
-                decimalPlaces: 2,
-                errorMessage: 'Required: Must be a positive number.',
-              },
-            },
-          ],
+          label: 'Modified Elongation (mm)(x2)',
+          value: 'N/A (Calculated: (A*L2*B*E)/(C*D))',
+          readOnly: true,
         },
-      ],
-    },
-  ],
-};
-
-const pre_tensioning_above_neutral_axisTaskDetailsConfig = {
-  mainTitle: 'Pre-Tensioning Readings: Above Neutral Axis (AN)',
-  isMultiTask: true,
-  isVariable: true,
-  variableSectionConfig: {
-    addButtonLabel: 'Add Set of AN Readings',
-    minSections: 1,
-    maxSections: 10,
-    title: 'AN Reading Set',
-    cta: 'addSection',
-  },
-  sections: [
-    {
-      mainTitle: 'AN Readings 1',
-      type: 'subSection',
-      sections: [
+        // READONLY Field: Minimum allowable elongation x2 (min)
         {
-          title: 'AN Inputs',
-          type: 'expandable',
-          items: [
-            {
-              id: '{{task unique id}}_Specimen1_L1',
-              label: 'Length of HTS Wire (m) -Master grip to Master Grip (L1)',
-              type: 'number',
-              value: 0,
-              placeholder: 'e.g., 50.000 (Max 3 decimals, Max 100)',
-              validations: {
-                required: true,
-                type: 'number',
-                min: 0.001,
-                max: 100.0,
-                decimalPlaces: 3,
-                errorMessage:
-                  'Required: Must be > 0, Max 100, Max 3 decimal places.',
-              },
-            },
-            {
-              id: '{{task unique id}}_Specimen1_A1',
-              label: 'Jack Ram Area (cm²)(A1)',
-              type: 'number',
-              value: 0,
-              placeholder: 'e.g., 100.00 (Max 2 decimals, Max 50000)',
-              validations: {
-                required: true,
-                type: 'number',
-                min: 0.01,
-                max: 50000.0,
-                decimalPlaces: 2,
-                errorMessage:
-                  'Required: Must be > 0, Max 50000, Max 2 decimal places.',
-              },
-            },
-            {
-              id: '{{task unique id}}_Specimen1_N1',
-              label: 'No. of Jacks are used(N1)',
-              type: 'number',
-              value: 1,
-              placeholder: 'e.g., 2 (Positive Integer, Max 100)',
-              validations: {
-                required: true,
-                type: 'number',
-                min: 1,
-                max: 100.0,
-                decimalPlaces: 0,
-                errorMessage: 'Required: Must be a positive integer, Max 100.',
-              },
-            },
-            {
-              id: '{{task unique id}}_Specimen1_I1',
-              label: 'Jack Efficiency (%)(I1)',
-              type: 'number',
-              value: 0,
-              placeholder: 'e.g., 90.00 (Max 2 decimals, Max 100)',
-              validations: {
-                required: true,
-                type: 'number',
-                min: 0.01,
-                max: 100.0,
-                decimalPlaces: 2,
-                errorMessage:
-                  'Required: Must be > 0, Max 100, Max 2 decimal places.',
-              },
-            },
-            {
-              id: '{{task unique id}}_Specimen1_applied_pressure',
-              label: 'Applied pressure (Kg/cm²)',
-              type: 'number',
-              value: 0,
-              placeholder: 'e.g., 1500.00 (Max 2 decimals)',
-              validations: {
-                required: true,
-                type: 'number',
-                min: 0.01,
-                max: 100000.0,
-                decimalPlaces: 2,
-                errorMessage:
-                  'Required: Must be > 0, Max 100000, Max 2 decimal places.',
-              },
-            },
-          ],
+          label: 'Minimum allowable elongation x2 (min)',
+          value: 'N/A (Calculated: .95* x2)',
+          readOnly: true,
         },
+        // READONLY Field: Maximum allowable elongation x2 (max)
         {
-          title: 'Elongation Readings (Dynamically Generated)',
-          type: 'expandable',
-          items: [
-            {
-              id: '{{task unique id}}_Specimen1_elongation_jack_1',
-              label: 'Elongation (mm)- jack 1',
-              type: 'number',
-              value: 0,
-              placeholder: 'e.g., 50.00 (Max 2 decimals)',
-              validations: {
-                required: true,
-                type: 'number',
-                min: 0.01,
-                max: 50000000.0,
-                decimalPlaces: 2,
-                errorMessage: 'Required: Must be a positive number.',
-              },
-            },
-          ],
+          label: 'Maximum allowable elongation x2 (max)',
+          value: 'N/A (Calculated: 1.05* x2)',
+          readOnly: true,
         },
+        // READONLY Field: Modified Pressure (Kg/cm²)(P2) - Formula: (n2*F*100000)/(A2*N2*I2)
         {
-          title: 'AN Calculated Results',
-          type: 'expandable',
-          items: [
-            {
-              label: 'Modified Elongation (mm)(x1)',
-              value: 'N/A',
-            },
-            {
-              label: 'Minimum allowable elongation x1 (min)',
-              value: 'N/A',
-            },
-            {
-              label: 'Maximum allowable elongation x1 (max)',
-              value: 'N/A',
-            },
-            {
-              label: 'Modified Pressure (Kg/cm²)(P1)',
-              value: 'N/A',
-            },
-            {
-              label: 'Minimum allowable pressure P1 (min)',
-              value: 'N/A',
-            },
-            {
-              label: 'Maximum allowable pressure P1 (max)',
-              value: 'N/A',
-            },
-            {
-              label: 'Avg. Elongation Reading (mm)',
-              value: 'N/A',
-            },
-            {
-              label: 'Difference (Max - Min Elongation) (mm)',
-              value: 'N/A',
-            },
-            {
-              label: 'Status / Remarks',
-              value: 'N/A',
-            },
-          ],
+          label: 'Modified Pressure (Kg/cm²)(P2)',
+          value: 'N/A (Calculated: (n2*F*100000)/(A2*N2*I2))',
+          readOnly: true,
         },
+        // READONLY Field: Minimum allowable pressure P2 (min)
+        {
+          label: 'Minimum allowable pressure P2 (min)',
+          value: 'N/A (Calculated: .95* P2)',
+          readOnly: true,
+        },
+        // READONLY Field: Maximum allowable pressure P2 (max)
+        {
+          label: 'Maximum allowable pressure P2 (max)',
+          value: 'N/A (Calculated: 1.05* P2)',
+          readOnly: true,
+        },
+        // Placeholder for User Input (e.g., Applied Pressure/Reading Field)
+        // (Note: A standard input field for 'Applied Pressure' is typically added for actual measurements.)
       ],
     },
   ],

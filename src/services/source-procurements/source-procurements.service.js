@@ -1,7 +1,8 @@
 import apiService from '../api.service';
 
 export const getMeterialRequestFormApi = async (projectId, id) => {
-  return apiService.getRequest(`v1/auth/projects/${projectId}/tasks/${id}/prepare-request`)
+  return apiService
+    .getRequest(`v1/auth/projects/${projectId}/tasks/${id}/prepare-request`)
     .then(response => {
       return response;
     })
@@ -12,7 +13,11 @@ export const getMeterialRequestFormApi = async (projectId, id) => {
 };
 
 export const postUploadBatchSlipApi = async (projectId, id, body) => {
-  return apiService.postRequest(`v1/auth/projects/${projectId}/material-requests/items/${id}/upload-batch-slip`, body)
+  return apiService
+    .postRequest(
+      `v1/auth/projects/${projectId}/material-requests/items/${id}/upload-batch-slip`,
+      body,
+    )
     .then(response => {
       return response;
     })
@@ -23,7 +28,8 @@ export const postUploadBatchSlipApi = async (projectId, id, body) => {
 };
 
 export const postMeterialRequestFormApi = async (projectId, body) => {
-  return apiService.postRequest(`v1/auth/projects/${projectId}/material-requests`, body)
+  return apiService
+    .postRequest(`v1/auth/projects/${projectId}/material-requests`, body)
     .then(response => {
       return response;
     })
@@ -33,11 +39,21 @@ export const postMeterialRequestFormApi = async (projectId, body) => {
     });
 };
 
-export const getMeterialRequestToFormApi = async (projectId, type, requestType) => {
-  console.log('---!!!', projectId, type, requestType)
-  return apiService.getRequest(`v1/auth/projects/${projectId}/material-requests?requestTo=${type}&requestType${requestType}`)
+export const getMeterialRequestToFormApi = async (
+  projectId,
+  type,
+  requestType,
+) => {
+  console.log('-Suyash--!!!', projectId, type, requestType);
+  console.log(
+    `v1/auth/projects/${projectId}/material-requests?requestTo=${type}&requestType=${requestType}`,
+  );
+  return apiService
+    .getRequest(
+      `v1/auth/projects/${projectId}/material-requests?requestTo=${type}&requestType=${requestType}`,
+    )
     .then(response => {
-  console.log('---!!!', response)
+      console.log('---!!!', response);
 
       return response;
     })
@@ -48,10 +64,14 @@ export const getMeterialRequestToFormApi = async (projectId, type, requestType) 
 };
 
 export const patchMeterialRequestStatusApi = async (projectId, id, body) => {
-  console.log('patch---!!!', projectId, id, body)
-  return apiService.patchRequest(`v1/auth/projects/${projectId}/material-requests/${id}/status`, body)
+  console.log('patch---!!!', projectId, id, body);
+  return apiService
+    .patchRequest(
+      `v1/auth/projects/${projectId}/material-requests/${id}/status`,
+      body,
+    )
     .then(response => {
-  console.log('---!!!', response)
+      console.log('---!!!', response);
 
       return response;
     })
@@ -62,10 +82,14 @@ export const patchMeterialRequestStatusApi = async (projectId, id, body) => {
 };
 
 export const patchDipatchRequestApi = async (projectId, id, body) => {
-  console.log('patch---!!!', projectId, id, body)
-  return apiService.patchRequest(`v1/auth/projects/${projectId}/material-requests/items/${id}/dispatch-store`, body)
+  console.log('patch---!!!', projectId, id, body);
+  return apiService
+    .patchRequest(
+      `v1/auth/projects/${projectId}/material-requests/items/${id}/dispatch-store`,
+      body,
+    )
     .then(response => {
-  console.log('---!!!', response)
+      console.log('---!!!', response);
 
       return response;
     })
@@ -76,8 +100,9 @@ export const patchDipatchRequestApi = async (projectId, id, body) => {
 };
 
 /*VENDOR FORM*/
-export const postVendorFormApi = async (body) => {
-  return apiService.postRequest(`v1/auth/vendors/addVender`, body)
+export const postVendorFormApi = async body => {
+  return apiService
+    .postRequest(`v1/auth/vendors/addVender`, body)
     .then(response => {
       return response;
     })
@@ -88,7 +113,8 @@ export const postVendorFormApi = async (body) => {
 };
 
 export const putVendorFormApi = async (id, body) => {
-  return apiService.putRequest(`v1/auth/vendors/updateVendor/${id}`, body)
+  return apiService
+    .putRequest(`v1/auth/vendors/updateVendor/${id}`, body)
     .then(response => {
       return response;
     })
@@ -98,8 +124,9 @@ export const putVendorFormApi = async (id, body) => {
     });
 };
 
-export const deleteVendorFormApi = async (id) => {
-  return apiService.deleteRequest(`v1/auth/vendors/deleteVendor/${id}`)
+export const deleteVendorFormApi = async id => {
+  return apiService
+    .deleteRequest(`v1/auth/vendors/deleteVendor/${id}`)
     .then(response => {
       return response;
     })
@@ -110,7 +137,8 @@ export const deleteVendorFormApi = async (id) => {
 };
 
 export const getVendorFormApi = async () => {
-  return apiService.getRequest(`v1/auth/vendors`)
+  return apiService
+    .getRequest(`v1/auth/vendors`)
     .then(response => {
       return response;
     })
@@ -187,7 +215,6 @@ export const addSourceApprovalApi = async (
       throw new Error(errorMessge);
     });
 };
-
 
 export const putSourceApprovalApi = async (
   projectId,

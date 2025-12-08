@@ -108,9 +108,9 @@ const currentRequests =
   const handleActionPress = useCallback(
     (action: string, status: string, item: any) => {
       console.log(`Action: ${action}, Status: ${status}, Tab: ${selectedTab}`);
-
+      console.log('Request Item:', item);
       switch (status) {
-        case MATERIAL_REQUEST_STATUS.PENDING_APPROVAL:
+        case MATERIAL_REQUEST_STATUS.REQUEST_FOR_APPROVAL:
         case MATERIAL_REQUEST_STATUS.PENDING_DISPATCH:
           navigation.navigate('MaterialApprovalForm', {status, item});
           break;
@@ -119,9 +119,18 @@ const currentRequests =
           break;
         case MATERIAL_REQUEST_STATUS.PENDING_ACCEPTANCE:
           if (action === 'accept') {
-            // Add your logic for accepting a request
-            console.log('Request accepted', {projectId: loggedInUser.projectId, id: item?.id, body: {status: 'pending_approval'}});
-            dispatch(patchMaterialRequestStatus({projectId: loggedInUser.projectId, id: item?.id, body: {status: 'pending_approval'}}))
+            console.log('Request accepted', {
+              projectId: loggedInUser.projectId,
+              id: item?.id,
+              body: {status: 'request_for_approval'},
+            });
+            dispatch(
+              patchMaterialRequestStatus({
+                projectId: loggedInUser.projectId,
+                id: item?.id,
+                body: {status: 'request_for_approval'},
+              }),
+            );
           } else if (action === 'reject') {
             // Add your logic for rejecting a request
             console.log('Request rejected');

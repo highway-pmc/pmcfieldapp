@@ -12,7 +12,7 @@ interface RequestCardProps {
     requestQty: number;
     status: string;
     statusText: string;
-    items: [],
+    items: [];
   };
   onActionPress: (action: string, status: string, items: any) => void;
 }
@@ -20,6 +20,8 @@ interface RequestCardProps {
 const RequestCard = ({request, onActionPress}: RequestCardProps) => {
   const getCardStyle = (status: string) => {
     switch (status) {
+      case MATERIAL_REQUEST_STATUS.REQUEST_FOR_APPROVAL:
+        return styles.pendingApprovalCard;
       case MATERIAL_REQUEST_STATUS.PENDING_ACCEPTANCE:
         return styles.pendingAcceptanceCard;
       case MATERIAL_REQUEST_STATUS.PENDING_APPROVAL:
@@ -35,6 +37,8 @@ const RequestCard = ({request, onActionPress}: RequestCardProps) => {
 
   const getStatusStyle = (status: string) => {
     switch (status) {
+      case MATERIAL_REQUEST_STATUS.REQUEST_FOR_APPROVAL:
+        return styles.pendingApprovalCard;
       case MATERIAL_REQUEST_STATUS.PENDING_ACCEPTANCE:
         return styles.pendingAcceptanceStatus;
       case MATERIAL_REQUEST_STATUS.PENDING_APPROVAL:
@@ -50,6 +54,7 @@ const RequestCard = ({request, onActionPress}: RequestCardProps) => {
 
   const getLeftBorderColor = (status: string) => {
     switch (status) {
+      case MATERIAL_REQUEST_STATUS.REQUEST_FOR_APPROVAL:
       case MATERIAL_REQUEST_STATUS.PENDING_ACCEPTANCE:
       case MATERIAL_REQUEST_STATUS.PENDING_APPROVAL:
         return '#FF9800'; // Orange for pending states
@@ -84,7 +89,7 @@ const RequestCard = ({request, onActionPress}: RequestCardProps) => {
           <TouchableOpacity
             style={styles.approvalButton}
             onPress={() => onActionPress('request_approval', status, item)}>
-            <Text style={styles.approvalButtonText}>Request for Approval</Text>
+            <Text style={styles.approvalButtonText}>Pending Approval</Text>
           </TouchableOpacity>
         );
       case MATERIAL_REQUEST_STATUS.PENDING_DISPATCH:
@@ -101,6 +106,14 @@ const RequestCard = ({request, onActionPress}: RequestCardProps) => {
             style={styles.newRequestButton}
             onPress={() => onActionPress('create_new', status, item)}>
             <Text style={styles.newRequestButtonText}>Create New Request</Text>
+          </TouchableOpacity>
+        );
+      case MATERIAL_REQUEST_STATUS.REQUEST_FOR_APPROVAL:
+        return (
+          <TouchableOpacity
+            style={styles.approvalButton}
+            onPress={() => onActionPress('request_approval', status, item)}>
+            <Text style={styles.approvalButtonText}>Request for Approval</Text>
           </TouchableOpacity>
         );
       default:

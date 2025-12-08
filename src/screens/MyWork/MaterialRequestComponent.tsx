@@ -10,6 +10,7 @@ import {
   Alert,
   NativeEventEmitter,
   StyleSheet,
+  ActivityIndicator,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {
@@ -21,7 +22,6 @@ import {HeaderItems} from '../../constants/constants';
 import {useSnackbar} from '../../context/SnackbarContext';
 
 const MaterialRequestComponent = ({route, navigation}: any) => {
-  console.log('MaterialRequestComponent route params:', route.params);
   const taskId = route && route.params ? route.params.taskId : undefined;
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
@@ -31,9 +31,18 @@ const MaterialRequestComponent = ({route, navigation}: any) => {
     useSelector((state: any) => state.MeterialRequest);
 
   const [materialRequests, setMaterialRequests] = useState<any[]>([]);
-  const [dropdownVisible, setDropdownVisible] = useState(false);
+
+  const [categoryDropdownVisible, setCategoryDropdownVisible] = useState(false);
   const [currentRequestId, setCurrentRequestId] = useState<any>(null);
   const [currentCategoryId, setCurrentCategoryId] = useState<any>(null);
+
+  const [plantDropdownVisible, setPlantDropdownVisible] = useState(false);
+  const [currentRequestForPlant, setCurrentRequestForPlant] =
+    useState<any>(null);
+
+  // button loaders
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     if (isFocused) {
@@ -44,8 +53,11 @@ const MaterialRequestComponent = ({route, navigation}: any) => {
 
   useEffect(() => {
     if (postMeterialRequestFormData) {
+      setIsSubmitting(false);
       showSnackbar('Material Request submitted successfully', 'success');
+      navigation.goBack();
     } else if (error) {
+      setIsSubmitting(false);
       showSnackbar(error, 'error');
     }
   }, [postMeterialRequestFormData, error]);
@@ -63,26 +75,35 @@ const MaterialRequestComponent = ({route, navigation}: any) => {
 
   useEffect(() => {
     if (getMeterialRequestFormData?.requestGroups?.length) {
-      // Flatten the structure to create individual Material Request cards
       const flattenedRequests: any[] = [];
       let requestCounter = 1;
 
       getMeterialRequestFormData.requestGroups.forEach((group: any) => {
+        const requestType = group.requestTo;
+
         group.materialRequests.forEach((workCategory: any) => {
           workCategory.materials.forEach((material: any) => {
             flattenedRequests.push({
               id: requestCounter,
+              uniqueKey: `${requestCounter}-${material.testMaterialId}`,
               expanded: false,
-              requestTo: group.requestTo,
+
+              requestTo: requestType,
               testWorkCategoryId: workCategory.testWorkCategoryId,
               testWorkCategoryType: workCategory.testWorkCategoryType,
               testWorkCategoryName: workCategory.testWorkCategoryName,
               testMaterialId: material.testMaterialId,
+
               materialType: material.materialType,
               materialName: material.materialName,
               unit: material.unit,
+
               availableCategories: material.materialRequests || [],
+              availablePlants: material.availablePlants || [],
+
               selectedCategories: [],
+              selectedPlantId: null,
+              selectedPlantName: '',
               comments: '',
             });
             requestCounter++;
@@ -112,26 +133,6 @@ const MaterialRequestComponent = ({route, navigation}: any) => {
     );
   };
 
-  const updateCategory = (
-    requestId: any,
-    categoryId: any,
-    field: any,
-    value: any,
-  ) => {
-    setMaterialRequests(prev =>
-      prev.map(request =>
-        request.id === requestId
-          ? {
-              ...request,
-              selectedCategories: request.selectedCategories.map((cat: any) =>
-                cat.id === categoryId ? {...cat, [field]: value} : cat,
-              ),
-            }
-          : request,
-      ),
-    );
-  };
-
   const addCategory = (requestId: any) => {
     setMaterialRequests(prev =>
       prev.map(request =>
@@ -153,6 +154,26 @@ const MaterialRequestComponent = ({route, navigation}: any) => {
     );
   };
 
+  const updateCategory = (
+    requestId: any,
+    categoryId: any,
+    field: any,
+    value: any,
+  ) => {
+    setMaterialRequests(prev =>
+      prev.map(request =>
+        request.id === requestId
+          ? {
+              ...request,
+              selectedCategories: request.selectedCategories.map((cat: any) =>
+                cat.id === categoryId ? {...cat, [field]: value} : cat,
+              ),
+            }
+          : request,
+      ),
+    );
+  };
+
   const removeCategory = (requestId: any, categoryId: any) => {
     setMaterialRequests(prev =>
       prev.map(request =>
@@ -168,157 +189,10 @@ const MaterialRequestComponent = ({route, navigation}: any) => {
     );
   };
 
-  const handleSave = () => {
-    Alert.alert('Success', 'Data saved successfully!');
-  };
-
-  const handleSubmitAlternative = () => {
-    // Group requests by requestTo, testWorkCategoryId, and testEquipmentId for submission
-    const groupedRequests = {};
-
-    materialRequests.forEach(request => {
-      if (request.selectedCategories.length === 0) return;
-
-      // Include testEquipmentId in the grouping key if it exists
-      const key = `${request.requestTo}-${request.testWorkCategoryId}-${
-        request.testEquipmentId || 'no-equipment'
-      }`;
-
-      if (!groupedRequests[key]) {
-        groupedRequests[key] = {
-          requestTo: request.requestTo,
-          testWorkCategoryId: request.testWorkCategoryId,
-          testWorkCategoryType: request.testWorkCategoryType,
-          testEquipmentId: request.testEquipmentId, // Include equipment ID
-          materialTypes: {},
-        };
-      }
-
-      if (!groupedRequests[key].materialTypes[request.testMaterialId]) {
-        groupedRequests[key].materialTypes[request.testMaterialId] = {
-          testMaterialId: request.testMaterialId,
-          type: request.materialType,
-          materialCategory: [],
-        };
-      }
-
-      request.selectedCategories.forEach(cat => {
-        if (cat.category && cat.quantity) {
-          groupedRequests[key].materialTypes[
-            request.testMaterialId
-          ].materialCategory.push({
-            category: cat.category,
-            qty: Number(cat.quantity),
-          });
-        }
-      });
-    });
-
-    const payload = {
-      rfiId: '6841ecdec00f933c0c1796c2',
-      comments: 'Material request submitted from mobile app.',
-      materialRequests: Object.values(groupedRequests).map((group: any) => {
-        const materialRequest = {
-          requestTo: group.requestTo,
-          testWorkCategories: [
-            {
-              testWorkCategoryId: group.testWorkCategoryId,
-              testWorkCategoryType: group.testWorkCategoryType,
-              materialTypes: Object.values(group.materialTypes),
-            },
-          ],
-        };
-
-        // Only include testEquipmentId if it exists
-        if (group.testEquipmentId && group.testEquipmentId !== 'no-equipment') {
-          materialRequest.testEquipmentId = group.testEquipmentId;
-        }
-
-        return materialRequest;
-      }),
-    };
-
-    console.log('Submitting payload:', JSON.stringify(payload, null, 2));
-    dispatch(
-      submitMaterialRequest({
-        projectId: loggedInUser?.projectId,
-        body: payload,
-      }),
-    );
-  };
-
-  // Alternative approach if you need to prevent over-grouping:
-  const handleSubmit = () => {
-    const materialRequestsMap = new Map();
-
-    materialRequests.forEach(request => {
-      if (request.selectedCategories.length === 0) return;
-
-      const materialCategories = request.selectedCategories
-        .filter(cat => cat.category && cat.quantity)
-        .map(cat => ({
-          category: cat.category,
-          qty: Number(cat.quantity),
-        }));
-
-      if (materialCategories.length === 0) return;
-
-      const requestKey = `${request.requestTo}-${
-        request.testEquipmentId || 'no-equipment'
-      }`;
-
-      if (!materialRequestsMap.has(requestKey)) {
-        materialRequestsMap.set(requestKey, {
-          requestTo: request.requestTo,
-          ...(request.testEquipmentId && {
-            testEquipmentId: request.testEquipmentId,
-          }),
-          testWorkCategories: new Map(),
-        });
-      }
-
-      const materialRequest = materialRequestsMap.get(requestKey);
-      const categoryKey = `${request.testWorkCategoryId}`;
-
-      if (!materialRequest.testWorkCategories.has(categoryKey)) {
-        materialRequest.testWorkCategories.set(categoryKey, {
-          testWorkCategoryId: request.testWorkCategoryId,
-          testWorkCategoryType: request.testWorkCategoryType,
-          materialTypes: [],
-        });
-      }
-
-      materialRequest.testWorkCategories.get(categoryKey).materialTypes.push({
-        testMaterialId: request.testMaterialId,
-        type: request.materialType,
-        materialCategory: materialCategories,
-      });
-    });
-
-    const payload = {
-      rfiId: '6841ecdec00f933c0c1796c2',
-      comments: 'Material request submitted from mobile app.',
-      materialRequests: Array.from(materialRequestsMap.values()).map(
-        request => ({
-          ...request,
-          testWorkCategories: Array.from(request.testWorkCategories.values()),
-        }),
-      ),
-    };
-
-    console.log('Submitting payload:', JSON.stringify(payload, null, 2));
-    dispatch(
-      submitMaterialRequest({
-        projectId: loggedInUser?.projectId,
-        body: payload,
-      }),
-    );
-  };
-
-  const openDropdown = (requestId: any, categoryId: any) => {
+  const openCategoryDropdown = (requestId: any, categoryId: any) => {
     setCurrentRequestId(requestId);
     setCurrentCategoryId(categoryId);
-    setDropdownVisible(true);
+    setCategoryDropdownVisible(true);
   };
 
   const handleSelectCategory = (selectedCategory: any) => {
@@ -334,31 +208,178 @@ const MaterialRequestComponent = ({route, navigation}: any) => {
       'unit',
       selectedCategory.unit,
     );
-    setDropdownVisible(false);
+    setCategoryDropdownVisible(false);
+  };
+
+  const openPlantDropdown = (request: any) => {
+    setCurrentRequestForPlant(request);
+    setPlantDropdownVisible(true);
+  };
+
+  const handleSelectPlant = (plant: any) => {
+    if (currentRequestForPlant) {
+      updateRequest(currentRequestForPlant.id, 'selectedPlantId', plant._id);
+      updateRequest(currentRequestForPlant.id, 'selectedPlantName', plant.name);
+      setPlantDropdownVisible(false);
+    }
   };
 
   const getAvailableCategories = (requestId: any) => {
     const request = materialRequests.find(r => r.id === requestId);
     if (!request) return [];
-
-    const selectedCategories = request.selectedCategories
+    const selectedCats = request.selectedCategories
       .map((sc: any) => sc.category)
       .filter(Boolean);
-
     return request.availableCategories.filter(
-      (cat: any) => !selectedCategories.includes(cat.category),
+      (cat: any) => !selectedCats.includes(cat.category),
     );
   };
+
+  const handleSubmit = () => {
+    const isValid = materialRequests.every(req => {
+      if (
+        req.selectedCategories.length > 0 &&
+        req.requestTo === 'production' &&
+        !req.selectedPlantId
+      ) {
+        return false;
+      }
+      return true;
+    });
+
+    if (!isValid) {
+      Alert.alert(
+        'Validation Error',
+        'Please select a Plant for all Production requests.',
+      );
+      return;
+    }
+
+    const finalPayloadRequests: any[] = [];
+    const procurementMap = new Map();
+
+    materialRequests.forEach(request => {
+      if (request.selectedCategories.length === 0) return;
+
+      const validCategories = request.selectedCategories
+        .filter((c: any) => c.category && c.quantity)
+        .map((c: any) => ({
+          category: c.category,
+          qty: Number(c.quantity),
+        }));
+
+      if (validCategories.length === 0) return;
+
+      if (request.requestTo === 'production') {
+        validCategories.forEach((catObj: any) => {
+          const productionRequest = {
+            requestTo: 'production',
+            testEquipmentId: request.selectedPlantId,
+            testWorkCategories: [
+              {
+                testWorkCategoryId: request.testWorkCategoryId,
+                testWorkCategoryType: request.testWorkCategoryType,
+                materialTypes: [
+                  {
+                    testMaterialId: request.testMaterialId,
+                    type: request.materialType,
+                    materialCategory: [catObj],
+                  },
+                ],
+              },
+            ],
+          };
+          finalPayloadRequests.push(productionRequest);
+        });
+      } else {
+        const key = `${request.testWorkCategoryId}`;
+
+        if (!procurementMap.has(key)) {
+          procurementMap.set(key, {
+            requestTo: request.requestTo,
+            testWorkCategoryId: request.testWorkCategoryId,
+            testWorkCategoryType: request.testWorkCategoryType,
+            materialTypes: [],
+          });
+        }
+
+        const group = procurementMap.get(key);
+        group.materialTypes.push({
+          testMaterialId: request.testMaterialId,
+          type: request.materialType,
+          materialCategory: validCategories,
+        });
+      }
+    });
+
+    procurementMap.forEach(group => {
+      finalPayloadRequests.push({
+        requestTo: group.requestTo,
+        testWorkCategories: [
+          {
+            testWorkCategoryId: group.testWorkCategoryId,
+            testWorkCategoryType: group.testWorkCategoryType,
+            materialTypes: group.materialTypes,
+          },
+        ],
+      });
+    });
+
+    if (finalPayloadRequests.length === 0) {
+      Alert.alert('Empty', 'Please add at least one material quantity.');
+      return;
+    }
+
+    const payload = {
+      rfiId: getMeterialRequestFormData?.rfiId,
+      isMaterialRequested: 'true',
+      comments: 'Request generated from mobile app',
+      materialRequests: finalPayloadRequests,
+    };
+
+    console.log('Final Payload:', JSON.stringify(payload, null, 2));
+
+    setIsSubmitting(true);
+    console.log('Final Project id:', loggedInUser?.projectId);
+    dispatch(
+      submitMaterialRequest({
+        projectId: loggedInUser?.projectId,
+        body: payload,
+      }),
+    );
+  };
+
+  const handleSave = () => {
+    setIsSaving(true);
+    Alert.alert('Saved', 'Local progress saved.');
+    setTimeout(() => {
+      setIsSaving(false);
+    }, 800);
+  };
+
+  const isInitialLoading =
+    !getMeterialRequestFormData &&
+    !error &&
+    !!taskId &&
+    materialRequests.length === 0;
+
+  if (isInitialLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#6B46C1" />
+        <Text style={styles.loadingText}>Loading material requests...</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
       <ScrollView
         style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}>
         <Text style={styles.description}>
-          Lorem Ipsum is simply dummy text of the printing and typesetting
-          industry. Lorem Ipsum has been the industry's standard dummy text ever
-          since the 1500s
+          Create requests for Procurement or Production simultaneously.
         </Text>
 
         {materialRequests.map(request => (
@@ -367,12 +388,28 @@ const MaterialRequestComponent = ({route, navigation}: any) => {
               style={styles.requestHeader}
               onPress={() => toggleExpanded(request.id)}>
               <View style={styles.requestHeaderLeft}>
-                <View style={styles.requestIcon}>
-                  <Text style={styles.requestIconText}>{request.id}</Text>
+                <View
+                  style={[
+                    styles.typeBadge,
+                    request.requestTo === 'production'
+                      ? styles.badgeProduction
+                      : styles.badgeProcurement,
+                  ]}>
+                  <Text style={styles.typeBadgeText}>
+                    {request.requestTo === 'production' ? 'PROD' : 'STORE'}
+                  </Text>
                 </View>
-                <Text style={styles.requestTitle}>
-                  Material Request {request.id}
-                </Text>
+                <View style={{flex: 1}}>
+                  <Text style={styles.requestTitle}>
+                    {request.materialName}
+                  </Text>
+                  <Text style={styles.subTitle}>
+                    To:{' '}
+                    {request.requestTo === 'production'
+                      ? 'Production Plant'
+                      : 'Procurement/Store'}
+                  </Text>
+                </View>
               </View>
               <View style={styles.expandIconContainer}>
                 <Text style={styles.expandIcon}>
@@ -383,35 +420,62 @@ const MaterialRequestComponent = ({route, navigation}: any) => {
 
             {request.expanded && (
               <View style={styles.requestContent}>
-                <View style={styles.inputRow}>
+                {/* Work Category / Material Name / Material Type – vertical */}
+                <View style={styles.verticalInfoGroup}>
                   <View style={styles.inputContainer}>
                     <Text style={styles.inputLabel}>Work Category</Text>
                     <TextInput
-                      style={styles.textInput}
+                      style={[styles.textInput, styles.readOnlyInput]}
                       value={request.testWorkCategoryName}
-                      placeholder="Concrete structure"
-                      placeholderTextColor="#999"
                       editable={false}
                     />
                   </View>
+
                   <View style={styles.inputContainer}>
                     <Text style={styles.inputLabel}>Material Name</Text>
                     <TextInput
-                      style={styles.textInput}
+                      style={[styles.textInput, styles.readOnlyInput]}
                       value={request.materialName}
-                      placeholder="Reinforcement cement"
-                      placeholderTextColor="#999"
+                      editable={false}
+                    />
+                  </View>
+
+                  <View style={styles.inputContainer}>
+                    <Text style={styles.inputLabel}>Material Type</Text>
+                    <TextInput
+                      style={[styles.textInput, styles.readOnlyInput]}
+                      value={request.materialType}
                       editable={false}
                     />
                   </View>
                 </View>
+
+                {request.requestTo === 'production' && (
+                  <View style={styles.plantSelectionContainer}>
+                    <Text style={styles.inputLabel}>
+                      Select Plant/Machinery *
+                    </Text>
+                    <TouchableOpacity
+                      style={styles.dropdownButton}
+                      onPress={() => openPlantDropdown(request)}>
+                      <Text
+                        style={[
+                          styles.dropdownButtonText,
+                          !request.selectedPlantName && styles.placeholderText,
+                        ]}>
+                        {request.selectedPlantName || 'Select Batching Plant'}
+                      </Text>
+                      <Text>▼</Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
 
                 {request.selectedCategories.map(
                   (category: any, index: number) => (
                     <View key={category.id} style={styles.categorySection}>
                       <View style={styles.categorySectionHeader}>
                         <Text style={styles.categorySectionTitle}>
-                          Material Category {index + 1}
+                          Item {index + 1}
                         </Text>
                         <TouchableOpacity
                           onPress={() =>
@@ -425,7 +489,9 @@ const MaterialRequestComponent = ({route, navigation}: any) => {
                       <View style={styles.categoryInputRow}>
                         <TouchableOpacity
                           style={styles.categoryDropdown}
-                          onPress={() => openDropdown(request.id, category.id)}>
+                          onPress={() =>
+                            openCategoryDropdown(request.id, category.id)
+                          }>
                           <View style={styles.dropdown}>
                             <Text
                               style={[
@@ -434,7 +500,7 @@ const MaterialRequestComponent = ({route, navigation}: any) => {
                                   ? styles.dropdownTextSelected
                                   : {},
                               ]}>
-                              {category.category || 'Select Category'}
+                              {category.category || 'Select Grade/Size'}
                             </Text>
                             <Text style={styles.dropdownArrow}>▼</Text>
                           </View>
@@ -457,6 +523,12 @@ const MaterialRequestComponent = ({route, navigation}: any) => {
                             keyboardType="numeric"
                           />
                         </View>
+
+                        <View style={styles.unitContainer}>
+                          <Text style={styles.unitText}>
+                            {category.unit || request.unit}
+                          </Text>
+                        </View>
                       </View>
                     </View>
                   ),
@@ -465,13 +537,13 @@ const MaterialRequestComponent = ({route, navigation}: any) => {
                 <TouchableOpacity
                   style={styles.addMoreButton}
                   onPress={() => addCategory(request.id)}>
-                  <Text style={styles.addMoreText}>+ Add More</Text>
+                  <Text style={styles.addMoreText}>+ Add Quantity</Text>
                 </TouchableOpacity>
 
                 <View style={styles.commentsContainer}>
                   <TextInput
                     style={[styles.textInput, styles.commentsInput]}
-                    placeholder="Comments, if any"
+                    placeholder="Remarks / Comments"
                     value={request.comments}
                     multiline
                     onChangeText={text =>
@@ -483,34 +555,68 @@ const MaterialRequestComponent = ({route, navigation}: any) => {
             )}
           </View>
         ))}
-
-        <View style={styles.actionButtons}>
-          <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-            <Text style={styles.saveButtonText}>Save</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-            <Text style={styles.submitButtonText}>Submit</Text>
-          </TouchableOpacity>
-        </View>
       </ScrollView>
 
+      {/* Bottom bar buttons fixed at bottom */}
+      <View style={styles.bottomBar}>
+        <View style={styles.actionButtons}>
+          <TouchableOpacity
+            style={[
+              styles.saveButton,
+              (isSaving || isSubmitting) && styles.disabledButton,
+            ]}
+            onPress={handleSave}
+            disabled={isSaving || isSubmitting}>
+            {isSaving ? (
+              <ActivityIndicator size="small" color="#6B46C1" />
+            ) : (
+              <Text style={styles.saveButtonText}>Save Draft</Text>
+            )}
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.submitButton,
+              (isSubmitting || isSaving) && styles.disabledButton,
+            ]}
+            onPress={handleSubmit}
+            disabled={isSubmitting || isSaving}>
+            {isSubmitting ? (
+              <ActivityIndicator size="small" color="#ffffff" />
+            ) : (
+              <Text style={styles.submitButtonText}>Submit Request</Text>
+            )}
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      {/* full-screen submit loader */}
+      {isSubmitting && (
+        <View style={styles.loaderOverlay}>
+          <View style={styles.loaderCard}>
+            <ActivityIndicator size="large" color="#6B46C1" />
+            <Text style={styles.loaderText}>Submitting request...</Text>
+          </View>
+        </View>
+      )}
+
+      {/* MODAL 1: Category Selection */}
       <Modal
         transparent
-        visible={dropdownVisible}
+        visible={categoryDropdownVisible}
         animationType="fade"
-        onRequestClose={() => setDropdownVisible(false)}>
+        onRequestClose={() => setCategoryDropdownVisible(false)}>
         <TouchableOpacity
           style={styles.modalOverlay}
           activeOpacity={1}
-          onPressOut={() => setDropdownVisible(false)}>
+          onPressOut={() => setCategoryDropdownVisible(false)}>
           <View style={styles.dropdownModal}>
             <View style={styles.dropdownHeader}>
               <Text style={styles.dropdownHeaderText}>Select Category</Text>
-              <TouchableOpacity onPress={() => setDropdownVisible(false)}>
+              <TouchableOpacity
+                onPress={() => setCategoryDropdownVisible(false)}>
                 <Text style={styles.closeButton}>✕</Text>
               </TouchableOpacity>
             </View>
-
             <FlatList
               data={
                 currentRequestId ? getAvailableCategories(currentRequestId) : []
@@ -531,6 +637,53 @@ const MaterialRequestComponent = ({route, navigation}: any) => {
           </View>
         </TouchableOpacity>
       </Modal>
+
+      {/* MODAL 2: Plant Selection */}
+      <Modal
+        transparent
+        visible={plantDropdownVisible}
+        animationType="fade"
+        onRequestClose={() => setPlantDropdownVisible(false)}>
+        <TouchableOpacity
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPressOut={() => setPlantDropdownVisible(false)}>
+          <View style={styles.dropdownModal}>
+            <View style={styles.dropdownHeader}>
+              <Text style={styles.dropdownHeaderText}>
+                Select Equipment / Plant
+              </Text>
+              <TouchableOpacity onPress={() => setPlantDropdownVisible(false)}>
+                <Text style={styles.closeButton}>✕</Text>
+              </TouchableOpacity>
+            </View>
+            <FlatList
+              data={
+                currentRequestForPlant
+                  ? currentRequestForPlant.availablePlants
+                  : []
+              }
+              keyExtractor={item => item._id}
+              ListEmptyComponent={
+                <Text style={{padding: 20, textAlign: 'center'}}>
+                  No plants available
+                </Text>
+              }
+              renderItem={({item}) => (
+                <TouchableOpacity
+                  style={styles.dropdownItem}
+                  onPress={() => handleSelectPlant(item)}>
+                  <Text style={styles.dropdownItemText}>{item.name}</Text>
+                  <Text style={styles.dropdownItemSubtext}>
+                    {item.uniqueEquipmentId} | {item.testEquipmentType}
+                  </Text>
+                </TouchableOpacity>
+              )}
+              style={styles.dropdownList}
+            />
+          </View>
+        </TouchableOpacity>
+      </Modal>
     </View>
   );
 };
@@ -542,23 +695,27 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
+  },
+  scrollContent: {
     padding: 16,
+    paddingBottom: 120,
   },
   description: {
     fontSize: 14,
     color: '#666',
-    lineHeight: 20,
-    marginBottom: 20,
+    marginBottom: 15,
   },
   requestCard: {
     backgroundColor: '#fff',
-    borderRadius: 12,
+    borderRadius: 16,
     marginBottom: 12,
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
     elevation: 3,
+    borderWidth: 1,
+    borderColor: '#eee',
   },
   requestHeader: {
     flexDirection: 'row',
@@ -569,31 +726,46 @@ const styles = StyleSheet.create({
   requestHeaderLeft: {
     flexDirection: 'row',
     alignItems: 'center',
+    flex: 1,
   },
-  requestIcon: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: '#E0E7FF',
+  typeBadge: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 999,
+    marginRight: 10,
+    minWidth: 55,
     alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 12,
   },
-  requestIconText: {
-    fontSize: 14,
-    color: '#6B46C1',
-    fontWeight: '600',
+  badgeProduction: {
+    backgroundColor: '#FFF4E5',
+    borderWidth: 1,
+    borderColor: '#FFD8A8',
+  },
+  badgeProcurement: {
+    backgroundColor: '#E7F5FF',
+    borderWidth: 1,
+    borderColor: '#A5D8FF',
+  },
+  typeBadgeText: {
+    fontSize: 10,
+    fontWeight: 'bold',
+    color: '#444',
   },
   requestTitle: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: '600',
     color: '#333',
+  },
+  subTitle: {
+    fontSize: 12,
+    color: '#888',
+    marginTop: 2,
   },
   expandIconContainer: {
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#f8f9fa',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -605,35 +777,73 @@ const styles = StyleSheet.create({
   requestContent: {
     padding: 16,
     paddingTop: 0,
+    borderTopWidth: 1,
+    borderTopColor: '#f0f0f0',
+  },
+  verticalInfoGroup: {
+    marginTop: 16,
+    marginBottom: 12,
+    gap: 12,
   },
   inputRow: {
     flexDirection: 'row',
-    marginBottom: 16,
+    marginTop: 16,
+    marginBottom: 12,
     gap: 12,
   },
   inputContainer: {
     flex: 1,
   },
   inputLabel: {
-    fontSize: 14,
+    fontSize: 13,
     color: '#666',
-    marginBottom: 8,
+    marginBottom: 6,
     fontWeight: '500',
   },
   textInput: {
     borderWidth: 1,
     borderColor: '#e0e0e0',
-    borderRadius: 8,
-    padding: 12,
+    borderRadius: 10,
+    padding: 10,
     fontSize: 14,
     color: '#333',
     backgroundColor: '#fff',
   },
+  readOnlyInput: {
+    backgroundColor: '#f9f9f9',
+    color: '#777',
+  },
+  plantSelectionContainer: {
+    marginBottom: 16,
+    marginTop: 4,
+    backgroundColor: '#FFF9DB',
+    padding: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#FFE066',
+  },
+  dropdownButton: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 10,
+    padding: 10,
+  },
+  dropdownButtonText: {
+    color: '#333',
+    fontSize: 14,
+  },
+  placeholderText: {
+    color: '#999',
+  },
   categorySection: {
     borderWidth: 1,
     borderColor: '#e0e0e0',
-    borderRadius: 8,
-    padding: 16,
+    borderRadius: 12,
+    padding: 12,
     marginBottom: 12,
     backgroundColor: '#fafafa',
   },
@@ -641,10 +851,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 10,
   },
   categorySectionTitle: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '600',
     color: '#333',
   },
@@ -652,12 +862,12 @@ const styles = StyleSheet.create({
     padding: 4,
   },
   deleteButtonText: {
-    fontSize: 18,
-    color: '#FF6B6B',
+    fontSize: 16,
   },
   categoryInputRow: {
     flexDirection: 'row',
-    gap: 12,
+    gap: 10,
+    alignItems: 'center',
   },
   categoryDropdown: {
     flex: 2,
@@ -668,9 +878,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     borderWidth: 1,
     borderColor: '#e0e0e0',
-    borderRadius: 8,
-    padding: 12,
+    borderRadius: 10,
+    padding: 10,
     backgroundColor: '#fff',
+    height: 45,
   },
   dropdownText: {
     fontSize: 14,
@@ -686,14 +897,23 @@ const styles = StyleSheet.create({
   quantityInput: {
     flex: 1,
   },
+  unitContainer: {
+    justifyContent: 'center',
+    paddingHorizontal: 4,
+  },
+  unitText: {
+    fontSize: 12,
+    color: '#666',
+  },
   addMoreButton: {
     borderWidth: 1,
     borderColor: '#6B46C1',
-    borderRadius: 8,
+    borderRadius: 10,
     padding: 12,
     alignItems: 'center',
     marginBottom: 16,
     backgroundColor: '#fff',
+    borderStyle: 'dashed',
   },
   addMoreText: {
     color: '#6B46C1',
@@ -705,39 +925,51 @@ const styles = StyleSheet.create({
   },
   commentsInput: {
     textAlignVertical: 'top',
-    minHeight: 80,
+    minHeight: 60,
+  },
+  bottomBar: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    backgroundColor: '#f5f5f5',
+    borderTopWidth: 1,
+    borderTopColor: '#e5e5e5',
   },
   actionButtons: {
     flexDirection: 'row',
     gap: 12,
-    marginTop: 20,
-    marginBottom: 20,
   },
   saveButton: {
     flex: 1,
     borderWidth: 1,
     borderColor: '#6B46C1',
-    borderRadius: 8,
-    padding: 16,
+    borderRadius: 999,
+    paddingVertical: 14,
     alignItems: 'center',
     backgroundColor: '#fff',
   },
   saveButtonText: {
     color: '#6B46C1',
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: '600',
   },
   submitButton: {
     flex: 1,
     backgroundColor: '#6B46C1',
-    borderRadius: 8,
-    padding: 16,
+    borderRadius: 999,
+    paddingVertical: 14,
     alignItems: 'center',
   },
   submitButtonText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: '600',
+  },
+  disabledButton: {
+    opacity: 0.6,
   },
   modalOverlay: {
     flex: 1,
@@ -766,7 +998,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#e0e0e0',
   },
   dropdownHeaderText: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '600',
     color: '#333',
   },
@@ -781,17 +1013,51 @@ const styles = StyleSheet.create({
     borderBottomColor: '#f0f0f0',
   },
   dropdownItemText: {
-    fontSize: 16,
+    fontSize: 15,
     color: '#333',
     fontWeight: '500',
   },
   dropdownItemSubtext: {
     fontSize: 12,
-    color: '#666',
+    color: '#888',
     marginTop: 4,
   },
   dropdownList: {
     maxHeight: 300,
+  },
+  loadingContainer: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 14,
+    color: '#666',
+  },
+  loaderOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.25)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loaderCard: {
+    backgroundColor: '#fff',
+    paddingHorizontal: 24,
+    paddingVertical: 18,
+    borderRadius: 16,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 4,
+  },
+  loaderText: {
+    marginTop: 8,
+    fontSize: 14,
+    color: '#333',
   },
 });
 

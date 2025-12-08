@@ -1035,17 +1035,18 @@ export const TEST_MATERIALS_TYPES = {
   BENTONITE_OTHER: '',
 };
 export const REQUEST_TYPES = {
-  INVENTORY_REQUEST: 'inventry',
+  INVENTORY_REQUEST: 'inventory',
   CONTINGENCY_REQUEST: 'contingency',
 };
 export const MATERIAL_REQUEST_STATUS = {
+  PENDING_ACCEPTANCE: 'pending_acceptance',
   PENDING_APPROVAL: 'pending_approval',
   PENDING_DISPATCH: 'pending_dispatch',
-  PENDING_ACCEPTANCE: 'pending_acceptance',
-  ACCEPTED: 'accepted',
+  REQUEST_FOR_APPROVAL: 'request_for_approval',
+  IN_PROGRESS: 'in_progress',
   REJECTED: 'rejected',
-  DELIVERED: 'delivered',
   DISPATCHED: 'dispatched',
+  DELIVERED: 'delivered',
 };
 export const TEST_TYPES = {
   CORE_TEST: 'core-test',

@@ -108,8 +108,9 @@ const currentRequests =
   const handleActionPress = useCallback(
     (action: string, status: string, item: any) => {
       console.log(`Action: ${action}, Status: ${status}, Tab: ${selectedTab}`);
-      console.log('Request Item:', item);
+      console.log('Request Item:', JSON.stringify(item));
       switch (status) {
+        case MATERIAL_REQUEST_STATUS.PENDING_APPROVAL:
         case MATERIAL_REQUEST_STATUS.REQUEST_FOR_APPROVAL:
         case MATERIAL_REQUEST_STATUS.PENDING_DISPATCH:
           navigation.navigate('MaterialApprovalForm', {status, item});

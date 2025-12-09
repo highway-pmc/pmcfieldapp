@@ -13,12 +13,16 @@ import {
   REQUEST_TYPES,
 } from '../../constants/constants';
 import RequestCard from '../Common/RequestCard';
-import { useDispatch, useSelector } from 'react-redux';
-import { getMaterialRequestTo, patchMaterialRequestStatus } from '../ManageUsers/actions';
-import { useSnackbar } from '../../context/SnackbarContext';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  getMaterialRequestTo,
+  patchMaterialRequestStatus,
+} from '../ManageUsers/actions';
+import {useSnackbar} from '../../context/SnackbarContext';
 
 type RequestItem = {
   id: number;
+  rfiId: string; // Added rfiId here
   materialType: string;
   workCategory: string;
   unit: string;
@@ -27,44 +31,70 @@ type RequestItem = {
   statusText: string;
 };
 
-
-
 const statusType = [
-  {status: MATERIAL_REQUEST_STATUS.PENDING_ACCEPTANCE, statusText: 'Pending for Acceptance'}, 
-  {status: MATERIAL_REQUEST_STATUS.PENDING_APPROVAL, statusText: 'Pending for Approval'}, 
-  {status: MATERIAL_REQUEST_STATUS.PENDING_DISPATCH, statusText: 'Pending for Dispatch'}, 
+  {
+    status: MATERIAL_REQUEST_STATUS.PENDING_ACCEPTANCE,
+    statusText: 'Pending for Acceptance',
+  },
+  {
+    status: MATERIAL_REQUEST_STATUS.PENDING_APPROVAL,
+    statusText: 'Pending for Approval',
+  },
+  {
+    status: MATERIAL_REQUEST_STATUS.PENDING_DISPATCH,
+    statusText: 'Pending for Dispatch',
+  },
   {status: MATERIAL_REQUEST_STATUS.REJECTED, statusText: 'Rejected'},
-]
+];
 
 const ProductionRequest = () => {
   const navigation = useNavigation<any>();
   const dispatch = useDispatch();
-  const { showSnackbar } = useSnackbar();
+  const {showSnackbar} = useSnackbar();
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const { getMeterialRequestToFormData, patchMeterialRequestStatusData, loading: any, error } = useSelector((state) => state.MeterialRequest);
+  const {
+    getMeterialRequestToFormData,
+    patchMeterialRequestStatusData,
+    loading: any,
+    error,
+  } = useSelector((state: any) => state.MeterialRequest);
   const [inventoryRequests, setInventoryRequests] = useState<any[]>([]);
 
   useEffect(() => {
-      if (patchMeterialRequestStatusData) {
-        showSnackbar("Meterial status updated successfully", "success");
-        dispatch(getMaterialRequestTo({ projectId: loggedInUser.projectId, type: 'production', requestType: ''}));
-      } else if (error) {
-        showSnackbar(error, "error");
-      }
-    }, [patchMeterialRequestStatusData, error]);
+    if (patchMeterialRequestStatusData) {
+      showSnackbar('Meterial status updated successfully', 'success');
+      dispatch(
+        getMaterialRequestTo({
+          projectId: loggedInUser.projectId,
+          type: 'production',
+          requestType: '',
+        }),
+      );
+    } else if (error) {
+      showSnackbar(error, 'error');
+    }
+  }, [patchMeterialRequestStatusData, error]);
 
   useEffect(() => {
-    dispatch(getMaterialRequestTo({ projectId: loggedInUser.projectId, type: 'production', requestType: ''}));
-  }, [])
+    dispatch(
+      getMaterialRequestTo({
+        projectId: loggedInUser.projectId,
+        type: 'production',
+        requestType: '',
+      }),
+    );
+  }, []);
 
   useEffect(() => {
-  if (getMeterialRequestToFormData?.length) {
-    const mapped = getMeterialRequestToFormData.flatMap((entry: any) =>
+    if (getMeterialRequestToFormData?.length) {
+      // Flatten the structure: Parent -> MaterialRequests -> Items
+      const mapped = getMeterialRequestToFormData.flatMap((entry: any) =>
         entry.materialRequests.flatMap((req: any) =>
           req.items.map((item: any) => {
             const statusInfo = statusType.find(s => s.status === item.status);
             return {
               id: req?._id,
+              rfiId: entry.rfiId, // Added RFI ID from Parent Object
               createdAt: req?.createdAt,
               updatedAt: req?.updatedAt,
               workCategory: item.testWorkCategoryType,
@@ -72,18 +102,17 @@ const ProductionRequest = () => {
               status: item.status,
               statusText: statusInfo ? statusInfo.statusText : item.status,
               items: req.items,
+              requestQty: item.qty_requested,
             };
-          })
-        )
-      ).filter((value: any, index: any, self: any) => index === self.findIndex((obj: any) =>
-          obj.materialType === value.materialType &&
-          obj.workCategory === value.workCategory
-      )
-  );
-    setInventoryRequests(mapped);
-    console.log("inventoryRequests mapped:", mapped);
-  }
-}, [getMeterialRequestToFormData]);
+          }),
+        ),
+      );
+
+      // Removed the .filter() function so all requests (e.g., all 4) are shown
+      setInventoryRequests(mapped);
+      console.log('inventoryRequests mapped:', mapped);
+    }
+  }, [getMeterialRequestToFormData]);
 
   // Handles navigation when a new request button is pressed
   const navigateToRequestForm = () => {
@@ -106,12 +135,28 @@ const ProductionRequest = () => {
         case MATERIAL_REQUEST_STATUS.PENDING_ACCEPTANCE:
           if (action === 'accept') {
             // Add your logic for accepting a request
-            console.log('Request accepted', {projectId: loggedInUser.projectId, id: item?.id, body: {status: 'pending_approval'}});
-            dispatch(patchMaterialRequestStatus({projectId: loggedInUser.projectId, id: item?.id, body: {status: 'pending_approval'}}))
+            console.log('Request accepted', {
+              projectId: loggedInUser.projectId,
+              id: item?.id,
+              body: {status: 'pending_approval'},
+            });
+            dispatch(
+              patchMaterialRequestStatus({
+                projectId: loggedInUser.projectId,
+                id: item?.id,
+                body: {status: 'pending_approval'},
+              }),
+            );
           } else if (action === 'reject') {
             // Add your logic for rejecting a request
             console.log('Request rejected');
-            dispatch(patchMaterialRequestStatus({projectId: loggedInUser.projectId, id: item?.id, body: {status: 'rejected'}}))
+            dispatch(
+              patchMaterialRequestStatus({
+                projectId: loggedInUser.projectId,
+                id: item?.id,
+                body: {status: 'rejected'},
+              }),
+            );
           }
           break;
         default:
@@ -136,36 +181,37 @@ const ProductionRequest = () => {
         <Text style={styles.addButtonText}>Request</Text>
       </TouchableOpacity>
       <SafeAreaView style={styles.safeArea}>
-          {/* Main Content */}
-          <ScrollView contentContainerStyle={styles.scrollContent}>
-            <View style={styles.recentWorkContainer}>
-              <View style={styles.recentWorkHead}>
-                <Text style={styles.headerText}>
-                  Recent Requests (
-                  <Text style={styles.taskCount}>{inventoryRequests.length}</Text>)
-                </Text>
-              </View>
-
-              <View style={styles.listContainer}>
-                {inventoryRequests.length > 0 ? (
-                  inventoryRequests.map(request => (
-                    <RequestCard
-                      key={request.id}
-                      request={request}
-                      onActionPress={handleActionPress}
-                    />
-                  ))
-                ) : (
-                  <View style={styles.noDataContainer}>
-                    <Text style={styles.noDataHeadText}>No Requests Found</Text>
-                    <Text style={styles.noDataSubText}>
-                      There are no requests available.
-                    </Text>
-                  </View>
-                )}
-              </View>
+        {/* Main Content */}
+        <ScrollView contentContainerStyle={styles.scrollContent}>
+          <View style={styles.recentWorkContainer}>
+            <View style={styles.recentWorkHead}>
+              <Text style={styles.headerText}>
+                Recent Requests (
+                <Text style={styles.taskCount}>{inventoryRequests.length}</Text>
+                )
+              </Text>
             </View>
-          </ScrollView>
+
+            <View style={styles.listContainer}>
+              {inventoryRequests.length > 0 ? (
+                inventoryRequests.map((request, index) => (
+                  <RequestCard
+                    key={request.id + index} // Added index to key to ensure uniqueness if ids are duplicates
+                    request={request}
+                    onActionPress={handleActionPress}
+                  />
+                ))
+              ) : (
+                <View style={styles.noDataContainer}>
+                  <Text style={styles.noDataHeadText}>No Requests Found</Text>
+                  <Text style={styles.noDataSubText}>
+                    There are no requests available.
+                  </Text>
+                </View>
+              )}
+            </View>
+          </View>
+        </ScrollView>
       </SafeAreaView>
     </View>
   );
@@ -229,7 +275,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 6,
     backgroundColor: '#FFFFFF',
     borderRadius: 12,
-   
   },
   recentWorkHead: {
     borderBottomWidth: 1,
@@ -290,4 +335,3 @@ const styles = StyleSheet.create({
 });
 
 export default ProductionRequest;
-

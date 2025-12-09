@@ -20,11 +20,12 @@ import {
   clearMaterialRequest,
 } from '../ManageUsers/actions';
 import {useSnackbar} from '../../context/SnackbarContext';
-import {set} from 'date-fns';
 
 type RequestItem = {
   id: number;
+  rfiId: string;
   materialType: string;
+  materialCategory: string; 
   workCategory: string;
   unit: string;
   requestQty: number;
@@ -46,6 +47,8 @@ const statusType = [
     statusText: 'Pending for Dispatch',
   },
   {status: MATERIAL_REQUEST_STATUS.REJECTED, statusText: 'Rejected'},
+  // Added Dispatched status for cleaner mapping
+  {status: 'dispatched', statusText: 'Dispatched'},
 ];
 
 const RequestPage = () => {
@@ -61,7 +64,7 @@ const RequestPage = () => {
     patchMeterialRequestStatusData,
     loading: any,
     error,
-  } = useSelector(state => state.MeterialRequest);
+  } = useSelector((state: any) => state.MeterialRequest);
   const [inventoryRequests, setInventoryRequests] = useState<any[]>([]);
   const [contingencyRequests, setContingencyRequests] = useState<any[]>([]);
 
@@ -89,8 +92,6 @@ const RequestPage = () => {
               : REQUEST_TYPES.CONTINGENCY_REQUEST,
         }),
       );
-      // You can keep this or remove it since the cleanup useEffect handles the "leave" event now,
-      // but this specific timeout handles clearing after a success action while still on the page.
       setTimeout(() => {
         dispatch(clearMaterialRequest());
       }, 1000);
@@ -110,56 +111,88 @@ const RequestPage = () => {
             : REQUEST_TYPES.CONTINGENCY_REQUEST,
       }),
     );
-  }, [selectedTab]);
+  }, [selectedTab, dispatch, loggedInUser.projectId]); // Added dependencies
 
   useEffect(() => {
     if (getMeterialRequestToFormData?.length) {
-      const mapped = getMeterialRequestToFormData
-        .flatMap((entry: any) =>
-          entry.materialRequests.flatMap((req: any) =>
-            req.items.map((item: any) => {
-              const statusInfo = statusType.find(s => s.status === item.status);
-              return {
-                id: req?._id,
-                createdAt: req?.createdAt,
-                updatedAt: req?.updatedAt,
-                workCategory: item.testWorkCategoryType,
-                materialType: item.testMaterialType,
-                status: item.status,
-                statusText: statusInfo ? statusInfo.statusText : item.status,
-                items: req.items,
-              };
-            }),
-          ),
-        )
-        .filter(
-          (value, index, self) =>
-            index ===
-            self.findIndex(
-              obj =>
-                obj.materialType === value.materialType &&
-                obj.workCategory === value.workCategory,
-            ),
-        );
+      console.log(
+        'getMeterialRequestToFormData:',
+        JSON.stringify(getMeterialRequestToFormData),
+      );
+
+      // --- LOGIC FIX START ---
+      const mapped = getMeterialRequestToFormData.flatMap((entry: any) =>
+        entry.materialRequests.map((req: any) => {
+          const allItems = req.items || [];
+          const firstItem = allItems[0];
+
+          // Determine Aggregate Status
+          // Priority: Rejected > Pending Approval > Pending Dispatch > Dispatched
+          let aggregateStatus = 'dispatched'; // Default if everything is done
+
+          const hasRejected = allItems.some(
+            (i: any) => i.status === MATERIAL_REQUEST_STATUS.REJECTED,
+          );
+          const hasPendingApproval = allItems.some(
+            (i: any) => i.status === MATERIAL_REQUEST_STATUS.PENDING_APPROVAL,
+          );
+          const hasPendingDispatch = allItems.some(
+            (i: any) => i.status === MATERIAL_REQUEST_STATUS.PENDING_DISPATCH,
+          );
+          const hasPendingAcceptance = allItems.some(
+            (i: any) => i.status === MATERIAL_REQUEST_STATUS.PENDING_ACCEPTANCE,
+          );
+
+          if (hasRejected) {
+            aggregateStatus = MATERIAL_REQUEST_STATUS.REJECTED;
+          } else if (hasPendingAcceptance) {
+            aggregateStatus = MATERIAL_REQUEST_STATUS.PENDING_ACCEPTANCE;
+          } else if (hasPendingApproval) {
+            aggregateStatus = MATERIAL_REQUEST_STATUS.PENDING_APPROVAL;
+          } else if (hasPendingDispatch) {
+            aggregateStatus = MATERIAL_REQUEST_STATUS.PENDING_DISPATCH;
+          } else if (allItems.length > 0) {
+            // Fallback to first item status if completely mixed or other status
+            aggregateStatus = firstItem.status;
+          }
+
+          const statusInfo = statusType.find(s => s.status === aggregateStatus);
+
+          return {
+            id: req?._id,
+            rfiId: entry.rfiId, // Mapped from Parent Entry
+            createdAt: req?.createdAt,
+            updatedAt: req?.updatedAt,
+            // Use generic info from the first item for the Card Header
+            workCategory: firstItem?.testWorkCategoryType || '',
+            materialType: firstItem?.testMaterialType || '',
+            materialCategory:
+              firstItem?.testMaterialCategory || req?.materialCategory || '', // Mapped from first item, fallback to req level
+            status: aggregateStatus,
+            statusText: statusInfo ? statusInfo.statusText : aggregateStatus,
+            items: req.items,
+          };
+        }),
+      );
+      // --- LOGIC FIX END ---
+
       if (selectedTab === REQUEST_TYPES.INVENTORY_REQUEST) {
         setContingencyRequests([]);
-        setInventoryRequests(mapped); // ✅ update state
+        setInventoryRequests(mapped);
       } else {
         setInventoryRequests([]);
         setContingencyRequests(mapped);
       }
-      console.log('inventoryRequests mapped:', mapped);
+      console.log('Requests mapped:', JSON.stringify(mapped));
     }
   }, [getMeterialRequestToFormData, selectedTab]);
 
-  // Handles navigation when a new request button is pressed
   const navigateToRequestForm = () => {
     navigation.navigate('ContingencyRequestComponent', {
       requestType: selectedTab,
     });
   };
 
-  // Handles actions from the RequestCard component (e.g., accept, reject, navigate)
   const handleActionPress = useCallback(
     (action: string, status: string, item: any) => {
       console.log(`Action: ${action}, Status: ${status}, Tab: ${selectedTab}`);
@@ -188,7 +221,6 @@ const RequestPage = () => {
               }),
             );
           } else if (action === 'reject') {
-            // Add your logic for rejecting a request
             console.log('Request rejected');
             dispatch(
               patchMaterialRequestStatus({
@@ -203,7 +235,7 @@ const RequestPage = () => {
           break;
       }
     },
-    [navigation, selectedTab],
+    [navigation, selectedTab, loggedInUser.projectId, dispatch],
   );
 
   return (

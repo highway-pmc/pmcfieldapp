@@ -449,9 +449,7 @@ const MaterialApprovalForm = ({route, navigation}) => {
             <Text
               style={[
                 styles.totalValue,
-                totalSourceQuantityForMaterial(requestItemId) >
-                  parseFloat(approvedQty[requestItemId] ?? '0') &&
-                  styles.errorText,
+               
               ]}>
               {totalSourceQuantityForMaterial(requestItemId)}
             </Text>

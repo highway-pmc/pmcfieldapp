@@ -13,9 +13,14 @@ import {
   REQUEST_TYPES,
 } from '../../constants/constants';
 import RequestCard from '../Common/RequestCard';
-import { useDispatch, useSelector } from 'react-redux';
-import { getMaterialRequestTo, patchMaterialRequestStatus } from '../ManageUsers/actions';
-import { useSnackbar } from '../../context/SnackbarContext';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  getMaterialRequestTo,
+  patchMaterialRequestStatus,
+  clearMaterialRequest,
+} from '../ManageUsers/actions';
+import {useSnackbar} from '../../context/SnackbarContext';
+import {set} from 'date-fns';
 
 type RequestItem = {
   id: number;
@@ -27,14 +32,21 @@ type RequestItem = {
   statusText: string;
 };
 
-
-
 const statusType = [
-  {status: MATERIAL_REQUEST_STATUS.PENDING_ACCEPTANCE, statusText: 'Pending for Acceptance'}, 
-  {status: MATERIAL_REQUEST_STATUS.PENDING_APPROVAL, statusText: 'Pending for Approval'}, 
-  {status: MATERIAL_REQUEST_STATUS.PENDING_DISPATCH, statusText: 'Pending for Dispatch'}, 
+  {
+    status: MATERIAL_REQUEST_STATUS.PENDING_ACCEPTANCE,
+    statusText: 'Pending for Acceptance',
+  },
+  {
+    status: MATERIAL_REQUEST_STATUS.PENDING_APPROVAL,
+    statusText: 'Pending for Approval',
+  },
+  {
+    status: MATERIAL_REQUEST_STATUS.PENDING_DISPATCH,
+    statusText: 'Pending for Dispatch',
+  },
   {status: MATERIAL_REQUEST_STATUS.REJECTED, statusText: 'Rejected'},
-]
+];
 
 const RequestPage = () => {
   const [selectedTab, setSelectedTab] = useState(
@@ -42,66 +54,100 @@ const RequestPage = () => {
   );
   const navigation = useNavigation<any>();
   const dispatch = useDispatch();
-  const { showSnackbar } = useSnackbar();
+  const {showSnackbar} = useSnackbar();
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const { getMeterialRequestToFormData, patchMeterialRequestStatusData, loading: any, error } = useSelector((state) => state.MeterialRequest);
+  const {
+    getMeterialRequestToFormData,
+    patchMeterialRequestStatusData,
+    loading: any,
+    error,
+  } = useSelector(state => state.MeterialRequest);
   const [inventoryRequests, setInventoryRequests] = useState<any[]>([]);
   const [contingencyRequests, setContingencyRequests] = useState<any[]>([]);
 
-const currentRequests =
-  selectedTab === REQUEST_TYPES.INVENTORY_REQUEST
-    ? inventoryRequests
-    : contingencyRequests;
+  const currentRequests =
+    selectedTab === REQUEST_TYPES.INVENTORY_REQUEST
+      ? inventoryRequests
+      : contingencyRequests;
   useEffect(() => {
-      if (patchMeterialRequestStatusData) {
-        showSnackbar("Meterial status updated successfully", "success");
-        dispatch(getMaterialRequestTo({ projectId: loggedInUser.projectId, type: 'procurement-details', requestType: selectedTab === REQUEST_TYPES.INVENTORY_REQUEST ? REQUEST_TYPES.INVENTORY_REQUEST : REQUEST_TYPES.CONTINGENCY_REQUEST }));
-      } else if (error) {
-        showSnackbar(error, "error");
-      }
-    }, [patchMeterialRequestStatusData, error]);
-
-  useEffect(() => {
-    dispatch(getMaterialRequestTo({ projectId: loggedInUser.projectId, type: 'procurement-details', requestType: selectedTab === REQUEST_TYPES.INVENTORY_REQUEST ? REQUEST_TYPES.INVENTORY_REQUEST : REQUEST_TYPES.CONTINGENCY_REQUEST }));
-  }, [selectedTab])
-
-  useEffect(() => {
-  if (getMeterialRequestToFormData?.length) {
-    const mapped = getMeterialRequestToFormData.flatMap((entry: any) =>
-        entry.materialRequests.flatMap((req: any) =>
-          req.items.map((item: any) => {
-            const statusInfo = statusType.find(s => s.status === item.status);
-            return {
-              id: req?._id,
-              createdAt: req?.createdAt,
-              updatedAt: req?.updatedAt,
-              workCategory: item.testWorkCategoryType,
-              materialType: item.testMaterialType,
-              status: item.status,
-              statusText: statusInfo ? statusInfo.statusText : item.status,
-              items: req.items,
-            };
-          })
-        )
-      ).filter((value, index, self) => index === self.findIndex(obj =>
-          obj.materialType === value.materialType &&
-          obj.workCategory === value.workCategory
-      )
-  );
-    if (selectedTab === REQUEST_TYPES.INVENTORY_REQUEST) {
-      setContingencyRequests([]);
-      setInventoryRequests(mapped); // ✅ update state
-    } else {
-      setInventoryRequests([]);
-      setContingencyRequests(mapped);
+    if (patchMeterialRequestStatusData) {
+      showSnackbar('Meterial status updated successfully', 'success');
+      dispatch(
+        getMaterialRequestTo({
+          projectId: loggedInUser.projectId,
+          type: 'procurement-details',
+          requestType:
+            selectedTab === REQUEST_TYPES.INVENTORY_REQUEST
+              ? REQUEST_TYPES.INVENTORY_REQUEST
+              : REQUEST_TYPES.CONTINGENCY_REQUEST,
+        }),
+      );
+      setTimeout(() => {
+        dispatch(clearMaterialRequest());
+      }, 1000);
+    } else if (error) {
+      showSnackbar(error, 'error');
     }
-    console.log("inventoryRequests mapped:", mapped);
-  }
-}, [getMeterialRequestToFormData, selectedTab]);
+  }, [patchMeterialRequestStatusData, error]);
+
+  useEffect(() => {
+    dispatch(
+      getMaterialRequestTo({
+        projectId: loggedInUser.projectId,
+        type: 'procurement-details',
+        requestType:
+          selectedTab === REQUEST_TYPES.INVENTORY_REQUEST
+            ? REQUEST_TYPES.INVENTORY_REQUEST
+            : REQUEST_TYPES.CONTINGENCY_REQUEST,
+      }),
+    );
+  }, [selectedTab]);
+
+  useEffect(() => {
+    if (getMeterialRequestToFormData?.length) {
+      const mapped = getMeterialRequestToFormData
+        .flatMap((entry: any) =>
+          entry.materialRequests.flatMap((req: any) =>
+            req.items.map((item: any) => {
+              const statusInfo = statusType.find(s => s.status === item.status);
+              return {
+                id: req?._id,
+                createdAt: req?.createdAt,
+                updatedAt: req?.updatedAt,
+                workCategory: item.testWorkCategoryType,
+                materialType: item.testMaterialType,
+                status: item.status,
+                statusText: statusInfo ? statusInfo.statusText : item.status,
+                items: req.items,
+              };
+            }),
+          ),
+        )
+        .filter(
+          (value, index, self) =>
+            index ===
+            self.findIndex(
+              obj =>
+                obj.materialType === value.materialType &&
+                obj.workCategory === value.workCategory,
+            ),
+        );
+      if (selectedTab === REQUEST_TYPES.INVENTORY_REQUEST) {
+        setContingencyRequests([]);
+        setInventoryRequests(mapped); // ✅ update state
+      } else {
+        setInventoryRequests([]);
+        setContingencyRequests(mapped);
+      }
+      console.log('inventoryRequests mapped:', mapped);
+    }
+  }, [getMeterialRequestToFormData, selectedTab]);
 
   // Handles navigation when a new request button is pressed
   const navigateToRequestForm = () => {
-    navigation.navigate('ContingencyRequestComponent', {requestType: selectedTab});
+    navigation.navigate('ContingencyRequestComponent', {
+      requestType: selectedTab,
+    });
   };
 
   // Handles actions from the RequestCard component (e.g., accept, reject, navigate)
@@ -135,7 +181,13 @@ const currentRequests =
           } else if (action === 'reject') {
             // Add your logic for rejecting a request
             console.log('Request rejected');
-            dispatch(patchMaterialRequestStatus({projectId: loggedInUser.projectId, id: item?.id, body: {status: 'rejected'}}))
+            dispatch(
+              patchMaterialRequestStatus({
+                projectId: loggedInUser.projectId,
+                id: item?.id,
+                body: {status: 'rejected'},
+              }),
+            );
           }
           break;
         default:
@@ -220,17 +272,17 @@ const currentRequests =
         </ScrollView>
 
         {/* Footer Button */}
-        {selectedTab === REQUEST_TYPES.CONTINGENCY_REQUEST &&
-        <View style={styles.footerContainer}>
-          <TouchableOpacity
-            style={styles.newRequestButton}
-            onPress={navigateToRequestForm}>
-            <Text style={styles.newRequestButtonText}>
-               New Contingency Request
-            </Text>
-          </TouchableOpacity>
-        </View>
-        }
+        {selectedTab === REQUEST_TYPES.CONTINGENCY_REQUEST && (
+          <View style={styles.footerContainer}>
+            <TouchableOpacity
+              style={styles.newRequestButton}
+              onPress={navigateToRequestForm}>
+              <Text style={styles.newRequestButtonText}>
+                New Contingency Request
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -280,7 +332,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 6,
     backgroundColor: '#FFFFFF',
     borderRadius: 12,
-   
   },
   recentWorkHead: {
     borderBottomWidth: 1,

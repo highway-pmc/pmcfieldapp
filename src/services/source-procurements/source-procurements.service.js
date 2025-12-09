@@ -82,7 +82,7 @@ export const patchMeterialRequestStatusApi = async (projectId, id, body) => {
 };
 
 export const patchDipatchRequestApi = async (projectId, id, body) => {
-  console.log('patch---!!!', projectId, id, body);
+  console.log('patch---!!!', projectId, id, JSON.stringify(body));
   return apiService
     .patchRequest(
       `v1/auth/projects/${projectId}/material-requests/items/${id}/dispatch-store`,

@@ -98,6 +98,7 @@ const meterialRequestFormState = {
   getMeterialRequestToFormData: null,
   patchMeterialRequestStatusData: null,
   patchDispatchRequestData: null,
+  dispatchProductionRequest: null,
   uploadingBatchData: null,
   error: null,
 };
@@ -1808,6 +1809,15 @@ const RFIsReducer = (state = myWorksState, action) => {
         error: action.error,
         loading: false,
       };
+    case 'CLEAR_MIX_DESIGN_INFO':
+      return {
+        ...state,
+        qualityMixDesignFormInfo: null,
+        savedMixDesignFormInfo: null,
+        qualityMixDesignListInfo: null,
+        error: null,
+        loading: false,
+      };
     default:
       return state;
   }
@@ -2531,6 +2541,26 @@ const MeterialRequestFormReducer = (
   action,
 ) => {
   switch (action.type) {
+    case METERIAL_REQUEST.DISPATCH_PRODUCTION_REQUEST:
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case METERIAL_REQUEST.DISPATCH_PRODUCTION_REQUEST_SUCCESS:
+      return {
+        ...state,
+        dispatchProductionRequest: action.response,
+        error: null,
+        loading: false,
+      };
+    case METERIAL_REQUEST.DISPATCH_PRODUCTION_REQUEST_FAILURE:
+      return {
+        ...state,
+        dispatchProductionRequest: null,
+        error: action.error,
+        loading: false,
+      };
     case METERIAL_REQUEST.POST_BATCH_SLIP_REQUEST:
       return {
         ...state,

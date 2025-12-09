@@ -41,8 +41,14 @@ import {
   patchMeterialRequestStatusApi,
   patchDipatchRequestApi,
   postUploadBatchSlipApi,
+  dispatchProductionRequestApi,
 } from '../../../services/source-procurements/source-procurements.service';
-import {METERIAL_REQUEST, PROCUREMENTS, SOURCE_APPROVALS, VENDOR_FORM} from './constants';
+import {
+  METERIAL_REQUEST,
+  PROCUREMENTS,
+  SOURCE_APPROVALS,
+  VENDOR_FORM,
+} from './constants';
 function* getUserCategories() {
   try {
     const response = yield getUserCategory();
@@ -544,11 +550,12 @@ function* deleteVendorForm({payload}) {
   }
 }
 
-
-
 function* getMeterialRequestForm({payload}) {
   try {
-    const response = yield getMeterialRequestFormApi(payload.projectId, payload.id);
+    const response = yield getMeterialRequestFormApi(
+      payload.projectId,
+      payload.id,
+    );
     yield put({type: METERIAL_REQUEST.GET_MATERIAL_REQUEST_SUCCESS, response});
   } catch (error) {
     yield put({
@@ -560,8 +567,14 @@ function* getMeterialRequestForm({payload}) {
 
 function* postMeterialRequestForm({payload}) {
   try {
-    const response = yield postMeterialRequestFormApi(payload.projectId, payload.body);
-    yield put({type: METERIAL_REQUEST.POST_SUBMIT_MATERIAL_REQUEST_SUCCESS, response});
+    const response = yield postMeterialRequestFormApi(
+      payload.projectId,
+      payload.body,
+    );
+    yield put({
+      type: METERIAL_REQUEST.POST_SUBMIT_MATERIAL_REQUEST_SUCCESS,
+      response,
+    });
   } catch (error) {
     yield put({
       type: METERIAL_REQUEST.POST_SUBMIT_MATERIAL_REQUEST_FAILURE,
@@ -572,8 +585,15 @@ function* postMeterialRequestForm({payload}) {
 
 function* getMeterialRequestToForm({payload}) {
   try {
-    const response = yield getMeterialRequestToFormApi(payload.projectId, payload.type, payload.requestType);
-    yield put({type: METERIAL_REQUEST.GET_MATERIAL_REQUEST_TO_SUCCESS, response});
+    const response = yield getMeterialRequestToFormApi(
+      payload.projectId,
+      payload.type,
+      payload.requestType,
+    );
+    yield put({
+      type: METERIAL_REQUEST.GET_MATERIAL_REQUEST_TO_SUCCESS,
+      response,
+    });
   } catch (error) {
     yield put({
       type: METERIAL_REQUEST.GET_MATERIAL_REQUEST_TO_FAILURE,
@@ -582,11 +602,17 @@ function* getMeterialRequestToForm({payload}) {
   }
 }
 
-
 function* patchMeterialRequestStatus({payload}) {
   try {
-    const response = yield patchMeterialRequestStatusApi(payload.projectId, payload.id, payload.body);
-    yield put({type: METERIAL_REQUEST.PATCH_MATERIAL_REQUEST_STATUS_SUCCESS, response});
+    const response = yield patchMeterialRequestStatusApi(
+      payload.projectId,
+      payload.id,
+      payload.body,
+    );
+    yield put({
+      type: METERIAL_REQUEST.PATCH_MATERIAL_REQUEST_STATUS_SUCCESS,
+      response,
+    });
   } catch (error) {
     yield put({
       type: METERIAL_REQUEST.PATCH_MATERIAL_REQUEST_STATUS_FAILURE,
@@ -597,8 +623,15 @@ function* patchMeterialRequestStatus({payload}) {
 
 function* patchDipatchRequest({payload}) {
   try {
-    const response = yield patchDipatchRequestApi(payload.projectId, payload.id, payload.body);
-    yield put({type: METERIAL_REQUEST.PATCH_DISPATCH_REQUEST_SUCCESS, response});
+    const response = yield patchDipatchRequestApi(
+      payload.projectId,
+      payload.itemId,
+      payload.body,
+    );
+    yield put({
+      type: METERIAL_REQUEST.PATCH_DISPATCH_REQUEST_SUCCESS,
+      response,
+    });
   } catch (error) {
     yield put({
       type: METERIAL_REQUEST.PATCH_DISPATCH_REQUEST_FAILURE,
@@ -607,10 +640,37 @@ function* patchDipatchRequest({payload}) {
   }
 }
 
+function* dispatchProductionRequest({payload}) {
+  console.log('===payload saga===', payload);
+  try {
+    const response = yield dispatchProductionRequestApi(
+      payload.projectId,
+      payload.itemId,
+      payload.body,
+    );
+    yield put({
+      type: METERIAL_REQUEST.DISPATCH_PRODUCTION_REQUEST_SUCCESS,
+      response,
+    });
+  } catch (error) {
+    yield put({
+      type: METERIAL_REQUEST.DISPATCH_PRODUCTION_REQUEST_FAILURE,
+      error: error.message,
+    });
+  }
+}
+
 function* postUploadBatchSlip({payload}) {
   try {
-    const response = yield postUploadBatchSlipApi(payload.projectId, payload.id, payload.body);
-    yield put({type: METERIAL_REQUEST.POST_BATCH_SLIP_REQUEST_SUCCESS, response});
+    const response = yield postUploadBatchSlipApi(
+      payload.projectId,
+      payload.id,
+      payload.body,
+    );
+    yield put({
+      type: METERIAL_REQUEST.POST_BATCH_SLIP_REQUEST_SUCCESS,
+      response,
+    });
   } catch (error) {
     yield put({
       type: METERIAL_REQUEST.POST_BATCH_SLIP_REQUEST_FAILURE,
@@ -654,7 +714,10 @@ export default function* testAssignmentScreenSaga() {
     'GET_TEST_CLASSIFICATION_NEXT_LEVEL_REQUEST',
     getTestClassificationNextLevel,
   );
-
+  yield takeLatest(
+    METERIAL_REQUEST.DISPATCH_PRODUCTION_REQUEST,
+    dispatchProductionRequest,
+  );
   yield takeLatest(
     METERIAL_REQUEST.PATCH_DISPATCH_REQUEST,
     patchDipatchRequest,

@@ -7,11 +7,12 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useIsFocused} from '@react-navigation/native';
 import {MATERIAL_REQUEST_STATUS} from '../../constants/constants';
 import RequestCard from '../Common/RequestCard';
 import {useDispatch, useSelector} from 'react-redux';
 import {
+  clearMaterialRequest,
   getMaterialRequestTo,
   patchMaterialRequestStatus,
 } from '../ManageUsers/actions';
@@ -23,7 +24,7 @@ const statusType = [
     statusText: 'Pending for Acceptance',
   },
   {
-    status: 'request_for_approval', // New Status
+    status: MATERIAL_REQUEST_STATUS.REQUEST_FOR_APPROVAL,
     statusText: 'Request For Approval',
   },
   {
@@ -43,6 +44,7 @@ const statusType = [
 
 const ProductionRequest = () => {
   const navigation = useNavigation<any>();
+  const isFocused = useIsFocused();
   const dispatch = useDispatch();
   const {showSnackbar} = useSnackbar();
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
@@ -74,8 +76,11 @@ const ProductionRequest = () => {
   };
 
   useEffect(() => {
-    fetchRequests();
-  }, []);
+    if (isFocused) {
+      dispatch(clearMaterialRequest());
+      fetchRequests();
+    }
+  }, [isFocused]);
 
   useEffect(() => {
     if (getMeterialRequestToFormData?.length) {
@@ -112,7 +117,7 @@ const ProductionRequest = () => {
           } else if (hasPendingAcceptance) {
             aggregateStatus = MATERIAL_REQUEST_STATUS.PENDING_ACCEPTANCE;
           } else if (hasRequestForApproval) {
-            aggregateStatus = 'request_for_approval';
+            aggregateStatus = MATERIAL_REQUEST_STATUS.REQUEST_FOR_APPROVAL;
           } else if (hasPendingApproval) {
             aggregateStatus = MATERIAL_REQUEST_STATUS.PENDING_APPROVAL;
           } else if (hasPendingDispatch) {
@@ -154,11 +159,14 @@ const ProductionRequest = () => {
       console.log(`Action: ${action}, Status: ${status}`);
 
       switch (status) {
-        case 'request_for_approval':
         case MATERIAL_REQUEST_STATUS.REQUEST_FOR_APPROVAL:
         case MATERIAL_REQUEST_STATUS.PENDING_APPROVAL:
         case MATERIAL_REQUEST_STATUS.PENDING_DISPATCH:
           // Navigate to Detail/Action Form
+          console.log(
+            'Navigating to MaterialApprovalProduction',
+            JSON.stringify(item),
+          );
           navigation.navigate('MaterialApprovalProduction', {status, item});
           break;
         case MATERIAL_REQUEST_STATUS.REJECTED:

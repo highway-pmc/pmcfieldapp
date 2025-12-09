@@ -116,7 +116,10 @@ export const clearProjectModulesWorkAssignmentData = () => ({
 export const clearNextLevel = () => ({
   type: 'CLEAR_NEXT_LEVEL',
 });
-
+export const dispatchProductionRequest = payload => ({
+  type: METERIAL_REQUEST.DISPATCH_PRODUCTION_REQUEST,
+  payload,
+});
 export const patchDispatchRequest = payload => ({
   type: METERIAL_REQUEST.PATCH_DISPATCH_REQUEST,
   payload,

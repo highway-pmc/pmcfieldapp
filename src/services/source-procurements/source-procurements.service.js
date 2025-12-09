@@ -81,11 +81,33 @@ export const patchMeterialRequestStatusApi = async (projectId, id, body) => {
     });
 };
 
-export const patchDipatchRequestApi = async (projectId, id, body) => {
-  console.log('patch---!!!', projectId, id, JSON.stringify(body));
+export const dispatchProductionRequestApi = async (projectId, itemId, body) => {
+  console.log(
+    'dispatch production---!!!',
+    projectId,
+    itemId,
+    JSON.stringify(body),
+  );
   return apiService
     .patchRequest(
-      `v1/auth/projects/${projectId}/material-requests/items/${id}/dispatch-store`,
+      `v1/auth/projects/${projectId}/material-requests/${itemId}/dispatch-production`,
+      body,
+    )
+    .then(response => {
+      console.log('---!!!', response);
+      return response;
+    })
+    .catch(err => {
+      const errorMessge =
+        err?.message || 'Unable to dispatch production material.';
+      throw new Error(errorMessge);
+    });
+};
+export const patchDipatchRequestApi = async (projectId, itemId, body) => {
+  console.log('patch---!!!', projectId, itemId, JSON.stringify(body));
+  return apiService
+    .patchRequest(
+      `v1/auth/projects/${projectId}/material-requests/items/${itemId}/dispatch-store`,
       body,
     )
     .then(response => {

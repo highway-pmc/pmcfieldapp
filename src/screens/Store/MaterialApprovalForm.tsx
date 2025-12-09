@@ -339,7 +339,7 @@ const MaterialApprovalForm = ({route, navigation}) => {
     dispatch(
       patchDispatchRequest({
         projectId: loggedInUser.projectId,
-        id: request._id,
+        itemId: request._id,
         body: payload,
       }),
     );

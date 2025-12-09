@@ -1,5 +1,5 @@
 import {useIsFocused} from '@react-navigation/native';
-import React, {useEffect, useState, useMemo} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -20,6 +20,24 @@ import {
 } from '../ManageUsers/actions';
 import {useDispatch, useSelector} from 'react-redux';
 import {useSnackbar} from '../../context/SnackbarContext';
+
+const formatDateTime = isoString => {
+  if (!isoString) {
+    return '-';
+  }
+  const d = new Date(isoString);
+  if (isNaN(d.getTime())) {
+    return isoString;
+  }
+
+  return d.toLocaleString('en-IN', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+};
 
 const MaterialApprovalForm = ({route, navigation}) => {
   const materialRequest = route.params?.item; // { id, items: [...] }
@@ -51,18 +69,11 @@ const MaterialApprovalForm = ({route, navigation}) => {
   // toast from redux
   useEffect(() => {
     if (patchMeterialRequestStatusData) {
-      // 1. Show the success message
       showSnackbar('Material status updated successfully', 'success');
-
-      // 2. CLEAR the Redux data to stop the infinite loop
-      // (You already imported this action on line 19)
       dispatch(clearMaterialRequest());
-
-      // 3. Go back to the previous screen
       navigation.goBack();
     } else if (error) {
       showSnackbar(error, 'error');
-      // Optional: Clear error state as well so it doesn't persist
       dispatch(clearMaterialRequest());
     }
   }, [
@@ -72,6 +83,7 @@ const MaterialApprovalForm = ({route, navigation}) => {
     navigation,
     dispatch,
   ]);
+
   // header
   useEffect(() => {
     if (isFocused) {
@@ -147,7 +159,6 @@ const MaterialApprovalForm = ({route, navigation}) => {
     if (isProcurementStage && type === 'approve') {
       const approvalData =
         materialRequest?.items?.map(req => {
-          // Filter by UNIQUE Request Item ID
           const materialSources = localApprovals.filter(
             row => row.requestItemId === req._id,
           );
@@ -156,7 +167,6 @@ const MaterialApprovalForm = ({route, navigation}) => {
             approvedQty[req._id] ?? req.qty_requested,
           );
 
-          // Find backend options for this material type
           const backendSourcesForMaterial = sourceApprovals?.filter(
             s => s.testMaterialId === req.testMaterialId,
           );
@@ -196,7 +206,7 @@ const MaterialApprovalForm = ({route, navigation}) => {
       return;
     }
 
-    // Dispatch Stage Submission
+    // Dispatch Stage Submission (Dispatch All Material)
     const payload = {
       status:
         type === 'dispatch'
@@ -205,7 +215,8 @@ const MaterialApprovalForm = ({route, navigation}) => {
       comments: remarks,
       approvalData: materialRequest?.items?.map(req => ({
         materialRequestItemId: req._id,
-        quantityApproved: approvedQty[req._id] ?? Number(req.qty_requested),
+        quantityApproved:
+          approvedQty[req._id] ?? Number(req.qty_approved ?? req.qty_requested),
       })),
     };
 
@@ -220,7 +231,7 @@ const MaterialApprovalForm = ({route, navigation}) => {
     Alert.alert('Success', 'Form has been submitted successfully!');
   };
 
-  // Final Decision Logic
+  // Final Decision Logic (Pending Approval -> Pending Dispatch / Rejected)
   const handleFinalApprovalDecision = action => {
     const items = materialRequest?.items || [];
     if (action === 'reject') {
@@ -340,8 +351,6 @@ const MaterialApprovalForm = ({route, navigation}) => {
 
   const renderApprovalItemEditable = request => {
     const unit = request?.unit || '';
-    // Use request._id (Unique per row) for tracking local state
-    // Use request.testMaterialId (Shared by material type) for fetching options
     const requestItemId = request._id;
     const materialTypeId = request.testMaterialId || requestItemId;
 
@@ -372,9 +381,7 @@ const MaterialApprovalForm = ({route, navigation}) => {
             <View style={{width: 30}} />
           </View>
 
-          {/* Iterate over rows belonging to THIS specific item ID */}
           {getSourceRowsForMaterial(requestItemId)?.map(row => {
-            // 1. Get already selected names for this item
             const selectedNames = localApprovals
               ?.filter(
                 r =>
@@ -384,19 +391,16 @@ const MaterialApprovalForm = ({route, navigation}) => {
               )
               ?.map(r => r.name);
 
-            // 2. Filter global options by MATERIAL TYPE (e.g., all Concrete suppliers)
             const specificSources =
               sourceApprovals?.filter(
                 s => s.testMaterialId === materialTypeId,
               ) || [];
 
-            // 3. Map to dropdown
             const dropdownOptions = specificSources.map(s => ({
               label: s.name,
               value: s.name,
             }));
 
-            // 4. Filter out duplicates
             const availableOptions = dropdownOptions.filter(
               opt => !selectedNames.includes(opt.value),
             );
@@ -405,7 +409,6 @@ const MaterialApprovalForm = ({route, navigation}) => {
               <View key={row.id} style={styles.tableRow}>
                 <View style={{flex: 2, marginRight: 8}}>
                   <TouchableOpacity
-                    // Fetch using material type ID
                     onPress={() => getAvailableSources(materialTypeId)}>
                     <DropdownPicker
                       items={availableOptions}
@@ -435,7 +438,6 @@ const MaterialApprovalForm = ({route, navigation}) => {
 
           <TouchableOpacity
             onPress={() =>
-              // Add row linked to this specific request Item ID
               handleAddSourceRowForMaterial(requestItemId, materialTypeId)
             }
             style={styles.addButton}>
@@ -458,8 +460,6 @@ const MaterialApprovalForm = ({route, navigation}) => {
       </>
     );
   };
-
-  // ... (Remainder of render functions: renderApprovalItemReadonly, renderApprovalSection, etc. remain largely the same, just ensure they call the updated renderApprovalItemEditable)
 
   const renderApprovalItemReadonly = request => {
     const unit = request?.unit || '';
@@ -507,20 +507,33 @@ const MaterialApprovalForm = ({route, navigation}) => {
           style={styles.formGroup}
           key={request._id || request.testMaterialId}>
           <View style={styles.mainContainer}>
-            <View style={styles.columnContainer}>
-              {request?.testMaterialType && (
-                <View style={styles.fieldContainer}>
-                  <Text style={styles.fieldLabel}>Material Name</Text>
-                  <Text style={styles.fieldValue}>
-                    {request?.testMaterialType}
+            <View style={styles.topHeaderRow}>
+              <Text style={styles.materialTitle}>
+                {request?.testMaterialType || 'Material'}
+              </Text>
+              {request?.testMaterialCategory && (
+                <View style={styles.chip}>
+                  <Text style={styles.chipText}>
+                    {request.testMaterialCategory}
                   </Text>
                 </View>
               )}
+            </View>
+
+            <View style={styles.columnContainer}>
               {request?.testWorkCategoryType && (
                 <View style={styles.fieldContainer}>
                   <Text style={styles.fieldLabel}>Work Category</Text>
                   <Text style={styles.fieldValue}>
                     {request?.testWorkCategoryType}
+                  </Text>
+                </View>
+              )}
+              {request?.createdAt && (
+                <View style={styles.fieldContainer}>
+                  <Text style={styles.fieldLabel}>Request Date</Text>
+                  <Text style={styles.fieldValue}>
+                    {formatDateTime(request?.createdAt)}
                   </Text>
                 </View>
               )}
@@ -533,10 +546,12 @@ const MaterialApprovalForm = ({route, navigation}) => {
                   <Text style={styles.fieldValue}>{request?.name}</Text>
                 </View>
               )}
-              {request?.createdAt && (
+              {materialRequest?.statusText && (
                 <View style={styles.fieldContainer}>
-                  <Text style={styles.fieldLabel}>Request Date</Text>
-                  <Text style={styles.fieldValue}>{request?.createdAt}</Text>
+                  <Text style={styles.fieldLabel}>Status</Text>
+                  <Text style={styles.fieldValue}>
+                    {materialRequest.statusText}
+                  </Text>
                 </View>
               )}
             </View>
@@ -553,75 +568,113 @@ const MaterialApprovalForm = ({route, navigation}) => {
   const renderDispatchSection = () => {
     if (!isDispatchStage || !materialRequest?.items?.length) return null;
 
-    return materialRequest.items.map((request, index) => (
-      <View key={request._id || index} style={styles.mainContainer}>
-        <View style={styles.columnContainer}>
-          {request?.testMaterialType && (
+    return materialRequest.items.map((request, index) => {
+      const isItemPendingDispatch =
+        request.status === MATERIAL_REQUEST_STATUS.PENDING_DISPATCH;
+      const isItemDispatched =
+        request.status === MATERIAL_REQUEST_STATUS.DISPATCHED;
+      console.log(
+        'Rendering dispatch item:',
+        request._id,
+        'Status:',
+        request.status,
+      );
+      return (
+        <View
+          key={request._id || index}
+          style={[
+            styles.mainContainer,
+            isItemDispatched && styles.dispatchedCard,
+          ]}>
+          <View style={styles.topHeaderRow}>
+            <Text style={styles.materialTitle}>
+              {request?.testMaterialType || 'Material'}
+            </Text>
+            {request?.testMaterialCategory && (
+              <View style={styles.chip}>
+                <Text style={styles.chipText}>
+                  {request.testMaterialCategory}
+                </Text>
+              </View>
+            )}
+          </View>
+
+          <View style={styles.columnContainer}>
+            {request?.testWorkCategoryType && (
+              <View style={styles.fieldContainer}>
+                <Text style={styles.fieldLabel}>Work Category</Text>
+                <Text style={styles.fieldValue}>
+                  {request?.testWorkCategoryType}
+                </Text>
+              </View>
+            )}
+            {request?.createdAt && (
+              <View style={styles.fieldContainer}>
+                <Text style={styles.fieldLabel}>Request Date</Text>
+                <Text style={styles.fieldValue}>
+                  {formatDateTime(request?.createdAt)}
+                </Text>
+              </View>
+            )}
+          </View>
+
+          <View style={styles.columnContainer}>
+            {request?.name && (
+              <View style={styles.fieldContainer}>
+                <Text style={styles.fieldLabel}>Requested By</Text>
+                <Text style={styles.fieldValue}>{request?.name}</Text>
+              </View>
+            )}
             <View style={styles.fieldContainer}>
-              <Text style={styles.fieldLabel}>Material Name</Text>
-              <Text style={styles.fieldValue}>{request?.testMaterialType}</Text>
-            </View>
-          )}
-          {request?.testWorkCategoryType && (
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldLabel}>Work Category</Text>
+              <Text style={styles.fieldLabel}>Item Status</Text>
               <Text style={styles.fieldValue}>
-                {request?.testWorkCategoryType}
+                {request.status === MATERIAL_REQUEST_STATUS.PENDING_DISPATCH
+                  ? 'Pending for Dispatch'
+                  : request.status === MATERIAL_REQUEST_STATUS.DISPATCHED
+                  ? 'Dispatched'
+                  : request.status || '-'}
               </Text>
             </View>
+          </View>
+
+          <View style={styles.formGroup}>
+            <Text style={styles.label}>
+              Total Qty Issued <Text style={styles.required}>*</Text>
+            </Text>
+
+            {isItemPendingDispatch ? (
+              <TextInput
+                style={styles.input}
+                value={
+                  approvedQty[request._id] ??
+                  String(request.qty_approved ?? request.qty_requested ?? '')
+                }
+                onChangeText={val => handleQtyChange(request._id, val)}
+                keyboardType="decimal-pad"
+                placeholder="Enter total issued quantity"
+              />
+            ) : (
+              <Text style={styles.fieldValue}>
+                {request?.qty_issued ?? '-'}
+              </Text>
+            )}
+
+            <Text style={styles.helperText}>
+              Maximum: {request?.qty_approved ?? request?.qty_requested}{' '}
+              {request?.unit ?? ''} (Approved quantity)
+            </Text>
+          </View>
+
+          {isItemPendingDispatch && (
+            <TouchableOpacity
+              style={styles.dispatchButton}
+              onPress={() => handleDispatchSingleMaterial(request)}>
+              <Text style={styles.dispatchButtonText}>Dispatch</Text>
+            </TouchableOpacity>
           )}
         </View>
-
-        <View style={styles.columnContainer}>
-          {request?.name && (
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldLabel}>Requested By</Text>
-              <Text style={styles.fieldValue}>{request?.name}</Text>
-            </View>
-          )}
-          {request?.createdAt && (
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldLabel}>Request Date</Text>
-              <Text style={styles.fieldValue}>{request?.createdAt}</Text>
-            </View>
-          )}
-        </View>
-
-        <View style={styles.formGroup}>
-          <Text style={styles.label}>
-            Total Qty Issued <Text style={styles.required}>*</Text>
-          </Text>
-
-          {request.status === MATERIAL_REQUEST_STATUS.PENDING_DISPATCH ? (
-            <TextInput
-              style={styles.input}
-              value={
-                approvedQty[request._id] ??
-                String(request.qty_approved ?? request.qty_requested ?? '')
-              }
-              onChangeText={val => handleQtyChange(request._id, val)}
-              keyboardType="decimal-pad"
-              placeholder="Enter total issued quantity"
-            />
-          ) : (
-            <Text style={styles.fieldValue}>{request?.qty_issued ?? '-'}</Text>
-          )}
-
-          <Text style={styles.helperText}>
-            Maximum: {request?.qty_approved ?? request?.qty_requested}{' '}
-            {request?.unit ?? ''} (Approved quantity)
-          </Text>
-        </View>
-
-        {request.status === MATERIAL_REQUEST_STATUS.PENDING_DISPATCH && (
-          <TouchableOpacity
-            style={styles.dispatchButton}
-            onPress={() => handleDispatchSingleMaterial(request)}>
-            <Text style={styles.dispatchButtonText}>Dispatch</Text>
-          </TouchableOpacity>
-        )}
-      </View>
-    ));
+      );
+    });
   };
 
   const renderRemarksSection = () => (
@@ -745,7 +798,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333',
   },
-  readOnlyInput: {},
+  readOnlyInput: {
+    backgroundColor: '#f1f3f5',
+  },
   textArea: {
     height: 80,
     textAlignVertical: 'top',
@@ -855,6 +910,11 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
   },
+  dispatchedCard: {
+    borderWidth: 1,
+    borderColor: '#2e7d32',
+    opacity: 0.8,
+  },
   columnContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -903,6 +963,28 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 14,
     fontWeight: '600',
+  },
+  topHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 4,
+  },
+  materialTitle: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#111827',
+  },
+  chip: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+    backgroundColor: '#EDE7F6',
+  },
+  chipText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#5A2AAF',
   },
 });
 

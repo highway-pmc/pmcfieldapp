@@ -69,6 +69,13 @@ const RequestPage = () => {
     selectedTab === REQUEST_TYPES.INVENTORY_REQUEST
       ? inventoryRequests
       : contingencyRequests;
+
+  useEffect(() => {
+    return () => {
+      dispatch(clearMaterialRequest());
+    };
+  }, [dispatch]);
+
   useEffect(() => {
     if (patchMeterialRequestStatusData) {
       showSnackbar('Meterial status updated successfully', 'success');
@@ -82,6 +89,8 @@ const RequestPage = () => {
               : REQUEST_TYPES.CONTINGENCY_REQUEST,
         }),
       );
+      // You can keep this or remove it since the cleanup useEffect handles the "leave" event now,
+      // but this specific timeout handles clearing after a success action while still on the page.
       setTimeout(() => {
         dispatch(clearMaterialRequest());
       }, 1000);

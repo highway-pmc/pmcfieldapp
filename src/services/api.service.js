@@ -11,7 +11,7 @@ apiService.postRequest = (url, body, auth = true) => {
         headers['Authorization'] = appConfig.getToken();
     }
     return axios.post(`${appConfig.API_URL}/${url}`, body, { headers }).then((response) => {
-        if (response.data.code === 200) {
+        if (response.data.code === 200 || response.data.code === 201) {
             return response.data?.data;
         }
         console.log('==response.data==', response.data)

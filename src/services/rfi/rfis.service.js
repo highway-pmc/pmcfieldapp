@@ -209,3 +209,12 @@ export const getMixDesignListInfoApi = async (
       throw new Error(errorMessge);
     });
 };
+
+export const getMixDesignDataApi = async (projectId, testType) => {
+    return apiService.getRequest(`v1/auth/projects/${projectId}/test-work-category?type=${testType}`).then((response) => {
+        return response;
+    }).catch((err) => {
+        const errorMessge = err.message || 'Unable to get Quality Master.';
+        throw new Error(errorMessge);
+    });
+}

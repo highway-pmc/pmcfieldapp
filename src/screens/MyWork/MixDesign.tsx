@@ -26,6 +26,7 @@ import {
   getMixDesignFormInfo,
   saveMixDesignFormInfo,
   clearRFITasksEvent,
+  getMixDesignList,
 } from '../RFIs/actions';
 
 // --- Constants & Utilities ---
@@ -46,7 +47,7 @@ const MixDesign = ({navigation}: {navigation: any}) => {
   // --- Redux State ---
   const {
     savedMixDesignFormInfo,
-    qualityMasterListing,
+    mixDesignListData,
     qualityMixDesignFormInfo,
     loading,
     error,
@@ -83,6 +84,8 @@ const MixDesign = ({navigation}: {navigation: any}) => {
     if (isFocused) {
       dispatch(clearRFITasksEvent());
       dispatch(getQualityMasterList({testType: 'mix-design'}));
+      dispatch(getMixDesignList({projectId: loggedInUser.projectId, testType: 'mix-design'}));
+      console.log('sdsaeda', mixDesignListData)
       // Reset all state variables
       setMixDesignShortName('');
       setDateOfSampling('');
@@ -102,14 +105,12 @@ const MixDesign = ({navigation}: {navigation: any}) => {
   useEffect(() => {
     if (savedMixDesignFormInfo) {
       showSnackbar('Mix Design saved successfully!', 'success');
-      setTimeout(() => {
-        navigation.navigate('MixDesignListing');
-      }, 2000);
+      navigation.navigate('MixDesignListing');
     }
     if (error) {
       showSnackbar(error.message || 'Unable to save Mix Design data.', 'error');
     }
-  }, [savedMixDesignFormInfo, error, navigation, showSnackbar]);
+  }, [savedMixDesignFormInfo, navigation, error]);
 
   // Populate materials list when form info is fetched
   useEffect(() => {
@@ -141,6 +142,7 @@ const MixDesign = ({navigation}: {navigation: any}) => {
 
   const handleWorkCategorySelect = (selectedOption: any) => {
     setSelectedWorkCategory(selectedOption);
+    console.log('98734982374', selectedWorkCategory)
     setSelectedMaterialType(null);
     setSelectedMaterialCategory('');
     setMaterialsData([]);
@@ -150,6 +152,8 @@ const MixDesign = ({navigation}: {navigation: any}) => {
     setSelectedMaterialType(selectedOption);
     setSelectedMaterialCategory('');
     setMaterialsData([]);
+    console.log('Selected Work Category:', selectedWorkCategory);
+    console.log('Selected Material Type:', selectedOption);
     handleFetchFormInfo(selectedWorkCategory, selectedOption);
   };
 
@@ -172,7 +176,7 @@ const MixDesign = ({navigation}: {navigation: any}) => {
     if (
       !selectedWorkCategory ||
       !selectedMaterialType ||
-      !selectedMaterialCategory
+      (selectedMaterialType?.category && selectedMaterialType?.category.length) ? !selectedMaterialCategory : false
     ) {
       showSnackbar('Please complete all Mix Design details.', 'error');
       return;
@@ -193,31 +197,39 @@ const MixDesign = ({navigation}: {navigation: any}) => {
     const finalMaterialsData = materialsData.map(item => ({
       _id: item._id,
       materialType: item.materialType,
+      materialUnit: item.materialUnit,
+      materialCategory: item.selectedMaterialCategory,
       name: item.name,
       selectedSource: item.selectedSource
         ? {_id: item.selectedSource._id, name: item.selectedSource.name}
         : null,
-      qty: item.qty,
+      qty: item.qty ? Number(item.qty) : 0,
     }));
 
     const payload = {
       projectId: loggedInUser.projectId,
       testWorkCategoryType: selectedWorkCategory?.type,
       testMaterialId: selectedMaterialType?._id,
+      
       body: {
         name: mixDesignShortName,
+        shortName:mixDesignShortName,
+        totalMixDesignQty: Number(totalQty),
         comments: recommend,
+        testMaterialType: selectedMaterialType?.materialType,
+        materialCategory: selectedMaterialCategory,
+        materialUnit: selectedMaterialType?.materialUnit,
+        dateOfSampling: `${getDbDateFromDDMMYYYY(dateOfSampling)} ${timeOfSampling}`,
+        timeOfSampling: timeOfSampling,
+        sampleBy: sampleBy,
+        conductedBy: mixDesignConductedBy,
         mixDesignData: {
-          dateOfSampling: getDbDateFromDDMMYYYY(dateOfSampling),
-          timeOfSampling: timeOfSampling,
-          sampleBy: sampleBy,
-          conductedBy: mixDesignConductedBy,
-          materialCategory: selectedMaterialCategory,
-          totalQty: totalQty,
           materialsData: finalMaterialsData,
         },
       },
     };
+
+    console.log('payload', payload, finalMaterialsData)
 
     dispatch(saveMixDesignFormInfo(payload));
   };
@@ -248,7 +260,21 @@ const MixDesign = ({navigation}: {navigation: any}) => {
             <View key={item._id || index} style={styles.tableRow}>
               <Text style={[styles.tableCell, {width: 150}]}>{item.name}</Text>
               <Text style={[styles.tableCell, {width: 150}]}>
-                {item.materialType || 'N/A'}
+                {item.category && item.category.length ?
+                  <CustomSelectDropdown
+                    label=""
+                    data={item.category}
+                    selectedValue={item.selectedMaterialCategory}
+                    itemTypeOf="string"
+                    onSelect={(selectedItem: any) =>
+                      handleMaterialItemChange(
+                        index,
+                        'selectedMaterialCategory',
+                        selectedItem,
+                      )
+                    }
+                  />
+                  : 'N/A'}
               </Text>
               <View style={{width: 200, paddingHorizontal: 5}}>
                 <CustomSelectDropdown
@@ -265,7 +291,7 @@ const MixDesign = ({navigation}: {navigation: any}) => {
                 />
               </View>
               <Text style={[styles.tableCell, {width: 100}]}>
-                {item.unit || 'Kg'}
+                {item.materialUnit || 'N/A'}
               </Text>
               <View style={{width: 120, paddingHorizontal: 5}}>
                 <Input
@@ -325,35 +351,50 @@ const MixDesign = ({navigation}: {navigation: any}) => {
         <View style={styles.card}>
           <Text style={styles.sectionTitle}>Mix Design Details</Text>
           <Input
-            label="Mix Design Name"
+            label="Mix Design Short Name"
             value={mixDesignShortName}
             onChange={setMixDesignShortName}
             maxLength={50}
             isRequired
           />
+          {/* <Input
+            label="Mix Design Name"
+            value={mixDesignShortName}
+            onChange={setMixDesignShortName}
+            maxLength={50}
+            isRequired
+          /> */}
           <CustomSelectDropdown
             label="Work Category"
-            data={qualityMasterListing?.testWorkCategoryData}
+            data={mixDesignListData?.testWorkCategoriesData}
             selectedValue={selectedWorkCategory}
             onSelect={handleWorkCategorySelect}
           />
           <CustomSelectDropdown
             label="Material Type"
-            data={selectedWorkCategory?.materialTypeData}
+            data={selectedWorkCategory?.materialsData}
             selectedValue={selectedMaterialType}
             onSelect={handleMaterialTypeSelect}
           />
-          <CustomSelectDropdown
-            label="Material Category"
-            data={selectedMaterialType?.category}
-            selectedValue={selectedMaterialCategory}
-            itemTypeOf="string"
-            onSelect={setSelectedMaterialCategory}
-          />
+          {selectedMaterialType?.category && selectedMaterialType?.category.length ?
+            <CustomSelectDropdown
+              label="Material Category"
+              data={selectedMaterialType?.category}
+              selectedValue={selectedMaterialCategory}
+              itemTypeOf="string"
+              onSelect={setSelectedMaterialCategory}
+            />
+            : <View style={styles.formGroup}>
+                <Text style={styles.label}>Material Category</Text>
+                <Text style={styles.textDisplay}>
+                  N/A
+                </Text>
+              </View>
+            }
           <View style={styles.formGroup}>
             <Text style={styles.label}>Unit</Text>
             <Text style={styles.textDisplay}>
-              {selectedMaterialType?.unit || 'Not Selected'}
+              {selectedMaterialType?.materialUnit || ''}
             </Text>
           </View>
           <Input

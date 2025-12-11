@@ -15,6 +15,7 @@ const CustomSelectDropdown = ({
   selectedValue,
   onSelect,
   itemTypeOf = 'object',
+  valueField = '_id',
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -64,7 +65,7 @@ const CustomSelectDropdown = ({
             ) : (
               <FlatList
                 data={data}
-                keyExtractor={item => item._id}
+                keyExtractor={item => item[valueField]}
                 renderItem={({item}) => (
                   <TouchableOpacity
                     style={styles.item}

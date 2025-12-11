@@ -64,13 +64,14 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
     loading,
     error,
   } = useSelector((state: any) => state.WorkAssignment);
-  const [componentsData, setComponentsData] = useState([]);
+  // Initialize as an array of the correct type
+  const [componentsData, setComponentsData] = useState<any[]>([]);
   const [selectedComponent, setSelectedComponent] = useState({
     isChecked: false,
     _id: '',
     name: '',
   });
-  const [userData, setUserCheckboxes] = useState([]);
+  const [userData, setUserCheckboxes] = useState<any[]>([]); // Initialize as an array
   const [isAssignPopOpen, openAssignPopup] = useState(false);
   const [searchText, setSearchText] = useState('');
 
@@ -83,18 +84,20 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
 
   useEffect(() => {
     if (components) {
-      components.forEach((pModule: any) => {
-        pModule.isChecked = false;
-      });
-      setComponentsData(components);
-      console.log('======', components);
+      // Use map for cleaner state initialization
+      const initialComponents = components.map((pModule: any) => ({
+        ...pModule,
+        isChecked: false, // Ensure local checked state is managed
+      }));
+      setComponentsData(initialComponents);
     }
 
     if (users) {
-      users.forEach((user: any) => {
-        user.isChecked = false;
-      });
-      setUserCheckboxes(users);
+      const initialUsers = users.map((user: any) => ({
+        ...user,
+        isChecked: false, // Ensure local checked state is managed
+      }));
+      setUserCheckboxes(initialUsers);
     }
   }, [components, users, error]);
 
@@ -123,65 +126,102 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
     );
   }, []);
 
-  const handleRadioChange = (index: any) => {
-    const component: any = componentsData[index];
+  const handleRadioChange = (component: any) => {
+    // Toggle the checkbox state for the selected component
+    const updatedComponentsData = componentsData.map(comp => {
+      // Find and update the selected component in the full list
+      if (comp._id === component._id) {
+        return {
+          ...comp,
+          isChecked: !comp.isChecked,
+        };
+      }
+      // Uncheck all other components
+      return {
+        ...comp,
+        isChecked: false,
+      };
+    });
 
-    component.isChecked = !component.isChecked;
-    setSelectedComponent(component);
+    // Find the single newly selected component (if one was checked)
+    const newSelectedComponent = updatedComponentsData.find(
+      comp => comp._id === component._id && comp.isChecked,
+    );
 
-    const updatedCheckboxes: any = [...userData];
+    setComponentsData(updatedComponentsData);
+    setSelectedComponent(
+      newSelectedComponent || {isChecked: false, _id: '', name: ''},
+    );
 
-    if (component.isChecked) {
-      updatedCheckboxes.forEach((user: any) => {
-        user.isChecked = false;
-        delete user.assignmentLevel;
-        if (
-          user.workAssignment?.find(
-            (wa: any) =>
-              wa.projectModule?.id === projectModuleId &&
-              wa.segmentId === segmentId &&
-              wa.componentId === component._id &&
-              wa.assignmentLevel === 4 &&
-              wa.assignmentLevelFrom === 4,
-          )
-        ) {
-          user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL4;
-          user.isChecked = true;
-        } else if (
-          user.workAssignment?.find(
-            (wa: any) =>
-              wa.projectModule?.id === projectModuleId &&
-              wa.segmentId === segmentId &&
-              wa.componentId === component._id &&
-              wa.assignmentLevel === 5 &&
-              wa.assignmentLevelFrom === 5,
-          )
-        ) {
-          user.assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL5;
-          user.isChecked = true;
+    if (newSelectedComponent) {
+      // Logic to initialize user checkboxes based on newSelectedComponent assignment
+      const updatedUserCheckboxes = userData.map((user: any) => {
+        let isChecked = false;
+        let assignmentLevel = null;
+
+        // Check for Level 4/5 assignments
+        const waLevel4 = user.workAssignment?.find(
+          (wa: any) =>
+            wa.projectModule?.id === projectModuleId &&
+            wa.segmentId === segmentId &&
+            wa.componentId === newSelectedComponent._id &&
+            wa.assignmentLevel === 4 &&
+            wa.assignmentLevelFrom === 4,
+        );
+
+        const waLevel5 = user.workAssignment?.find(
+          (wa: any) =>
+            wa.projectModule?.id === projectModuleId &&
+            wa.segmentId === segmentId &&
+            wa.componentId === newSelectedComponent._id &&
+            wa.assignmentLevel === 5 &&
+            wa.assignmentLevelFrom === 5,
+        );
+
+        if (waLevel4) {
+          assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL4;
+          isChecked = true;
+        } else if (waLevel5) {
+          assignmentLevel = WORK_ASSIGNMENT_LEVEL.LEVEL5;
+          isChecked = true;
         } else {
-          const workAssignment = user.workAssignment?.find(
+          // Check for Level 3 assignment
+          const waLevel3 = user.workAssignment?.find(
             (wa: any) =>
               wa.projectModule?.id === projectModuleId &&
               wa.segmentId === segmentId &&
-              wa.componentId === component._id &&
+              wa.componentId === newSelectedComponent._id &&
               wa.assignmentLevel === 3,
           );
-          if (workAssignment) {
-            user.isChecked = true;
+          if (waLevel3) {
+            isChecked = true;
           }
         }
-      });
-    }
 
-    setUserCheckboxes(updatedCheckboxes);
-    openAssignPopup(!isAssignPopOpen);
+        return {
+          ...user,
+          isChecked, // Set local checkbox state
+          assignmentLevel, // Set assignment level subtext
+          dirty: false, // Reset dirty state on component switch
+          delete: false, // Reset delete state on component switch
+        };
+      });
+
+      setUserCheckboxes(updatedUserCheckboxes);
+      openAssignPopup(true); // Open popup only if a component was selected
+    } else {
+      openAssignPopup(false); // Close popup if the currently selected component was unchecked
+    }
   };
 
   const handleUserData = (index: any) => {
     const updatedCheckboxes: any = [...userData];
     const selectedUser: any = updatedCheckboxes[index];
+
+    // Toggle the checkbox
     selectedUser.isChecked = !selectedUser.isChecked;
+
+    // Check for existing work assignment at level 3
     const workAssignment = selectedUser.workAssignment?.find(
       (wa: any) =>
         wa.projectModule?.id === projectModuleId &&
@@ -189,6 +229,8 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
         wa.componentId === selectedComponent._id &&
         wa.assignmentLevel === 3,
     );
+
+    // Update dirty and delete flags for API submission
     if (selectedUser.isChecked) {
       if (workAssignment) {
         workAssignment.dirty = false;
@@ -298,14 +340,19 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
   };
 
   const openAssignClose = () => {
-    componentsData.forEach((item: any) => {
-      item.isChecked = false;
-    });
-    userData.forEach((item: any) => {
-      item.isChecked = false;
-    });
-    setUserCheckboxes(userData);
-    openAssignPopup(!isAssignPopOpen);
+    const updatedComponents = componentsData.map(item => ({
+      ...item,
+      isChecked: false,
+    }));
+    const updatedUsers = userData.map(item => ({
+      ...item,
+      isChecked: false,
+    }));
+
+    setComponentsData(updatedComponents);
+    setUserCheckboxes(updatedUsers);
+    setSelectedComponent({isChecked: false, _id: '', name: ''});
+    openAssignPopup(false);
   };
 
   useEffect(
@@ -364,7 +411,7 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
   const [isSplitChainageModalOpen, setIsSplitChainageModalOpen] =
     useState(false);
   const [selectedComponentForSplit, setSelectedComponentForSplit] =
-    useState(null);
+    useState<any>(null); // Explicitly type as any or a specific component type
   const [splitChainageData, setSplitChainageData] = useState({
     startChainage: 0.0,
     endChainage: 0.0,
@@ -373,6 +420,7 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
 
   const openSplitChainageModal = (item: any) => {
     setSelectedComponentForSplit(item);
+    // Use optional chaining for safer access
     const startChainage =
       item.splitInfo?.chainage?.start ?? chainage?.start ?? 0.0;
     const endChainage = item.splitInfo?.chainage?.end ?? chainage?.end ?? 0.0;
@@ -445,7 +493,7 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
 
   const [isSplitLayerModalOpen, setIsSplitLayerModalOpen] = useState(false);
   const [selectedComponentForLayerSplit, setSelectedComponentForLayerSplit] =
-    useState(null);
+    useState<any>(null);
   const [splitLayerData, setSplitLayerData] = useState({numberOfLayers: 0});
 
   const openSplitByLayerModal = (item: any) => {
@@ -466,7 +514,13 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
       isNaN(splitLayerData.numberOfLayers) ||
       splitLayerData.numberOfLayers <= 0
     ) {
-      console.log('Please enter a valid number of layers.');
+      Alert.alert('Validation Error', 'Please enter a valid number of layers.');
+      return;
+    }
+
+    if (!selectedComponentForLayerSplit) {
+      Alert.alert('Error', 'No component selected for splitting.');
+      closeSplitByLayerModal();
       return;
     }
 
@@ -493,220 +547,220 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
     closeSplitByLayerModal();
   };
 
-  const {componentType} = componentsData
-    .filter((subSeg: any) => {
-      if (searchText && subSeg.name) {
-        return subSeg.name.toLowerCase().includes(searchText.toLowerCase());
-      }
-      return true;
-    })
-    .reduce(
-      (result: {componentType: any[]}, item: any) => {
-        result.componentType.push(item);
-        return result;
-      },
-      {componentType: []},
-    );
+  // Filter components based on search text
+  const filteredComponents = componentsData.filter(component => {
+    if (searchText && component.name) {
+      return component.name.toLowerCase().includes(searchText.toLowerCase());
+    }
+    return true;
+  });
 
-  const filteredCategory = componentType
-    .filter((item, index) => index === 0)
-    .map(item => ({
-      segmentCategory: item.segmentCategory || '',
-      name: item.type || '',
-    }));
+  // Get category info from first component
+  const filteredCategory =
+    filteredComponents.length > 0
+      ? [
+          {
+            segmentCategory: filteredComponents[0].segmentCategory || '',
+            name: filteredComponents[0].type || '',
+          },
+        ]
+      : [];
 
-  const repeatedComponentTypes = commonComponentTypes.map(
-    (type: any, index: any) => {
-      const filteredItems = componentType.filter(item => item.type === type);
-      if (filteredItems.length === 0) {
-        return null;
-      }
+  // Group components by type
+  const groupedByType = filteredComponents.reduce((acc, item) => {
+    const type = item.type || 'other';
+    if (!acc[type]) {
+      acc[type] = [];
+    }
+    acc[type].push(item);
+    return acc;
+  }, {});
+
+  // Render grouped components
+  const repeatedComponentTypes = Object.entries(groupedByType)
+    .map(([type, items]) => {
+      if (!items || items.length === 0) return null;
+
       return (
-        filteredItems.length > 0 && (
-          <View style={styles.separatTaskType} key={type}>
-            <View style={styles.titleTextForGrouping}>
-              <Text
-                style={[styles.titleText, {color: workTypeColors.titleColor}]}>
-                {type.charAt(0).toUpperCase() + type.slice(1)}
-              </Text>
-            </View>
-            {filteredItems.map((item, i) => {
-              // --- LOGIC FOR CONDITIONAL RENDERING ---
-              let isLastLayer = false;
-              if (item.splitInfo?.splitBy === 'layer' && item.name) {
-                const match = item.name.match(/\(Layer (\d+)\)/);
-                const currentLayer = match ? parseInt(match[1], 10) : 0;
-                const totalLayers = item.splitInfo.splitNo;
+        <View style={styles.separatTaskType} key={type}>
+          <View style={styles.titleTextForGrouping}>
+            <Text
+              style={[styles.titleText, {color: workTypeColors.titleColor}]}>
+              {type
+                .split('-')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ')}
+            </Text>
+          </View>
+          {items.map((item, i) => {
+            // --- LOGIC FOR CONDITIONAL RENDERING ---
+            let isLastLayer = false;
+            if (item.splitInfo?.splitBy === 'layer' && item.name) {
+              const match = item.name.match(/\(Layer (\d+)\)/);
+              const currentLayer = match ? parseInt(match[1], 10) : 0;
+              const totalLayers = item.splitInfo.splitNo;
 
-                if (currentLayer > 0 && currentLayer === totalLayers) {
-                  isLastLayer = true;
-                }
+              if (currentLayer > 0 && currentLayer === totalLayers) {
+                isLastLayer = true;
               }
+            }
 
-              const showActionSection =
-                !item.rfiGenerated &&
-                (item.splitByChainage || item.splitByLayer || isLastLayer);
+            const showActionSection =
+              !item.rfiGenerated &&
+              (item.splitByChainage || item.splitByLayer || isLastLayer);
 
-              return (
+            return (
+              <View
+                key={`${type}-${i}`}
+                style={[
+                  styles.UserCategory,
+                  {borderColor: workTypeColors.borderColor},
+                ]}>
+                <LinearGradient
+                  colors={workTypeColors.gradientColors}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}
+                  style={styles.gradientBackground}
+                />
                 <View
-                  key={`${type}-${i}`}
                   style={[
-                    styles.UserCategory,
-                    {borderColor: workTypeColors.borderColor},
-                  ]}>
-                  <LinearGradient
-                    colors={workTypeColors.gradientColors}
-                    start={{x: 0, y: 0}}
-                    end={{x: 1, y: 0}}
-                    style={styles.gradientBackground}
-                  />
+                    styles.leftBorder,
+                    {backgroundColor: workTypeColors.leftBorderColor},
+                  ]}
+                />
+
+                {/* ---Main content row --- */}
+                <View style={styles.mainContentRow}>
                   <View
-                    style={[
-                      styles.leftBorder,
-                      {backgroundColor: workTypeColors.leftBorderColor},
-                    ]}
-                  />
-
-                  {/* ---Main content row --- */}
-                  <View style={styles.mainContentRow}>
-                    <View
-                      style={[styles.FlexRowCenter, {flex: 1, marginRight: 8}]}>
-                      <CheckBox
-                        value={item.isChecked}
-                        onValueChange={() =>
-                          handleRadioChange(filteredItems.indexOf(item))
-                        }
-                        style={styles.checkbox}
-                        tintColors={{true: '#5A2AAF', false: '#000001'}}
-                      />
-                      {/* This container ensures the text can wrap */}
-                      <View style={styles.nameContainer}>
-                        <Text style={styles.UserRole}>{item.name || ''}</Text>
-                      </View>
-                    </View>
-
-                    {/* This container remains fixed on the right */}
-                    <View style={styles.FlexRowCenter}>
-                      <View style={styles.numberCircle}>
-                        <Text
-                          style={[
-                            styles.numberText,
-                            {color: workTypeColors.leftBorderColor},
-                          ]}>
-                          {item.taskCount}
-                        </Text>
-                      </View>
-                      <TouchableOpacity
-                        onPress={() => onComponentNextClick(item)}>
-                        <Image
-                          style={styles.CloseIcon}
-                          source={require('./../../images/right-arrow.png')}
-                        />
-                      </TouchableOpacity>
+                    style={[styles.FlexRowCenter, {flex: 1, marginRight: 8}]}>
+                    <CheckBox
+                      value={item.isChecked}
+                      onValueChange={() => handleRadioChange(item)}
+                      style={styles.checkbox}
+                      tintColors={{true: '#5A2AAF', false: '#000001'}}
+                    />
+                    <View style={styles.nameContainer}>
+                      <Text style={styles.UserRole}>{item.name || ''}</Text>
                     </View>
                   </View>
 
-                  {showActionSection && (
-                    <>
-                      <View
+                  <View style={styles.FlexRowCenter}>
+                    <View style={styles.numberCircle}>
+                      <Text
                         style={[
-                          styles.dashedLine,
-                          {borderBottomColor: workTypeColors.leftBorderColor},
-                        ]}
+                          styles.numberText,
+                          {color: workTypeColors.leftBorderColor},
+                        ]}>
+                        {item.taskCount}
+                      </Text>
+                    </View>
+                    <TouchableOpacity
+                      onPress={() => onComponentNextClick(item)}>
+                      <Image
+                        style={styles.CloseIcon}
+                        source={require('./../../images/right-arrow.png')}
                       />
-
-                      <View style={styles.buttonsContainer}>
-                        {/* 1. Split by Chainage Button */}
-                        {item.splitByChainage && (
-                          <TouchableOpacity
-                            style={[
-                              styles.actionButton,
-                              styles.actionButtonChainage,
-                            ]}
-                            onPress={() => openSplitChainageModal(item)}>
-                            <View style={styles.buttonContent}>
-                              <Image
-                                style={[
-                                  styles.buttonIcon,
-                                  {tintColor: '#5EAB4B'},
-                                ]}
-                                source={require('./../../images/userManagement/spliting.png')}
-                              />
-                              <Text
-                                style={[
-                                  styles.buttonText,
-                                  styles.buttonTextChainage,
-                                ]}>
-                                Split by Chainage
-                              </Text>
-                            </View>
-                          </TouchableOpacity>
-                        )}
-
-                        {/* 2. Split by Layer Button */}
-                        {item.splitByLayer && (
-                          <TouchableOpacity
-                            style={[
-                              styles.actionButton,
-                              styles.actionButtonLayer,
-                            ]}
-                            onPress={() => openSplitByLayerModal(item)}>
-                            <View style={styles.buttonContent}>
-                              <Image
-                                style={[
-                                  styles.buttonIcon,
-                                  {tintColor: '#5A2AAF'},
-                                ]}
-                                source={require('./../../images/userManagement/spliting.png')}
-                              />
-                              <Text
-                                style={[
-                                  styles.buttonText,
-                                  styles.buttonTextLayer,
-                                ]}>
-                                Split by Layer
-                              </Text>
-                            </View>
-                          </TouchableOpacity>
-                        )}
-
-                        {/* 3. Delete Button */}
-                        {isLastLayer && (
-                          <TouchableOpacity
-                            style={[
-                              styles.actionButton,
-                              styles.actionButtonDelete,
-                            ]}
-                            onPress={() => handleDeleteComponent(item)}>
-                            <View style={styles.buttonContent}>
-                              <Image
-                                style={[
-                                  styles.buttonIcon,
-                                  {tintColor: '#FF4747'},
-                                ]}
-                                source={require('./../../images/userManagement/delete.png')}
-                              />
-                              <Text
-                                style={[
-                                  styles.buttonText,
-                                  styles.buttonTextDelete,
-                                ]}>
-                                Delete
-                              </Text>
-                            </View>
-                          </TouchableOpacity>
-                        )}
-                      </View>
-                    </>
-                  )}
+                    </TouchableOpacity>
+                  </View>
                 </View>
-              );
-            })}
-          </View>
-        )
+
+                {showActionSection && (
+                  <>
+                    <View
+                      style={[
+                        styles.dashedLine,
+                        {borderBottomColor: workTypeColors.leftBorderColor},
+                      ]}
+                    />
+
+                    <View style={styles.buttonsContainer}>
+                      {item.splitByChainage && (
+                        <TouchableOpacity
+                          style={[
+                            styles.actionButton,
+                            styles.actionButtonChainage,
+                          ]}
+                          onPress={() => openSplitChainageModal(item)}>
+                          <View style={styles.buttonContent}>
+                            <Image
+                              style={[
+                                styles.buttonIcon,
+                                {tintColor: '#5EAB4B'},
+                              ]}
+                              source={require('./../../images/userManagement/spliting.png')}
+                            />
+                            <Text
+                              style={[
+                                styles.buttonText,
+                                styles.buttonTextChainage,
+                              ]}>
+                              Split by Chainage
+                            </Text>
+                          </View>
+                        </TouchableOpacity>
+                      )}
+
+                      {item.splitByLayer && (
+                        <TouchableOpacity
+                          style={[
+                            styles.actionButton,
+                            styles.actionButtonLayer,
+                          ]}
+                          onPress={() => openSplitByLayerModal(item)}>
+                          <View style={styles.buttonContent}>
+                            <Image
+                              style={[
+                                styles.buttonIcon,
+                                {tintColor: '#5A2AAF'},
+                              ]}
+                              source={require('./../../images/userManagement/spliting.png')}
+                            />
+                            <Text
+                              style={[
+                                styles.buttonText,
+                                styles.buttonTextLayer,
+                              ]}>
+                              Split by Layer
+                            </Text>
+                          </View>
+                        </TouchableOpacity>
+                      )}
+
+                      {isLastLayer && (
+                        <TouchableOpacity
+                          style={[
+                            styles.actionButton,
+                            styles.actionButtonDelete,
+                          ]}
+                          onPress={() => handleDeleteComponent(item)}>
+                          <View style={styles.buttonContent}>
+                            <Image
+                              style={[
+                                styles.buttonIcon,
+                                {tintColor: '#FF4747'},
+                              ]}
+                              source={require('./../../images/userManagement/delete.png')}
+                            />
+                            <Text
+                              style={[
+                                styles.buttonText,
+                                styles.buttonTextDelete,
+                              ]}>
+                              Delete
+                            </Text>
+                          </View>
+                        </TouchableOpacity>
+                      )}
+                    </View>
+                  </>
+                )}
+              </View>
+            );
+          })}
+        </View>
       );
-    },
-  );
+    })
+    .filter(Boolean); // Remove null values
 
   return (
     <View style={styles.Container}>
@@ -923,7 +977,7 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
                   <TextInput
                     style={styles.splitInput}
                     placeholder="Enter split value"
-                    value={splitChainageData.splitValue}
+                    value={splitChainageData.splitValue.toString()}
                     onChangeText={(num: string) =>
                       setSplitChainageData(prev => ({
                         ...prev,
@@ -1013,7 +1067,6 @@ const ComponentsList = ({route, navigation}: {route: any; navigation: any}) => {
   );
 };
 
-//NOTE: Your styles are not included here for brevity, but they should remain unchanged.
 const styles = StyleSheet.create({
   Container: {
     flexDirection: 'column',

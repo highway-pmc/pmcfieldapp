@@ -1,8 +1,10 @@
 import {combineReducers} from 'redux';
 import {reducer as formReducer} from 'redux-form';
 import {
+  METERIAL_REQUEST,
   PROCUREMENTS,
   SOURCE_APPROVALS,
+  VENDOR_FORM,
 } from '../screens/ManageUsers/QualityWorks/constants';
 
 const initialState = {
@@ -74,6 +76,30 @@ const sourceApprovalsState = {
   addedSourceDetail: null,
   updatedSourceDetail: null,
   deletedSourceDetail: null,
+  sourceCategoriesWithCount: null,
+  sourceByStatusData: null,
+  putSourceApprovalData: null,
+  error: null,
+};
+
+const vendorFormState = {
+  loading: false,
+  postVendorFormData: null,
+  getVendorFormData: null,
+  putVendorFormData: null,
+  deleteVendorFormData: null,
+  error: null,
+};
+
+const meterialRequestFormState = {
+  loading: false,
+  postMeterialRequestFormData: null,
+  getMeterialRequestFormData: null,
+  getMeterialRequestToFormData: null,
+  patchMeterialRequestStatusData: null,
+  patchDispatchRequestData: null,
+  dispatchProductionRequest: null,
+  uploadingBatchData: null,
   error: null,
 };
 
@@ -1657,6 +1683,7 @@ const RFIsReducer = (state = myWorksState, action) => {
         qualityMixDesignFormInfo: null,
         savedMixDesignFormInfo: null,
         qualityMixDesignListInfo: null,
+        mixDesignListData: null,
         error: null,
         loading: false,
       };
@@ -1700,6 +1727,28 @@ const RFIsReducer = (state = myWorksState, action) => {
         error: action.error,
         loading: false,
       };
+
+    case 'GET_MIX_DESIGN_REQUEST':
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case 'GET_MIX_DESIGN_SUCCESS':
+      return {
+        ...state,
+        mixDesignListData: action.response,
+        error: null,
+        loading: false,
+      };
+    case 'GET_MIX_DESIGN_FAILURE':
+      return {
+        ...state,
+        mixDesignListData: null,
+        error: action.error,
+        loading: false,
+      };
+
     case 'GET_MIX_DESIGN_FORM_INFO_REQUEST':
       return {
         ...state,
@@ -1760,12 +1809,81 @@ const RFIsReducer = (state = myWorksState, action) => {
         error: action.error,
         loading: false,
       };
+    case 'CLEAR_MIX_DESIGN_INFO':
+      return {
+        ...state,
+        qualityMixDesignFormInfo: null,
+        savedMixDesignFormInfo: null,
+        qualityMixDesignListInfo: null,
+        error: null,
+        loading: false,
+      };
     default:
       return state;
   }
 };
 const SourceApprovalsReducer = (state = sourceApprovalsState, action) => {
   switch (action.type) {
+    case SOURCE_APPROVALS.PUT_SOURCE_APPROVAL_REQUEST:
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case SOURCE_APPROVALS.PUT_SOURCE_APPROVAL_SUCCESS:
+      return {
+        ...state,
+        putSourceApprovalData: action.response,
+        error: null,
+        loading: false,
+      };
+    case SOURCE_APPROVALS.PUT_SOURCE_APPROVAL_FAILURE:
+      return {
+        ...state,
+        putSourceApprovalData: null,
+        error: action.error,
+        loading: false,
+      };
+    case SOURCE_APPROVALS.GET_SOURCE_BY_STATUS_REQUEST:
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case SOURCE_APPROVALS.GET_SOURCE_BY_STATUS_SUCCESS:
+      return {
+        ...state,
+        sourceByStatusData: action.response,
+        error: null,
+        loading: false,
+      };
+    case SOURCE_APPROVALS.GET_SOURCE_BY_STATUS_FAILURE:
+      return {
+        ...state,
+        sourceByStatusData: null,
+        error: action.error,
+        loading: false,
+      };
+    case SOURCE_APPROVALS.GET_SOURCE_CATEGORIES_WITH_COUNT_REQUEST:
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case SOURCE_APPROVALS.GET_SOURCE_CATEGORIES_WITH_COUNT_SUCCESS:
+      return {
+        ...state,
+        sourceCategoriesWithCount: action.response,
+        error: null,
+        loading: false,
+      };
+    case SOURCE_APPROVALS.GET_SOURCE_CATEGORIES_WITH_COUNT_FAILURE:
+      return {
+        ...state,
+        sourceCategoriesWithCount: null,
+        error: action.error,
+        loading: false,
+      };
     case SOURCE_APPROVALS.GET_SOURCE_APPROVALS_REQUEST:
       return {
         ...state,
@@ -1949,6 +2067,9 @@ const SourceApprovalsReducer = (state = sourceApprovalsState, action) => {
     case SOURCE_APPROVALS.CLEAR_SOURCE_APPROVALS_REQUEST:
       return {
         ...state,
+        putSourceApprovalData: null,
+        sourceByStatusData: null,
+        sourceCategoriesWithCount: null,
         sourceApprovals: null,
         sourceApprovalsByStatus: null,
         addedSourceApproval: null,
@@ -2317,6 +2438,359 @@ const ProcurementsReducer = (state = procurementsState, action) => {
   }
 };
 
+const VendorFormReducer = (state = vendorFormState, action) => {
+  switch (action.type) {
+    case VENDOR_FORM.DELETE_VENDOR_FORM_REQUEST:
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case VENDOR_FORM.DELETE_VENDOR_FORM_SUCCESS:
+      return {
+        ...state,
+        deleteVendorFormData: action.response,
+        error: null,
+        loading: false,
+      };
+    case VENDOR_FORM.DELETE_VENDOR_FORM_FAILURE:
+      return {
+        ...state,
+        deleteVendorFormData: null,
+        error: action.error,
+        loading: false,
+      };
+    case VENDOR_FORM.PUT_VENDOR_FORM_REQUEST:
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case VENDOR_FORM.PUT_VENDOR_FORM_SUCCESS:
+      return {
+        ...state,
+        putVendorFormData: action.response,
+        error: null,
+        loading: false,
+      };
+    case VENDOR_FORM.PUT_VENDOR_FORM_FAILURE:
+      return {
+        ...state,
+        putVendorFormData: null,
+        error: action.error,
+        loading: false,
+      };
+    case VENDOR_FORM.GET_VENDOR_FORM_REQUEST:
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case VENDOR_FORM.GET_VENDOR_FORM_SUCCESS:
+      return {
+        ...state,
+        getVendorFormData: action.response,
+        error: null,
+        loading: false,
+      };
+    case VENDOR_FORM.GET_VENDOR_FORM_FAILURE:
+      return {
+        ...state,
+        getVendorFormData: null,
+        error: action.error,
+        loading: false,
+      };
+    case VENDOR_FORM.POST_VENDOR_FORM_REQUEST:
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case VENDOR_FORM.POST_VENDOR_FORM_SUCCESS:
+      return {
+        ...state,
+        postVendorFormData: action.response,
+        error: null,
+        loading: false,
+      };
+    case VENDOR_FORM.POST_VENDOR_FORM_FAILURE:
+      return {
+        ...state,
+        postVendorFormData: null,
+        error: action.error,
+        loading: false,
+      };
+    case VENDOR_FORM.CLEAR_VENDOR_FORM_REQUEST:
+      return {
+        ...state,
+        postVendorFormData: null,
+        getVendorFormData: null,
+        putVendorFormData: null,
+        deleteVendorFormData: null,
+        error: action.error,
+        error: null,
+        loading: true,
+      };
+    default:
+      return state;
+  }
+};
+
+const MeterialRequestFormReducer = (
+  state = meterialRequestFormState,
+  action,
+) => {
+  switch (action.type) {
+    case METERIAL_REQUEST.DISPATCH_PRODUCTION_REQUEST:
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case METERIAL_REQUEST.DISPATCH_PRODUCTION_REQUEST_SUCCESS:
+      return {
+        ...state,
+        dispatchProductionRequest: action.response,
+        error: null,
+        loading: false,
+      };
+    case METERIAL_REQUEST.DISPATCH_PRODUCTION_REQUEST_FAILURE:
+      return {
+        ...state,
+        dispatchProductionRequest: null,
+        error: action.error,
+        loading: false,
+      };
+    case METERIAL_REQUEST.POST_BATCH_SLIP_REQUEST:
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case METERIAL_REQUEST.POST_BATCH_SLIP_REQUEST_SUCCESS:
+      return {
+        ...state,
+        uploadingBatchData: action.response,
+        error: null,
+        loading: false,
+      };
+    case METERIAL_REQUEST.POST_BATCH_SLIP_REQUEST_FAILURE:
+      return {
+        ...state,
+        uploadingBatchData: null,
+        error: action.error,
+        loading: false,
+      };
+    case METERIAL_REQUEST.PATCH_DISPATCH_REQUEST:
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case METERIAL_REQUEST.PATCH_DISPATCH_REQUEST_SUCCESS:
+      return {
+        ...state,
+        patchDispatchRequestData: action.response,
+        error: null,
+        loading: false,
+      };
+    case METERIAL_REQUEST.PATCH_DISPATCH_REQUEST_FAILURE:
+      return {
+        ...state,
+        patchDispatchRequestData: null,
+        error: action.error,
+        loading: false,
+      };
+    case METERIAL_REQUEST.PATCH_MATERIAL_REQUEST_STATUS:
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case METERIAL_REQUEST.PATCH_MATERIAL_REQUEST_STATUS_SUCCESS:
+      return {
+        ...state,
+        patchMeterialRequestStatusData: action.response,
+        error: null,
+        loading: false,
+      };
+    case METERIAL_REQUEST.PATCH_MATERIAL_REQUEST_STATUS_FAILURE:
+      return {
+        ...state,
+        patchMeterialRequestStatusData: null,
+        error: action.error,
+        loading: false,
+      };
+    case METERIAL_REQUEST.GET_MATERIAL_REQUEST_TO:
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case METERIAL_REQUEST.GET_MATERIAL_REQUEST_TO_SUCCESS:
+      return {
+        ...state,
+        getMeterialRequestToFormData: action.response,
+        error: null,
+        loading: false,
+      };
+    case METERIAL_REQUEST.GET_MATERIAL_REQUEST_TO_FAILURE:
+      return {
+        ...state,
+        getMeterialRequestToFormData: null,
+        error: action.error,
+        loading: false,
+      };
+    case METERIAL_REQUEST.POST_SUBMIT_MATERIAL_REQUEST:
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case METERIAL_REQUEST.POST_SUBMIT_MATERIAL_REQUEST_SUCCESS:
+      return {
+        ...state,
+        postMeterialRequestFormData: action.response,
+        error: null,
+        loading: false,
+      };
+    case METERIAL_REQUEST.POST_SUBMIT_MATERIAL_REQUEST_FAILURE:
+      return {
+        ...state,
+        postMeterialRequestFormData: null,
+        error: action.error,
+        loading: false,
+      };
+    case METERIAL_REQUEST.GET_MATERIAL_REQUEST:
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case METERIAL_REQUEST.GET_MATERIAL_REQUEST_SUCCESS:
+      return {
+        ...state,
+        getMeterialRequestFormData: action.response,
+        error: null,
+        loading: false,
+      };
+    case METERIAL_REQUEST.GET_MATERIAL_REQUEST_FAILURE:
+      return {
+        ...state,
+        getMeterialRequestFormData: null,
+        error: action.error,
+        loading: false,
+      };
+    case METERIAL_REQUEST.CLEAR_SUBMIT_MATERIAL_FORM_REQUEST:
+      return {
+        ...state,
+        getMeterialRequestFormData: null,
+        postMeterialRequestFormData: null,
+        getMeterialRequestToFormData: null,
+        patchMeterialRequestStatusData: null,
+        patchDispatchRequestData: null,
+        uploadingBatchData: null,
+        error: action.error,
+        error: null,
+        loading: true,
+      };
+    default:
+      return state;
+  }
+};
+
+const testDetailsInitialState = {
+  tab1TestDetails: null,
+  tab2TestDetails: null,
+  inspectionChecklist: null,
+  rfiFormDataSaveResponse: null,
+  error: null,
+  saveError: null,
+  loading: false,
+};
+
+const FormDetailsReducer = (state = testDetailsInitialState, action) => {
+  switch (action.type) {
+    case 'GET_TEST_DETAILS_TAB1_REQUEST':
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case 'GET_TEST_DETAILS_TAB1_SUCCESS':
+      return {
+        ...state,
+        tab1TestDetails: action.response,
+        error: null,
+        loading: false,
+      };
+    case 'GET_TEST_DETAILS_TAB1_FAILURE':
+      return {
+        ...state,
+        tab1TestDetails: null,
+        error: action.error,
+        loading: false,
+      };
+    case 'GET_INSPECTION_CHECKLIST_REQUEST':
+      return {
+        ...state,
+        error: null,
+        loading: true, // Optionally use a separate loading state if needed
+      };
+    case 'GET_INSPECTION_CHECKLIST_SUCCESS':
+      return {
+        ...state,
+        inspectionChecklist: action.response,
+        error: null,
+        loading: false,
+      };
+    case 'GET_INSPECTION_CHECKLIST_FAILURE':
+      return {
+        ...state,
+        inspectionChecklist: null,
+        error: action.error,
+        loading: false,
+      };
+    case 'SAVE_RFI_FORM_DATA_REQUEST':
+      return {
+        ...state,
+        saveError: null,
+        rfiFormDataSaveResponse: null,
+        loading: true,
+      };
+    case 'SAVE_RFI_FORM_DATA_SUCCESS':
+      return {
+        ...state,
+        rfiFormDataSaveResponse: action.response,
+        saveError: null,
+        loading: false,
+      };
+    case 'SAVE_RFI_FORM_DATA_FAILURE':
+      return {
+        ...state,
+        rfiFormDataSaveResponse: null,
+        saveError: action.error,
+        loading: false,
+      };
+    case 'SAVE_RFI_FORM_DATA_CLEAR':
+      return {
+        ...state,
+        rfiFormDataSaveResponse: null,
+      };
+    case 'CLEAR_FORM_DETAILS':
+      return {
+        ...state,
+        tab1TestDetails: null,
+        inspectionChecklist: null,
+        rfiFormDataSaveResponse: null,
+        saveError: null,
+        error: null,
+        loading: false,
+      };
+    default:
+      return state;
+  }
+};
 export const combinedReducers = combineReducers({
   form: formReducer,
   Auth: AuthReducer,
@@ -2333,4 +2807,7 @@ export const combinedReducers = combineReducers({
   SourceApprovals: SourceApprovalsReducer,
   Procurements: ProcurementsReducer,
   EquipmentsCalibration: EquimentCalibrationReducer,
+  VendorForm: VendorFormReducer,
+  MeterialRequest: MeterialRequestFormReducer,
+  FormDetails: FormDetailsReducer,
 });

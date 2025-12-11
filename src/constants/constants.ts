@@ -76,6 +76,18 @@ export const HeaderItems = {
   assignTestTypes: {showBack: true, title: 'Assign Test Types'},
   sourceApprovals: {showBack: true, title: 'Source Approvals'},
   sourceApprovalForm: {showBack: true, title: 'Source Approvals Form'},
+  sourceApprovalEditForm: {showBack: true, title: 'Edit Source Approvals'},
+  addVendorForm: {showBack: true, title: 'Add Vendor Form'},
+  vendorFormLists: {showBack: true, title: 'Vendor Details'},
+  materialRequestFormLists: {showBack: true, title: 'Material Request'},
+  newContingencyRequestFormLists: {
+    showBack: true,
+    title: 'New Contingency Request',
+  },
+  ProductionRequestFormLists: {
+    showBack: true,
+    title: 'Production Material Request',
+  },
   procurements: {showBack: true, title: 'Procurements'},
   mixDesignListing: {showBack: true, title: 'Mix Design'},
   mixDesignInfo: {showBack: true, title: 'Mix Design'},
@@ -101,6 +113,10 @@ export const HeaderItems = {
   materialDispatch: {
     showBack: true,
     title: 'Material Dispatch',
+  },
+  taskForm: {
+    showBack: true,
+    title: 'Task',
   },
 };
 
@@ -336,6 +352,25 @@ export const Dashboard_MENU = [
     title: 'Survey',
     subTitle: 'Accurate Site Data',
     route: 'SurveyHome',
+    backgroundColor: '#FFEFC8',
+    titleColor: '#FBC02D',
+    border: '#FFE094',
+    permissions: [
+      'project-head',
+      'structure-head',
+      'highway-head',
+      'other-work-head',
+      'quality-head',
+      'user',
+    ],
+  },
+  {
+    id: '13',
+    icon: require('./../images/homeDashbord/surveying.png'),
+    iconMenu: require('./../images/homeDashbord/surveying.png'),
+    title: 'Add Vendor',
+    subTitle: 'sdsad',
+    route: 'VendorFormLists',
     backgroundColor: '#FFEFC8',
     titleColor: '#FBC02D',
     border: '#FFE094',
@@ -1000,15 +1035,17 @@ export const TEST_MATERIALS_TYPES = {
   BENTONITE_OTHER: '',
 };
 export const REQUEST_TYPES = {
-  INVENTORY_REQUEST: 'inventry',
+  INVENTORY_REQUEST: 'inventory',
   CONTINGENCY_REQUEST: 'contingency',
 };
 export const MATERIAL_REQUEST_STATUS = {
+  PENDING_ACCEPTANCE: 'pending_acceptance',
   PENDING_APPROVAL: 'pending_approval',
   PENDING_DISPATCH: 'pending_dispatch',
-  PENDING_ACCEPTANCE: 'pending_acceptance',
-  ACCEPTED: 'accepted',
+  REQUEST_FOR_APPROVAL: 'request_for_approval',
+  IN_PROGRESS: 'in_progress',
   REJECTED: 'rejected',
+  DISPATCHED: 'dispatched',
   DELIVERED: 'delivered',
 };
 export const TEST_TYPES = {
@@ -1390,3 +1427,13 @@ export const CEMENT_TYPE_LIST = [
     value: 'II ISOPC',
   },
 ];
+
+export const MATERIAL_TEST_STATUS = {
+  PENDING_APPROVAL: 'pending_approval',
+  PENDING_DISPATCH: 'pending_dispatch',
+  PENDING_ACCEPTANCE: 'pending_acceptance',
+  ACCEPTED: 'accepted',
+  REJECTED: 'rejected',
+  DELIVERED: 'delivered',
+  PENDING: 'pending',
+};

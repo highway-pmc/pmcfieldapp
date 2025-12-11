@@ -1,4 +1,4 @@
-import {useIsFocused} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState, useMemo} from 'react';
 import {
   View,
@@ -9,427 +9,739 @@ import {
   ScrollView,
   Alert,
   NativeEventEmitter,
-  Platform,
+  ActivityIndicator,
 } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import {HeaderItems, MATERIAL_REQUEST_STATUS} from '../../constants/constants';
 import DropdownPicker from '../../components/UI/DropdownPicker';
-import DetailsCard from '../Common/DetailsCard'; // Make sure this path is correct
+import {
+  patchDispatchRequest,
+  patchMaterialRequestStatus,
+  dispatchProductionRequest,
+  clearMaterialRequest,
+} from '../ManageUsers/actions';
+import {useDispatch, useSelector} from 'react-redux';
+import {useSnackbar} from '../../context/SnackbarContext';
+import {getMixDesignListInfo} from '../RFIs/actions';
+import DocumentPicker from 'react-native-document-picker';
+import appConfig from '../../common/app.config';
 
-// --- Type Definitions ---
-interface RequestData {
-  workCategory: string;
-  materialName: string;
-  materialCategory: string;
-  unit: string;
-  qtyRequested: number;
-  qtyApproved: number;
-  taskPath: string;
-  userName: string;
-  requestDateTime: string;
-}
+const MaterialApprovalProduction = ({route, navigation}: any) => {
+  const {status, item} = route.params || {};
 
-interface DropdownOption {
-  label: string;
-  value: string;
-}
+  if (!item) {
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <ActivityIndicator size="large" color="#4E36A3" />
+      </View>
+    );
+  }
 
-// New type for the mix design rows
-interface MixDesignRow {
-  id: number;
-  mixDesign: string;
-  quantity: string;
-}
-
-type MaterialApprovalFormProps = {
-  route: {params?: {status?: string}};
-  navigation: any;
-};
-
-// --- Mock Data ---
-const requestData: RequestData = {
-  workCategory: 'Structural Steel',
-  materialName: 'TMT Bars',
-  materialCategory: 'Fe-500D',
-  unit: 'Tonne',
-  qtyRequested: 150.5,
-  qtyApproved: 150,
-  taskPath: 'Project X / Tower A / Foundation / Raft',
-  userName: 'Prakash Kumar (Site Engineer)',
-  requestDateTime: '15/08/2025 10:30 AM',
-};
-
-const mixDesignData: DropdownOption[] = [
-  {label: 'Select Mix Design', value: ''},
-  {label: 'M25-Grade Concrete', value: 'm25'},
-  {label: 'M30-Grade Concrete', value: 'm30'},
-  {label: 'M40-Grade Concrete', value: 'm40'},
-];
-
-// --- Component ---
-const MaterialApprovalProductionForm: React.FC<MaterialApprovalFormProps> = ({
-  route,
-}) => {
-  const {status} = route.params || {};
-  const isFocused = useIsFocused();
-
-  // Common State
+  // Local State
+  const [qtyApproved, setQtyApproved] = useState<{[key: string]: string}>({});
+  const [qtyIssued, setQtyIssued] = useState<{[key: string]: string}>({});
   const [remarks, setRemarks] = useState<string>('');
-  const [qtyApproved, setQtyApproved] = useState<string>(
-    String(requestData.qtyApproved),
-  );
-  const [qtyIssued, setQtyIssued] = useState<string>('');
 
-  // Dispatch-specific State
-  const [mixDesigns, setMixDesigns] = useState<MixDesignRow[]>([
-    {id: 1, mixDesign: '', quantity: ''},
-  ]);
-  const [nextMixDesignId, setNextMixDesignId] = useState<number>(2);
-  const [vehicleNumbers, setVehicleNumbers] = useState<string[]>([]);
-  const [currentVehicleInput, setCurrentVehicleInput] = useState<string>('');
-  const [batchNo, setBatchNo] = useState<string>('');
-  const [dispatchTime, setDispatchTime] = useState<Date>(new Date());
-  const [showDateTimePicker, setShowDateTimePicker] = useState<boolean>(false);
+  // Mix Design State
+  const [mixDesignRows, setMixDesignRows] = useState<{[key: string]: any[]}>(
+    {},
+  );
+
+  // Dispatch State
+  const [vehicleNumbers, setVehicleNumbers] = useState<{
+    [key: string]: string[];
+  }>({});
+  const [currentVehicleInput, setCurrentVehicleInput] = useState<{
+    [key: string]: string;
+  }>({});
+  const [batchSlips, setBatchSlips]: any = useState(null);
+  const [fileUrlData, setfileUrlData]: any = useState('');
+  const [batchNumbers, setBatchNumbers] = useState<{[key: string]: string}>({});
+
+  const isFocused = useIsFocused();
+  const dispatch = useDispatch();
+  const {showSnackbar} = useSnackbar();
+  const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
+
+  const {
+    patchMeterialRequestStatusData,
+    error,
+    dispatchProductionRequest: dispatchProductionRequestState,
+  } = useSelector((state: any) => state.MeterialRequest);
+  const {qualityMixDesignListInfo} = useSelector((state: any) => state.RFIs);
+
+  // --- MODES DEFINITION ---
+  // 1. Edit Mode: User enters Mix Design and Batch No (Status: request_for_approval)
+  const isEditApprovalMode =
+    status === 'request_for_approval' ||
+    status === MATERIAL_REQUEST_STATUS.REQUEST_FOR_APPROVAL;
+
+  // 2. Read-Only Mode: User Reviews and Accepts/Rejects (Status: pending_approval)
+  const isPendingApprovalMode =
+    status === 'pending_approval' ||
+    status === MATERIAL_REQUEST_STATUS.PENDING_APPROVAL;
+
+  // 3. Dispatch Mode: User enters vehicle details (Status: pending_dispatch)
+  const isDispatchMode = status === MATERIAL_REQUEST_STATUS.PENDING_DISPATCH;
+
+  const isDispatchedMode = status === 'dispatched';
+
+  const mixDesignDropdownOptions = useMemo(() => {
+    if (!qualityMixDesignListInfo || !Array.isArray(qualityMixDesignListInfo)) {
+      return [];
+    }
+    return qualityMixDesignListInfo.map((item: any) => ({
+      label: item.name,
+      value: item._id,
+      originalData: item,
+    }));
+  }, [qualityMixDesignListInfo]);
+
+  useEffect(() => {
+    return () => {
+      dispatch(clearMaterialRequest());
+    };
+  }, []);
+
+  useEffect(() => {
+    if (patchMeterialRequestStatusData) {
+      showSnackbar('Status updated successfully', 'success');
+      navigation.goBack();
+    } else if (error) {
+      showSnackbar(error, 'error');
+    }
+  }, [patchMeterialRequestStatusData, error, navigation]);
+
+  useEffect(() => {
+    if (dispatchProductionRequestState) {
+      showSnackbar('Dispatched successfully', 'success');
+      dispatch(clearMaterialRequest());
+      navigation.goBack();
+    } else if (error) {
+      showSnackbar(error, 'error');
+    }
+  }, [dispatchProductionRequestState, error]);
+
 
   useEffect(() => {
     if (isFocused) {
       const eventEmitter = new NativeEventEmitter();
-      eventEmitter.emit(
-        'headerEvent',
-        status === MATERIAL_REQUEST_STATUS.PENDING_APPROVAL
-          ? HeaderItems.materialApprove
-          : HeaderItems.materialDispatch,
+      let headerTitle = HeaderItems.materialDispatch;
+      if (isEditApprovalMode || isPendingApprovalMode) {
+        headerTitle = HeaderItems.materialApprove;
+      }
+      eventEmitter.emit('headerEvent', headerTitle);
+    }
+  }, [isFocused, isEditApprovalMode, isPendingApprovalMode]);
+
+  // Load Data for Editing Mode
+  useEffect(() => {
+    if (isFocused && isEditApprovalMode && item?.items?.length > 0) {
+      // Clear all local states
+      setQtyApproved({});
+      setQtyIssued({});
+      setRemarks('');
+      setMixDesignRows({});
+      setVehicleNumbers({});
+      setCurrentVehicleInput({});
+      setBatchSlips(null);
+      setfileUrlData('');
+      setBatchNumbers({});
+
+      const firstItem = item.items[0];
+      dispatch(
+        getMixDesignListInfo({
+          projectId: loggedInUser.projectId,
+          testWorkCategoryType: firstItem?.testWorkCategoryType,
+          testMaterialId: firstItem?.testMaterialId,
+        }),
       );
-    }
-  }, [isFocused, status]);
 
-  // Read-only data for the top card
-  const detailsData = useMemo(() => {
-    const data = [
-      {label: 'Work Category', value: requestData.workCategory},
-      {label: 'Material Name', value: requestData.materialName},
-      {label: 'Material Category', value: requestData.materialCategory},
-      {label: 'Unit', value: requestData.unit},
-      {
-        label: 'Qty Requested',
-        value: `${requestData.qtyRequested} ${requestData.unit}`,
-      },
-    ];
-    if (status === MATERIAL_REQUEST_STATUS.PENDING_DISPATCH) {
-      data.push({
-        label: 'Qty Approved',
-        value: `${requestData.qtyApproved} ${requestData.unit}`,
+      // Initialize Rows
+      const initialRows: any = {};
+      item.items.forEach((req: any) => {
+        initialRows[req._id] = [
+          {id: Date.now(), selectedOption: null, qty: ''},
+        ];
       });
+      setMixDesignRows(initialRows);
     }
-    data.push({type: 'divider' as const});
-    data.push(
-      {label: 'Task Details', value: requestData.taskPath},
-      {label: 'Requested by', value: requestData.userName},
-      {label: 'Request Date & Time', value: requestData.requestDateTime},
-    );
-    return data;
-  }, [status]);
+  }, [isFocused, isEditApprovalMode, item, dispatch, loggedInUser.projectId]);
 
-  // --- Mix Design Handlers ---
-  const handleMixDesignChange = (value: string, id: number) => {
-    const newMixDesigns = mixDesigns.map(item =>
-      item.id === id ? {...item, mixDesign: value} : item,
-    );
-    setMixDesigns(newMixDesigns);
+  // --- Handlers ---
+
+  const handleQtyApprovedChange = (id: string, value: string) => {
+    setQtyApproved(prev => ({...prev, [id]: value}));
   };
 
-  const handleMixDesignQuantityChange = (text: string, id: number) => {
-    const newMixDesigns = mixDesigns.map(item =>
-      item.id === id ? {...item, quantity: text.replace(/[^0-9.]/g, '')} : item,
-    );
-    setMixDesigns(newMixDesigns);
+  const handleQtyIssuedChange = (id: string, value: string) => {
+    setQtyIssued(prev => ({...prev, [id]: value}));
   };
 
-  const handleAddMixDesignRow = () => {
-    setMixDesigns(prev => [
+  const handleBatchNumberChange = (requestId: string, value: string) => {
+    setBatchNumbers(prev => ({...prev, [requestId]: value}));
+  };
+
+  const addMixDesignRow = (requestId: string) => {
+    setMixDesignRows(prev => ({
       ...prev,
-      {id: nextMixDesignId, mixDesign: '', quantity: ''},
-    ]);
-    setNextMixDesignId(prev => prev + 1);
+      [requestId]: [
+        ...(prev[requestId] || []),
+        {id: Date.now(), selectedOption: null, qty: ''},
+      ],
+    }));
   };
 
-  const handleRemoveMixDesignRow = (id: number) => {
-    if (mixDesigns.length > 1) {
-      setMixDesigns(prev => prev.filter(item => item.id !== id));
+  const removeMixDesignRow = (requestId: string, rowId: number) => {
+    setMixDesignRows(prev => ({
+      ...prev,
+      [requestId]: prev[requestId].filter((r: any) => r.id !== rowId),
+    }));
+  };
+
+  const updateMixDesignRow = (
+    requestId: string,
+    rowId: number,
+    field: string,
+    value: any,
+  ) => {
+    setMixDesignRows(prev => ({
+      ...prev,
+      [requestId]: prev[requestId].map((r: any) => {
+        if (r.id === rowId) {
+          if (field === 'mixDesign') {
+            const selectedObj = mixDesignDropdownOptions.find(
+              (m: any) => m.value === value,
+            );
+            return {...r, selectedOption: selectedObj};
+          }
+          if (field === 'qty') {
+            return {...r, qty: value};
+          }
+        }
+        return r;
+      }),
+    }));
+  };
+
+  const handleAddVehicle = (requestId: string) => {
+    const vNo = currentVehicleInput[requestId]?.trim();
+    if (!vNo || vNo.length < 4) {
+      Alert.alert('Error', 'Please enter a valid vehicle number (min 4 chars)');
+      return;
+    }
+    setVehicleNumbers(prev => ({
+      ...prev,
+      [requestId]: [...(prev[requestId] || []), vNo],
+    }));
+    setCurrentVehicleInput(prev => ({...prev, [requestId]: ''}));
+  };
+
+  const handleRemoveVehicle = (requestId: string, vNo: string) => {
+    setVehicleNumbers(prev => ({
+      ...prev,
+      [requestId]: prev[requestId]?.filter(v => v !== vNo) || [],
+    }));
+  };
+
+  const handleBatchSlipUpload = async (requestId: string) => {
+    try {
+      const result: any = await DocumentPicker.pick({
+        type: [DocumentPicker.types.images, DocumentPicker.types.pdf],
+        allowMultiSelection: false,
+      });
+      const res = result[0];
+      setBatchSlips(res);
+
+      let url = `${appConfig.API_URL}/v1/auth/projects/${loggedInUser.projectId}/material-requests/items/${requestId}/upload-batch-slip`;
+      let data = new FormData();
+      data.append('file', res);
+
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {Authorization: appConfig.getToken()},
+        body: data,
+      });
+
+      if (response.status === 200) {
+        let json = await response.json();
+        setfileUrlData(json.data.fileUrl);
+        showSnackbar('Batch slip uploaded successfully', 'success');
+      } else {
+        showSnackbar('Upload Failed', 'error');
+      }
+    } catch (err) {
+      if (!DocumentPicker.isCancel(err)) {
+        showSnackbar('Error picking file', 'error');
+      }
     }
   };
 
-  const getAvailableMixDesigns = (currentRowId: number): DropdownOption[] => {
-    const selectedMixDesigns = mixDesigns
-      .filter(row => row.id !== currentRowId && row.mixDesign)
-      .map(row => row.mixDesign);
-    return mixDesignData.filter(opt => !selectedMixDesigns.includes(opt.value));
-  };
+  // --- SUBMIT: Request For Approval -> Pending Approval ---
+  const handleSubmitForApproval = () => {
+    const approvalData = item?.items?.map((req: any) => {
+      const mId = req._id;
+      const totalApprovedQty = qtyApproved[mId]
+        ? Number(qtyApproved[mId])
+        : Number(req.qty_requested);
+      const batchNo = batchNumbers[mId];
+      const rows = mixDesignRows[mId] || [];
 
-  const totalMixDesignQuantity = useMemo(() => {
-    return mixDesigns.reduce(
-      (total, row) => total + (parseFloat(row.quantity) || 0),
-      0,
-    );
-  }, [mixDesigns]);
+      const totalMixQty = rows.reduce(
+        (sum: number, row: any) => sum + Number(row.qty || 0),
+        0,
+      );
 
-  // --- Vehicle Handlers ---
-  const handleVehicleInputChange = (text: string) => {
-    setCurrentVehicleInput(text.replace(/[^0-9]/g, ''));
-  };
-
-  const addVehicle = () => {
-    if (currentVehicleInput.length === 4) {
-      if (!vehicleNumbers.includes(currentVehicleInput)) {
-        setVehicleNumbers([...vehicleNumbers, currentVehicleInput]);
-        setCurrentVehicleInput('');
-      } else {
+      if (totalMixQty !== totalApprovedQty) {
         Alert.alert(
-          'Duplicate Entry',
-          'This vehicle number has already been added.',
+          'Validation Warning',
+          `Total Mix Design Qty (${totalMixQty}) does not match Approved Qty (${totalApprovedQty})`,
         );
       }
-    } else {
-      Alert.alert(
-        'Invalid Input',
-        'Please enter exactly 4 digits for the vehicle number.',
-      );
-    }
-  };
 
-  const removeVehicle = (index: number) => {
-    setVehicleNumbers(vehicleNumbers.filter((_, i) => i !== index));
-  };
+      const mixDesignPayload = rows
+        .map((row: any) => ({
+          mixDesignId: row.selectedOption?.value,
+          mixDesignName: row.selectedOption?.label,
+          qtyRequest: Number(row.qty),
+          qtyApproved: Number(row.qty),
+        }))
+        .filter((md: any) => md.mixDesignId);
 
-  // --- DateTime Picker Handler ---
-  const onDateTimeChange = (event: any, selectedDate?: Date) => {
-    const currentDate = selectedDate || dispatchTime;
-    setShowDateTimePicker(Platform.OS === 'ios');
-    setDispatchTime(currentDate);
-  };
+      if (mixDesignPayload.length === 0) {
+        Alert.alert(
+          'Error',
+          `Please select Mix Design for ${req.testMaterialType}`,
+        );
+        throw new Error('Missing Mix Design');
+      }
 
-  // --- Form Submission ---
-  const handleSubmit = () => {
-    // Implement your validation and submission logic here based on status
-    console.log({
-      status,
-      qtyApproved,
-      remarks,
-      qtyIssued,
-      mixDesigns,
-      vehicleNumbers,
-      batchNo,
-      dispatchTime,
+      return {
+        materialRequestItemId: mId,
+        quantityApproved: totalApprovedQty,
+        mixDesign: mixDesignPayload,
+      };
     });
-    Alert.alert('Success', 'Form has been submitted successfully!');
+
+    const payload = {
+      status: MATERIAL_REQUEST_STATUS.PENDING_APPROVAL,
+      comments: remarks,
+      approvalData: approvalData,
+    };
+
+    dispatch(
+      patchMaterialRequestStatus({
+        projectId: loggedInUser.projectId,
+        id: item?.id,
+        body: payload,
+      }),
+    );
+  };
+
+  // --- ACTION: Pending Approval -> Pending Dispatch (Accept) ---
+  const handlePendingAccept = () => {
+    const payload = {
+      status: MATERIAL_REQUEST_STATUS.PENDING_DISPATCH,
+      comments: remarks || 'Accepted via App',
+      // We send the existing items data back to confirm current state or simple status update
+      // Based on typical flow, just status and comments are usually enough if data is already saved
+      approvalData: item?.items?.map((req: any) => ({
+        materialRequestItemId: req._id,
+        quantityApproved: req.qty_approved,
+        mixDesign: req.mixDesign, // Pass through existing mix design
+      })),
+    };
+
+    dispatch(
+      patchMaterialRequestStatus({
+        projectId: loggedInUser.projectId,
+        id: item?.id,
+        body: payload,
+      }),
+    );
+  };
+
+  // --- ACTION: Pending Approval -> Rejected ---
+  const handlePendingReject = () => {
+    const payload = {
+      status: MATERIAL_REQUEST_STATUS.REJECTED,
+      comments: remarks,
+    };
+
+    dispatch(
+      patchMaterialRequestStatus({
+        projectId: loggedInUser.projectId,
+        id: item?.id,
+        body: payload,
+      }),
+    );
+  };
+
+  // --- SUBMIT: Pending Dispatch -> Dispatched ---
+  const handleDispatchSubmit = (request: any) => {
+    console.log('Dispatching request:', request);
+    const rId = request._id;
+    const qIssued = qtyIssued[rId];
+    const vList = vehicleNumbers[rId] || [];
+
+    if (!qIssued) {
+      Alert.alert('Error', 'Enter Qty Issued');
+      return;
+    }
+    if (vList.length === 0) {
+      Alert.alert('Error', 'Add at least one vehicle');
+      return;
+    }
+
+    const payload = {
+      qty_issued: Number(qIssued),
+      vehicleDetails: vList,
+      batchSlip: fileUrlData || '',
+      comments_issued: remarks,
+      batchNo: batchNumbers[rId],
+      requestId: request?.materialRequestId,
+    };
+    dispatch(
+      dispatchProductionRequest({
+        projectId: loggedInUser.projectId,
+        itemId: rId,
+        body: payload,
+      }),
+    );
   };
 
   return (
     <ScrollView style={styles.container} keyboardShouldPersistTaps="handled">
-      <DetailsCard title="Material Request Details" data={detailsData} />
-
       <View style={styles.formContainer}>
         <Text style={styles.sectionTitle}>
-          {status === MATERIAL_REQUEST_STATUS.PENDING_APPROVAL
-            ? 'Approval Details'
-            : 'Dispatch Details'}
+          {isDispatchMode ? 'Dispatch Material' : 'Production Approval'}
         </Text>
 
-        {/* --- APPROVAL FORM --- */}
-        {status === MATERIAL_REQUEST_STATUS.PENDING_APPROVAL && (
-          <>
-            <View style={styles.formGroup}>
-              <Text style={styles.label}>
-                Qty Approved <Text style={styles.required}>*</Text>
-              </Text>
-              <TextInput
-                style={styles.input}
-                value={qtyApproved}
-                onChangeText={setQtyApproved}
-                keyboardType="decimal-pad"
-                placeholder="Enter approved quantity"
-              />
-              <Text style={styles.helperText}>
-                Max: {requestData.qtyRequested} {requestData.unit}
-              </Text>
-            </View>
-          </>
-        )}
-
-        {/* --- DISPATCH FORM --- */}
-        {status === MATERIAL_REQUEST_STATUS.PENDING_DISPATCH && (
-          <>
-            <View style={styles.formGroup}>
-              <Text style={styles.label}>
-                Qty Issued <Text style={styles.required}>*</Text>
-              </Text>
-              <TextInput
-                style={styles.input}
-                value={qtyIssued}
-                onChangeText={setQtyIssued}
-                keyboardType="decimal-pad"
-                placeholder="e.g., 120.500"
-              />
-              <Text style={styles.helperText}>
-                Max: {requestData.qtyApproved} {requestData.unit}
-              </Text>
-            </View>
-
-            {/* --- MIX DESIGN DROPDOWN WITH QUANTITY --- */}
-            <View style={styles.mixDesignTableContainer}>
-              <View style={styles.tableHeader}>
-                <Text style={[styles.tableHeaderText, {flex: 2}]}>
-                  Mix Design
-                </Text>
-                <Text style={[styles.tableHeaderText, {flex: 1.2}]}>
-                  Quantity
-                </Text>
-                <View style={{width: 30}} />
+        {item?.items?.map((request: any, index: number) => {
+          const requestId = request._id;
+          return (
+            <View key={requestId || index} style={styles.itemCard}>
+              {/* Header Info */}
+              <View style={styles.infoRow}>
+                <View style={styles.infoCol}>
+                  <Text style={styles.labelStatic}>Material</Text>
+                  <Text style={styles.valueStatic}>
+                    {request?.testMaterialType}
+                  </Text>
+                </View>
+                <View style={styles.infoCol}>
+                  <Text style={styles.labelStatic}>Category</Text>
+                  <Text style={styles.valueStatic}>
+                    {request?.testWorkCategoryType}
+                  </Text>
+                </View>
               </View>
-              {mixDesigns.map(row => (
-                <View key={row.id} style={styles.tableRow}>
-                  <View style={{flex: 2, marginRight: 8}}>
-                    <DropdownPicker
-                      items={getAvailableMixDesigns(row.id)}
-                      value={row.mixDesign}
-                      onChange={(value: any) =>
-                        handleMixDesignChange(value, row.id)
+              <View style={styles.infoRow}>
+                <View style={styles.infoCol}>
+                  <Text style={styles.labelStatic}>Requested Qty</Text>
+                  <Text style={styles.valueStatic}>
+                    {request?.qty_requested} {request?.unit}
+                  </Text>
+                </View>
+                <View style={styles.infoCol}>
+                  <Text style={styles.labelStatic}>Date</Text>
+                  <Text style={styles.valueStatic}>
+                    {new Date(request?.createdAt).toLocaleDateString()}
+                  </Text>
+                </View>
+              </View>
+
+              {/* === MODE 1: READ ONLY (Pending Approval) === */}
+              {isPendingApprovalMode && (
+                <View style={styles.readOnlyContainer}>
+                  <View style={styles.divider} />
+                  <Text style={styles.readOnlyTitle}>Approval Details</Text>
+
+                  <View style={styles.infoRow}>
+                    <View style={styles.infoCol}>
+                      <Text style={styles.labelStatic}>Approved Qty</Text>
+                      <Text style={[styles.valueStatic, styles.textBold]}>
+                        {request.qty_approved} {request.unit}
+                      </Text>
+                    </View>
+                    <View style={styles.infoCol}>
+                      <Text style={styles.labelStatic}>Batch Number</Text>
+                      <Text style={[styles.valueStatic, styles.textBold]}>
+                        {request.metaData?.batchNo || 'N/A'}
+                      </Text>
+                    </View>
+                  </View>
+
+                  <Text style={[styles.labelStatic, {marginTop: 8}]}>
+                    Mix Design Allocation:
+                  </Text>
+                  {request.mixDesign && request.mixDesign.length > 0 ? (
+                    request.mixDesign.map((mix: any, idx: number) => (
+                      <View key={idx} style={styles.readOnlyRow}>
+                        <Text style={styles.readOnlyValue}>
+                          • {mix.mixDesignName}
+                        </Text>
+                        <Text style={styles.readOnlyValue}>
+                          {mix.qtyApproved} {request.unit}
+                        </Text>
+                      </View>
+                    ))
+                  ) : (
+                    <Text style={styles.valueStatic}>
+                      No Mix Design Assigned
+                    </Text>
+                  )}
+                </View>
+              )}
+
+              {/* === MODE 2: EDITING (Request For Approval) === */}
+              {isEditApprovalMode && (
+                <View style={styles.actionSection}>
+                  <View style={styles.inputGroup}>
+                    <Text style={styles.inputLabel}>Total Qty Approved *</Text>
+                    <TextInput
+                      style={styles.textInput}
+                      value={
+                        qtyApproved[requestId] ?? String(request.qty_requested)
+                      }
+                      onChangeText={val =>
+                        handleQtyApprovedChange(requestId, val)
+                      }
+                      keyboardType="numeric"
+                    />
+                  </View>
+
+                  <View style={styles.tableContainer}>
+                    <Text style={styles.inputLabel}>
+                      Mix Design Allocation *
+                    </Text>
+
+                    {(mixDesignRows[requestId] || []).map((row, idx) => (
+                      <View key={row.id} style={styles.mixDesignRow}>
+                        <View
+                          style={{flex: 2, marginRight: 8, zIndex: 1000 - idx}}>
+                          <DropdownPicker
+                            items={mixDesignDropdownOptions}
+                            value={row.selectedOption?.value || ''}
+                            onChange={(val: any) =>
+                              updateMixDesignRow(
+                                requestId,
+                                row.id,
+                                'mixDesign',
+                                val,
+                              )
+                            }
+                            placeholder="Select Mix"
+                            containerStyle={{height: 45}}
+                          />
+                        </View>
+                        <View style={{flex: 1}}>
+                          <TextInput
+                            style={styles.textInputSmall}
+                            placeholder="Qty"
+                            keyboardType="numeric"
+                            value={row.qty}
+                            onChangeText={val =>
+                              updateMixDesignRow(requestId, row.id, 'qty', val)
+                            }
+                          />
+                        </View>
+                        <TouchableOpacity
+                          onPress={() => removeMixDesignRow(requestId, row.id)}
+                          style={styles.removeBtn}>
+                          <Text style={styles.removeBtnText}>✕</Text>
+                        </TouchableOpacity>
+                      </View>
+                    ))}
+
+                    <TouchableOpacity
+                      style={styles.addMoreBtn}
+                      onPress={() => addMixDesignRow(requestId)}>
+                      <Text style={styles.addMoreText}>+ Add Mix Design</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              )}
+
+              {/* === MODE 3: DISPATCH === */}
+              {isDispatchMode && (
+                <View style={styles.actionSection}>
+                  <View style={styles.infoRow}>
+                    <Text style={styles.highlightText}>
+                      Approved: {request.qty_approved} | Batch:{' '}
+                      {request.metaData?.batchNo || 'N/A'}
+                    </Text>
+                  </View>
+
+                  {request.mixDesign && request.mixDesign.length > 0 && (
+                    <View style={styles.mixDisplayContainer}>
+                      {request.mixDesign.map((md: any, i: number) => (
+                        <Text key={i} style={styles.mixDisplayText}>
+                          • {md.mixDesignName}: {md.qtyApproved}
+                        </Text>
+                      ))}
+                    </View>
+                  )}
+
+                  <View style={styles.inputGroup}>
+                    <Text style={styles.inputLabel}>Qty Issued *</Text>
+                    <TextInput
+                      style={styles.textInput}
+                      placeholder="Actual Qty Issued"
+                      value={qtyIssued[requestId] || ''}
+                      onChangeText={val =>
+                        handleQtyIssuedChange(requestId, val)
+                      }
+                      keyboardType="numeric"
+                    />
+                  </View>
+                  <View style={styles.inputGroup}>
+                    <Text style={styles.inputLabel}>Batch No (For Item) *</Text>
+                    <TextInput
+                      style={styles.textInput}
+                      placeholder="Enter Batch Number"
+                      value={batchNumbers[requestId] || ''}
+                      onChangeText={val =>
+                        handleBatchNumberChange(requestId, val)
                       }
                     />
                   </View>
-                  <TextInput
-                    style={[styles.input, {flex: 1.2, height: 42}]}
-                    value={row.quantity}
-                    onChangeText={text =>
-                      handleMixDesignQuantityChange(text, row.id)
-                    }
-                    keyboardType="decimal-pad"
-                    placeholder="Qty"
-                  />
-                  <TouchableOpacity
-                    onPress={() => handleRemoveMixDesignRow(row.id)}
-                    style={styles.removeButton}
-                    disabled={mixDesigns.length === 1}>
-                    <Text
-                      style={[
-                        styles.removeButtonText,
-                        mixDesigns.length === 1 && {color: '#ccc'},
-                      ]}>
-                      ✕
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              ))}
-              <TouchableOpacity
-                onPress={handleAddMixDesignRow}
-                style={styles.addButton}>
-                <Text style={styles.addButtonText}>+ Add Mix Design</Text>
-              </TouchableOpacity>
-              <View style={styles.totalContainer}>
-                <Text style={styles.totalLabel}>Sum of Mix Design Qty:</Text>
-                <Text
-                  style={[
-                    styles.totalValue,
-                    totalMixDesignQuantity > parseFloat(qtyIssued) &&
-                      styles.errorText,
-                  ]}>
-                  {totalMixDesignQuantity.toFixed(2)}
-                </Text>
-              </View>
-            </View>
 
-            {/* --- VEHICLE NUMBER INPUT --- */}
-            <View style={styles.formGroup}>
-              <Text style={styles.label}>
-                Vehicle 4 Digit No. <Text style={styles.required}>*</Text>
-              </Text>
-              <View style={styles.vehicleInputContainer}>
-                <TextInput
-                  style={[styles.input, {flex: 1}]}
-                  value={currentVehicleInput}
-                  onChangeText={handleVehicleInputChange}
-                  keyboardType="number-pad"
-                  maxLength={4}
-                  placeholder="e.g., 1234"
-                />
-                <TouchableOpacity
-                  onPress={addVehicle}
-                  style={styles.addButton}
-                  disabled={currentVehicleInput.length !== 4}>
-                  <Text style={styles.addButtonText}>+ Add</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.tagContainer}>
-                {vehicleNumbers.map((vehicle, index) => (
-                  <View key={index} style={styles.tag}>
-                    <Text style={styles.tagText}>{vehicle}</Text>
-                    <TouchableOpacity onPress={() => removeVehicle(index)}>
-                      <Text style={styles.tagRemove}> ✕</Text>
+                  <View style={styles.vehicleWrapper}>
+                    <Text style={styles.inputLabel}>
+                      Vehicles (Last 4 Digits)
+                    </Text>
+                    <View style={styles.rowInputBtn}>
+                      <TextInput
+                        style={[styles.textInput, {flex: 1}]}
+                        placeholder="Ex: 8844"
+                        maxLength={4}
+                        keyboardType="numeric"
+                        value={currentVehicleInput[requestId] || ''}
+                        onChangeText={val =>
+                          setCurrentVehicleInput(prev => ({
+                            ...prev,
+                            [requestId]: val,
+                          }))
+                        }
+                      />
+                      <TouchableOpacity
+                        onPress={() => handleAddVehicle(requestId)}
+                        style={styles.btnSmall}>
+                        <Text style={styles.btnSmallText}>Add</Text>
+                      </TouchableOpacity>
+                    </View>
+                    <View style={styles.tagContainer}>
+                      {(vehicleNumbers[requestId] || []).map((v, i) => (
+                        <TouchableOpacity
+                          key={i}
+                          onPress={() => handleRemoveVehicle(requestId, v)}
+                          style={styles.tag}>
+                          <Text style={styles.tagText}>{v} ✕</Text>
+                        </TouchableOpacity>
+                      ))}
+                    </View>
+                  </View>
+
+                  <View style={styles.inputGroup}>
+                    <TouchableOpacity
+                      onPress={() => handleBatchSlipUpload(requestId)}
+                      style={styles.uploadBtn}>
+                      <Text style={styles.uploadBtnText}>
+                        {fileUrlData
+                          ? 'Batch Slip Uploaded ✅'
+                          : '📄 Upload Batch Slip'}
+                      </Text>
                     </TouchableOpacity>
                   </View>
-                ))}
-              </View>
-            </View>
 
-            {/* --- BATCH NO AND SLIP UPLOAD --- */}
-            <View style={styles.formGroup}>
-              <Text style={styles.label}>Batch No.</Text>
-              <TextInput
-                style={styles.input}
-                value={batchNo}
-                onChangeText={setBatchNo}
-                maxLength={100}
-                placeholder="Enter batch number"
-              />
-            </View>
-            <View style={styles.formGroup}>
-              <Text style={styles.label}>Upload Batch Slip</Text>
-              <TouchableOpacity style={styles.uploadButton}>
-                <Text style={styles.uploadButtonText}>Choose File</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.formGroup}>
-              <Text style={styles.label}>Material Dispatch Time</Text>
-              <TouchableOpacity onPress={() => setShowDateTimePicker(true)}>
-                <TextInput
-                  style={styles.input}
-                  value={dispatchTime.toLocaleString('en-IN')}
-                  editable={false}
-                  placeholder="Select Date & Time"
-                />
-              </TouchableOpacity>
-              {showDateTimePicker && (
-                <DateTimePicker
-                  value={dispatchTime}
-                  mode="datetime"
-                  display="default"
-                  onChange={onDateTimeChange}
-                />
+                  <TouchableOpacity
+                    style={styles.dispatchBtnItem}
+                    onPress={() => handleDispatchSubmit(request)}>
+                    <Text style={styles.btnTextWhite}>Dispatch This Item</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+
+              {isDispatchedMode && (
+                <View style={styles.actionSection}>
+                  <View style={styles.infoRow}>
+                    <Text style={styles.highlightText}>
+                      Dispatched Qty: {request.metaData?.qty_issued}
+                    </Text>
+                  </View>
+                  <View style={styles.infoRow}>
+                    <Text style={styles.highlightText}>
+                      Batch No: {request.metaData?.batchNo}
+                    </Text>
+                  </View>
+
+                  {request.metaData?.vehicleDetails &&
+                    request.metaData?.vehicleDetails.length > 0 && (
+                      <View style={styles.vehicleWrapper}>
+                        <Text style={styles.inputLabel}>Vehicles</Text>
+                        <View style={styles.tagContainer}>
+                          {request.metaData?.vehicleDetails.map(
+                            (v: any, i: number) => (
+                              <View key={i} style={styles.tag}>
+                                <Text style={styles.tagText}>{v}</Text>
+                              </View>
+                            ),
+                          )}
+                        </View>
+                      </View>
+                    )}
+                </View>
               )}
             </View>
-          </>
+          );
+        })}
+
+        {/* --- FOOTERS --- */}
+
+        {/* 1. Footer for READ ONLY (Accept/Reject) */}
+        {isPendingApprovalMode && (
+          <View style={styles.footerSection}>
+            <Text style={styles.inputLabel}>Remarks</Text>
+            <TextInput
+              style={[styles.textInput, styles.textArea]}
+              placeholder="Comments (optional)..."
+              multiline
+              value={remarks}
+              onChangeText={setRemarks}
+            />
+            <View style={styles.doubleBtnContainer}>
+              <TouchableOpacity
+                style={[styles.halfBtn, styles.rejectBtn]}
+                onPress={handlePendingReject}>
+                <Text style={styles.btnTextWhite}>Reject</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.halfBtn, styles.acceptBtn]}
+                onPress={handlePendingAccept}>
+                <Text style={styles.btnTextWhite}>Accept</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         )}
 
-        {/* --- COMMON REMARKS FIELD --- */}
-        <View style={styles.formGroup}>
-          <Text style={styles.label}>Remarks (if any)</Text>
-          <TextInput
-            style={[styles.input, styles.textArea]}
-            value={remarks}
-            onChangeText={setRemarks}
-            placeholder="Enter any remarks or notes..."
-            multiline
-            maxLength={500}
-          />
-        </View>
-
-        <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-          <Text style={styles.submitButtonText}>
-            {status === MATERIAL_REQUEST_STATUS.PENDING_APPROVAL
-              ? 'Approve Material'
-              : 'Dispatch Material'}
-          </Text>
-        </TouchableOpacity>
+        {/* 2. Footer for EDITING (Submit) */}
+        {isEditApprovalMode && (
+          <View style={styles.footerSection}>
+            <Text style={styles.inputLabel}>Remarks</Text>
+            <TextInput
+              style={[styles.textInput, styles.textArea]}
+              placeholder="Optional comments..."
+              multiline
+              value={remarks}
+              onChangeText={setRemarks}
+            />
+            <TouchableOpacity
+              style={styles.mainSubmitBtn}
+              onPress={handleSubmitForApproval}>
+              <Text style={styles.btnTextWhite}>Submit For Approval</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
     </ScrollView>
   );
@@ -441,178 +753,262 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
   },
   formContainer: {
-    backgroundColor: 'white',
-    margin: 16,
-    borderRadius: 12,
-    padding: 20,
-    elevation: 3,
+    padding: 16,
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
     color: '#333',
-    marginBottom: 20,
-    textAlign: 'center',
-    borderBottomWidth: 2,
-    borderBottomColor: '#5A2AAF',
-    paddingBottom: 8,
-  },
-  formGroup: {
     marginBottom: 16,
+    textAlign: 'center',
   },
-  label: {
+  itemCard: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 16,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  infoRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  },
+  infoCol: {
+    flex: 1,
+  },
+  labelStatic: {
+    fontSize: 12,
+    color: '#888',
+    marginBottom: 4,
+  },
+  valueStatic: {
     fontSize: 14,
-    marginBottom: 8,
     color: '#333',
-    fontWeight: '600',
+    fontWeight: '500',
   },
-  required: {
-    color: '#e74c3c',
+  textBold: {
+    fontWeight: 'bold',
+    color: '#000',
   },
-  input: {
-    height: 42,
+  divider: {
+    height: 1,
+    backgroundColor: '#eee',
+    marginVertical: 10,
+  },
+  readOnlyContainer: {
+    backgroundColor: '#FAFAFA',
+    padding: 10,
+    borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 4,
-    paddingHorizontal: 12,
-    backgroundColor: 'white',
-    fontSize: 16,
+    borderColor: '#eee',
+  },
+  readOnlyTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#555',
+    marginBottom: 10,
+  },
+  readOnlyRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 4,
+    paddingLeft: 8,
+  },
+  readOnlyValue: {
+    fontSize: 13,
     color: '#333',
   },
-  textArea: {
-    height: 100,
-    textAlignVertical: 'top',
+  highlightText: {
+    fontSize: 13,
+    color: '#5A2AAF',
+    fontWeight: '600',
+    backgroundColor: '#F3E5F5',
+    padding: 6,
+    borderRadius: 4,
+    overflow: 'hidden',
+  },
+  actionSection: {
+    marginTop: 8,
+    borderTopWidth: 1,
+    borderTopColor: '#eee',
     paddingTop: 12,
   },
-  helperText: {
-    fontSize: 12,
-    color: '#666',
-    marginTop: 4,
-    fontStyle: 'italic',
+  inputGroup: {
+    marginBottom: 12,
   },
-  vehicleInputContainer: {
+  inputLabel: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#444',
+    marginBottom: 6,
+  },
+  textInput: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 8,
+    padding: 10,
+    fontSize: 14,
+    backgroundColor: '#fafafa',
+    color: '#333',
+  },
+  textInputSmall: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 8,
+    padding: 8,
+    fontSize: 14,
+    backgroundColor: '#fafafa',
+    color: '#333',
+    height: 45,
+  },
+  textArea: {
+    minHeight: 80,
+    textAlignVertical: 'top',
+  },
+  tableContainer: {
+    backgroundColor: '#f9f9f9',
+    padding: 10,
+    borderRadius: 8,
+    marginBottom: 12,
+  },
+  mixDesignRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginBottom: 8,
   },
-  addButton: {
-    backgroundColor: '#5A2AAF',
-    paddingHorizontal: 20,
-    height: 40,
+  removeBtn: {
+    width: 30,
+    height: 45,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 8,
-    marginLeft: 10,
+    marginLeft: 6,
   },
-  addButtonText: {
-    color: 'white',
+  removeBtnText: {
+    fontSize: 18,
+    color: '#ff4444',
     fontWeight: 'bold',
-    fontSize: 16,
+  },
+  addMoreBtn: {
+    alignSelf: 'flex-start',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderWidth: 1,
+    borderColor: '#5A2AAF',
+    borderStyle: 'dashed',
+    borderRadius: 6,
+    marginTop: 4,
+  },
+  addMoreText: {
+    color: '#5A2AAF',
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  vehicleWrapper: {
+    marginBottom: 12,
+  },
+  rowInputBtn: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  btnSmall: {
+    backgroundColor: '#5A2AAF',
+    justifyContent: 'center',
+    paddingHorizontal: 16,
+    borderRadius: 8,
+  },
+  btnSmallText: {
+    color: '#fff',
+    fontWeight: '600',
   },
   tagContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginTop: 10,
+    gap: 8,
+    marginTop: 8,
   },
   tag: {
-    flexDirection: 'row',
-    backgroundColor: '#e8deff',
-    borderRadius: 15,
-    paddingVertical: 5,
-    paddingHorizontal: 12,
-    marginRight: 8,
-    marginBottom: 8,
-    alignItems: 'center',
+    backgroundColor: '#e0e0e0',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 16,
   },
   tagText: {
-    color: '#5A2AAF',
-    fontWeight: '500',
+    fontSize: 12,
+    color: '#333',
   },
-  tagRemove: {
-    color: '#5A2AAF',
-    fontWeight: 'bold',
-    marginLeft: 5,
-  },
-  uploadButton: {
-    height: 42,
-    justifyContent: 'center',
-    alignItems: 'center',
+  uploadBtn: {
     borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 4,
+    borderColor: '#5A2AAF',
     borderStyle: 'dashed',
+    borderRadius: 8,
+    padding: 12,
+    alignItems: 'center',
+    backgroundColor: '#F3E5F5',
   },
-  uploadButtonText: {
+  uploadBtnText: {
     color: '#5A2AAF',
     fontWeight: '500',
   },
-  submitButton: {
-    height: 52,
+  mixDisplayContainer: {
+    marginBottom: 10,
+    paddingLeft: 4,
+  },
+  mixDisplayText: {
+    fontSize: 12,
+    color: '#666',
+    fontStyle: 'italic',
+  },
+  footerSection: {
+    backgroundColor: '#fff',
+    padding: 16,
+    borderRadius: 12,
+    marginTop: 10,
+  },
+  mainSubmitBtn: {
     backgroundColor: '#5A2AAF',
-    borderRadius: 26,
-    justifyContent: 'center',
+    padding: 16,
+    borderRadius: 30,
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 16,
     elevation: 3,
   },
-  submitButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  // New styles for the mix design table
-  mixDesignTableContainer: {
-    borderColor: '#eee',
+  dispatchBtnItem: {
+    backgroundColor: '#28a745',
+    padding: 12,
     borderRadius: 8,
-    marginBottom: 16,
+    alignItems: 'center',
+    marginTop: 8,
   },
-  tableHeader: {
+  btnTextWhite: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  // Double Button Styles
+  doubleBtnContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingBottom: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-    paddingHorizontal: 5,
-    paddingVertical: 10,
+    gap: 12,
+    marginTop: 16,
   },
-  tableHeaderText: {
-    fontWeight: '600',
-    color: '#333',
-  },
-  tableRow: {
-    flexDirection: 'row',
-    marginTop: 5,
-  },
-  removeButton: {
-    width: 30,
-    height: 30,
+  halfBtn: {
+    flex: 1,
+    height: 50,
+    borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: 8,
+    elevation: 2,
   },
-  removeButtonText: {
-    fontSize: 20,
-    color: '#e74c3c',
+  acceptBtn: {
+    backgroundColor: '#28a745',
   },
-  totalContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    marginTop: 15,
-    paddingTop: 10,
-    borderTopWidth: 1,
-    borderTopColor: '#eee',
-  },
-  totalLabel: {
-    marginRight: 10,
-    fontWeight: '600',
-    color: '#333',
-  },
-  totalValue: {
-    fontWeight: 'bold',
-    color: 'green',
-  },
-  errorText: {
-    color: '#e74c3c',
+  rejectBtn: {
+    backgroundColor: '#dc3545',
   },
 });
 
-export default MaterialApprovalProductionForm;
+export default MaterialApprovalProduction;

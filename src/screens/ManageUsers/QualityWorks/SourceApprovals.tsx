@@ -1315,7 +1315,6 @@ const SourceApprovals = ({
         ...sourceApprovalDetails,
       ];
 
-      // Handle form reset based on material type
       if (testWorkCategoryType === TEST_WORK_CATEGORY_TYPES.BITUMINOUS_WORKS) {
         switch (materialType) {
           case TEST_MATERIALS_TYPES.FINE_AGGREGATE:

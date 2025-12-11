@@ -63,6 +63,16 @@ import SourceHome from '../../screens/ManageUsers/QualityWorks/SourceApproval/So
 import SourceApprovalForm from '../../screens/ManageUsers/QualityWorks/SourceApproval/SourceApprovalForm';
 import MaterialProductionRequestForm from '../../screens/Production/MaterialRequestProduction';
 import MaterialApprovalProductionForm from '../../screens/Production/MaterialApprovalProduction';
+import SourceTestMeterial from '../../screens/ManageUsers/QualityWorks/SourceApproval/SourceTestMeterial';
+import SourceApprovalEditForm from '../../screens/ManageUsers/QualityWorks/SourceApproval/SourceApprovalEditForm';
+import AddVendorForm from '../../screens/AddVendor/AddVendorForm';
+import VendorFormLists from '../../screens/AddVendor/VendorFormLists';
+import MaterialRequestComponent from '../../screens/MyWork/MaterialRequestComponent';
+import TestDetailsScreen from '../../screens/ManageUsers/QualityWorks/FieldLabTest/TestDetailsScreen';
+import ContingencyRequestComponent from '../../screens/Store/ContingencyRequestComponent';
+import ProductionRequestFormComponent from '../../screens/Production/ProductionRequestFormComponent';
+import MaterialApprovalProduction from '../../screens/Production/MaterialApprovalProduction';
+import TaskForm from '../../screens/MyWork/TaskForm';
 
 const Stack = createStackNavigator();
 
@@ -88,6 +98,11 @@ const MyWorkStackNavigator = () => {
         options={{headerShown: false}}
       />
       <Stack.Screen
+        name="TaskForm"
+        component={TaskForm}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
         name="MyWork2"
         component={MyWork2}
         options={{headerShown: false}}
@@ -95,6 +110,11 @@ const MyWorkStackNavigator = () => {
       <Stack.Screen
         name="MyWork3"
         component={MyWork3}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="MaterialRequestComponent"
+        component={MaterialRequestComponent}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
@@ -164,6 +184,11 @@ const MyQualityWorksStackNavigator = () => {
       <Stack.Screen
         name="MyQualityWorks"
         component={MyQualityWorks}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="TestDetailsScreen"
+        component={TestDetailsScreen}
         options={{headerShown: false}}
       />
       <Stack.Screen
@@ -247,6 +272,33 @@ const MyQualityWorksStackNavigator = () => {
         component={SourceApprovalForm}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name="SourceTestMeterial"
+        component={SourceTestMeterial}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="SourceApprovalEditForm"
+        component={SourceApprovalEditForm}
+        options={{headerShown: false}}
+      />
+    </Stack.Navigator>
+  );
+};
+
+const AddVendorStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen
+        name="VendorFormLists"
+        component={VendorFormLists}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="AddVendorForm"
+        component={AddVendorForm}
+        options={{headerShown: false}}
+      />
     </Stack.Navigator>
   );
 };
@@ -300,6 +352,11 @@ const StoreStackNavigator = () => {
         component={MaterialApprovalForm}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name="ContingencyRequestComponent"
+        component={ContingencyRequestComponent}
+        options={{headerShown: false}}
+      />
     </Stack.Navigator>
   );
 };
@@ -348,8 +405,13 @@ const ProductionStackNavigator = () => {
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="MaterialApprovalProductionForm"
-        component={MaterialApprovalProductionForm}
+        name="MaterialApprovalProduction"
+        component={MaterialApprovalProduction}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ProductionRequestFormComponent"
+        component={ProductionRequestFormComponent}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
@@ -533,4 +595,5 @@ export {
   ChangePasswordStackNavigator,
   EquipmentStackNavigator,
   StoreStackNavigator,
+  AddVendorStackNavigator,
 };

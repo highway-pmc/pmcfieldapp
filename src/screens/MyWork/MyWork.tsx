@@ -195,6 +195,7 @@ const MyWork = ({route, navigation}: {route: any; navigation: any}) => {
     }
 
     if (_v.rfiData) {
+      
       if (_v.selectedTask?.name === TASK_TYPES.CONTROL_POINTS) {
         navigation.navigate('ControlPoints', {
           projectId: _v.loggedInUser.projectId,

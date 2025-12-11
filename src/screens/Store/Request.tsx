@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import {
   SafeAreaView,
   View,
@@ -7,16 +7,25 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useIsFocused} from '@react-navigation/native';
 import {
   MATERIAL_REQUEST_STATUS,
   REQUEST_TYPES,
 } from '../../constants/constants';
 import RequestCard from '../Common/RequestCard';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  getMaterialRequestTo,
+  patchMaterialRequestStatus,
+  clearMaterialRequest,
+} from '../ManageUsers/actions';
+import {useSnackbar} from '../../context/SnackbarContext';
 
 type RequestItem = {
   id: number;
+  rfiId: string;
   materialType: string;
+  materialCategory: string; 
   workCategory: string;
   unit: string;
   requestQty: number;
@@ -24,47 +33,22 @@ type RequestItem = {
   statusText: string;
 };
 
-const inventoryRequests: RequestItem[] = [
+const statusType = [
   {
-    id: 1,
-    materialType: 'Concrete (Structure)',
-    workCategory: 'Admixture',
-    unit: 'Kg',
-    requestQty: 100,
     status: MATERIAL_REQUEST_STATUS.PENDING_ACCEPTANCE,
     statusText: 'Pending for Acceptance',
   },
   {
-    id: 2,
-    materialType: 'Steel TMT Bars',
-    workCategory: 'Reinforcement',
-    unit: 'Ton',
-    requestQty: 5,
     status: MATERIAL_REQUEST_STATUS.PENDING_APPROVAL,
     statusText: 'Pending for Approval',
   },
   {
-    id: 3,
-    materialType: 'Cement Bags',
-    workCategory: 'Masonry',
-    unit: 'Bag',
-    requestQty: 250,
     status: MATERIAL_REQUEST_STATUS.PENDING_DISPATCH,
     statusText: 'Pending for Dispatch',
   },
-  {
-    id: 4,
-    materialType: 'Electrical Wiring',
-    workCategory: 'MEP',
-    unit: 'Meter',
-    requestQty: 500,
-    status: MATERIAL_REQUEST_STATUS.REJECTED,
-    statusText: 'Rejected',
-  },
-];
-
-const contingencyRequests: RequestItem[] = [
-  // Add contingency requests data here if needed. For now, it's empty.
+  {status: MATERIAL_REQUEST_STATUS.REJECTED, statusText: 'Rejected'},
+  // Added Dispatched status for cleaner mapping
+  {status: 'dispatched', statusText: 'Dispatched'},
 ];
 
 const RequestPage = () => {
@@ -72,44 +56,180 @@ const RequestPage = () => {
     REQUEST_TYPES.INVENTORY_REQUEST,
   );
   const navigation = useNavigation<any>();
+  const dispatch = useDispatch();
+  const {showSnackbar} = useSnackbar();
+  const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
+  const {
+    getMeterialRequestToFormData,
+    patchMeterialRequestStatusData,
+    loading: any,
+    error,
+  } = useSelector((state: any) => state.MeterialRequest);
+  const [inventoryRequests, setInventoryRequests] = useState<any[]>([]);
+  const [contingencyRequests, setContingencyRequests] = useState<any[]>([]);
 
   const currentRequests =
     selectedTab === REQUEST_TYPES.INVENTORY_REQUEST
       ? inventoryRequests
       : contingencyRequests;
 
-  // Handles navigation when a new request button is pressed
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    return () => {
+      dispatch(clearMaterialRequest());
+    };
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (isFocused) {
+      setInventoryRequests([]);
+      setContingencyRequests([]);
+      dispatch(clearMaterialRequest());
+      dispatch(
+        getMaterialRequestTo({
+          projectId: loggedInUser.projectId,
+          type: 'procurement-details',
+          requestType:
+            selectedTab === REQUEST_TYPES.INVENTORY_REQUEST
+              ? REQUEST_TYPES.INVENTORY_REQUEST
+              : REQUEST_TYPES.CONTINGENCY_REQUEST,
+        }),
+      );
+    }
+  }, [selectedTab, isFocused, dispatch, loggedInUser.projectId]);
+
+  useEffect(() => {
+    if (patchMeterialRequestStatusData) {
+      showSnackbar('Material status updated successfully', 'success');
+    } else if (error) {
+      showSnackbar(error, 'error');
+    }
+  }, [patchMeterialRequestStatusData, error]);
+
+  useEffect(() => {
+    if (getMeterialRequestToFormData?.length) {
+      console.log(
+        'getMeterialRequestToFormData:',
+        JSON.stringify(getMeterialRequestToFormData),
+      );
+
+      // --- LOGIC FIX START ---
+      const mapped = getMeterialRequestToFormData.flatMap((entry: any) =>
+        entry.materialRequests.map((req: any) => {
+          const allItems = req.items || [];
+          const firstItem = allItems[0];
+
+          // Determine Aggregate Status
+          // Priority: Rejected > Pending Approval > Pending Dispatch > Dispatched
+          let aggregateStatus = 'dispatched'; // Default if everything is done
+
+          const hasRejected = allItems.some(
+            (i: any) => i.status === MATERIAL_REQUEST_STATUS.REJECTED,
+          );
+          const hasPendingApproval = allItems.some(
+            (i: any) => i.status === MATERIAL_REQUEST_STATUS.PENDING_APPROVAL,
+          );
+          const hasPendingDispatch = allItems.some(
+            (i: any) => i.status === MATERIAL_REQUEST_STATUS.PENDING_DISPATCH,
+          );
+          const hasPendingAcceptance = allItems.some(
+            (i: any) => i.status === MATERIAL_REQUEST_STATUS.PENDING_ACCEPTANCE,
+          );
+
+          if (hasRejected) {
+            aggregateStatus = MATERIAL_REQUEST_STATUS.REJECTED;
+          } else if (hasPendingAcceptance) {
+            aggregateStatus = MATERIAL_REQUEST_STATUS.PENDING_ACCEPTANCE;
+          } else if (hasPendingApproval) {
+            aggregateStatus = MATERIAL_REQUEST_STATUS.PENDING_APPROVAL;
+          } else if (hasPendingDispatch) {
+            aggregateStatus = MATERIAL_REQUEST_STATUS.PENDING_DISPATCH;
+          } else if (allItems.length > 0) {
+            // Fallback to first item status if completely mixed or other status
+            aggregateStatus = firstItem.status;
+          }
+
+          const statusInfo = statusType.find(s => s.status === aggregateStatus);
+
+          return {
+            id: req?._id,
+            rfiId: entry.rfiId, // Mapped from Parent Entry
+            createdAt: req?.createdAt,
+            updatedAt: req?.updatedAt,
+            // Use generic info from the first item for the Card Header
+            workCategory: firstItem?.testWorkCategoryType || '',
+            materialType: firstItem?.testMaterialType || '',
+            materialCategory:
+              firstItem?.testMaterialCategory || req?.materialCategory || '', // Mapped from first item, fallback to req level
+            status: aggregateStatus,
+            statusText: statusInfo ? statusInfo.statusText : aggregateStatus,
+            items: req.items,
+          };
+        }),
+      );
+      // --- LOGIC FIX END ---
+
+      if (selectedTab === REQUEST_TYPES.INVENTORY_REQUEST) {
+        setContingencyRequests([]);
+        setInventoryRequests(mapped);
+      } else {
+        setInventoryRequests([]);
+        setContingencyRequests(mapped);
+      }
+      console.log('Requests mapped:', JSON.stringify(mapped));
+    }
+  }, [getMeterialRequestToFormData, selectedTab]);
+
   const navigateToRequestForm = () => {
-    navigation.navigate('MaterialStoreRequestForm', {requestType: selectedTab});
+    navigation.navigate('ContingencyRequestComponent', {
+      requestType: selectedTab,
+    });
   };
 
-  // Handles actions from the RequestCard component (e.g., accept, reject, navigate)
   const handleActionPress = useCallback(
-    (action: string, status: string) => {
+    (action: string, status: string, item: any) => {
       console.log(`Action: ${action}, Status: ${status}, Tab: ${selectedTab}`);
-
+      console.log('Request Item:', JSON.stringify(item));
       switch (status) {
         case MATERIAL_REQUEST_STATUS.PENDING_APPROVAL:
+        case MATERIAL_REQUEST_STATUS.REQUEST_FOR_APPROVAL:
         case MATERIAL_REQUEST_STATUS.PENDING_DISPATCH:
-          navigation.navigate('MaterialApprovalForm', {status});
+          navigation.navigate('MaterialApprovalForm', {status, item});
           break;
         case MATERIAL_REQUEST_STATUS.REJECTED:
           navigateToRequestForm();
           break;
         case MATERIAL_REQUEST_STATUS.PENDING_ACCEPTANCE:
           if (action === 'accept') {
-            // Add your logic for accepting a request
-            console.log('Request accepted');
+            console.log('Request accepted', {
+              projectId: loggedInUser.projectId,
+              id: item?.id,
+              body: {status: 'request_for_approval'},
+            });
+            dispatch(
+              patchMaterialRequestStatus({
+                projectId: loggedInUser.projectId,
+                id: item?.id,
+                body: {status: 'request_for_approval'},
+              }),
+            );
           } else if (action === 'reject') {
-            // Add your logic for rejecting a request
             console.log('Request rejected');
+            dispatch(
+              patchMaterialRequestStatus({
+                projectId: loggedInUser.projectId,
+                id: item?.id,
+                body: {status: 'rejected'},
+              }),
+            );
           }
           break;
         default:
           break;
       }
     },
-    [navigation, selectedTab],
+    [navigation, selectedTab, loggedInUser.projectId, dispatch],
   );
 
   return (
@@ -187,17 +307,17 @@ const RequestPage = () => {
         </ScrollView>
 
         {/* Footer Button */}
-        <View style={styles.footerContainer}>
-          <TouchableOpacity
-            style={styles.newRequestButton}
-            onPress={navigateToRequestForm}>
-            <Text style={styles.newRequestButtonText}>
-              {selectedTab === REQUEST_TYPES.INVENTORY_REQUEST
-                ? 'New Inventory Request'
-                : 'New Contingency Request'}
-            </Text>
-          </TouchableOpacity>
-        </View>
+        {selectedTab === REQUEST_TYPES.CONTINGENCY_REQUEST && (
+          <View style={styles.footerContainer}>
+            <TouchableOpacity
+              style={styles.newRequestButton}
+              onPress={navigateToRequestForm}>
+              <Text style={styles.newRequestButtonText}>
+                New Contingency Request
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -247,7 +367,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 6,
     backgroundColor: '#FFFFFF',
     borderRadius: 12,
-   
   },
   recentWorkHead: {
     borderBottomWidth: 1,

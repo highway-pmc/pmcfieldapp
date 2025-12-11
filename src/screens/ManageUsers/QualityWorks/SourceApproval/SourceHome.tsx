@@ -4,59 +4,44 @@ import {
   NativeEventEmitter,
   StyleSheet,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useIsFocused} from '@react-navigation/native';
-import {HeaderItems} from '../../../../constants/constants'; // Adjust import path
-import SourceDetail from './SourceDetail'; // Import the subcomponent
-import SourceRequest from './SourceRequest'; // Import the subcomponent
+import {useDispatch, useSelector} from 'react-redux';
+import {HeaderItems} from '../../../../constants/constants';
+import SourceDetail from './SourceDetail';
+import SourceRequest from './SourceRequest';
+import {
+  getSourceCategoriesWithCount,
+  clearSourceApprovals,
+} from '../../actions';
 
-// Define types for navigation props for better code quality
-type SourceHomeProps = {
-  route: {
-    params: {
-      testClassificationId: string;
-      testClassificationName: string;
-      testClassificationType: string;
-      testWorkCategoriesData: any[]; // Define a more specific type if possible
-      workType: string;
-    };
-  };
-  navigation: any;
-};
-
-const SourceHome = ({route, navigation}: SourceHomeProps) => {
+const SourceHome = () => {
   const [activeTab, setActiveTab] = useState('Source Detail');
-  const {
-    testClassificationId,
-    testClassificationName,
-    testClassificationType,
-    testWorkCategoriesData,
-    workType,
-  } = route.params;
-
   const isFocused = useIsFocused();
+  const dispatch = useDispatch();
 
-  // This function will be passed to the child component
-  const onTestWorkCategoryNextClick = (item: any) => {
-    navigation.navigate('AssignTestMaterialsPurchage', {
-      // Adjust screen name
-      testClassificationId,
-      testClassificationName,
-      testClassificationType,
-      testWorkCategoryId: item._id,
-      testWorkCategoryName: item.name,
-      testWorkCategoryType: item.type,
-      workType,
-    });
-  };
+  const {sourceCategoriesWithCount, loading, error} = useSelector(
+    (state: any) => state.SourceApprovals,
+  );
+  const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
 
+  // This useEffect fetches the data
   useEffect(() => {
-    if (isFocused) {
+    if (isFocused && loggedInUser?.projectId) {
+      dispatch(
+        getSourceCategoriesWithCount({projectId: loggedInUser.projectId}),
+      );
+
       const eventEmitter = new NativeEventEmitter();
       eventEmitter.emit('headerEvent', HeaderItems.sourceApprovals);
     }
-  }, [isFocused]);
+
+    return () => {
+      dispatch(clearSourceApprovals());
+    };
+  }, [isFocused, dispatch, loggedInUser?.projectId]);
 
   return (
     <View style={styles.container}>
@@ -89,13 +74,28 @@ const SourceHome = ({route, navigation}: SourceHomeProps) => {
         </TouchableOpacity>
       </View>
 
-      {/* Content Area: Pass props to the active component */}
+      {/* Content Area */}
       <View style={styles.tabContent}>
         {activeTab === 'Source Detail' && (
-          <SourceDetail
-            workCategories={testWorkCategoriesData}
-            onCategoryClick={onTestWorkCategoryNextClick}
-          />
+          <>
+            {loading ? (
+              <View style={styles.centered}>
+                <ActivityIndicator size="large" color="#4E36A3" />
+              </View>
+            ) : error ? (
+              <View style={styles.centered}>
+                <Text style={styles.errorText}>
+                  Failed to load data. Please try again.
+                </Text>
+              </View>
+            ) : (
+              <SourceDetail
+                workCategories={
+                  sourceCategoriesWithCount?.testWorkCategoriesData
+                }
+              />
+            )}
+          </>
         )}
         {activeTab === 'Request' && <SourceRequest />}
       </View>
@@ -103,11 +103,19 @@ const SourceHome = ({route, navigation}: SourceHomeProps) => {
   );
 };
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
+  },
+  centered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorText: {
+    fontSize: 16,
+    color: 'red',
   },
   tabBar: {
     margin: 10,
@@ -140,7 +148,7 @@ const styles = StyleSheet.create({
   },
   tabContent: {
     flex: 1,
-    paddingHorizontal: 16, // Add horizontal padding for content
+    paddingHorizontal: 16,
   },
 });
 

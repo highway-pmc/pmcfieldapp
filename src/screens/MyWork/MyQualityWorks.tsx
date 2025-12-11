@@ -106,7 +106,7 @@ import {
   getTestSampleFIEIObjectBSB,
   getWaterAbsorptionObjectBSB,
 } from './ReportSamples/Forms/QualityWorks/BaseSubBase';
-import { thirdPartySampleTest } from './ReportSamples/Forms/QualityWorks/ThirdPartyLabTestCustomForm';
+import {thirdPartySampleTest} from './ReportSamples/Forms/QualityWorks/ThirdPartyLabTestCustomForm';
 import CustomSelectDropdown from '../Common/CustomSelectDropdown';
 import {getThirdPartyTestSampleObject} from './ReportSamples/Forms/QualityWorks/ThirdPartyTest';
 import LinearGradient from 'react-native-linear-gradient';
@@ -194,7 +194,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
   };
 
   useEffect(() => {
-   // getMyWorksData(selectedValues?.type);
+    // getMyWorksData(selectedValues?.type);
   }, [selectedValues]);
 
   const getMyWorksData = (selectedType: any) => {
@@ -272,13 +272,8 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
       //   testWorkCategoriesData: item.testWorkCategoriesData,
       //   workType: workType,
       // });
-      navigation.navigate('SourceHome', {
-        testClassificationId: item.id,
-        testClassificationName: item.name,
-        testClassificationType: item.type,
-        testWorkCategoriesData: item.testWorkCategoriesData,
-        workType: workType,
-      });
+      //navigation.navigate('TestDetailsScreen');
+      navigation.navigate('SourceHome');
       return;
     }
     if (isMixDesignClassification(item.type)) {
@@ -293,8 +288,8 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
     }
     setMyTestsData([item]);
     setTimeout(() => {
-      onClick(2, item.assignmentLevel, 0, -1, -1, -1, [item])
-    }, 100);    
+      onClick(2, item.assignmentLevel, 0, -1, -1, -1, [item]);
+    }, 100);
   };
 
   const onClick = (
@@ -304,11 +299,11 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
     workCateIndex: number = -1,
     testMateIndex: number = -1,
     testTypeIndex: number = -1,
-    myTestsDataDuplicate: any = null
+    myTestsDataDuplicate: any = null,
   ) => {
-    const testClassifData: any = myTestsData[testClassifIndex] || myTestsDataDuplicate[testClassifIndex];
+    const testClassifData: any =
+      myTestsData[testClassifIndex] || myTestsDataDuplicate[testClassifIndex];
     if (isTestInventoryClassification(testClassifData.type)) {
-      // TODO - will introduce type in db and use it iso Classification Name
       const testWorkCategory = testClassifData.testWorkCategoriesData[0];
       navigation.navigate('AssignTestMaterialsPurchage', {
         testClassificationId: testClassifData.id,
@@ -451,6 +446,8 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
             setCurrentLevel(6);
             setCurrentSubTestTypeRFIsData(testTypeData.testRFIsData);
             setSelectedTestSample(testTypeData);
+            //========Testing Purpose========
+
             // const testObservations: any = [];
             // testObservations.push(getTestSampleCementFineAggregateObject(1, testTypeData.type));
             // setConcreteSampleTestItems(testObservations);
@@ -1019,12 +1016,15 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
       objSampleTest7thOr28thDay.dateOfTesting,
     );
 
-    if (selectedTestSample.testClassificationType === TEST_CLASSIFICATION_TYPES.THIRD_PARTY_LAB_TEST) {
+    if (
+      selectedTestSample.testClassificationType ===
+      TEST_CLASSIFICATION_TYPES.THIRD_PARTY_LAB_TEST
+    ) {
       objSampleTest7thOr28thDay.dateOfSampling = getDbDateFromDDMMYYYY(
         objSampleTest7thOr28thDay.dateOfSampling,
       );
 
-      objSampleTest7thOr28thDay.result = concreteSampleTestItems[0].result
+      objSampleTest7thOr28thDay.result = concreteSampleTestItems[0].result;
 
       //objSampleTest7thOr28thDay.base64Image = "" // TODO
 
@@ -1036,15 +1036,15 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
           body: {
             sampleData: objSampleTest7thOr28thDay,
             additionalData: {
-              comments: concreteSampleTestItems[0].comments
-            }
+              comments: concreteSampleTestItems[0].comments,
+            },
           },
         }),
       );
 
       return;
     }
-    
+
     // Temperature Validation
     if (isValidTemperature(objSampleTest7thOr28thDay.roomTemperature)) {
       objSampleTest7thOr28thDay.roomTemperature = Number(
@@ -1404,7 +1404,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
       {/* {currentLevel === 0 && (
         <View style={{paddingHorizontal: 10}}>
           <View style={styles.qualityDropDown}> */}
-            {/* <CustomSelectDropdown
+      {/* <CustomSelectDropdown
               label="Selected Type"
               data={approvalTypeArray}
               selectedValue={selectedValues}
@@ -1413,7 +1413,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
               }
             /> */}
 
-            {/* {approvalTypeArray.map((item: any, index: number) => (
+      {/* {approvalTypeArray.map((item: any, index: number) => (
               <TouchableOpacity
                 onPress={() => handleApprovalType(item)}>
                 <View key={index}>
@@ -1449,33 +1449,35 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
       <ScrollView showsVerticalScrollIndicator={false} style={styles.Height100}>
         {currentLevel === 0
           ? myTestsDataAll.map((testClassificationItem: any, index: number) => (
-            <LinearGradient colors={['#FEFEFF', '#E1E8FF']} start={{x: 0, y: 0}} end={{x: 1, y: 1}} style={styles.hardcodedGradientContainer}>
-              <TouchableOpacity
-                style={[
-                  styles.MyWorkCard
-                ]}
-                onPress={() => handleApprovalType(testClassificationItem)}>
-                <View style={styles.TaskDetails}>
-                  <Text style={styles.HeadingText}>
-                    {testClassificationItem.name}
-                  </Text>
-                  {/* <View style={{flexDirection: 'row'}}>
+              <LinearGradient
+                colors={['#FEFEFF', '#E1E8FF']}
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 1}}
+                style={styles.hardcodedGradientContainer}>
+                <TouchableOpacity
+                  style={[styles.MyWorkCard]}
+                  onPress={() => handleApprovalType(testClassificationItem)}>
+                  <View style={styles.TaskDetails}>
+                    <Text style={styles.HeadingText}>
+                      {testClassificationItem.name}
+                    </Text>
+                    {/* <View style={{flexDirection: 'row'}}>
                     <Text style={styles.SubHeadingText}>Assigneddd :</Text>
                     <Text style={[styles.SubHeadingText, styles.SubActive]}>
                       {testClassificationItem.name}
                     </Text>
                   </View> */}
-                </View>
-                <View style={commonStyles.iconsStyle}>
-                  {imageMap.length && (
-                    <Image
-                      source={imageMap[index % imageMap.length]}
-                      style={commonStyles.image}
-                    />
-                  )}
-                </View>
-              </TouchableOpacity>
-            </LinearGradient>
+                  </View>
+                  <View style={commonStyles.iconsStyle}>
+                    {imageMap.length && (
+                      <Image
+                        source={imageMap[index % imageMap.length]}
+                        style={commonStyles.image}
+                      />
+                    )}
+                  </View>
+                </TouchableOpacity>
+              </LinearGradient>
             ))
           : currentLevel === 1
           ? myTestsData.map(
@@ -2383,7 +2385,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     gap: 20,
     alignItems: 'flex-start',
-    width: '100%'
+    width: '100%',
   },
   hardcodedGradientContainer: {
     flexDirection: 'row',
@@ -2399,7 +2401,6 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 12,
     borderTopRightRadius: 12,
     borderTopLeftRadius: 12,
-
   },
   CompleteWork: {
     borderWidth: 1,

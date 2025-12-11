@@ -18923,21 +18923,39 @@ export const CustomForms = (_v: any, workType: any, taskCategory: any) => {
             <View></View>
           </LinearGradient>
           {item.rfiStatus === RFI_STATUS.GENERATED ? (
-            <TouchableOpacity
-              style={[styles.MyWorkCta, styles.StartBorder]}
-              onPress={() => {
-                console.log('Task Information', item);
-                navigation.navigate('TaskForm', {taskData: item});
-                //_event.getRFIDataByWorkAssignmentId(item);
-              }}>
-              <Image
-                style={styles.WorkIcon}
-                source={require('../../../../../images/play-icon.png')}
-              />
-              <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>
-                Start
-              </Text>
-            </TouchableOpacity>
+            <View>
+              <TouchableOpacity
+                style={[styles.MyWorkCta, styles.StartBorder]}
+                onPress={() => {
+                  console.log('Task Information', item);
+                  navigation.navigate('TaskForm', {taskData: item});
+                  //_event.getRFIDataByWorkAssignmentId(item);
+                }}>
+                <Image
+                  style={styles.WorkIcon}
+                  source={require('../../../../../images/play-icon.png')}
+                />
+                <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>
+                  Start
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.MyWorkCta, styles.StartBorder]}
+                onPress={() => {
+                  console.log('Task Information', item);
+                  navigation.navigate('MaterialRequestComponent', {
+                    taskId: item.taskId._id,
+                  });
+                }}>
+                <Image
+                  style={styles.WorkIcon}
+                  source={require('../../../../../images/play-icon.png')}
+                />
+                <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>
+                  Material Request
+                </Text>
+              </TouchableOpacity>
+            </View>
           ) : null}
 
           {item.rfiStatus === RFI_STATUS.RE_GENERATED ? (
@@ -19190,18 +19208,20 @@ export const CustomForms = (_v: any, workType: any, taskCategory: any) => {
                   {item.name}
                 </Text>
               </View> */}
-            </View>
-            <View></View>
-          </LinearGradient>
-        </TouchableOpacity>
-        
-        <TouchableOpacity onPress={() => {navigation.navigate('MaterialRequestComponent')}}>
-                <Text>sdfdsafas</Text>
-        </TouchableOpacity>
-        </>
+                  </View>
+                  <View></View>
+                </LinearGradient>
+              </TouchableOpacity>
 
-        );
-      })
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('MaterialRequestComponent');
+                }}>
+                <Text>sdfdsafas</Text>
+              </TouchableOpacity>
+            </>
+          );
+        });
     }
   };
 

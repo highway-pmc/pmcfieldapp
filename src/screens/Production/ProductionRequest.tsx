@@ -6,98 +6,170 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {
-  MATERIAL_REQUEST_STATUS,
-  REQUEST_TYPES,
-} from '../../constants/constants';
+import {useNavigation, useIsFocused} from '@react-navigation/native';
+import {MATERIAL_REQUEST_STATUS} from '../../constants/constants';
 import RequestCard from '../Common/RequestCard';
-import { useDispatch, useSelector } from 'react-redux';
-import { getMaterialRequestTo, patchMaterialRequestStatus } from '../ManageUsers/actions';
-import { useSnackbar } from '../../context/SnackbarContext';
-
-type RequestItem = {
-  id: number;
-  materialType: string;
-  workCategory: string;
-  unit: string;
-  requestQty: number;
-  status: string;
-  statusText: string;
-};
-
-
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  clearMaterialRequest,
+  getMaterialRequestTo,
+  patchMaterialRequestStatus,
+} from '../ManageUsers/actions';
+import {useSnackbar} from '../../context/SnackbarContext';
 
 const statusType = [
-  {status: MATERIAL_REQUEST_STATUS.PENDING_ACCEPTANCE, statusText: 'Pending for Acceptance'}, 
-  {status: MATERIAL_REQUEST_STATUS.PENDING_APPROVAL, statusText: 'Pending for Approval'}, 
-  {status: MATERIAL_REQUEST_STATUS.PENDING_DISPATCH, statusText: 'Pending for Dispatch'}, 
+  {
+    status: MATERIAL_REQUEST_STATUS.PENDING_ACCEPTANCE,
+    statusText: 'Pending for Acceptance',
+  },
+  {
+    status: MATERIAL_REQUEST_STATUS.REQUEST_FOR_APPROVAL,
+    statusText: 'Request For Approval',
+  },
+  {
+    status: MATERIAL_REQUEST_STATUS.PENDING_APPROVAL,
+    statusText: 'Pending for Approval',
+  },
+  {
+    status: MATERIAL_REQUEST_STATUS.PENDING_DISPATCH,
+    statusText: 'Pending for Dispatch',
+  },
+  {
+    status: 'dispatched',
+    statusText: 'Dispatched',
+  },
   {status: MATERIAL_REQUEST_STATUS.REJECTED, statusText: 'Rejected'},
-]
+];
 
 const ProductionRequest = () => {
   const navigation = useNavigation<any>();
+  const isFocused = useIsFocused();
   const dispatch = useDispatch();
-  const { showSnackbar } = useSnackbar();
+  const {showSnackbar} = useSnackbar();
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const { getMeterialRequestToFormData, patchMeterialRequestStatusData, loading: any, error } = useSelector((state) => state.MeterialRequest);
+  const {
+    getMeterialRequestToFormData,
+    patchMeterialRequestStatusData,
+    loading,
+    error,
+  } = useSelector((state: any) => state.MeterialRequest);
   const [inventoryRequests, setInventoryRequests] = useState<any[]>([]);
 
   useEffect(() => {
-      if (patchMeterialRequestStatusData) {
-        showSnackbar("Meterial status updated successfully", "success");
-        dispatch(getMaterialRequestTo({ projectId: loggedInUser.projectId, type: 'production', requestType: ''}));
-      } else if (error) {
-        showSnackbar(error, "error");
-      }
-    }, [patchMeterialRequestStatusData, error]);
+    if (patchMeterialRequestStatusData) {
+      showSnackbar('Material status updated successfully', 'success');
+      fetchRequests();
+    } else if (error) {
+      showSnackbar(error, 'error');
+    }
+  }, [patchMeterialRequestStatusData, error]);
+
+  const fetchRequests = () => {
+    dispatch(
+      getMaterialRequestTo({
+        projectId: loggedInUser.projectId,
+        type: 'production',
+        requestType: '',
+      }),
+    );
+  };
 
   useEffect(() => {
-    dispatch(getMaterialRequestTo({ projectId: loggedInUser.projectId, type: 'production', requestType: ''}));
-  }, [])
+    if (isFocused) {
+      dispatch(clearMaterialRequest());
+      fetchRequests();
+    }
+  }, [isFocused]);
 
   useEffect(() => {
-  if (getMeterialRequestToFormData?.length) {
-    const mapped = getMeterialRequestToFormData.flatMap((entry: any) =>
-        entry.materialRequests.flatMap((req: any) =>
-          req.items.map((item: any) => {
-            const statusInfo = statusType.find(s => s.status === item.status);
-            return {
-              id: req?._id,
-              createdAt: req?.createdAt,
-              updatedAt: req?.updatedAt,
-              workCategory: item.testWorkCategoryType,
-              materialType: item.testMaterialType,
-              status: item.status,
-              statusText: statusInfo ? statusInfo.statusText : item.status,
-              items: req.items,
-            };
-          })
-        )
-      ).filter((value: any, index: any, self: any) => index === self.findIndex((obj: any) =>
-          obj.materialType === value.materialType &&
-          obj.workCategory === value.workCategory
-      )
-  );
-    setInventoryRequests(mapped);
-    console.log("inventoryRequests mapped:", mapped);
-  }
-}, [getMeterialRequestToFormData]);
+    setInventoryRequests([]);
+    if (getMeterialRequestToFormData?.length) {
+      // Logic from RequestPage.tsx to handle aggregate status
+      const mapped = getMeterialRequestToFormData.flatMap((entry: any) =>
+        entry.materialRequests.map((req: any) => {
+          const allItems = req.items || [];
+          const firstItem = allItems[0];
 
-  // Handles navigation when a new request button is pressed
+          // Determine Aggregate Status
+          // Priority: Rejected > Pending Approval > Request For Approval > Pending Dispatch > Dispatched
+          let aggregateStatus = 'dispatched';
+
+          const hasRejected = allItems.some(
+            (i: any) => i.status === MATERIAL_REQUEST_STATUS.REJECTED,
+          );
+          const hasPendingAcceptance = allItems.some(
+            (i: any) => i.status === MATERIAL_REQUEST_STATUS.PENDING_ACCEPTANCE,
+          );
+          const hasRequestForApproval = allItems.some(
+            (i: any) =>
+              i.status === 'request_for_approval' ||
+              i.status === MATERIAL_REQUEST_STATUS.REQUEST_FOR_APPROVAL,
+          );
+          const hasPendingApproval = allItems.some(
+            (i: any) => i.status === MATERIAL_REQUEST_STATUS.PENDING_APPROVAL,
+          );
+          const hasPendingDispatch = allItems.some(
+            (i: any) => i.status === MATERIAL_REQUEST_STATUS.PENDING_DISPATCH,
+          );
+
+          if (hasRejected) {
+            aggregateStatus = MATERIAL_REQUEST_STATUS.REJECTED;
+          } else if (hasPendingAcceptance) {
+            aggregateStatus = MATERIAL_REQUEST_STATUS.PENDING_ACCEPTANCE;
+          } else if (hasRequestForApproval) {
+            aggregateStatus = MATERIAL_REQUEST_STATUS.REQUEST_FOR_APPROVAL;
+          } else if (hasPendingApproval) {
+            aggregateStatus = MATERIAL_REQUEST_STATUS.PENDING_APPROVAL;
+          } else if (hasPendingDispatch) {
+            aggregateStatus = MATERIAL_REQUEST_STATUS.PENDING_DISPATCH;
+          } else if (allItems.length > 0) {
+            aggregateStatus = firstItem.status;
+          }
+
+          const statusInfo = statusType.find(s => s.status === aggregateStatus);
+
+          return {
+            id: req?._id,
+            rfiId: entry.rfiId,
+            createdAt: req?.createdAt,
+            updatedAt: req?.updatedAt,
+            workCategory: firstItem?.testWorkCategoryType || '',
+            materialType: firstItem?.testMaterialType || '',
+            materialCategory:
+              firstItem?.testMaterialCategory || req?.materialCategory || '',
+            status: aggregateStatus,
+            statusText: statusInfo ? statusInfo.statusText : aggregateStatus,
+            items: req.items,
+            requestQty: firstItem?.qty_requested, // Show first item qty or sum
+          };
+        }),
+      );
+
+      setInventoryRequests(mapped);
+      console.log('Production Requests mapped:', JSON.stringify(mapped));
+    }
+  }, [getMeterialRequestToFormData]);
+
   const navigateToRequestForm = () => {
     navigation.navigate('ProductionRequestFormComponent');
   };
 
-  // Handles actions from the RequestCard component (e.g., accept, reject, navigate)
   const handleActionPress = useCallback(
     (action: string, status: string, item: any) => {
       console.log(`Action: ${action}, Status: ${status}`);
 
       switch (status) {
+        case MATERIAL_REQUEST_STATUS.REQUEST_FOR_APPROVAL:
         case MATERIAL_REQUEST_STATUS.PENDING_APPROVAL:
         case MATERIAL_REQUEST_STATUS.PENDING_DISPATCH:
+        case 'dispatched':
+          // Navigate to Detail/Action Form
+          console.log(
+            'Navigating to MaterialApprovalProduction',
+            JSON.stringify(item),
+          );
           navigation.navigate('MaterialApprovalProduction', {status, item});
           break;
         case MATERIAL_REQUEST_STATUS.REJECTED:
@@ -105,67 +177,71 @@ const ProductionRequest = () => {
           break;
         case MATERIAL_REQUEST_STATUS.PENDING_ACCEPTANCE:
           if (action === 'accept') {
-            // Add your logic for accepting a request
-            console.log('Request accepted', {projectId: loggedInUser.projectId, id: item?.id, body: {status: 'pending_approval'}});
-            dispatch(patchMaterialRequestStatus({projectId: loggedInUser.projectId, id: item?.id, body: {status: 'pending_approval'}}))
+            // Updated Flow: Acceptance -> Request For Approval
+            dispatch(
+              patchMaterialRequestStatus({
+                projectId: loggedInUser.projectId,
+                id: item?.id,
+                body: {status: 'request_for_approval'},
+              }),
+            );
           } else if (action === 'reject') {
-            // Add your logic for rejecting a request
-            console.log('Request rejected');
-            dispatch(patchMaterialRequestStatus({projectId: loggedInUser.projectId, id: item?.id, body: {status: 'rejected'}}))
+            dispatch(
+              patchMaterialRequestStatus({
+                projectId: loggedInUser.projectId,
+                id: item?.id,
+                body: {status: 'rejected'},
+              }),
+            );
           }
           break;
         default:
           break;
       }
     },
-    [navigation],
+    [navigation, dispatch, loggedInUser.projectId],
   );
-
-  const handleRequestPress = () => {
-    navigation.navigate('ProductionRequestFormComponent');
-  };
 
   return (
     <View style={styles.container}>
       <TouchableOpacity
         style={styles.addButton}
-        onPress={() => {
-          console.log('Request pressed');
-          handleRequestPress();
-        }}>
+        onPress={navigateToRequestForm}>
         <Text style={styles.addButtonText}>Request</Text>
       </TouchableOpacity>
       <SafeAreaView style={styles.safeArea}>
-          {/* Main Content */}
-          <ScrollView contentContainerStyle={styles.scrollContent}>
-            <View style={styles.recentWorkContainer}>
-              <View style={styles.recentWorkHead}>
-                <Text style={styles.headerText}>
-                  Recent Requests (
-                  <Text style={styles.taskCount}>{inventoryRequests.length}</Text>)
-                </Text>
-              </View>
-
-              <View style={styles.listContainer}>
-                {inventoryRequests.length > 0 ? (
-                  inventoryRequests.map(request => (
-                    <RequestCard
-                      key={request.id}
-                      request={request}
-                      onActionPress={handleActionPress}
-                    />
-                  ))
-                ) : (
-                  <View style={styles.noDataContainer}>
-                    <Text style={styles.noDataHeadText}>No Requests Found</Text>
-                    <Text style={styles.noDataSubText}>
-                      There are no requests available.
-                    </Text>
-                  </View>
-                )}
-              </View>
+        <ScrollView contentContainerStyle={styles.scrollContent}>
+          <View style={styles.recentWorkContainer}>
+            <View style={styles.recentWorkHead}>
+              <Text style={styles.headerText}>
+                Recent Requests (
+                <Text style={styles.taskCount}>{inventoryRequests.length}</Text>
+                )
+              </Text>
             </View>
-          </ScrollView>
+
+            <View style={styles.listContainer}>
+              {loading && inventoryRequests.length === 0 ? (
+                <ActivityIndicator size="large" color="#4E36A3" />
+              ) : inventoryRequests.length > 0 ? (
+                inventoryRequests.map((request, index) => (
+                  <RequestCard
+                    key={`${request.id}-${index}`}
+                    request={request}
+                    onActionPress={handleActionPress}
+                  />
+                ))
+              ) : (
+                <View style={styles.noDataContainer}>
+                  <Text style={styles.noDataHeadText}>No Requests Found</Text>
+                  <Text style={styles.noDataSubText}>
+                    There are no production requests available.
+                  </Text>
+                </View>
+              )}
+            </View>
+          </View>
+        </ScrollView>
       </SafeAreaView>
     </View>
   );
@@ -178,63 +254,39 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 10,
+    backgroundColor: '#f5f5f5',
   },
   addButton: {
     alignSelf: 'flex-end',
     backgroundColor: '#FFFFFF',
-    paddingVertical: 5,
+    paddingVertical: 8,
     paddingHorizontal: 20,
     borderRadius: 20,
     borderWidth: 1,
     borderColor: '#4E36A3',
-    marginBottom: 5,
+    marginVertical: 10,
   },
   addButtonText: {
     color: '#4E36A3',
     fontWeight: 'bold',
   },
-  toggleContainer: {
-    flexDirection: 'row',
-    backgroundColor: '#FFFFFF',
-    marginHorizontal: 16,
-    borderRadius: 8,
-    marginTop: 10,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 1},
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-  },
-  toggleButton: {
-    flex: 1,
-    paddingVertical: 12,
-    alignItems: 'center',
-    borderRadius: 8,
-  },
-  activeToggleButton: {
-    backgroundColor: '#4E36A3',
-  },
-  toggleText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#4E36A3',
-  },
-  activeToggleText: {
-    color: '#FFFFFF',
-  },
   scrollContent: {
     paddingBottom: 100,
   },
   recentWorkContainer: {
-    marginHorizontal: 6,
+    marginHorizontal: 0,
     backgroundColor: '#FFFFFF',
     borderRadius: 12,
-   
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   recentWorkHead: {
     borderBottomWidth: 1,
     borderColor: '#DEE1E7',
-    padding: 10,
+    padding: 16,
   },
   headerText: {
     color: '#34343F',
@@ -246,7 +298,7 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     paddingVertical: 10,
-    paddingHorizontal: 5,
+    paddingHorizontal: 8,
   },
   noDataContainer: {
     paddingVertical: 50,
@@ -264,30 +316,6 @@ const styles = StyleSheet.create({
     marginTop: 8,
     textAlign: 'center',
   },
-  footerContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    paddingVertical: 15,
-    paddingHorizontal: 16,
-    backgroundColor: '#FFFFFF',
-    borderTopWidth: 1,
-    borderTopColor: '#EAEAF5',
-  },
-  newRequestButton: {
-    backgroundColor: '#4E36A3',
-    paddingVertical: 14,
-    borderRadius: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  newRequestButtonText: {
-    color: '#FFFFFF',
-    fontSize: 15,
-    fontWeight: '500',
-  },
 });
 
 export default ProductionRequest;
-

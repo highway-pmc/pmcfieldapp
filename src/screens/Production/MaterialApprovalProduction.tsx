@@ -1,5 +1,3 @@
-// src/screens/MaterialApprovalProduction.tsx
-
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState, useMemo} from 'react';
 import {
@@ -11,637 +9,739 @@ import {
   ScrollView,
   Alert,
   NativeEventEmitter,
+  ActivityIndicator,
 } from 'react-native';
 import {HeaderItems, MATERIAL_REQUEST_STATUS} from '../../constants/constants';
 import DropdownPicker from '../../components/UI/DropdownPicker';
-import DetailsCard from '../Common/DetailsCard';
-import { getSourceApprovals, patchDispatchRequest, patchMaterialRequestStatus, postUploadBatchSlip } from '../ManageUsers/actions';
-import { useDispatch, useSelector } from 'react-redux';
-import { useSnackbar } from '../../context/SnackbarContext';
-import { getMixDesignListInfo } from '../RFIs/actions';
+import {
+  patchDispatchRequest,
+  patchMaterialRequestStatus,
+  dispatchProductionRequest,
+  clearMaterialRequest,
+} from '../ManageUsers/actions';
+import {useDispatch, useSelector} from 'react-redux';
+import {useSnackbar} from '../../context/SnackbarContext';
+import {getMixDesignListInfo} from '../RFIs/actions';
 import DocumentPicker from 'react-native-document-picker';
 import appConfig from '../../common/app.config';
 
-// --- Type Definitions ---
+const MaterialApprovalProduction = ({route, navigation}: any) => {
+  const {status, item} = route.params || {};
 
-interface RequestData {
-  workCategory: string;
-  materialName: string;
-  materialCategory: string;
-  unit: string;
-  qtyRequested: number;
-  qtyApproved: number;
-  taskPath: string;
-  userName: string;
-  requestDateTime: string;
-}
+  if (!item) {
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <ActivityIndicator size="large" color="#4E36A3" />
+      </View>
+    );
+  }
 
-interface SourceOption {
-  label: string;
-  value: string;
-}
-
-interface DispatchSource {
-  id: number;
-  source: string;
-  quantity: string;
-}
-
-// Assuming React Navigation types
-// type MaterialApprovalFormProps = {
-//   route: {params?: {status?: string, item: any}};
-//   navigation: any; // Replace 'any' with your actual navigation type for better safety
-// };
-
-// --- Mock Data ---
-
-const requestData: RequestData = {
-  workCategory: 'Structural Steel',
-  materialName: 'TMT Bars',
-  materialCategory: 'Fe-500D',
-  unit: 'Tonne',
-  qtyRequested: 150.5,
-  qtyApproved: 150,
-  taskPath: 'Project X / Tower A / Foundation / Raft',
-  userName: 'Prakash Kumar (Site Engineer)',
-  requestDateTime: '15/08/2025 10:30 AM',
-};
-
-const sourcesData: SourceOption[] = [
-  {label: 'Select Source', value: ''},
-  {label: 'Main Warehouse', value: 'main_warehouse'},
-  {label: 'Site Storage A', value: 'site_storage_a'},
-  {label: 'Vendor Direct Supply', value: 'vendor_direct'},
-  {label: 'Local Purchase', value: 'local_purchase'},
-];
-
-// --- Component ---
-
-const MaterialApprovalProduction = ({route, navigation}) => {
-  const {status} = route.params?.item || {};
-  console.log('Statysdsfmldsk: ', route.params?.item?.items)
-  const [qtyIssued, setQtyIssued] = useState<string>('');
-  const [qtyApproved, setQtyApproved] = useState(route.params?.item);
+  // Local State
+  const [qtyApproved, setQtyApproved] = useState<{[key: string]: string}>({});
+  const [qtyIssued, setQtyIssued] = useState<{[key: string]: string}>({});
   const [remarks, setRemarks] = useState<string>('');
-  const [dispatchSources, setDispatchSources] = useState<any[]>([]);
-  // initial state: one row
-  const [localApprovals, setLocalApprovals] = useState<any[]>([]);
-    // Add these state variables at the top of your component
-  const [vehicleNumbers, setVehicleNumbers] = useState<{[key: string]: string[]}>({});
-  const [currentVehicleInput, setCurrentVehicleInput] = useState<{[key: string]: string}>({});
-  const [batchNumbers, setBatchNumbers] = useState<{[key: string]: string}>({});
+
+  // Mix Design State
+  const [mixDesignRows, setMixDesignRows] = useState<{[key: string]: any[]}>(
+    {},
+  );
+
+  // Dispatch State
+  const [vehicleNumbers, setVehicleNumbers] = useState<{
+    [key: string]: string[];
+  }>({});
+  const [currentVehicleInput, setCurrentVehicleInput] = useState<{
+    [key: string]: string;
+  }>({});
   const [batchSlips, setBatchSlips]: any = useState(null);
   const [fileUrlData, setfileUrlData]: any = useState('');
-  const [selectedMixDesigns, setSelectedMixDesigns] = useState<{[key: string]: string}>({});
+  const [batchNumbers, setBatchNumbers] = useState<{[key: string]: string}>({});
+
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
-  const { showSnackbar } = useSnackbar();
+  const {showSnackbar} = useSnackbar();
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const [approvedQty, setApprovedQty] = useState({}); // object keyed by id
-  const { patchMeterialRequestStatusData, uploadingBatchData, loading: any, error } = useSelector((state) => state.MeterialRequest);
-  const {sourceApprovals} = useSelector((state: any) => state.SourceApprovals);
+
+  const {
+    patchMeterialRequestStatusData,
+    error,
+    dispatchProductionRequest: dispatchProductionRequestState,
+  } = useSelector((state: any) => state.MeterialRequest);
   const {qualityMixDesignListInfo} = useSelector((state: any) => state.RFIs);
 
+  // --- MODES DEFINITION ---
+  // 1. Edit Mode: User enters Mix Design and Batch No (Status: request_for_approval)
+  const isEditApprovalMode =
+    status === 'request_for_approval' ||
+    status === MATERIAL_REQUEST_STATUS.REQUEST_FOR_APPROVAL;
+
+  // 2. Read-Only Mode: User Reviews and Accepts/Rejects (Status: pending_approval)
+  const isPendingApprovalMode =
+    status === 'pending_approval' ||
+    status === MATERIAL_REQUEST_STATUS.PENDING_APPROVAL;
+
+  // 3. Dispatch Mode: User enters vehicle details (Status: pending_dispatch)
+  const isDispatchMode = status === MATERIAL_REQUEST_STATUS.PENDING_DISPATCH;
+
+  const isDispatchedMode = status === 'dispatched';
+
+  const mixDesignDropdownOptions = useMemo(() => {
+    if (!qualityMixDesignListInfo || !Array.isArray(qualityMixDesignListInfo)) {
+      return [];
+    }
+    return qualityMixDesignListInfo.map((item: any) => ({
+      label: item.name,
+      value: item._id,
+      originalData: item,
+    }));
+  }, [qualityMixDesignListInfo]);
+
   useEffect(() => {
-        if (patchMeterialRequestStatusData) {
-          showSnackbar("Meterial status updated successfully", "success");
-        } else if (error) {
-          showSnackbar(error, "error");
-        }
-      }, [patchMeterialRequestStatusData, error]);
+    return () => {
+      dispatch(clearMaterialRequest());
+    };
+  }, []);
+
+  useEffect(() => {
+    if (patchMeterialRequestStatusData) {
+      showSnackbar('Status updated successfully', 'success');
+      navigation.goBack();
+    } else if (error) {
+      showSnackbar(error, 'error');
+    }
+  }, [patchMeterialRequestStatusData, error, navigation]);
+
+  useEffect(() => {
+    if (dispatchProductionRequestState) {
+      showSnackbar('Dispatched successfully', 'success');
+      dispatch(clearMaterialRequest());
+      navigation.goBack();
+    } else if (error) {
+      showSnackbar(error, 'error');
+    }
+  }, [dispatchProductionRequestState, error]);
+
 
   useEffect(() => {
     if (isFocused) {
       const eventEmitter = new NativeEventEmitter();
-      eventEmitter.emit(
-        'headerEvent',
-        status === MATERIAL_REQUEST_STATUS.PENDING_APPROVAL
-          ? HeaderItems.materialApprove
-          : HeaderItems.materialDispatch,
-      );
+      let headerTitle = HeaderItems.materialDispatch;
+      if (isEditApprovalMode || isPendingApprovalMode) {
+        headerTitle = HeaderItems.materialApprove;
+      }
+      eventEmitter.emit('headerEvent', headerTitle);
     }
-  }, [isFocused, status]);
+  }, [isFocused, isEditApprovalMode, isPendingApprovalMode]);
 
+  // Load Data for Editing Mode
   useEffect(() => {
-  if (route.params?.item?.items?.length > 0 && localApprovals.length === 0) {
-    const initialApprovals = route.params.item.items.map((request: any) => ({
-      id: `${request._id || request.testMaterialId}_${Date.now()}`,
-      testMaterialId: request.testMaterialId || request._id,
-      name: '',
-      quantity: '',
-    }));
-    setLocalApprovals(initialApprovals);
-    dispatch(getMixDesignListInfo({projectId: loggedInUser.projectId, testWorkCategoryType: route.params?.item?.items[0]?.testWorkCategoryType, testMaterialId: route.params?.item?.items[0]?.testMaterialId}));
-  }
-}, [route.params?.item?.items, qualityMixDesignListInfo]);
+    if (isFocused && isEditApprovalMode && item?.items?.length > 0) {
+      // Clear all local states
+      setQtyApproved({});
+      setQtyIssued({});
+      setRemarks('');
+      setMixDesignRows({});
+      setVehicleNumbers({});
+      setCurrentVehicleInput({});
+      setBatchSlips(null);
+      setfileUrlData('');
+      setBatchNumbers({});
 
-  const handleQtyChange = (id, value) => {
-    setApprovedQty(prev => ({ ...prev, [id]: value }));
+      const firstItem = item.items[0];
+      dispatch(
+        getMixDesignListInfo({
+          projectId: loggedInUser.projectId,
+          testWorkCategoryType: firstItem?.testWorkCategoryType,
+          testMaterialId: firstItem?.testMaterialId,
+        }),
+      );
+
+      // Initialize Rows
+      const initialRows: any = {};
+      item.items.forEach((req: any) => {
+        initialRows[req._id] = [
+          {id: Date.now(), selectedOption: null, qty: ''},
+        ];
+      });
+      setMixDesignRows(initialRows);
+    }
+  }, [isFocused, isEditApprovalMode, item, dispatch, loggedInUser.projectId]);
+
+  // --- Handlers ---
+
+  const handleQtyApprovedChange = (id: string, value: string) => {
+    setQtyApproved(prev => ({...prev, [id]: value}));
   };
 
-  const handleSubmit = (type:any) => {
-    let payload = {
-      status: type === 'dispatch' ? MATERIAL_REQUEST_STATUS.DISPATCHED : MATERIAL_REQUEST_STATUS.PENDING_DISPATCH,
-      comments: remarks,
-      approvalData: route.params?.item?.items?.map((req: any) => ({
-        materialRequestItemId: req._id,
-        quantityApproved: approvedQty[req._id] ?? Number(req.qty_requested),
-      })),
-    };
-console.log('dsjskljf!!!----',{projectId: loggedInUser.projectId,
-      id: route.params?.item?.id,
-      body: payload,})
-  dispatch(
-    patchMaterialRequestStatus({
-      projectId: loggedInUser.projectId,
-      id: route.params?.item?.id,
-      body: payload,
-    })
-  );
+  const handleQtyIssuedChange = (id: string, value: string) => {
+    setQtyIssued(prev => ({...prev, [id]: value}));
+  };
 
-  Alert.alert('Success', 'Form has been submitted successfully!');
-};
+  const handleBatchNumberChange = (requestId: string, value: string) => {
+    setBatchNumbers(prev => ({...prev, [requestId]: value}));
+  };
 
+  const addMixDesignRow = (requestId: string) => {
+    setMixDesignRows(prev => ({
+      ...prev,
+      [requestId]: [
+        ...(prev[requestId] || []),
+        {id: Date.now(), selectedOption: null, qty: ''},
+      ],
+    }));
+  };
 
+  const removeMixDesignRow = (requestId: string, rowId: number) => {
+    setMixDesignRows(prev => ({
+      ...prev,
+      [requestId]: prev[requestId].filter((r: any) => r.id !== rowId),
+    }));
+  };
 
+  const updateMixDesignRow = (
+    requestId: string,
+    rowId: number,
+    field: string,
+    value: any,
+  ) => {
+    setMixDesignRows(prev => ({
+      ...prev,
+      [requestId]: prev[requestId].map((r: any) => {
+        if (r.id === rowId) {
+          if (field === 'mixDesign') {
+            const selectedObj = mixDesignDropdownOptions.find(
+              (m: any) => m.value === value,
+            );
+            return {...r, selectedOption: selectedObj};
+          }
+          if (field === 'qty') {
+            return {...r, qty: value};
+          }
+        }
+        return r;
+      }),
+    }));
+  };
 
-// Fetch available sources only if not already in Redux
-const getAvailableSources = (currentRowId: any) => {
-  //Alert.alert('Error', 'Please fill in all source details');
-  const existingApprovals = sourceApprovals?.filter(
-    (row: any) => row.testMaterialId === currentRowId
-  );
+  const handleAddVehicle = (requestId: string) => {
+    const vNo = currentVehicleInput[requestId]?.trim();
+    if (!vNo || vNo.length < 4) {
+      Alert.alert('Error', 'Please enter a valid vehicle number (min 4 chars)');
+      return;
+    }
+    setVehicleNumbers(prev => ({
+      ...prev,
+      [requestId]: [...(prev[requestId] || []), vNo],
+    }));
+    setCurrentVehicleInput(prev => ({...prev, [requestId]: ''}));
+  };
 
-  console.log('Test Data: ----', existingApprovals?.length)
-  if (existingApprovals?.length === 0 || existingApprovals?.length === undefined) {
-    dispatch(
-      getSourceApprovals({
-        projectId: loggedInUser.projectId,
-        testMaterialId: currentRowId,
-      })
-    );
-  }
+  const handleRemoveVehicle = (requestId: string, vNo: string) => {
+    setVehicleNumbers(prev => ({
+      ...prev,
+      [requestId]: prev[requestId]?.filter(v => v !== vNo) || [],
+    }));
+  };
 
-  // Build dropdown list
-  const allSources = sourceApprovals?.map((opt: any) => ({
-    label: opt.name,
-    value: opt.name,
-  }));
-
-  setDispatchSources(allSources);
-};
-
-
-
-// Add vehicle number functions
-const handleAddVehicle = (requestId: string) => {
-  const vehicleNumber = currentVehicleInput[requestId]?.trim();
-  if (!vehicleNumber || vehicleNumber.length !== 4) {
-    Alert.alert('Error', 'Please enter a valid 4-digit vehicle number');
-    return;
-  }
-
-  setVehicleNumbers(prev => ({
-    ...prev,
-    [requestId]: [...(prev[requestId] || []), vehicleNumber]
-  }));
-
-  setCurrentVehicleInput(prev => ({
-    ...prev,
-    [requestId]: ''
-  }));
-};
-
-const handleRemoveVehicle = (requestId: string, vehicleNumber: string) => {
-  setVehicleNumbers(prev => ({
-    ...prev,
-    [requestId]: prev[requestId]?.filter(v => v !== vehicleNumber) || []
-  }));
-};
-
-// Handle batch slip upload (you'll need to implement file picker)
-const handleBatchSlipUpload = async (requestId: string) => {
-      try {
+  const handleBatchSlipUpload = async (requestId: string) => {
+    try {
       const result: any = await DocumentPicker.pick({
         type: [DocumentPicker.types.images, DocumentPicker.types.pdf],
         allowMultiSelection: false,
       });
       const res = result[0];
       setBatchSlips(res);
-      console.log('==res===', batchSlips);
-    } catch (err) {
-      console.log('======err2===', err);
-      if (DocumentPicker.isCancel(err)) {
-        showSnackbar('No document selected');
+
+      let url = `${appConfig.API_URL}/v1/auth/projects/${loggedInUser.projectId}/material-requests/items/${requestId}/upload-batch-slip`;
+      let data = new FormData();
+      data.append('file', res);
+
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {Authorization: appConfig.getToken()},
+        body: data,
+      });
+
+      if (response.status === 200) {
+        let json = await response.json();
+        setfileUrlData(json.data.fileUrl);
+        showSnackbar('Batch slip uploaded successfully', 'success');
       } else {
-        throw err;
+        showSnackbar('Upload Failed', 'error');
+      }
+    } catch (err) {
+      if (!DocumentPicker.isCancel(err)) {
+        showSnackbar('Error picking file', 'error');
       }
     }
-
-
-
-      if (!batchSlips) {
-        return;
-      }
-
-
-      let urlOfS = `${appConfig.API_URL}/v1/auth/projects/${
-        loggedInUser.projectId
-      }/material-requests/items/${route.params?.item?.items[0]?.testMaterialId}/upload-batch-slip`;
-      if (batchSlips.size < 5000000) {
-        let data = new FormData();
-        data.append('file', batchSlips);
-        try {
-          const responseOfFileUpload = await fetch(urlOfS, {
-            method: 'POST',
-            headers: {
-              Authorization: appConfig.getToken(),
-            },
-            body: data,
-          });
-          console.log('===responseOfFileUpload====', responseOfFileUpload);
-          if (responseOfFileUpload.status == 200) {
-            let responseInJs = await responseOfFileUpload.json();
-            console.log('===responseInJs====', responseInJs);
-            let fileName = responseInJs.data.fileUrl; // file name which will be        sent from backend
-            setfileUrlData(fileName)
-            showSnackbar('Upload Succesfull');
-            setBatchSlips(null);
-          } else {
-            showSnackbar('Upload Failed');
-          }
-        } catch (err) {
-          console.log('========err==', err);
-          showSnackbar('Upload Failed');
-          console.log(err, 'error in upload');
-        }
-      } else {
-        showSnackbar('File size should not exceed 4 MB');
-      }
-};
-
-// Handle mix design selection
-const handleMixDesignChange = (requestId: string, value: string) => {
-  setSelectedMixDesigns(prev => ({
-    ...prev,
-    [requestId]: value
-  }));
-};
-
-// Handle quantity issued change
-const handleQtyIssuedChange = (requestId: string, value: string) => {
-  setQtyIssued(prev => ({
-    ...prev,
-    [requestId]: value
-  }));
-};
-
-// Handle batch number change
-const handleBatchNumberChange = (requestId: string, value: string) => {
-  setBatchNumbers(prev => ({
-    ...prev,
-    [requestId]: value
-  }));
-};
-
-// Updated dispatch function with proper API payload
-const handleDispatchSingleMaterial = (request: any) => {
-  const requestId = request._id;
-  const issiedQty = qtyIssued[requestId];
-  const selectedMixDesign = selectedMixDesigns[requestId];
-  const vehicleList = vehicleNumbers[requestId] || [];
-  const batchNo = batchNumbers[requestId];
-
-  // Validation
-  if (!issiedQty || parseFloat(issiedQty) <= 0) {
-    Alert.alert('Error', 'Please enter a valid quantity to issue');
-    return;
-  }
-
-  // if (!selectedMixDesign) {
-  //   Alert.alert('Error', 'Please select a mix design');
-  //   return;
-  // }
-
-  if (vehicleList.length === 0) {
-    Alert.alert('Error', 'Please add at least one vehicle number');
-    return;
-  }
-
-  if (!batchNo) {
-    Alert.alert('Error', 'Please enter batch number');
-    return;
-  }
-
-  // Create API payload
-  const payload = {
-    qty_issued: parseFloat(issiedQty),
-    vehicleDetails: vehicleList.map(vehicle => (vehicle)),
-    batchNo: batchNo,
-    batchSlip: fileUrlData || '', // File path or base64
-    comments_issued: remarks,
-    mixDesign: [{
-      mixDesignName: selectedMixDesign,
-      mixDesignId: selectedMixDesigns?._id || selectedMixDesigns?.id,
-      qty: parseFloat(issiedQty)
-    }]
   };
 
-  console.log('Dispatch Payload:', payload);
+  // --- SUBMIT: Request For Approval -> Pending Approval ---
+  const handleSubmitForApproval = () => {
+    const approvalData = item?.items?.map((req: any) => {
+      const mId = req._id;
+      const totalApprovedQty = qtyApproved[mId]
+        ? Number(qtyApproved[mId])
+        : Number(req.qty_requested);
+      const batchNo = batchNumbers[mId];
+      const rows = mixDesignRows[mId] || [];
 
-  dispatch(
-    patchDispatchRequest({
-      projectId: loggedInUser.projectId,
-      id: route.params?.item?.id,
-      body: payload,
-    })
-  );
-};
+      const totalMixQty = rows.reduce(
+        (sum: number, row: any) => sum + Number(row.qty || 0),
+        0,
+      );
 
+      if (totalMixQty !== totalApprovedQty) {
+        Alert.alert(
+          'Validation Warning',
+          `Total Mix Design Qty (${totalMixQty}) does not match Approved Qty (${totalApprovedQty})`,
+        );
+      }
 
+      const mixDesignPayload = rows
+        .map((row: any) => ({
+          mixDesignId: row.selectedOption?.value,
+          mixDesignName: row.selectedOption?.label,
+          qtyRequest: Number(row.qty),
+          qtyApproved: Number(row.qty),
+        }))
+        .filter((md: any) => md.mixDesignId);
 
+      if (mixDesignPayload.length === 0) {
+        Alert.alert(
+          'Error',
+          `Please select Mix Design for ${req.testMaterialType}`,
+        );
+        throw new Error('Missing Mix Design');
+      }
 
-//File Upload Code
+      return {
+        materialRequestItemId: mId,
+        quantityApproved: totalApprovedQty,
+        mixDesign: mixDesignPayload,
+      };
+    });
+
+    const payload = {
+      status: MATERIAL_REQUEST_STATUS.PENDING_APPROVAL,
+      comments: remarks,
+      approvalData: approvalData,
+    };
+
+    dispatch(
+      patchMaterialRequestStatus({
+        projectId: loggedInUser.projectId,
+        id: item?.id,
+        body: payload,
+      }),
+    );
+  };
+
+  // --- ACTION: Pending Approval -> Pending Dispatch (Accept) ---
+  const handlePendingAccept = () => {
+    const payload = {
+      status: MATERIAL_REQUEST_STATUS.PENDING_DISPATCH,
+      comments: remarks || 'Accepted via App',
+      // We send the existing items data back to confirm current state or simple status update
+      // Based on typical flow, just status and comments are usually enough if data is already saved
+      approvalData: item?.items?.map((req: any) => ({
+        materialRequestItemId: req._id,
+        quantityApproved: req.qty_approved,
+        mixDesign: req.mixDesign, // Pass through existing mix design
+      })),
+    };
+
+    dispatch(
+      patchMaterialRequestStatus({
+        projectId: loggedInUser.projectId,
+        id: item?.id,
+        body: payload,
+      }),
+    );
+  };
+
+  // --- ACTION: Pending Approval -> Rejected ---
+  const handlePendingReject = () => {
+    const payload = {
+      status: MATERIAL_REQUEST_STATUS.REJECTED,
+      comments: remarks,
+    };
+
+    dispatch(
+      patchMaterialRequestStatus({
+        projectId: loggedInUser.projectId,
+        id: item?.id,
+        body: payload,
+      }),
+    );
+  };
+
+  // --- SUBMIT: Pending Dispatch -> Dispatched ---
+  const handleDispatchSubmit = (request: any) => {
+    console.log('Dispatching request:', request);
+    const rId = request._id;
+    const qIssued = qtyIssued[rId];
+    const vList = vehicleNumbers[rId] || [];
+
+    if (!qIssued) {
+      Alert.alert('Error', 'Enter Qty Issued');
+      return;
+    }
+    if (vList.length === 0) {
+      Alert.alert('Error', 'Add at least one vehicle');
+      return;
+    }
+
+    const payload = {
+      qty_issued: Number(qIssued),
+      vehicleDetails: vList,
+      batchSlip: fileUrlData || '',
+      comments_issued: remarks,
+      batchNo: batchNumbers[rId],
+      requestId: request?.materialRequestId,
+    };
+    dispatch(
+      dispatchProductionRequest({
+        projectId: loggedInUser.projectId,
+        itemId: rId,
+        body: payload,
+      }),
+    );
+  };
+
   return (
     <ScrollView style={styles.container} keyboardShouldPersistTaps="handled">
-      {/* <DetailsCard title="Material Request Details" data={detailsData} /> */}
-
       <View style={styles.formContainer}>
         <Text style={styles.sectionTitle}>
-          {status === MATERIAL_REQUEST_STATUS.PENDING_APPROVAL
-            ? 'Approval Details'
-            : 'Dispatch Details'}
+          {isDispatchMode ? 'Dispatch Material' : 'Production Approval'}
         </Text>
 
-        {status === MATERIAL_REQUEST_STATUS.PENDING_APPROVAL && route.params?.item?.items?.length > 0 &&
-          route.params?.item?.items?.map((request: any) => (
-            <View style={styles.formGroup}>
-              <View style={styles.mainContainer}>
-                <View style={styles.columnContainer}>
-                  {request?.testMaterialType && (
-                    <View style={styles.fieldContainer}>
-                      <Text style={styles.fieldLabel}>Material Name</Text>
-                      <Text style={styles.fieldValue}>{request?.testMaterialType}</Text>
-                    </View>
-                  )}
-                  {request?.testWorkCategoryType && (
-                    <View style={styles.fieldContainer}>
-                      <Text style={styles.fieldLabel}>Work Category</Text>
-                      <Text style={styles.fieldValue}>{request?.testWorkCategoryType}</Text>
-                    </View>
-                  )}
-                </View>
-                
-                <View style={styles.columnContainer}>
-                  {request?.name && (
-                    <View style={styles.fieldContainer}>
-                      <Text style={styles.fieldLabel}>Requested By</Text>
-                      <Text style={styles.fieldValue}>{request?.name}</Text>
-                    </View>
-                  )}
-                  {request?.createdAt && (
-                    <View style={styles.fieldContainer}>
-                      <Text style={styles.fieldLabel}>Request Date</Text>
-                      <Text style={styles.fieldValue}>{request?.createdAt}</Text>
-                    </View>
-                  )}
-                </View>
-                {/* ... Approval Section JSX ... */}
-                <View>
-                  <Text style={styles.label}>
-                    Total Qty Approve <Text style={styles.required}>*</Text>
+        {item?.items?.map((request: any, index: number) => {
+          const requestId = request._id;
+          return (
+            <View key={requestId || index} style={styles.itemCard}>
+              {/* Header Info */}
+              <View style={styles.infoRow}>
+                <View style={styles.infoCol}>
+                  <Text style={styles.labelStatic}>Material</Text>
+                  <Text style={styles.valueStatic}>
+                    {request?.testMaterialType}
                   </Text>
-                  <TextInput
-                    style={styles.input}
-                    // 👇 controlled by state
-                    value={approvedQty[request._id] ?? String(request.qty_requested ?? '')}
-                    onChangeText={val => handleQtyChange(request._id, val)}
-                    keyboardType="decimal-pad"
-                    placeholder="Enter total issued quantity"
-                  />
-                  <Text style={styles.helperText}>
-                    Maximum: {request?.qty_requested} {requestData.unit}  (Requested
-                    quantity)
+                </View>
+                <View style={styles.infoCol}>
+                  <Text style={styles.labelStatic}>Category</Text>
+                  <Text style={styles.valueStatic}>
+                    {request?.testWorkCategoryType}
                   </Text>
                 </View>
               </View>
-            </View>
-          ))
-        }
+              <View style={styles.infoRow}>
+                <View style={styles.infoCol}>
+                  <Text style={styles.labelStatic}>Requested Qty</Text>
+                  <Text style={styles.valueStatic}>
+                    {request?.qty_requested} {request?.unit}
+                  </Text>
+                </View>
+                <View style={styles.infoCol}>
+                  <Text style={styles.labelStatic}>Date</Text>
+                  <Text style={styles.valueStatic}>
+                    {new Date(request?.createdAt).toLocaleDateString()}
+                  </Text>
+                </View>
+              </View>
 
-        {status === MATERIAL_REQUEST_STATUS.PENDING_DISPATCH && (
-          <>
-            {route.params?.item?.items?.map((request: any, index: number) => {
-              const requestId = request._id;
-              return (
-                <View key={requestId || index} style={styles.mainContainerDispatch}>
-                  {/* Header Information */}
-                  <View style={styles.columnContainer}>
-                    {request?.testMaterialType && (
-                      <View style={styles.fieldContainer}>
-                        <Text style={styles.fieldLabel}>Material Name</Text>
-                        <Text style={styles.fieldValue}>{request?.testMaterialType}</Text>
-                      </View>
-                    )}
-                    {request?.testWorkCategoryType && (
-                      <View style={styles.fieldContainer}>
-                        <Text style={styles.fieldLabel}>Work Category</Text>
-                        <Text style={styles.fieldValue}>{request?.testWorkCategoryType || 'NA'}</Text>
-                      </View>
-                    )}
-                  </View>
-                  
-                  <View style={styles.columnContainer}>
-                      <View style={styles.fieldContainer}>
-                        <Text style={styles.fieldLabel}>Requested By</Text>
-                        <Text style={styles.fieldValue}>{request?.name || 'NA'}</Text>
-                      </View>
-                      <View style={styles.fieldContainer}>
-                        <Text style={styles.fieldLabel}>Request Date</Text>
-                        <Text style={styles.fieldValue}>{new Date(request?.createdAt).toLocaleDateString()}</Text>
-                      </View>
-                  </View>
+              {/* === MODE 1: READ ONLY (Pending Approval) === */}
+              {isPendingApprovalMode && (
+                <View style={styles.readOnlyContainer}>
+                  <View style={styles.divider} />
+                  <Text style={styles.readOnlyTitle}>Approval Details</Text>
 
-                  <View style={styles.columnContainer}>
-                      <View style={styles.fieldContainer}>
-                        <Text style={styles.fieldLabel}>Material category*</Text>
-                        <Text style={styles.fieldValue}>{request?.materialCategory || request?.testMaterialCategory || 'Aggregate'}</Text>
-                      </View>
-                      <View style={styles.fieldContainer}>
-                        <Text style={styles.fieldLabel}>Unit</Text>
-                        <Text style={styles.fieldValue}>{request?.unit || 'Ton'}</Text>
-                      </View>
-                  </View>
-
-                  <View style={styles.columnContainer}>
-                      <View style={styles.fieldContainer}>
-                        <Text style={styles.fieldLabel}>Qty requested</Text>
-                        <Text style={styles.fieldValue}>{request?.qty_requested || 0}</Text>
-                      </View>
-                      <View style={styles.fieldContainer}>
-                        <Text style={styles.fieldLabel}>Qty Approved</Text>
-                        <Text style={styles.fieldValue}>{request?.qty_approved || request?.qty_requested || 0}</Text>
-                      </View>
-                  </View>
-
-                  {/* Mix Design Details Section */}
-                  <View style={styles.mixDesignSection}>
-                    <Text style={styles.mixDesignTitle}>Mix Design Details</Text>
-                    
-                    <View style={styles.mixDesignRow}>
-                      <View style={styles.mixDesignDropdown}>
-                        <TouchableOpacity
-                          onPress={() => getAvailableSources(request.testMaterialId)}>
-                          <DropdownPicker
-                            label={'Mix Design Details*'}
-                            items={qualityMixDesignListInfo}
-                            value={selectedMixDesigns[requestId] || ''}
-                            onChange={(value: any) => handleMixDesignChange(requestId, value)}
-                            placeholder="Select"
-                          />
-                        </TouchableOpacity>
-                      </View>
-                      
-                      <View style={styles.qtyIssuedContainer}>
-                        <Text style={styles.qtyIssuedLabel}>Qty issued*</Text>
-                        <TextInput
-                          style={styles.qtyIssuedInput}
-                          placeholder="Qty issued*"
-                          keyboardType="decimal-pad"
-                          value={qtyIssued[requestId] || ''}
-                          onChangeText={(value) => handleQtyIssuedChange(requestId, value)}
-                        />
-                      </View>
+                  <View style={styles.infoRow}>
+                    <View style={styles.infoCol}>
+                      <Text style={styles.labelStatic}>Approved Qty</Text>
+                      <Text style={[styles.valueStatic, styles.textBold]}>
+                        {request.qty_approved} {request.unit}
+                      </Text>
+                    </View>
+                    <View style={styles.infoCol}>
+                      <Text style={styles.labelStatic}>Batch Number</Text>
+                      <Text style={[styles.valueStatic, styles.textBold]}>
+                        {request.metaData?.batchNo || 'N/A'}
+                      </Text>
                     </View>
                   </View>
 
-                  {/* Vehicle Details Section */}
-                  <View style={styles.vehicleSection}>
-                    <Text style={styles.vehicleSectionTitle}>Vehicle No (Last 4 digit)</Text>
-                    
-                    <View style={styles.vehicleInputRow}>
-                      <TextInput
-                        style={styles.vehicleInput}
-                        placeholder="Enter last 4 digit"
-                        keyboardType="numeric"
-                        maxLength={4}
-                        value={currentVehicleInput[requestId] || ''}
-                        onChangeText={(value) => setCurrentVehicleInput(prev => ({
-                          ...prev,
-                          [requestId]: value
-                        }))}
-                      />
-                      <TouchableOpacity 
-                        style={styles.addVehicleButton}
-                        onPress={() => handleAddVehicle(requestId)}
-                      >
-                        <Text style={styles.addVehicleButtonText}>+ Add</Text>
-                      </TouchableOpacity>
-                    </View>
-
-                    {/* Added Vehicles Display */}
-                    {vehicleNumbers[requestId]?.length > 0 && (
-                      <View style={styles.addedVehiclesContainer}>
-                        <Text style={styles.addedVehiclesTitle}>Added Vehicles</Text>
-                        <View style={styles.vehicleTagsContainer}>
-                          {vehicleNumbers[requestId].map((vehicle, vehicleIndex) => (
-                            <View key={vehicleIndex} style={styles.vehicleTag}>
-                              <Text style={styles.vehicleTagText}>{vehicle}</Text>
-                              <TouchableOpacity 
-                                style={styles.removeVehicleButton}
-                                onPress={() => handleRemoveVehicle(requestId, vehicle)}
-                              >
-                                <Text style={styles.removeVehicleButtonText}>×</Text>
-                              </TouchableOpacity>
-                            </View>
-                          ))}
-                        </View>
-                      </View>
-                    )}
-                  </View>
-
-                  {/* Batch Details Section */}
-                  <View style={styles.batchSection}>
-                    <View style={styles.batchInputContainer}>
-                      <Text style={styles.batchLabel}>Batch No.</Text>
-                      <TextInput
-                        style={styles.batchInput}
-                        placeholder="Enter batch number"
-                        value={batchNumbers[requestId] || ''}
-                        onChangeText={(value) => handleBatchNumberChange(requestId, value)}
-                      />
-                    </View>
-
-                    <View style={styles.batchSlipContainer}>
-                      <Text style={styles.batchSlipLabel}>Upload Batch Slip</Text>
-                      <TouchableOpacity 
-                        style={styles.batchSlipButton}
-                        onPress={() => handleBatchSlipUpload(requestId)}
-                      >
-                        <Text style={styles.batchSlipIcon}>📄</Text>
-                        <Text style={styles.batchSlipText}>
-                          {batchSlips?.name || 'Select Batch Slip'}
+                  <Text style={[styles.labelStatic, {marginTop: 8}]}>
+                    Mix Design Allocation:
+                  </Text>
+                  {request.mixDesign && request.mixDesign.length > 0 ? (
+                    request.mixDesign.map((mix: any, idx: number) => (
+                      <View key={idx} style={styles.readOnlyRow}>
+                        <Text style={styles.readOnlyValue}>
+                          • {mix.mixDesignName}
                         </Text>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
+                        <Text style={styles.readOnlyValue}>
+                          {mix.qtyApproved} {request.unit}
+                        </Text>
+                      </View>
+                    ))
+                  ) : (
+                    <Text style={styles.valueStatic}>
+                      No Mix Design Assigned
+                    </Text>
+                  )}
+                </View>
+              )}
 
-                  {/* Remarks Section */}
-                  <View style={styles.remarksSection}>
-                    <Text style={styles.remarksLabel}>Remarks</Text>
+              {/* === MODE 2: EDITING (Request For Approval) === */}
+              {isEditApprovalMode && (
+                <View style={styles.actionSection}>
+                  <View style={styles.inputGroup}>
+                    <Text style={styles.inputLabel}>Total Qty Approved *</Text>
                     <TextInput
-                      style={styles.remarksInput}
-                      placeholder="Enter remarks..."
-                      multiline
-                      numberOfLines={3}
-                      value={remarks}
-                      onChangeText={setRemarks}
+                      style={styles.textInput}
+                      value={
+                        qtyApproved[requestId] ?? String(request.qty_requested)
+                      }
+                      onChangeText={val =>
+                        handleQtyApprovedChange(requestId, val)
+                      }
+                      keyboardType="numeric"
                     />
                   </View>
 
-                  {/* Action Buttons */}
-                  <View style={styles.actionButtonsContainer}>
-                    <TouchableOpacity 
-                      style={styles.cancelButton}
-                      onPress={() => navigation.goBack()}
-                    >
-                      <Text style={styles.cancelButtonText}>Cancel</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity 
-                      style={styles.dispatchButton}
-                      onPress={() => handleDispatchSingleMaterial(request)}
-                    >
-                      <Text style={styles.dispatchButtonText}>Dispatch</Text>
+                  <View style={styles.tableContainer}>
+                    <Text style={styles.inputLabel}>
+                      Mix Design Allocation *
+                    </Text>
+
+                    {(mixDesignRows[requestId] || []).map((row, idx) => (
+                      <View key={row.id} style={styles.mixDesignRow}>
+                        <View
+                          style={{flex: 2, marginRight: 8, zIndex: 1000 - idx}}>
+                          <DropdownPicker
+                            items={mixDesignDropdownOptions}
+                            value={row.selectedOption?.value || ''}
+                            onChange={(val: any) =>
+                              updateMixDesignRow(
+                                requestId,
+                                row.id,
+                                'mixDesign',
+                                val,
+                              )
+                            }
+                            placeholder="Select Mix"
+                            containerStyle={{height: 45}}
+                          />
+                        </View>
+                        <View style={{flex: 1}}>
+                          <TextInput
+                            style={styles.textInputSmall}
+                            placeholder="Qty"
+                            keyboardType="numeric"
+                            value={row.qty}
+                            onChangeText={val =>
+                              updateMixDesignRow(requestId, row.id, 'qty', val)
+                            }
+                          />
+                        </View>
+                        <TouchableOpacity
+                          onPress={() => removeMixDesignRow(requestId, row.id)}
+                          style={styles.removeBtn}>
+                          <Text style={styles.removeBtnText}>✕</Text>
+                        </TouchableOpacity>
+                      </View>
+                    ))}
+
+                    <TouchableOpacity
+                      style={styles.addMoreBtn}
+                      onPress={() => addMixDesignRow(requestId)}>
+                      <Text style={styles.addMoreText}>+ Add Mix Design</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
-              );
-            })}
-          </>
-        )}
-        {status === MATERIAL_REQUEST_STATUS.PENDING_APPROVAL && (
-          <>
-          <View style={styles.formGroup}>
-            <Text style={styles.label}>Remarks (Optional)</Text>
+              )}
+
+              {/* === MODE 3: DISPATCH === */}
+              {isDispatchMode && (
+                <View style={styles.actionSection}>
+                  <View style={styles.infoRow}>
+                    <Text style={styles.highlightText}>
+                      Approved: {request.qty_approved} | Batch:{' '}
+                      {request.metaData?.batchNo || 'N/A'}
+                    </Text>
+                  </View>
+
+                  {request.mixDesign && request.mixDesign.length > 0 && (
+                    <View style={styles.mixDisplayContainer}>
+                      {request.mixDesign.map((md: any, i: number) => (
+                        <Text key={i} style={styles.mixDisplayText}>
+                          • {md.mixDesignName}: {md.qtyApproved}
+                        </Text>
+                      ))}
+                    </View>
+                  )}
+
+                  <View style={styles.inputGroup}>
+                    <Text style={styles.inputLabel}>Qty Issued *</Text>
+                    <TextInput
+                      style={styles.textInput}
+                      placeholder="Actual Qty Issued"
+                      value={qtyIssued[requestId] || ''}
+                      onChangeText={val =>
+                        handleQtyIssuedChange(requestId, val)
+                      }
+                      keyboardType="numeric"
+                    />
+                  </View>
+                  <View style={styles.inputGroup}>
+                    <Text style={styles.inputLabel}>Batch No (For Item) *</Text>
+                    <TextInput
+                      style={styles.textInput}
+                      placeholder="Enter Batch Number"
+                      value={batchNumbers[requestId] || ''}
+                      onChangeText={val =>
+                        handleBatchNumberChange(requestId, val)
+                      }
+                    />
+                  </View>
+
+                  <View style={styles.vehicleWrapper}>
+                    <Text style={styles.inputLabel}>
+                      Vehicles (Last 4 Digits)
+                    </Text>
+                    <View style={styles.rowInputBtn}>
+                      <TextInput
+                        style={[styles.textInput, {flex: 1}]}
+                        placeholder="Ex: 8844"
+                        maxLength={4}
+                        keyboardType="numeric"
+                        value={currentVehicleInput[requestId] || ''}
+                        onChangeText={val =>
+                          setCurrentVehicleInput(prev => ({
+                            ...prev,
+                            [requestId]: val,
+                          }))
+                        }
+                      />
+                      <TouchableOpacity
+                        onPress={() => handleAddVehicle(requestId)}
+                        style={styles.btnSmall}>
+                        <Text style={styles.btnSmallText}>Add</Text>
+                      </TouchableOpacity>
+                    </View>
+                    <View style={styles.tagContainer}>
+                      {(vehicleNumbers[requestId] || []).map((v, i) => (
+                        <TouchableOpacity
+                          key={i}
+                          onPress={() => handleRemoveVehicle(requestId, v)}
+                          style={styles.tag}>
+                          <Text style={styles.tagText}>{v} ✕</Text>
+                        </TouchableOpacity>
+                      ))}
+                    </View>
+                  </View>
+
+                  <View style={styles.inputGroup}>
+                    <TouchableOpacity
+                      onPress={() => handleBatchSlipUpload(requestId)}
+                      style={styles.uploadBtn}>
+                      <Text style={styles.uploadBtnText}>
+                        {fileUrlData
+                          ? 'Batch Slip Uploaded ✅'
+                          : '📄 Upload Batch Slip'}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+
+                  <TouchableOpacity
+                    style={styles.dispatchBtnItem}
+                    onPress={() => handleDispatchSubmit(request)}>
+                    <Text style={styles.btnTextWhite}>Dispatch This Item</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+
+              {isDispatchedMode && (
+                <View style={styles.actionSection}>
+                  <View style={styles.infoRow}>
+                    <Text style={styles.highlightText}>
+                      Dispatched Qty: {request.metaData?.qty_issued}
+                    </Text>
+                  </View>
+                  <View style={styles.infoRow}>
+                    <Text style={styles.highlightText}>
+                      Batch No: {request.metaData?.batchNo}
+                    </Text>
+                  </View>
+
+                  {request.metaData?.vehicleDetails &&
+                    request.metaData?.vehicleDetails.length > 0 && (
+                      <View style={styles.vehicleWrapper}>
+                        <Text style={styles.inputLabel}>Vehicles</Text>
+                        <View style={styles.tagContainer}>
+                          {request.metaData?.vehicleDetails.map(
+                            (v: any, i: number) => (
+                              <View key={i} style={styles.tag}>
+                                <Text style={styles.tagText}>{v}</Text>
+                              </View>
+                            ),
+                          )}
+                        </View>
+                      </View>
+                    )}
+                </View>
+              )}
+            </View>
+          );
+        })}
+
+        {/* --- FOOTERS --- */}
+
+        {/* 1. Footer for READ ONLY (Accept/Reject) */}
+        {isPendingApprovalMode && (
+          <View style={styles.footerSection}>
+            <Text style={styles.inputLabel}>Remarks</Text>
             <TextInput
-              style={[styles.input, styles.textArea]}
+              style={[styles.textInput, styles.textArea]}
+              placeholder="Comments (optional)..."
+              multiline
               value={remarks}
               onChangeText={setRemarks}
-              placeholder="Enter any remarks or notes..."
-              multiline
-              maxLength={500}
             />
-            <Text style={styles.helperText}>{remarks.length}/500 characters</Text>
+            <View style={styles.doubleBtnContainer}>
+              <TouchableOpacity
+                style={[styles.halfBtn, styles.rejectBtn]}
+                onPress={handlePendingReject}>
+                <Text style={styles.btnTextWhite}>Reject</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.halfBtn, styles.acceptBtn]}
+                onPress={handlePendingAccept}>
+                <Text style={styles.btnTextWhite}>Accept</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-          
-            <TouchableOpacity style={styles.submitButton} onPress={() => handleSubmit('approve')}>
-              <Text style={styles.submitButtonText}>
-                Approve Material
-              </Text>
+        )}
+
+        {/* 2. Footer for EDITING (Submit) */}
+        {isEditApprovalMode && (
+          <View style={styles.footerSection}>
+            <Text style={styles.inputLabel}>Remarks</Text>
+            <TextInput
+              style={[styles.textInput, styles.textArea]}
+              placeholder="Optional comments..."
+              multiline
+              value={remarks}
+              onChangeText={setRemarks}
+            />
+            <TouchableOpacity
+              style={styles.mainSubmitBtn}
+              onPress={handleSubmitForApproval}>
+              <Text style={styles.btnTextWhite}>Submit For Approval</Text>
             </TouchableOpacity>
-          </>
-        )
-        }
+          </View>
+        )}
       </View>
     </ScrollView>
   );
@@ -653,590 +753,262 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
   },
   formContainer: {
-    backgroundColor: 'white',
-    margin: 16,
-    borderRadius: 12,
-    padding: 20,
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    padding: 16,
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 20,
-    textAlign: 'center',
-    borderBottomWidth: 2,
-    borderBottomColor: '#5A2AAF',
-    paddingBottom: 8,
-  },
-  formGroup: {
-    marginBottom: 10,
-  },
-  label: {
-    fontSize: 14,
-    marginBottom: 8,
-    color: '#333',
-    fontWeight: '600',
-  },
-  required: {
-    color: '#e74c3c',
-  },
-  input: {
-    height: 48,
-    borderWidth: 1.5,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    backgroundColor: 'white',
-    fontSize: 16,
-    color: '#333',
-  },
-  textArea: {
-    height: 80,
-    textAlignVertical: 'top',
-    paddingTop: 12,
-  },
-  helperText: {
-    fontSize: 12,
-    color: '#666',
-    marginTop: 4,
-    fontStyle: 'italic',
-  },
-  submitButton: {
-    height: 52,
-    backgroundColor: '#5A2AAF',
-    borderRadius: 26,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 20,
-    elevation: 3,
-  },
-  submitButtonSingle: {
-    height: 40,
-    backgroundColor: '#5A2AAF',
-    borderRadius: 26,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 0,
-    marginBottom: 10,
-    elevation: 3,
-  },
-  submitButtonTextSingle: {
-    color: 'white',
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  submitButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  sourceTableContainer: {
-    borderColor: '#eee',
-    borderRadius: 8,
-    marginBottom: 5,
-  },
-  tableHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingBottom: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-    paddingHorizontal: 5,
-    paddingVertical: 10,
-  },
-  tableHeaderText: {
-    fontWeight: '600',
-    color: '#333',
-  },
-  tableRow: {
-    flexDirection: 'row',
-    marginTop: 5,
-  },
-  removeButton: {
-    width: 30,
-    height: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: 8,
-  },
-  removeButtonText: {
     fontSize: 20,
-    color: '#e74c3c',
-  },
-  addButton: {
-    marginTop: 15,
-    alignSelf: 'flex-start',
-  },
-  addButtonText: {
-    color: '#5A2AAF',
     fontWeight: 'bold',
-  },
-  totalContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    marginTop: 15,
-    paddingTop: 10,
-    borderTopWidth: 1,
-    borderTopColor: '#eee',
-  },
-  totalLabel: {
-    marginRight: 10,
-    fontWeight: '600',
     color: '#333',
+    marginBottom: 16,
+    textAlign: 'center',
   },
-  totalValue: {
-    fontWeight: 'bold',
-    color: 'green',
-  },
-  errorText: {
-    color: '#e74c3c',
-  },
-  mainContainer: {
-    flexDirection: 'column',
-    gap: 10,
-    padding: 10,
-    marginBottom: 10,
-    backgroundColor: '#ffffff',
-    borderRadius: 6,
+  itemCard: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 16,
+    elevation: 2,
     shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3, // Android shadow
   },
-
-  mainContainerDispatch: {
-    flexDirection: 'column',
-    gap: 10,
-    backgroundColor: '#ffffff',
-  },
-
-  // Left and right column containers
-  columnContainer: {
+  infoRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    gap: 10,
-  },
-
-  // Individual field containers
-  fieldContainer: {
-    flex: 1,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    backgroundColor: '#f8f9fa',
-  },
-
-  // Field labels
-  fieldLabel: {
-    fontSize: 13,
-    fontWeight: '500',
-    color: '#6c757d',
-    textTransform: "capitalize",
-  },
-
-  // Field values
-  fieldValue: {
-    fontSize: 12,
-    fontWeight: '400',
-    color: '#212529',
-  },
-
-  // Alternative: Card style with gradient background
-  cardContainer: {
-    flexDirection: 'row',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    backgroundColor: '#667eea', // Fallback color
-    marginHorizontal: 16,
-    marginVertical: 8,
-    borderRadius: 15,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    elevation: 6,
-  },
-
-  cardFieldContainer: {
-    marginBottom: 16,
-    paddingVertical: 10,
-    paddingHorizontal: 14,
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
-    borderRadius: 10,
-    borderLeftWidth: 3,
-    borderLeftColor: 'rgba(255, 255, 255, 0.5)',
-  },
-
-  cardFieldLabel: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: 'rgba(255, 255, 255, 0.8)',
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-    marginBottom: 4,
-  },
-
-  cardFieldValue: {
-    fontSize: 11,
-    fontWeight: '500',
-    color: '#ffffff',
-    lineHeight: 20,
-  },
-
-  // Alternative: Minimal style
-  minimalContainer: {
-    flexDirection: 'row',
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    backgroundColor: '#ffffff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#e9ecef',
-  },
-
-  minimalColumnContainer: {
-    flex: 1,
-    paddingHorizontal: 12,
-  },
-
-  minimalFieldContainer: {
-    marginBottom: 16,
-    paddingVertical: 4,
-  },
-
-  minimalFieldLabel: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#868e96',
-    marginBottom: 2,
-  },
-
-  minimalFieldValue: {
-    fontSize: 14,
-    fontWeight: '400',
-    color: '#343a40',
-    lineHeight: 22,
-  },
-
-  // Responsive styles (for smaller screens)
-  smallScreenContainer: {
-    flexDirection: 'column',
-    paddingHorizontal: 12,
-    paddingVertical: 12,
-  },
-
-  smallScreenColumn: {
     marginBottom: 12,
   },
-
-  // Loading/skeleton styles
-  skeletonField: {
-    height: 16,
-    backgroundColor: '#e9ecef',
-    borderRadius: 4,
-    marginBottom: 8,
+  infoCol: {
+    flex: 1,
   },
-
-  skeletonLabel: {
-    height: 12,
-    width: '60%',
-    backgroundColor: '#f8f9fa',
-    borderRadius: 3,
+  labelStatic: {
+    fontSize: 12,
+    color: '#888',
     marginBottom: 4,
   },
-
-  // Status-based field styling
-  successField: {
-    borderLeftColor: '#28a745',
-    backgroundColor: '#f8fff9',
+  valueStatic: {
+    fontSize: 14,
+    color: '#333',
+    fontWeight: '500',
   },
-
-  warningField: {
-    borderLeftColor: '#ffc107',
-    backgroundColor: '#fffef7',
+  textBold: {
+    fontWeight: 'bold',
+    color: '#000',
   },
-
-  errorField: {
-    borderLeftColor: '#dc3545',
-    backgroundColor: '#fff8f8',
+  divider: {
+    height: 1,
+    backgroundColor: '#eee',
+    marginVertical: 10,
   },
-
-
-  materialDetailsRow: {
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  backgroundColor: '#f8f9fa',
-  padding: 12,
-  borderRadius: 8,
-  marginBottom: 12,
-},
-materialDetailItem: {
-  flex: 1,
-  marginHorizontal: 4,
-},
-materialDetailLabel: {
-  fontSize: 12,
-  color: '#666',
-  marginBottom: 4,
-  fontWeight: '500',
-},
-materialDetailValue: {
-  fontSize: 14,
-  fontWeight: '600',
-  color: '#333',
-},
-quantityRow: {
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  backgroundColor: '#f8f9fa',
-  padding: 12,
-  borderRadius: 8,
-  marginBottom: 16,
-},
-quantityItem: {
-  flex: 1,
-  alignItems: 'center',
-},
-quantityLabel: {
-  fontSize: 12,
-  color: '#666',
-  marginBottom: 4,
-  fontWeight: '500',
-},
-quantityValue: {
-  fontSize: 16,
-  fontWeight: 'bold',
-  color: '#333',
-},
-mixDesignSection: {
-  marginBottom: 16,
-},
-mixDesignTitle: {
-  fontSize: 16,
-  fontWeight: '600',
-  color: '#333',
-  marginBottom: 12,
-},
-mixDesignRow: {
-  flexDirection: 'row',
-  alignItems: 'flex-start',
-  gap: 12,
-},
-mixDesignDropdown: {
-  flex: 1,
-},
-qtyIssuedContainer: {
-  flex: 1,
-},
-qtyIssuedLabel: {
-  fontSize: 14,
-  color: '#333',
-  marginBottom: 5,
-  fontWeight: '500',
-},
-qtyIssuedInput: {
-  height: 44,
-  borderWidth: 1,
-  borderColor: '#ddd',
-  borderRadius: 8,
-  paddingHorizontal: 12,
-  fontSize: 16,
-  backgroundColor: 'white',
-},
-vehicleSection: {
-  marginBottom: 16,
-},
-vehicleSectionTitle: {
-  fontSize: 16,
-  fontWeight: '600',
-  color: '#333',
-  marginBottom: 12,
-},
-vehicleInputRow: {
-  flexDirection: 'row',
-  alignItems: 'center',
-  gap: 12,
-  marginBottom: 16,
-},
-vehicleInput: {
-  flex: 1,
-  height: 44,
-  borderWidth: 1,
-  borderColor: '#ddd',
-  borderRadius: 8,
-  paddingHorizontal: 12,
-  fontSize: 16,
-  backgroundColor: 'white',
-},
-addVehicleButton: {
-  backgroundColor: '#5A2AAF',
-  paddingHorizontal: 16,
-  paddingVertical: 12,
-  borderRadius: 8,
-  minHeight: 48,
-  justifyContent: 'center',
-},
-addVehicleButtonText: {
-  color: 'white',
-  fontWeight: '600',
-  fontSize: 14,
-},
-addedVehiclesContainer: {
-  marginTop: 8,
-},
-addedVehiclesTitle: {
-  fontSize: 14,
-  color: '#666',
-  marginBottom: 8,
-  fontWeight: '500',
-},
-vehicleTagsContainer: {
-  flexDirection: 'row',
-  flexWrap: 'wrap',
-  gap: 8,
-},
-vehicleTag: {
-  flexDirection: 'row',
-  alignItems: 'center',
-  backgroundColor: '#e9ecef',
-  borderRadius: 20,
-  paddingHorizontal: 12,
-  paddingVertical: 6,
-},
-vehicleTagText: {
-  fontSize: 14,
-  color: '#333',
-  marginRight: 8,
-  fontWeight: '500',
-},
-removeVehicleButton: {
-  width: 20,
-  height: 20,
-  borderRadius: 10,
-  backgroundColor: '#dc3545',
-  justifyContent: 'center',
-  alignItems: 'center',
-},
-removeVehicleButtonText: {
-  color: 'white',
-  fontSize: 12,
-  fontWeight: 'bold',
-  lineHeight: 12,
-},
-batchSection: {
-  marginBottom: 16,
-},
-batchInputContainer: {
-  marginBottom: 16,
-},
-batchLabel: {
-  fontSize: 14,
-  color: '#333',
-  marginBottom: 8,
-  fontWeight: '500',
-},
-batchInput: {
-  height: 44,
-  borderWidth: 1,
-  borderColor: '#ddd',
-  borderRadius: 8,
-  paddingHorizontal: 12,
-  fontSize: 16,
-  backgroundColor: 'white',
-},
-batchSlipContainer: {
-  marginBottom: 7,
-},
-batchSlipLabel: {
-  fontSize: 14,
-  color: '#333',
-  marginBottom: 8,
-  fontWeight: '500',
-},
-batchSlipButton: {
-  flexDirection: 'row',
-  alignItems: 'center',
-  padding: 16,
-  borderWidth: 2,
-  borderColor: '#ddd',
-  borderStyle: 'dashed',
-  borderRadius: 8,
-  backgroundColor: '#f8f9fa',
-  justifyContent: 'center',
-  minHeight: 60,
-},
-batchSlipIcon: {
-  fontSize: 24,
-  marginRight: 8,
-},
-batchSlipText: {
-  fontSize: 16,
-  color: '#666',
-  fontWeight: '500',
-},
-remarksSection: {
-  marginBottom: 20,
-},
-remarksLabel: {
-  fontSize: 14,
-  color: '#333',
-  marginBottom: 8,
-  fontWeight: '500',
-},
-remarksInput: {
-  borderWidth: 1,
-  borderColor: '#ddd',
-  borderRadius: 8,
-  paddingHorizontal: 12,
-  paddingVertical: 12,
-  fontSize: 16,
-  textAlignVertical: 'top',
-  minHeight: 80,
-  backgroundColor: 'white',
-},
-actionButtonsContainer: {
-  flexDirection: 'row',
-  gap: 12,
-  marginTop: 16,
-},
-cancelButton: {
-  flex: 1,
-  height: 48,
-  borderWidth: 1,
-  borderColor: '#ddd',
-  borderRadius: 24,
-  justifyContent: 'center',
-  alignItems: 'center',
-  backgroundColor: 'white',
-},
-cancelButtonText: {
-  fontSize: 16,
-  color: '#666',
-  fontWeight: '600',
-},
-dispatchButton: {
-  flex: 1,
-  height: 48,
-  backgroundColor: '#5A2AAF',
-  borderRadius: 24,
-  justifyContent: 'center',
-  alignItems: 'center',
-},
-dispatchButtonText: {
-  fontSize: 16,
-  color: 'white',
-  fontWeight: 'bold',
-},
+  readOnlyContainer: {
+    backgroundColor: '#FAFAFA',
+    padding: 10,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#eee',
+  },
+  readOnlyTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#555',
+    marginBottom: 10,
+  },
+  readOnlyRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 4,
+    paddingLeft: 8,
+  },
+  readOnlyValue: {
+    fontSize: 13,
+    color: '#333',
+  },
+  highlightText: {
+    fontSize: 13,
+    color: '#5A2AAF',
+    fontWeight: '600',
+    backgroundColor: '#F3E5F5',
+    padding: 6,
+    borderRadius: 4,
+    overflow: 'hidden',
+  },
+  actionSection: {
+    marginTop: 8,
+    borderTopWidth: 1,
+    borderTopColor: '#eee',
+    paddingTop: 12,
+  },
+  inputGroup: {
+    marginBottom: 12,
+  },
+  inputLabel: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#444',
+    marginBottom: 6,
+  },
+  textInput: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 8,
+    padding: 10,
+    fontSize: 14,
+    backgroundColor: '#fafafa',
+    color: '#333',
+  },
+  textInputSmall: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 8,
+    padding: 8,
+    fontSize: 14,
+    backgroundColor: '#fafafa',
+    color: '#333',
+    height: 45,
+  },
+  textArea: {
+    minHeight: 80,
+    textAlignVertical: 'top',
+  },
+  tableContainer: {
+    backgroundColor: '#f9f9f9',
+    padding: 10,
+    borderRadius: 8,
+    marginBottom: 12,
+  },
+  mixDesignRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  removeBtn: {
+    width: 30,
+    height: 45,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 6,
+  },
+  removeBtnText: {
+    fontSize: 18,
+    color: '#ff4444',
+    fontWeight: 'bold',
+  },
+  addMoreBtn: {
+    alignSelf: 'flex-start',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderWidth: 1,
+    borderColor: '#5A2AAF',
+    borderStyle: 'dashed',
+    borderRadius: 6,
+    marginTop: 4,
+  },
+  addMoreText: {
+    color: '#5A2AAF',
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  vehicleWrapper: {
+    marginBottom: 12,
+  },
+  rowInputBtn: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  btnSmall: {
+    backgroundColor: '#5A2AAF',
+    justifyContent: 'center',
+    paddingHorizontal: 16,
+    borderRadius: 8,
+  },
+  btnSmallText: {
+    color: '#fff',
+    fontWeight: '600',
+  },
+  tagContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginTop: 8,
+  },
+  tag: {
+    backgroundColor: '#e0e0e0',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 16,
+  },
+  tagText: {
+    fontSize: 12,
+    color: '#333',
+  },
+  uploadBtn: {
+    borderWidth: 1,
+    borderColor: '#5A2AAF',
+    borderStyle: 'dashed',
+    borderRadius: 8,
+    padding: 12,
+    alignItems: 'center',
+    backgroundColor: '#F3E5F5',
+  },
+  uploadBtnText: {
+    color: '#5A2AAF',
+    fontWeight: '500',
+  },
+  mixDisplayContainer: {
+    marginBottom: 10,
+    paddingLeft: 4,
+  },
+  mixDisplayText: {
+    fontSize: 12,
+    color: '#666',
+    fontStyle: 'italic',
+  },
+  footerSection: {
+    backgroundColor: '#fff',
+    padding: 16,
+    borderRadius: 12,
+    marginTop: 10,
+  },
+  mainSubmitBtn: {
+    backgroundColor: '#5A2AAF',
+    padding: 16,
+    borderRadius: 30,
+    alignItems: 'center',
+    marginTop: 16,
+    elevation: 3,
+  },
+  dispatchBtnItem: {
+    backgroundColor: '#28a745',
+    padding: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  btnTextWhite: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  // Double Button Styles
+  doubleBtnContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 12,
+    marginTop: 16,
+  },
+  halfBtn: {
+    flex: 1,
+    height: 50,
+    borderRadius: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 2,
+  },
+  acceptBtn: {
+    backgroundColor: '#28a745',
+  },
+  rejectBtn: {
+    backgroundColor: '#dc3545',
+  },
 });
 
 export default MaterialApprovalProduction;

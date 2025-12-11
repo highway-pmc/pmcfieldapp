@@ -6,13 +6,15 @@ import {MATERIAL_REQUEST_STATUS} from '../../constants/constants';
 interface RequestCardProps {
   request: {
     id: number;
+    rfiId?: string; // Added optional
     materialType: string;
+    materialCategory?: string; // Added optional
     workCategory: string;
     unit: string;
     requestQty: number;
     status: string;
     statusText: string;
-    items: [],
+    items: [];
   };
   onActionPress: (action: string, status: string, items: any) => void;
 }
@@ -20,6 +22,8 @@ interface RequestCardProps {
 const RequestCard = ({request, onActionPress}: RequestCardProps) => {
   const getCardStyle = (status: string) => {
     switch (status) {
+      case MATERIAL_REQUEST_STATUS.REQUEST_FOR_APPROVAL:
+        return styles.pendingApprovalCard;
       case MATERIAL_REQUEST_STATUS.PENDING_ACCEPTANCE:
         return styles.pendingAcceptanceCard;
       case MATERIAL_REQUEST_STATUS.PENDING_APPROVAL:
@@ -35,6 +39,8 @@ const RequestCard = ({request, onActionPress}: RequestCardProps) => {
 
   const getStatusStyle = (status: string) => {
     switch (status) {
+      case MATERIAL_REQUEST_STATUS.REQUEST_FOR_APPROVAL:
+        return styles.pendingApprovalCard;
       case MATERIAL_REQUEST_STATUS.PENDING_ACCEPTANCE:
         return styles.pendingAcceptanceStatus;
       case MATERIAL_REQUEST_STATUS.PENDING_APPROVAL:
@@ -50,6 +56,7 @@ const RequestCard = ({request, onActionPress}: RequestCardProps) => {
 
   const getLeftBorderColor = (status: string) => {
     switch (status) {
+      case MATERIAL_REQUEST_STATUS.REQUEST_FOR_APPROVAL:
       case MATERIAL_REQUEST_STATUS.PENDING_ACCEPTANCE:
       case MATERIAL_REQUEST_STATUS.PENDING_APPROVAL:
         return '#FF9800'; // Orange for pending states
@@ -84,7 +91,7 @@ const RequestCard = ({request, onActionPress}: RequestCardProps) => {
           <TouchableOpacity
             style={styles.approvalButton}
             onPress={() => onActionPress('request_approval', status, item)}>
-            <Text style={styles.approvalButtonText}>Request for Approval</Text>
+            <Text style={styles.approvalButtonText}>Pending Approval</Text>
           </TouchableOpacity>
         );
       case MATERIAL_REQUEST_STATUS.PENDING_DISPATCH:
@@ -101,6 +108,14 @@ const RequestCard = ({request, onActionPress}: RequestCardProps) => {
             style={styles.newRequestButton}
             onPress={() => onActionPress('create_new', status, item)}>
             <Text style={styles.newRequestButtonText}>Create New Request</Text>
+          </TouchableOpacity>
+        );
+      case MATERIAL_REQUEST_STATUS.REQUEST_FOR_APPROVAL:
+        return (
+          <TouchableOpacity
+            style={styles.approvalButton}
+            onPress={() => onActionPress('request_approval', status, item)}>
+            <Text style={styles.approvalButtonText}>Request for Approval</Text>
           </TouchableOpacity>
         );
       default:
@@ -124,21 +139,32 @@ const RequestCard = ({request, onActionPress}: RequestCardProps) => {
       <View>
         {/* Card content */}
         <View style={styles.cardContent}>
-          <Text style={styles.materialType}>
-            Material Type:{' '}
-            <Text style={styles.materialValue}>{request.materialType}</Text>
-          </Text>
-          <Text style={styles.workCategory}>
+          
+          {/* RFI ID Display */}
+          {request.rfiId ? (
+             <Text style={styles.rowLabel}>
+             RFI ID: <Text style={styles.rowValue}>{request.rfiId}</Text>
+           </Text>
+          ) : null}
+
+          <Text style={styles.rowLabel}>
             Work Category:{' '}
-            <Text style={styles.categoryValue}>{request.workCategory}</Text>
+            <Text style={styles.rowValue}>{request.workCategory}</Text>
           </Text>
-          {/* <Text style={styles.unit}>
-            Unit: <Text style={styles.unitValue}>{request.unit}</Text>
+
+          <Text style={styles.rowLabel}>
+            Material Type:{' '}
+            <Text style={styles.rowValue}>{request.materialType}</Text>
           </Text>
-          <Text style={styles.requestQty}>
-            Request qty:{' '}
-            <Text style={styles.qtyValue}>{request.requestQty}</Text>
-          </Text> */}
+
+          {/* Material Category Display */}
+          {request.materialCategory ? (
+            <Text style={styles.rowLabel}>
+              Material Category:{' '}
+              <Text style={styles.rowValue}>{request.materialCategory}</Text>
+            </Text>
+          ) : null}
+
         </View>
 
         <View style={styles.divider} />
@@ -181,40 +207,15 @@ const styles = StyleSheet.create({
   cardContent: {
     padding: 15,
   },
-  materialType: {
+  // Generic styles for rows to keep it clean
+  rowLabel: {
     fontSize: 14,
     color: '#666',
     marginBottom: 5,
   },
-  materialValue: {
+  rowValue: {
     color: '#000',
     fontWeight: '600',
-  },
-  workCategory: {
-    fontSize: 14,
-    color: '#666',
-    marginBottom: 5,
-  },
-  categoryValue: {
-    color: '#000',
-    fontWeight: '500',
-  },
-  unit: {
-    fontSize: 14,
-    color: '#666',
-    marginBottom: 5,
-  },
-  unitValue: {
-    color: '#000',
-    fontWeight: '500',
-  },
-  requestQty: {
-    fontSize: 14,
-    color: '#666',
-  },
-  qtyValue: {
-    color: '#000',
-    fontWeight: '500',
   },
   divider: {
     height: 1,

@@ -1,4 +1,9 @@
-import {PROCUREMENTS, SOURCE_APPROVALS, VENDOR_FORM, METERIAL_REQUEST} from './QualityWorks/constants';
+import {
+  PROCUREMENTS,
+  SOURCE_APPROVALS,
+  VENDOR_FORM,
+  METERIAL_REQUEST,
+} from './QualityWorks/constants';
 
 export const getUserCategories = () => ({
   type: 'GET_USER_CATEGORY_REQUEST',
@@ -111,38 +116,43 @@ export const clearProjectModulesWorkAssignmentData = () => ({
 export const clearNextLevel = () => ({
   type: 'CLEAR_NEXT_LEVEL',
 });
-
-export const patchDispatchRequest = (payload) => ({
+export const dispatchProductionRequest = payload => ({
+  type: METERIAL_REQUEST.DISPATCH_PRODUCTION_REQUEST,
+  payload,
+});
+export const patchDispatchRequest = payload => ({
   type: METERIAL_REQUEST.PATCH_DISPATCH_REQUEST,
   payload,
 });
 
-export const postUploadBatchSlip = (payload) => ({
+export const postUploadBatchSlip = payload => ({
   type: METERIAL_REQUEST.POST_BATCH_SLIP_REQUEST,
   payload,
 });
 
-export const patchMaterialRequestStatus = (payload) => ({
+export const patchMaterialRequestStatus = payload => ({
   type: METERIAL_REQUEST.PATCH_MATERIAL_REQUEST_STATUS,
   payload,
 });
 
-export const getMaterialRequestTo = (payload) => ({
+export const getMaterialRequestTo = payload => ({
   type: METERIAL_REQUEST.GET_MATERIAL_REQUEST_TO,
   payload,
 });
 
-export const submitMaterialRequest = (payload) => ({
+export const submitMaterialRequest = payload => ({
   type: METERIAL_REQUEST.POST_SUBMIT_MATERIAL_REQUEST,
   payload,
 });
-
+export const clearMaterialRequest = () => ({
+  type: METERIAL_REQUEST.CLEAR_SUBMIT_MATERIAL_FORM_REQUEST,
+});
 export const getMaterialRequest = payload => ({
   type: METERIAL_REQUEST.GET_MATERIAL_REQUEST,
   payload,
 });
 
-/*VENDOR FORM*/ 
+/*VENDOR FORM*/
 export const postVendorForm = payload => ({
   type: VENDOR_FORM.POST_VENDOR_FORM_REQUEST,
   payload: payload,

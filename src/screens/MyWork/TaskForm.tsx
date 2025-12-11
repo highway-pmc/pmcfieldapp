@@ -43,7 +43,7 @@ const TaskForm = ({route, navigation, taskData}: any) => {
   const taskInfo = taskFromRoute || taskData || {};
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
-  //console.log('Task Info in TaskForm:', taskInfo);
+  console.log('Task Info in TaskForm:', taskInfo);
   // --- SECTION-WISE CENTRALIZED STATE ---
   const [projectInfoData, setProjectInfoData] = useState<Record<string, any>>(
     {},
@@ -104,8 +104,8 @@ const TaskForm = ({route, navigation, taskData}: any) => {
   }, [prepareMaterialConsumption]);
   const PROJECT_ID = taskInfo.projectId;
   const RFI_ID = taskInfo._id;
-  const CHECKLIST_NAME = taskInfo.taskId.name; //TODO rfi id is wrong as it is not coming from taskInfo
-
+  const CHECKLIST_NAME = taskInfo.taskId.name;
+  //const CHECKLIST_NAME = 'torquing';
   const [activeTab, setActiveTab] = useState(TABS.INFORMATION);
   const [isSaving, setIsSaving] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);

@@ -6,6 +6,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
 import {MATERIAL_REQUEST_STATUS} from '../../constants/constants';
@@ -51,7 +52,7 @@ const ProductionRequest = () => {
   const {
     getMeterialRequestToFormData,
     patchMeterialRequestStatusData,
-    loading: any,
+    loading,
     error,
   } = useSelector((state: any) => state.MeterialRequest);
   const [inventoryRequests, setInventoryRequests] = useState<any[]>([]);
@@ -83,6 +84,7 @@ const ProductionRequest = () => {
   }, [isFocused]);
 
   useEffect(() => {
+    setInventoryRequests([]);
     if (getMeterialRequestToFormData?.length) {
       // Logic from RequestPage.tsx to handle aggregate status
       const mapped = getMeterialRequestToFormData.flatMap((entry: any) =>
@@ -162,6 +164,7 @@ const ProductionRequest = () => {
         case MATERIAL_REQUEST_STATUS.REQUEST_FOR_APPROVAL:
         case MATERIAL_REQUEST_STATUS.PENDING_APPROVAL:
         case MATERIAL_REQUEST_STATUS.PENDING_DISPATCH:
+        case 'dispatched':
           // Navigate to Detail/Action Form
           console.log(
             'Navigating to MaterialApprovalProduction',
@@ -218,7 +221,9 @@ const ProductionRequest = () => {
             </View>
 
             <View style={styles.listContainer}>
-              {inventoryRequests.length > 0 ? (
+              {loading && inventoryRequests.length === 0 ? (
+                <ActivityIndicator size="large" color="#4E36A3" />
+              ) : inventoryRequests.length > 0 ? (
                 inventoryRequests.map((request, index) => (
                   <RequestCard
                     key={`${request.id}-${index}`}

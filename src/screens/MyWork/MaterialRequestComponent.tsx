@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {
+  clearMaterialRequest,
   getMaterialRequest,
   submitMaterialRequest,
 } from '../ManageUsers/actions';
@@ -63,7 +64,8 @@ const MaterialRequestComponent = ({route, navigation}: any) => {
   }, [postMeterialRequestFormData, error]);
 
   useEffect(() => {
-    if (taskId) {
+    if (isFocused && taskId) {
+      dispatch(clearMaterialRequest());
       dispatch(
         getMaterialRequest({
           projectId: loggedInUser?.projectId,
@@ -71,7 +73,7 @@ const MaterialRequestComponent = ({route, navigation}: any) => {
         }),
       );
     }
-  }, []);
+  }, [isFocused, taskId]);
 
   useEffect(() => {
     if (getMeterialRequestFormData?.requestGroups?.length) {

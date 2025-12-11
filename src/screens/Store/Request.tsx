@@ -7,7 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useIsFocused} from '@react-navigation/native';
 import {
   MATERIAL_REQUEST_STATUS,
   REQUEST_TYPES,
@@ -73,6 +73,8 @@ const RequestPage = () => {
       ? inventoryRequests
       : contingencyRequests;
 
+  const isFocused = useIsFocused();
+
   useEffect(() => {
     return () => {
       dispatch(clearMaterialRequest());
@@ -80,8 +82,10 @@ const RequestPage = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (patchMeterialRequestStatusData) {
-      showSnackbar('Meterial status updated successfully', 'success');
+    if (isFocused) {
+      setInventoryRequests([]);
+      setContingencyRequests([]);
+      dispatch(clearMaterialRequest());
       dispatch(
         getMaterialRequestTo({
           projectId: loggedInUser.projectId,
@@ -92,26 +96,16 @@ const RequestPage = () => {
               : REQUEST_TYPES.CONTINGENCY_REQUEST,
         }),
       );
-      setTimeout(() => {
-        dispatch(clearMaterialRequest());
-      }, 1000);
+    }
+  }, [selectedTab, isFocused, dispatch, loggedInUser.projectId]);
+
+  useEffect(() => {
+    if (patchMeterialRequestStatusData) {
+      showSnackbar('Material status updated successfully', 'success');
     } else if (error) {
       showSnackbar(error, 'error');
     }
   }, [patchMeterialRequestStatusData, error]);
-
-  useEffect(() => {
-    dispatch(
-      getMaterialRequestTo({
-        projectId: loggedInUser.projectId,
-        type: 'procurement-details',
-        requestType:
-          selectedTab === REQUEST_TYPES.INVENTORY_REQUEST
-            ? REQUEST_TYPES.INVENTORY_REQUEST
-            : REQUEST_TYPES.CONTINGENCY_REQUEST,
-      }),
-    );
-  }, [selectedTab, dispatch, loggedInUser.projectId]); // Added dependencies
 
   useEffect(() => {
     if (getMeterialRequestToFormData?.length) {

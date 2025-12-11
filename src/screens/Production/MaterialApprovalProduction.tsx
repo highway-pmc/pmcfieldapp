@@ -9,6 +9,7 @@ import {
   ScrollView,
   Alert,
   NativeEventEmitter,
+  ActivityIndicator,
 } from 'react-native';
 import {HeaderItems, MATERIAL_REQUEST_STATUS} from '../../constants/constants';
 import DropdownPicker from '../../components/UI/DropdownPicker';
@@ -26,6 +27,14 @@ import appConfig from '../../common/app.config';
 
 const MaterialApprovalProduction = ({route, navigation}: any) => {
   const {status, item} = route.params || {};
+
+  if (!item) {
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <ActivityIndicator size="large" color="#4E36A3" />
+      </View>
+    );
+  }
 
   // Local State
   const [qtyApproved, setQtyApproved] = useState<{[key: string]: string}>({});
@@ -74,6 +83,8 @@ const MaterialApprovalProduction = ({route, navigation}: any) => {
   // 3. Dispatch Mode: User enters vehicle details (Status: pending_dispatch)
   const isDispatchMode = status === MATERIAL_REQUEST_STATUS.PENDING_DISPATCH;
 
+  const isDispatchedMode = status === 'dispatched';
+
   const mixDesignDropdownOptions = useMemo(() => {
     if (!qualityMixDesignListInfo || !Array.isArray(qualityMixDesignListInfo)) {
       return [];
@@ -84,6 +95,12 @@ const MaterialApprovalProduction = ({route, navigation}: any) => {
       originalData: item,
     }));
   }, [qualityMixDesignListInfo]);
+
+  useEffect(() => {
+    return () => {
+      dispatch(clearMaterialRequest());
+    };
+  }, []);
 
   useEffect(() => {
     if (patchMeterialRequestStatusData) {
@@ -118,7 +135,18 @@ const MaterialApprovalProduction = ({route, navigation}: any) => {
 
   // Load Data for Editing Mode
   useEffect(() => {
-    if (isEditApprovalMode && item?.items?.length > 0) {
+    if (isFocused && isEditApprovalMode && item?.items?.length > 0) {
+      // Clear all local states
+      setQtyApproved({});
+      setQtyIssued({});
+      setRemarks('');
+      setMixDesignRows({});
+      setVehicleNumbers({});
+      setCurrentVehicleInput({});
+      setBatchSlips(null);
+      setfileUrlData('');
+      setBatchNumbers({});
+
       const firstItem = item.items[0];
       dispatch(
         getMixDesignListInfo({
@@ -137,7 +165,7 @@ const MaterialApprovalProduction = ({route, navigation}: any) => {
       });
       setMixDesignRows(initialRows);
     }
-  }, [isEditApprovalMode, item, dispatch, loggedInUser.projectId]);
+  }, [isFocused, isEditApprovalMode, item, dispatch, loggedInUser.projectId]);
 
   // --- Handlers ---
 
@@ -631,6 +659,37 @@ const MaterialApprovalProduction = ({route, navigation}: any) => {
                     onPress={() => handleDispatchSubmit(request)}>
                     <Text style={styles.btnTextWhite}>Dispatch This Item</Text>
                   </TouchableOpacity>
+                </View>
+              )}
+
+              {isDispatchedMode && (
+                <View style={styles.actionSection}>
+                  <View style={styles.infoRow}>
+                    <Text style={styles.highlightText}>
+                      Dispatched Qty: {request.metaData?.qty_issued}
+                    </Text>
+                  </View>
+                  <View style={styles.infoRow}>
+                    <Text style={styles.highlightText}>
+                      Batch No: {request.metaData?.batchNo}
+                    </Text>
+                  </View>
+
+                  {request.metaData?.vehicleDetails &&
+                    request.metaData?.vehicleDetails.length > 0 && (
+                      <View style={styles.vehicleWrapper}>
+                        <Text style={styles.inputLabel}>Vehicles</Text>
+                        <View style={styles.tagContainer}>
+                          {request.metaData?.vehicleDetails.map(
+                            (v: any, i: number) => (
+                              <View key={i} style={styles.tag}>
+                                <Text style={styles.tagText}>{v}</Text>
+                              </View>
+                            ),
+                          )}
+                        </View>
+                      </View>
+                    )}
                 </View>
               )}
             </View>

@@ -61,6 +61,7 @@ const RFIsGenerateMyQuality = ({ route, navigation }: { route: any, navigation: 
     };
   
     const handleTestTypeSelect = (selectedOption: any) => {
+      console.log('==========', selectedOption)
       setSelectedTestTypeData(selectedOption);
       setSelectedSubTestTypeData({});
     };
@@ -143,10 +144,11 @@ const RFIsGenerateMyQuality = ({ route, navigation }: { route: any, navigation: 
                 onSelect={(selectedOption: any) => handleTestTypeSelect(selectedOption)} />
               }
 
-              {selectedTestTypeData.subTestTypes?.length &&
+              {selectedTestTypeData.subTestTypes && selectedTestTypeData.subTestTypes.length > 0 &&
                 <CustomSelectDropdown label='Sub Test Type'
-                data={selectedTestTypeData?.subTestTypes}
+                data={selectedTestTypeData.subTestTypes}
                 selectedValue={selectedSubTestTypeData}
+                valueField='testCategory'
                 onSelect={(selectedOption: any) => handleSubTestTypeSelect(selectedOption)} /> 
               }
 

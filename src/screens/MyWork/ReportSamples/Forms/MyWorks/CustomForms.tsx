@@ -18965,33 +18965,42 @@ export const CustomForms = (_v: any, workType: any, taskCategory: any) => {
             <View style={styles.cardFooter}>
               {item.rfiStatus === RFI_STATUS.GENERATED ? (
                 <View style={styles.taskButtonContainer}>
-                  <TouchableOpacity
-                    style={[styles.materialReqstBtn]}
-                    onPress={() => {
-                      console.log('Task Information', item);
-                      navigation.navigate('MaterialRequestComponent', {
-                        taskId: item.taskId._id,
-                      });
-                    }}>
-                    <Text style={[styles.CtaStartText, styles.CtaRequestTextColor]}>
-                      Material Request
-                    </Text>
-                  </TouchableOpacity> 
-                  <TouchableOpacity
-                    style={[styles.MyWorkCta, styles.StartBorder]}
-                    onPress={() => {
-                      console.log('Task Information', item);
-                      navigation.navigate('TaskForm', {taskData: item});
-                      //_event.getRFIDataByWorkAssignmentId(item);
-                    }}>
-                    <Image
-                      style={styles.WorkIcon}
-                      source={require('../../../../../images/play-icon.png')}
-                    />
-                    <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>
-                      Start
-                    </Text>
-                  </TouchableOpacity>
+                  {
+                    shouldRenderMaterialRequestButton(item) ? (
+                      <TouchableOpacity
+                      style={[styles.materialReqstBtn]}
+                      onPress={() => {
+                        console.log('Task Information', item);
+                        navigation.navigate('MaterialRequestComponent', {
+                          taskId: item.taskId._id,
+                        });
+                      }}>
+                      <Text style={[styles.CtaStartText, styles.CtaRequestTextColor]}>
+                        Material Request
+                      </Text>
+                    </TouchableOpacity>
+                    ) : null
+                  }
+                  {
+                    shouldRenderStartButton(item) ? (
+                      <TouchableOpacity
+                        style={[styles.MyWorkCta, styles.StartBorder]}
+                        onPress={() => {
+                          console.log('Task Information', item);
+                          navigation.navigate('TaskForm', {taskData: item});
+                          //_event.getRFIDataByWorkAssignmentId(item);
+                        }}>
+                        <Image
+                          style={styles.WorkIcon}
+                          source={require('../../../../../images/play-icon.png')}
+                        />
+                        <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>
+                          Start
+                        </Text>
+                      </TouchableOpacity>
+                    ) : null
+                  }
+                  
                 </View>
               ) : null}
 

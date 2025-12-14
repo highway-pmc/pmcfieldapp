@@ -40,10 +40,10 @@ const InformationTab = forwardRef<DynamicFormRef, InformationTabProps>(
     // Use useImperativeHandle to expose the combined logic to the outside world (TaskForm)
     useEffect(() => {
       if (materialConsumptionSection) {
-        console.log(
-          'Material Consumption Section:',
-          JSON.stringify(materialConsumptionSection),
-        );
+        // console.log(
+        //   'Material Consumption Section:',
+        //   JSON.stringify(materialConsumptionSection),
+        // );
       }
     });
     useImperativeHandle(ref, () => ({

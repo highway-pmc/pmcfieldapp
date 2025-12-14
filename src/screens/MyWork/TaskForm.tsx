@@ -51,6 +51,10 @@ const TaskForm = ({route, navigation, taskData, isReadOnlyRFI}: any) => {
     if (taskInfo) {
       console.log('Task Info in TaskForm:', JSON.stringify(taskInfo));
       console.log('Is ReadOnly in TaskForm:', isReadOnlyFromRoute);
+      console.log(
+        'RFI ID in TaskForm:',
+        taskInfo.rfiData?.rfiStatus ?? taskInfo.rfiStatus,
+      );
     }
   }, [taskInfo]);
 
@@ -69,7 +73,7 @@ const TaskForm = ({route, navigation, taskData, isReadOnlyRFI}: any) => {
   );
   const PROJECT_ID = taskInfo.projectId;
   const RFI_ID = taskInfo.rfiData?._id ?? taskInfo._id;
-  const status = taskInfo.rfiData?.status ?? taskInfo.status;
+  const status = taskInfo.rfiData?.rfiStatus ?? taskInfo.rfiStatus;
   const CHECKLIST_NAME = taskInfo.taskId.name;
   const stateSetters = {
     projectInfoSection: setProjectInfoData,
@@ -157,7 +161,7 @@ const TaskForm = ({route, navigation, taskData, isReadOnlyRFI}: any) => {
   useEffect(() => {
     if (inspectionChecklist && inspectionChecklist.savedData) {
       const savedData = inspectionChecklist.savedData;
-      console.log('Saved Data:', savedData);
+      //console.log('Saved Data:', savedData);
       setProjectInfoData(savedData.projectInfoSection || {});
       setMaterialConsumptionData(savedData.materialConsumptionSection || {});
       setInspectionChecklistData(savedData.inspectionChecklistSection || {});
@@ -327,8 +331,8 @@ const TaskForm = ({route, navigation, taskData, isReadOnlyRFI}: any) => {
     // }
 
     setIsSaving(true);
-    console.log('Saving form data:', allInputs);
-    console.log('With projectId:', PROJECT_ID, 'and rfiId:', RFI_ID);
+    //console.log('Saving form data:', allInputs);
+    //console.log('With projectId:', PROJECT_ID, 'and rfiId:', RFI_ID);
     let body = {
       formData: allInputs,
       action: 'save',

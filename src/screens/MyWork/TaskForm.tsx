@@ -7,7 +7,6 @@ import {
   SafeAreaView,
   NativeEventEmitter,
   ActivityIndicator,
-  Alert,
 } from 'react-native';
 import React, {useEffect, useState, useRef, useMemo} from 'react';
 import {useIsFocused} from '@react-navigation/native';
@@ -25,6 +24,7 @@ import TaskDetailsTab from './MyWorkDynamicFrom/TaskDetailsTab';
 import {DynamicFormRef} from '../../components/Form/DynamicForm';
 import {validateChainageIntervals} from '../../components/Form/utils/formValidation';
 import TaskDetailsTabPreTensioningOfWires from '../../components/Form/MyWorkTaskDetails/TaskDetailsTabPreTensioningOfWires';
+import {useSnackbar} from '../../context/SnackbarContext';
 
 interface FormData {
   mainTitle: string;
@@ -38,12 +38,18 @@ const TABS = {
 };
 
 const TaskForm = ({route, navigation, taskData}: any) => {
+  const {showSnackbar} = useSnackbar();
   const taskFromRoute =
     route && route.params ? route.params.taskData : undefined;
   const taskInfo = taskFromRoute || taskData || {};
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
-  console.log('Task Info in TaskForm:', taskInfo);
+  useEffect(() => {
+    if (taskInfo) {
+      console.log('Task Info in TaskForm:', JSON.stringify(taskInfo));
+    }
+  }, [taskInfo]);
+
   // --- SECTION-WISE CENTRALIZED STATE ---
   const [projectInfoData, setProjectInfoData] = useState<Record<string, any>>(
     {},
@@ -103,7 +109,7 @@ const TaskForm = ({route, navigation, taskData}: any) => {
     return prepareMaterialConsumption;
   }, [prepareMaterialConsumption]);
   const PROJECT_ID = taskInfo.projectId;
-  const RFI_ID = taskInfo._id;
+  const RFI_ID = taskInfo.rfiData._id;
   const CHECKLIST_NAME = taskInfo.taskId.name;
   //const CHECKLIST_NAME = 'torquing';
   const [activeTab, setActiveTab] = useState(TABS.INFORMATION);
@@ -152,16 +158,18 @@ const TaskForm = ({route, navigation, taskData}: any) => {
   // 3. Handle Save Success/Failure
   useEffect(() => {
     if (rfiFormDataSaveResponse) {
+      const wasSubmitting = isSubmitting;
       // SUCCESS
       setIsSaving(false);
-      Alert.alert(
-        'Success',
-        rfiFormDataSaveResponse.message ||
-          'Form data has been saved successfully.',
-      );
+      setIsSubmitting(false);
 
-      //RECALL API TO RE-FETCH THE LATEST DATA
-      fetchChecklist();
+      const message = wasSubmitting
+        ? 'Form data has been submitted.'
+        : rfiFormDataSaveResponse.message ||
+          'Form data has been saved successfully.';
+
+      showSnackbar(message, 'success');
+      navigation.goBack();
 
       // Clear the response data
       dispatch(saveRfiFormDataClear());
@@ -169,15 +177,23 @@ const TaskForm = ({route, navigation, taskData}: any) => {
       // FAILURE (using the dedicated saveError field)
       console.error('Save Error:', saveError);
       setIsSaving(false);
-      Alert.alert(
-        'Save Failed',
+      setIsSubmitting(false);
+      showSnackbar(
         saveError.message ||
           'The form data could not be saved. Please try again.',
+        'error',
       );
       // Clear the error data (though the reducer should handle this on next request)
       dispatch(saveRfiFormDataClear());
     }
-  }, [rfiFormDataSaveResponse, saveError, dispatch]);
+  }, [
+    rfiFormDataSaveResponse,
+    saveError,
+    dispatch,
+    navigation,
+    isSubmitting,
+    showSnackbar,
+  ]);
 
   const switchTab = (tabName: string) => {
     setActiveTab(tabName);
@@ -280,11 +296,15 @@ const TaskForm = ({route, navigation, taskData}: any) => {
     setIsSaving(true);
     console.log('Saving form data:', allInputs);
     console.log('With projectId:', PROJECT_ID, 'and rfiId:', RFI_ID);
+    let body = {
+      formData: allInputs,
+      action: 'save',
+    };
     dispatch(
       saveRfiFormData({
         projectId: PROJECT_ID,
         rfiId: RFI_ID,
-        formData: allInputs,
+        body: body,
       }),
     );
   };
@@ -293,23 +313,31 @@ const TaskForm = ({route, navigation, taskData}: any) => {
     if (isSaving || isSubmitting || loading || error) return;
     const {allInputs, hasError, allErrors} = getFormDataFromTabs();
 
-    if (hasError) {
-      const errorMessages = Object.values(allErrors).filter(
-        (message, index, self) => message && self.indexOf(message) === index,
-      );
-      const formattedErrorList = errorMessages.join('\n\n');
+    // if (hasError) {
+    //   const errorMessages = Object.values(allErrors).filter(
+    //     (message, index, self) => message && self.indexOf(message) === index,
+    //   );
+    //   const formattedErrorList = errorMessages.join('\n\n');
 
-      Alert.alert(
-        'Validation Warning',
-        formattedErrorList || 'One or more fields have errors.',
-      );
-      return;
-    }
+    //   Alert.alert(
+    //     'Validation Warning',
+    //     formattedErrorList || 'One or more fields have errors.',
+    //   );
+    //   return;
+    // }
 
     setIsSubmitting(true);
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setIsSubmitting(false);
-    Alert.alert('Success', 'Form data has been submitted.');
+    let body = {
+      formData: allInputs,
+      action: 'submit',
+    };
+    dispatch(
+      saveRfiFormData({
+        projectId: PROJECT_ID,
+        rfiId: RFI_ID,
+        body: body,
+      }),
+    );
   };
 
   const renderTabContent = () => {

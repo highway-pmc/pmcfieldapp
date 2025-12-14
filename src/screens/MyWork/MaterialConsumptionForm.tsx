@@ -19,15 +19,6 @@ import {
 } from '../ManageUsers/actions';
 import {getMixDesignListInfo} from '../RFIs/actions';
 
-// Static fallback data (used if API calls fail or return empty)
-const STATIC_SOURCES: any[] = [
-  {
-    id: '60d5f1b3f7b3e3001f1f1f1f',
-    name: 'Source A - Local Quarry',
-    sourceApprovalId: 'static-1',
-  },
-];
-
 // Helper to safely get nested data
 const getNestedData = (
   data: any,
@@ -118,6 +109,7 @@ const MaterialConsumptionForm = ({
   // Fetch Source data for a specific testMaterialId
   const fetchSourceOptionsForMaterial = useCallback(
     (testMaterialId: any) => {
+      console.log('Fetching sources for Material ID:', testMaterialId);
       dispatch(
         getSourceApprovals({
           projectId: loggedInUser.projectId,
@@ -286,7 +278,7 @@ const MaterialConsumptionForm = ({
 
   // Get source options for a specific testMaterialId
   const getSourceOptionsForMaterial = (testMaterialId: any): any[] => {
-    return sourceOptionsByMaterial[testMaterialId] || STATIC_SOURCES;
+    return sourceOptionsByMaterial[testMaterialId];
   };
 
   /**
@@ -311,6 +303,9 @@ const MaterialConsumptionForm = ({
       .filter((id: any) => id !== null && id !== undefined);
 
     const sourceOptions = getSourceOptionsForMaterial(testMaterialId);
+    if (!sourceOptions) {
+      return [];
+    }
     return sourceOptions.filter((option: any) => {
       const optionId = option.id || option._id || option.sourceApprovalId;
       // Exclude sources whose ID is already present in another entry in this category.
@@ -339,7 +334,7 @@ const MaterialConsumptionForm = ({
       .filter((id: any) => id !== null && id !== undefined);
 
     // Assuming mixDesignOptions are comprehensive
-    return mixDesignOptions.filter((option: any) => {
+    return (mixDesignOptions || []).filter((option: any) => {
       const optionId = option.id || option._id || option.mixDesignId;
       // Exclude mix designs whose ID is already present in another entry in this category.
       return !selectedMixDesignIds.includes(optionId);

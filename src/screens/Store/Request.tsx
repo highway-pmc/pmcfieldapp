@@ -195,6 +195,7 @@ const RequestPage = () => {
         case MATERIAL_REQUEST_STATUS.PENDING_APPROVAL:
         case MATERIAL_REQUEST_STATUS.REQUEST_FOR_APPROVAL:
         case MATERIAL_REQUEST_STATUS.PENDING_DISPATCH:
+        case 'dispatched':
           navigation.navigate('MaterialApprovalForm', {status, item});
           break;
         case MATERIAL_REQUEST_STATUS.REJECTED:

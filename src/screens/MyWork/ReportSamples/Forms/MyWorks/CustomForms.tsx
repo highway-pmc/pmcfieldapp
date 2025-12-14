@@ -19021,20 +19021,38 @@ export const CustomForms = (_v: any, workType: any, taskCategory: any) => {
           ) : null}
 
           {item.rfiStatus === RFI_STATUS.IN_PROGRESS ? (
-            <TouchableOpacity
-              style={[styles.MyWorkCta, styles.StartInProgressBorder]}
-              onPress={() => {
-                _event.getRFIDataByWorkAssignmentId(item);
-              }}>
-              <Image
-                style={styles.WorkIcon}
-                source={require('../../../../../images/inprogress.png')}
-              />
-              <Text
-                style={[styles.CtaStartText, styles.CtaInProgressTextColor]}>
-                In Progress
-              </Text>
-            </TouchableOpacity>
+            // <TouchableOpacity
+            //   style={[styles.MyWorkCta, styles.StartInProgressBorder]}
+            //   onPress={() => {
+            //     _event.getRFIDataByWorkAssignmentId(item);
+            //   }}>
+            //   <Image
+            //     style={styles.WorkIcon}
+            //     source={require('../../../../../images/inprogress.png')}
+            //   />
+            //   <Text
+            //     style={[styles.CtaStartText, styles.CtaInProgressTextColor]}>
+            //     In Progress
+            //   </Text>
+            // </TouchableOpacity>
+            <View>
+              <TouchableOpacity
+                style={[styles.MyWorkCta, styles.StartInProgressBorder]}
+                onPress={() => {
+                  console.log('Task Information', item);
+                  navigation.navigate('TaskForm', {taskData: item});
+                  //_event.getRFIDataByWorkAssignmentId(item);
+                }}>
+                <Image
+                  style={styles.WorkIcon}
+                  source={require('../../../../../images/inprogress.png')}
+                />
+                <Text
+                  style={[styles.CtaStartText, styles.CtaInProgressTextColor]}>
+                  In Progress
+                </Text>
+              </TouchableOpacity>
+            </View>
           ) : null}
 
           {item.rfiStatus === RFI_STATUS.IN_REVIEW ? (

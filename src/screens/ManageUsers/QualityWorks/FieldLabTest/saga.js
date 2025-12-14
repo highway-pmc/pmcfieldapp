@@ -44,7 +44,7 @@ function* saveRfiFormDataWorker({payload}) {
     const response = yield saveRfiFormDataApi(
       payload.projectId,
       payload.rfiId,
-      payload.formData,
+      payload.body,
     );
     yield put({type: 'SAVE_RFI_FORM_DATA_SUCCESS', response});
   } catch (error) {

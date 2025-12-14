@@ -1,5 +1,5 @@
 import {View, StyleSheet, ScrollView, Text} from 'react-native';
-import React, {forwardRef, useRef, useImperativeHandle} from 'react';
+import React, {forwardRef, useRef, useImperativeHandle, useEffect} from 'react';
 import DynamicForm, {
   DynamicFormRef,
 } from '../../../components/Form/DynamicForm';
@@ -38,6 +38,14 @@ const InformationTab = forwardRef<DynamicFormRef, InformationTabProps>(
     const projectInfoRef = useRef<DynamicFormRef>(null);
     const materialConsumptionRef = useRef<DynamicFormRef>(null);
     // Use useImperativeHandle to expose the combined logic to the outside world (TaskForm)
+    useEffect(() => {
+      if (materialConsumptionSection) {
+        console.log(
+          'Material Consumption Section:',
+          JSON.stringify(materialConsumptionSection),
+        );
+      }
+    });
     useImperativeHandle(ref, () => ({
       collectAllInputs: () => {
         let combinedInputErrors: Record<string, string> = {};
@@ -88,7 +96,7 @@ const InformationTab = forwardRef<DynamicFormRef, InformationTabProps>(
         )}
 
         {/* Render Material Consumption Section, passing state and setter */}
-        {materialConsumptionSection && !isMaterialRequested ? (
+        {materialConsumptionSection && isMaterialRequested ? (
           <DynamicForm
             ref={materialConsumptionRef}
             formData={materialConsumptionSection}

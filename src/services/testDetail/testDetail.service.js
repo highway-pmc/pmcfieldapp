@@ -25,10 +25,11 @@ export const getInspectionChecklistApi = async (
   projectId,
   checklistName,
   rfiId,
+  readOnly,
 ) => {
   return apiService
     .getRequest(
-      `v1/auth/projects/${projectId}/my-work-task-form/inspection-checklist?name=${checklistName}&rfiId=${rfiId}`,
+      `v1/auth/projects/${projectId}/my-work-task-form/inspection-checklist?name=${checklistName}&rfiId=${rfiId}&readOnly=${readOnly}`,
     )
     .then(response => {
       return response;
@@ -40,11 +41,11 @@ export const getInspectionChecklistApi = async (
     });
 };
 
-export const saveRfiFormDataApi = async (projectId, rfiId, formData) => {
+export const saveRfiFormDataApi = async (projectId, rfiId, body) => {
   return apiService
     .postRequest(
       `v1/auth/projects/${projectId}/my-work-task-form/${rfiId}/save-data`,
-      formData,
+      body,
     )
     .then(response => {
       return response;

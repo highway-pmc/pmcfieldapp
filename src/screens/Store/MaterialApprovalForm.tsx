@@ -21,7 +21,7 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 import {useSnackbar} from '../../context/SnackbarContext';
 
-const formatDateTime = isoString => {
+const formatDateTime = (isoString: any) => {
   if (!isoString) {
     return '-';
   }
@@ -39,7 +39,7 @@ const formatDateTime = isoString => {
   });
 };
 
-const MaterialApprovalForm = ({route, navigation}) => {
+const MaterialApprovalForm = ({route, navigation}: any) => {
   const materialRequest = route.params?.item; // { id, items: [...] }
   const {status} = materialRequest || {};
 
@@ -50,21 +50,21 @@ const MaterialApprovalForm = ({route, navigation}) => {
     status === MATERIAL_REQUEST_STATUS.PENDING_APPROVAL;
   const isApprovalStage = isProcurementStage || isReadOnlyApprovalStage;
   const isDispatchStage = status === MATERIAL_REQUEST_STATUS.PENDING_DISPATCH;
+  const isDispatchedViewMode = status === 'dispatched';
 
-  const [remarks, setRemarks] = useState('');
-  const [localApprovals, setLocalApprovals] = useState([]);
-  const [approvedQty, setApprovedQty] = useState({});
+  const [remarks, setRemarks] = useState<string>('');
+  const [localApprovals, setLocalApprovals] = useState<any[]>([]);
+  const [approvedQty, setApprovedQty] = useState<any>({});
+  const [dispatchedItemsVisible, setDispatchedItemsVisible] = useState(false);
 
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
   const {showSnackbar} = useSnackbar();
-  const loggedInUser = useSelector(state => state.Auth.userInfo);
-  const {
-    patchMeterialRequestStatusData,
-    loading: any,
-    error,
-  } = useSelector(state => state.MeterialRequest);
-  const {sourceApprovals} = useSelector(state => state.SourceApprovals);
+  const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
+  const {patchMeterialRequestStatusData, loading, error} = useSelector(
+    (state: any) => state.MeterialRequest,
+  );
+  const {sourceApprovals} = useSelector((state: any) => state.SourceApprovals);
 
   // toast from redux
   useEffect(() => {
@@ -97,12 +97,12 @@ const MaterialApprovalForm = ({route, navigation}) => {
     }
   }, [isFocused, isDispatchStage]);
 
-  const handleQtyChange = (id, value) => {
-    setApprovedQty(prev => ({...prev, [id]: value}));
+  const handleQtyChange = (id: any, value: any) => {
+    setApprovedQty((prev: any) => ({...prev, [id]: value}));
   };
 
   // Fetch available sources (API uses material type ID)
-  const getAvailableSources = materialTypeId => {
+  const getAvailableSources = (materialTypeId: any) => {
     dispatch(
       getSourceApprovals({
         projectId: loggedInUser.projectId,
@@ -111,33 +111,43 @@ const MaterialApprovalForm = ({route, navigation}) => {
     );
   };
 
-  const handleSourceChange = (newValue, rowId) => {
-    setLocalApprovals(prev =>
-      prev.map(row => (row.id === rowId ? {...row, name: newValue} : row)),
+  const handleSourceChange = (newValue: any, rowId: any) => {
+    setLocalApprovals((prev: any) =>
+      prev.map((row: any) =>
+        row.id === rowId ? {...row, name: newValue} : row,
+      ),
     );
   };
 
-  const handleQuantityChange = (value, rowId) => {
-    setLocalApprovals(prev =>
-      prev.map(row => (row.id === rowId ? {...row, quantity: value} : row)),
+  const handleQuantityChange = (value: any, rowId: any) => {
+    setLocalApprovals((prev: any) =>
+      prev.map((row: any) =>
+        row.id === rowId ? {...row, quantity: value} : row,
+      ),
     );
   };
 
   // Remove row
-  const handleRemoveSourceRow = id => {
-    setLocalApprovals(prev => prev?.filter(row => row.id !== id));
+  const handleRemoveSourceRow = (id: any) => {
+    setLocalApprovals((prev: any) => prev?.filter((row: any) => row.id !== id));
   };
 
   // Calculate sum based on UNIQUE ITEM ID, not material type
-  const totalSourceQuantityForMaterial = requestItemId => {
+  const totalSourceQuantityForMaterial = (requestItemId: any) => {
     return localApprovals
-      ?.filter(row => row.requestItemId === requestItemId)
-      ?.reduce((total, row) => total + (parseFloat(row.quantity) || 0), 0);
+      ?.filter((row: any) => row.requestItemId === requestItemId)
+      ?.reduce(
+        (total: any, row: any) => total + (parseFloat(row.quantity) || 0),
+        0,
+      );
   };
 
   // Add row specifically for this REQUEST ITEM ID
-  const handleAddSourceRowForMaterial = (requestItemId, materialTypeId) => {
-    setLocalApprovals(prev => [
+  const handleAddSourceRowForMaterial = (
+    requestItemId: any,
+    materialTypeId: any,
+  ) => {
+    setLocalApprovals((prev: any) => [
       ...prev,
       {
         id: `${requestItemId}_${Date.now()}`, // Unique Row ID
@@ -150,17 +160,19 @@ const MaterialApprovalForm = ({route, navigation}) => {
   };
 
   // Get rows specifically for this REQUEST ITEM ID
-  const getSourceRowsForMaterial = requestItemId => {
-    return localApprovals?.filter(row => row.requestItemId === requestItemId);
+  const getSourceRowsForMaterial = (requestItemId: any) => {
+    return localApprovals?.filter(
+      (row: any) => row.requestItemId === requestItemId,
+    );
   };
 
   // SUBMIT
-  const handleSubmit = type => {
+  const handleSubmit = (type: any) => {
     if (isProcurementStage && type === 'approve') {
       const approvalData =
-        materialRequest?.items?.map(req => {
+        materialRequest?.items?.map((req: any) => {
           const materialSources = localApprovals.filter(
-            row => row.requestItemId === req._id,
+            (row: any) => row.requestItemId === req._id,
           );
 
           const approvedQtyForMaterial = Number(
@@ -168,12 +180,12 @@ const MaterialApprovalForm = ({route, navigation}) => {
           );
 
           const backendSourcesForMaterial = sourceApprovals?.filter(
-            s => s.testMaterialId === req.testMaterialId,
+            (s: any) => s.testMaterialId === req.testMaterialId,
           );
 
-          const source = materialSources.map(row => {
+          const source = materialSources.map((row: any) => {
             const matched = backendSourcesForMaterial?.find(
-              s => s.name === row.name,
+              (s: any) => s.name === row.name,
             );
             return {
               sourceApprovalId: matched?._id,
@@ -213,7 +225,7 @@ const MaterialApprovalForm = ({route, navigation}) => {
           ? MATERIAL_REQUEST_STATUS.DISPATCHED
           : MATERIAL_REQUEST_STATUS.PENDING_DISPATCH,
       comments: remarks,
-      approvalData: materialRequest?.items?.map(req => ({
+      approvalData: materialRequest?.items?.map((req: any) => ({
         materialRequestItemId: req._id,
         quantityApproved:
           approvedQty[req._id] ?? Number(req.qty_approved ?? req.qty_requested),
@@ -232,7 +244,7 @@ const MaterialApprovalForm = ({route, navigation}) => {
   };
 
   // Final Decision Logic (Pending Approval -> Pending Dispatch / Rejected)
-  const handleFinalApprovalDecision = action => {
+  const handleFinalApprovalDecision = (action: any) => {
     const items = materialRequest?.items || [];
     if (action === 'reject') {
       const payload = {
@@ -251,8 +263,8 @@ const MaterialApprovalForm = ({route, navigation}) => {
     }
 
     const approvalData =
-      items?.map(req => {
-        const base = {
+      items?.map((req: any) => {
+        const base: any = {
           materialRequestItemId: req._id,
           quantityApproved:
             typeof req.qty_approved === 'number'
@@ -261,7 +273,7 @@ const MaterialApprovalForm = ({route, navigation}) => {
         };
 
         if (Array.isArray(req.mixDesign) && req.mixDesign.length > 0) {
-          base.mixDesign = req.mixDesign.map(md => ({
+          base.mixDesign = req.mixDesign.map((md: any) => ({
             mixDesignId: md.mixDesignId,
             mixDesignName: md.mixDesignName,
             qtyRequest: md.qtyRequest,
@@ -269,7 +281,7 @@ const MaterialApprovalForm = ({route, navigation}) => {
           }));
           base.batchNo = req.metaData?.batchNo ?? null;
         } else if (Array.isArray(req.source) && req.source.length > 0) {
-          base.source = req.source.map(src => ({
+          base.source = req.source.map((src: any) => ({
             sourceApprovalId: src.sourceApprovalId,
             sourceName: src.sourceName,
             qtyRequest: src.qtyRequest,
@@ -296,7 +308,7 @@ const MaterialApprovalForm = ({route, navigation}) => {
   };
 
   // Dispatch Single
-  const handleDispatchSingleMaterial = request => {
+  const handleDispatchSingleMaterial = (request: any) => {
     const qtyToDispatch = parseFloat(
       approvedQty[request._id] ??
         String(request.qty_approved ?? request.qty_requested),
@@ -311,7 +323,7 @@ const MaterialApprovalForm = ({route, navigation}) => {
       Number(request.qty_approved ?? request.qty_requested ?? qtyToDispatch) ||
       1;
 
-    const sources = (request.source || []).map(src => {
+    const sources = (request.source || []).map((src: any) => {
       const srcApproved =
         Number(src.qtyApproved ?? src.qtyRequest ?? totalApprovedForItem) || 0;
       const ratio = srcApproved / totalApprovedForItem || 0;
@@ -349,7 +361,7 @@ const MaterialApprovalForm = ({route, navigation}) => {
     );
   };
 
-  const renderApprovalItemEditable = request => {
+  const renderApprovalItemEditable = (request: any) => {
     const unit = request?.unit || '';
     const requestItemId = request._id;
     const materialTypeId = request.testMaterialId || requestItemId;
@@ -381,28 +393,28 @@ const MaterialApprovalForm = ({route, navigation}) => {
             <View style={{width: 30}} />
           </View>
 
-          {getSourceRowsForMaterial(requestItemId)?.map(row => {
+          {getSourceRowsForMaterial(requestItemId)?.map((row: any) => {
             const selectedNames = localApprovals
               ?.filter(
-                r =>
+                (r: any) =>
                   r.id !== row.id &&
                   r.name &&
                   r.requestItemId === requestItemId,
               )
-              ?.map(r => r.name);
+              ?.map((r: any) => r.name);
 
             const specificSources =
               sourceApprovals?.filter(
-                s => s.testMaterialId === materialTypeId,
+                (s: any) => s.testMaterialId === materialTypeId,
               ) || [];
 
-            const dropdownOptions = specificSources.map(s => ({
+            const dropdownOptions = specificSources.map((s: any) => ({
               label: s.name,
               value: s.name,
             }));
 
             const availableOptions = dropdownOptions.filter(
-              opt => !selectedNames.includes(opt.value),
+              (opt: any) => !selectedNames.includes(opt.value),
             );
 
             return (
@@ -413,7 +425,9 @@ const MaterialApprovalForm = ({route, navigation}) => {
                     <DropdownPicker
                       items={availableOptions}
                       value={row.name}
-                      onChange={value => handleSourceChange(value, row.id)}
+                      onChange={(value: any) =>
+                        handleSourceChange(value, row.id)
+                      }
                     />
                   </TouchableOpacity>
                 </View>
@@ -446,11 +460,7 @@ const MaterialApprovalForm = ({route, navigation}) => {
 
           <View style={styles.totalContainer}>
             <Text style={styles.totalLabel}>Sum of Source Qty:</Text>
-            <Text
-              style={[
-                styles.totalValue,
-               
-              ]}>
+            <Text style={[styles.totalValue]}>
               {totalSourceQuantityForMaterial(requestItemId)}
             </Text>
           </View>
@@ -459,7 +469,7 @@ const MaterialApprovalForm = ({route, navigation}) => {
     );
   };
 
-  const renderApprovalItemReadonly = request => {
+  const renderApprovalItemReadonly = (request: any) => {
     const unit = request?.unit || '';
     return (
       <>
@@ -477,10 +487,10 @@ const MaterialApprovalForm = ({route, navigation}) => {
           </Text>
         </View>
 
-        {Array.isArray(request?.source) && request.source.length > 0 && (
+        {Array.isArray(request?.source) && request.source.length > 0 ? (
           <View style={styles.fieldContainer}>
             <Text style={styles.fieldLabel}>Source Allocation</Text>
-            {request.source.map((s, idx) => (
+            {request.source.map((s: any, idx: number) => (
               <View key={idx} style={styles.sourceRowReadonly}>
                 <Text style={styles.sourceReadonlyText}>
                   {s.sourceName ?? '-'}
@@ -491,6 +501,31 @@ const MaterialApprovalForm = ({route, navigation}) => {
               </View>
             ))}
           </View>
+        ) : (
+          Array.isArray(request?.mixDesign) &&
+          request.mixDesign.length > 0 && (
+            <View style={styles.fieldContainer}>
+              <Text style={styles.fieldLabel}>Mix Design Details</Text>
+              {request.mixDesign.map((md: any, idx: number) => (
+                <View key={idx} style={styles.sourceRowReadonly}>
+                  <Text style={styles.sourceReadonlyText}>
+                    {md.mixDesignName ?? '-'}
+                  </Text>
+                  <Text style={styles.sourceReadonlyQty}>
+                    {md.qtyApproved ?? md.qtyRequest ?? 0} {unit}
+                  </Text>
+                </View>
+              ))}
+              {request.metaData?.batchNo && (
+                <View style={styles.sourceRowReadonly}>
+                  <Text style={styles.sourceReadonlyText}>Batch No</Text>
+                  <Text style={styles.sourceReadonlyQty}>
+                    {request.metaData.batchNo}
+                  </Text>
+                </View>
+              )}
+            </View>
+          )
         )}
       </>
     );
@@ -499,7 +534,7 @@ const MaterialApprovalForm = ({route, navigation}) => {
   const renderApprovalSection = () => {
     if (!isApprovalStage || !materialRequest?.items?.length) return null;
 
-    return materialRequest.items.map(request => {
+    return materialRequest.items.map((request: any) => {
       return (
         <View
           style={styles.formGroup}
@@ -566,7 +601,7 @@ const MaterialApprovalForm = ({route, navigation}) => {
   const renderDispatchSection = () => {
     if (!isDispatchStage || !materialRequest?.items?.length) return null;
 
-    return materialRequest.items.map((request, index) => {
+    return materialRequest.items.map((request: any, index: number) => {
       const isItemPendingDispatch =
         request.status === MATERIAL_REQUEST_STATUS.PENDING_DISPATCH;
       const isItemDispatched =
@@ -634,6 +669,50 @@ const MaterialApprovalForm = ({route, navigation}) => {
               </Text>
             </View>
           </View>
+
+          {request &&
+          Array.isArray(request.source) &&
+          request.source.length > 0 ? (
+            <View style={styles.fieldContainer}>
+              <Text style={styles.fieldLabel}>Source Allocation</Text>
+              {request.source.map((s: any, idx: number) => (
+                <View key={idx} style={styles.sourceRowReadonly}>
+                  <Text style={styles.sourceReadonlyText}>
+                    {s.sourceName ?? '-'}
+                  </Text>
+                  <Text style={styles.sourceReadonlyQty}>
+                    {s.qtyRequest ?? s.qty ?? 0} {request.unit}
+                  </Text>
+                </View>
+              ))}
+            </View>
+          ) : (
+            request &&
+            Array.isArray(request.mixDesign) &&
+            request.mixDesign.length > 0 && (
+              <View style={styles.fieldContainer}>
+                <Text style={styles.fieldLabel}>Mix Design Details</Text>
+                {request.mixDesign.map((md: any, idx: number) => (
+                  <View key={idx} style={styles.sourceRowReadonly}>
+                    <Text style={styles.sourceReadonlyText}>
+                      {md.mixDesignName ?? '-'}
+                    </Text>
+                    <Text style={styles.sourceReadonlyQty}>
+                      {md.qtyApproved ?? md.qtyRequest ?? 0} {request.unit}
+                    </Text>
+                  </View>
+                ))}
+                {request.metaData?.batchNo && (
+                  <View style={styles.sourceRowReadonly}>
+                    <Text style={styles.sourceReadonlyText}>Batch No</Text>
+                    <Text style={styles.sourceReadonlyQty}>
+                      {request.metaData.batchNo}
+                    </Text>
+                  </View>
+                )}
+              </View>
+            )
+          )}
 
           <View style={styles.formGroup}>
             <Text style={styles.label}>
@@ -727,7 +806,7 @@ const MaterialApprovalForm = ({route, navigation}) => {
         <TouchableOpacity
           style={styles.submitButton}
           onPress={() => handleSubmit('approve')}>
-          <Text style={styles.submitButtonText}>Approve Material</Text>
+          <Text style={styles.submitButtonText}>Request for Approval</Text>
         </TouchableOpacity>
       );
     }
@@ -735,21 +814,175 @@ const MaterialApprovalForm = ({route, navigation}) => {
     return null;
   };
 
-  const renderContent = () => (
-    <View style={styles.formContainer}>
-      <Text style={styles.sectionTitle}>
-        {isDispatchStage ? 'Dispatch Details' : 'Approval Details'}
-      </Text>
+  const renderDispatchedItemsView = () => {
+    if (
+      !materialRequest?.items?.every(
+        (item: any) => item.status === 'dispatched',
+      )
+    ) {
+      return null;
+    }
 
-      {renderApprovalSection()}
-      {renderDispatchSection()}
-      {renderRemarksSection()}
-      {renderFooterButtons()}
-    </View>
-  );
+    return (
+      <View style={styles.formContainer}>
+        <TouchableOpacity
+          style={styles.submitButton}
+          onPress={() => setDispatchedItemsVisible(prev => !prev)}>
+          <Text style={styles.submitButtonText}>
+            {dispatchedItemsVisible
+              ? 'Hide Dispatched Items'
+              : 'View Dispatched Items'}
+          </Text>
+        </TouchableOpacity>
+
+        {dispatchedItemsVisible &&
+          materialRequest.items.map((request: any) => (
+            <View
+              key={request._id}
+              style={[styles.mainContainer, styles.dispatchedCard]}>
+              <Text style={styles.materialTitle}>
+                {request?.testMaterialType || 'Material'}
+              </Text>
+              <View style={styles.fieldContainer}>
+                <Text style={styles.fieldLabel}>Qty Issued</Text>
+                <Text style={styles.fieldValue}>
+                  {request?.qty_issued ?? '-'}
+                </Text>
+              </View>
+              <View style={styles.fieldContainer}>
+                <Text style={styles.fieldLabel}>Item Status</Text>
+                <Text style={styles.fieldValue}>Dispatched</Text>
+              </View>
+              {Array.isArray(request?.source) && request.source.length > 0 ? (
+                <View style={styles.fieldContainer}>
+                  <Text style={styles.fieldLabel}>Source Allocation</Text>
+                  {request.source.map((s: any, idx: number) => (
+                    <View key={idx} style={styles.sourceRowReadonly}>
+                      <Text style={styles.sourceReadonlyText}>
+                        {s.sourceName ?? '-'}
+                      </Text>
+                      <Text style={styles.sourceReadonlyQty}>
+                        {s.qtyRequest ?? s.qty ?? 0} {request.unit}
+                      </Text>
+                    </View>
+                  ))}
+                </View>
+              ) : (
+                Array.isArray(request?.mixDesign) &&
+                request.mixDesign.length > 0 && (
+                  <View style={styles.fieldContainer}>
+                    <Text style={styles.fieldLabel}>Mix Design Details</Text>
+                    {request.mixDesign.map((md: any, idx: number) => (
+                      <View key={idx} style={styles.sourceRowReadonly}>
+                        <Text style={styles.sourceReadonlyText}>
+                          {md.mixDesignName ?? '-'}
+                        </Text>
+                        <Text style={styles.sourceReadonlyQty}>
+                          {md.qtyApproved ?? md.qtyRequest ?? 0} {request.unit}
+                        </Text>
+                      </View>
+                    ))}
+                    {request.metaData?.batchNo && (
+                      <View style={styles.sourceRowReadonly}>
+                        <Text style={styles.sourceReadonlyText}>Batch No</Text>
+                        <Text style={styles.sourceReadonlyQty}>
+                          {request.metaData.batchNo}
+                        </Text>
+                      </View>
+                    )}
+                  </View>
+                )
+              )}
+            </View>
+          ))}
+      </View>
+    );
+  };
+
+  const renderContent = () => {
+    if (isDispatchedViewMode) {
+      return (
+        <View style={styles.formContainer}>
+          <Text style={styles.sectionTitle}>Dispatched Items</Text>
+          {materialRequest.items.map((request: any) => (
+            <View
+              key={request._id}
+              style={[styles.mainContainer, styles.dispatchedCard]}>
+              <Text style={styles.materialTitle}>
+                {request?.testMaterialType || 'Material'}
+              </Text>
+              <View style={styles.fieldContainer}>
+                <Text style={styles.fieldLabel}>Qty Issued</Text>
+                <Text style={styles.fieldValue}>
+                  {request?.qty_issued ?? '-'}
+                </Text>
+              </View>
+              <View style={styles.fieldContainer}>
+                <Text style={styles.fieldLabel}>Item Status</Text>
+                <Text style={styles.fieldValue}>Dispatched</Text>
+              </View>
+              {Array.isArray(request?.source) && request.source.length > 0 ? (
+                <View style={styles.fieldContainer}>
+                  <Text style={styles.fieldLabel}>Source Allocation</Text>
+                  {request.source.map((s: any, idx: number) => (
+                    <View key={idx} style={styles.sourceRowReadonly}>
+                      <Text style={styles.sourceReadonlyText}>
+                        {s.sourceName ?? '-'}
+                      </Text>
+                      <Text style={styles.sourceReadonlyQty}>
+                        {s.qtyRequest ?? s.qty ?? 0} {request.unit}
+                      </Text>
+                    </View>
+                  ))}
+                </View>
+              ) : (
+                Array.isArray(request?.mixDesign) &&
+                request.mixDesign.length > 0 && (
+                  <View style={styles.fieldContainer}>
+                    <Text style={styles.fieldLabel}>Mix Design Details</Text>
+                    {request.mixDesign.map((md: any, idx: number) => (
+                      <View key={idx} style={styles.sourceRowReadonly}>
+                        <Text style={styles.sourceReadonlyText}>
+                          {md.mixDesignName ?? '-'}
+                        </Text>
+                        <Text style={styles.sourceReadonlyQty}>
+                          {md.qtyApproved ?? md.qtyRequest ?? 0} {request.unit}
+                        </Text>
+                      </View>
+                    ))}
+                    {request.metaData?.batchNo && (
+                      <View style={styles.sourceRowReadonly}>
+                        <Text style={styles.sourceReadonlyText}>Batch No</Text>
+                        <Text style={styles.sourceReadonlyQty}>
+                          {request.metaData.batchNo}
+                        </Text>
+                      </View>
+                    )}
+                  </View>
+                )
+              )}
+            </View>
+          ))}
+        </View>
+      );
+    }
+    return (
+      <View style={styles.formContainer}>
+        <Text style={styles.sectionTitle}>
+          {isDispatchStage ? 'Dispatch Details' : 'Approval Details'}
+        </Text>
+
+        {renderApprovalSection()}
+        {renderDispatchSection()}
+        {renderRemarksSection()}
+        {renderFooterButtons()}
+      </View>
+    );
+  };
 
   return (
     <ScrollView style={styles.container} keyboardShouldPersistTaps="handled">
+      {isDispatchedViewMode ? null : renderDispatchedItemsView()}
       {renderContent()}
     </ScrollView>
   );

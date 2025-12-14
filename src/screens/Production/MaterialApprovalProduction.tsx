@@ -18,6 +18,7 @@ import {
   patchMaterialRequestStatus,
   dispatchProductionRequest,
   clearMaterialRequest,
+  getSourceApprovals,
 } from '../ManageUsers/actions';
 import {useDispatch, useSelector} from 'react-redux';
 import {useSnackbar} from '../../context/SnackbarContext';
@@ -56,6 +57,7 @@ const MaterialApprovalProduction = ({route, navigation}: any) => {
   const [batchSlips, setBatchSlips]: any = useState(null);
   const [fileUrlData, setfileUrlData]: any = useState('');
   const [batchNumbers, setBatchNumbers] = useState<{[key: string]: string}>({});
+  const [dispatchedItemsVisible, setDispatchedItemsVisible] = useState(false);
 
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
@@ -68,6 +70,7 @@ const MaterialApprovalProduction = ({route, navigation}: any) => {
     dispatchProductionRequest: dispatchProductionRequestState,
   } = useSelector((state: any) => state.MeterialRequest);
   const {qualityMixDesignListInfo} = useSelector((state: any) => state.RFIs);
+  const {sourceApprovals} = useSelector((state: any) => state.SourceApprovals);
 
   // --- MODES DEFINITION ---
   // 1. Edit Mode: User enters Mix Design and Batch No (Status: request_for_approval)
@@ -155,6 +158,14 @@ const MaterialApprovalProduction = ({route, navigation}: any) => {
           testMaterialId: firstItem?.testMaterialId,
         }),
       );
+      item.items.forEach((req: any) => {
+        dispatch(
+          getSourceApprovals({
+            projectId: loggedInUser.projectId,
+            testMaterialId: req?.testMaterialId,
+          }),
+        );
+      });
 
       // Initialize Rows
       const initialRows: any = {};
@@ -409,12 +420,91 @@ const MaterialApprovalProduction = ({route, navigation}: any) => {
     );
   };
 
+  const renderSourceApprovalReadonly = (request: any) => {
+    const unit = request?.unit || '';
+    const sources = sourceApprovals?.filter(
+      (s: any) => s.testMaterialId === request.testMaterialId,
+    );
+
+    if (!sources || sources.length === 0) {
+      return <Text>No source approval information available.</Text>;
+    }
+
+    return (
+      <View style={styles.readOnlyContainer}>
+        <Text style={styles.readOnlyTitle}>Source Approval Details</Text>
+        {sources.map((source: any, idx: number) => (
+          <View key={idx} style={styles.readOnlyRow}>
+            <Text style={styles.readOnlyValue}>• {source.name}</Text>
+            <Text style={styles.readOnlyValue}>
+              {source.quantity} {unit}
+            </Text>
+          </View>
+        ))}
+      </View>
+    );
+  };
+
   return (
     <ScrollView style={styles.container} keyboardShouldPersistTaps="handled">
       <View style={styles.formContainer}>
         <Text style={styles.sectionTitle}>
-          {isDispatchMode ? 'Dispatch Material' : 'Production Approval'}
+          {isDispatchMode ? 'Dispatch Material' : 'Request for Approval'}
         </Text>
+
+        {item?.items?.every(i => i.status === 'dispatched') && (
+          <View>
+            <TouchableOpacity
+              style={styles.mainSubmitBtn}
+              onPress={() => setDispatchedItemsVisible(prev => !prev)}>
+              <Text style={styles.btnTextWhite}>
+                {dispatchedItemsVisible
+                  ? 'Hide Dispatched Items'
+                  : 'View Dispatched Items'}
+              </Text>
+            </TouchableOpacity>
+            {dispatchedItemsVisible &&
+              item.items.map((request: any) => (
+                <View key={request._id} style={styles.itemCard}>
+                  <View style={styles.infoRow}>
+                    <Text style={styles.highlightText}>
+                      Dispatched Qty: {request.metaData?.qty_issued}
+                    </Text>
+                  </View>
+                  <View style={styles.infoRow}>
+                    <Text style={styles.highlightText}>
+                      Batch No: {request.metaData?.batchNo}
+                    </Text>
+                  </View>
+                  {request.mixDesign && request.mixDesign.length > 0 && (
+                    <View style={styles.mixDisplayContainer}>
+                      <Text style={styles.inputLabel}>Mix Design</Text>
+                      {request.mixDesign.map((md: any, i: number) => (
+                        <Text key={i} style={styles.mixDisplayText}>
+                          • {md.mixDesignName}: {md.qtyApproved || md.qtyRequest}
+                        </Text>
+                      ))}
+                    </View>
+                  )}
+                  {request.metaData?.vehicleDetails &&
+                    request.metaData?.vehicleDetails.length > 0 && (
+                      <View style={styles.vehicleWrapper}>
+                        <Text style={styles.inputLabel}>Vehicles</Text>
+                        <View style={styles.tagContainer}>
+                          {request.metaData?.vehicleDetails.map(
+                            (v: any, i: number) => (
+                              <View key={i} style={styles.tag}>
+                                <Text style={styles.tagText}>{v}</Text>
+                              </View>
+                            ),
+                          )}
+                        </View>
+                      </View>
+                    )}
+                </View>
+              ))}
+          </View>
+        )}
 
         {item?.items?.map((request: any, index: number) => {
           const requestId = request._id;
@@ -450,6 +540,8 @@ const MaterialApprovalProduction = ({route, navigation}: any) => {
                 </View>
               </View>
 
+              {renderSourceApprovalReadonly(request)}
+
               {/* === MODE 1: READ ONLY (Pending Approval) === */}
               {isPendingApprovalMode && (
                 <View style={styles.readOnlyContainer}>
@@ -481,7 +573,7 @@ const MaterialApprovalProduction = ({route, navigation}: any) => {
                           • {mix.mixDesignName}
                         </Text>
                         <Text style={styles.readOnlyValue}>
-                          {mix.qtyApproved} {request.unit}
+                          {mix.qtyApproved || mix.qtyRequest} {request.unit}
                         </Text>
                       </View>
                     ))
@@ -563,12 +655,12 @@ const MaterialApprovalProduction = ({route, navigation}: any) => {
               )}
 
               {/* === MODE 3: DISPATCH === */}
-              {isDispatchMode && (
+              {request.status === MATERIAL_REQUEST_STATUS.PENDING_DISPATCH && (
                 <View style={styles.actionSection}>
                   <View style={styles.infoRow}>
                     <Text style={styles.highlightText}>
-                      Approved: {request.qty_approved} | Batch:{' '}
-                      {request.metaData?.batchNo || 'N/A'}
+                      Approved: {request.qty_approved}
+                      {request.metaData?.batchNo}
                     </Text>
                   </View>
 
@@ -576,7 +668,7 @@ const MaterialApprovalProduction = ({route, navigation}: any) => {
                     <View style={styles.mixDisplayContainer}>
                       {request.mixDesign.map((md: any, i: number) => (
                         <Text key={i} style={styles.mixDisplayText}>
-                          • {md.mixDesignName}: {md.qtyApproved}
+                          • {md.mixDesignName}: {md.qtyApproved || md.qtyRequest}
                         </Text>
                       ))}
                     </View>
@@ -662,7 +754,7 @@ const MaterialApprovalProduction = ({route, navigation}: any) => {
                 </View>
               )}
 
-              {isDispatchedMode && (
+              {request.status === 'dispatched' && (
                 <View style={styles.actionSection}>
                   <View style={styles.infoRow}>
                     <Text style={styles.highlightText}>
@@ -674,6 +766,16 @@ const MaterialApprovalProduction = ({route, navigation}: any) => {
                       Batch No: {request.metaData?.batchNo}
                     </Text>
                   </View>
+
+                  {request.mixDesign && request.mixDesign.length > 0 && (
+                    <View style={styles.mixDisplayContainer}>
+                      {request.mixDesign.map((md: any, i: number) => (
+                        <Text key={i} style={styles.mixDisplayText}>
+                          • {md.mixDesignName}: {md.qtyApproved || md.qtyRequest}
+                        </Text>
+                      ))}
+                    </View>
+                  )}
 
                   {request.metaData?.vehicleDetails &&
                     request.metaData?.vehicleDetails.length > 0 && (
@@ -738,7 +840,7 @@ const MaterialApprovalProduction = ({route, navigation}: any) => {
             <TouchableOpacity
               style={styles.mainSubmitBtn}
               onPress={handleSubmitForApproval}>
-              <Text style={styles.btnTextWhite}>Submit For Approval</Text>
+              <Text style={styles.btnTextWhite}>Request for Approval</Text>
             </TouchableOpacity>
           </View>
         )}

@@ -14,7 +14,7 @@ import DropdownInput from '../FormComponents/InputDropdown';
 import YesNoRadioInput from '../FormComponents/InputRadioYesNo';
 import InputText from '../FormComponents/InputText';
 import InputDate from '../FormComponents/InputDate'; // Using the new name
-
+import TimePicker from '../FormComponents/InputTimePicker';
 const renderDataItem = (item: DataItem, index: number) => (
   <View key={`data-${index}`} style={styles.gridItem}>
     <Text style={styles.dataLabel}>{item.label}</Text>
@@ -55,7 +55,17 @@ const renderRegularInput = (
       />
     );
   }
-
+  if (input.type === 'time') {
+    return (
+      <TimePicker
+        key={`input-${input.id}`}
+        input={input}
+        value={currentInputValue}
+        onChange={onValueChange}
+        error={error}
+      />
+    );
+  }
   // Default Text/Number Input
   return (
     <InputText

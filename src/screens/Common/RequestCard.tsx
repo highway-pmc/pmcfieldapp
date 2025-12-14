@@ -32,6 +32,8 @@ const RequestCard = ({request, onActionPress}: RequestCardProps) => {
         return styles.pendingDispatchCard;
       case MATERIAL_REQUEST_STATUS.REJECTED:
         return styles.rejectedCard;
+      case MATERIAL_REQUEST_STATUS.DISPATCHED:
+        return styles.dispatchedCard;
       default:
         return styles.defaultCard;
     }
@@ -64,6 +66,8 @@ const RequestCard = ({request, onActionPress}: RequestCardProps) => {
         return '#5A7EF8'; // Blue for dispatch
       case MATERIAL_REQUEST_STATUS.REJECTED:
         return '#FF4747'; // Red for rejected
+      case MATERIAL_REQUEST_STATUS.DISPATCHED:
+        return '#28A745'; // Green for dispatched
       default:
         return '#CCCCCC'; // Default gray
     }
@@ -116,6 +120,14 @@ const RequestCard = ({request, onActionPress}: RequestCardProps) => {
             style={styles.approvalButton}
             onPress={() => onActionPress('request_approval', status, item)}>
             <Text style={styles.approvalButtonText}>Request for Approval</Text>
+          </TouchableOpacity>
+        );
+      case MATERIAL_REQUEST_STATUS.DISPATCHED:
+        return (
+          <TouchableOpacity
+            style={styles.viewButton}
+            onPress={() => onActionPress('view', status, item)}>
+            <Text style={styles.viewButtonText}>View</Text>
           </TouchableOpacity>
         );
       default:
@@ -200,6 +212,9 @@ const styles = StyleSheet.create({
   rejectedCard: {
     borderColor: '#FF4747',
   },
+  dispatchedCard: {
+    borderColor: '#28A745',
+  },
   defaultCard: {
     backgroundColor: '#F5F5F5',
     borderColor: '#CCCCCC',
@@ -276,13 +291,25 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   approvalButton: {
-    borderColor: '#28A745',
+    borderColor: '#FF9800',
     borderWidth: 1,
     paddingHorizontal: 15,
     paddingVertical: 8,
     borderRadius: 20,
   },
   approvalButtonText: {
+    color: '#FF9800',
+    fontSize: 12,
+    fontWeight: '500',
+  },
+  viewButton: {
+    borderColor: '#28A745',
+    borderWidth: 1,
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 20,
+  },
+  viewButtonText: {
     color: '#28A745',
     fontSize: 12,
     fontWeight: '500',

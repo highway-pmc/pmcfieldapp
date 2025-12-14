@@ -7,24 +7,25 @@ import {
   SafeAreaView,
   NativeEventEmitter,
   ActivityIndicator,
-  Alert,
 } from 'react-native';
 import React, {useEffect, useState, useRef, useMemo} from 'react';
 import {useIsFocused} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
-import {HeaderItems} from '../../constants/constants';
+import {HeaderItems, RFI_STATUS} from '../../constants/constants';
 import {
   getInspectionChecklist,
   clearFormDetails,
   saveRfiFormData,
   saveRfiFormDataClear, // Import the new action
 } from './actions';
+import {updatedRFIs, clearRFITasksEvent} from '../RFIs/actions';
 import InformationTab from './MyWorkDynamicFrom/InformationTab';
 import InspectionTab from './MyWorkDynamicFrom/InspectionTab';
 import TaskDetailsTab from './MyWorkDynamicFrom/TaskDetailsTab';
 import {DynamicFormRef} from '../../components/Form/DynamicForm';
 import {validateChainageIntervals} from '../../components/Form/utils/formValidation';
 import TaskDetailsTabPreTensioningOfWires from '../../components/Form/MyWorkTaskDetails/TaskDetailsTabPreTensioningOfWires';
+import {useSnackbar} from '../../context/SnackbarContext';
 
 interface FormData {
   mainTitle: string;
@@ -37,13 +38,26 @@ const TABS = {
   TASK_DETAILS: 'Task Details',
 };
 
-const TaskForm = ({route, navigation, taskData}: any) => {
+const TaskForm = ({route, navigation, taskData, isReadOnlyRFI}: any) => {
+  const {showSnackbar} = useSnackbar();
   const taskFromRoute =
     route && route.params ? route.params.taskData : undefined;
+  const isReadOnlyFromRoute =
+    route && route.params ? route.params.isReadOnlyRFI : 'false';
   const taskInfo = taskFromRoute || taskData || {};
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
-  console.log('Task Info in TaskForm:', taskInfo);
+  useEffect(() => {
+    if (taskInfo) {
+      console.log('Task Info in TaskForm:', JSON.stringify(taskInfo));
+      console.log('Is ReadOnly in TaskForm:', isReadOnlyFromRoute);
+      console.log(
+        'RFI ID in TaskForm:',
+        taskInfo.rfiData?.rfiStatus ?? taskInfo.rfiStatus,
+      );
+    }
+  }, [taskInfo]);
+
   // --- SECTION-WISE CENTRALIZED STATE ---
   const [projectInfoData, setProjectInfoData] = useState<Record<string, any>>(
     {},
@@ -57,7 +71,10 @@ const TaskForm = ({route, navigation, taskData}: any) => {
   const [taskDetailsData, setTaskDetailsData] = useState<Record<string, any>>(
     {},
   );
-
+  const PROJECT_ID = taskInfo.projectId;
+  const RFI_ID = taskInfo.rfiData?._id ?? taskInfo._id;
+  const status = taskInfo.rfiData?.rfiStatus ?? taskInfo.rfiStatus;
+  const CHECKLIST_NAME = taskInfo.taskId.name;
   const stateSetters = {
     projectInfoSection: setProjectInfoData,
     materialConsumptionSection: setMaterialConsumptionData,
@@ -90,6 +107,7 @@ const TaskForm = ({route, navigation, taskData}: any) => {
     rfiFormDataSaveResponse,
     saveError,
   } = useSelector((state: any) => state.FormDetails);
+  const {rfiUpdated, error: rfiError} = useSelector((state: any) => state.RFIs);
   const {
     isMaterialRequested,
     materialConsumptionSection,
@@ -102,9 +120,6 @@ const TaskForm = ({route, navigation, taskData}: any) => {
   const memoizedMaterialData = useMemo(() => {
     return prepareMaterialConsumption;
   }, [prepareMaterialConsumption]);
-  const PROJECT_ID = taskInfo.projectId;
-  const RFI_ID = taskInfo._id;
-  const CHECKLIST_NAME = taskInfo.taskId.name;
   //const CHECKLIST_NAME = 'torquing';
   const [activeTab, setActiveTab] = useState(TABS.INFORMATION);
   const [isSaving, setIsSaving] = useState(false);
@@ -116,6 +131,7 @@ const TaskForm = ({route, navigation, taskData}: any) => {
         projectId: PROJECT_ID,
         checklistName: CHECKLIST_NAME,
         rfiId: RFI_ID,
+        readOnly: isReadOnlyFromRoute,
       }),
     );
   };
@@ -125,7 +141,11 @@ const TaskForm = ({route, navigation, taskData}: any) => {
     if (isFocused) {
       fetchChecklist();
       const eventEmitter = new NativeEventEmitter();
-      eventEmitter.emit('headerEvent', HeaderItems.taskForm);
+      let headersTitle = {
+        showBack: true,
+        title: `Task ${taskInfo?.taskId?.displayName}`,
+      };
+      eventEmitter.emit('headerEvent', headersTitle);
     }
     return () => {
       if (!isFocused) {
@@ -141,7 +161,7 @@ const TaskForm = ({route, navigation, taskData}: any) => {
   useEffect(() => {
     if (inspectionChecklist && inspectionChecklist.savedData) {
       const savedData = inspectionChecklist.savedData;
-      console.log('Saved Data:', savedData);
+      //console.log('Saved Data:', savedData);
       setProjectInfoData(savedData.projectInfoSection || {});
       setMaterialConsumptionData(savedData.materialConsumptionSection || {});
       setInspectionChecklistData(savedData.inspectionChecklistSection || {});
@@ -152,16 +172,17 @@ const TaskForm = ({route, navigation, taskData}: any) => {
   // 3. Handle Save Success/Failure
   useEffect(() => {
     if (rfiFormDataSaveResponse) {
-      // SUCCESS
+      const wasSubmitting = isSubmitting;
       setIsSaving(false);
-      Alert.alert(
-        'Success',
-        rfiFormDataSaveResponse.message ||
-          'Form data has been saved successfully.',
-      );
+      setIsSubmitting(false);
 
-      //RECALL API TO RE-FETCH THE LATEST DATA
-      fetchChecklist();
+      const message = wasSubmitting
+        ? 'Form data has been submitted.'
+        : rfiFormDataSaveResponse.message ||
+          'Form data has been saved successfully.';
+
+      showSnackbar(message, 'success');
+      navigation.goBack();
 
       // Clear the response data
       dispatch(saveRfiFormDataClear());
@@ -169,15 +190,34 @@ const TaskForm = ({route, navigation, taskData}: any) => {
       // FAILURE (using the dedicated saveError field)
       console.error('Save Error:', saveError);
       setIsSaving(false);
-      Alert.alert(
-        'Save Failed',
+      setIsSubmitting(false);
+      showSnackbar(
         saveError.message ||
           'The form data could not be saved. Please try again.',
+        'error',
       );
       // Clear the error data (though the reducer should handle this on next request)
       dispatch(saveRfiFormDataClear());
     }
-  }, [rfiFormDataSaveResponse, saveError, dispatch]);
+  }, [
+    rfiFormDataSaveResponse,
+    saveError,
+    dispatch,
+    navigation,
+    isSubmitting,
+    showSnackbar,
+  ]);
+
+  useEffect(() => {
+    if (rfiUpdated) {
+      showSnackbar('RFI status updated successfully.', 'success');
+      navigation.goBack();
+      dispatch(clearRFITasksEvent());
+    } else if (rfiError) {
+      showSnackbar(rfiError.message || 'Failed to update RFI status.', 'error');
+      dispatch(clearRFITasksEvent());
+    }
+  }, [rfiUpdated, rfiError, dispatch, navigation, showSnackbar]);
 
   const switchTab = (tabName: string) => {
     setActiveTab(tabName);
@@ -259,6 +299,19 @@ const TaskForm = ({route, navigation, taskData}: any) => {
     return {allInputs, allErrors, hasError};
   };
 
+  const onRFIAction = (status: string) => {
+    dispatch(
+      updatedRFIs({
+        projectId: PROJECT_ID,
+        projectModuleId:
+          taskInfo?.rfiData?.projectModuleId ?? taskInfo?.projectModuleId,
+        rfiId: RFI_ID,
+        status: status,
+        body: {},
+      }),
+    );
+  };
+
   const handleSave = () => {
     if (isSaving || isSubmitting || loading) return; // Disable if loading the checklist initially
     const {allInputs, hasError, allErrors} = getFormDataFromTabs();
@@ -278,13 +331,17 @@ const TaskForm = ({route, navigation, taskData}: any) => {
     // }
 
     setIsSaving(true);
-    console.log('Saving form data:', allInputs);
-    console.log('With projectId:', PROJECT_ID, 'and rfiId:', RFI_ID);
+    //console.log('Saving form data:', allInputs);
+    //console.log('With projectId:', PROJECT_ID, 'and rfiId:', RFI_ID);
+    let body = {
+      formData: allInputs,
+      action: 'save',
+    };
     dispatch(
       saveRfiFormData({
         projectId: PROJECT_ID,
         rfiId: RFI_ID,
-        formData: allInputs,
+        body: body,
       }),
     );
   };
@@ -293,23 +350,31 @@ const TaskForm = ({route, navigation, taskData}: any) => {
     if (isSaving || isSubmitting || loading || error) return;
     const {allInputs, hasError, allErrors} = getFormDataFromTabs();
 
-    if (hasError) {
-      const errorMessages = Object.values(allErrors).filter(
-        (message, index, self) => message && self.indexOf(message) === index,
-      );
-      const formattedErrorList = errorMessages.join('\n\n');
+    // if (hasError) {
+    //   const errorMessages = Object.values(allErrors).filter(
+    //     (message, index, self) => message && self.indexOf(message) === index,
+    //   );
+    //   const formattedErrorList = errorMessages.join('\n\n');
 
-      Alert.alert(
-        'Validation Warning',
-        formattedErrorList || 'One or more fields have errors.',
-      );
-      return;
-    }
+    //   Alert.alert(
+    //     'Validation Warning',
+    //     formattedErrorList || 'One or more fields have errors.',
+    //   );
+    //   return;
+    // }
 
     setIsSubmitting(true);
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setIsSubmitting(false);
-    Alert.alert('Success', 'Form data has been submitted.');
+    let body = {
+      formData: allInputs,
+      action: 'submit',
+    };
+    dispatch(
+      saveRfiFormData({
+        projectId: PROJECT_ID,
+        rfiId: RFI_ID,
+        body: body,
+      }),
+    );
   };
 
   const renderTabContent = () => {
@@ -495,28 +560,55 @@ const TaskForm = ({route, navigation, taskData}: any) => {
 
       {/* --- SAVE AND SUBMIT BUTTON BAR --- */}
 
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={[styles.button, styles.saveButton]}
-          onPress={handleSave}
-          disabled={isActionInProgress || loading || error}>
-          {isSaving ? (
-            <ActivityIndicator color="#5A2AAF" />
-          ) : (
-            <Text style={styles.saveButtonText}>Save</Text>
-          )}
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.button, styles.submitButton]}
-          onPress={handleSubmit}
-          disabled={isActionInProgress || loading || error}>
-          {isSubmitting ? (
-            <ActivityIndicator color="#FFFFFF" />
-          ) : (
-            <Text style={styles.submitButtonText}>Submit</Text>
-          )}
-        </TouchableOpacity>
-      </View>
+      {!isReadOnlyFromRoute && (
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={[styles.button, styles.saveButton]}
+            onPress={handleSave}
+            disabled={isActionInProgress || loading || error}>
+            {isSaving ? (
+              <ActivityIndicator color="#5A2AAF" />
+            ) : (
+              <Text style={styles.saveButtonText}>Save</Text>
+            )}
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.button, styles.submitButton]}
+            onPress={handleSubmit}
+            disabled={isActionInProgress || loading || error}>
+            {isSubmitting ? (
+              <ActivityIndicator color="#FFFFFF" />
+            ) : (
+              <Text style={styles.submitButtonText}>Submit</Text>
+            )}
+          </TouchableOpacity>
+        </View>
+      )}
+
+      {isReadOnlyFromRoute && status === RFI_STATUS.IN_REVIEW && (
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={[styles.button, styles.rejectButton]}
+            onPress={() => onRFIAction(RFI_STATUS.REJECTED)}>
+            <Text style={styles.submitButtonText}>Reject</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.button, styles.submitButton]}
+            onPress={() => onRFIAction(RFI_STATUS.APPROVED)}>
+            <Text style={styles.submitButtonText}>Approve</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+      {isReadOnlyFromRoute && status === RFI_STATUS.APPROVED && (
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={[styles.button, styles.submitButton]}
+            onPress={() => console.log('Generate Report pressed')}>
+            <Text style={styles.submitButtonText}>Generate Report</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </SafeAreaView>
   );
 };
@@ -605,6 +697,9 @@ const styles = StyleSheet.create({
   submitButton: {
     backgroundColor: '#5A2AAF',
     borderWidth: 0,
+  },
+  rejectButton: {
+    backgroundColor: '#E53935',
   },
   saveButtonText: {
     color: '#5A2AAF',

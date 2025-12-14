@@ -187,13 +187,13 @@ export const styles = StyleSheet.create({
     height: 12,
   },
   MyWorkCta: {
-    borderRadius: 6,
+    borderRadius: 20,
     borderStyle: 'solid',
     borderWidth: 1,
     alignItems: 'center',
     flexDirection: 'row',
     gap: 7,
-    paddingHorizontal: 12,
+    paddingHorizontal: 15,
     paddingVertical: 10,
   },
   CtaStartText: {
@@ -205,6 +205,23 @@ export const styles = StyleSheet.create({
   },
   StartBorder: {
     borderColor: '#A1A1A1',
+    backgroundColor: '#ffffff'
+  },
+  materialReqstBtn: {
+    borderRadius: 20,
+    borderStyle: 'solid',
+    borderWidth: 1,
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 7,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderColor: '#5EAB4B',
+    backgroundColor: '#ffffff'
+  },
+  CtaRequestTextColor: {
+    color: '#5EAB4B',
+    fontWeight: '600'
   },
   DisabledBorder: {
     borderColor: '#EBEBE4',
@@ -238,33 +255,59 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
+    backgroundColor: '#ffffff',
+    paddingVertical: 14,
+    paddingHorizontal: 0,
     marginHorizontal: -20,
-    paddingHorizontal: 20,
     marginTop: -21,
-    backgroundColor: '#e7ebf4',
-    gap: 5,
+    borderRadius: 0,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 3,
   },
+
+  // ScrollView
   scrollView: {
-    paddingVertical: 10,
-    paddingBottom: 15,
+    flexGrow: 0,
   },
-  BreadcrumbPrevText: {
-    fontSize: 14,
-    color: '#333',
-  },
-  BreadcrumbPrevTextUnderline: {
-    fontSize: 13,
-    textDecorationLine: 'none',
-    color: '#333',
-  },
+
+  // Current/Active breadcrumb item (last item)
   BreadcrumbCurrentText: {
     fontSize: 13,
-    color: '#333',
     fontWeight: '600',
+    color: '#ffffff',
+    backgroundColor: '#3b82f6',
+    paddingVertical: 7,
+    paddingHorizontal: 10,
+    borderRadius: 30,
+    overflow: 'hidden',
+    marginLeft: 5,
+    marginRight: 7,
   },
+
+  // Previous/Clickable breadcrumb items
+  BreadcrumbPrevTextUnderline: {
+    fontSize: 13,
+    fontWeight: '400',
+    color: '#64748b',
+    backgroundColor: '#f1f5f9',
+    paddingVertical: 7,
+    paddingHorizontal: 10,
+    borderRadius: 30,
+    marginLeft: 7,
+    overflow: 'hidden',
+  },
+
+  // Arrow icon between items
   ArrowIcon: {
-    width: 18,
-    height: 18,
+    width: 16,
+    height: 16,
+    marginHorizontal: 10,
+    tintColor: '#cbd5e1',
+    opacity: 0.7,
+    display: 'none'
   },
 
   //MyWork Card
@@ -595,7 +638,6 @@ export const styles = StyleSheet.create({
     height: 20,
   },
   gradientContainer: {
-    flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'space-between',
     paddingVertical: 20,
@@ -607,6 +649,30 @@ export const styles = StyleSheet.create({
     position: 'relative',
     marginBottom: 10,
     borderWidth: 1,
+  },
+  divider: {
+    width: '100%',
+    height: 1,
+    backgroundColor: '#E0E0E0',
+    marginBottom: 7,
+    marginTop: 15,
+  },
+  cardFooter: {
+    paddingTop: 12,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    width: '100%',
+  },
+  statusText: {
+    fontSize: 13,
+    fontWeight: '500',
+  },
+  taskButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: 10
   },
   leftBorder: {
     paddingVertical: 3,

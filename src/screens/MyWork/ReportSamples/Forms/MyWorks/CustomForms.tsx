@@ -18920,115 +18920,113 @@ export const CustomForms = (_v: any, workType: any, taskCategory: any) => {
                 </Text>
               </View>
             </View>
-            <View></View>
-          </LinearGradient>
-          {item.rfiStatus === RFI_STATUS.GENERATED ? (
-            <View>
-              <TouchableOpacity
-                style={[styles.MyWorkCta, styles.StartBorder]}
-                onPress={() => {
-                  console.log('Task Information', item);
-                  navigation.navigate('TaskForm', {taskData: item});
-                  //_event.getRFIDataByWorkAssignmentId(item);
-                }}>
-                <Image
-                  style={styles.WorkIcon}
-                  source={require('../../../../../images/play-icon.png')}
-                />
-                <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>
-                  Start
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.MyWorkCta, styles.StartBorder]}
-                onPress={() => {
-                  console.log('Task Information', item);
-                  navigation.navigate('MaterialRequestComponent', {
-                    taskId: item.taskId._id,
-                  });
-                }}>
-                <Image
-                  style={styles.WorkIcon}
-                  source={require('../../../../../images/play-icon.png')}
-                />
-                <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>
-                  Material Request
-                </Text>
-              </TouchableOpacity>
+            <View style={styles.divider} />
+            <View style={styles.cardFooter}>
+              {item.rfiStatus === RFI_STATUS.GENERATED ? (
+                <View style={styles.taskButtonContainer}>
+                  <TouchableOpacity
+                    style={[styles.materialReqstBtn]}
+                    onPress={() => {
+                      console.log('Task Information', item);
+                      navigation.navigate('MaterialRequestComponent', {
+                        taskId: item.taskId._id,
+                      });
+                    }}>
+                    <Text style={[styles.CtaStartText, styles.CtaRequestTextColor]}>
+                      Material Request
+                    </Text>
+                  </TouchableOpacity> 
+                  <TouchableOpacity
+                    style={[styles.MyWorkCta, styles.StartBorder]}
+                    onPress={() => {
+                      console.log('Task Information', item);
+                      navigation.navigate('TaskForm', {taskData: item});
+                      //_event.getRFIDataByWorkAssignmentId(item);
+                    }}>
+                    <Image
+                      style={styles.WorkIcon}
+                      source={require('../../../../../images/play-icon.png')}
+                    />
+                    <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>
+                      Start
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              ) : null}
+
+              {item.rfiStatus === RFI_STATUS.RE_GENERATED ? (
+                <TouchableOpacity
+                  style={[styles.MyWorkCta, styles.StartBorder]}
+                  onPress={() => {
+                    _event.getRFIDataByWorkAssignmentId(item);
+                  }}>
+                  <Image
+                    style={styles.WorkIcon}
+                    source={require('../../../../../images/play-icon.png')}
+                  />
+                  <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>
+                    Re-start
+                  </Text>
+                </TouchableOpacity>
+              ) : null}
+
+              {item.rfiStatus === RFI_STATUS.REJECTED ||
+              item.rfiStatus === RFI_STATUS.CANCELLED ? (
+                <TouchableOpacity
+                  style={[styles.MyWorkCta, styles.StartRejectBorder]}>
+                  {/* <Image style={styles.WorkIcon} source={require('../../../../../images/play-icon.png')} /> */}
+                  <Text style={[styles.CtaStartText, styles.CtaRejectTextColor]}>
+                    {item.rfiStatus === RFI_STATUS.CANCELLED
+                      ? 'Cancelled'
+                      : 'Rejected'}
+                  </Text>
+                </TouchableOpacity>
+              ) : null}
+
+              {item.rfiStatus === RFI_STATUS.IN_PROGRESS ? (
+                <TouchableOpacity
+                  style={[styles.MyWorkCta, styles.StartInProgressBorder]}
+                  onPress={() => {
+                    _event.getRFIDataByWorkAssignmentId(item);
+                  }}>
+                  <Image
+                    style={styles.WorkIcon}
+                    source={require('../../../../../images/inprogress.png')}
+                  />
+                  <Text
+                    style={[styles.CtaStartText, styles.CtaInProgressTextColor]}>
+                    In Progress
+                  </Text>
+                </TouchableOpacity>
+              ) : null}
+
+              {item.rfiStatus === RFI_STATUS.IN_REVIEW ? (
+                <TouchableOpacity
+                  style={[styles.MyWorkCta, styles.StartReviewBorder]}>
+                  <Image
+                    style={styles.WorkIcon}
+                    source={require('../../../../../images/review-icon.png')}
+                  />
+                  <Text style={[styles.CtaStartText, styles.CtaReviewTextColor]}>
+                    Under Review
+                  </Text>
+                </TouchableOpacity>
+              ) : null}
+
+              {item.rfiStatus === RFI_STATUS.APPROVED ? (
+                <TouchableOpacity
+                  style={[styles.MyWorkCta, styles.StartCompleteBorder]}>
+                  <Image
+                    style={styles.WorkIcon}
+                    source={require('../../../../../images/complete-icon.png')}
+                  />
+                  <Text style={[styles.CtaStartText, styles.CtaCompleteTextColor]}>
+                    Completed
+                  </Text>
+                </TouchableOpacity>
+              ) : null}
             </View>
-          ) : null}
-
-          {item.rfiStatus === RFI_STATUS.RE_GENERATED ? (
-            <TouchableOpacity
-              style={[styles.MyWorkCta, styles.StartBorder]}
-              onPress={() => {
-                _event.getRFIDataByWorkAssignmentId(item);
-              }}>
-              <Image
-                style={styles.WorkIcon}
-                source={require('../../../../../images/play-icon.png')}
-              />
-              <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>
-                Re-start
-              </Text>
-            </TouchableOpacity>
-          ) : null}
-
-          {item.rfiStatus === RFI_STATUS.REJECTED ||
-          item.rfiStatus === RFI_STATUS.CANCELLED ? (
-            <TouchableOpacity
-              style={[styles.MyWorkCta, styles.StartRejectBorder]}>
-              {/* <Image style={styles.WorkIcon} source={require('../../../../../images/play-icon.png')} /> */}
-              <Text style={[styles.CtaStartText, styles.CtaRejectTextColor]}>
-                {item.rfiStatus === RFI_STATUS.CANCELLED
-                  ? 'Cancelled'
-                  : 'Rejected'}
-              </Text>
-            </TouchableOpacity>
-          ) : null}
-
-          {item.rfiStatus === RFI_STATUS.IN_PROGRESS ? (
-            <TouchableOpacity
-              style={[styles.MyWorkCta, styles.StartInProgressBorder]}
-              onPress={() => {
-                _event.getRFIDataByWorkAssignmentId(item);
-              }}>
-              <Image
-                style={styles.WorkIcon}
-                source={require('../../../../../images/inprogress.png')}
-              />
-              <Text
-                style={[styles.CtaStartText, styles.CtaInProgressTextColor]}>
-                In Progress
-              </Text>
-            </TouchableOpacity>
-          ) : null}
-
-          {item.rfiStatus === RFI_STATUS.IN_REVIEW ? (
-            <TouchableOpacity
-              style={[styles.MyWorkCta, styles.StartReviewBorder]}>
-              <Image
-                style={styles.WorkIcon}
-                source={require('../../../../../images/review-icon.png')}
-              />
-              <Text style={[styles.CtaStartText, styles.CtaReviewTextColor]}>
-                Under Review
-              </Text>
-            </TouchableOpacity>
-          ) : null}
-
-          {item.rfiStatus === RFI_STATUS.APPROVED ? (
-            <TouchableOpacity
-              style={[styles.MyWorkCta, styles.StartCompleteBorder]}>
-              <Image
-                style={styles.WorkIcon}
-                source={require('../../../../../images/complete-icon.png')}
-              />
-              <Text style={[styles.CtaStartText, styles.CtaCompleteTextColor]}>
-                Completed
-              </Text>
-            </TouchableOpacity>
-          ) : null}
+          </LinearGradient>
         </View>
       ));
   };
@@ -19211,13 +19209,6 @@ export const CustomForms = (_v: any, workType: any, taskCategory: any) => {
                   </View>
                   <View></View>
                 </LinearGradient>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('MaterialRequestComponent');
-                }}>
-                <Text>sdfdsafas</Text>
               </TouchableOpacity>
             </>
           );

@@ -538,6 +538,11 @@ const RFIsStackNavigator = () => {
         component={RFIsGenerateMyQuality}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name="TaskForm"
+        component={TaskForm}
+        options={{headerShown: false}}
+      />
     </Stack.Navigator>
   );
 };

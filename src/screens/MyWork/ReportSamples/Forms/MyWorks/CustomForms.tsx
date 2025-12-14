@@ -54,6 +54,26 @@ const shouldRenderStartButton = (item: any) => {
 
   return false; // Do not render for all other cases
 };
+const shouldRenderMaterialRequestButton = (item: any) => {
+  const {materialRequestParentData} = item;
+
+  if (!materialRequestParentData) {
+    return true; // Render if materialRequestParentData is null or undefined
+  }
+
+  // const {isMaterialRequested, materialRequestStatus} =
+  //   materialRequestParentData;
+
+  // if (isMaterialRequested === false) {
+  //   return true; // Render if isMaterialRequested is false
+  // }
+
+  // if (isMaterialRequested === true && materialRequestStatus === 'completed') {
+  //   return true; // Render if isMaterialRequested is true and materialRequestStatus is 'completed'
+  // }
+
+  return false; // Do not render for all other cases
+};
 
 export const CustomForms = (_v: any, workType: any, taskCategory: any) => {
   const _validation = Validates(_v);
@@ -18971,7 +18991,8 @@ export const CustomForms = (_v: any, workType: any, taskCategory: any) => {
               </View>
             )
           ) : null}
-          {item.rfiStatus === RFI_STATUS.GENERATED ? (
+          {item.rfiStatus === RFI_STATUS.GENERATED &&
+          shouldRenderMaterialRequestButton(item) ? (
             <View>
               <TouchableOpacity
                 style={[styles.MyWorkCta, styles.StartBorder]}

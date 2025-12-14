@@ -29,6 +29,7 @@ function* getInspectionChecklist({payload}) {
       payload.projectId,
       payload.checklistName,
       payload.rfiId,
+      payload.readOnly,
     );
     yield put({type: 'GET_INSPECTION_CHECKLIST_SUCCESS', response});
   } catch (error) {

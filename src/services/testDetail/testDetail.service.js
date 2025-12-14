@@ -25,10 +25,11 @@ export const getInspectionChecklistApi = async (
   projectId,
   checklistName,
   rfiId,
+  readOnly,
 ) => {
   return apiService
     .getRequest(
-      `v1/auth/projects/${projectId}/my-work-task-form/inspection-checklist?name=${checklistName}&rfiId=${rfiId}`,
+      `v1/auth/projects/${projectId}/my-work-task-form/inspection-checklist?name=${checklistName}&rfiId=${rfiId}&readOnly=${readOnly}`,
     )
     .then(response => {
       return response;

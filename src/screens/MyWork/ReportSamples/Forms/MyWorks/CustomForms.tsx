@@ -34,6 +34,27 @@ import LinearGradient from 'react-native-linear-gradient';
 import {getWorkTypeColors} from '../../../../Common/CommonConstantsTypes';
 import {useNavigation} from '@react-navigation/native';
 
+const shouldRenderStartButton = (item: any) => {
+  const {materialRequestParentData} = item;
+
+  if (!materialRequestParentData) {
+    return true; // Render if materialRequestParentData is null or undefined
+  }
+
+  const {isMaterialRequested, materialRequestStatus} =
+    materialRequestParentData;
+
+  if (isMaterialRequested === false) {
+    return true; // Render if isMaterialRequested is false
+  }
+
+  if (isMaterialRequested === true && materialRequestStatus === 'completed') {
+    return true; // Render if isMaterialRequested is true and materialRequestStatus is 'completed'
+  }
+
+  return false; // Do not render for all other cases
+};
+
 export const CustomForms = (_v: any, workType: any, taskCategory: any) => {
   const _validation = Validates(_v);
   const _event = Events(_v);
@@ -18923,22 +18944,35 @@ export const CustomForms = (_v: any, workType: any, taskCategory: any) => {
             <View></View>
           </LinearGradient>
           {item.rfiStatus === RFI_STATUS.GENERATED ? (
-            <View>
-              <TouchableOpacity
-                style={[styles.MyWorkCta, styles.StartBorder]}
-                onPress={() => {
-                  console.log('Task Information', item);
-                  navigation.navigate('TaskForm', {taskData: item});
-                  //_event.getRFIDataByWorkAssignmentId(item);
-                }}>
-                <Image
-                  style={styles.WorkIcon}
-                  source={require('../../../../../images/play-icon.png')}
-                />
-                <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>
-                  Start
+            shouldRenderStartButton(item) ? (
+              <View>
+                <TouchableOpacity
+                  style={[styles.MyWorkCta, styles.StartBorder]}
+                  onPress={() => {
+                    console.log('Task Information', item);
+                    navigation.navigate('TaskForm', {taskData: item});
+                    //_event.getRFIDataByWorkAssignmentId(item);
+                  }}>
+                  <Image
+                    style={styles.WorkIcon}
+                    source={require('../../../../../images/play-icon.png')}
+                  />
+                  <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>
+                    Start
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <View style={[styles.MyWorkCta, styles.StartInProgressBorder]}>
+                <Text
+                  style={[styles.CtaStartText, styles.CtaInProgressTextColor]}>
+                  Material is requested, wait till delivered.
                 </Text>
-              </TouchableOpacity>
+              </View>
+            )
+          ) : null}
+          {item.rfiStatus === RFI_STATUS.GENERATED ? (
+            <View>
               <TouchableOpacity
                 style={[styles.MyWorkCta, styles.StartBorder]}
                 onPress={() => {
@@ -18957,7 +18991,6 @@ export const CustomForms = (_v: any, workType: any, taskCategory: any) => {
               </TouchableOpacity>
             </View>
           ) : null}
-
           {item.rfiStatus === RFI_STATUS.RE_GENERATED ? (
             <TouchableOpacity
               style={[styles.MyWorkCta, styles.StartBorder]}
@@ -19211,13 +19244,6 @@ export const CustomForms = (_v: any, workType: any, taskCategory: any) => {
                   </View>
                   <View></View>
                 </LinearGradient>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('MaterialRequestComponent');
-                }}>
-                <Text>sdfdsafas</Text>
               </TouchableOpacity>
             </>
           );

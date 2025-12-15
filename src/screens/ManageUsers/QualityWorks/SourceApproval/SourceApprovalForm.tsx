@@ -357,7 +357,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   input: {
-    height: 48,
+    height: 44,
     borderWidth: 1,
     borderColor: '#ddd',
     borderRadius: 4,

@@ -84,7 +84,11 @@ const CustomSelectDropdown = ({
 
 // Styles
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    width: '100%',
+    marginBottom: 15,
+    fontSize: 12,
+  },
   label: {
     fontSize: 12,
     color: '#666',

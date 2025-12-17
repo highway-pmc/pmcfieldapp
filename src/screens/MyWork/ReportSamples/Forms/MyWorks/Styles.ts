@@ -231,18 +231,21 @@ export const styles = StyleSheet.create({
   },
   StartInProgressBorder: {
     borderColor: '#FCB700',
+    backgroundColor: '#fff'
   },
   CtaReviewTextColor: {
     color: '#1C58C0',
   },
   StartReviewBorder: {
     borderColor: '#1C58C0',
+    backgroundColor: '#fff'
   },
   CtaCompleteTextColor: {
     color: '#2BC267',
   },
   StartCompleteBorder: {
     borderColor: '#2BC267',
+    backgroundColor: '#fff'
   },
   StartRejectBorder: {
     borderColor: '#FF0000',
@@ -640,25 +643,26 @@ export const styles = StyleSheet.create({
   gradientContainer: {
     alignItems: 'flex-start',
     justifyContent: 'space-between',
-    paddingVertical: 20,
+    paddingTop: 13,
+    paddingBottom: 13,
     paddingHorizontal: 15,
     borderBottomLeftRadius: 8,
     borderBottomRightRadius: 8,
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
     position: 'relative',
-    marginBottom: 10,
+    marginBottom: 5,
     borderWidth: 1,
   },
   divider: {
     width: '100%',
     height: 1,
     backgroundColor: '#E0E0E0',
-    marginBottom: 7,
-    marginTop: 15,
+    marginBottom: 5,
+    marginTop: 12,
   },
   cardFooter: {
-    paddingTop: 12,
+    paddingTop: 7,
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center',

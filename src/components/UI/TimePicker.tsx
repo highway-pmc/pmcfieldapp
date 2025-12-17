@@ -53,7 +53,8 @@ const styles = StyleSheet.create({
     height: 24,
     position: 'absolute',
     right: 15,
-    top: 10
+    top: 10,
+    tintColor: '#000000'
   },
   inputContainer: {
     marginBottom: 15,

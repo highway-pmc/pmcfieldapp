@@ -67,10 +67,10 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   label: {
-    fontSize: 14,
+    fontSize: 12,
     marginBottom: 5,
-    color: '#333',
-    fontWeight: '500',
+    color: '#666',
+    fontWeight: '500'
   },
   pickerContainer: {
     backgroundColor: '#fff',

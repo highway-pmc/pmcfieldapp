@@ -604,26 +604,26 @@ const handleSubmit = () => {
 
 // Styles adapted for use with an external DropdownPicker component
 const styles = StyleSheet.create({
-  container: {flex: 1, backgroundColor: '#f9f9f9'},
+  container: {flex: 1, backgroundColor: '#fff'},
   formContainer: {padding: 16},
   // FormGroup can be used for non-dropdown inputs
   formGroup: {
-    marginBottom: 16,
+    marginBottom: 15,
   },
   label: {
-    fontSize: 14,
-    marginBottom: 8,
-    color: '#333',
+    fontSize: 12,
+    marginBottom: 5,
+    color: '#666',
     fontWeight: '500',
   },
   input: {
-    height: 48,
+    height: 44,
     borderWidth: 1,
     borderColor: '#ddd',
-    borderRadius: 8,
+    borderRadius: 4,
     paddingHorizontal: 12,
     backgroundColor: 'white',
-    fontSize: 15,
+    fontSize: 12,
   },
   readOnlyInput: {
     backgroundColor: '#f0f0f0',
@@ -657,7 +657,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 16,
+    marginTop: 0,
     gap: 12,
   },
   submitButton: {
@@ -675,7 +675,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   cancelButton: {
-    backgroundColor: 'transparent',
+    backgroundColor: '#fff',
     borderWidth: 2,
     borderColor: '#5A2AAF',
   },

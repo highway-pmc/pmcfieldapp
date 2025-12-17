@@ -62,11 +62,12 @@ const CalendarPicker: React.FC<CalendarPickerProps> = ({
 
 const styles = StyleSheet.create({
   CalendarIcon: {
-    width: 24,
-    height: 24,
+    width: 20,
+    height: 20,
     position: 'absolute',
     right: 15,
-    top: 10
+    top: 11,
+    tintColor: '#666'
   },
   inputContainer: {
     marginBottom: 15,

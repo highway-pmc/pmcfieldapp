@@ -64,17 +64,19 @@ const SourceDetail = ({workCategories}: any) => {
       </View>
 
       <ScrollView style={styles.listContainer}>
-        {workCategories?.map((category: any) => (
-          <ListItem
-            key={category._id}
-            name={category.name}
-            number={category.sourceCount}
-            onPress={() => {
-              console.log('Selected category:', category);
-              setSelectedCategory(category);
-            }}
-          />
-        ))}
+        <View style={styles.listContainerPad}>
+          {workCategories?.map((category: any) => (
+            <ListItem
+              key={category._id}
+              name={category.name}
+              number={category.sourceCount}
+              onPress={() => {
+                console.log('Selected category:', category);
+                setSelectedCategory(category);
+              }}
+            />
+          ))}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -85,8 +87,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   listContainer: {
-    paddingVertical: 16,
+    paddingTop: 16,
+    paddingBottom: 0,
     paddingHorizontal: 8,
+  },
+  listContainerPad: {
+    paddingBottom: 20,
   },
   header: {
     flexDirection: 'row',

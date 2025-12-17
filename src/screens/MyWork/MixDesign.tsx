@@ -317,7 +317,7 @@ const MixDesign = ({navigation}: {navigation: any}) => {
       style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.card}>
-          <Text style={styles.sectionTitle}>Sampling Information</Text>
+            <Text style={styles.sectionTitle}>Sampling Information</Text>
           <View style={{flex: 1}}>
             <CalendarPicker
               label="Date of Sampling"
@@ -347,8 +347,7 @@ const MixDesign = ({navigation}: {navigation: any}) => {
             onChange={setMixDesignConductedBy}
             isRequired
           />
-        </View>
-        <View style={styles.card}>
+
           <Text style={styles.sectionTitle}>Mix Design Details</Text>
           <Input
             label="Mix Design Short Name"
@@ -407,10 +406,11 @@ const MixDesign = ({navigation}: {navigation: any}) => {
             placeholder=">0, up to 3 decimal places"
             isRequired
           />
-        </View>
-        {materialsData.length > 0 && renderMaterialsTable()}
 
-        <View style={styles.card}>
+
+          {materialsData.length > 0 && renderMaterialsTable()}
+
+
           <Text style={styles.sectionTitle}>Recommendation</Text>
           <Input
             label=""
@@ -420,8 +420,8 @@ const MixDesign = ({navigation}: {navigation: any}) => {
             numberOfLines={4}
             placeholder="Enter recommendations..."
           />
-        </View>
 
+        </View>
         <TouchableOpacity style={styles.submitButton} onPress={onSubmit}>
           <Text style={styles.submitButtonText}>Submit Mix Design</Text>
         </TouchableOpacity>
@@ -453,10 +453,10 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.card,
     borderRadius: 12,
     padding: 16,
-    marginBottom: 16,
+    marginBottom: 10,
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.05,
+    shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
   },
@@ -470,15 +470,16 @@ const styles = StyleSheet.create({
     borderBottomColor: COLORS.border,
   },
   formGroup: {
-    marginBottom: 16,
+    marginBottom: 15,
   },
   label: {
-    fontSize: 14,
-    color: COLORS.textLight,
-    marginBottom: 8,
+    fontSize: 12,
+    color: '#666',
+    fontWeight: '500',
+    marginBottom: 5,
   },
   textDisplay: {
-    fontSize: 16,
+    fontSize: 12,
     color: COLORS.text,
     paddingVertical: 12,
     paddingHorizontal: 10,
@@ -518,7 +519,8 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     alignItems: 'center',
     justifyContent: 'center',
-    marginVertical: 24,
+    marginTop: 10,
+    marginBottom: 15,
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 4},
     shadowOpacity: 0.2,

@@ -18,7 +18,7 @@ import {
 import styles from './DynamicForm.styles';
 import {Section, InputItem, DynamicTestFormProps} from './DynamicForm.types';
 import {validateField} from './utils/formValidation';
-
+import {subtract3Dec, divide3Dec, square3Dec, addValues} from './utils/formula';
 import ExpandableSection from './SectionRenderers/ExpandableSection';
 import SectionContent from './SectionRenderers/SectionContent';
 

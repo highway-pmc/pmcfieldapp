@@ -18,7 +18,13 @@ import {
 import styles from './DynamicForm.styles';
 import {Section, InputItem, DynamicTestFormProps} from './DynamicForm.types';
 import {validateField} from './utils/formValidation';
-import {subtract3Dec, divide3Dec, square3Dec, addValues} from './utils/formula';
+import {
+  subtract3Dec,
+  divide3Dec,
+  square3Dec,
+  addValues,
+  sqrt3Dec,
+} from './utils/formula';
 import ExpandableSection from './SectionRenderers/ExpandableSection';
 import SectionContent from './SectionRenderers/SectionContent';
 
@@ -67,11 +73,10 @@ const replaceIndexInString = (
   if (str.match(specimenInIdRegex)) {
     return str.replace(specimenInIdRegex, `Specimen${newIndex}`);
   }
-  
+
   const titleNumberRegex = new RegExp(`(\\s|\\b)${oldIndex}(\\b)`);
 
   if (str.match(titleNumberRegex)) {
-  
     const specimenTitleRegex = new RegExp(`(\\s)${oldIndex}(\\b|$)`, 'i');
 
     // If the string contains the index as a separate word, replace it.
@@ -325,18 +330,128 @@ const DynamicForm = forwardRef<DynamicFormRef, DynamicFormProps>(
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
       setIsMainExpanded(!isMainExpanded);
     };
+    // Inside DynamicForm.tsx component
 
-    const handleValueChange = (field: InputItem, newValue: any) => {
-      onGlobalValueChange(field.id, newValue);
+    const evalFormula = (
+      formula: string,
+      scope: Record<string, any>,
+      currentPrefix: string,
+    ) => {
+      try {
+        // 1. Helper Functions
+        const utils = {
+          subtract3Dec,
+          divide3Dec,
+          square3Dec,
+          sqrt3Dec,
+          addValues,
+        };
 
-      const error = validateField(field, newValue);
+        // 2. Build Execution Context
+        // We map the global state (scope) to variable names that the formula expects
+        const executionContext: Record<string, any> = {...utils};
 
-      setInputErrors((prev: any) => ({
-        ...prev,
-        [field.id]: error,
-      }));
+        Object.keys(scope).forEach(key => {
+          const rawValue = scope[key];
+          // Ensure we work with numbers for calculation, treating empty strings as 0
+          const numValue =
+            rawValue === '' || rawValue === null || isNaN(Number(rawValue))
+              ? 0
+              : parseFloat(rawValue);
+
+          // A. Inject the raw global ID (e.g. "Specimen1_date")
+          executionContext[key] = numValue;
+
+          // B. Inject Scoped Variables (e.g. "Specimen1_val_a" -> "val_a")
+          if (key.startsWith(currentPrefix)) {
+            const strippedName = key.replace(currentPrefix, '');
+
+            // Inject exact match
+            executionContext[strippedName] = numValue;
+
+            // C. Inject Normalized Match (Handle trailing underscore inconsistency)
+            // Fixes mismatch where ID is "...meter_f_" but formula uses "...meter_f"
+            if (strippedName.endsWith('_')) {
+              const noTrailingUnderscore = strippedName.slice(0, -1);
+              executionContext[noTrailingUnderscore] = numValue;
+            }
+          }
+        });
+
+        // 3. Execute Formula
+        const args = Object.keys(executionContext);
+        const values = Object.values(executionContext);
+
+        // Wrap formula in return statement if it's a simple expression
+        const sanitizedFormula =
+          formula.trim().includes('let ') || formula.trim().includes('const ')
+            ? formula
+            : `return ${formula}`;
+
+        const runner = new Function(...args, sanitizedFormula);
+        return runner(...values);
+      } catch (err) {
+        console.warn('Calc Error:', err, formula);
+        return null;
+      }
     };
 
+    const handleValueChange = (field: any, newValue: any) => {
+      // 1. Update Global State immediately
+      onGlobalValueChange(field.id, newValue);
+
+      // Create a temporary updated data object for calculation context
+      const updatedData = {
+        ...globalFormData,
+        [field.id]: newValue,
+      };
+
+      // 2. Identify the Specimen Context (e.g., "Specimen1_")
+      // This ensures we don't calculate Specimen 2 based on Specimen 1's inputs
+      const prefixMatch = field.id.match(/Specimen\d+_/);
+      const currentPrefix = prefixMatch ? prefixMatch[0] : '';
+
+      // 3. Recursive Recalculation Loop
+      const recalculate = (sections: any) => {
+        sections.forEach((sec: any) => {
+          if (sec.items) {
+            sec.items.forEach((item: any) => {
+              // Check for calculated type AND logic to ensure we only calc relevant fields
+              if (item.type === 'calculated' && item.formula) {
+                // Only calculate if the field belongs to the current Specimen OR is a global calc
+                if (
+                  item.id.startsWith(currentPrefix) ||
+                  !item.id.includes('Specimen')
+                ) {
+                  const result = evalFormula(
+                    item.formula,
+                    updatedData,
+                    currentPrefix,
+                  );
+
+                  // Only update if result is valid and changed
+                  if (
+                    result !== null &&
+                    result !== undefined &&
+                    !isNaN(result)
+                  ) {
+                    // Update the local data scope for subsequent formulas in the chain
+                    updatedData[item.id] = result;
+                    // Update the UI
+                    onGlobalValueChange(item.id, result);
+                  }
+                }
+              }
+            });
+          }
+          if (sec.sections) {
+            recalculate(sec.sections);
+          }
+        });
+      };
+
+      recalculate(dynamicSections);
+    };
     const isNested: boolean =
       formData.mainTitle !== 'Project & Material Testing';
 

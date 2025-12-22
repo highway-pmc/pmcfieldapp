@@ -178,6 +178,11 @@ export const getSourceApprovals = payload => ({
   payload: payload,
 });
 
+export const postAddSourceApprovals = payload => ({
+  type: SOURCE_APPROVALS.POST_ADD_SOURCE_REQUEST,
+  payload: payload,
+});
+
 export const getSourceCategoriesWithCount = payload => ({
   type: SOURCE_APPROVALS.GET_SOURCE_CATEGORIES_WITH_COUNT_REQUEST,
   payload: payload,
@@ -210,6 +215,16 @@ export const updateSourceApproval = payload => ({
 
 export const deleteSourceApproval = payload => ({
   type: SOURCE_APPROVALS.DELETE_SOURCE_APPROVAL_REQUEST,
+  payload: payload,
+});
+
+export const deleteSource = payload => ({
+  type: SOURCE_APPROVALS.DELETE_SOURCE_REQUEST,
+  payload: payload,
+});
+
+export const patchSourceStatus = payload => ({
+  type: SOURCE_APPROVALS.PATCH_SOURCE_STATUS_REQUEST,
   payload: payload,
 });
 

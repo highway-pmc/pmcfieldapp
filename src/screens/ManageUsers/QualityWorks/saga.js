@@ -24,6 +24,7 @@ import {
   deleteSourceDetailApi,
   getProcurementsApi,
   getSourceApprovalsApi,
+  postAddSourceApi,
   getSourceApprovalsByStatusApi,
   patchSourceApprovalApi,
   updateProcurementApi,
@@ -42,6 +43,8 @@ import {
   patchDipatchRequestApi,
   postUploadBatchSlipApi,
   dispatchProductionRequestApi,
+  deleteSourceApi,
+  patchSourceApprovalStatusApi
 } from '../../../services/source-procurements/source-procurements.service';
 import {
   METERIAL_REQUEST,
@@ -244,6 +247,23 @@ function* getSourceApprovals({payload}) {
   }
 }
 
+
+function* postAddSource({payload}) {
+  try {
+    const response = yield postAddSourceApi(
+      payload.projectId,
+      payload.testMaterialId,
+      payload.body
+    );
+    yield put({type: SOURCE_APPROVALS.POST_ADD_SOURCE_SUCCESS, response});
+  } catch (error) {
+    yield put({
+      type: SOURCE_APPROVALS.POST_ADD_SOURCE_FAILURE,
+      error: error.message,
+    });
+  }
+}
+
 function* getSourceCategoriesWithCount({payload}) {
   try {
     const response = yield getSourceCategoriesWithCountApi(payload.projectId);
@@ -366,6 +386,44 @@ function* deleteSourceApproval({payload}) {
   } catch (error) {
     yield put({
       type: SOURCE_APPROVALS.DELETE_SOURCE_APPROVAL_FAILURE,
+      error: error.message,
+    });
+  }
+}
+
+
+function* deleteSource({payload}) {
+  try {
+    const response = yield deleteSourceApi(
+      payload.projectId,
+      payload.id,
+    );
+    yield put({
+      type: SOURCE_APPROVALS.DELETE_SOURCE_SUCCESS,
+      response,
+    });
+  } catch (error) {
+    yield put({
+      type: SOURCE_APPROVALS.DELETE_SOURCE_FAILURE,
+      error: error.message,
+    });
+  }
+}
+
+function* patchSourceApprovalStatus({payload}) {
+  try {
+    const response = yield patchSourceApprovalStatusApi(
+      payload.projectId,
+      payload.id,
+      payload.body
+    );
+    yield put({
+      type: SOURCE_APPROVALS.PATCH_SOURCE_STATUS_SUCCESS,
+      response,
+    });
+  } catch (error) {
+    yield put({
+      type: SOURCE_APPROVALS.PATCH_SOURCE_STATUS_FAILURE,
       error: error.message,
     });
   }
@@ -752,6 +810,12 @@ export default function* testAssignmentScreenSaga() {
     SOURCE_APPROVALS.GET_SOURCE_APPROVALS_REQUEST,
     getSourceApprovals,
   );
+
+  yield takeLatest(
+    SOURCE_APPROVALS.POST_ADD_SOURCE_REQUEST,
+    postAddSource,
+  );
+
   yield takeLatest(
     SOURCE_APPROVALS.GET_SOURCE_CATEGORIES_WITH_COUNT_REQUEST,
     getSourceCategoriesWithCount,
@@ -780,6 +844,17 @@ export default function* testAssignmentScreenSaga() {
     SOURCE_APPROVALS.DELETE_SOURCE_APPROVAL_REQUEST,
     deleteSourceApproval,
   );
+
+  yield takeLatest(
+    SOURCE_APPROVALS.DELETE_SOURCE_REQUEST,
+    deleteSource,
+  );
+
+  yield takeLatest(
+    SOURCE_APPROVALS.PATCH_SOURCE_STATUS_REQUEST,
+    patchSourceApprovalStatus,
+  );
+
   yield takeLatest(
     SOURCE_APPROVALS.ADD_SOURCE_APPROVAL_DETAIL_REQUEST,
     addSourceDetail,

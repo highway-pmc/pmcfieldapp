@@ -14,6 +14,10 @@ import {HeaderItems} from '../../constants/constants'; // Assuming this path is 
 import {useIsFocused} from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DropdownPicker from '../../components/UI/DropdownPicker';
+import { useDispatch, useSelector } from 'react-redux';
+import { useSnackbar } from '../../context/SnackbarContext';
+import { getMixDesignFormInfo, getMixDesignList, getQualityMasterList } from '../RFIs/actions';
+import CustomSelectDropdown from '../Common/CustomSelectDropdown';
 
 // --- MOCK DATA FOR CASCADING DROPDOWNS ---
 const procurementDataSource = {
@@ -62,13 +66,32 @@ const procurementDataSource = {
   },
 };
 
-export default function AddPurchase({navigation}) {
+export default function AddPurchase({
+  route,
+  navigation,
+}: {
+  route: any;
+  navigation: any;
+}) {
   const isFocused = useIsFocused();
+  const {showSnackbar} = useSnackbar();
+  const dispatch = useDispatch();
+  
+    // --- Redux State ---
+    const {
+      savedMixDesignFormInfo,
+      mixDesignListData,
+      qualityMixDesignFormInfo,
+      loading,
+      error,
+    } = useSelector((state: any) => state.RFIs);
+    const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
+
 
   // --- FORM STATE ---
-  const [workCategory, setWorkCategory] = useState<string>('');
-  const [materialName, setMaterialName] = useState<string>('');
-  const [materialCategory, setMaterialCategory] = useState<string>('');
+  const [workCategory, setWorkCategory] = useState<any>(null);
+  const [materialName, setMaterialName] = useState<any>(null);;
+  const [materialCategory, setMaterialCategory] = useState<any>(null);
   const [sourceName, setSourceName] = useState<string>('');
   const [vendorName, setVendorName] = useState<string>('');
   const [vehicleNumbers, setVehicleNumbers] = useState<string[]>([]);
@@ -97,8 +120,11 @@ export default function AddPurchase({navigation}) {
     if (isFocused) {
       const eventEmitter = new NativeEventEmitter();
       eventEmitter.emit('headerEvent', HeaderItems.addPurchase); // Update header
+
+      dispatch(getQualityMasterList({testType: 'procurement-details'}));
+      dispatch(getMixDesignList({projectId: loggedInUser.projectId, testType: 'procurement-details'}));
     }
-  }, [isFocused]);
+  }, [isFocused, dispatch]);
 
   // --- CASCADING DROPDOWN LOGIC ---
   useEffect(() => {
@@ -237,42 +263,103 @@ export default function AddPurchase({navigation}) {
       date.getMonth() + 1,
     ).padStart(2, '0')}/${date.getFullYear()}`;
 
+  
+
+
+
+const [selectedWorkCategory, setSelectedWorkCategory] = useState<any>(null);
+const [selectedMaterialType, setSelectedMaterialType] = useState<any>(null);
+const [selectedMaterialCategory, setSelectedMaterialCategory] = useState<any>('');
+const [materialsData, setMaterialsData] = useState<any[]>([]);
+
+
+  const handleWorkCategorySelect = (selectedOption: any) => {
+    setSelectedWorkCategory(selectedOption);
+    console.log('98734982374', selectedWorkCategory)
+    setSelectedMaterialType(null);
+    setSelectedMaterialCategory('');
+    setMaterialsData([]);
+  };
+
+  const handleMaterialTypeSelect = (selectedOption: any) => {
+    setSelectedMaterialType(selectedOption);
+    setSelectedMaterialCategory('');
+    setMaterialsData([]);
+    handleFetchFormInfo(selectedWorkCategory, selectedOption);
+  };
+
+
+  const handleFetchFormInfo = (workCategory: any, materialType: any) => {
+      if (workCategory?.type && materialType?._id) {
+        dispatch(
+          getMixDesignFormInfo({
+            projectId: loggedInUser.projectId,
+            testWorkCategoryType: workCategory.type,
+            testMaterialId: materialType._id,
+          }),
+        );
+
+        console.log('dsfsfsdgfrdf 123', {projectId: loggedInUser.projectId,
+            testWorkCategoryType: workCategory.type,
+            testMaterialId: materialType._id, materialsData})
+      }
+    };
+
+
+  const handleMaterialItemChange = (
+    index: number,
+    field: string,
+    value: any,
+  ) => {
+    const updatedMaterials = [...materialsData];
+    updatedMaterials[index][field] = value;
+    setMaterialsData(updatedMaterials);
+  };
+
   return (
     <ScrollView style={styles.container} keyboardShouldPersistTaps="handled">
       <View style={styles.formContainer}>
-        <DropdownPicker
-          label="Work Category"
-          items={[
-            {label: 'Select Work Category', value: ''},
-            ...Object.keys(procurementDataSource).map(cat => ({
-              label: cat,
-              value: cat,
-            })),
-          ]}
-          value={workCategory}
-          onChange={setWorkCategory}
-          inputStyle={styles.formInput}
-        />
-        <DropdownPicker
-          label="Material Name"
-          items={[
-            {label: 'Select Material', value: ''},
-            ...materialOptions.map(mat => ({label: mat, value: mat})),
-          ]}
-          value={materialName}
-          onChange={setMaterialName}
-          inputStyle={styles.formInput}
-        />
-        <DropdownPicker
-          label="Material category"
-          items={[
-            {label: 'Select Material Category', value: ''},
-            ...materialCategoryOptions.map(cat => ({label: cat, value: cat})),
-          ]}
-          value={materialCategory}
-          onChange={setMaterialCategory}
-          inputStyle={styles.formInput}
-        />
+        <CustomSelectDropdown
+            label="Work Category"
+            data={mixDesignListData?.testWorkCategoriesData}
+            selectedValue={selectedWorkCategory}
+            onSelect={handleWorkCategorySelect}
+          />
+          <CustomSelectDropdown
+            label="Material Name"
+            data={selectedWorkCategory?.materialsData}
+            selectedValue={selectedMaterialType}
+            onSelect={handleMaterialTypeSelect}
+          />
+          <CustomSelectDropdown
+            label="Material Category"
+            data={selectedMaterialType?.category}
+            selectedValue={selectedMaterialCategory}
+            itemTypeOf="string"
+            onSelect={setSelectedMaterialCategory}
+          />
+
+
+{materialsData.map((item, index) => (
+            <>
+                  <CustomSelectDropdown
+                    label="Source Name*"
+                    data={item.category}
+                    selectedValue={item.selectedMaterialCategory}
+                    itemTypeOf="string"
+                    onSelect={(selectedItem: any) =>
+                      handleMaterialItemChange(
+                        index,
+                        'selectedMaterialCategory',
+                        selectedItem,
+                      )
+                    }
+                  />
+            </>
+          ))}
+
+
+
         <DropdownPicker
           label="Source Name*"
           items={[
@@ -469,7 +556,7 @@ const styles = StyleSheet.create({
   container: {flex: 1, backgroundColor: '#f9f9f9'},
   formContainer: {padding: 16},
   formGroup: {marginBottom: 16},
-  label: {fontSize: 14, marginBottom: 8, color: '#555', fontWeight: '500'},
+  label: {fontSize: 12, marginBottom: 5, color: '#666', fontWeight: '500'},
 
   // Consolidated and updated styling for all input boxes
   formInput: {
@@ -479,7 +566,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     paddingHorizontal: 12,
     backgroundColor: 'white',
-    fontSize: 14, // A slightly smaller font size to fit the new height
+    fontSize: 12, // A slightly smaller font size to fit the new height
     color: '#333',
   },
 

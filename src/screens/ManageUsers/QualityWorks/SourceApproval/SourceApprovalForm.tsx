@@ -12,8 +12,11 @@ import {
 import {useIsFocused} from '@react-navigation/native';
 import DropdownPicker from '../../../../components/UI/DropdownPicker';
 import {HeaderItems} from '../../../../constants/constants';
-import {getSourceApprovals, getVendorForm} from '../../actions';
+import {getSourceApprovals, getVendorForm, postAddSourceApprovals} from '../../actions';
 import {useDispatch, useSelector} from 'react-redux';
+import DocumentPicker from 'react-native-document-picker';
+import appConfig from '../../../../common/app.config';
+import { useSnackbar } from '../../../../context/SnackbarContext';
 
 // Static options for the 'Source Proposed For' dropdown
 const sourceProposedForOptions = [
@@ -39,6 +42,8 @@ export default function SourceApprovalForm({
   const testWorkCategoriesData = route.params.workCategories || [];
   const isFocused = useIsFocused();
   const {getVendorFormData} = useSelector((state: any) => state.VendorForm);
+  const {postAddSourceData, loading,
+    error} = useSelector((state: any) => state.SourceApprovals);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -78,7 +83,9 @@ export default function SourceApprovalForm({
 
   // Form state management
   const [workCategory, setWorkCategory] = useState<string>('');
+  const [workCategoryId, setWorkCategoryId] = useState<string>('');
   const [materialName, setMaterialName] = useState<string>('');
+  const [testMaterialId, setTestMaterialId] = useState<string>('');
   const [materialCategory, setMaterialCategory] = useState<string>('');
   const [sourceName, setSourceName] = useState<string>('');
   const [sourceProposedFor, setSourceProposedFor] = useState<string>('');
@@ -96,6 +103,12 @@ export default function SourceApprovalForm({
   >([]);
   const [showSourceProposedFor, setShowSourceProposedFor] = useState(false);
 
+  const [batchSlips, setBatchSlips]: any = useState(null);
+  const [fileUrlData, setfileUrlData]: any = useState('');
+  const {showSnackbar} = useSnackbar();
+  const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
+  
+
   // 3. UPDATE MATERIAL DROPDOWN WHEN WORK CATEGORY CHANGES
   useEffect(() => {
     if (workCategory && processedData[workCategory]) {
@@ -108,6 +121,7 @@ export default function SourceApprovalForm({
     }
     // Reset dependent fields when the parent dropdown changes
     setMaterialName('');
+    setTestMaterialId('');
     setMaterialCategory('');
     setUnit('');
   }, [workCategory, processedData]);
@@ -128,15 +142,52 @@ export default function SourceApprovalForm({
         ?.materialsData.find(m => m.name === materialName);
 
       unitValue = materialData?.materialUnit || '';
+      setTestMaterialId(materialData?._id);
+      setWorkCategoryId(materialData?.testWorkCategoryId);
+      console.log('Test data', materialData)
     }
 
     setMaterialCategoryOptions(options);
     setUnit(unitValue);
     setMaterialCategory(''); // Reset sub-category selection
-  }, [materialName, workCategory, processedData, testWorkCategoriesData]);
+  }, [materialName, testMaterialId, workCategory, processedData, testWorkCategoriesData]);
 
   const handleUpload = (fileName: string) =>
     Alert.alert('Upload', `Simulating upload for: ${fileName}`);
+
+
+  const handleBatchSlipUpload = async (requestId: string) => {
+      try {
+        const result: any = await DocumentPicker.pick({
+          type: [DocumentPicker.types.images, DocumentPicker.types.pdf],
+          allowMultiSelection: false,
+        });
+        const res = result[0];
+        setBatchSlips(res);
+  
+        let url = `${appConfig.API_URL}/v1/auth/projects/${loggedInUser.projectId}/material-requests/items/${requestId}/upload-batch-slip`;
+        let data = new FormData();
+        data.append('file', res);
+  
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {Authorization: appConfig.getToken()},
+          body: data,
+        });
+  
+        if (response.status === 200) {
+          let json = await response.json();
+          setfileUrlData(json.data.fileUrl);
+          showSnackbar('Batch slip uploaded successfully', 'success');
+        } else {
+          showSnackbar('Upload Failed', 'error');
+        }
+      } catch (err) {
+        if (!DocumentPicker.isCancel(err)) {
+          showSnackbar('Error picking file', 'error');
+        }
+      }
+    };
 
   const handleSubmit = () => {
     // Enhanced validation
@@ -157,22 +208,49 @@ export default function SourceApprovalForm({
       return;
     }
 
+
+    let selectedVendorId: any = {};
+
+    getVendorFormData.forEach((element: any) => {
+      if (element.name === selectedVendor) {
+        selectedVendorId = element
+      }
+    })
+
     const formData = {
-      workCategory,
-      materialName,
-      materialCategory: materialCategory || 'N/A', // Send 'N/A' if not applicable
-      sourceName,
-      sourceProposedFor: showSourceProposedFor ? sourceProposedFor : 'N/A',
-      location,
-      vendor: selectedVendor,
-      unit,
+      testWorkCategoryId: workCategoryId[0],
+      testMaterialType: materialName,
+      testWorkCategoryType: workCategory,
+      vendorId: selectedVendorId?._id,
+      materialCategory: materialCategory || 'N/A',
+      name: sourceName,
       unitRate,
       approxQty,
       remarks,
+      specificationsFile: "path/to/specs.pdf",
+      vendorCredentialsFile: "path/to/credentials.pdf",
+      quotationFile: "path/to/quote.pdf",
+      sourceProposedFor: [showSourceProposedFor ? sourceProposedFor : 'N/A'],
+      address: selectedVendorId?.address,
+      district: selectedVendorId?.district,
+      state: selectedVendorId?.state,
+      countryCode: selectedVendorId?.countryCode,
+      country: selectedVendorId?.country
     };
-    console.log('Form Submitted:', JSON.stringify(formData, null, 2));
-    Alert.alert('Success', 'Source Approval details submitted!');
+    dispatch(postAddSourceApprovals({projectId: loggedInUser.projectId, testMaterialId: testMaterialId, body: formData}));
+    //console.log('Form Submitted:', JSON.stringify(formData, null, 2));
+    //Alert.alert('Success', 'Source Approval details submitted!');
   };
+
+
+  useEffect(() => {
+      if (postAddSourceData) {
+        showSnackbar('Source Approval details submitted!', 'success');
+        navigation.navigate('SourceHome');
+      } else if (error) {
+        showSnackbar(error, 'error');
+      }
+    }, [postAddSourceData, error]);
 
   return (
     <ScrollView style={styles.container} keyboardShouldPersistTaps="handled">
@@ -300,7 +378,7 @@ export default function SourceApprovalForm({
           </Text>
           <TouchableOpacity
             style={styles.uploadButton}
-            onPress={() => handleUpload('Specifications')}>
+            onPress={() => handleBatchSlipUpload('Specifications')}>
             <Text style={styles.uploadButtonText}>Upload File</Text>
           </TouchableOpacity>
         </View>

@@ -72,13 +72,15 @@ const sourceApprovalsState = {
   patchedSourceApproval: null,
   updatedSourceApproval: null,
   deletedSourceApproval: null,
-
+  deletedSource: null,
+  patchSourceStatusData: null,
   addedSourceDetail: null,
   updatedSourceDetail: null,
   deletedSourceDetail: null,
   sourceCategoriesWithCount: null,
   sourceByStatusData: null,
   putSourceApprovalData: null,
+  postAddSourceData: null,
   error: null,
 };
 
@@ -1824,6 +1826,29 @@ const RFIsReducer = (state = myWorksState, action) => {
 };
 const SourceApprovalsReducer = (state = sourceApprovalsState, action) => {
   switch (action.type) {
+
+    case SOURCE_APPROVALS.POST_ADD_SOURCE_REQUEST:
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case SOURCE_APPROVALS.POST_ADD_SOURCE_SUCCESS:
+      return {
+        ...state,
+        postAddSourceData: action.response,
+        error: null,
+        loading: false,
+      };
+    case SOURCE_APPROVALS.POST_ADD_SOURCE_FAILURE:
+      return {
+        ...state,
+        postAddSourceData: null,
+        error: action.error,
+        loading: false,
+      };
+
+
     case SOURCE_APPROVALS.PUT_SOURCE_APPROVAL_REQUEST:
       return {
         ...state,
@@ -1984,7 +2009,49 @@ const SourceApprovalsReducer = (state = sourceApprovalsState, action) => {
         error: action.error,
         loading: false,
       };
-    case SOURCE_APPROVALS.DELETE_SOURCE_APPROVAL_REQUEST:
+      case SOURCE_APPROVALS.PATCH_SOURCE_STATUS_REQUEST:
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case SOURCE_APPROVALS.PATCH_SOURCE_STATUS_SUCCESS:
+      return {
+        ...state,
+        patchSourceStatusData: action.response,
+        error: null,
+        loading: false,
+      };
+    case SOURCE_APPROVALS.PATCH_SOURCE_STATUS_FAILURE:
+      return {
+        ...state,
+        patchSourceStatusData: null,
+        error: action.error,
+        loading: false,
+      };
+
+    case SOURCE_APPROVALS.DELETE_SOURCE_REQUEST:
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case SOURCE_APPROVALS.DELETE_SOURCE_SUCCESS:
+      return {
+        ...state,
+        deletedSource: action.response,
+        error: null,
+        loading: false,
+      };
+    case SOURCE_APPROVALS.DELETE_SOURCE_FAILURE:
+      return {
+        ...state,
+        deletedSource: null,
+        error: action.error,
+        loading: false,
+      };
+
+     case SOURCE_APPROVALS.DELETE_SOURCE_APPROVAL_REQUEST:
       return {
         ...state,
         error: null,
@@ -2067,6 +2134,7 @@ const SourceApprovalsReducer = (state = sourceApprovalsState, action) => {
     case SOURCE_APPROVALS.CLEAR_SOURCE_APPROVALS_REQUEST:
       return {
         ...state,
+        postAddSourceData: null,
         putSourceApprovalData: null,
         sourceByStatusData: null,
         sourceCategoriesWithCount: null,
@@ -2076,6 +2144,8 @@ const SourceApprovalsReducer = (state = sourceApprovalsState, action) => {
         patchedSourceApproval: null,
         updatedSourceApproval: null,
         deletedSourceApproval: null,
+        deletedSource: null,
+        patchSourceStatusData: null,
         addedSourceDetail: null,
         updatedSourceDetail: null,
         deletedSourceDetail: null,

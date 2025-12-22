@@ -185,6 +185,29 @@ export const getSourceApprovalsApi = async (projectId, testMaterialId) => {
       throw new Error(errorMessge);
     });
 };
+
+
+export const postAddSourceApi = async (projectId, testMaterialId, body) => {
+  console.log('post---!!!', projectId, testMaterialId, JSON.stringify(body));
+  return apiService
+    .postRequest(
+      `v1/auth/projects/${projectId}/test-materials/${testMaterialId}/source-approvals`, body
+    )
+    .then(response => {
+      console.log('data get---!!!', response);
+      return response;
+    })
+    .catch(err => {
+      const errorMessge =
+        err.message || 'Unable to get list of source approvals.';
+        console.log('data get---!!!', errorMessge);
+      throw new Error(errorMessge);
+    });
+};
+
+
+
+
 export const getSourceCategoriesWithCountApi = async projectId => {
   const url = `v1/auth/projects/${projectId}/source-approvals`;
   return apiService
@@ -314,6 +337,40 @@ export const deleteSourceApprovalApi = async (
     })
     .catch(err => {
       const errorMessge = err.message || 'Unable to update source.';
+      throw new Error(errorMessge);
+    });
+};
+
+
+export const deleteSourceApi = async (
+  projectId,
+  id,
+) => {
+  return apiService
+    .deleteRequest(
+      `v1/auth/projects/${projectId}/source-approvals/${id}`
+    )
+    .then(response => {
+      return response;
+    })
+    .catch(err => {
+      const errorMessge = err.message || 'Unable to update source.';
+      throw new Error(errorMessge);
+    });
+};
+
+
+export const patchSourceApprovalStatusApi = async (projectId, id, body) => {
+  return apiService
+    .patchRequest(
+      `v1/auth/projects/${projectId}/source-approvals/${id}/status`,
+      body,
+    )
+    .then(response => {
+      return response;
+    })
+    .catch(err => {
+      const errorMessge = err?.message || 'Unable to Approve status.';
       throw new Error(errorMessge);
     });
 };

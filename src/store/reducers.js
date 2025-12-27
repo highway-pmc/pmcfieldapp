@@ -1827,7 +1827,6 @@ const RFIsReducer = (state = myWorksState, action) => {
 };
 const SourceApprovalsReducer = (state = sourceApprovalsState, action) => {
   switch (action.type) {
-
     case SOURCE_APPROVALS.POST_ADD_SOURCE_REQUEST:
       return {
         ...state,
@@ -1848,7 +1847,6 @@ const SourceApprovalsReducer = (state = sourceApprovalsState, action) => {
         error: action.error,
         loading: false,
       };
-
 
     case SOURCE_APPROVALS.PUT_SOURCE_APPROVAL_REQUEST:
       return {
@@ -1907,6 +1905,26 @@ const SourceApprovalsReducer = (state = sourceApprovalsState, action) => {
       return {
         ...state,
         sourceCategoriesWithCount: null,
+        error: action.error,
+        loading: false,
+      };
+    case SOURCE_APPROVALS.GET_ALL_SOURCE_APPROVALS_REQUEST:
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case SOURCE_APPROVALS.GET_ALL_SOURCE_APPROVALS_SUCCESS:
+      return {
+        ...state,
+        allSourceApprovals: action.response,
+        error: null,
+        loading: false,
+      };
+    case SOURCE_APPROVALS.GET_ALL_SOURCE_APPROVALS_FAILURE:
+      return {
+        ...state,
+        allSourceApprovals: null,
         error: action.error,
         loading: false,
       };
@@ -2010,7 +2028,7 @@ const SourceApprovalsReducer = (state = sourceApprovalsState, action) => {
         error: action.error,
         loading: false,
       };
-      case SOURCE_APPROVALS.PATCH_SOURCE_STATUS_REQUEST:
+    case SOURCE_APPROVALS.PATCH_SOURCE_STATUS_REQUEST:
       return {
         ...state,
         error: null,
@@ -2052,7 +2070,7 @@ const SourceApprovalsReducer = (state = sourceApprovalsState, action) => {
         loading: false,
       };
 
-     case SOURCE_APPROVALS.DELETE_SOURCE_APPROVAL_REQUEST:
+    case SOURCE_APPROVALS.DELETE_SOURCE_APPROVAL_REQUEST:
       return {
         ...state,
         error: null,
@@ -2427,7 +2445,6 @@ const ProcurementsReducer = (state = procurementsState, action) => {
         loading: false,
       };
 
-
     case PROCUREMENTS.ADD_PURCHASE_REQUEST:
       return {
         ...state,
@@ -2448,7 +2465,6 @@ const ProcurementsReducer = (state = procurementsState, action) => {
         error: action.error,
         loading: false,
       };
-
 
     case PROCUREMENTS.ADD_PROCUREMENT_REQUEST:
       return {

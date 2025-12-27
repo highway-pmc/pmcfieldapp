@@ -30,6 +30,7 @@ import {
   updateProcurementApi,
   updateSourceApprovalApi,
   updateSourceDetailApi,
+  getAllSourceApprovalsApi,
   getSourceCategoriesWithCountApi,
   putSourceApprovalApi,
   postVendorFormApi,
@@ -45,7 +46,7 @@ import {
   dispatchProductionRequestApi,
   deleteSourceApi,
   patchSourceApprovalStatusApi,
-  addPurchaseApi
+  addPurchaseApi,
 } from '../../../services/source-procurements/source-procurements.service';
 import {
   METERIAL_REQUEST,
@@ -248,13 +249,30 @@ function* getSourceApprovals({payload}) {
   }
 }
 
-
+function* getAllSourceApprovals({payload}) {
+  console.log('===getAllSourceApprovals Saga===payload===', payload);
+  try {
+    const response = yield getAllSourceApprovalsApi(
+      payload.projectId,
+      payload.status,
+    );
+    yield put({
+      type: SOURCE_APPROVALS.GET_ALL_SOURCE_APPROVALS_SUCCESS,
+      response,
+    });
+  } catch (error) {
+    yield put({
+      type: SOURCE_APPROVALS.GET_ALL_SOURCE_APPROVALS_FAILURE,
+      error: error.message,
+    });
+  }
+}
 function* postAddSource({payload}) {
   try {
     const response = yield postAddSourceApi(
       payload.projectId,
       payload.testMaterialId,
-      payload.body
+      payload.body,
     );
     yield put({type: SOURCE_APPROVALS.POST_ADD_SOURCE_SUCCESS, response});
   } catch (error) {
@@ -392,13 +410,9 @@ function* deleteSourceApproval({payload}) {
   }
 }
 
-
 function* deleteSource({payload}) {
   try {
-    const response = yield deleteSourceApi(
-      payload.projectId,
-      payload.id,
-    );
+    const response = yield deleteSourceApi(payload.projectId, payload.id);
     yield put({
       type: SOURCE_APPROVALS.DELETE_SOURCE_SUCCESS,
       response,
@@ -416,7 +430,7 @@ function* patchSourceApprovalStatus({payload}) {
     const response = yield patchSourceApprovalStatusApi(
       payload.projectId,
       payload.id,
-      payload.body
+      payload.body,
     );
     yield put({
       type: SOURCE_APPROVALS.PATCH_SOURCE_STATUS_SUCCESS,
@@ -526,7 +540,6 @@ function* addProcurement({payload}) {
     });
   }
 }
-
 
 function* addPurchase({payload}) {
   try {
@@ -830,11 +843,11 @@ export default function* testAssignmentScreenSaga() {
     SOURCE_APPROVALS.GET_SOURCE_APPROVALS_REQUEST,
     getSourceApprovals,
   );
-
   yield takeLatest(
-    SOURCE_APPROVALS.POST_ADD_SOURCE_REQUEST,
-    postAddSource,
+    SOURCE_APPROVALS.GET_ALL_SOURCE_APPROVALS_REQUEST,
+    getAllSourceApprovals,
   );
+  yield takeLatest(SOURCE_APPROVALS.POST_ADD_SOURCE_REQUEST, postAddSource);
 
   yield takeLatest(
     SOURCE_APPROVALS.GET_SOURCE_CATEGORIES_WITH_COUNT_REQUEST,
@@ -865,10 +878,7 @@ export default function* testAssignmentScreenSaga() {
     deleteSourceApproval,
   );
 
-  yield takeLatest(
-    SOURCE_APPROVALS.DELETE_SOURCE_REQUEST,
-    deleteSource,
-  );
+  yield takeLatest(SOURCE_APPROVALS.DELETE_SOURCE_REQUEST, deleteSource);
 
   yield takeLatest(
     SOURCE_APPROVALS.PATCH_SOURCE_STATUS_REQUEST,

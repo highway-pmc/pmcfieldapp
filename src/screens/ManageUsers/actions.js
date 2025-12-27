@@ -177,7 +177,10 @@ export const getSourceApprovals = payload => ({
   type: SOURCE_APPROVALS.GET_SOURCE_APPROVALS_REQUEST,
   payload: payload,
 });
-
+export const getAllSourceApprovals = payload => ({
+  type: SOURCE_APPROVALS.GET_ALL_SOURCE_APPROVALS_REQUEST,
+  payload: payload,
+});
 export const postAddSourceApprovals = payload => ({
   type: SOURCE_APPROVALS.POST_ADD_SOURCE_REQUEST,
   payload: payload,
@@ -248,7 +251,10 @@ export const getProcurements = payload => ({
   type: PROCUREMENTS.GET_PROCUREMENTS_REQUEST,
   payload: payload,
 });
-
+export const getAllProcurements = payload => ({
+  type: PROCUREMENTS.GET_ALL_PROCUREMENTS_REQUEST,
+  payload: payload,
+});
 export const addProcurement = payload => ({
   type: PROCUREMENTS.ADD_PROCUREMENT_REQUEST,
   payload: payload,

@@ -185,13 +185,30 @@ export const getSourceApprovalsApi = async (projectId, testMaterialId) => {
       throw new Error(errorMessge);
     });
 };
-
+export const getAllSourceApprovalsApi = async (projectId, status) => {
+  console.log('getAllSourceApprovalsApi---!!!', projectId, status);
+  console.log(
+    `v1/auth/projects/${projectId}/all-source-approvals?status=${status}`,
+  );
+  //TODO
+  return apiService
+    .getRequest(`v1/auth/projects/${projectId}/all-source-approvals`)
+    .then(response => {
+      return response;
+    })
+    .catch(err => {
+      const errorMessge =
+        err.message || 'Unable to get list of source approvals.';
+      throw new Error(errorMessge);
+    });
+};
 
 export const postAddSourceApi = async (projectId, testMaterialId, body) => {
   console.log('post---!!!', projectId, testMaterialId, JSON.stringify(body));
   return apiService
     .postRequest(
-      `v1/auth/projects/${projectId}/test-materials/${testMaterialId}/source-approvals`, body
+      `v1/auth/projects/${projectId}/test-materials/${testMaterialId}/source-approvals`,
+      body,
     )
     .then(response => {
       console.log('data get---!!!', response);
@@ -200,13 +217,10 @@ export const postAddSourceApi = async (projectId, testMaterialId, body) => {
     .catch(err => {
       const errorMessge =
         err.message || 'Unable to get list of source approvals.';
-        console.log('data get---!!!', errorMessge);
+      console.log('data get---!!!', errorMessge);
       throw new Error(errorMessge);
     });
 };
-
-
-
 
 export const getSourceCategoriesWithCountApi = async projectId => {
   const url = `v1/auth/projects/${projectId}/source-approvals`;
@@ -341,15 +355,9 @@ export const deleteSourceApprovalApi = async (
     });
 };
 
-
-export const deleteSourceApi = async (
-  projectId,
-  id,
-) => {
+export const deleteSourceApi = async (projectId, id) => {
   return apiService
-    .deleteRequest(
-      `v1/auth/projects/${projectId}/source-approvals/${id}`
-    )
+    .deleteRequest(`v1/auth/projects/${projectId}/source-approvals/${id}`)
     .then(response => {
       return response;
     })
@@ -358,7 +366,6 @@ export const deleteSourceApi = async (
       throw new Error(errorMessge);
     });
 };
-
 
 export const patchSourceApprovalStatusApi = async (projectId, id, body) => {
   return apiService
@@ -468,17 +475,18 @@ export const addProcurementApi = async (
     });
 };
 
-
 export const addPurchaseApi = async (
   projectId,
   testWorkCategoryType,
   testMaterialId,
   body,
 ) => {
-  console.log('adjahslkd lkasjdlkja', {projectId,
-  testWorkCategoryType,
-  testMaterialId,
-  body,})
+  console.log('adjahslkd lkasjdlkja', {
+    projectId,
+    testWorkCategoryType,
+    testMaterialId,
+    body,
+  });
   return apiService
     .postRequest(
       `v1/auth/projects/${projectId}/test-work-category/${testWorkCategoryType}/test-material/${testMaterialId}`,

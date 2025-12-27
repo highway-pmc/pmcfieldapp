@@ -468,6 +468,31 @@ export const addProcurementApi = async (
     });
 };
 
+
+export const addPurchaseApi = async (
+  projectId,
+  testWorkCategoryType,
+  testMaterialId,
+  body,
+) => {
+  console.log('adjahslkd lkasjdlkja', {projectId,
+  testWorkCategoryType,
+  testMaterialId,
+  body,})
+  return apiService
+    .postRequest(
+      `v1/auth/projects/${projectId}/test-work-category/${testWorkCategoryType}/test-material/${testMaterialId}`,
+      body,
+    )
+    .then(response => {
+      return response;
+    })
+    .catch(err => {
+      const errorMessge = err.message || 'Unable to add Add Purchase.';
+      throw new Error(errorMessge);
+    });
+};
+
 export const updateProcurementApi = async (
   projectId,
   testWorkCategoryType,

@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useSnackbar } from '../../context/SnackbarContext';
 import { getMixDesignFormInfo, getMixDesignList, getQualityMasterList } from '../RFIs/actions';
 import CustomSelectDropdown from '../Common/CustomSelectDropdown';
+import { addPurchasePost, getSourceApprovals, getVendorForm } from '../ManageUsers/actions';
 
 // --- MOCK DATA FOR CASCADING DROPDOWNS ---
 const procurementDataSource = {
@@ -86,6 +87,11 @@ export default function AddPurchase({
       error,
     } = useSelector((state: any) => state.RFIs);
     const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
+    const {sourceApprovals} = useSelector((state: any) => state.SourceApprovals);
+    const {getVendorFormData} = useSelector((state: any) => state.VendorForm);
+    const {
+        addedPurchaseData
+      } = useSelector((state: any) => state.Procurements);
 
 
   // --- FORM STATE ---
@@ -226,37 +232,7 @@ export default function AddPurchase({
   const handleUpload = (fileName: string) =>
     Alert.alert('Upload', `Simulating upload for: ${fileName}`);
 
-  const handleSubmit = () => {
-    if (
-      !workCategory ||
-      !materialName ||
-      !unitRate ||
-      !quantity ||
-      !invoiceNumber ||
-      lotNumbers.length === 0
-    ) {
-      Alert.alert('Validation Error', 'Please fill all required fields.');
-      return;
-    }
-    const formData = {
-      workCategory,
-      materialName,
-      materialCategory,
-      sourceName,
-      vendorName,
-      vehicleNumbers,
-      lotNumbers,
-      unit,
-      unitRate,
-      quantity,
-      purchaseDate,
-      invoiceNumber,
-      remarks,
-    };
-    console.log('Form Submitted:', JSON.stringify(formData, null, 2));
-    Alert.alert('Success', 'Procurement details submitted!');
-    navigation.goBack();
-  };
+  
 
   const formatDate = (date: Date) =>
     `${String(date.getDate()).padStart(2, '0')}/${String(
@@ -270,12 +246,13 @@ export default function AddPurchase({
 const [selectedWorkCategory, setSelectedWorkCategory] = useState<any>(null);
 const [selectedMaterialType, setSelectedMaterialType] = useState<any>(null);
 const [selectedMaterialCategory, setSelectedMaterialCategory] = useState<any>('');
+const [selectedSource, setSelectedSource] = useState<any>(null);
+const [selectedSourceId, setSelectedSourceId] = useState<any>(null);
 const [materialsData, setMaterialsData] = useState<any[]>([]);
 
 
   const handleWorkCategorySelect = (selectedOption: any) => {
     setSelectedWorkCategory(selectedOption);
-    console.log('98734982374', selectedWorkCategory)
     setSelectedMaterialType(null);
     setSelectedMaterialCategory('');
     setMaterialsData([]);
@@ -286,7 +263,18 @@ const [materialsData, setMaterialsData] = useState<any[]>([]);
     setSelectedMaterialCategory('');
     setMaterialsData([]);
     handleFetchFormInfo(selectedWorkCategory, selectedOption);
+    console.log('dada', selectedMaterialType)
   };
+
+
+  const getAvailableSources = (materialTypeId: any) => {
+      dispatch(
+        getSourceApprovals({
+          projectId: loggedInUser.projectId,
+          testMaterialId: materialTypeId,
+        }),
+      );
+    };
 
 
   const handleFetchFormInfo = (workCategory: any, materialType: any) => {
@@ -298,23 +286,104 @@ const [materialsData, setMaterialsData] = useState<any[]>([]);
             testMaterialId: materialType._id,
           }),
         );
-
-        console.log('dsfsfsdgfrdf 123', {projectId: loggedInUser.projectId,
-            testWorkCategoryType: workCategory.type,
-            testMaterialId: materialType._id, materialsData})
+        getAvailableSources(materialType._id);
       }
     };
 
 
-  const handleMaterialItemChange = (
-    index: number,
-    field: string,
-    value: any,
-  ) => {
-    const updatedMaterials = [...materialsData];
-    updatedMaterials[index][field] = value;
-    setMaterialsData(updatedMaterials);
+  const handleMaterialItemChange = (item: any) => {
+    sourceApprovals?.forEach((data: any) => {
+      if(item === data?.name) {
+        setSelectedSourceId(data?._id)
+      }
+    })
+    setSelectedSource(item);
+    dispatch(getVendorForm());
   };
+
+  
+  
+  useEffect(() => {
+
+  }, [sourceApprovals, selectedSourceId, selectedMaterialType])
+
+
+  const handleSubmit = () => {
+    if (
+      !selectedMaterialCategory ||
+      !selectedSourceId
+    ) {
+      Alert.alert('Validation Error', 'Please fill all required fields.');
+      return;
+    }
+
+
+    let selectedVendorId: any = {};
+
+    getVendorFormData.forEach((element: any) => {
+      if (element.name === vendorName) {
+        selectedVendorId = element
+      }
+    })
+
+    
+    const formData = {
+      sourceApprovalId: selectedSourceId,
+      lotNo: lotNumbers,
+      procurementDateTime: '', 
+      vehicleNo: vehicleNumbers, 
+      invoiceFile: '', 
+      metaData: '',
+      testWorkCategoryId: selectedMaterialType?.testWorkCategoryId[0],
+      vendorId: selectedVendorId?._id,
+      unit: unit,
+      unitRate: unitRate,
+      quantityPurchased: quantity,
+      purchaseDate: purchaseDate,
+      invoiceNumber: invoiceNumber,
+      mtcFile: '',
+      remarks: remarks,
+      materialCategory: selectedMaterialCategory,
+
+      
+      // workCategory,
+      // materialName,
+      // materialCategory,
+      // sourceName,
+      // vendorName,
+      // vehicleNumbers,
+      // lotNumbers,
+      // unit,
+      // unitRate,
+      // quantity,
+      // purchaseDate,
+      // invoiceNumber,
+      // remarks,
+    };
+
+    dispatch(
+        addPurchasePost({
+          projectId: loggedInUser.projectId,
+          testWorkCategoryType: selectedWorkCategory?.name,
+          testMaterialId: selectedMaterialType?._id,
+          body: formData,
+        }),
+      );
+    console.log('Form Submitted:', JSON.stringify(formData, null, 2));
+    // Alert.alert('Success', 'Procurement details submitted!');
+  };
+
+
+  useEffect(() => {
+        if (addedPurchaseData) {
+          showSnackbar('Procurement details submitted!', 'success');
+          navigation.goBack();
+        } else if (error) {
+          showSnackbar(error, 'error');
+        }
+  }, [addedPurchaseData, error]);
+
+  
 
   return (
     <ScrollView style={styles.container} keyboardShouldPersistTaps="handled">
@@ -338,29 +407,18 @@ const [materialsData, setMaterialsData] = useState<any[]>([]);
             itemTypeOf="string"
             onSelect={setSelectedMaterialCategory}
           />
-
-
-{materialsData.map((item, index) => (
-            <>
-                  <CustomSelectDropdown
-                    label="Source Name*"
-                    data={item.category}
-                    selectedValue={item.selectedMaterialCategory}
-                    itemTypeOf="string"
-                    onSelect={(selectedItem: any) =>
-                      handleMaterialItemChange(
-                        index,
-                        'selectedMaterialCategory',
-                        selectedItem,
-                      )
-                    }
-                  />
-            </>
-          ))}
+          
+          <CustomSelectDropdown
+            label="Source Name*"
+            data={sourceApprovals?.filter((item: any) => item?.status === 'approved').map((item: any) => item?.name)}
+            selectedValue={selectedSource}
+            itemTypeOf="string"
+            onSelect={handleMaterialItemChange}
+          />
 
 
 
-        <DropdownPicker
+        {/* <DropdownPicker
           label="Source Name*"
           items={[
             {label: 'Select Source', value: ''},
@@ -369,8 +427,26 @@ const [materialsData, setMaterialsData] = useState<any[]>([]);
           value={sourceName}
           onChange={setSourceName}
           inputStyle={styles.formInput}
-        />
-        <DropdownPicker
+        /> */}
+
+
+          {Array.isArray(getVendorFormData) && getVendorFormData.length > 0 ? (
+          <DropdownPicker
+            label="Select an existing vendor*"
+            items={[
+              {label: 'Select an existing vendor', value: ''},
+              ...getVendorFormData.map((v: any) => ({
+                label: v.name,
+                value: v.name,
+              })),
+            ]}
+            value={vendorName}
+            onChange={setVendorName}
+          />
+        ) : null}
+
+
+        {/* <DropdownPicker
           label="Vendor Name*"
           items={[
             {label: 'Select Vendor', value: ''},
@@ -379,7 +455,7 @@ const [materialsData, setMaterialsData] = useState<any[]>([]);
           value={vendorName}
           onChange={setVendorName}
           inputStyle={styles.formInput}
-        />
+        /> */}
 
         <View style={styles.formGroup}>
           <Text style={styles.label}>Vehicle No. (last 4 digit)*</Text>

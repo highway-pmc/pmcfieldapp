@@ -111,6 +111,7 @@ const procurementsState = {
   addedProcurement: null,
   updatedProcurement: null,
   deletedProcurement: null,
+  addedPurchaseData: null,
   error: null,
 };
 
@@ -2425,6 +2426,30 @@ const ProcurementsReducer = (state = procurementsState, action) => {
         error: action.error,
         loading: false,
       };
+
+
+    case PROCUREMENTS.ADD_PURCHASE_REQUEST:
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case PROCUREMENTS.ADD_PURCHASE_SUCCESS:
+      return {
+        ...state,
+        addedPurchaseData: action.response,
+        error: null,
+        loading: false,
+      };
+    case PROCUREMENTS.ADD_PURCHASE_FAILURE:
+      return {
+        ...state,
+        addedPurchaseData: null,
+        error: action.error,
+        loading: false,
+      };
+
+
     case PROCUREMENTS.ADD_PROCUREMENT_REQUEST:
       return {
         ...state,
@@ -2492,6 +2517,7 @@ const ProcurementsReducer = (state = procurementsState, action) => {
         addedProcurement: null,
         updatedProcurement: null,
         deletedProcurement: null,
+        addedPurchaseData: null,
         loading: true,
       };
       return {

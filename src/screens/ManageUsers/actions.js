@@ -254,6 +254,11 @@ export const addProcurement = payload => ({
   payload: payload,
 });
 
+export const addPurchasePost = payload => ({
+  type: PROCUREMENTS.ADD_PURCHASE_REQUEST,
+  payload: payload,
+});
+
 export const updateProcurement = payload => ({
   type: PROCUREMENTS.UPDATE_PROCUREMENT_REQUEST,
   payload: payload,

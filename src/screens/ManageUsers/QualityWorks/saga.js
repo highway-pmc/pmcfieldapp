@@ -44,7 +44,8 @@ import {
   postUploadBatchSlipApi,
   dispatchProductionRequestApi,
   deleteSourceApi,
-  patchSourceApprovalStatusApi
+  patchSourceApprovalStatusApi,
+  addPurchaseApi
 } from '../../../services/source-procurements/source-procurements.service';
 import {
   METERIAL_REQUEST,
@@ -526,6 +527,25 @@ function* addProcurement({payload}) {
   }
 }
 
+
+function* addPurchase({payload}) {
+  try {
+    const response = yield addPurchaseApi(
+      payload.projectId,
+      payload.testWorkCategoryType,
+      payload.testMaterialId,
+      payload.body,
+    );
+    yield put({type: PROCUREMENTS.ADD_PURCHASE_SUCCESS, response});
+  } catch (error) {
+    console.log('===error===', error);
+    yield put({
+      type: PROCUREMENTS.ADD_PURCHASE_FAILURE,
+      error: error.message,
+    });
+  }
+}
+
 function* updateProcurement({payload}) {
   try {
     const response = yield updateProcurementApi(
@@ -869,6 +889,7 @@ export default function* testAssignmentScreenSaga() {
   );
   yield takeLatest(PROCUREMENTS.GET_PROCUREMENTS_REQUEST, getProcurements);
   yield takeLatest(PROCUREMENTS.ADD_PROCUREMENT_REQUEST, addProcurement);
+  yield takeLatest(PROCUREMENTS.ADD_PURCHASE_REQUEST, addPurchase);
   yield takeLatest(PROCUREMENTS.UPDATE_PROCUREMENT_REQUEST, updateProcurement);
   yield takeLatest(PROCUREMENTS.DELETE_PROCUREMENT_REQUEST, deleteProcurement);
 }

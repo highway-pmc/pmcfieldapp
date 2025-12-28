@@ -490,7 +490,7 @@ export const addPurchaseApi = async (
   });
   return apiService
     .postRequestWithFile(
-      `v1/auth/projects/${projectId}/test-work-category/${testWorkCategoryType}/test-material/${testMaterialId}`,
+      `v1/auth/projects/${projectId}/test-work-category/${testWorkCategoryType}/test-material/${testMaterialId}/procurements`,
       body,
     )
     .then(response => {

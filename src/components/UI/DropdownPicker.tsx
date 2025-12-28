@@ -12,6 +12,7 @@ interface DropdownPickerProps {
   style?: any,
   cssStyle?: any;
   onChange: any;
+  inputStyle?: any;
 }
 
 const DropdownPicker: React.FC<DropdownPickerProps> = ({
@@ -23,7 +24,8 @@ const DropdownPicker: React.FC<DropdownPickerProps> = ({
   isRequired,
   style = {},
   onChange,
-  cssStyle
+  cssStyle,
+  inputStyle,
 }) => {
 
   const [error, setError] = useState('');
@@ -44,7 +46,7 @@ const DropdownPicker: React.FC<DropdownPickerProps> = ({
         label && 
         <Text style={[styles.label, cssStyle]}>{label}</Text>
       }
-      <View style={[styles.pickerContainer]}>
+      <View style={[styles.pickerContainer, inputStyle]}>
         <Picker
           selectedValue={value}
           style={styles.picker}

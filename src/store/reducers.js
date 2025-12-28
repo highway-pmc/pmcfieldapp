@@ -1832,6 +1832,7 @@ const SourceApprovalsReducer = (state = sourceApprovalsState, action) => {
         ...state,
         error: null,
         loading: true,
+        postAddSourceData: null,
       };
     case SOURCE_APPROVALS.POST_ADD_SOURCE_SUCCESS:
       return {

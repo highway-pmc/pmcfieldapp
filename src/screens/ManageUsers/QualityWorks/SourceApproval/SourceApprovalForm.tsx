@@ -13,6 +13,7 @@ import {useIsFocused} from '@react-navigation/native';
 import DropdownPicker from '../../../../components/UI/DropdownPicker';
 import {HeaderItems} from '../../../../constants/constants';
 import {
+  clearSourceApprovals,
   getSourceApprovals,
   getVendorForm,
   postAddSourceApprovals,
@@ -52,6 +53,7 @@ export default function SourceApprovalForm({
   );
   const dispatch = useDispatch();
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
 
   useEffect(() => {
@@ -60,7 +62,7 @@ export default function SourceApprovalForm({
       eventEmitter.emit('headerEvent', HeaderItems.sourceApprovalForm);
       // Fetch initial data needed for the form
       dispatch(getVendorForm());
-      dispatch(getSourceApprovals());
+      //dispatch(getSourceApprovals());
     }
   }, [isFocused, dispatch]);
 
@@ -165,42 +167,6 @@ export default function SourceApprovalForm({
     testWorkCategoriesData,
   ]);
 
-  const handleUpload = (fileName: string) =>
-    Alert.alert('Upload', `Simulating upload for: ${fileName}`);
-
-  // const handleBatchSlipUpload = async (requestId: string) => {
-  //     try {
-  //       const result: any = await DocumentPicker.pick({
-  //         type: [DocumentPicker.types.images, DocumentPicker.types.pdf],
-  //         allowMultiSelection: false,
-  //       });
-  //       const res = result[0];
-  //       setBatchSlips(res);
-
-  //       let url = `${appConfig.API_URL}/v1/auth/projects/${loggedInUser.projectId}/material-requests/items/${requestId}/upload-batch-slip`;
-  //       let data = new FormData();
-  //       data.append('file', res);
-
-  //       const response = await fetch(url, {
-  //         method: 'POST',
-  //         headers: {Authorization: appConfig.getToken()},
-  //         body: data,
-  //       });
-
-  //       if (response.status === 200) {
-  //         let json = await response.json();
-  //         setfileUrlData(json.data.fileUrl);
-  //         showSnackbar('Batch slip uploaded successfully', 'success');
-  //       } else {
-  //         showSnackbar('Upload Failed', 'error');
-  //       }
-  //     } catch (err) {
-  //       if (!DocumentPicker.isCancel(err)) {
-  //         showSnackbar('Error picking file', 'error');
-  //       }
-  //     }
-  //   };
-
   const [specificationsFile, setSpecificationsFile] = useState<any>(null);
   const [vendorCredentialsFile, setVendorCredentialsFile] = useState<any>(null);
   const [quotationFile, setQuotationFile] = useState<any>(null);
@@ -232,7 +198,6 @@ export default function SourceApprovalForm({
   };
 
   const handleSubmit = async () => {
-    
     // Enhanced validation
     if (
       !workCategory ||
@@ -258,29 +223,6 @@ export default function SourceApprovalForm({
         selectedVendorId = element;
       }
     });
-
-    //console.log('sduay78687', selectedOptions)
-
-    // const formData = {
-    //   testWorkCategoryId: workCategoryId[0],
-    //   testMaterialType: materialName,
-    //   testWorkCategoryType: workCategory,
-    //   vendorId: selectedVendorId?._id,
-    //   materialCategory: materialCategory || 'N/A',
-    //   name: sourceName,
-    //   unitRate,
-    //   approxQty,
-    //   remarks,
-    //   specificationsFile: "path/to/specs.pdf",
-    //   vendorCredentialsFile: "path/to/credentials.pdf",
-    //   quotationFile: "path/to/quote.pdf",
-    //   sourceProposedFor: selectedOptions ? selectedOptions : ['N/A'],//[showSourceProposedFor ? sourceProposedFor : 'N/A'],
-    //   address: selectedVendorId?.address,
-    //   district: selectedVendorId?.district,
-    //   state: selectedVendorId?.state,
-    //   countryCode: selectedVendorId?.countryCode,
-    //   country: selectedVendorId?.country
-    // };
 
     const formData = new FormData();
 
@@ -319,6 +261,7 @@ export default function SourceApprovalForm({
     if (quotationFile) {
       formData.append('quotationFile', quotationFile);
     }
+    setIsSubmitting(true);
     dispatch(
       postAddSourceApprovals({
         projectId: loggedInUser.projectId,
@@ -331,13 +274,39 @@ export default function SourceApprovalForm({
   };
 
   useEffect(() => {
-    if (postAddSourceData) {
-      showSnackbar('Source Approval details submitted!', 'success');
-      navigation.navigate('SourceHome');
-    } else if (error) {
-      showSnackbar(error, 'error');
+    if (isSubmitting && !loading) {
+      setIsSubmitting(false);
+      if (postAddSourceData) {
+        showSnackbar('Source Approval details submitted!', 'success');
+        // Reset form state
+        setWorkCategory('');
+        setMaterialName('');
+        setMaterialCategory('');
+        setSourceName('');
+        setSourceProposedFor('');
+        setLocation('');
+        setSelectedVendor('');
+        setUnitRate('');
+        setApproxQty('');
+        setRemarks('');
+        setSelectedOptions([]);
+        setSpecificationsFile(null);
+        setVendorCredentialsFile(null);
+        setQuotationFile(null);
+
+        navigation.navigate('SourceHome');
+      } else if (error) {
+        showSnackbar(error, 'error');
+      }
     }
-  }, [postAddSourceData, error]);
+  }, [
+    postAddSourceData,
+    error,
+    loading,
+    navigation,
+    showSnackbar,
+    isSubmitting,
+  ]);
 
   return (
     <ScrollView style={styles.container} keyboardShouldPersistTaps="handled">
@@ -525,8 +494,13 @@ export default function SourceApprovalForm({
           />
         </View>
 
-        <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-          <Text style={styles.submitButtonText}>Submit for Approval</Text>
+        <TouchableOpacity
+          style={[styles.submitButton, isSubmitting && styles.disabledButton]}
+          onPress={handleSubmit}
+          disabled={isSubmitting}>
+          <Text style={styles.submitButtonText}>
+            {isSubmitting ? 'Submitting...' : 'Submit for Approval'}
+          </Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -597,5 +571,9 @@ const styles = StyleSheet.create({
     marginVertical: 12,
     color: '#777',
     fontWeight: 'bold',
+  },
+  disabledButton: {
+    backgroundColor: '#ccc',
+    opacity: 0.6,
   },
 });

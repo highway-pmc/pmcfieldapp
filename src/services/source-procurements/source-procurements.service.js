@@ -488,7 +488,7 @@ export const addPurchaseApi = async (
     body,
   });
   return apiService
-    .postRequest(
+    .postRequestWithFile(
       `v1/auth/projects/${projectId}/test-work-category/${testWorkCategoryType}/test-material/${testMaterialId}`,
       body,
     )
@@ -496,7 +496,7 @@ export const addPurchaseApi = async (
       return response;
     })
     .catch(err => {
-      const errorMessge = err.message || 'Unable to add Add Purchase.';
+      const errorMessge = err.message || 'Unable to Add Purchase.';
       throw new Error(errorMessge);
     });
 };

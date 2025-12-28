@@ -18,7 +18,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useSnackbar } from '../../context/SnackbarContext';
 import { getMixDesignFormInfo, getMixDesignList, getQualityMasterList } from '../RFIs/actions';
 import CustomSelectDropdown from '../Common/CustomSelectDropdown';
-import { addPurchasePost, getSourceApprovals, getVendorForm } from '../ManageUsers/actions';
+import { addPurchasePost, getSourceApprovals, getSourceApprovalsByStatus, getVendorForm } from '../ManageUsers/actions';
+import MultiSelectDropdown from '../Common/MultiSelectDropdown';
+import DocumentPicker from 'react-native-document-picker';
 
 // --- MOCK DATA FOR CASCADING DROPDOWNS ---
 const procurementDataSource = {
@@ -87,7 +89,7 @@ export default function AddPurchase({
       error,
     } = useSelector((state: any) => state.RFIs);
     const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-    const {sourceApprovals} = useSelector((state: any) => state.SourceApprovals);
+    const {sourceApprovals, sourceByStatusData} = useSelector((state: any) => state.SourceApprovals);
     const {getVendorFormData} = useSelector((state: any) => state.VendorForm);
     const {
         addedPurchaseData
@@ -249,6 +251,8 @@ const [selectedMaterialCategory, setSelectedMaterialCategory] = useState<any>(''
 const [selectedSource, setSelectedSource] = useState<any>(null);
 const [selectedSourceId, setSelectedSourceId] = useState<any>(null);
 const [materialsData, setMaterialsData] = useState<any[]>([]);
+const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+const [sourceProposedFor, setSourceProposedFor] = useState<string[]>([]);
 
 
   const handleWorkCategorySelect = (selectedOption: any) => {
@@ -269,9 +273,10 @@ const [materialsData, setMaterialsData] = useState<any[]>([]);
 
   const getAvailableSources = (materialTypeId: any) => {
       dispatch(
-        getSourceApprovals({
+        getSourceApprovalsByStatus({
           projectId: loggedInUser.projectId,
           testMaterialId: materialTypeId,
+          status: 'approved'
         }),
       );
     };
@@ -292,9 +297,10 @@ const [materialsData, setMaterialsData] = useState<any[]>([]);
 
 
   const handleMaterialItemChange = (item: any) => {
-    sourceApprovals?.forEach((data: any) => {
+    sourceByStatusData?.forEach((data: any) => {
       if(item === data?.name) {
-        setSelectedSourceId(data?._id)
+        setSelectedSourceId(data?._id);
+        setSourceProposedFor(data?.sourceProposedFor)
       }
     })
     setSelectedSource(item);
@@ -304,9 +310,37 @@ const [materialsData, setMaterialsData] = useState<any[]>([]);
   
   
   useEffect(() => {
+    console.log('Approved Source Data', sourceProposedFor)
 
-  }, [sourceApprovals, selectedSourceId, selectedMaterialType])
+  }, [sourceApprovals, sourceByStatusData, sourceProposedFor, selectedSourceId, selectedMaterialType])
 
+
+  const [invoiceFile, setInvoiceFile] = useState<any>(null);
+  const [mtcFile, setMTCFile] = useState<any>(null);
+  const handleBatchSlipUpload = async (
+    type: 'Invoice' | 'MTC',
+  ) => {
+    try {
+      const result = await DocumentPicker.pickSingle({
+        type: [DocumentPicker.types.pdf, DocumentPicker.types.images],
+      });
+
+      const fileObj = {
+        uri: result.uri,
+        name: result.name,
+        type: result.type,
+      };
+
+      if (type === 'Invoice') {
+        setInvoiceFile(fileObj);
+      } else if (type === 'MTC') {
+        setMTCFile(fileObj);
+      }
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) return;
+      console.error(err);
+    }
+  };
 
   const handleSubmit = () => {
     if (
@@ -322,44 +356,83 @@ const [materialsData, setMaterialsData] = useState<any[]>([]);
 
     getVendorFormData.forEach((element: any) => {
       if (element.name === vendorName) {
-        selectedVendorId = element
+        selectedVendorId = element;
       }
     })
 
+     const formData = new FormData();
     
-    const formData = {
-      sourceApprovalId: selectedSourceId,
-      lotNo: lotNumbers,
-      procurementDateTime: '', 
-      vehicleNo: vehicleNumbers, 
-      invoiceFile: '', 
-      metaData: '',
-      testWorkCategoryId: selectedMaterialType?.testWorkCategoryId[0],
-      vendorId: selectedVendorId?._id,
-      unit: unit,
-      unitRate: unitRate,
-      quantityPurchased: quantity,
-      purchaseDate: purchaseDate,
-      invoiceNumber: invoiceNumber,
-      mtcFile: '',
-      remarks: remarks,
-      materialCategory: selectedMaterialCategory,
+    // const formData = {
+    //   sourceApprovalId: selectedSourceId,
+    //   lotNo: lotNumbers,
+    //   procurementDateTime: '', 
+    //   vehicleNo: vehicleNumbers, 
+    //   invoiceFile: '', 
+    //   metaData: '',
+    //   testWorkCategoryId: selectedMaterialType?.testWorkCategoryId[0],
+    //   vendorId: selectedVendorId?._id,
+    //   unit: unit,
+    //   unitRate: unitRate,
+    //   quantityPurchased: quantity,
+    //   purchaseDate: purchaseDate,
+    //   invoiceNumber: invoiceNumber,
+    //   mtcFile: '',
+    //   remarks: remarks,
+    //   materialCategory: selectedMaterialCategory,
 
       
-      // workCategory,
-      // materialName,
-      // materialCategory,
-      // sourceName,
-      // vendorName,
-      // vehicleNumbers,
-      // lotNumbers,
-      // unit,
-      // unitRate,
-      // quantity,
-      // purchaseDate,
-      // invoiceNumber,
-      // remarks,
-    };
+    //   // workCategory,
+    //   // materialName,
+    //   // materialCategory,
+    //   // sourceName,
+    //   // vendorName,
+    //   // vehicleNumbers,
+    //   // lotNumbers,
+    //   // unit,
+    //   // unitRate,
+    //   // quantity,
+    //   // purchaseDate,
+    //   // invoiceNumber,
+    //   // remarks,
+    // };
+
+
+    formData.append('sourceApprovalId', selectedSourceId);
+    formData.append('lotNo', lotNumbers);                 // string
+    formData.append('procurementDateTime', '');          // or actual ISO string
+    formData.append('vehicleNo', vehicleNumbers);
+    formData.append('metaData', '');
+
+    formData.append(
+      'testWorkCategoryId',
+      selectedMaterialType?.testWorkCategoryId[0]
+    );
+
+    formData.append('vendorId', selectedVendorId?._id);
+    formData.append('unit', unit);
+    formData.append('unitRate', String(unitRate));
+    formData.append('quantityPurchased', String(quantity));
+    formData.append('purchaseDate', purchaseDate);       // ISO string preferred
+    formData.append('invoiceNumber', invoiceNumber);
+    formData.append('remarks', remarks);
+    formData.append('materialCategory', selectedMaterialCategory);
+
+
+
+    if (selectedOptions && selectedOptions.length > 0) {
+      selectedOptions.forEach((item: string) => {
+        formData.append('sourceProposedFor', item);
+      });
+    } else {
+      formData.append('sourceProposedFor', 'N/A');
+    }
+
+    if (invoiceFile) {
+      formData.append('invoiceFile', invoiceFile);
+    }
+    if (mtcFile) {
+      formData.append('mtcsFile', mtcFile);
+    }
 
     dispatch(
         addPurchasePost({
@@ -372,6 +445,8 @@ const [materialsData, setMaterialsData] = useState<any[]>([]);
     console.log('Form Submitted:', JSON.stringify(formData, null, 2));
     // Alert.alert('Success', 'Procurement details submitted!');
   };
+
+  
 
 
   useEffect(() => {
@@ -410,7 +485,7 @@ const [materialsData, setMaterialsData] = useState<any[]>([]);
           
           <CustomSelectDropdown
             label="Source Name*"
-            data={sourceApprovals?.filter((item: any) => item?.status === 'approved').map((item: any) => item?.name)}
+            data={sourceByStatusData?.filter((item: any) => item?.status === 'approved').map((item: any) => item?.name)}
             selectedValue={selectedSource}
             itemTypeOf="string"
             onSelect={handleMaterialItemChange}
@@ -444,6 +519,17 @@ const [materialsData, setMaterialsData] = useState<any[]>([]);
             onChange={setVendorName}
           />
         ) : null}
+
+
+        <View>
+          <Text style={styles.label}>Source Proposed For:</Text>
+          <MultiSelectDropdown
+            options={sourceProposedFor}
+            selectedItems={selectedOptions}
+            onSelectionChange={setSelectedOptions}
+            placeholder="Select source types"
+          />
+        </View>
 
 
         {/* <DropdownPicker
@@ -558,9 +644,14 @@ const [materialsData, setMaterialsData] = useState<any[]>([]);
           <Text style={styles.label}>Upload weight slip/Invoice*</Text>
           <TouchableOpacity
             style={styles.uploadButton}
-            onPress={() => handleUpload('Invoice')}>
+            onPress={() => handleBatchSlipUpload('Invoice')}>
             <Text style={styles.uploadButtonText}>Upload File</Text>
           </TouchableOpacity>
+          {invoiceFile && (
+            <Text style={[styles.label, {marginTop: 7}]}>
+              Selected: {invoiceFile.name}
+            </Text>
+          )}
         </View>
 
         <View style={styles.formGroup}>
@@ -604,9 +695,14 @@ const [materialsData, setMaterialsData] = useState<any[]>([]);
           <Text style={styles.label}>Upload MTC (if applicable)*</Text>
           <TouchableOpacity
             style={styles.uploadButton}
-            onPress={() => handleUpload('MTC')}>
+            onPress={() => handleBatchSlipUpload('MTC')}>
             <Text style={styles.uploadButtonText}>Upload File</Text>
           </TouchableOpacity>
+          {mtcFile && (
+            <Text style={[styles.label, {marginTop: 7}]}>
+              Selected: {mtcFile.name}
+            </Text>
+          )}
         </View>
         <View style={styles.formGroup}>
           <Text style={styles.label}>Remarks (if any)</Text>

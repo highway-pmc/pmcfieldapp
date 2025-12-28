@@ -217,7 +217,7 @@ export const postAddSourceApi = async (projectId, testMaterialId, body) => {
     .catch(err => {
       const errorMessge =
         err.message || 'Unable to get list of source approvals.';
-      console.log('data get---!!!', errorMessge);
+      console.log('data get---!!!', JSON.stringify(err));
       throw new Error(errorMessge);
     });
 };

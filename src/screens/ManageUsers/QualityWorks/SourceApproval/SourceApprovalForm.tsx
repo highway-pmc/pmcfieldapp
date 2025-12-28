@@ -17,6 +17,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import DocumentPicker from 'react-native-document-picker';
 import appConfig from '../../../../common/app.config';
 import { useSnackbar } from '../../../../context/SnackbarContext';
+import MultiSelectDropdown from '../../../Common/MultiSelectDropdown';
 
 // Static options for the 'Source Proposed For' dropdown
 const sourceProposedForOptions = [
@@ -45,6 +46,8 @@ export default function SourceApprovalForm({
   const {postAddSourceData, loading,
     error} = useSelector((state: any) => state.SourceApprovals);
   const dispatch = useDispatch();
+
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
 
   useEffect(() => {
     if (isFocused) {
@@ -156,40 +159,70 @@ export default function SourceApprovalForm({
     Alert.alert('Upload', `Simulating upload for: ${fileName}`);
 
 
-  const handleBatchSlipUpload = async (requestId: string) => {
+  // const handleBatchSlipUpload = async (requestId: string) => {
+  //     try {
+  //       const result: any = await DocumentPicker.pick({
+  //         type: [DocumentPicker.types.images, DocumentPicker.types.pdf],
+  //         allowMultiSelection: false,
+  //       });
+  //       const res = result[0];
+  //       setBatchSlips(res);
+  
+  //       let url = `${appConfig.API_URL}/v1/auth/projects/${loggedInUser.projectId}/material-requests/items/${requestId}/upload-batch-slip`;
+  //       let data = new FormData();
+  //       data.append('file', res);
+  
+  //       const response = await fetch(url, {
+  //         method: 'POST',
+  //         headers: {Authorization: appConfig.getToken()},
+  //         body: data,
+  //       });
+  
+  //       if (response.status === 200) {
+  //         let json = await response.json();
+  //         setfileUrlData(json.data.fileUrl);
+  //         showSnackbar('Batch slip uploaded successfully', 'success');
+  //       } else {
+  //         showSnackbar('Upload Failed', 'error');
+  //       }
+  //     } catch (err) {
+  //       if (!DocumentPicker.isCancel(err)) {
+  //         showSnackbar('Error picking file', 'error');
+  //       }
+  //     }
+  //   };
+
+  const [specificationsFile, setSpecificationsFile] = useState<any>(null);
+  const [vendorCredentialsFile, setVendorCredentialsFile] = useState<any>(null);
+  const [quotationFile, setQuotationFile] = useState<any>(null);
+  const handleBatchSlipUpload = async (
+      type: 'Specifications' | 'Vendor' | 'Quotation'
+    ) => {
       try {
-        const result: any = await DocumentPicker.pick({
-          type: [DocumentPicker.types.images, DocumentPicker.types.pdf],
-          allowMultiSelection: false,
+        const result = await DocumentPicker.pickSingle({
+          type: [DocumentPicker.types.pdf, DocumentPicker.types.images],
         });
-        const res = result[0];
-        setBatchSlips(res);
-  
-        let url = `${appConfig.API_URL}/v1/auth/projects/${loggedInUser.projectId}/material-requests/items/${requestId}/upload-batch-slip`;
-        let data = new FormData();
-        data.append('file', res);
-  
-        const response = await fetch(url, {
-          method: 'POST',
-          headers: {Authorization: appConfig.getToken()},
-          body: data,
-        });
-  
-        if (response.status === 200) {
-          let json = await response.json();
-          setfileUrlData(json.data.fileUrl);
-          showSnackbar('Batch slip uploaded successfully', 'success');
-        } else {
-          showSnackbar('Upload Failed', 'error');
+
+        const fileObj = {
+          uri: result.uri,
+          name: result.name,
+          type: result.type,
+        };
+
+        if (type === 'Specifications') {
+          setSpecificationsFile(fileObj);
+        } else if (type === 'Vendor') {
+          setVendorCredentialsFile(fileObj);
+        } else if (type === 'Quotation') {
+          setQuotationFile(fileObj);
         }
       } catch (err) {
-        if (!DocumentPicker.isCancel(err)) {
-          showSnackbar('Error picking file', 'error');
-        }
+        if (DocumentPicker.isCancel(err)) return;
+        console.error(err);
       }
     };
 
-  const handleSubmit = () => {
+  const handleSubmit = async() => {
     // Enhanced validation
     if (
       !workCategory ||
@@ -215,30 +248,68 @@ export default function SourceApprovalForm({
       if (element.name === selectedVendor) {
         selectedVendorId = element
       }
-    })
+    });
 
-    const formData = {
-      testWorkCategoryId: workCategoryId[0],
-      testMaterialType: materialName,
-      testWorkCategoryType: workCategory,
-      vendorId: selectedVendorId?._id,
-      materialCategory: materialCategory || 'N/A',
-      name: sourceName,
-      unitRate,
-      approxQty,
-      remarks,
-      specificationsFile: "path/to/specs.pdf",
-      vendorCredentialsFile: "path/to/credentials.pdf",
-      quotationFile: "path/to/quote.pdf",
-      sourceProposedFor: [showSourceProposedFor ? sourceProposedFor : 'N/A'],
-      address: selectedVendorId?.address,
-      district: selectedVendorId?.district,
-      state: selectedVendorId?.state,
-      countryCode: selectedVendorId?.countryCode,
-      country: selectedVendorId?.country
-    };
+    //console.log('sduay78687', selectedOptions)
+
+    // const formData = {
+    //   testWorkCategoryId: workCategoryId[0],
+    //   testMaterialType: materialName,
+    //   testWorkCategoryType: workCategory,
+    //   vendorId: selectedVendorId?._id,
+    //   materialCategory: materialCategory || 'N/A',
+    //   name: sourceName,
+    //   unitRate,
+    //   approxQty,
+    //   remarks,
+    //   specificationsFile: "path/to/specs.pdf",
+    //   vendorCredentialsFile: "path/to/credentials.pdf",
+    //   quotationFile: "path/to/quote.pdf",
+    //   sourceProposedFor: selectedOptions ? selectedOptions : ['N/A'],//[showSourceProposedFor ? sourceProposedFor : 'N/A'],
+    //   address: selectedVendorId?.address,
+    //   district: selectedVendorId?.district,
+    //   state: selectedVendorId?.state,
+    //   countryCode: selectedVendorId?.countryCode,
+    //   country: selectedVendorId?.country
+    // };
+
+
+    const formData = new FormData();
+
+    formData.append('testWorkCategoryId', workCategoryId[0]);
+    formData.append('testMaterialType', materialName.toLowerCase().replace(/\s+/g, '-'));
+    formData.append('testWorkCategoryType', workCategory);
+    formData.append('vendorId', selectedVendorId?._id || '');
+    formData.append('materialCategory', materialCategory || 'N/A');
+    formData.append('name', sourceName);
+    formData.append('unitRate', String(unitRate));
+    formData.append('approxQty', String(approxQty));
+    formData.append('remarks', remarks);
+    formData.append('address', selectedVendorId?.address || '');
+    formData.append('district', selectedVendorId?.district || '');
+    formData.append('state', selectedVendorId?.state || '');
+    formData.append('countryCode', selectedVendorId?.countryCode || '');
+    formData.append('country', selectedVendorId?.country || '');
+
+    if (selectedOptions && selectedOptions.length > 0) {
+      selectedOptions.forEach((item: string) => {
+        formData.append('sourceProposedFor', item);
+      });
+    } else {
+      formData.append('sourceProposedFor', 'N/A');
+    }
+
+    if (specificationsFile) {
+      formData.append('specificationsFile', specificationsFile);
+    }
+    if (vendorCredentialsFile) {
+      formData.append('vendorCredentialsFile', vendorCredentialsFile);
+    }
+    if (quotationFile) {
+      formData.append('quotationFile', quotationFile);
+    }
     dispatch(postAddSourceApprovals({projectId: loggedInUser.projectId, testMaterialId: testMaterialId, body: formData}));
-    //console.log('Form Submitted:', JSON.stringify(formData, null, 2));
+    console.log('Form Submitted:', JSON.stringify(formData, null, 2));
     //Alert.alert('Success', 'Source Approval details submitted!');
   };
 
@@ -302,7 +373,7 @@ export default function SourceApprovalForm({
           />
         </View>
 
-        {showSourceProposedFor && (
+        {/* {showSourceProposedFor && (
           <DropdownPicker
             label="Source Proposed for"
             items={[
@@ -315,7 +386,18 @@ export default function SourceApprovalForm({
             value={sourceProposedFor}
             onChange={setSourceProposedFor}
           />
-        )}
+        )} */}
+
+
+        <View>
+          <Text style={styles.label}>Source Proposed For:</Text>
+          <MultiSelectDropdown
+            options={sourceProposedForOptions}
+            selectedItems={selectedOptions}
+            onSelectionChange={setSelectedOptions}
+            placeholder="Select source types"
+          />
+        </View>
 
         <View style={styles.formGroup}>
           <Text style={styles.label}>Location*</Text>
@@ -381,6 +463,7 @@ export default function SourceApprovalForm({
             onPress={() => handleBatchSlipUpload('Specifications')}>
             <Text style={styles.uploadButtonText}>Upload File</Text>
           </TouchableOpacity>
+          {specificationsFile && (<Text style={[styles.label, {marginTop: 7}]}>Selected: {specificationsFile.name}</Text>)}
         </View>
         <View style={styles.formGroup}>
           <Text style={styles.label}>
@@ -388,17 +471,19 @@ export default function SourceApprovalForm({
           </Text>
           <TouchableOpacity
             style={styles.uploadButton}
-            onPress={() => handleUpload('Vendor Credentials')}>
+            onPress={() => handleBatchSlipUpload('Vendor')}>
             <Text style={styles.uploadButtonText}>Upload File</Text>
           </TouchableOpacity>
+          {vendorCredentialsFile && (<Text style={[styles.label, {marginTop: 7}]}>Selected: {vendorCredentialsFile.name}</Text>)}
         </View>
         <View style={styles.formGroup}>
           <Text style={styles.label}>Upload Quotation (if applicable)</Text>
           <TouchableOpacity
             style={styles.uploadButton}
-            onPress={() => handleUpload('Quotation')}>
+            onPress={() => handleBatchSlipUpload('Quotation')}>
             <Text style={styles.uploadButtonText}>Upload File</Text>
           </TouchableOpacity>
+          {quotationFile && (<Text style={[styles.label, {marginTop: 7}]}>Selected: {quotationFile.name}</Text>)}
         </View>
 
         <View style={styles.formGroup}>

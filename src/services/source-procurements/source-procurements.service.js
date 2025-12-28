@@ -482,21 +482,18 @@ export const addPurchaseApi = async (
   testMaterialId,
   body,
 ) => {
-  console.log('adjahslkd lkasjdlkja', {
-    projectId,
-    testWorkCategoryType,
-    testMaterialId,
-    body,
-  });
+  const url = `v1/auth/projects/${projectId}/test-work-category/${testWorkCategoryType}/test-material/${testMaterialId}/procurements`;
+  console.log('addPurchaseApi: URL', url);
+  console.log('addPurchaseApi: body', JSON.stringify(body, null, 2));
   return apiService
-    .postRequestWithFile(
-      `v1/auth/projects/${projectId}/test-work-category/${testWorkCategoryType}/test-material/${testMaterialId}/procurements`,
-      body,
-    )
+    .postRequestWithFile(url, body)
     .then(response => {
+      console.log('addPurchaseApi: success response', response);
       return response;
     })
     .catch(err => {
+      console.log('addPurchaseApi: error', err);
+      console.log('addPurchaseApi: error message', err.message);
       const errorMessge = err.message || 'Unable to Add Purchase.';
       throw new Error(errorMessge);
     });

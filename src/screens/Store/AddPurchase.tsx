@@ -14,11 +14,20 @@ import {HeaderItems} from '../../constants/constants'; // Assuming this path is 
 import {useIsFocused} from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DropdownPicker from '../../components/UI/DropdownPicker';
-import { useDispatch, useSelector } from 'react-redux';
-import { useSnackbar } from '../../context/SnackbarContext';
-import { getMixDesignFormInfo, getMixDesignList, getQualityMasterList } from '../RFIs/actions';
+import {useDispatch, useSelector} from 'react-redux';
+import {useSnackbar} from '../../context/SnackbarContext';
+import {
+  getMixDesignFormInfo,
+  getMixDesignList,
+  getQualityMasterList,
+} from '../RFIs/actions';
 import CustomSelectDropdown from '../Common/CustomSelectDropdown';
-import { addPurchasePost, getSourceApprovals, getSourceApprovalsByStatus, getVendorForm } from '../ManageUsers/actions';
+import {
+  addPurchasePost,
+  getSourceApprovals,
+  getSourceApprovalsByStatus,
+  getVendorForm,
+} from '../ManageUsers/actions';
 import MultiSelectDropdown from '../Common/MultiSelectDropdown';
 import DocumentPicker from 'react-native-document-picker';
 
@@ -79,26 +88,25 @@ export default function AddPurchase({
   const isFocused = useIsFocused();
   const {showSnackbar} = useSnackbar();
   const dispatch = useDispatch();
-  
-    // --- Redux State ---
-    const {
-      savedMixDesignFormInfo,
-      mixDesignListData,
-      qualityMixDesignFormInfo,
-      loading,
-      error,
-    } = useSelector((state: any) => state.RFIs);
-    const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-    const {sourceApprovals, sourceByStatusData} = useSelector((state: any) => state.SourceApprovals);
-    const {getVendorFormData} = useSelector((state: any) => state.VendorForm);
-    const {
-        addedPurchaseData
-      } = useSelector((state: any) => state.Procurements);
 
+  // --- Redux State ---
+  const {
+    savedMixDesignFormInfo,
+    mixDesignListData,
+    qualityMixDesignFormInfo,
+    loading,
+    error,
+  } = useSelector((state: any) => state.RFIs);
+  const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
+  const {sourceApprovals, sourceByStatusData} = useSelector(
+    (state: any) => state.SourceApprovals,
+  );
+  const {getVendorFormData} = useSelector((state: any) => state.VendorForm);
+  const {addedPurchaseData} = useSelector((state: any) => state.Procurements);
 
   // --- FORM STATE ---
   const [workCategory, setWorkCategory] = useState<any>(null);
-  const [materialName, setMaterialName] = useState<any>(null);;
+  const [materialName, setMaterialName] = useState<any>(null);
   const [materialCategory, setMaterialCategory] = useState<any>(null);
   const [sourceName, setSourceName] = useState<string>('');
   const [vendorName, setVendorName] = useState<string>('');
@@ -130,7 +138,12 @@ export default function AddPurchase({
       eventEmitter.emit('headerEvent', HeaderItems.addPurchase); // Update header
 
       dispatch(getQualityMasterList({testType: 'procurement-details'}));
-      dispatch(getMixDesignList({projectId: loggedInUser.projectId, testType: 'procurement-details'}));
+      dispatch(
+        getMixDesignList({
+          projectId: loggedInUser.projectId,
+          testType: 'procurement-details',
+        }),
+      );
     }
   }, [isFocused, dispatch]);
 
@@ -234,26 +247,21 @@ export default function AddPurchase({
   const handleUpload = (fileName: string) =>
     Alert.alert('Upload', `Simulating upload for: ${fileName}`);
 
-  
-
   const formatDate = (date: Date) =>
     `${String(date.getDate()).padStart(2, '0')}/${String(
       date.getMonth() + 1,
     ).padStart(2, '0')}/${date.getFullYear()}`;
 
-  
-
-
-
-const [selectedWorkCategory, setSelectedWorkCategory] = useState<any>(null);
-const [selectedMaterialType, setSelectedMaterialType] = useState<any>(null);
-const [selectedMaterialCategory, setSelectedMaterialCategory] = useState<any>('');
-const [selectedSource, setSelectedSource] = useState<any>(null);
-const [selectedSourceId, setSelectedSourceId] = useState<any>(null);
-const [materialsData, setMaterialsData] = useState<any[]>([]);
-const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
-const [sourceProposedFor, setSourceProposedFor] = useState<string[]>([]);
-
+  const [selectedWorkCategory, setSelectedWorkCategory] = useState<any>(null);
+  const [selectedMaterialType, setSelectedMaterialType] = useState<any>(null);
+  const [selectedMaterialCategory, setSelectedMaterialCategory] =
+    useState<any>('');
+  const [selectedSource, setSelectedSource] = useState<any>(null);
+  const [selectedSourceId, setSelectedSourceId] = useState<any>(null);
+  const [materialsData, setMaterialsData] = useState<any[]>([]);
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+  const [sourceProposedFor, setSourceProposedFor] = useState<string[]>([]);
+  const [selectedMaterialName, setSelectedMaterialName] = useState<any>(null);
 
   const handleWorkCategorySelect = (selectedOption: any) => {
     setSelectedWorkCategory(selectedOption);
@@ -265,61 +273,59 @@ const [sourceProposedFor, setSourceProposedFor] = useState<string[]>([]);
   const handleMaterialTypeSelect = (selectedOption: any) => {
     setSelectedMaterialType(selectedOption);
     setSelectedMaterialCategory('');
-    setMaterialsData([]);
+    setSelectedMaterialName(selectedOption);
     handleFetchFormInfo(selectedWorkCategory, selectedOption);
-    console.log('dada', selectedMaterialType)
+    console.log('dada', selectedMaterialName);
   };
 
-
   const getAvailableSources = (materialTypeId: any) => {
-      dispatch(
-        getSourceApprovalsByStatus({
-          projectId: loggedInUser.projectId,
-          testMaterialId: materialTypeId,
-          status: 'approved'
-        }),
-      );
-    };
-
+    dispatch(
+      getSourceApprovalsByStatus({
+        projectId: loggedInUser.projectId,
+        testMaterialId: materialTypeId,
+        status: 'approved',
+      }),
+    );
+  };
 
   const handleFetchFormInfo = (workCategory: any, materialType: any) => {
-      if (workCategory?.type && materialType?._id) {
-        dispatch(
-          getMixDesignFormInfo({
-            projectId: loggedInUser.projectId,
-            testWorkCategoryType: workCategory.type,
-            testMaterialId: materialType._id,
-          }),
-        );
-        getAvailableSources(materialType._id);
-      }
-    };
-
+    if (workCategory?.type && materialType?._id) {
+      dispatch(
+        getMixDesignFormInfo({
+          projectId: loggedInUser.projectId,
+          testWorkCategoryType: workCategory.type,
+          testMaterialId: materialType._id,
+        }),
+      );
+      getAvailableSources(materialType._id);
+    }
+  };
 
   const handleMaterialItemChange = (item: any) => {
     sourceByStatusData?.forEach((data: any) => {
-      if(item === data?.name) {
+      if (item === data?.name) {
         setSelectedSourceId(data?._id);
-        setSourceProposedFor(data?.sourceProposedFor)
+        setSourceProposedFor(data?.sourceProposedFor);
       }
-    })
+    });
     setSelectedSource(item);
     dispatch(getVendorForm());
   };
 
-  
-  
   useEffect(() => {
-    console.log('Approved Source Data', sourceProposedFor)
-
-  }, [sourceApprovals, sourceByStatusData, sourceProposedFor, selectedSourceId, selectedMaterialType])
-
+    console.log('Approved Source Data', selectedMaterialName);
+  }, [
+    sourceApprovals,
+    sourceByStatusData,
+    sourceProposedFor,
+    selectedSourceId,
+    selectedMaterialType,
+    selectedMaterialName
+  ]);
 
   const [invoiceFile, setInvoiceFile] = useState<any>(null);
   const [mtcFile, setMTCFile] = useState<any>(null);
-  const handleBatchSlipUpload = async (
-    type: 'Invoice' | 'MTC',
-  ) => {
+  const handleBatchSlipUpload = async (type: 'Invoice' | 'MTC') => {
     try {
       const result = await DocumentPicker.pickSingle({
         type: [DocumentPicker.types.pdf, DocumentPicker.types.images],
@@ -343,155 +349,120 @@ const [sourceProposedFor, setSourceProposedFor] = useState<string[]>([]);
   };
 
   const handleSubmit = () => {
-    if (
-      !selectedMaterialCategory ||
-      !selectedSourceId
-    ) {
+    if (!selectedMaterialCategory || !selectedSourceId) {
       Alert.alert('Validation Error', 'Please fill all required fields.');
       return;
     }
 
+    let selectedVendorId = getVendorFormData.find(v => v.name === vendorName);
 
-    let selectedVendorId: any = {};
+    const formData = new FormData();
 
-    getVendorFormData.forEach((element: any) => {
-      if (element.name === vendorName) {
-        selectedVendorId = element;
-      }
-    })
-
-     const formData = new FormData();
-    
-    // const formData = {
-    //   sourceApprovalId: selectedSourceId,
-    //   lotNo: lotNumbers,
-    //   procurementDateTime: '', 
-    //   vehicleNo: vehicleNumbers, 
-    //   invoiceFile: '', 
-    //   metaData: '',
-    //   testWorkCategoryId: selectedMaterialType?.testWorkCategoryId[0],
-    //   vendorId: selectedVendorId?._id,
-    //   unit: unit,
-    //   unitRate: unitRate,
-    //   quantityPurchased: quantity,
-    //   purchaseDate: purchaseDate,
-    //   invoiceNumber: invoiceNumber,
-    //   mtcFile: '',
-    //   remarks: remarks,
-    //   materialCategory: selectedMaterialCategory,
-
-      
-    //   // workCategory,
-    //   // materialName,
-    //   // materialCategory,
-    //   // sourceName,
-    //   // vendorName,
-    //   // vehicleNumbers,
-    //   // lotNumbers,
-    //   // unit,
-    //   // unitRate,
-    //   // quantity,
-    //   // purchaseDate,
-    //   // invoiceNumber,
-    //   // remarks,
-    // };
-
-
-    formData.append('sourceApprovalId', selectedSourceId);
-    formData.append('lotNo', lotNumbers);                 // string
-    formData.append('procurementDateTime', '');          // or actual ISO string
-    formData.append('vehicleNo', vehicleNumbers);
-    formData.append('metaData', '');
-
+    // 1. IDs and Types
+    // Match the IDs from your curl
     formData.append(
       'testWorkCategoryId',
-      selectedMaterialType?.testWorkCategoryId[0]
+      selectedMaterialType?.testWorkCategoryId[0] || '',
     );
-
+    //TODO
+    formData.append('testWorkCategoryType', selectedWorkCategory?.name);
+    formData.append('testMaterialId', selectedMaterialType?._id);
+    formData.append('testMaterialType', selectedMaterialType?.name); 
+    // 2. Core Procurement Data
+    //TODO
     formData.append('vendorId', selectedVendorId?._id);
-    formData.append('unit', unit);
+    console.log('selectedVendorId', selectedVendorId);
+    formData.append('sourceApprovalId', selectedSourceId);
+    formData.append('materialCategory', selectedMaterialCategory);
+    //TODO
+    formData.append('unit', selectedMaterialName?.materialUnit);
     formData.append('unitRate', String(unitRate));
     formData.append('quantityPurchased', String(quantity));
-    formData.append('purchaseDate', purchaseDate);       // ISO string preferred
+
+    // 3. Dates (Use ISO Strings)
+    const isoDate = purchaseDate.toISOString();
+    formData.append('purchaseDate', isoDate);
+    formData.append('procurementDateTime', isoDate);
+
+    // 4. Strings
     formData.append('invoiceNumber', invoiceNumber);
     formData.append('remarks', remarks);
-    formData.append('materialCategory', selectedMaterialCategory);
-
-
-
     if (selectedOptions && selectedOptions.length > 0) {
       selectedOptions.forEach((item: string) => {
-        formData.append('sourceProposedFor', item);
+        formData.append('materialUsedFor', item);
       });
     } else {
-      formData.append('sourceProposedFor', 'N/A');
+      formData.append('materialUsedFor', 'N/A');
     }
 
+    // 5. Arrays (Append items individually)
+    lotNumbers.forEach(lot => formData.append('lotNo', lot));
+
+    // If backend expects vehicleNo as an array (multiple keys):
+    vehicleNumbers.forEach(v => formData.append('vehicleNo', v));
+    // OR if backend expects a single string (as shown in your curl):
+    // formData.append('vehicleNo', vehicleNumbers[0] || "");
+
+    // 6. Files
     if (invoiceFile) {
       formData.append('invoiceFile', invoiceFile);
     }
     if (mtcFile) {
-      formData.append('mtcsFile', mtcFile);
+      formData.append('mtcFile', mtcFile); // Corrected key from mtcsFile
     }
 
     dispatch(
-        addPurchasePost({
-          projectId: loggedInUser.projectId,
-          testWorkCategoryType: selectedWorkCategory?.name,
-          testMaterialId: selectedMaterialType?._id,
-          body: formData,
-        }),
-      );
+      addPurchasePost({
+        projectId: loggedInUser.projectId,
+        testWorkCategoryType: selectedWorkCategory?.name,
+        testMaterialId: selectedMaterialType?._id,
+        body: formData,
+      }),
+    );
     console.log('Form Submitted:', JSON.stringify(formData, null, 2));
-    // Alert.alert('Success', 'Procurement details submitted!');
   };
 
-  
-
-
   useEffect(() => {
-        if (addedPurchaseData) {
-          showSnackbar('Procurement details submitted!', 'success');
-          navigation.goBack();
-        } else if (error) {
-          showSnackbar(error, 'error');
-        }
+    if (addedPurchaseData) {
+      showSnackbar('Procurement details submitted!', 'success');
+      navigation.goBack();
+    } else if (error) {
+      showSnackbar(error, 'error');
+    }
   }, [addedPurchaseData, error]);
-
-  
 
   return (
     <ScrollView style={styles.container} keyboardShouldPersistTaps="handled">
       <View style={styles.formContainer}>
         <CustomSelectDropdown
-            label="Work Category"
-            data={mixDesignListData?.testWorkCategoriesData}
-            selectedValue={selectedWorkCategory}
-            onSelect={handleWorkCategorySelect}
-          />
-          <CustomSelectDropdown
-            label="Material Name"
-            data={selectedWorkCategory?.materialsData}
-            selectedValue={selectedMaterialType}
-            onSelect={handleMaterialTypeSelect}
-          />
-          <CustomSelectDropdown
-            label="Material Category"
-            data={selectedMaterialType?.category}
-            selectedValue={selectedMaterialCategory}
-            itemTypeOf="string"
-            onSelect={setSelectedMaterialCategory}
-          />
-          
-          <CustomSelectDropdown
-            label="Source Name*"
-            data={sourceByStatusData?.filter((item: any) => item?.status === 'approved').map((item: any) => item?.name)}
-            selectedValue={selectedSource}
-            itemTypeOf="string"
-            onSelect={handleMaterialItemChange}
-          />
+          label="Work Category"
+          data={mixDesignListData?.testWorkCategoriesData}
+          selectedValue={selectedWorkCategory}
+          onSelect={handleWorkCategorySelect}
+        />
+        <CustomSelectDropdown
+          label="Material Name"
+          data={selectedWorkCategory?.materialsData}
+          selectedValue={selectedMaterialType}
+          onSelect={handleMaterialTypeSelect}
+        />
+        <CustomSelectDropdown
+          label="Material Category"
+          data={selectedMaterialType?.category}
+          selectedValue={selectedMaterialCategory}
+          itemTypeOf="string"
+          onSelect={setSelectedMaterialCategory}
+        />
 
-
+        <CustomSelectDropdown
+          label="Source Name*"
+          data={sourceByStatusData
+            ?.filter((item: any) => item?.status === 'approved')
+            .map((item: any) => item?.name)}
+          selectedValue={selectedSource}
+          itemTypeOf="string"
+          onSelect={handleMaterialItemChange}
+        />
 
         {/* <DropdownPicker
           label="Source Name*"
@@ -504,8 +475,7 @@ const [sourceProposedFor, setSourceProposedFor] = useState<string[]>([]);
           inputStyle={styles.formInput}
         /> */}
 
-
-          {Array.isArray(getVendorFormData) && getVendorFormData.length > 0 ? (
+        {Array.isArray(getVendorFormData) && getVendorFormData.length > 0 ? (
           <DropdownPicker
             label="Select an existing vendor*"
             items={[
@@ -520,7 +490,6 @@ const [sourceProposedFor, setSourceProposedFor] = useState<string[]>([]);
           />
         ) : null}
 
-
         <View>
           <Text style={styles.label}>Source Proposed For:</Text>
           <MultiSelectDropdown
@@ -530,7 +499,6 @@ const [sourceProposedFor, setSourceProposedFor] = useState<string[]>([]);
             placeholder="Select source types"
           />
         </View>
-
 
         {/* <DropdownPicker
           label="Vendor Name*"
@@ -587,7 +555,7 @@ const [sourceProposedFor, setSourceProposedFor] = useState<string[]>([]);
           <Text style={styles.label}>Unit*</Text>
           <TextInput
             style={[styles.formInput, styles.readOnlyInput]}
-            value={unit}
+            value={selectedMaterialName?.materialUnit}
             editable={false}
           />
         </View>

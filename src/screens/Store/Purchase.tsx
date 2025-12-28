@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -9,202 +9,155 @@ import {
   Modal,
   TextInput,
   Pressable,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import RequestCard from '../Common/RequestCard';
 import {MATERIAL_REQUEST_STATUS} from '../../constants/constants';
+import { useSnackbar } from '../../context/SnackbarContext';
+import { useDispatch, useSelector } from 'react-redux';
+import { clearPatchProcurement, getAllProcurements, patchProcurementsStatus} from '../ManageUsers/actions';
 
 export default function Purchase() {
   const navigation = useNavigation<any>();
-  const [purchaseData, setPurchaseData] = useState([
-    {
-      id: 1,
-      materialType: 'Concrete (Structure)',
-      workCategory: 'Admixture',
-      unit: 'Kg',
-      requestQty: 100,
-      status: MATERIAL_REQUEST_STATUS.PENDING_ACCEPTANCE,
-      statusText: 'Pending for Acceptance',
-    },
-    {
-      id: 2,
-      materialType: 'Steel TMT Bars',
-      workCategory: 'Reinforcement',
-      unit: 'Ton',
-      requestQty: 5,
-      status: MATERIAL_REQUEST_STATUS.PENDING_APPROVAL,
-      statusText: 'Pending for Approval',
-    },
-    {
-      id: 3,
-      materialType: 'Cement Bags',
-      workCategory: 'Masonry',
-      unit: 'Bag',
-      requestQty: 250,
-      status: MATERIAL_REQUEST_STATUS.PENDING_DISPATCH,
-      statusText: 'Pending for Dispatch',
-    },
-    {
-      id: 4,
-      materialType: 'Electrical Wiring',
-      workCategory: 'MEP',
-      unit: 'Meter',
-      requestQty: 500,
-      status: MATERIAL_REQUEST_STATUS.REJECTED,
-      statusText: 'Rejected',
-    },
-  ]);
+  const dispatch = useDispatch();
+  const isFocused = useIsFocused();
+  const {showSnackbar} = useSnackbar();
+  const {allProcurements, loading, patchProcurements, error} =
+    useSelector((state: any) => state.Procurements);
+  const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
 
-  const [originalData, setOriginalData] = useState([...purchaseData]);
+  useEffect(() => {
+    if (isFocused && loggedInUser?.projectId) {
+      dispatch(getAllProcurements({projectId: loggedInUser.projectId}));
+      console.log('Procurments Data', allProcurements);
+    }
+    return () => {
+      dispatch(clearPatchProcurement());
+    };
+  }, [isFocused, dispatch, loggedInUser?.projectId]);
+  useEffect(() => {
+    if (patchProcurements) {
+      dispatch(clearPatchProcurement());
+      dispatch(getAllProcurements({projectId: loggedInUser.projectId}));
+      showSnackbar('Source Status Updated!', 'success');
+    } else {
+      if (error) {
+        showSnackbar(error || 'Something went wrong', 'error');
+      }
+    }
+  }, [patchProcurements]);
+  // Unified action handler
+  const handleAction = (id: string, action: 'approved' | 'rejected') => {
+    const actionLabel = action === 'approved' ? 'Approve' : 'Reject';
 
-  const [filterVisible, setFilterVisible] = useState(false);
-  const [activeFilters, setActiveFilters] = useState(null);
-
-  const [fromDate, setFromDate] = useState('');
-  const [toDate, setToDate] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [selectedMaterial, setSelectedMaterial] = useState(null);
-  const [selectedVendor, setSelectedVendor] = useState(null);
+    Alert.alert(
+      'Confirm Action',
+      `Are you sure you want to ${actionLabel} this request?`,
+      [
+        {text: 'Cancel', style: 'cancel'},
+        {
+          text: 'Confirm',
+          onPress: () => {
+            console.log(`Dispatching ${action} for ID: ${id}`);
+            dispatch(
+              patchProcurementsStatus({
+                projectId: loggedInUser.projectId,
+                id: id,
+                body: {status: action},
+              }),
+            );
+          },
+        },
+      ],
+    );
+  };
 
   const handleAddPurchase = () => {
-    console.log('Add purchase');
     navigation.navigate('AddPurchase');
   };
 
   const handleFilter = () => {
-    setFilterVisible(true);
-  };
-
-  const closeFilterModal = () => {
-    setFilterVisible(false);
-  };
-  const handleActionPress = (request: any) => {
-    // Implement your action logic here
-    console.log('Action pressed for request:', request);
-  };
-  const resetFilters = () => {
-    setFromDate('');
-    setToDate('');
-    setSelectedCategory(null);
-    setSelectedMaterial(null);
-    setSelectedVendor(null);
-  };
-
-  const applyFilter = () => {
-    const filters = {
-      fromDate,
-      toDate,
-      category: selectedCategory,
-      material: selectedMaterial,
-      vendor: selectedVendor,
-    };
-    setActiveFilters(filters);
-
-    let filteredData = [...originalData];
-
-    // Apply filters... (Your existing filter logic is correct and remains unchanged)
-
-    setPurchaseData(filteredData);
-    setFilterVisible(false);
-  };
-
-  const clearFilters = () => {
-    setPurchaseData([...originalData]);
-    setActiveFilters(null);
-    resetFilters();
+    //setFilterVisible(true);
   };
 
   return (
     <View style={styles.container}>
-      {/* Header with Add and Filter buttons */}
-      <View style={styles.header}>
+
+    <View style={styles.header}>
+      <View>
+        <Text style={styles.countText}>
+            Total Requests: {allProcurements?.length || 0}
+        </Text>
+      </View>
         <TouchableOpacity style={styles.addButton} onPress={handleAddPurchase}>
           <Text style={styles.addButtonText}>Add Purchase</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[
             styles.filterButton,
-            activeFilters && styles.activeFilterButton,
+            styles.activeFilterButton,
           ]}
           onPress={handleFilter}>
           <Text
             style={[
               {color: '#4E36A3'},
-              activeFilters && styles.activeFilterText,
+              styles.activeFilterText,
             ]}>
             Filter
           </Text>
         </TouchableOpacity>
       </View>
-
-      {/* Active Filters Display */}
-      {activeFilters && (
-        <View style={styles.activeFiltersContainer}>
-          <Text style={styles.activeFiltersText}>
-            Filters applied:{' '}
-            {Object.values(activeFilters).filter(Boolean).length}
-          </Text>
-          <TouchableOpacity onPress={clearFilters}>
-            <Text style={styles.clearFiltersText}>Clear</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-
-      {/* Card List */}
-      <FlatList
-        data={purchaseData}
-        keyExtractor={item => item.id}
-        renderItem={({item}) => (
-          <RequestCard
-            key={item.id}
-            request={item}
-            onActionPress={handleActionPress}
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        {loading ? (
+          <ActivityIndicator
+            size="large"
+            color="#4E36A3"
+            style={{marginTop: 50}}
           />
-        )}
-        ListEmptyComponent={
-          <View style={styles.emptyState}>
-            <Text style={styles.emptyStateText}>No purchase data found</Text>
+        ) : (
+          <View style={styles.listContainer}>
+            {allProcurements && allProcurements.length > 0 ? (
+              allProcurements.map((item: any) => (
+                <RequestCard
+                  key={item._id}
+                  request={item}
+                  onApprove={id => handleAction(id, 'approved')}
+                  onReject={id => handleAction(id, 'rejected')}
+                />
+              ))
+            ) : (
+              <View style={styles.noDataContainer}>
+                <Text style={styles.noDataHeadText}>No Requests Found</Text>
+                <Text style={styles.noDataSubText}>
+                  There are no pending approvals.
+                </Text>
+              </View>
+            )}
           </View>
-        }
-        contentContainerStyle={{paddingBottom: 20}}
-      />
-
-      {/* Filter Modal remains the same */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={filterVisible}
-        onRequestClose={closeFilterModal}>
-        {/* Your Modal JSX Here - it remains unchanged */}
-      </Modal>
+        )}
+      </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: 16,
-    paddingTop: 16,
-  },
+  container: {flex: 1, backgroundColor: '#F8F9FA'},
   header: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 16,
+    padding: 15,
   },
+  countText: {fontSize: 14, color: '#666', fontWeight: '500'},
   addButton: {
-    backgroundColor: '#fff',
+    backgroundColor: '#FFFFFF',
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 20,
     borderWidth: 1,
     borderColor: '#4E36A3',
-    marginRight: 8,
-  },
-  addButtonText: {
-    color: '#4E36A3',
-    fontWeight: '600',
   },
   filterButton: {
     backgroundColor: '#fff',
@@ -356,49 +309,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 10,
   },
-  input: {
-    flex: 1,
-    height: '100%',
-  },
-  dateIcon: {
-    fontSize: 18,
-  },
-  dropdown: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 4,
-    height: 40,
-    paddingHorizontal: 10,
-  },
-  dropdownText: {
-    color: '#999',
-  },
-  dropdownIcon: {
-    fontSize: 12,
-  },
-  goButton: {
-    backgroundColor: '#4E36A3',
-    borderRadius: 25,
-    height: 32,
-    width: 110,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  goButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  footContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 62,
-    backgroundColor: '#F7F3FF',
-    borderTopWidth: 1,
-    borderTopColor: '#EBEBF0',
-  },
+  addButtonText: {color: '#4E36A3', fontWeight: 'bold'},
+  scrollContent: {padding: 15, paddingBottom: 40},
+  listContainer: {width: '100%'},
+  noDataContainer: {marginTop: 100, alignItems: 'center'},
+  noDataHeadText: {fontSize: 18, fontWeight: '600', color: '#34343F'},
+  noDataSubText: {fontSize: 14, color: '#6E6E82', marginTop: 8},
 });

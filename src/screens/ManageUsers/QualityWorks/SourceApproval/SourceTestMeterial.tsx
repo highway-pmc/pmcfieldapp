@@ -10,8 +10,9 @@ import {
   Alert,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import {deleteSourceApproval, getSourceApprovalsByStatus} from '../../actions';
+import {deleteSource, deleteSourceApproval, getSourceApprovalsByStatus, patchSourceStatus} from '../../actions';
 import TestMeterialCard from '../../../Common/TestMeterialCard';
+import { useSnackbar } from '../../../../context/SnackbarContext';
 
 type TabType = 'all' | 'pending' | 'approved' | 'rejected';
 
@@ -41,7 +42,7 @@ const SourceTestMeterial = ({
   const [filteredData, setFilteredData] = useState<any[]>([]);
 
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const {sourceByStatusData, loading, error} = useSelector(
+  const {sourceByStatusData, deletedSource, patchSourceStatusData, loading, error} = useSelector(
     (state: any) => state.SourceApprovals,
   );
   const dispatch = useDispatch();
@@ -75,7 +76,7 @@ const SourceTestMeterial = ({
         });
       }
     }
-  }, [sourceByStatusData, activeTab]);
+  }, [sourceByStatusData, deletedSource, patchSourceStatusData, activeTab]);
 
   useEffect(() => {
   if (activeTab === 'all') {
@@ -150,7 +151,10 @@ const SourceTestMeterial = ({
     }
   };
 
+  const [statusType, setStatusType] = useState('');
+
   const handleActionPress = (type: any, request: any) => {
+    setStatusType(type);
     if (type === 'delete') {
       Alert.alert(
             'Delete Source',
@@ -164,9 +168,8 @@ const SourceTestMeterial = ({
                 text: 'Delete',
                 onPress: () => {
                   dispatch(
-                    deleteSourceApproval({
+                    deleteSource({
                       projectId: loggedInUser.projectId,
-                      testMaterialId: request.testMaterialId,
                       id: request._id,
                     }),
                   );
@@ -177,12 +180,83 @@ const SourceTestMeterial = ({
           );
       return
     }
+
+
+    if (type === 'approve') {
+      Alert.alert(
+            'Approve Source',
+            'Are you sure you want to Approve this Source Approval?',
+            [
+              {
+                text: 'Cancel',
+                style: 'cancel',
+              },
+              {
+                text: 'Approve',
+                onPress: () => {
+                  dispatch(
+                    patchSourceStatus({
+                      projectId: loggedInUser.projectId,
+                      id: request._id,
+                      body: {status: 'approved'}
+                    }),
+                  );
+                },
+                style: 'destructive',
+              },
+            ],
+          );
+      return
+    }
+
+
+    if (type === 'reject') {
+      Alert.alert(
+            'Reject Source',
+            'Are you sure you want to Reject this Source Approval?',
+            [
+              {
+                text: 'Cancel',
+                style: 'cancel',
+              },
+              {
+                text: 'Reject',
+                onPress: () => {
+                  dispatch(
+                    patchSourceStatus({
+                      projectId: loggedInUser.projectId,
+                      id: request._id,
+                      body: {status: 'rejected'}
+                    }),
+                  );
+                },
+                style: 'destructive',
+              },
+            ],
+          );
+      return
+    }
+
+
     console.log('Action pressed for request:', request);
     navigation.navigate('SourceApprovalEditForm', {
       sourceData: request,
       type: type,
     });
   };
+
+const {showSnackbar} = useSnackbar();
+  useEffect(() => {
+    if (deletedSource) {
+      showSnackbar('Source Deleted!', 'success');
+      navigation.navigate('SourceHome');
+    } else if (patchSourceStatusData) {
+      navigation.navigate('SourceHome');
+      showSnackbar(`Source ${statusType === 'approve' ? 'Approved!' : 'Rejected!' }!`, 'success');
+    } else if (error) {
+      showSnackbar(error, 'error');
+    }
+  }, [deletedSource, patchSourceStatusData, statusType, error]);
 
   const getTabCount = (tabKey: TabType) => {
     if (tabKey === 'all') {
@@ -284,6 +358,8 @@ const SourceTestMeterial = ({
             request={request}
             onEdit={() => handleActionPress('edit', request)}
             onView={() => handleActionPress('view', request)}
+            onApprove={() => handleActionPress('approve', request)}
+            onReject={() => handleActionPress('reject', request)}
             onDelete={() => handleActionPress('delete', request)}
           />
         ))}

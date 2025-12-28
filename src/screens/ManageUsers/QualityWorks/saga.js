@@ -24,11 +24,13 @@ import {
   deleteSourceDetailApi,
   getProcurementsApi,
   getSourceApprovalsApi,
+  postAddSourceApi,
   getSourceApprovalsByStatusApi,
   patchSourceApprovalApi,
   updateProcurementApi,
   updateSourceApprovalApi,
   updateSourceDetailApi,
+  getAllSourceApprovalsApi,
   getSourceCategoriesWithCountApi,
   putSourceApprovalApi,
   postVendorFormApi,
@@ -42,6 +44,11 @@ import {
   patchDipatchRequestApi,
   postUploadBatchSlipApi,
   dispatchProductionRequestApi,
+  deleteSourceApi,
+  patchSourceApprovalStatusApi,
+  addPurchaseApi,
+  getAllProcurementsApi,
+  patchProcurementsApi,
 } from '../../../services/source-procurements/source-procurements.service';
 import {
   METERIAL_REQUEST,
@@ -244,6 +251,40 @@ function* getSourceApprovals({payload}) {
   }
 }
 
+function* getAllSourceApprovals({payload}) {
+  console.log('===getAllSourceApprovals Saga===payload===', payload);
+  try {
+    const response = yield getAllSourceApprovalsApi(
+      payload.projectId,
+      payload.status,
+    );
+    yield put({
+      type: SOURCE_APPROVALS.GET_ALL_SOURCE_APPROVALS_SUCCESS,
+      response,
+    });
+  } catch (error) {
+    yield put({
+      type: SOURCE_APPROVALS.GET_ALL_SOURCE_APPROVALS_FAILURE,
+      error: error.message,
+    });
+  }
+}
+function* postAddSource({payload}) {
+  try {
+    const response = yield postAddSourceApi(
+      payload.projectId,
+      payload.testMaterialId,
+      payload.body,
+    );
+    yield put({type: SOURCE_APPROVALS.POST_ADD_SOURCE_SUCCESS, response});
+  } catch (error) {
+    yield put({
+      type: SOURCE_APPROVALS.POST_ADD_SOURCE_FAILURE,
+      error: error.message,
+    });
+  }
+}
+
 function* getSourceCategoriesWithCount({payload}) {
   try {
     const response = yield getSourceCategoriesWithCountApi(payload.projectId);
@@ -371,6 +412,40 @@ function* deleteSourceApproval({payload}) {
   }
 }
 
+function* deleteSource({payload}) {
+  try {
+    const response = yield deleteSourceApi(payload.projectId, payload.id);
+    yield put({
+      type: SOURCE_APPROVALS.DELETE_SOURCE_SUCCESS,
+      response,
+    });
+  } catch (error) {
+    yield put({
+      type: SOURCE_APPROVALS.DELETE_SOURCE_FAILURE,
+      error: error.message,
+    });
+  }
+}
+
+function* patchSourceApprovalStatus({payload}) {
+  try {
+    const response = yield patchSourceApprovalStatusApi(
+      payload.projectId,
+      payload.id,
+      payload.body,
+    );
+    yield put({
+      type: SOURCE_APPROVALS.PATCH_SOURCE_STATUS_SUCCESS,
+      response,
+    });
+  } catch (error) {
+    yield put({
+      type: SOURCE_APPROVALS.PATCH_SOURCE_STATUS_FAILURE,
+      error: error.message,
+    });
+  }
+}
+
 /* Source details APIs */
 
 function* addSourceDetail({payload}) {
@@ -450,6 +525,36 @@ function* getProcurements({payload}) {
   }
 }
 
+function* getAllProcurements({payload}) {
+  try {
+    const response = yield getAllProcurementsApi(
+      payload.projectId,
+    );
+    yield put({type: PROCUREMENTS.GET_ALL_PROCUREMENTS_SUCCESS, response});
+  } catch (error) {
+    yield put({
+      type: PROCUREMENTS.GET_ALL_PROCUREMENTS_FAILURE,
+      error: error.message,
+    });
+  }
+}
+
+function* patchProcurements({payload}) {
+  try {
+    const response = yield patchProcurementsApi(
+      payload.projectId,
+      payload.id,
+      payload.body
+    );
+    yield put({type: PROCUREMENTS.GET_PATCH_PROCUREMENTS_SUCCESS, response});
+  } catch (error) {
+    yield put({
+      type: PROCUREMENTS.GET_PATCH_PROCUREMENTS_FAILURE,
+      error: error.message,
+    });
+  }
+}
+
 function* addProcurement({payload}) {
   try {
     const response = yield addProcurementApi(
@@ -463,6 +568,24 @@ function* addProcurement({payload}) {
     console.log('===error===', error);
     yield put({
       type: PROCUREMENTS.ADD_PROCUREMENT_FAILURE,
+      error: error.message,
+    });
+  }
+}
+
+function* addPurchase({payload}) {
+  try {
+    const response = yield addPurchaseApi(
+      payload.projectId,
+      payload.testWorkCategoryType,
+      payload.testMaterialId,
+      payload.body,
+    );
+    yield put({type: PROCUREMENTS.ADD_PURCHASE_SUCCESS, response});
+  } catch (error) {
+    console.log('===error===', error);
+    yield put({
+      type: PROCUREMENTS.ADD_PURCHASE_FAILURE,
       error: error.message,
     });
   }
@@ -753,6 +876,12 @@ export default function* testAssignmentScreenSaga() {
     getSourceApprovals,
   );
   yield takeLatest(
+    SOURCE_APPROVALS.GET_ALL_SOURCE_APPROVALS_REQUEST,
+    getAllSourceApprovals,
+  );
+  yield takeLatest(SOURCE_APPROVALS.POST_ADD_SOURCE_REQUEST, postAddSource);
+
+  yield takeLatest(
     SOURCE_APPROVALS.GET_SOURCE_CATEGORIES_WITH_COUNT_REQUEST,
     getSourceCategoriesWithCount,
   );
@@ -780,6 +909,14 @@ export default function* testAssignmentScreenSaga() {
     SOURCE_APPROVALS.DELETE_SOURCE_APPROVAL_REQUEST,
     deleteSourceApproval,
   );
+
+  yield takeLatest(SOURCE_APPROVALS.DELETE_SOURCE_REQUEST, deleteSource);
+
+  yield takeLatest(
+    SOURCE_APPROVALS.PATCH_SOURCE_STATUS_REQUEST,
+    patchSourceApprovalStatus,
+  );
+
   yield takeLatest(
     SOURCE_APPROVALS.ADD_SOURCE_APPROVAL_DETAIL_REQUEST,
     addSourceDetail,
@@ -793,7 +930,10 @@ export default function* testAssignmentScreenSaga() {
     deleteSourceDetail,
   );
   yield takeLatest(PROCUREMENTS.GET_PROCUREMENTS_REQUEST, getProcurements);
+  yield takeLatest(PROCUREMENTS.GET_ALL_PROCUREMENTS_REQUEST, getAllProcurements);
+  yield takeLatest(PROCUREMENTS.GET_PATCH_PROCUREMENTS_REQUEST, patchProcurements);
   yield takeLatest(PROCUREMENTS.ADD_PROCUREMENT_REQUEST, addProcurement);
+  yield takeLatest(PROCUREMENTS.ADD_PURCHASE_REQUEST, addPurchase);
   yield takeLatest(PROCUREMENTS.UPDATE_PROCUREMENT_REQUEST, updateProcurement);
   yield takeLatest(PROCUREMENTS.DELETE_PROCUREMENT_REQUEST, deleteProcurement);
 }

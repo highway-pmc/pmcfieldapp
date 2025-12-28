@@ -177,6 +177,14 @@ export const getSourceApprovals = payload => ({
   type: SOURCE_APPROVALS.GET_SOURCE_APPROVALS_REQUEST,
   payload: payload,
 });
+export const getAllSourceApprovals = payload => ({
+  type: SOURCE_APPROVALS.GET_ALL_SOURCE_APPROVALS_REQUEST,
+  payload: payload,
+});
+export const postAddSourceApprovals = payload => ({
+  type: SOURCE_APPROVALS.POST_ADD_SOURCE_REQUEST,
+  payload: payload,
+});
 
 export const getSourceCategoriesWithCount = payload => ({
   type: SOURCE_APPROVALS.GET_SOURCE_CATEGORIES_WITH_COUNT_REQUEST,
@@ -213,6 +221,16 @@ export const deleteSourceApproval = payload => ({
   payload: payload,
 });
 
+export const deleteSource = payload => ({
+  type: SOURCE_APPROVALS.DELETE_SOURCE_REQUEST,
+  payload: payload,
+});
+
+export const patchSourceStatus = payload => ({
+  type: SOURCE_APPROVALS.PATCH_SOURCE_STATUS_REQUEST,
+  payload: payload,
+});
+
 export const addSourceDetail = payload => ({
   type: SOURCE_APPROVALS.ADD_SOURCE_APPROVAL_DETAIL_REQUEST,
   payload: payload,
@@ -233,9 +251,21 @@ export const getProcurements = payload => ({
   type: PROCUREMENTS.GET_PROCUREMENTS_REQUEST,
   payload: payload,
 });
-
+export const getAllProcurements = payload => ({
+  type: PROCUREMENTS.GET_ALL_PROCUREMENTS_REQUEST,
+  payload: payload,
+});
+export const patchProcurementsStatus = payload => ({
+  type: PROCUREMENTS.GET_PATCH_PROCUREMENTS_REQUEST,
+  payload: payload,
+});
 export const addProcurement = payload => ({
   type: PROCUREMENTS.ADD_PROCUREMENT_REQUEST,
+  payload: payload,
+});
+
+export const addPurchasePost = payload => ({
+  type: PROCUREMENTS.ADD_PURCHASE_REQUEST,
   payload: payload,
 });
 
@@ -251,6 +281,10 @@ export const deleteProcurement = payload => ({
 
 export const clearSourceApprovals = () => ({
   type: SOURCE_APPROVALS.CLEAR_SOURCE_APPROVALS_REQUEST,
+});
+
+export const clearPatchProcurement = () => ({
+  type: PROCUREMENTS.CLEAR_PROCUREMENT_REQUEST,
 });
 
 export const clearProcurements = () => ({

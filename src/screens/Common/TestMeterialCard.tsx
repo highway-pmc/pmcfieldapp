@@ -18,9 +18,11 @@ interface RequestCardProps {
   onView?: (requestData: any) => void;
   onEdit?: (requestData: any) => void;
   onDelete?: (requestData: any) => void;
+  onApprove?: (requestData: any) => void;
+  onReject?: (requestData: any) => void;
 }
 
-const TestMaterialCard = ({request, onView, onEdit, onDelete}: RequestCardProps) => {
+const TestMaterialCard = ({request, onView, onEdit, onDelete, onApprove, onReject}: RequestCardProps) => {
   const [menuVisible, setMenuVisible] = useState(false);
 
   const getCardStyle = (status: string) => {
@@ -76,6 +78,12 @@ const TestMaterialCard = ({request, onView, onEdit, onDelete}: RequestCardProps)
       case 'edit':
         onEdit?.(request);
         break;
+      case 'approve':
+        onApprove?.(request);
+        break;
+      case 'reject':
+      onReject?.(request);
+      break;
       case 'delete':
         onDelete?.(request);
         break;
@@ -177,6 +185,20 @@ const TestMaterialCard = ({request, onView, onEdit, onDelete}: RequestCardProps)
               onPress={() => handleMenuAction('edit')}
             >
               <Text style={styles.menuItemText}>Edit</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+              style={styles.menuItem}
+              onPress={() => handleMenuAction('approve')}
+            >
+              <Text style={styles.menuItemText}>Approve</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+              style={styles.menuItem}
+              onPress={() => handleMenuAction('reject')}
+            >
+              <Text style={styles.menuItemText}>Reject</Text>
             </TouchableOpacity>
             
             <TouchableOpacity 

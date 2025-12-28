@@ -185,6 +185,43 @@ export const getSourceApprovalsApi = async (projectId, testMaterialId) => {
       throw new Error(errorMessge);
     });
 };
+export const getAllSourceApprovalsApi = async (projectId, status) => {
+  console.log('getAllSourceApprovalsApi---!!!', projectId, status);
+  console.log(
+    `v1/auth/projects/${projectId}/all-source-approvals?status=${status}`,
+  );
+  //TODO
+  return apiService
+    .getRequest(`v1/auth/projects/${projectId}/all-source-approvals`)
+    .then(response => {
+      return response;
+    })
+    .catch(err => {
+      const errorMessge =
+        err.message || 'Unable to get list of source approvals.';
+      throw new Error(errorMessge);
+    });
+};
+
+export const postAddSourceApi = async (projectId, testMaterialId, body) => {
+  console.log('post---!!!', projectId, testMaterialId, JSON.stringify(body));
+  return apiService
+    .postRequestWithFile(
+      `v1/auth/projects/${projectId}/test-materials/${testMaterialId}/source-approvals`,
+      body,
+    )
+    .then(response => {
+      console.log('data get---!!!', response);
+      return response;
+    })
+    .catch(err => {
+      const errorMessge =
+        err.message || 'Unable to get list of source approvals.';
+      console.log('data get---!!!', JSON.stringify(err));
+      throw new Error(errorMessge);
+    });
+};
+
 export const getSourceCategoriesWithCountApi = async projectId => {
   const url = `v1/auth/projects/${projectId}/source-approvals`;
   return apiService
@@ -225,7 +262,7 @@ export const addSourceApprovalApi = async (
   body,
 ) => {
   return apiService
-    .postRequest(
+    .postRequestWithFile(
       `v1/auth/projects/${projectId}/test-work-category/${testCategoryType}/test-material/${testMaterialId}/source-approvals`,
       body,
     )
@@ -245,7 +282,7 @@ export const putSourceApprovalApi = async (
   body,
 ) => {
   return apiService
-    .putRequest(
+    .putRequestWithFile(
       `v1/auth/projects/${projectId}/test-materials/${testMaterialId}/source-approvals/${id}`,
       body,
     )
@@ -314,6 +351,34 @@ export const deleteSourceApprovalApi = async (
     })
     .catch(err => {
       const errorMessge = err.message || 'Unable to update source.';
+      throw new Error(errorMessge);
+    });
+};
+
+export const deleteSourceApi = async (projectId, id) => {
+  return apiService
+    .deleteRequest(`v1/auth/projects/${projectId}/source-approvals/${id}`)
+    .then(response => {
+      return response;
+    })
+    .catch(err => {
+      const errorMessge = err.message || 'Unable to update source.';
+      throw new Error(errorMessge);
+    });
+};
+
+export const patchSourceApprovalStatusApi = async (projectId, id, body) => {
+  console.log('patch---!!!', projectId, id, body);
+  return apiService
+    .patchRequest(
+      `v1/auth/projects/${projectId}/source-approvals/${id}/status`,
+      body,
+    )
+    .then(response => {
+      return response;
+    })
+    .catch(err => {
+      const errorMessge = err?.message || 'Unable to Approve status.';
       throw new Error(errorMessge);
     });
 };
@@ -391,6 +456,40 @@ export const getProcurementsApi = async (
     });
 };
 
+
+export const getAllProcurementsApi = async (
+  projectId
+) => {
+  return apiService
+    .getRequest(
+      `v1/auth/projects/${projectId}/procurements`,
+    )
+    .then(response => {
+      return response;
+    })
+    .catch(err => {
+      const errorMessge = err.message || 'Unable to get list of procurements.';
+      throw new Error(errorMessge);
+    });
+};
+
+
+export const patchProcurementsApi = async (projectId, id, body) => {
+  console.log('patch---!!!', projectId, id, body);
+  return apiService
+    .patchRequest(
+      `v1/auth/projects/${projectId}/procurements/${id}/status`,
+      body,
+    )
+    .then(response => {
+      return response;
+    })
+    .catch(err => {
+      const errorMessge = err?.message || 'Unable to Approve status.';
+      throw new Error(errorMessge);
+    });
+}
+
 export const addProcurementApi = async (
   projectId,
   testWorkCategoryType,
@@ -407,6 +506,29 @@ export const addProcurementApi = async (
     })
     .catch(err => {
       const errorMessge = err.message || 'Unable to add procurements.';
+      throw new Error(errorMessge);
+    });
+};
+
+export const addPurchaseApi = async (
+  projectId,
+  testWorkCategoryType,
+  testMaterialId,
+  body,
+) => {
+  const url = `v1/auth/projects/${projectId}/test-work-category/${testWorkCategoryType}/test-material/${testMaterialId}/procurements`;
+  console.log('addPurchaseApi: URL', url);
+  console.log('addPurchaseApi: body', JSON.stringify(body, null, 2));
+  return apiService
+    .postRequestWithFile(url, body)
+    .then(response => {
+      console.log('addPurchaseApi: success response', response);
+      return response;
+    })
+    .catch(err => {
+      console.log('addPurchaseApi: error', err);
+      console.log('addPurchaseApi: error message', err.message);
+      const errorMessge = err.message || 'Unable to Add Purchase.';
       throw new Error(errorMessge);
     });
 };

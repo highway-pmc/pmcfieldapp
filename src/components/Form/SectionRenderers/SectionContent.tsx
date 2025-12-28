@@ -10,6 +10,7 @@ import {
 } from '../DynamicForm.types';
 
 // Import Input Components
+import DataCalculated from '../FormComponents/DataCalculated';
 import DropdownInput from '../FormComponents/InputDropdown';
 import YesNoRadioInput from '../FormComponents/InputRadioYesNo';
 import InputText from '../FormComponents/InputText';
@@ -66,6 +67,17 @@ const renderRegularInput = (
       />
     );
   }
+ if (input.type === 'calculated') {
+   return (
+     <DataCalculated
+       key={`input-${input.id}`}
+       input={input}
+       value={currentInputValue}
+       onChange={() => {}}
+       error={error}
+     />
+   );
+ }
   // Default Text/Number Input
   return (
     <InputText

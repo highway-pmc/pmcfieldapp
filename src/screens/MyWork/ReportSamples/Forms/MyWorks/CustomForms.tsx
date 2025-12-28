@@ -19009,19 +19009,48 @@ export const CustomForms = (_v: any, workType: any, taskCategory: any) => {
               ) : null}
 
               {item.rfiStatus === RFI_STATUS.RE_GENERATED ? (
-                <TouchableOpacity
-                  style={[styles.MyWorkCta, styles.StartBorder]}
-                  onPress={() => {
-                    _event.getRFIDataByWorkAssignmentId(item);
-                  }}>
-                  <Image
-                    style={styles.WorkIcon}
-                    source={require('../../../../../images/play-icon.png')}
-                  />
-                  <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>
-                    Re-start
-                  </Text>
-                </TouchableOpacity>
+                <View style={styles.taskButtonContainer}>
+                  {shouldRenderMaterialRequestButton(item) ? (
+                    <TouchableOpacity
+                      style={[styles.materialReqstBtn]}
+                      onPress={() => {
+                        console.log('Task Information', item);
+                        navigation.navigate('MaterialRequestComponent', {
+                          taskId: item.taskId._id,
+                        });
+                      }}>
+                      <Text
+                        style={[
+                          styles.CtaStartText,
+                          styles.CtaRequestTextColor,
+                        ]}>
+                        Material Request
+                      </Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <Text>Material Requested</Text>
+                  )}
+                  {shouldRenderStartButton(item) ? (
+                    <TouchableOpacity
+                      style={[styles.MyWorkCta, styles.StartBorder]}
+                      onPress={() => {
+                        console.log('Task Information', item);
+                        navigation.navigate('TaskForm', {taskData: item});
+                        //_event.getRFIDataByWorkAssignmentId(item);
+                      }}>
+                      <Image
+                        style={styles.WorkIcon}
+                        source={require('../../../../../images/play-icon.png')}
+                      />
+                      <Text
+                        style={[styles.CtaStartText, styles.CtaStartTextColor]}>
+                        Re-Start
+                      </Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <Text></Text>
+                  )}
+                </View>
               ) : null}
 
               {item.rfiStatus === RFI_STATUS.REJECTED ||

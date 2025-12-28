@@ -25,7 +25,15 @@ export type ValidationRules = {
 export type InputItem = {
   id: string; // Unique ID for state management
   label: string;
-  type: 'text' | 'number' | 'select' | 'textarea' | 'date' | 'radio' | 'time';
+  type:
+    | 'text'
+    | 'number'
+    | 'select'
+    | 'textarea'
+    | 'date'
+    | 'radio'
+    | 'time'
+    | 'calculated';
   value: any;
   placeholder: string;
   validations: ValidationRules;

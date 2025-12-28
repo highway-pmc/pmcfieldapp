@@ -75,6 +75,7 @@ const TaskForm = ({route, navigation, taskData, isReadOnlyRFI}: any) => {
   const RFI_ID = taskInfo.rfiData?._id ?? taskInfo._id;
   const status = taskInfo.rfiData?.rfiStatus ?? taskInfo.rfiStatus;
   const CHECKLIST_NAME = taskInfo.taskId.name;
+  //const CHECKLIST_NAME = 'well-sinking';
   const stateSetters = {
     projectInfoSection: setProjectInfoData,
     materialConsumptionSection: setMaterialConsumptionData,

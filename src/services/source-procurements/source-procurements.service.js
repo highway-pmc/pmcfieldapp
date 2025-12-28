@@ -206,7 +206,7 @@ export const getAllSourceApprovalsApi = async (projectId, status) => {
 export const postAddSourceApi = async (projectId, testMaterialId, body) => {
   console.log('post---!!!', projectId, testMaterialId, JSON.stringify(body));
   return apiService
-    .postRequest(
+    .postRequestWithFile(
       `v1/auth/projects/${projectId}/test-materials/${testMaterialId}/source-approvals`,
       body,
     )
@@ -262,7 +262,7 @@ export const addSourceApprovalApi = async (
   body,
 ) => {
   return apiService
-    .postRequest(
+    .postRequestWithFile(
       `v1/auth/projects/${projectId}/test-work-category/${testCategoryType}/test-material/${testMaterialId}/source-approvals`,
       body,
     )
@@ -282,7 +282,7 @@ export const putSourceApprovalApi = async (
   body,
 ) => {
   return apiService
-    .putRequest(
+    .putRequestWithFile(
       `v1/auth/projects/${projectId}/test-materials/${testMaterialId}/source-approvals/${id}`,
       body,
     )

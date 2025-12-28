@@ -255,6 +255,10 @@ export const getAllProcurements = payload => ({
   type: PROCUREMENTS.GET_ALL_PROCUREMENTS_REQUEST,
   payload: payload,
 });
+export const patchProcurementsStatus = payload => ({
+  type: PROCUREMENTS.GET_PATCH_PROCUREMENTS_REQUEST,
+  payload: payload,
+});
 export const addProcurement = payload => ({
   type: PROCUREMENTS.ADD_PROCUREMENT_REQUEST,
   payload: payload,
@@ -277,6 +281,10 @@ export const deleteProcurement = payload => ({
 
 export const clearSourceApprovals = () => ({
   type: SOURCE_APPROVALS.CLEAR_SOURCE_APPROVALS_REQUEST,
+});
+
+export const clearPatchProcurement = () => ({
+  type: PROCUREMENTS.CLEAR_PROCUREMENT_REQUEST,
 });
 
 export const clearProcurements = () => ({

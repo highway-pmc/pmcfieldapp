@@ -47,6 +47,8 @@ import {
   deleteSourceApi,
   patchSourceApprovalStatusApi,
   addPurchaseApi,
+  getAllProcurementsApi,
+  patchProcurementsApi,
 } from '../../../services/source-procurements/source-procurements.service';
 import {
   METERIAL_REQUEST,
@@ -523,6 +525,36 @@ function* getProcurements({payload}) {
   }
 }
 
+function* getAllProcurements({payload}) {
+  try {
+    const response = yield getAllProcurementsApi(
+      payload.projectId,
+    );
+    yield put({type: PROCUREMENTS.GET_ALL_PROCUREMENTS_SUCCESS, response});
+  } catch (error) {
+    yield put({
+      type: PROCUREMENTS.GET_ALL_PROCUREMENTS_FAILURE,
+      error: error.message,
+    });
+  }
+}
+
+function* patchProcurements({payload}) {
+  try {
+    const response = yield patchProcurementsApi(
+      payload.projectId,
+      payload.id,
+      payload.body
+    );
+    yield put({type: PROCUREMENTS.GET_PATCH_PROCUREMENTS_SUCCESS, response});
+  } catch (error) {
+    yield put({
+      type: PROCUREMENTS.GET_PATCH_PROCUREMENTS_FAILURE,
+      error: error.message,
+    });
+  }
+}
+
 function* addProcurement({payload}) {
   try {
     const response = yield addProcurementApi(
@@ -898,6 +930,8 @@ export default function* testAssignmentScreenSaga() {
     deleteSourceDetail,
   );
   yield takeLatest(PROCUREMENTS.GET_PROCUREMENTS_REQUEST, getProcurements);
+  yield takeLatest(PROCUREMENTS.GET_ALL_PROCUREMENTS_REQUEST, getAllProcurements);
+  yield takeLatest(PROCUREMENTS.GET_PATCH_PROCUREMENTS_REQUEST, patchProcurements);
   yield takeLatest(PROCUREMENTS.ADD_PROCUREMENT_REQUEST, addProcurement);
   yield takeLatest(PROCUREMENTS.ADD_PURCHASE_REQUEST, addPurchase);
   yield takeLatest(PROCUREMENTS.UPDATE_PROCUREMENT_REQUEST, updateProcurement);

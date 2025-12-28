@@ -456,6 +456,40 @@ export const getProcurementsApi = async (
     });
 };
 
+
+export const getAllProcurementsApi = async (
+  projectId
+) => {
+  return apiService
+    .getRequest(
+      `v1/auth/projects/${projectId}/procurements`,
+    )
+    .then(response => {
+      return response;
+    })
+    .catch(err => {
+      const errorMessge = err.message || 'Unable to get list of procurements.';
+      throw new Error(errorMessge);
+    });
+};
+
+
+export const patchProcurementsApi = async (projectId, id, body) => {
+  console.log('patch---!!!', projectId, id, body);
+  return apiService
+    .patchRequest(
+      `v1/auth/projects/${projectId}/procurements/${id}/status`,
+      body,
+    )
+    .then(response => {
+      return response;
+    })
+    .catch(err => {
+      const errorMessge = err?.message || 'Unable to Approve status.';
+      throw new Error(errorMessge);
+    });
+}
+
 export const addProcurementApi = async (
   projectId,
   testWorkCategoryType,

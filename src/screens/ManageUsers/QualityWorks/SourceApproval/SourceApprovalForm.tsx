@@ -61,7 +61,6 @@ export default function SourceApprovalForm({
       const eventEmitter = new NativeEventEmitter();
       eventEmitter.emit('headerEvent', HeaderItems.sourceApprovalForm);
       // Fetch initial data needed for the form
-      dispatch(clearSourceApprovals());
       dispatch(getVendorForm());
       //dispatch(getSourceApprovals());
     }

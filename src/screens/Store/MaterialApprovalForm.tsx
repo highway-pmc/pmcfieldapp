@@ -10,13 +10,18 @@ import {
   Alert,
   NativeEventEmitter,
 } from 'react-native';
-import {HeaderItems, MATERIAL_REQUEST_STATUS} from '../../constants/constants';
+import {
+  HeaderItems,
+  MATERIAL_REQUEST_STATUS,
+  SOURCE_APPROVAL_STATUS,
+} from '../../constants/constants';
 import DropdownPicker from '../../components/UI/DropdownPicker';
 import {
   getSourceApprovals,
   patchDispatchRequest,
   patchMaterialRequestStatus,
   clearMaterialRequest,
+  getSourceApprovalsByStatus,
 } from '../ManageUsers/actions';
 import {useDispatch, useSelector} from 'react-redux';
 import {useSnackbar} from '../../context/SnackbarContext';
@@ -42,8 +47,6 @@ const formatDateTime = (isoString: any) => {
 const MaterialApprovalForm = ({route, navigation}: any) => {
   const materialRequest = route.params?.item; // { id, items: [...] }
   const {status} = materialRequest || {};
-
-  // flags
   const isProcurementStage =
     status === MATERIAL_REQUEST_STATUS.REQUEST_FOR_APPROVAL;
   const isReadOnlyApprovalStage =
@@ -64,7 +67,9 @@ const MaterialApprovalForm = ({route, navigation}: any) => {
   const {patchMeterialRequestStatusData, loading, error} = useSelector(
     (state: any) => state.MeterialRequest,
   );
-  const {sourceApprovals} = useSelector((state: any) => state.SourceApprovals);
+  const {sourceByStatusData} = useSelector(
+    (state: any) => state.SourceApprovals,
+  );
 
   // toast from redux
   useEffect(() => {
@@ -104,9 +109,10 @@ const MaterialApprovalForm = ({route, navigation}: any) => {
   // Fetch available sources (API uses material type ID)
   const getAvailableSources = (materialTypeId: any) => {
     dispatch(
-      getSourceApprovals({
+      getSourceApprovalsByStatus({
         projectId: loggedInUser.projectId,
         testMaterialId: materialTypeId,
+        status: SOURCE_APPROVAL_STATUS.APPROVED,
       }),
     );
   };
@@ -179,7 +185,7 @@ const MaterialApprovalForm = ({route, navigation}: any) => {
             approvedQty[req._id] ?? req.qty_requested,
           );
 
-          const backendSourcesForMaterial = sourceApprovals?.filter(
+          const backendSourcesForMaterial = sourceByStatusData?.filter(
             (s: any) => s.testMaterialId === req.testMaterialId,
           );
 
@@ -404,7 +410,7 @@ const MaterialApprovalForm = ({route, navigation}: any) => {
               ?.map((r: any) => r.name);
 
             const specificSources =
-              sourceApprovals?.filter(
+              sourceByStatusData?.filter(
                 (s: any) => s.testMaterialId === materialTypeId,
               ) || [];
 

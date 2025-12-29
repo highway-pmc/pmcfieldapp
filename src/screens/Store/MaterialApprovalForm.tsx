@@ -22,6 +22,7 @@ import {
   patchMaterialRequestStatus,
   clearMaterialRequest,
   getSourceApprovalsByStatus,
+  clearSourceApprovals,
 } from '../ManageUsers/actions';
 import {useDispatch, useSelector} from 'react-redux';
 import {useSnackbar} from '../../context/SnackbarContext';
@@ -108,10 +109,14 @@ const MaterialApprovalForm = ({route, navigation}: any) => {
 
   // Fetch available sources (API uses material type ID)
   const getAvailableSources = (materialTypeId: any) => {
+    const id = normalizeId(materialTypeId);
+
+    dispatch(clearSourceApprovals());
+
     dispatch(
       getSourceApprovalsByStatus({
         projectId: loggedInUser.projectId,
-        testMaterialId: materialTypeId,
+        testMaterialId: id,
         status: SOURCE_APPROVAL_STATUS.APPROVED,
       }),
     );
@@ -248,6 +253,7 @@ const MaterialApprovalForm = ({route, navigation}: any) => {
 
     Alert.alert('Success', 'Form has been submitted successfully!');
   };
+  const normalizeId = (val: any) => (typeof val === 'object' ? val?._id : val);
 
   // Final Decision Logic (Pending Approval -> Pending Dispatch / Rejected)
   const handleFinalApprovalDecision = (action: any) => {
@@ -411,7 +417,8 @@ const MaterialApprovalForm = ({route, navigation}: any) => {
 
             const specificSources =
               sourceByStatusData?.filter(
-                (s: any) => s.testMaterialId === materialTypeId,
+                (s: any) =>
+                  s.testMaterialId?._id === normalizeId(materialTypeId),
               ) || [];
 
             const dropdownOptions = specificSources.map((s: any) => ({

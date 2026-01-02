@@ -611,7 +611,7 @@ export const SURVEY_MODULE_TYPE = [
 
 export const SEGMENT_TYPES = {
   FOUNDATIONS: 'foundations',
-  SUB_STRUCTURES: 'sub-structures',
+  SUB_STRUCTURES: 'sub-structure',
   BEARINGS: 'bearings',
   SUPER_STRUCTURE: 'super-structure',
   EXPANSION_JOINTS: 'expansion-joints',
@@ -622,7 +622,7 @@ export const SEGMENT_TYPES = {
 
 export const SEGMENT_TYPES_DISPLAY: any = {
   foundations: 'Foundations',
-  'sub-structures': 'Sub Structures',
+  'sub-structure': 'Sub Structure',
   'super-structure': 'Super Structure',
   bearings: 'Bearings',
   'expansion-joints': 'Expansion Joints',
@@ -675,6 +675,8 @@ export const SEGMENT_TYPES_DISPLAY: any = {
   alignment: 'Alignment',
   benchmarks: 'Benchmarks',
   ogl: 'OGL',
+  'wearing-coat': 'Wearing Coat',
+  'drainage-arrangement': 'Drainage Arrangement',
 };
 
 export const RFIs_TYPE = {
@@ -1048,7 +1050,6 @@ export const MATERIAL_REQUEST_STATUS = {
   DISPATCHED: 'dispatched',
   DELIVERED: 'delivered',
 };
-
 
 export const TEST_TYPES = {
   CORE_TEST: 'core-test',

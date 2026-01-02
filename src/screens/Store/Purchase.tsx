@@ -13,7 +13,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
-import RequestCard from '../Common/RequestCard';
+import RequestCard from './PurchaseRequestCard';
 import {MATERIAL_REQUEST_STATUS} from '../../constants/constants';
 import { useSnackbar } from '../../context/SnackbarContext';
 import { useDispatch, useSelector } from 'react-redux';

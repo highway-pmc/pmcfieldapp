@@ -110,6 +110,7 @@ import {thirdPartySampleTest} from './ReportSamples/Forms/QualityWorks/ThirdPart
 import CustomSelectDropdown from '../Common/CustomSelectDropdown';
 import {getThirdPartyTestSampleObject} from './ReportSamples/Forms/QualityWorks/ThirdPartyTest';
 import LinearGradient from 'react-native-linear-gradient';
+import SamplePrepModal from './ReportSamples/Forms/QualityWorks/SamplePrepModal';
 const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
   const workType = PROJECT_TYPE.QUALITY_WORK;
@@ -1381,6 +1382,17 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
   const colors = CARD_COLORS_ARRAY;
   const imageMap: any = CARD_ICONS;
 
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const handleSubmitSamplePrepare = (samples: any) => {
+      console.log('Received samples:', samples);
+      // Handle the submitted data
+    };
+
+  const onSamplePrepareSubmit = (data: any) => {
+    console.log('Received samples Data:', data);
+  }
+
   return (
     <View style={styles.Container}>
       {breadcrumbData.length ? (
@@ -1461,6 +1473,11 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
         </View>
       ) : null}
       <ScrollView showsVerticalScrollIndicator={false} style={styles.Height100}>
+      <SamplePrepModal
+              visible={isModalVisible}
+              onClose={() => setIsModalVisible(false)}
+              onSubmit={handleSubmitSamplePrepare}
+            />
         {currentLevel === 0
           ? myTestsDataAll.map((testClassificationItem: any, index: number) => (
               <LinearGradient
@@ -1753,7 +1770,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
                     </View>
                   </TouchableOpacity>
                 ))
-            : tasksListing(currentTestTypesData, searchText, getStyle, styles)
+            : tasksListing(currentTestTypesData, searchText, getStyle, styles, setIsModalVisible, onSamplePrepareSubmit)
           : null}
         {currentLevel === 3
           ? currentTestMaterialsData && currentTestMaterialsData.length
@@ -1776,10 +1793,10 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
                     </View>
                   </TouchableOpacity>
                 ))
-            : tasksListing(currentTestTypesData, searchText, getStyle, styles)
+            : tasksListing(currentTestTypesData, searchText, getStyle, styles, setIsModalVisible, onSamplePrepareSubmit)
           : null}
         {currentLevel === 4
-          ? tasksListing(currentTestTypesData, searchText, getStyle, styles)
+          ? tasksListing(currentTestTypesData, searchText, getStyle, styles, setIsModalVisible, onSamplePrepareSubmit)
           : null}
         {currentLevel === 5 && currentSubTestTypesData?.length
           ? currentSubTestTypesData
@@ -1812,7 +1829,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
                 currentTestMaterialData.materialType ===
                   TEST_MATERIALS_TYPES.PQC) &&
                 selectedTestSample?.type === TEST_TYPES.CUBE_TEST)) &&
-            tasksListing(currentTestTypesData, searchText, getStyle, styles)}
+            tasksListing(currentTestTypesData, searchText, getStyle, styles, setIsModalVisible, onSamplePrepareSubmit)}
         {currentLevel === 6 ? (
           currentSubTestTypeRFIsData?.length ? (
             <ScrollView style={styles.Height100}>

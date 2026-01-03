@@ -18,7 +18,11 @@ import {
   saveRfiFormData,
   saveRfiFormDataClear, // Import the new action
 } from './actions';
-import {updatedRFIs, clearRFITasksEvent} from '../RFIs/actions';
+import {
+  updatedRFIs,
+  clearRFITasksEvent,
+  generateRFIReport,
+} from '../RFIs/actions';
 import InformationTab from './MyWorkDynamicFrom/InformationTab';
 import InspectionTab from './MyWorkDynamicFrom/InspectionTab';
 import TaskDetailsTab from './MyWorkDynamicFrom/TaskDetailsTab';
@@ -71,10 +75,12 @@ const TaskForm = ({route, navigation, taskData, isReadOnlyRFI}: any) => {
   const [taskDetailsData, setTaskDetailsData] = useState<Record<string, any>>(
     {},
   );
+
   const PROJECT_ID = taskInfo.projectId;
   const RFI_ID = taskInfo.rfiData?._id ?? taskInfo._id;
   const status = taskInfo.rfiData?.rfiStatus ?? taskInfo.rfiStatus;
   const CHECKLIST_NAME = taskInfo.taskId.name;
+
   //const CHECKLIST_NAME = 'well-sinking';
   const stateSetters = {
     projectInfoSection: setProjectInfoData,
@@ -292,6 +298,7 @@ const TaskForm = ({route, navigation, taskData, isReadOnlyRFI}: any) => {
 
     // Aggregate the centralized STATE DATA for the final payload
     const allInputs = {
+      taskName: CHECKLIST_NAME,
       projectInfoSection: projectInfoData,
       materialConsumptionSection: materialConsumptionData,
       inspectionChecklistSection: inspectionChecklistData,
@@ -330,7 +337,6 @@ const TaskForm = ({route, navigation, taskData, isReadOnlyRFI}: any) => {
     //   );
     //   return;
     // }
-
     setIsSaving(true);
     //console.log('Saving form data:', allInputs);
     //console.log('With projectId:', PROJECT_ID, 'and rfiId:', RFI_ID);
@@ -346,7 +352,15 @@ const TaskForm = ({route, navigation, taskData, isReadOnlyRFI}: any) => {
       }),
     );
   };
-
+  const onGenerateReport = () => {
+    dispatch(
+      generateRFIReport({
+        projectId: PROJECT_ID,
+        projectModuleId: taskInfo.projectModuleId,
+        rfiId: RFI_ID,
+      }),
+    );
+  };
   const handleSubmit = async () => {
     if (isSaving || isSubmitting || loading || error) return;
     const {allInputs, hasError, allErrors} = getFormDataFromTabs();
@@ -605,7 +619,10 @@ const TaskForm = ({route, navigation, taskData, isReadOnlyRFI}: any) => {
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={[styles.button, styles.submitButton]}
-            onPress={() => console.log('Generate Report pressed')}>
+            onPress={() => {
+              onGenerateReport();
+              console.log('Generate Report pressed');
+            }}>
             <Text style={styles.submitButtonText}>Generate Report</Text>
           </TouchableOpacity>
         </View>

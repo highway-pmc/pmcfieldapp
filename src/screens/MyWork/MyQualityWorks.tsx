@@ -189,6 +189,20 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
 
   const handleApprovalType = (selectedOption: any) => {
     setSelectedValues(selectedOption);
+
+    if (isTestInventoryClassification(selectedOption.type)) {
+      // navigation.navigate('SelectTestWorkCategory', {
+      //   testClassificationId: item.id,
+      //   testClassificationName: item.name,
+      //   testClassificationType: item.type,
+      //   testWorkCategoriesData: item.testWorkCategoriesData,
+      //   workType: workType,
+      // });
+      //navigation.navigate('TestDetailsScreen');
+      navigation.navigate('SourceHome');
+      return;
+    }
+
     getMyWorksData(selectedOption?.type);
     console.log('selectedOption', selectedOption);
   };

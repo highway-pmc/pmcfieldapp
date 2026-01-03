@@ -231,7 +231,7 @@ export default function SourceApprovalForm({
       'testMaterialType',
       materialName.toLowerCase().replace(/\s+/g, '-'),
     );
-    formData.append('testWorkCategoryType', workCategory);
+    formData.append('testWorkCategoryType', workCategory.toLowerCase());
     formData.append('vendorId', selectedVendorId?._id || '');
     formData.append('materialCategory', materialCategory || 'N/A');
     formData.append('name', sourceName);

@@ -6860,8 +6860,7 @@ export const tasksListing = (
   searchText: any,
   getStyle: any,
   styles: any,
-  setIsModalVisible: any,
-  onSamplePrepareSubmit: any,
+  onOpenSamplePreparePopup: any,
 ) => {
   return currentTestTypesData
     .filter((task: any) => {
@@ -6894,6 +6893,7 @@ export const tasksListing = (
                       {item.rfiStatus === RFI_STATUS.GENERATED ? (
                         <TouchableOpacity
                           style={[styles.MyWorkCta, styles.StartBorder]}
+                          disabled={!item.samplePrepared}
                           onPress={() => {
                             getRFIDataByWorkAssignmentId(item);
                           }}>
@@ -6906,13 +6906,15 @@ export const tasksListing = (
                           </Text>
                         </TouchableOpacity>
                       ) : null}
-                        <TouchableOpacity
+                        {!item.samplePrepared ? <TouchableOpacity
                           style={[style.MyCtaContainer, style.StartBorder]}
-                          onPress={() => {setIsModalVisible(true), onSamplePrepareSubmit(item)}}>
+                          onPress={() => {onOpenSamplePreparePopup(item)}}>
                           <Text style={[style.CtaTextColor]}>
                             Sample Prepare
                           </Text>
                         </TouchableOpacity>
+                        : <Text style={{fontWeight: '600', color: 'green'}}>Sample Prepared</Text>
+                      }
 
                       {item.rfiStatus === RFI_STATUS.RE_GENERATED ? (
                         <TouchableOpacity

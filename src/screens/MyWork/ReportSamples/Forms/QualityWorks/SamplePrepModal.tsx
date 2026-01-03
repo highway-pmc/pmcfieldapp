@@ -2,20 +2,32 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, Switch, Modal, Dimensions, StyleSheet } from 'react-native';
 import CalendarPicker from '../../../../../components/UI/CalenderPicker';
 import DropdownPicker from '../../../../../components/UI/DropdownPicker';
+import { SAMPLE_BY_LIST } from '../../../../../constants/constants';
+import { useSnackbar } from '../../../../../context/SnackbarContext';
 
-export default function SamplePrepModal({ visible, onClose, onSubmit }) {
+export default function SamplePrepModal({ visible, onClose, selectedTaskData, onSubmit }: any) {
   const { height } = Dimensions.get('window');
   const calculatedHeight = height * 7;
+  const [samples, setSamples]: any = useState([]);
+  const { showSnackbar } = useSnackbar();
 
-  const [samples, setSamples] = useState([
-    {
-      id: 1,
-      name: 'Sample 1',
-      isPrepared: false,
-      date: '',
-      collectedBy: ''
+  useState(() => {
+    console.log('Selected Task Data in Modal:', selectedTaskData);
+    if (selectedTaskData && selectedTaskData.testRfiData?.metaData?.testCountData?.sampleCount) {
+      const sampleCount = selectedTaskData.testRfiData.metaData.testCountData.sampleCount;
+      const initialSamples = [];
+      for (let i = 1; i <= sampleCount; i++) {
+        initialSamples.push({
+          id: i,
+          name: `Sample ${i}`,
+          isPrepared: false,
+          sampleDate: '',
+          collectedBy: SAMPLE_BY_LIST[0].value
+        });
+      }
+      setSamples(initialSamples);
     }
-  ]);
+  });
 
   const addSample = () => {
     const newId = samples.length + 1;
@@ -23,49 +35,44 @@ export default function SamplePrepModal({ visible, onClose, onSubmit }) {
       id: newId,
       name: `Sample ${newId}`,
       isPrepared: false,
-      date: '',
-      collectedBy: ''
+      sampleDate: '',
+      collectedBy: SAMPLE_BY_LIST[0].value
     }]);
   };
 
-  const removeSample = (id) => {
+  const removeSample = (id: string) => {
     if (samples.length > 1) {
-      setSamples(samples.filter(s => s.id !== id));
+      setSamples(samples.filter((s: any) => s.id !== id));
     }
   };
 
-  const updateSample = (id, field, value) => {
-    setSamples(samples.map(s => 
+  const updateSample = (id: any, field: any, value: any) => {
+    setSamples(samples.map((s: any) => 
       s.id === id ? { ...s, [field]: value } : s
     ));
   };
 
   const handleSubmit = () => {
     console.log('Submitted samples:', samples);
+    // const allSamplePrepared = samples.every((s: any) => !s.isPrepared);
+    const allSamplePrepared = samples.every((s: any) => s.name && s.isPrepared && s.sampleDate && s.collectedBy);
+    if (!allSamplePrepared) {
+      showSnackbar('Please ensure all samples are marked as prepared, with name, sample date and collected by filled.', "error");
+      return;
+    }
+
     if (onSubmit) {
       onSubmit(samples);
     }
     // Reset form
-    setSamples([{
-      id: 1,
-      name: 'Sample 1',
-      isPrepared: false,
-      date: '',
-      collectedBy: ''
-    }]);
-    if (onClose) {
-      onClose();
-    }
+    // setSamples([]);
+    // if (onClose) {
+    //   onClose();
+    // }
   };
 
   const handleCancel = () => {
-    setSamples([{
-      id: 1,
-      name: 'Sample 1',
-      isPrepared: false,
-      date: '',
-      collectedBy: ''
-    }]);
+    setSamples([]);
     if (onClose) {
       onClose();
     }
@@ -96,7 +103,7 @@ export default function SamplePrepModal({ visible, onClose, onSubmit }) {
           >
             <View style={styles.viewScrollContainer}>
               <View>
-                {samples.map((sample, index) => (
+                {samples.map((sample: any, index: any) => (
                   <View key={sample.id} style={styles.card}>
                     <View style={styles.cardHeader}>
                       <Text style={styles.cardTitle}>Sample #{index + 1}</Text>
@@ -143,8 +150,8 @@ export default function SamplePrepModal({ visible, onClose, onSubmit }) {
 
                     <CalendarPicker
                         label="Sample Date"
-                        value={sample.date}
-                        onChange={date => updateSample(sample.id, 'date', date)}
+                        value={sample.sampleDate}
+                        onChange={date => updateSample(sample.id, 'sampleDate', date)}
                     />
                       {/* <Text style={styles.label}>Sample Collected By</Text>
                       <TextInput
@@ -155,23 +162,18 @@ export default function SamplePrepModal({ visible, onClose, onSubmit }) {
                         placeholderTextColor="#94a3b8"
                       /> */}
                       <DropdownPicker
-                        label="Sample Collected By"
-                        items={[
-                            {label: 'Select', value: ''},
-                            {label: '37.5mm', value: '37.5mm'},
-                            {label: '26.5mm', value: '26.5mm'},
-                            {label: '19mm', value: '19mm'},
-                            {label: '13.2mm', value: '13.2mm'},
-                        ]}
+                        label="Sampled By"
+                        items={SAMPLE_BY_LIST}
                         value={sample.collectedBy}
-                        onChange={(text) => updateSample(sample.id, 'collectedBy', text)}
-                        />
+                        onChange={(text: any) => updateSample(sample.id, 'collectedBy', text)}
+                        isRequired
+                      />
                   </View>
                 ))}
 
-                <TouchableOpacity style={styles.addButton} onPress={addSample}>
+                {/* <TouchableOpacity style={styles.addButton} onPress={addSample}>
                   <Text style={styles.addButtonText}>+ Add More Sample</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
             </View>
           </ScrollView>

@@ -37,6 +37,7 @@ import {
   fillRFIsChecklistForTestSample,
   generateTestSampleReport,
   getMyTests,
+  testSamplePreparedSubmit,
   updateTestSample,
 } from './actions';
 import LoadingAnimation from '../Common/LoadingAnimation';
@@ -120,6 +121,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
     testSampleUpdated,
     generatedTestSampleReport,
     rfiChecklistSaved,
+    samplePrepared,
     loading,
     error,
   } = useSelector((state: any) => state.MyWorks);
@@ -243,16 +245,21 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
       }
       setCurrentSubTestTypeRFIsData([]);
       setCurrentSubTestTypeRFIsData(sampleDataTemp);
-      Alert.alert('Info', 'Sample updated');
+      showSnackbar('Sample updated', 'success');
       dispatch(clearMyWorksEvent());
     }
 
     if (rfiChecklistSaved) {
       setOpenPopup(false);
-      Alert.alert('RFIs checklist saved.');
+      showSnackbar('RFIs checklist saved.', 'success');
       setCurrentLevel(1);
       dispatch(clearMyWorksEvent());
       getMyWorksData(selectedValues?.type);
+    }
+
+    if (samplePrepared) {
+      setIsSamplePrepModalVisible(false);
+      showSnackbar('Sample prepared successfully', 'success');
     }
 
     if (error) {
@@ -1383,13 +1390,25 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
   const imageMap: any = CARD_ICONS;
 
 
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isSamplePrepModalVisible, setIsSamplePrepModalVisible] = useState(false);
+  const [selectedTaskData, setSelectedTaskData]: any = useState(null);
   const handleSubmitSamplePrepare = (samples: any) => {
-      console.log('Received samples:', samples);
+      console.log('Samples prepared payload:', samples);
       // Handle the submitted data
+      dispatch(
+        testSamplePreparedSubmit({
+          projectId: loggedInUser.projectId,
+          testRfiId: selectedTaskData.testRfiData.id,
+          body: {
+            samplesData: samples,
+          },
+        }),
+      );
     };
 
-  const onSamplePrepareSubmit = (data: any) => {
+  const onOpenSamplePreparePopup = (data: any) => {
+    setSelectedTaskData(data);
+    setIsSamplePrepModalVisible(true);
     console.log('Received samples Data:', data);
   }
 
@@ -1473,11 +1492,15 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
         </View>
       ) : null}
       <ScrollView showsVerticalScrollIndicator={false} style={styles.Height100}>
-      <SamplePrepModal
-              visible={isModalVisible}
-              onClose={() => setIsModalVisible(false)}
-              onSubmit={handleSubmitSamplePrepare}
-            />
+      
+      {
+        isSamplePrepModalVisible && <SamplePrepModal
+            onClose={() => setIsSamplePrepModalVisible(false)}
+            selectedTaskData={selectedTaskData}
+            onSubmit={handleSubmitSamplePrepare}
+          />
+      }
+      
         {currentLevel === 0
           ? myTestsDataAll.map((testClassificationItem: any, index: number) => (
               <LinearGradient
@@ -1770,7 +1793,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
                     </View>
                   </TouchableOpacity>
                 ))
-            : tasksListing(currentTestTypesData, searchText, getStyle, styles, setIsModalVisible, onSamplePrepareSubmit)
+            : tasksListing(currentTestTypesData, searchText, getStyle, styles, onOpenSamplePreparePopup)
           : null}
         {currentLevel === 3
           ? currentTestMaterialsData && currentTestMaterialsData.length
@@ -1793,10 +1816,10 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
                     </View>
                   </TouchableOpacity>
                 ))
-            : tasksListing(currentTestTypesData, searchText, getStyle, styles, setIsModalVisible, onSamplePrepareSubmit)
+            : tasksListing(currentTestTypesData, searchText, getStyle, styles, onOpenSamplePreparePopup)
           : null}
         {currentLevel === 4
-          ? tasksListing(currentTestTypesData, searchText, getStyle, styles, setIsModalVisible, onSamplePrepareSubmit)
+          ? tasksListing(currentTestTypesData, searchText, getStyle, styles, onOpenSamplePreparePopup)
           : null}
         {currentLevel === 5 && currentSubTestTypesData?.length
           ? currentSubTestTypesData
@@ -1829,7 +1852,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
                 currentTestMaterialData.materialType ===
                   TEST_MATERIALS_TYPES.PQC) &&
                 selectedTestSample?.type === TEST_TYPES.CUBE_TEST)) &&
-            tasksListing(currentTestTypesData, searchText, getStyle, styles, setIsModalVisible, onSamplePrepareSubmit)}
+            tasksListing(currentTestTypesData, searchText, getStyle, styles, onOpenSamplePreparePopup)}
         {currentLevel === 6 ? (
           currentSubTestTypeRFIsData?.length ? (
             <ScrollView style={styles.Height100}>

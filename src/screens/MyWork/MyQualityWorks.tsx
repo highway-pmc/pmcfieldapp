@@ -1793,7 +1793,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
                     </View>
                   </TouchableOpacity>
                 ))
-            : tasksListing(currentTestTypesData, searchText, getStyle, styles, onOpenSamplePreparePopup)
+            : tasksListing(currentTestTypesData, searchText, getStyle, styles, onOpenSamplePreparePopup, selectedValues)
           : null}
         {currentLevel === 3
           ? currentTestMaterialsData && currentTestMaterialsData.length
@@ -1816,10 +1816,10 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
                     </View>
                   </TouchableOpacity>
                 ))
-            : tasksListing(currentTestTypesData, searchText, getStyle, styles, onOpenSamplePreparePopup)
+            : tasksListing(currentTestTypesData, searchText, getStyle, styles, onOpenSamplePreparePopup, selectedValues)
           : null}
         {currentLevel === 4
-          ? tasksListing(currentTestTypesData, searchText, getStyle, styles, onOpenSamplePreparePopup)
+          ? tasksListing(currentTestTypesData, searchText, getStyle, styles, onOpenSamplePreparePopup, selectedValues)
           : null}
         {currentLevel === 5 && currentSubTestTypesData?.length
           ? currentSubTestTypesData
@@ -1852,7 +1852,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
                 currentTestMaterialData.materialType ===
                   TEST_MATERIALS_TYPES.PQC) &&
                 selectedTestSample?.type === TEST_TYPES.CUBE_TEST)) &&
-            tasksListing(currentTestTypesData, searchText, getStyle, styles, onOpenSamplePreparePopup)}
+            tasksListing(currentTestTypesData, searchText, getStyle, styles, onOpenSamplePreparePopup, selectedValues)}
         {currentLevel === 6 ? (
           currentSubTestTypeRFIsData?.length ? (
             <ScrollView style={styles.Height100}>

@@ -5,6 +5,7 @@ import {Text, TouchableOpacity, View, Image, ScrollView, StyleSheet} from 'react
 import {
   RFI_STATUS,
   SAMPLE_BY_LIST,
+  TEST_CLASSIFICATION_TYPES,
   TEST_CONDUCTED_BY_LIST,
   TEST_MATERIALS_TYPES,
   TEST_TYPES,
@@ -6861,6 +6862,7 @@ export const tasksListing = (
   getStyle: any,
   styles: any,
   onOpenSamplePreparePopup: any,
+  testClassificationData: any
 ) => {
   return currentTestTypesData
     .filter((task: any) => {
@@ -6884,6 +6886,7 @@ export const tasksListing = (
               <View>
                 <View style={style.cardContent}>
                   <Text style={styles.HeadText}>{item.name}</Text>
+                  <Text style={styles.HeadText}>{item.testRfiData.displayName}</Text>
                 </View>
                 <View style={style.divider} />
                 <View style={style.cardFooter}>
@@ -6902,18 +6905,22 @@ export const tasksListing = (
                             source={require('../../../../../images/play-icon.png')}
                           />
                           <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>
-                            Start
+                            {
+                              testClassificationData.type == TEST_CLASSIFICATION_TYPES.THIRD_PARTY_LAB_TEST ? 'Upload' : 'Start'
+                            }
                           </Text>
                         </TouchableOpacity>
                       ) : null}
-                        {!item.samplePrepared ? <TouchableOpacity
+                        {(item.testRfiData?.samplePrepRequired == 'Yes' && !item.samplePrepared && testClassificationData.type !== TEST_CLASSIFICATION_TYPES.THIRD_PARTY_LAB_TEST) ? <TouchableOpacity
                           style={[style.MyCtaContainer, style.StartBorder]}
                           onPress={() => {onOpenSamplePreparePopup(item)}}>
                           <Text style={[style.CtaTextColor]}>
                             Sample Prepare
                           </Text>
                         </TouchableOpacity>
-                        : <Text style={{fontWeight: '600', color: 'green'}}>Sample Prepared</Text>
+                        : 
+                        (testClassificationData.type !== TEST_CLASSIFICATION_TYPES.THIRD_PARTY_LAB_TEST && item.testRfiData?.samplePrepRequired == 'Yes') &&
+                        <Text style={{fontWeight: '600', color: 'green'}}>Sample Prepared</Text>
                       }
 
                       {item.rfiStatus === RFI_STATUS.RE_GENERATED ? (

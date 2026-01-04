@@ -831,7 +831,7 @@ const MaterialConsumptionForm = ({
                     </Text>
                   </View>
                 </View>
-                <View style={styles.infoContainer}>
+                {/* <View style={styles.infoContainer}>
                   <View style={styles.infoField}>
                     <Text style={styles.infoLabel}>Material Category</Text>
                     <Text style={styles.infoValue}>
@@ -846,7 +846,7 @@ const MaterialConsumptionForm = ({
                       {request?.unit || 'NA'}
                     </Text>
                   </View>
-                </View>
+                </View> */}
 
                 {request.materials.map((material: any, matIndex: number) => (
                   <View key={matIndex} style={styles.materialSection}>

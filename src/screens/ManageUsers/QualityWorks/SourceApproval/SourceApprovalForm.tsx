@@ -95,6 +95,7 @@ export default function SourceApprovalForm({
   const [workCategory, setWorkCategory] = useState<string>('');
   const [workCategoryId, setWorkCategoryId] = useState<string>('');
   const [materialName, setMaterialName] = useState<string>('');
+  const [testMaterialType, setTestMaterialType] = useState<string>('');
   const [testMaterialId, setTestMaterialId] = useState<string>('');
   const [materialCategory, setMaterialCategory] = useState<string>('');
   const [sourceName, setSourceName] = useState<string>('');
@@ -153,6 +154,7 @@ export default function SourceApprovalForm({
       unitValue = materialData?.materialUnit || '';
       setTestMaterialId(materialData?._id);
       setWorkCategoryId(materialData?.testWorkCategoryId);
+      setTestMaterialType(materialData?.materialType);
       console.log('Test data', materialData);
     }
 
@@ -227,10 +229,7 @@ export default function SourceApprovalForm({
     const formData = new FormData();
 
     formData.append('testWorkCategoryId', workCategoryId[0]);
-    formData.append(
-      'testMaterialType',
-      materialName.toLowerCase().replace(/\s+/g, '-'),
-    );
+    formData.append('testMaterialType', testMaterialType);
     formData.append('testWorkCategoryType', workCategory.toLowerCase());
     formData.append('vendorId', selectedVendorId?._id || '');
     formData.append('materialCategory', materialCategory || 'N/A');

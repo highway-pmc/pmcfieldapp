@@ -432,6 +432,7 @@ const TaskForm = ({route, navigation, taskData, isReadOnlyRFI}: any) => {
               isMaterialRequested={isMaterialRequested}
               projectInfoData={projectInfoData}
               rfiId={RFI_ID}
+              taskId={taskInfo.taskId}
               onMaterialSubmitSuccess={handleMaterialSubmitSuccess}
               onProjectInfoChange={(fieldId, newValue) =>
                 handleUniversalValueChange(

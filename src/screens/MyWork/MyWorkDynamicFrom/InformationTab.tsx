@@ -10,6 +10,7 @@ interface InformationTabProps {
   materialConsumptionSection: any;
   prepareMaterialConsumption: any;
   rfiId: string;
+  taskId: string;
   isMaterialRequested: boolean;
   onMaterialSubmitSuccess?: () => void;
   projectInfoData: Record<string, any>;
@@ -31,6 +32,7 @@ const InformationTab = forwardRef<DynamicFormRef, InformationTabProps>(
       isMaterialRequested,
       onMaterialSubmitSuccess,
       rfiId,
+      taskId,
     },
     ref,
   ) => {
@@ -107,6 +109,7 @@ const InformationTab = forwardRef<DynamicFormRef, InformationTabProps>(
           <MaterialConsumptionForm
             materialData={prepareMaterialConsumption}
             rfiId={rfiId}
+            taskId={taskId}
             onSubmissionSuccess={onMaterialSubmitSuccess}
           />
         )}

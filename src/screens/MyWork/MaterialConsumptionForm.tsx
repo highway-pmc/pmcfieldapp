@@ -18,7 +18,7 @@ import {
   getSourceApprovalsByStatus,
   submitMaterialRequest,
 } from '../ManageUsers/actions';
-import {getMixDesignListInfo} from '../RFIs/actions'; // Imported from Old
+import {getMixDesignListInfo} from '../RFIs/actions';
 import {useSnackbar} from '../../context/SnackbarContext';
 import {SOURCE_APPROVAL_STATUS} from '../../constants/constants';
 
@@ -36,7 +36,6 @@ const MaterialConsumptionForm = ({
   const {getMeterialRequestFormData, postMeterialRequestFormData, error} =
     useSelector((state: any) => state.MeterialRequest);
 
-  // Selectors for Source/Mix Data
   const {sourceByStatusData, loading: sourceLoading} = useSelector(
     (state: any) => state.SourceApprovals,
   );
@@ -50,22 +49,21 @@ const MaterialConsumptionForm = ({
   // Modal States
   const [categoryDropdownVisible, setCategoryDropdownVisible] = useState(false);
   const [plantDropdownVisible, setPlantDropdownVisible] = useState(false);
-  const [sourceDropdownVisible, setSourceDropdownVisible] = useState(false); // New Modal
+  const [sourceDropdownVisible, setSourceDropdownVisible] = useState(false);
 
   // Context for current selection
   const [currentRequestId, setCurrentRequestId] = useState<any>(null);
   const [currentCategoryId, setCurrentCategoryId] = useState<any>(null);
+  const [currentSourceRowId, setCurrentSourceRowId] = useState<any>(null);
   const [currentRequestForPlant, setCurrentRequestForPlant] =
     useState<any>(null);
 
-  // Options State
   const [currentSourceOptions, setCurrentSourceOptions] = useState<any[]>([]);
-  const [currentSourceType, setCurrentSourceType] = useState<string>(''); // 'source' or 'mix'
+  const [currentSourceType, setCurrentSourceType] = useState<string>('');
 
-  // Loaders
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // 1. Initial Load (Keep New Version Logic)
+  // 1. Initial Load
   useEffect(() => {
     dispatch(clearMaterialRequest());
     if (taskId && loggedInUser?.projectId) {
@@ -96,12 +94,10 @@ const MaterialConsumptionForm = ({
     }
   }, [postMeterialRequestFormData, error]);
 
-  // 3. Listen for Source/Mix API Responses and update options list
+  // 3. Listen for Source/Mix API Responses
   useEffect(() => {
-    console.log('sourceApprovalsByStatus', sourceByStatusData);
     if (sourceDropdownVisible) {
       if (currentSourceType === 'source' && sourceByStatusData) {
-        console.log('sourceApprovalsByStatus:', sourceByStatusData);
         setCurrentSourceOptions(sourceByStatusData);
       } else if (currentSourceType === 'mix' && qualityMixDesignListInfo) {
         setCurrentSourceOptions(qualityMixDesignListInfo);
@@ -116,7 +112,7 @@ const MaterialConsumptionForm = ({
 
   const dataSource = getMeterialRequestFormData;
 
-  // 4. Transform Data (Keep New Version Logic)
+  // 4. Transform Data
   useEffect(() => {
     if (dataSource?.requestGroups?.length) {
       const flattenedRequests: any[] = [];
@@ -131,21 +127,17 @@ const MaterialConsumptionForm = ({
               id: requestCounter,
               uniqueKey: `${requestCounter}-${material.testMaterialId}`,
               expanded: false,
-
               requestTo: requestType,
               testWorkCategoryId: workCategory.testWorkCategoryId,
               testWorkCategoryType: workCategory.testWorkCategoryType,
               testWorkCategoryName: workCategory.testWorkCategoryName,
               testMaterialId: material.testMaterialId,
-
               materialType: material.materialType,
               materialName: material.materialName,
               unit: material.unit,
-
               availableCategories: material.materialRequests || [],
               availablePlants: material.availablePlants || [],
-
-              selectedCategories: [], // Will hold quantity + source info
+              selectedCategories: [],
               selectedPlantId: null,
               selectedPlantName: '',
               comments: '',
@@ -154,7 +146,6 @@ const MaterialConsumptionForm = ({
           });
         });
       });
-
       setMaterialRequests(flattenedRequests);
     }
   }, [dataSource]);
@@ -179,6 +170,9 @@ const MaterialConsumptionForm = ({
     );
   };
 
+  // --- HIERARCHY LOGIC: CATEGORY -> SOURCES ---
+
+  // 1. Add a Category Card (Parent)
   const addCategory = (requestId: any) => {
     setMaterialRequests(prev =>
       prev.map(request =>
@@ -190,11 +184,8 @@ const MaterialConsumptionForm = ({
                 {
                   id: Date.now(),
                   category: '',
-                  quantity: '',
                   unit: request.unit,
-                  // New fields for Source/Mix
-                  sourceId: null,
-                  sourceName: '',
+                  sources: [],
                 },
               ],
             }
@@ -203,7 +194,82 @@ const MaterialConsumptionForm = ({
     );
   };
 
-  const updateCategory = (
+  // 2. Add a Source Row inside a Category
+  const addSourceToCategory = (requestId: any, categoryId: any) => {
+    setMaterialRequests(prev =>
+      prev.map(request => {
+        if (request.id !== requestId) return request;
+
+        const updatedCategories = request.selectedCategories.map((cat: any) => {
+          if (cat.id !== categoryId) return cat;
+
+          return {
+            ...cat,
+            sources: [
+              ...cat.sources,
+              {
+                id: Date.now(),
+                sourceId: null,
+                sourceName: '',
+                quantity: '',
+              },
+            ],
+          };
+        });
+
+        return {...request, selectedCategories: updatedCategories};
+      }),
+    );
+  };
+
+  // 3. Remove a specific source row
+  const removeSource = (requestId: any, categoryId: any, sourceRowId: any) => {
+    setMaterialRequests(prev =>
+      prev.map(request => {
+        if (request.id !== requestId) return request;
+        return {
+          ...request,
+          selectedCategories: request.selectedCategories.map((cat: any) => {
+            if (cat.id !== categoryId) return cat;
+            return {
+              ...cat,
+              sources: cat.sources.filter((s: any) => s.id !== sourceRowId),
+            };
+          }),
+        };
+      }),
+    );
+  };
+
+  // 4. Update data inside a source row (Qty, Name, etc)
+  const updateSourceRow = (
+    requestId: any,
+    categoryId: any,
+    sourceRowId: any,
+    field: any,
+    value: any,
+  ) => {
+    setMaterialRequests(prev =>
+      prev.map(request => {
+        if (request.id !== requestId) return request;
+        return {
+          ...request,
+          selectedCategories: request.selectedCategories.map((cat: any) => {
+            if (cat.id !== categoryId) return cat;
+            return {
+              ...cat,
+              sources: cat.sources.map((s: any) =>
+                s.id === sourceRowId ? {...s, [field]: value} : s,
+              ),
+            };
+          }),
+        };
+      }),
+    );
+  };
+
+  // 5. Update Category Info
+  const updateCategoryInfo = (
     requestId: any,
     categoryId: any,
     field: any,
@@ -247,18 +313,28 @@ const MaterialConsumptionForm = ({
   };
 
   const handleSelectCategory = (selectedCategory: any) => {
-    updateCategory(
+    updateCategoryInfo(
       currentRequestId,
       currentCategoryId,
       'category',
       selectedCategory.category,
     );
-    updateCategory(
+    updateCategoryInfo(
       currentRequestId,
       currentCategoryId,
       'unit',
       selectedCategory.unit,
     );
+
+    // Auto-add first source row if empty
+    const request = materialRequests.find(r => r.id === currentRequestId);
+    const category = request?.selectedCategories.find(
+      (c: any) => c.id === currentCategoryId,
+    );
+    if (category && category.sources.length === 0) {
+      addSourceToCategory(currentRequestId, currentCategoryId);
+    }
+
     setCategoryDropdownVisible(false);
   };
 
@@ -275,21 +351,21 @@ const MaterialConsumptionForm = ({
     }
   };
 
-  // --- NEW: Source / Mix Design Logic (From Old Version) ---
-
-  const openSourceDropdown = (request: any, categoryItem: any) => {
+  const openSourceDropdown = (
+    request: any,
+    categoryId: any,
+    sourceRowId: any,
+  ) => {
     setCurrentRequestId(request.id);
-    setCurrentCategoryId(categoryItem.id);
-    setCurrentSourceOptions([]); // Clear previous options
+    setCurrentCategoryId(categoryId);
+    setCurrentSourceRowId(sourceRowId);
+    setCurrentSourceOptions([]);
 
-    // Determine type
     const isProduction = request.requestTo === 'production';
     const type = isProduction ? 'mix' : 'source';
     setCurrentSourceType(type);
 
-    // FETCH ON CLICK (Lazy Loading)
     if (isProduction) {
-      // Fetch Mix Design
       dispatch(
         getMixDesignListInfo({
           projectId: loggedInUser.projectId,
@@ -298,7 +374,6 @@ const MaterialConsumptionForm = ({
         }),
       );
     } else {
-      // Fetch Procurement Source
       dispatch(
         getSourceApprovalsByStatus({
           projectId: loggedInUser.projectId,
@@ -312,30 +387,45 @@ const MaterialConsumptionForm = ({
   };
 
   const handleSelectSource = (item: any) => {
-    // Map based on type (Old version logic normalization)
     const id = item.id || item._id || item.sourceApprovalId || item.mixDesignId;
     const name = item.name || item.sourceName || item.mixDesignName;
 
-    updateCategory(currentRequestId, currentCategoryId, 'sourceId', id);
-    updateCategory(currentRequestId, currentCategoryId, 'sourceName', name);
+    updateSourceRow(
+      currentRequestId,
+      currentCategoryId,
+      currentSourceRowId,
+      'sourceId',
+      id,
+    );
+    updateSourceRow(
+      currentRequestId,
+      currentCategoryId,
+      currentSourceRowId,
+      'sourceName',
+      name,
+    );
     setSourceDropdownVisible(false);
   };
 
-  // ---------------------------------------------------------
-
+  // --- FILTERED CATEGORY LOGIC ---
   const getAvailableCategories = (requestId: any) => {
     const request = materialRequests.find(r => r.id === requestId);
     if (!request) return [];
-    const selectedCats = request.selectedCategories
+
+    // Get list of currently selected category names for this specific request
+    const selectedNames = request.selectedCategories
       .map((sc: any) => sc.category)
-      .filter(Boolean);
+      .filter((name: any) => name); // filter out undefined/empty
+
+    // Filter the master list: Only return categories NOT in selectedNames
     return request.availableCategories.filter(
-      (cat: any) => !selectedCats.includes(cat.category),
+      (cat: any) => !selectedNames.includes(cat.category),
     );
   };
 
-  // --- Submission Logic (Merged) ---
+  // --- SUBMISSION LOGIC ---
   const handleSubmit = () => {
+    // 1. Validation
     const isValid = materialRequests.every(req => {
       if (
         req.selectedCategories.length > 0 &&
@@ -361,72 +451,59 @@ const MaterialConsumptionForm = ({
     materialRequests.forEach(request => {
       if (request.selectedCategories.length === 0) return;
 
-      // Filter valid entries (must have category, qty AND source/mix)
-      const validCategories = request.selectedCategories
-        .filter((c: any) => c.category && c.quantity && c.sourceId) // Added sourceId check
-        .map((c: any) => {
-          // Construct the inner object based on Old Version structure
-          const baseObj = {
-            qty: Number(c.quantity),
-          };
+      const validCategories: any[] = [];
 
-          // Determine if we attach 'source' or 'mixDesign' key
-          let sourceOrMixObj;
-          if (request.requestTo === 'production') {
-            sourceOrMixObj = {
-              mixDesign: [
-                {
-                  ...baseObj,
-                  mixDesignId: c.sourceId,
-                  mixDesignName: c.sourceName,
-                },
-              ],
-            };
-          } else {
-            sourceOrMixObj = {
-              source: [
-                {
-                  ...baseObj,
-                  sourceApprovalId: c.sourceId,
-                  sourceName: c.sourceName,
-                },
-              ],
-            };
-          }
+      request.selectedCategories.forEach((catBlock: any) => {
+        if (!catBlock.category || catBlock.sources.length === 0) return;
 
-          return {
-            category: c.category,
-            // Spread the source/mix array into the category object
-            ...sourceOrMixObj,
-          };
-        });
+        const validSources = catBlock.sources
+          .filter(
+            (s: any) => s.sourceId && s.quantity && Number(s.quantity) > 0,
+          )
+          .map((s: any) => ({
+            qty: Number(s.quantity),
+            ...(request.requestTo === 'production'
+              ? {
+                  mixDesignId: s.sourceId,
+                  mixDesignName: s.sourceName,
+                }
+              : {
+                  sourceApprovalId: s.sourceId,
+                  sourceName: s.sourceName,
+                }),
+          }));
+
+        if (validSources.length > 0) {
+          validCategories.push({
+            category: catBlock.category,
+            [request.requestTo === 'production' ? 'mixDesign' : 'source']:
+              validSources,
+          });
+        }
+      });
 
       if (validCategories.length === 0) return;
 
       if (request.requestTo === 'production') {
-        // Production Logic
-        validCategories.forEach((catObj: any) => {
-          const productionRequest = {
-            requestTo: 'production',
-            testEquipmentId: request.selectedPlantId,
-            testWorkCategories: [
-              {
-                testWorkCategoryId: request.testWorkCategoryId,
-                testWorkCategoryType: request.testWorkCategoryType,
-                materialTypes: [
-                  {
-                    testMaterialId: request.testMaterialId,
-                    type: request.materialType,
-                    materialCategory: [catObj],
-                  },
-                ],
-              },
-            ],
-          };
-          finalPayloadRequests.push(productionRequest);
-        });
+        const productionRequest = {
+          requestTo: 'production',
+          testEquipmentId: request.selectedPlantId,
+          testWorkCategories: [
+            {
+              testWorkCategoryId: request.testWorkCategoryId,
+              testWorkCategoryType: request.testWorkCategoryType,
+              materialTypes: [
+                {
+                  testMaterialId: request.testMaterialId,
+                  type: request.materialType,
+                  materialCategory: validCategories,
+                },
+              ],
+            },
+          ],
+        };
+        finalPayloadRequests.push(productionRequest);
       } else {
-        // Procurement Logic
         const key = `${request.testWorkCategoryId}`;
 
         if (!procurementMap.has(key)) {
@@ -440,7 +517,6 @@ const MaterialConsumptionForm = ({
 
         const group = procurementMap.get(key);
 
-        // Find if materialType already exists to group categories
         let matType = group.materialTypes.find(
           (m: any) => m.testMaterialId === request.testMaterialId,
         );
@@ -453,7 +529,6 @@ const MaterialConsumptionForm = ({
           group.materialTypes.push(matType);
         }
 
-        // Push the formatted categories
         matType.materialCategory.push(...validCategories);
       }
     });
@@ -482,11 +557,11 @@ const MaterialConsumptionForm = ({
     const payload = {
       rfiId: dataSource?.rfiId || rfiId,
       isMaterialRequested: false,
-      comments: 'Material consumption submitted/updated.',
+      comments: 'Material consumption submitted.',
       materialRequests: finalPayloadRequests,
     };
 
-    console.log('Final Payload:', JSON.stringify(payload, null, 2));
+    console.log('Final Nested Payload:', JSON.stringify(payload, null, 2));
 
     setIsSubmitting(true);
     dispatch(
@@ -537,11 +612,9 @@ const MaterialConsumptionForm = ({
                   <Text style={styles.requestTitle}>
                     {request.materialName}
                   </Text>
-                  <Text style={styles.subTitle}>
-                    To:{' '}
-                    {request.requestTo === 'production'
-                      ? 'Production Plant'
-                      : 'Procurement/Store'}
+                  {/* Added Work Category Here */}
+                  <Text style={styles.wcName}>
+                    {request.testWorkCategoryName}
                   </Text>
                 </View>
               </View>
@@ -554,7 +627,6 @@ const MaterialConsumptionForm = ({
 
             {request.expanded && (
               <View style={styles.requestContent}>
-                {/* Information Header */}
                 <View style={styles.verticalInfoGroup}>
                   <View style={styles.inputContainer}>
                     <Text style={styles.inputLabel}>Work Category</Text>
@@ -564,7 +636,6 @@ const MaterialConsumptionForm = ({
                       editable={false}
                     />
                   </View>
-
                   <View style={styles.inputContainer}>
                     <Text style={styles.inputLabel}>Material Name</Text>
                     <TextInput
@@ -595,100 +666,145 @@ const MaterialConsumptionForm = ({
                   </View>
                 )}
 
+                {/* --- CATEGORY BLOCKS --- */}
                 {request.selectedCategories.map(
-                  (category: any, index: number) => (
-                    <View key={category.id} style={styles.categorySection}>
+                  (catBlock: any, index: number) => (
+                    <View key={catBlock.id} style={styles.categorySection}>
                       <View style={styles.categorySectionHeader}>
                         <Text style={styles.categorySectionTitle}>
-                          Item {index + 1}
+                          Category {index + 1}
                         </Text>
                         <TouchableOpacity
                           onPress={() =>
-                            removeCategory(request.id, category.id)
+                            removeCategory(request.id, catBlock.id)
                           }
                           style={styles.deleteButton}>
-                          <Text style={styles.deleteButtonText}>🗑️</Text>
+                          <Text style={styles.deleteButtonText}>✕</Text>
                         </TouchableOpacity>
                       </View>
 
-                      {/* ROW 1: Category & Quantity */}
-                      <View style={styles.categoryInputRow}>
+                      {/* LEVEL 1: Select Category */}
+                      <View style={styles.categorySelectRow}>
+                        <Text style={styles.inputLabel}>Material Category</Text>
                         <TouchableOpacity
                           style={styles.categoryDropdown}
                           onPress={() =>
-                            openCategoryDropdown(request.id, category.id)
+                            openCategoryDropdown(request.id, catBlock.id)
                           }>
                           <View style={styles.dropdown}>
                             <Text
                               style={[
                                 styles.dropdownText,
-                                category.category
+                                catBlock.category
                                   ? styles.dropdownTextSelected
                                   : {},
                               ]}>
-                              {category.category || 'Select Grade/Size'}
+                              {catBlock.category || 'Select Category'}
                             </Text>
                             <Text style={styles.dropdownArrow}>▼</Text>
                           </View>
                         </TouchableOpacity>
-
-                        <View style={styles.quantityInput}>
-                          <TextInput
-                            style={styles.textInput}
-                            value={category.quantity}
-                            onChangeText={text =>
-                              updateCategory(
-                                request.id,
-                                category.id,
-                                'quantity',
-                                text,
-                              )
-                            }
-                            placeholder="Qty"
-                            placeholderTextColor="#999"
-                            keyboardType="numeric"
-                          />
-                        </View>
-                        <View style={styles.unitContainer}>
-                          <Text style={styles.unitText}>
-                            {category.unit || request.unit}
-                          </Text>
-                        </View>
                       </View>
 
-                      {/* ROW 2: Source/Mix Design Selection (NEW) */}
-                      <View style={{marginTop: 10}}>
-                        <Text style={styles.inputLabel}>
-                          {request.requestTo === 'production'
-                            ? 'Mix Design'
-                            : 'Source'}
-                        </Text>
-                        <TouchableOpacity
-                          style={styles.dropdownButton}
-                          onPress={() => openSourceDropdown(request, category)}>
-                          <Text
-                            style={[
-                              styles.dropdownButtonText,
-                              !category.sourceName && styles.placeholderText,
-                            ]}
-                            numberOfLines={1}>
-                            {category.sourceName ||
-                              (request.requestTo === 'production'
-                                ? 'Select Mix Design'
-                                : 'Select Source')}
+                      {/* LEVEL 2: Sources List */}
+                      {catBlock.category ? (
+                        <View style={styles.sourcesContainer}>
+                          <Text style={styles.sourcesHeaderLabel}>
+                            Sources & Quantities
                           </Text>
-                          <Text>▼</Text>
-                        </TouchableOpacity>
-                      </View>
+
+                          {catBlock.sources.map(
+                            (source: any, sIndex: number) => (
+                              <View key={source.id} style={styles.sourceRow}>
+                                <View style={{flex: 1}}>
+                                  {/* Source Selector */}
+                                  <TouchableOpacity
+                                    style={styles.smallDropdown}
+                                    onPress={() =>
+                                      openSourceDropdown(
+                                        request,
+                                        catBlock.id,
+                                        source.id,
+                                      )
+                                    }>
+                                    <Text
+                                      style={[
+                                        styles.smallDropdownText,
+                                        !source.sourceName &&
+                                          styles.placeholderText,
+                                      ]}
+                                      numberOfLines={1}>
+                                      {source.sourceName ||
+                                        (request.requestTo === 'production'
+                                          ? 'Select Mix'
+                                          : 'Select Source')}
+                                    </Text>
+                                    <Text style={{fontSize: 10}}>▼</Text>
+                                  </TouchableOpacity>
+                                </View>
+
+                                {/* Quantity Input */}
+                                <View style={styles.qtyContainer}>
+                                  <TextInput
+                                    style={styles.smallInput}
+                                    value={source.quantity}
+                                    onChangeText={text =>
+                                      updateSourceRow(
+                                        request.id,
+                                        catBlock.id,
+                                        source.id,
+                                        'quantity',
+                                        text,
+                                      )
+                                    }
+                                    placeholder="Qty"
+                                    placeholderTextColor="#999"
+                                    keyboardType="numeric"
+                                  />
+                                  <Text style={styles.unitSmall}>
+                                    {catBlock.unit}
+                                  </Text>
+                                </View>
+
+                                {/* Remove Source Button */}
+                                <TouchableOpacity
+                                  style={styles.removeSourceBtn}
+                                  onPress={() =>
+                                    removeSource(
+                                      request.id,
+                                      catBlock.id,
+                                      source.id,
+                                    )
+                                  }>
+                                  <Text style={styles.removeSourceText}>−</Text>
+                                </TouchableOpacity>
+                              </View>
+                            ),
+                          )}
+
+                          <TouchableOpacity
+                            style={styles.addSourceButton}
+                            onPress={() =>
+                              addSourceToCategory(request.id, catBlock.id)
+                            }>
+                            <Text style={styles.addSourceText}>
+                              + Add Source
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                      ) : null}
                     </View>
                   ),
                 )}
 
-                <TouchableOpacity
-                  style={styles.addMoreButton}
-                  onPress={() => addCategory(request.id)}>
-                  <Text style={styles.addMoreText}>+ Add Quantity</Text>
-                </TouchableOpacity>
+                {/* Show "Add Category" button only if there are available categories left */}
+                {getAvailableCategories(request.id).length > 0 && (
+                  <TouchableOpacity
+                    style={styles.addMoreButton}
+                    onPress={() => addCategory(request.id)}>
+                    <Text style={styles.addMoreText}>+ Add Category Block</Text>
+                  </TouchableOpacity>
+                )}
 
                 <View style={styles.commentsContainer}>
                   <TextInput
@@ -746,6 +862,11 @@ const MaterialConsumptionForm = ({
                 currentRequestId ? getAvailableCategories(currentRequestId) : []
               }
               keyExtractor={(item, index) => index.toString()}
+              ListEmptyComponent={
+                <Text style={{padding: 20, textAlign: 'center'}}>
+                  No Categories Available
+                </Text>
+              }
               renderItem={({item}) => (
                 <TouchableOpacity
                   style={styles.dropdownItem}
@@ -801,7 +922,7 @@ const MaterialConsumptionForm = ({
         </TouchableOpacity>
       </Modal>
 
-      {/* MODAL 3: Source / Mix Design Selection (New) */}
+      {/* MODAL 3: Source / Mix Design Selection */}
       <Modal
         transparent
         visible={sourceDropdownVisible}
@@ -853,6 +974,11 @@ const MaterialConsumptionForm = ({
                     <Text style={styles.dropdownItemText}>
                       {item.name || item.sourceName || item.mixDesignName}
                     </Text>
+                    {item.approxQty && (
+                      <Text style={{fontSize: 11, color: '#888'}}>
+                        Stock: {item.approxQty}
+                      </Text>
+                    )}
                   </TouchableOpacity>
                 )}
                 style={styles.dropdownList}
@@ -933,6 +1059,12 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#333',
   },
+  wcName: {
+    fontSize: 12,
+    color: '#666',
+    marginTop: 2,
+    fontStyle: 'italic',
+  },
   subTitle: {
     fontSize: 12,
     color: '#888',
@@ -1011,6 +1143,8 @@ const styles = StyleSheet.create({
   placeholderText: {
     color: '#999',
   },
+
+  // --- Category Block Styles ---
   categorySection: {
     borderWidth: 1,
     borderColor: '#e0e0e0',
@@ -1024,32 +1158,34 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+    paddingBottom: 5,
   },
   categorySectionTitle: {
     fontSize: 13,
-    fontWeight: '600',
-    color: '#333',
+    fontWeight: 'bold',
+    color: '#6B46C1',
   },
   deleteButton: {
     padding: 4,
   },
   deleteButtonText: {
     fontSize: 16,
+    color: '#ff4d4f',
   },
-  categoryInputRow: {
-    flexDirection: 'row',
-    gap: 10,
-    alignItems: 'center',
+  categorySelectRow: {
+    marginBottom: 15,
   },
   categoryDropdown: {
-    flex: 2,
+    width: '100%',
   },
   dropdown: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: '#d1d1d1',
     borderRadius: 10,
     padding: 10,
     backgroundColor: '#fff',
@@ -1066,17 +1202,91 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#666',
   },
-  quantityInput: {
+
+  // --- Source List Styles ---
+  sourcesContainer: {
+    marginTop: 5,
+    paddingLeft: 4,
+  },
+  sourcesHeaderLabel: {
+    fontSize: 12,
+    color: '#555',
+    marginBottom: 8,
+    fontWeight: '600',
+  },
+  sourceRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+    gap: 8,
+  },
+  smallDropdown: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 8,
+    backgroundColor: '#fff',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  smallDropdownText: {
+    fontSize: 13,
+    color: '#333',
     flex: 1,
   },
-  unitContainer: {
+  qtyContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: 90,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    backgroundColor: '#fff',
+    paddingHorizontal: 5,
+  },
+  smallInput: {
+    flex: 1,
+    paddingVertical: 6,
+    paddingHorizontal: 2,
+    fontSize: 13,
+    color: '#333',
+    textAlign: 'center',
+  },
+  unitSmall: {
+    fontSize: 10,
+    color: '#888',
+    marginLeft: 2,
+  },
+  removeSourceBtn: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: '#ffebee',
+    alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 4,
+    borderWidth: 1,
+    borderColor: '#ffcdd2',
   },
-  unitText: {
-    fontSize: 12,
-    color: '#666',
+  removeSourceText: {
+    color: '#d32f2f',
+    fontSize: 18,
+    fontWeight: 'bold',
+    lineHeight: 20,
   },
+  addSourceButton: {
+    alignSelf: 'flex-start',
+    marginTop: 5,
+    marginBottom: 5,
+  },
+  addSourceText: {
+    color: '#6B46C1',
+    fontSize: 13,
+    fontWeight: '600',
+  },
+
+  // General Buttons
   addMoreButton: {
     borderWidth: 1,
     borderColor: '#6B46C1',

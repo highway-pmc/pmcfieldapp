@@ -16,7 +16,7 @@ import {
   getInspectionChecklist,
   clearFormDetails,
   saveRfiFormData,
-  saveRfiFormDataClear, // Import the new action
+  saveRfiFormDataClear,
 } from './actions';
 import {
   updatedRFIs,

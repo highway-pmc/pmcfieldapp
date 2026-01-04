@@ -75,6 +75,19 @@ const RequestPage = () => {
 
   const isFocused = useIsFocused();
 
+  const fetchRequests = useCallback(() => {
+    dispatch(
+      getMaterialRequestTo({
+        projectId: loggedInUser.projectId,
+        type: 'procurement-details',
+        requestType:
+          selectedTab === REQUEST_TYPES.INVENTORY_REQUEST
+            ? REQUEST_TYPES.INVENTORY_REQUEST
+            : REQUEST_TYPES.CONTINGENCY_REQUEST,
+      }),
+    );
+  }, [dispatch, loggedInUser.projectId, selectedTab]);
+
   useEffect(() => {
     return () => {
       dispatch(clearMaterialRequest());
@@ -86,24 +99,18 @@ const RequestPage = () => {
       setInventoryRequests([]);
       setContingencyRequests([]);
       dispatch(clearMaterialRequest());
-      dispatch(
-        getMaterialRequestTo({
-          projectId: loggedInUser.projectId,
-          type: 'procurement-details',
-          requestType:
-            selectedTab === REQUEST_TYPES.INVENTORY_REQUEST
-              ? REQUEST_TYPES.INVENTORY_REQUEST
-              : REQUEST_TYPES.CONTINGENCY_REQUEST,
-        }),
-      );
+      fetchRequests();
     }
-  }, [selectedTab, isFocused, dispatch, loggedInUser.projectId]);
+  }, [selectedTab, isFocused, dispatch, fetchRequests]);
 
   useEffect(() => {
     if (patchMeterialRequestStatusData) {
       showSnackbar('Material status updated successfully', 'success');
+      dispatch(clearMaterialRequest());
+      fetchRequests();
     } else if (error) {
       showSnackbar(error, 'error');
+      dispatch(clearMaterialRequest());
     }
   }, [patchMeterialRequestStatusData, error]);
 

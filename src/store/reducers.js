@@ -2851,9 +2851,7 @@ const MeterialRequestFormReducer = (
         patchMeterialRequestStatusData: null,
         patchDispatchRequestData: null,
         uploadingBatchData: null,
-        error: action.error,
         error: null,
-        loading: true,
       };
     default:
       return state;

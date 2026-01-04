@@ -1,5 +1,5 @@
 import {View, StyleSheet, ScrollView, Text} from 'react-native';
-import React, {forwardRef, useRef} from 'react';
+import React, {forwardRef, useEffect, useRef} from 'react';
 import DynamicForm, {
   DynamicFormRef,
 } from '../../../components/Form/DynamicForm';

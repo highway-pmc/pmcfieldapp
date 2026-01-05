@@ -38,7 +38,6 @@ const MaterialConsumptionForm = ({
     getMeterialRequestFormData,
     getMeterialRequestByRfiData,
     postMeterialRequestFormData,
-    loading: materialRequestLoading,
     error,
   } = useSelector((state: any) => state.MeterialRequest);
 
@@ -107,9 +106,6 @@ const MaterialConsumptionForm = ({
     if (postMeterialRequestFormData) {
       setIsSubmitting(false);
       showSnackbar('Material Consumption updated successfully', 'success');
-      if (onSubmissionSuccess) {
-        onSubmissionSuccess();
-      }
       dispatch(clearMaterialRequest());
       dispatch(
         getMaterialRequest({
@@ -127,7 +123,7 @@ const MaterialConsumptionForm = ({
       setIsSubmitting(false);
       showSnackbar(error, 'error');
     }
-  }, [postMeterialRequestFormData, error, onSubmissionSuccess]);
+  }, [postMeterialRequestFormData, error]);
 
   // 3. Listen for Source/Mix API Responses
   useEffect(() => {
@@ -724,19 +720,11 @@ const MaterialConsumptionForm = ({
     );
   };
 
-  if (materialRequestLoading) {
+  if (!dataSource) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#6B46C1" />
         <Text style={styles.loadingText}>Loading material data...</Text>
-      </View>
-    );
-  }
-
-  if (!materialRequests.length) {
-    return (
-      <View style={styles.loadingContainer}>
-        <Text style={styles.loadingText}>No material for consumption</Text>
       </View>
     );
   }

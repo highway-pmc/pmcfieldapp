@@ -38,7 +38,7 @@ const MaterialConsumptionForm = ({
     getMeterialRequestFormData,
     getMeterialRequestByRfiData,
     postMeterialRequestFormData,
-    loading,
+    loading: materialRequestLoading,
     error,
   } = useSelector((state: any) => state.MeterialRequest);
 
@@ -724,11 +724,19 @@ const MaterialConsumptionForm = ({
     );
   };
 
-  if (!dataSource) {
+  if (materialRequestLoading) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#6B46C1" />
         <Text style={styles.loadingText}>Loading material data...</Text>
+      </View>
+    );
+  }
+
+  if (!materialRequests.length) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Text style={styles.loadingText}>No material for consumption</Text>
       </View>
     );
   }

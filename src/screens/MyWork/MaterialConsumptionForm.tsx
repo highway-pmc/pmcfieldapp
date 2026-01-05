@@ -412,15 +412,44 @@ const MaterialConsumptionForm = ({
     const request = materialRequests.find(r => r.id === requestId);
     if (!request) return [];
 
-    // Get list of currently selected category names for this specific request
     const selectedNames = request.selectedCategories
       .map((sc: any) => sc.category)
-      .filter((name: any) => name); // filter out undefined/empty
+      .filter((name: any) => name);
 
-    // Filter the master list: Only return categories NOT in selectedNames
     return request.availableCategories.filter(
       (cat: any) => !selectedNames.includes(cat.category),
     );
+  };
+
+  // --- FILTERED SOURCE LOGIC ---
+  // Returns sources NOT yet selected in the current category block
+  const getAvailableSources = () => {
+    if (!currentRequestId || !currentCategoryId) return currentSourceOptions;
+
+    // Find current request
+    const request = materialRequests.find(r => r.id === currentRequestId);
+    if (!request) return currentSourceOptions;
+
+    // Find current category block
+    const categoryBlock = request.selectedCategories.find(
+      (c: any) => c.id === currentCategoryId,
+    );
+    if (!categoryBlock) return currentSourceOptions;
+
+    // Get list of IDs already selected in this category block
+    const selectedSourceIds = categoryBlock.sources
+      .map((s: any) => s.sourceId)
+      .filter((id: any) => id); // filter out empty/nulls
+
+    // Filter the master list options
+    return currentSourceOptions.filter(option => {
+      const optionId =
+        option.id ||
+        option._id ||
+        option.sourceApprovalId ||
+        option.mixDesignId;
+      return !selectedSourceIds.includes(optionId);
+    });
   };
 
   // --- SUBMISSION LOGIC ---
@@ -612,7 +641,6 @@ const MaterialConsumptionForm = ({
                   <Text style={styles.requestTitle}>
                     {request.materialName}
                   </Text>
-                  {/* Added Work Category Here */}
                   <Text style={styles.wcName}>
                     {request.testWorkCategoryName}
                   </Text>
@@ -952,7 +980,7 @@ const MaterialConsumptionForm = ({
               </View>
             ) : (
               <FlatList
-                data={currentSourceOptions}
+                data={getAvailableSources()} // Use the filtered list here
                 keyExtractor={item =>
                   (
                     item.id ||

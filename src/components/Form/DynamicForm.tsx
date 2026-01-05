@@ -249,6 +249,10 @@ const reIndexSectionsAndData = (
  */
 const DynamicForm = forwardRef<DynamicFormRef, DynamicFormProps>(
   ({formData, globalFormData, onGlobalValueChange}, ref) => {
+    // Guard clause to prevent crash if formData is null or undefined
+    if (!formData) {
+      return null;
+    }
     const [isMainExpanded, setIsMainExpanded] = useState<boolean>(true);
     const [inputErrors, setInputErrors] = useState<Record<string, string>>({});
 

@@ -433,6 +433,7 @@ const TaskForm = ({route, navigation, taskData, isReadOnlyRFI}: any) => {
               projectInfoData={projectInfoData}
               rfiId={RFI_ID}
               taskId={taskInfo.taskId}
+              readOnly={isReadOnlyFromRoute}
               onMaterialSubmitSuccess={handleMaterialSubmitSuccess}
               onProjectInfoChange={(fieldId, newValue) =>
                 handleUniversalValueChange(
@@ -493,22 +494,23 @@ const TaskForm = ({route, navigation, taskData, isReadOnlyRFI}: any) => {
             display: activeTab === TABS.TASK_DETAILS ? 'flex' : 'none',
             flex: 1,
           }}>
-          {/* <TaskDetailsTabPreTensioningOfWires
-            formData={taskDetails || null}
-            globalFormData={taskDetailsData}
-            onGlobalValueChange={(fieldId, newValue) =>
-              handleUniversalValueChange('taskDetails', fieldId, newValue)
-            }
-          /> */}
-          <TaskDetailsTab
-            ref={taskDetailsRef}
-            formData={taskDetails || null}
-            header={taskDetailHeader || null}
-            globalFormData={taskDetailsData}
-            onGlobalValueChange={(fieldId, newValue) =>
-              handleUniversalValueChange('taskDetails', fieldId, newValue)
-            }
-          />
+          {taskDetails ? (
+            <TaskDetailsTab
+              ref={taskDetailsRef}
+              formData={taskDetails}
+              header={taskDetailHeader || null}
+              globalFormData={taskDetailsData}
+              onGlobalValueChange={(fieldId, newValue) =>
+                handleUniversalValueChange('taskDetails', fieldId, newValue)
+              }
+            />
+          ) : (
+            <View style={styles.centered}>
+              <Text style={styles.statusText}>
+                Task details data is not available.
+              </Text>
+            </View>
+          )}
         </View>
       </>
     );

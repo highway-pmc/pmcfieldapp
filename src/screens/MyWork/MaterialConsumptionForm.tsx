@@ -15,6 +15,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {
   clearMaterialRequest,
   getMaterialRequest,
+  getMaterialRequestByRfi,
   getSourceApprovalsByStatus,
   submitMaterialRequest,
 } from '../ManageUsers/actions';
@@ -33,8 +34,21 @@ const MaterialConsumptionForm = ({
 
   // Redux Selectors
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
-  const {getMeterialRequestFormData, postMeterialRequestFormData, error} =
-    useSelector((state: any) => state.MeterialRequest);
+  const {
+    getMeterialRequestFormData,
+    getMeterialRequestByRfiData,
+    postMeterialRequestFormData,
+    error,
+  } = useSelector((state: any) => state.MeterialRequest);
+
+  useEffect(() => {
+    if (getMeterialRequestFormData) {
+      console.log('getMeterialRequestFormData', JSON.stringify(getMeterialRequestFormData));
+    }
+    if (getMeterialRequestByRfiData) {
+      console.log('getMeterialRequestByRfiData', JSON.stringify(getMeterialRequestByRfiData));
+    }
+  }, [getMeterialRequestFormData, getMeterialRequestByRfiData]);
 
   const {sourceByStatusData, loading: sourceLoading} = useSelector(
     (state: any) => state.SourceApprovals,
@@ -66,6 +80,14 @@ const MaterialConsumptionForm = ({
   // 1. Initial Load
   useEffect(() => {
     dispatch(clearMaterialRequest());
+    if (rfiId && loggedInUser?.projectId) {
+      dispatch(
+        getMaterialRequestByRfi({
+          projectId: loggedInUser.projectId,
+          id: rfiId,
+        }),
+      );
+    }
     if (taskId && loggedInUser?.projectId) {
       dispatch(
         getMaterialRequest({
@@ -74,7 +96,7 @@ const MaterialConsumptionForm = ({
         }),
       );
     }
-  }, [dispatch, taskId, loggedInUser?.projectId]);
+  }, [dispatch, taskId, rfiId, loggedInUser?.projectId]);
 
   // 2. Handle Submission Response
   useEffect(() => {

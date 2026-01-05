@@ -43,10 +43,10 @@ const MaterialConsumptionForm = ({
 
   useEffect(() => {
     if (getMeterialRequestFormData) {
-      console.log('getMeterialRequestFormData', JSON.stringify(getMeterialRequestFormData));
+      // console.log('Form Structure:', JSON.stringify(getMeterialRequestFormData));
     }
     if (getMeterialRequestByRfiData) {
-      console.log('getMeterialRequestByRfiData', JSON.stringify(getMeterialRequestByRfiData));
+      console.log('Saved Data:', JSON.stringify(getMeterialRequestByRfiData));
     }
   }, [getMeterialRequestFormData, getMeterialRequestByRfiData]);
 
@@ -110,6 +110,12 @@ const MaterialConsumptionForm = ({
           id: taskId?._id,
         }),
       );
+      dispatch(
+        getMaterialRequestByRfi({
+          projectId: loggedInUser.projectId,
+          id: rfiId,
+        }),
+      );
     } else if (error) {
       setIsSubmitting(false);
       showSnackbar(error, 'error');
@@ -133,22 +139,95 @@ const MaterialConsumptionForm = ({
   ]);
 
   const dataSource = getMeterialRequestFormData;
+  const savedData = getMeterialRequestByRfiData;
 
-  // 4. Transform Data
+  // 4. Transform Data & Merge with Saved Data
   useEffect(() => {
     if (dataSource?.requestGroups?.length) {
       const flattenedRequests: any[] = [];
       let requestCounter = 1;
+
+      // Helper to find saved items for a specific material ID
+      const findSavedItems = (
+        targetMaterialId: string,
+        requestType: string,
+      ) => {
+        if (!savedData?.materialRequests) return [];
+
+        // Find parent request group (production vs procurement) logic could go here
+        // For now, flattening all items from all groups to find match
+        const allSavedItems = savedData.materialRequests.flatMap((mr: any) => {
+          // Attach the parent equipment info to the item for mapping
+          return (mr.items || []).map((item: any) => ({
+            ...item,
+            parentEquipmentId: mr.testEquipmentId,
+          }));
+        });
+
+        return allSavedItems.filter((item: any) => {
+          const savedId = item.testMaterialId?._id || item.testMaterialId;
+          return savedId === targetMaterialId;
+        });
+      };
 
       dataSource.requestGroups.forEach((group: any) => {
         const requestType = group.requestTo;
 
         group.materialRequests.forEach((workCategory: any) => {
           workCategory.materials.forEach((material: any) => {
+            // --- Logic to Populate Pre-Saved Data ---
+            const savedItems = findSavedItems(
+              material.testMaterialId,
+              requestType,
+            );
+
+            let prefilledCategories: any[] = [];
+            let prefilledPlantId = null;
+            let prefilledPlantName = '';
+
+            if (savedItems.length > 0) {
+              // Group items by category (e.g., "13.0 mm")
+              savedItems.forEach((item: any) => {
+                // If production, try to grab the plant from the saved parent
+                if (requestType === 'production' && item.parentEquipmentId) {
+                  prefilledPlantId = item.parentEquipmentId._id;
+                  prefilledPlantName = item.parentEquipmentId.name;
+                }
+
+                // Determine sources array based on type
+                const sourcesRaw =
+                  item.source && item.source.length > 0
+                    ? item.source
+                    : item.mixDesign || [];
+
+                // Map sources
+                const mappedSources = sourcesRaw.map((s: any) => ({
+                  id: Date.now() + Math.random(),
+                  sourceId: s.sourceApprovalId || s.mixDesignId || s._id,
+                  sourceName: s.sourceName || s.mixDesignName || s.name,
+                  // If quantity is inside source object use it, else fallback to item quantity
+                  quantity: (s.qty || item.qty_consumed || '').toString(),
+                  isPrefilled: true, // <--- LOCKING FLAG
+                }));
+
+                const catName =
+                  item.testMaterialCategory || item.testMaterialCategoryName;
+
+                // We create a new block for every item found to be safe
+                prefilledCategories.push({
+                  id: Date.now() + Math.random(),
+                  category: catName,
+                  unit: material.unit,
+                  sources: mappedSources,
+                  isPrefilled: true, // <--- LOCKING FLAG FOR CATEGORY
+                });
+              });
+            }
+
             flattenedRequests.push({
               id: requestCounter,
               uniqueKey: `${requestCounter}-${material.testMaterialId}`,
-              expanded: false,
+              expanded: savedItems.length > 0, // Auto expand if data exists
               requestTo: requestType,
               testWorkCategoryId: workCategory.testWorkCategoryId,
               testWorkCategoryType: workCategory.testWorkCategoryType,
@@ -159,10 +238,12 @@ const MaterialConsumptionForm = ({
               unit: material.unit,
               availableCategories: material.materialRequests || [],
               availablePlants: material.availablePlants || [],
-              selectedCategories: [],
-              selectedPlantId: null,
-              selectedPlantName: '',
-              comments: '',
+
+              // Set the prefilled data
+              selectedCategories: prefilledCategories,
+              selectedPlantId: prefilledPlantId,
+              selectedPlantName: prefilledPlantName,
+              comments: savedData?.comments || '',
             });
             requestCounter++;
           });
@@ -170,7 +251,7 @@ const MaterialConsumptionForm = ({
       });
       setMaterialRequests(flattenedRequests);
     }
-  }, [dataSource]);
+  }, [dataSource, savedData]);
 
   // --- UI Interactions ---
 
@@ -208,6 +289,7 @@ const MaterialConsumptionForm = ({
                   category: '',
                   unit: request.unit,
                   sources: [],
+                  isPrefilled: false,
                 },
               ],
             }
@@ -234,6 +316,7 @@ const MaterialConsumptionForm = ({
                 sourceId: null,
                 sourceName: '',
                 quantity: '',
+                isPrefilled: false,
               },
             ],
           };
@@ -361,6 +444,13 @@ const MaterialConsumptionForm = ({
   };
 
   const openPlantDropdown = (request: any) => {
+    if (request.selectedCategories.some((cat: any) => cat.isPrefilled)) {
+      Alert.alert(
+        'Action not allowed',
+        'Plant cannot be changed for saved requests.',
+      );
+      return;
+    }
     setCurrentRequestForPlant(request);
     setPlantDropdownVisible(true);
   };
@@ -444,7 +534,6 @@ const MaterialConsumptionForm = ({
   };
 
   // --- FILTERED SOURCE LOGIC ---
-  // Returns sources NOT yet selected in the current category block
   const getAvailableSources = () => {
     if (!currentRequestId || !currentCategoryId) return currentSourceOptions;
 
@@ -605,10 +694,15 @@ const MaterialConsumptionForm = ({
       return;
     }
 
+    const comments = materialRequests
+      .map(request => request.comments)
+      .filter(Boolean)
+      .join('; ');
+
     const payload = {
       rfiId: dataSource?.rfiId || rfiId,
       isMaterialRequested: false,
-      comments: 'Material consumption submitted.',
+      comments: comments,
       materialRequests: finalPayloadRequests,
     };
 
@@ -702,7 +796,12 @@ const MaterialConsumptionForm = ({
                       Select Plant/Machinery *
                     </Text>
                     <TouchableOpacity
-                      style={styles.dropdownButton}
+                      style={[
+                        styles.dropdownButton,
+                        request.selectedPlantId && savedData
+                          ? {backgroundColor: '#f0f0f0'}
+                          : {},
+                      ]}
                       onPress={() => openPlantDropdown(request)}>
                       <Text
                         style={[
@@ -724,24 +823,39 @@ const MaterialConsumptionForm = ({
                         <Text style={styles.categorySectionTitle}>
                           Category {index + 1}
                         </Text>
-                        <TouchableOpacity
-                          onPress={() =>
-                            removeCategory(request.id, catBlock.id)
-                          }
-                          style={styles.deleteButton}>
-                          <Text style={styles.deleteButtonText}>✕</Text>
-                        </TouchableOpacity>
+
+                        {/* Only show delete if NOT prefilled */}
+                        {!catBlock.isPrefilled && (
+                          <TouchableOpacity
+                            onPress={() =>
+                              removeCategory(request.id, catBlock.id)
+                            }
+                            style={styles.deleteButton}>
+                            <Text style={styles.deleteButtonText}>✕</Text>
+                          </TouchableOpacity>
+                        )}
                       </View>
 
                       {/* LEVEL 1: Select Category */}
                       <View style={styles.categorySelectRow}>
                         <Text style={styles.inputLabel}>Material Category</Text>
                         <TouchableOpacity
-                          style={styles.categoryDropdown}
+                          style={[
+                            styles.categoryDropdown,
+                            catBlock.isPrefilled && {opacity: 0.7},
+                          ]}
+                          disabled={catBlock.isPrefilled}
                           onPress={() =>
                             openCategoryDropdown(request.id, catBlock.id)
                           }>
-                          <View style={styles.dropdown}>
+                          <View
+                            style={[
+                              styles.dropdown,
+                              catBlock.isPrefilled && {
+                                backgroundColor: '#f0f0f0',
+                                borderColor: '#ddd',
+                              },
+                            ]}>
                             <Text
                               style={[
                                 styles.dropdownText,
@@ -751,7 +865,9 @@ const MaterialConsumptionForm = ({
                               ]}>
                               {catBlock.category || 'Select Category'}
                             </Text>
-                            <Text style={styles.dropdownArrow}>▼</Text>
+                            {!catBlock.isPrefilled && (
+                              <Text style={styles.dropdownArrow}>▼</Text>
+                            )}
                           </View>
                         </TouchableOpacity>
                       </View>
@@ -769,7 +885,14 @@ const MaterialConsumptionForm = ({
                                 <View style={{flex: 1}}>
                                   {/* Source Selector */}
                                   <TouchableOpacity
-                                    style={styles.smallDropdown}
+                                    style={[
+                                      styles.smallDropdown,
+                                      source.isPrefilled && {
+                                        backgroundColor: '#f0f0f0',
+                                        borderColor: '#ddd',
+                                      },
+                                    ]}
+                                    disabled={source.isPrefilled} // LOCK SOURCE
                                     onPress={() =>
                                       openSourceDropdown(
                                         request,
@@ -789,11 +912,13 @@ const MaterialConsumptionForm = ({
                                           ? 'Select Mix'
                                           : 'Select Source')}
                                     </Text>
-                                    <Text style={{fontSize: 10}}>▼</Text>
+                                    {!source.isPrefilled && (
+                                      <Text style={{fontSize: 10}}>▼</Text>
+                                    )}
                                   </TouchableOpacity>
                                 </View>
 
-                                {/* Quantity Input */}
+                                {/* Quantity Input - ALWAYS EDITABLE */}
                                 <View style={styles.qtyContainer}>
                                   <TextInput
                                     style={styles.smallInput}
@@ -816,18 +941,22 @@ const MaterialConsumptionForm = ({
                                   </Text>
                                 </View>
 
-                                {/* Remove Source Button */}
-                                <TouchableOpacity
-                                  style={styles.removeSourceBtn}
-                                  onPress={() =>
-                                    removeSource(
-                                      request.id,
-                                      catBlock.id,
-                                      source.id,
-                                    )
-                                  }>
-                                  <Text style={styles.removeSourceText}>−</Text>
-                                </TouchableOpacity>
+                                {/* Remove Source Button - Hidden if Prefilled */}
+                                {!source.isPrefilled && (
+                                  <TouchableOpacity
+                                    style={styles.removeSourceBtn}
+                                    onPress={() =>
+                                      removeSource(
+                                        request.id,
+                                        catBlock.id,
+                                        source.id,
+                                      )
+                                    }>
+                                    <Text style={styles.removeSourceText}>
+                                      −
+                                    </Text>
+                                  </TouchableOpacity>
+                                )}
                               </View>
                             ),
                           )}

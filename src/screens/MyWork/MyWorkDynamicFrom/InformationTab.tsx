@@ -100,7 +100,7 @@ const InformationTab = forwardRef<DynamicFormRef, InformationTabProps>(
             onGlobalValueChange={onProjectInfoChange}
           />
         )}
-        {materialConsumptionData && (
+        {materialConsumptionData && readOnly && (
           <DynamicForm
             ref={materialConsumptionRef}
             formData={materialConsumptionSection}

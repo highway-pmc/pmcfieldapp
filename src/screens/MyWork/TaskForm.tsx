@@ -161,8 +161,8 @@ const TaskForm = ({route, navigation, taskData, isReadOnlyRFI}: any) => {
     };
   }, [isFocused, dispatch]);
   const handleMaterialSubmitSuccess = () => {
-    // Trigger the form save logic, which also calls fetchChecklist on success (as per your existing code)
-    handleSave();
+    // Refresh the form data after material submission
+    fetchChecklist();
   };
   // 2. Initialize state with saved data after fetch
   useEffect(() => {

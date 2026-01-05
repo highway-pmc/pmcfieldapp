@@ -38,12 +38,16 @@ const MaterialConsumptionForm = ({
     getMeterialRequestFormData,
     getMeterialRequestByRfiData,
     postMeterialRequestFormData,
+    loading,
     error,
   } = useSelector((state: any) => state.MeterialRequest);
 
   useEffect(() => {
     if (getMeterialRequestFormData) {
-      // console.log('Form Structure:', JSON.stringify(getMeterialRequestFormData));
+      console.log(
+        'Form Structure:',
+        JSON.stringify(getMeterialRequestFormData),
+      );
     }
     if (getMeterialRequestByRfiData) {
       console.log('Saved Data:', JSON.stringify(getMeterialRequestByRfiData));
@@ -103,6 +107,9 @@ const MaterialConsumptionForm = ({
     if (postMeterialRequestFormData) {
       setIsSubmitting(false);
       showSnackbar('Material Consumption updated successfully', 'success');
+      if (onSubmissionSuccess) {
+        onSubmissionSuccess();
+      }
       dispatch(clearMaterialRequest());
       dispatch(
         getMaterialRequest({
@@ -120,7 +127,7 @@ const MaterialConsumptionForm = ({
       setIsSubmitting(false);
       showSnackbar(error, 'error');
     }
-  }, [postMeterialRequestFormData, error]);
+  }, [postMeterialRequestFormData, error, onSubmissionSuccess]);
 
   // 3. Listen for Source/Mix API Responses
   useEffect(() => {

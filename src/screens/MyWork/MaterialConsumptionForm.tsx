@@ -569,150 +569,171 @@ const MaterialConsumptionForm = ({
 
   // --- SUBMISSION LOGIC ---
   const handleSubmit = () => {
-    // 1. Validation
-    const isValid = materialRequests.every(req => {
-      if (
-        req.selectedCategories.length > 0 &&
-        req.requestTo === 'production' &&
-        !req.selectedPlantId
-      ) {
-        return false;
-      }
-      return true;
-    });
+    Alert.alert(
+      'Confirm Submission',
+      'Source and mix design details for material can not be removed after submission. Only quantity can be edited.',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: () => {
+            // 1. Validation
+            const isValid = materialRequests.every(req => {
+              if (
+                req.selectedCategories.length > 0 &&
+                req.requestTo === 'production' &&
+                !req.selectedPlantId
+              ) {
+                return false;
+              }
+              return true;
+            });
 
-    if (!isValid) {
-      Alert.alert(
-        'Validation Error',
-        'Please select a Plant for all Production requests.',
-      );
-      return;
-    }
+            if (!isValid) {
+              Alert.alert(
+                'Validation Error',
+                'Please select a Plant for all Production requests.',
+              );
+              return;
+            }
 
-    const finalPayloadRequests: any[] = [];
-    const procurementMap = new Map();
+            const finalPayloadRequests: any[] = [];
+            const procurementMap = new Map();
 
-    materialRequests.forEach(request => {
-      if (request.selectedCategories.length === 0) return;
+            materialRequests.forEach(request => {
+              if (request.selectedCategories.length === 0) return;
 
-      const validCategories: any[] = [];
+              const validCategories: any[] = [];
 
-      request.selectedCategories.forEach((catBlock: any) => {
-        if (!catBlock.category || catBlock.sources.length === 0) return;
+              request.selectedCategories.forEach((catBlock: any) => {
+                if (!catBlock.category || catBlock.sources.length === 0) return;
 
-        const validSources = catBlock.sources
-          .filter(
-            (s: any) => s.sourceId && s.quantity && Number(s.quantity) > 0,
-          )
-          .map((s: any) => ({
-            qty: Number(s.quantity),
-            ...(request.requestTo === 'production'
-              ? {
-                  mixDesignId: s.sourceId,
-                  mixDesignName: s.sourceName,
+                const validSources = catBlock.sources
+                  .filter(
+                    (s: any) =>
+                      s.sourceId && s.quantity && Number(s.quantity) > 0,
+                  )
+                  .map((s: any) => ({
+                    qty: Number(s.quantity),
+                    ...(request.requestTo === 'production'
+                      ? {
+                          mixDesignId: s.sourceId,
+                          mixDesignName: s.sourceName,
+                        }
+                      : {
+                          sourceApprovalId: s.sourceId,
+                          sourceName: s.sourceName,
+                        }),
+                  }));
+
+                if (validSources.length > 0) {
+                  validCategories.push({
+                    category: catBlock.category,
+                    [request.requestTo === 'production'
+                      ? 'mixDesign'
+                      : 'source']: validSources,
+                  });
                 }
-              : {
-                  sourceApprovalId: s.sourceId,
-                  sourceName: s.sourceName,
-                }),
-          }));
+              });
 
-        if (validSources.length > 0) {
-          validCategories.push({
-            category: catBlock.category,
-            [request.requestTo === 'production' ? 'mixDesign' : 'source']:
-              validSources,
-          });
-        }
-      });
+              if (validCategories.length === 0) return;
 
-      if (validCategories.length === 0) return;
+              if (request.requestTo === 'production') {
+                const productionRequest = {
+                  requestTo: 'production',
+                  testEquipmentId: request.selectedPlantId,
+                  testWorkCategories: [
+                    {
+                      testWorkCategoryId: request.testWorkCategoryId,
+                      testWorkCategoryType: request.testWorkCategoryType,
+                      materialTypes: [
+                        {
+                          testMaterialId: request.testMaterialId,
+                          type: request.materialType,
+                          materialCategory: validCategories,
+                        },
+                      ],
+                    },
+                  ],
+                };
+                finalPayloadRequests.push(productionRequest);
+              } else {
+                const key = `${request.testWorkCategoryId}`;
 
-      if (request.requestTo === 'production') {
-        const productionRequest = {
-          requestTo: 'production',
-          testEquipmentId: request.selectedPlantId,
-          testWorkCategories: [
-            {
-              testWorkCategoryId: request.testWorkCategoryId,
-              testWorkCategoryType: request.testWorkCategoryType,
-              materialTypes: [
-                {
-                  testMaterialId: request.testMaterialId,
-                  type: request.materialType,
-                  materialCategory: validCategories,
-                },
-              ],
-            },
-          ],
-        };
-        finalPayloadRequests.push(productionRequest);
-      } else {
-        const key = `${request.testWorkCategoryId}`;
+                if (!procurementMap.has(key)) {
+                  procurementMap.set(key, {
+                    requestTo: request.requestTo,
+                    testWorkCategoryId: request.testWorkCategoryId,
+                    testWorkCategoryType: request.testWorkCategoryType,
+                    materialTypes: [],
+                  });
+                }
 
-        if (!procurementMap.has(key)) {
-          procurementMap.set(key, {
-            requestTo: request.requestTo,
-            testWorkCategoryId: request.testWorkCategoryId,
-            testWorkCategoryType: request.testWorkCategoryType,
-            materialTypes: [],
-          });
-        }
+                const group = procurementMap.get(key);
 
-        const group = procurementMap.get(key);
+                let matType = group.materialTypes.find(
+                  (m: any) => m.testMaterialId === request.testMaterialId,
+                );
+                if (!matType) {
+                  matType = {
+                    testMaterialId: request.testMaterialId,
+                    type: request.materialType,
+                    materialCategory: [],
+                  };
+                  group.materialTypes.push(matType);
+                }
 
-        let matType = group.materialTypes.find(
-          (m: any) => m.testMaterialId === request.testMaterialId,
-        );
-        if (!matType) {
-          matType = {
-            testMaterialId: request.testMaterialId,
-            type: request.materialType,
-            materialCategory: [],
-          };
-          group.materialTypes.push(matType);
-        }
+                matType.materialCategory.push(...validCategories);
+              }
+            });
 
-        matType.materialCategory.push(...validCategories);
-      }
-    });
+            procurementMap.forEach(group => {
+              finalPayloadRequests.push({
+                requestTo: group.requestTo,
+                testWorkCategories: [
+                  {
+                    testWorkCategoryId: group.testWorkCategoryId,
+                    testWorkCategoryType: group.testWorkCategoryType,
+                    materialTypes: group.materialTypes,
+                  },
+                ],
+              });
+            });
 
-    procurementMap.forEach(group => {
-      finalPayloadRequests.push({
-        requestTo: group.requestTo,
-        testWorkCategories: [
-          {
-            testWorkCategoryId: group.testWorkCategoryId,
-            testWorkCategoryType: group.testWorkCategoryType,
-            materialTypes: group.materialTypes,
+            if (finalPayloadRequests.length === 0) {
+              Alert.alert(
+                'Incomplete Data',
+                'Please ensure Category, Quantity, and Source/Mix are selected.',
+              );
+              return;
+            }
+
+            const payload = {
+              rfiId: dataSource?.rfiId || rfiId,
+              isMaterialRequested: false,
+              comments: comments,
+              materialRequests: finalPayloadRequests,
+            };
+
+            console.log(
+              'Final Nested Payload:',
+              JSON.stringify(payload, null, 2),
+            );
+
+            setIsSubmitting(true);
+            dispatch(
+              submitMaterialRequest({
+                projectId: loggedInUser?.projectId,
+                body: payload,
+              }),
+            );
           },
-        ],
-      });
-    });
-
-    if (finalPayloadRequests.length === 0) {
-      Alert.alert(
-        'Incomplete Data',
-        'Please ensure Category, Quantity, and Source/Mix are selected.',
-      );
-      return;
-    }
-
-    const payload = {
-      rfiId: dataSource?.rfiId || rfiId,
-      isMaterialRequested: false,
-      comments: comments,
-      materialRequests: finalPayloadRequests,
-    };
-
-    console.log('Final Nested Payload:', JSON.stringify(payload, null, 2));
-
-    setIsSubmitting(true);
-    dispatch(
-      submitMaterialRequest({
-        projectId: loggedInUser?.projectId,
-        body: payload,
-      }),
+        },
+      ],
     );
   };
 
@@ -731,10 +752,11 @@ const MaterialConsumptionForm = ({
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}>
+        <Text style={styles.title}>Material Consumption</Text>
         <Text style={styles.description}>
-          Update consumption for Procurement or Production.
+          Submit consumption details for Procurement or Production. Note: Source
+          and mix details cannot be edited after submission.
         </Text>
-
         {materialRequests.map(request => (
           <View key={request.id} style={styles.requestCard}>
             <TouchableOpacity
@@ -1008,7 +1030,7 @@ const MaterialConsumptionForm = ({
             {isSubmitting ? (
               <ActivityIndicator size="small" color="#ffffff" />
             ) : (
-              <Text style={styles.submitButtonText}>Update Consumption</Text>
+              <Text style={styles.submitButtonText}>Submit Consumption</Text>
             )}
           </TouchableOpacity>
         </View>
@@ -1180,12 +1202,19 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: 12,
-    paddingBottom: 100,
+    paddingBottom: 70,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 4,
   },
   description: {
-    fontSize: 14,
-    color: '#666',
-    marginBottom: 10,
+    fontSize: 13,
+    color: '#888',
+    marginBottom: 16,
+    fontStyle: 'italic',
   },
   requestCard: {
     backgroundColor: '#fff',
@@ -1574,14 +1603,16 @@ const styles = StyleSheet.create({
   },
   loadingContainer: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
     alignItems: 'center',
     justifyContent: 'center',
+    borderRadius: 12,
+    padding: 24,
   },
   loadingText: {
-    marginTop: 10,
-    fontSize: 14,
-    color: '#666',
+    marginTop: 12,
+    fontSize: 15,
+    color: '#444',
   },
 });
 

@@ -697,6 +697,7 @@ export const RFI_STATUS = {
   RE_GENERATED: 'regenerated',
   IN_PROGRESS: 'inProgress',
   IN_REVIEW: 'inReview',
+  CORRECTION_REQUEST: 'correction_request', // Revised by raise
   REJECTED: 'rejected',
   CANCELLED: 'cancelled',
   APPROVED: 'approved',

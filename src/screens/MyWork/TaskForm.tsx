@@ -429,49 +429,8 @@ const TaskForm = ({route, navigation, taskData, isReadOnlyRFI}: any) => {
     return (
       <>
         {/* INFORMATION TAB */}
-        <View
-          style={{
-            display: activeTab === TABS.INFORMATION ? 'flex' : 'none',
-            flex: 1,
-          }}>
-          {projectInfoSection ||
-          materialConsumptionSection ||
-          prepareMaterialConsumption ? (
-            <InformationTab
-              ref={informationRef}
-              projectInfoSection={projectInfoSection}
-              materialConsumptionSection={materialConsumptionSection}
-              prepareMaterialConsumption={memoizedMaterialData}
-              isMaterialRequested={isMaterialRequested}
-              projectInfoData={projectInfoData}
-              rfiId={RFI_ID}
-              taskId={taskInfo.taskId}
-              readOnly={isReadOnlyFromRoute}
-              onMaterialSubmitSuccess={handleMaterialSubmitSuccess}
-              onProjectInfoChange={(fieldId, newValue) =>
-                handleUniversalValueChange(
-                  'projectInfoSection',
-                  fieldId,
-                  newValue,
-                )
-              }
-              materialConsumptionData={materialConsumptionData}
-              onMaterialConsumptionChange={(fieldId, newValue) =>
-                handleUniversalValueChange(
-                  'materialConsumptionSection',
-                  fieldId,
-                  newValue,
-                )
-              }
-            />
-          ) : (
-            <View style={styles.centered}>
-              <Text style={styles.statusText}>
-                Project info data is not available.
-              </Text>
-            </View>
-          )}
-        </View>
+       
+        
 
         {/* INSPECTION TAB */}
         <View
@@ -627,7 +586,11 @@ const TaskForm = ({route, navigation, taskData, isReadOnlyRFI}: any) => {
             onPress={() => onRFIAction(RFI_STATUS.REJECTED)}>
             <Text style={styles.submitButtonText}>Reject</Text>
           </TouchableOpacity>
-
+          <TouchableOpacity
+            style={[styles.button, styles.correctionButton]}
+            onPress={() => onRFIAction(RFI_STATUS.CORRECTION_REQUEST)}>
+            <Text style={styles.submitButtonText}>Request Correction</Text>
+          </TouchableOpacity>
           <TouchableOpacity
             style={[styles.button, styles.submitButton]}
             onPress={() => onRFIAction(RFI_STATUS.APPROVED)}>
@@ -738,6 +701,9 @@ const styles = StyleSheet.create({
   },
   rejectButton: {
     backgroundColor: '#E53935',
+  },
+  correctionButton: {
+    backgroundColor: '#F57C00',
   },
   saveButtonText: {
     color: '#5A2AAF',

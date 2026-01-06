@@ -629,7 +629,12 @@ export const SEGMENT_TYPES_DISPLAY: any = {
   'dirt-wall': 'Dirt Wall',
   'gap-slab': 'Gap Slab',
   'approach-slab': 'Approach Slab',
-
+  'bottom-raft': 'Bottom Raft',
+  'drainage-system': 'Drainage System',
+  'd-wall': 'D Wall',
+  'top-beam': 'Top Beam',
+  'crash-barrier-median': 'Crash Barrier Median',
+  'wearing-coat': 'Wearing Coat',
   'main-foundations': 'Foundations Main',
   'main-sub-structures': 'Sub Structures Main',
   'main-super-structures': 'Super Structures Main',
@@ -675,7 +680,6 @@ export const SEGMENT_TYPES_DISPLAY: any = {
   alignment: 'Alignment',
   benchmarks: 'Benchmarks',
   ogl: 'OGL',
-  'wearing-coat': 'Wearing Coat',
   'drainage-arrangement': 'Drainage Arrangement',
 };
 

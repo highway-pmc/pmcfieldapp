@@ -60,6 +60,7 @@ const MaterialApprovalForm = ({route, navigation}: any) => {
   const [localApprovals, setLocalApprovals] = useState<any[]>([]);
   const [approvedQty, setApprovedQty] = useState<any>({});
   const [dispatchedItemsVisible, setDispatchedItemsVisible] = useState(false);
+  const [dispatchedItems, setDispatchedItems] = useState<any>({});
 
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
@@ -112,7 +113,8 @@ const MaterialApprovalForm = ({route, navigation}: any) => {
     const id = normalizeId(materialTypeId);
 
     dispatch(clearSourceApprovals());
-
+    console.log('Fetching sources for material type ID:', id);
+    
     dispatch(
       getSourceApprovalsByStatus({
         projectId: loggedInUser.projectId,
@@ -367,6 +369,7 @@ const MaterialApprovalForm = ({route, navigation}: any) => {
         body: payload,
       }),
     );
+    setDispatchedItems((prev: any) => ({...prev, [request._id]: true}));
     Alert.alert(
       'Success',
       `${request.testMaterialType} has been dispatched successfully!`,
@@ -615,10 +618,13 @@ const MaterialApprovalForm = ({route, navigation}: any) => {
     if (!isDispatchStage || !materialRequest?.items?.length) return null;
 
     return materialRequest.items.map((request: any, index: number) => {
+      const isItemLocallyDispatched = dispatchedItems[request._id];
       const isItemPendingDispatch =
-        request.status === MATERIAL_REQUEST_STATUS.PENDING_DISPATCH;
+        request.status === MATERIAL_REQUEST_STATUS.PENDING_DISPATCH &&
+        !isItemLocallyDispatched;
       const isItemDispatched =
-        request.status === MATERIAL_REQUEST_STATUS.DISPATCHED;
+        request.status === MATERIAL_REQUEST_STATUS.DISPATCHED ||
+        isItemLocallyDispatched;
       console.log(
         'Rendering dispatch item:',
         request._id,
@@ -787,15 +793,15 @@ const MaterialApprovalForm = ({route, navigation}: any) => {
   );
 
   const renderFooterButtons = () => {
-    if (isDispatchStage) {
-      return (
-        <TouchableOpacity
-          style={styles.submitButton}
-          onPress={() => handleSubmit('dispatch')}>
-          <Text style={styles.submitButtonText}>Dispatch All Material</Text>
-        </TouchableOpacity>
-      );
-    }
+    // if (isDispatchStage) {
+    //   return (
+    //     <TouchableOpacity
+    //       style={styles.submitButton}
+    //       onPress={() => handleSubmit('dispatch')}>
+    //       <Text style={styles.submitButtonText}>Dispatch All Material</Text>
+    //     </TouchableOpacity>
+    //   );
+    // }
 
     if (isReadOnlyApprovalStage) {
       return (

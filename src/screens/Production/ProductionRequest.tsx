@@ -60,9 +60,11 @@ const ProductionRequest = () => {
   useEffect(() => {
     if (patchMeterialRequestStatusData) {
       showSnackbar('Material status updated successfully', 'success');
+      dispatch(clearMaterialRequest());
       fetchRequests();
     } else if (error) {
       showSnackbar(error, 'error');
+      dispatch(clearMaterialRequest());
     }
   }, [patchMeterialRequestStatusData, error]);
 

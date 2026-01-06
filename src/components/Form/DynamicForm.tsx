@@ -24,6 +24,11 @@ import {
   square3Dec,
   addValues,
   sqrt3Dec,
+  divide2Dec,
+  multiply2Dec,
+  subtractValues,
+  checkRange,
+  overallStatus,
 } from './utils/formula';
 import ExpandableSection from './SectionRenderers/ExpandableSection';
 import SectionContent from './SectionRenderers/SectionContent';
@@ -249,6 +254,10 @@ const reIndexSectionsAndData = (
  */
 const DynamicForm = forwardRef<DynamicFormRef, DynamicFormProps>(
   ({formData, globalFormData, onGlobalValueChange}, ref) => {
+    // Guard clause to prevent crash if formData is null or undefined
+    if (!formData) {
+      return null;
+    }
     const [isMainExpanded, setIsMainExpanded] = useState<boolean>(true);
     const [inputErrors, setInputErrors] = useState<Record<string, string>>({});
 
@@ -345,6 +354,11 @@ const DynamicForm = forwardRef<DynamicFormRef, DynamicFormProps>(
           square3Dec,
           sqrt3Dec,
           addValues,
+          divide2Dec,
+          multiply2Dec,
+          subtractValues,
+          checkRange,
+          overallStatus,
         };
 
         // 2. Build Execution Context

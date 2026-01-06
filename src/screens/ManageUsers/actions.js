@@ -152,6 +152,11 @@ export const getMaterialRequest = payload => ({
   payload,
 });
 
+export const getMaterialRequestByRfi = payload => ({
+  type: METERIAL_REQUEST.GET_MATERIAL_REQUEST_BY_RFI,
+  payload,
+});
+
 /*VENDOR FORM*/
 export const postVendorForm = payload => ({
   type: VENDOR_FORM.POST_VENDOR_FORM_REQUEST,

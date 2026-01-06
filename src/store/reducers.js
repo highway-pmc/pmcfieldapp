@@ -102,6 +102,7 @@ const meterialRequestFormState = {
   patchDispatchRequestData: null,
   dispatchProductionRequest: null,
   uploadingBatchData: null,
+  getMeterialRequestByRfiData: null,
   error: null,
 };
 
@@ -2448,7 +2449,6 @@ const ProcurementsReducer = (state = procurementsState, action) => {
         loading: false,
       };
 
-
     case PROCUREMENTS.GET_ALL_PROCUREMENTS_REQUEST:
       return {
         ...state,
@@ -2470,8 +2470,7 @@ const ProcurementsReducer = (state = procurementsState, action) => {
         loading: false,
       };
 
-
-      case PROCUREMENTS.GET_PATCH_PROCUREMENTS_REQUEST:
+    case PROCUREMENTS.GET_PATCH_PROCUREMENTS_REQUEST:
       return {
         ...state,
         error: null,
@@ -2842,6 +2841,26 @@ const MeterialRequestFormReducer = (
         error: action.error,
         loading: false,
       };
+    case METERIAL_REQUEST.GET_MATERIAL_REQUEST_BY_RFI:
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case METERIAL_REQUEST.GET_MATERIAL_REQUEST_BY_RFI_SUCCESS:
+      return {
+        ...state,
+        getMeterialRequestByRfiData: action.response,
+        error: null,
+        loading: false,
+      };
+    case METERIAL_REQUEST.GET_MATERIAL_REQUEST_BY_RFI_FAILURE:
+      return {
+        ...state,
+        getMeterialRequestByRfiData: null,
+        error: action.error,
+        loading: false,
+      };
     case METERIAL_REQUEST.CLEAR_SUBMIT_MATERIAL_FORM_REQUEST:
       return {
         ...state,
@@ -2851,9 +2870,7 @@ const MeterialRequestFormReducer = (
         patchMeterialRequestStatusData: null,
         patchDispatchRequestData: null,
         uploadingBatchData: null,
-        error: action.error,
         error: null,
-        loading: true,
       };
     default:
       return state;

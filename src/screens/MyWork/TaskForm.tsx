@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   NativeEventEmitter,
   ActivityIndicator,
+  RefreshControl,
 } from 'react-native';
 import React, {useEffect, useState, useRef, useMemo} from 'react';
 import {useIsFocused} from '@react-navigation/native';
@@ -16,7 +17,7 @@ import {
   getInspectionChecklist,
   clearFormDetails,
   saveRfiFormData,
-  saveRfiFormDataClear, // Import the new action
+  saveRfiFormDataClear,
 } from './actions';
 import {
   updatedRFIs,
@@ -131,6 +132,18 @@ const TaskForm = ({route, navigation, taskData, isReadOnlyRFI}: any) => {
   const [activeTab, setActiveTab] = useState(TABS.INFORMATION);
   const [isSaving, setIsSaving] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    fetchChecklist();
+  }, []);
+
+  useEffect(() => {
+    if (!loading) {
+      setRefreshing(false);
+    }
+  }, [loading]);
 
   const fetchChecklist = () => {
     dispatch(
@@ -161,8 +174,8 @@ const TaskForm = ({route, navigation, taskData, isReadOnlyRFI}: any) => {
     };
   }, [isFocused, dispatch]);
   const handleMaterialSubmitSuccess = () => {
-    // Trigger the form save logic, which also calls fetchChecklist on success (as per your existing code)
-    handleSave();
+    // Refresh the form data after material submission
+    fetchChecklist();
   };
   // 2. Initialize state with saved data after fetch
   useEffect(() => {
@@ -432,6 +445,8 @@ const TaskForm = ({route, navigation, taskData, isReadOnlyRFI}: any) => {
               isMaterialRequested={isMaterialRequested}
               projectInfoData={projectInfoData}
               rfiId={RFI_ID}
+              taskId={taskInfo.taskId}
+              readOnly={isReadOnlyFromRoute}
               onMaterialSubmitSuccess={handleMaterialSubmitSuccess}
               onProjectInfoChange={(fieldId, newValue) =>
                 handleUniversalValueChange(
@@ -492,22 +507,23 @@ const TaskForm = ({route, navigation, taskData, isReadOnlyRFI}: any) => {
             display: activeTab === TABS.TASK_DETAILS ? 'flex' : 'none',
             flex: 1,
           }}>
-          {/* <TaskDetailsTabPreTensioningOfWires
-            formData={taskDetails || null}
-            globalFormData={taskDetailsData}
-            onGlobalValueChange={(fieldId, newValue) =>
-              handleUniversalValueChange('taskDetails', fieldId, newValue)
-            }
-          /> */}
-          <TaskDetailsTab
-            ref={taskDetailsRef}
-            formData={taskDetails || null}
-            header={taskDetailHeader || null}
-            globalFormData={taskDetailsData}
-            onGlobalValueChange={(fieldId, newValue) =>
-              handleUniversalValueChange('taskDetails', fieldId, newValue)
-            }
-          />
+          {taskDetails ? (
+            <TaskDetailsTab
+              ref={taskDetailsRef}
+              formData={taskDetails}
+              header={taskDetailHeader || null}
+              globalFormData={taskDetailsData}
+              onGlobalValueChange={(fieldId, newValue) =>
+                handleUniversalValueChange('taskDetails', fieldId, newValue)
+              }
+            />
+          ) : (
+            <View style={styles.centered}>
+              <Text style={styles.statusText}>
+                Task details data is not available.
+              </Text>
+            </View>
+          )}
         </View>
       </>
     );
@@ -568,7 +584,11 @@ const TaskForm = ({route, navigation, taskData, isReadOnlyRFI}: any) => {
       </View>
 
       {/* Scrollable Content Area */}
-      <ScrollView style={styles.contentContainer}>
+      <ScrollView
+        style={styles.contentContainer}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         {renderTabContent()}
         <View style={styles.scrollViewPadding} />
       </ScrollView>

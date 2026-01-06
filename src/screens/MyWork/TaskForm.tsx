@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   NativeEventEmitter,
   ActivityIndicator,
+  RefreshControl,
 } from 'react-native';
 import React, {useEffect, useState, useRef, useMemo} from 'react';
 import {useIsFocused} from '@react-navigation/native';
@@ -131,6 +132,18 @@ const TaskForm = ({route, navigation, taskData, isReadOnlyRFI}: any) => {
   const [activeTab, setActiveTab] = useState(TABS.INFORMATION);
   const [isSaving, setIsSaving] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    fetchChecklist();
+  }, []);
+
+  useEffect(() => {
+    if (!loading) {
+      setRefreshing(false);
+    }
+  }, [loading]);
 
   const fetchChecklist = () => {
     dispatch(
@@ -571,7 +584,11 @@ const TaskForm = ({route, navigation, taskData, isReadOnlyRFI}: any) => {
       </View>
 
       {/* Scrollable Content Area */}
-      <ScrollView style={styles.contentContainer}>
+      <ScrollView
+        style={styles.contentContainer}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         {renderTabContent()}
         <View style={styles.scrollViewPadding} />
       </ScrollView>

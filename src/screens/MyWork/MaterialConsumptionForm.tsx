@@ -77,6 +77,7 @@ const MaterialConsumptionForm = ({
 
   const [currentSourceOptions, setCurrentSourceOptions] = useState<any[]>([]);
   const [currentSourceType, setCurrentSourceType] = useState<string>('');
+  const [comments, setComments] = useState('');
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -246,13 +247,13 @@ const MaterialConsumptionForm = ({
               selectedCategories: prefilledCategories,
               selectedPlantId: prefilledPlantId,
               selectedPlantName: prefilledPlantName,
-              comments: savedData?.comments || '',
             });
             requestCounter++;
           });
         });
       });
       setMaterialRequests(flattenedRequests);
+      setComments(savedData?.comments || '');
     }
   }, [dataSource, savedData]);
 
@@ -697,11 +698,6 @@ const MaterialConsumptionForm = ({
       return;
     }
 
-    const comments = materialRequests
-      .map(request => request.comments)
-      .filter(Boolean)
-      .join('; ');
-
     const payload = {
       rfiId: dataSource?.rfiId || rfiId,
       isMaterialRequested: false,
@@ -987,22 +983,19 @@ const MaterialConsumptionForm = ({
                     <Text style={styles.addMoreText}>+ Add Category Block</Text>
                   </TouchableOpacity>
                 )}
-
-                <View style={styles.commentsContainer}>
-                  <TextInput
-                    style={[styles.textInput, styles.commentsInput]}
-                    placeholder="Remarks / Comments"
-                    value={request.comments}
-                    multiline
-                    onChangeText={text =>
-                      updateRequest(request.id, 'comments', text)
-                    }
-                  />
-                </View>
               </View>
             )}
           </View>
         ))}
+        <View style={styles.commentsContainer}>
+          <TextInput
+            style={[styles.textInput, styles.commentsInput]}
+            placeholder="Remarks / Comments"
+            value={comments}
+            multiline
+            onChangeText={setComments}
+          />
+        </View>
       </ScrollView>
 
       {/* Bottom bar */}
@@ -1175,29 +1168,33 @@ const MaterialConsumptionForm = ({
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#ffffff',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#ABBEFD',
+    overflow: 'hidden',
+    marginBottom: 8,
   },
   scrollView: {
     flex: 1,
   },
   scrollContent: {
-    padding: 16,
-    paddingBottom: 120,
+    padding: 12,
+    paddingBottom: 100,
   },
   description: {
     fontSize: 14,
     color: '#666',
-    marginBottom: 15,
+    marginBottom: 10,
   },
   requestCard: {
     backgroundColor: '#fff',
     borderRadius: 16,
-    marginBottom: 12,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.08,
-    shadowRadius: 6,
+    marginBottom: 8,
+    // shadowColor: '#000',
+    // shadowOffset: {width: 0, height: 2},
+    // shadowOpacity: 0.08,
+    // shadowRadius: 6,
     elevation: 3,
     borderWidth: 1,
     borderColor: '#eee',
@@ -1206,7 +1203,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 16,
+    padding: 12,
   },
   requestHeaderLeft: {
     flexDirection: 'row',
@@ -1266,15 +1263,15 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   requestContent: {
-    padding: 16,
+    padding: 10,
     paddingTop: 0,
     borderTopWidth: 1,
     borderTopColor: '#f0f0f0',
   },
   verticalInfoGroup: {
-    marginTop: 16,
-    marginBottom: 12,
-    gap: 12,
+    marginTop: 12,
+    marginBottom: 10,
+    gap: 8,
   },
   inputContainer: {
     flex: 1,
@@ -1299,10 +1296,10 @@ const styles = StyleSheet.create({
     color: '#777',
   },
   plantSelectionContainer: {
-    marginBottom: 16,
+    marginBottom: 10,
     marginTop: 4,
     backgroundColor: '#FFF9DB',
-    padding: 10,
+    padding: 8,
     borderRadius: 10,
     borderWidth: 1,
     borderColor: '#FFE066',
@@ -1331,8 +1328,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#e0e0e0',
     borderRadius: 12,
-    padding: 12,
-    marginBottom: 12,
+    padding: 10,
+    marginBottom: 10,
     backgroundColor: '#fafafa',
   },
   categorySectionHeader: {
@@ -1357,7 +1354,7 @@ const styles = StyleSheet.create({
     color: '#ff4d4f',
   },
   categorySelectRow: {
-    marginBottom: 15,
+    marginBottom: 10,
   },
   categoryDropdown: {
     width: '100%',
@@ -1399,8 +1396,8 @@ const styles = StyleSheet.create({
   sourceRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
-    gap: 8,
+    marginBottom: 8,
+    gap: 6,
   },
   smallDropdown: {
     borderWidth: 1,
@@ -1421,7 +1418,7 @@ const styles = StyleSheet.create({
   qtyContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    width: 90,
+    width: 95,
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 8,
@@ -1437,7 +1434,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   unitSmall: {
-    fontSize: 10,
+    fontSize: 11,
     color: '#888',
     marginLeft: 2,
   },
@@ -1473,9 +1470,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#6B46C1',
     borderRadius: 10,
-    padding: 12,
+    padding: 10,
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 10,
     backgroundColor: '#fff',
     borderStyle: 'dashed',
   },
@@ -1485,7 +1482,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   commentsContainer: {
-    marginTop: 4,
+    marginTop: 10,
   },
   commentsInput: {
     textAlignVertical: 'top',
@@ -1497,7 +1494,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     paddingHorizontal: 16,
-    paddingVertical: 10,
+    paddingVertical: 8,
     backgroundColor: '#f5f5f5',
     borderTopWidth: 1,
     borderTopColor: '#e5e5e5',
@@ -1510,7 +1507,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#6B46C1',
     borderRadius: 999,
-    paddingVertical: 14,
+    paddingVertical: 10,
     alignItems: 'center',
   },
   submitButtonText: {
@@ -1533,10 +1530,10 @@ const styles = StyleSheet.create({
     margin: 20,
     maxHeight: '70%',
     width: '90%',
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
+    // shadowColor: '#000',
+    // shadowOffset: {width: 0, height: 2},
+    // shadowOpacity: 0.25,
+    // shadowRadius: 4,
     elevation: 5,
   },
   dropdownHeader: {

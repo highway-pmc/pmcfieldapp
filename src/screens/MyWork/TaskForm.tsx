@@ -51,6 +51,7 @@ const TaskForm = ({route, navigation, taskData, isReadOnlyRFI}: any) => {
     route && route.params ? route.params.isReadOnlyRFI : 'false';
   const taskInfo = taskFromRoute || taskData || {};
   const isFocused = useIsFocused();
+
   const dispatch = useDispatch();
   useEffect(() => {
     if (taskInfo) {
@@ -81,6 +82,7 @@ const TaskForm = ({route, navigation, taskData, isReadOnlyRFI}: any) => {
   const RFI_ID = taskInfo.rfiData?._id ?? taskInfo._id;
   const status = taskInfo.rfiData?.rfiStatus ?? taskInfo.rfiStatus;
   const CHECKLIST_NAME = taskInfo.taskId.name;
+  const isCorrectionRequest = status === RFI_STATUS.CORRECTION_REQUEST;
 
   //const CHECKLIST_NAME = 'well-sinking';
   const stateSetters = {
@@ -129,7 +131,9 @@ const TaskForm = ({route, navigation, taskData, isReadOnlyRFI}: any) => {
     return prepareMaterialConsumption;
   }, [prepareMaterialConsumption]);
   //const CHECKLIST_NAME = 'torquing';
-  const [activeTab, setActiveTab] = useState(TABS.INFORMATION);
+  const [activeTab, setActiveTab] = useState(
+    isCorrectionRequest ? TABS.INSPECTION : TABS.INFORMATION,
+  );
   const [isSaving, setIsSaving] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -429,8 +433,52 @@ const TaskForm = ({route, navigation, taskData, isReadOnlyRFI}: any) => {
     return (
       <>
         {/* INFORMATION TAB */}
-       
-        
+
+        {!isCorrectionRequest && (
+          <View
+            style={{
+              display: activeTab === TABS.INFORMATION ? 'flex' : 'none',
+              flex: 1,
+            }}>
+            {projectInfoSection ||
+            materialConsumptionSection ||
+            prepareMaterialConsumption ? (
+              <InformationTab
+                ref={informationRef}
+                projectInfoSection={projectInfoSection}
+                materialConsumptionSection={materialConsumptionSection}
+                prepareMaterialConsumption={memoizedMaterialData}
+                isMaterialRequested={isMaterialRequested}
+                projectInfoData={projectInfoData}
+                rfiId={RFI_ID}
+                taskId={taskInfo.taskId}
+                readOnly={isReadOnlyFromRoute}
+                onMaterialSubmitSuccess={handleMaterialSubmitSuccess}
+                onProjectInfoChange={(fieldId, newValue) =>
+                  handleUniversalValueChange(
+                    'projectInfoSection',
+                    fieldId,
+                    newValue,
+                  )
+                }
+                materialConsumptionData={materialConsumptionData}
+                onMaterialConsumptionChange={(fieldId, newValue) =>
+                  handleUniversalValueChange(
+                    'materialConsumptionSection',
+                    fieldId,
+                    newValue,
+                  )
+                }
+              />
+            ) : (
+              <View style={styles.centered}>
+                <Text style={styles.statusText}>
+                  Project info data is not available.
+                </Text>
+              </View>
+            )}
+          </View>
+        )}
 
         {/* INSPECTION TAB */}
         <View
@@ -494,21 +542,22 @@ const TaskForm = ({route, navigation, taskData, isReadOnlyRFI}: any) => {
     <SafeAreaView style={styles.container}>
       {/* Tab Bar for navigation */}
       <View style={styles.tabBar}>
-        <TouchableOpacity
-          style={[
-            styles.tabItem,
-            activeTab === TABS.INFORMATION && styles.activeTab,
-          ]}
-          onPress={() => switchTab(TABS.INFORMATION)}>
-          <Text
+        {!isCorrectionRequest && (
+          <TouchableOpacity
             style={[
-              styles.tabText,
-              activeTab === TABS.INFORMATION && styles.activeTabText,
-            ]}>
-            {TABS.INFORMATION}
-          </Text>
-        </TouchableOpacity>
-
+              styles.tabItem,
+              activeTab === TABS.INFORMATION && styles.activeTab,
+            ]}
+            onPress={() => switchTab(TABS.INFORMATION)}>
+            <Text
+              style={[
+                styles.tabText,
+                activeTab === TABS.INFORMATION && styles.activeTabText,
+              ]}>
+              {TABS.INFORMATION}
+            </Text>
+          </TouchableOpacity>
+        )}
         {/* INSPECTION Tab */}
         <TouchableOpacity
           style={[

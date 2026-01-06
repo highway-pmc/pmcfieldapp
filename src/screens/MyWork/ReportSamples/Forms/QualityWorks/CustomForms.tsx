@@ -6864,66 +6864,95 @@ export const tasksListing = (
   onOpenSamplePreparePopup: any,
   testClassificationData: any
 ) => {
-  return currentTestTypesData
-    .filter((task: any) => {
-      if (searchText && task.name) {
-        return task.name.toLowerCase().includes(searchText.toLowerCase());
-      } else {
-        return true;
-      }
-    })
-    .map((item: any, index: any) => (
-      <>
-        <LinearGradient
-              colors={['#FFFFFF', '#E0E7FF']}
-              start={{x: 0, y: 0}}
-              end={{x: 1, y: 1}}
-              style={[style.requestCard]}>
-              {/* Left border with dynamic color */}
-              <View
-                style={[style.leftBorder]}
-              />
-              <View>
-                <View style={style.cardContent}>
-                  <Text style={styles.HeadText}>{item.name}</Text>
-                  <Text style={styles.HeadText}>{item.testRfiData.displayName}</Text>
-                </View>
-                <View style={style.divider} />
-                <View style={style.cardFooter}>
-                    <View>
-                    </View>
-                    <View style={style.footerButton}>
-                      {item.rfiStatus === RFI_STATUS.GENERATED ? (
-                        <TouchableOpacity
-                          style={[styles.MyWorkCta, styles.StartBorder]}
-                          disabled={!item.samplePrepared}
-                          onPress={() => {
-                            getRFIDataByWorkAssignmentId(item);
-                          }}>
-                          <Image
-                            style={styles.WorkIcon}
-                            source={require('../../../../../images/play-icon.png')}
-                          />
-                          <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>
-                            {
-                              testClassificationData.type == TEST_CLASSIFICATION_TYPES.THIRD_PARTY_LAB_TEST ? 'Upload' : 'Start'
-                            }
-                          </Text>
-                        </TouchableOpacity>
-                      ) : null}
-                        {(item.testRfiData?.samplePrepRequired == 'Yes' && !item.samplePrepared && testClassificationData.type !== TEST_CLASSIFICATION_TYPES.THIRD_PARTY_LAB_TEST) ? <TouchableOpacity
-                          style={[style.MyCtaContainer, style.StartBorder]}
-                          onPress={() => {onOpenSamplePreparePopup(item)}}>
-                          <Text style={[style.CtaTextColor]}>
-                            Sample Prepare
-                          </Text>
-                        </TouchableOpacity>
-                        : 
-                        (testClassificationData.type !== TEST_CLASSIFICATION_TYPES.THIRD_PARTY_LAB_TEST && item.testRfiData?.samplePrepRequired == 'Yes') &&
-                        <Text style={{fontWeight: '600', color: 'green'}}>Sample Prepared</Text>
-                      }
 
-                      {item.rfiStatus === RFI_STATUS.RE_GENERATED ? (
+  const filteredData = currentTestTypesData.filter((task: any) => {
+    if (searchText && task.name) {
+      return task.name.toLowerCase().includes(searchText.toLowerCase());
+    }
+    return true;
+  });
+
+  const groupedData = filteredData.reduce((acc: any, item: any) => {
+    const key = item.testMaterialType?.[0] || 'Others';
+
+    if (!acc[key]) {
+      acc[key] = [];
+    }
+
+    acc[key].push(item);
+    return acc;
+  }, {});
+
+  return Object.entries(groupedData).map(([groupName, items]: any) => (
+    <View key={groupName} style={style.groupContainer}>
+      <Text style={style.groupHeader}>
+        {groupName.replace(/-/g, ' ').toUpperCase()}
+      </Text>
+      {items.map((item: any) => (
+        <View key={item._id}>
+          <LinearGradient
+            colors={['#FFFFFF', '#E0E7FF']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={[style.requestCard]}
+          >
+            <View style={[style.leftBorder]} />
+
+            <View>
+              <View style={style.cardContent}>
+                <Text style={styles.HeadText}>{item.name}</Text>
+                <Text style={styles.HeadText}>
+                  {item.testRfiData?.displayName}
+                </Text>
+              </View>
+
+              <View style={style.divider} />
+
+              <View style={style.cardFooter}>
+                <View />
+                <View style={style.footerButton}>
+                  {item.rfiStatus === RFI_STATUS.GENERATED && (
+                    <TouchableOpacity
+                      style={[styles.MyWorkCta, styles.StartBorder]}
+                      disabled={!item.samplePrepared}
+                      onPress={() => getRFIDataByWorkAssignmentId(item)}
+                    >
+                      <Image
+                        style={styles.WorkIcon}
+                        source={require('../../../../../images/play-icon.png')}
+                      />
+                      <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>
+                        {testClassificationData.type ===
+                        TEST_CLASSIFICATION_TYPES.THIRD_PARTY_LAB_TEST
+                          ? 'Upload'
+                          : 'Start'}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+
+                  {(item.testRfiData?.samplePrepRequired === 'Yes' &&
+                    !item.samplePrepared &&
+                    testClassificationData.type !==
+                      TEST_CLASSIFICATION_TYPES.THIRD_PARTY_LAB_TEST) ? (
+                    <TouchableOpacity
+                      style={[style.MyCtaContainer, style.StartBorder]}
+                      onPress={() => onOpenSamplePreparePopup(item)}
+                    >
+                      <Text style={[style.CtaTextColor]}>
+                        Sample Prepare
+                      </Text>
+                    </TouchableOpacity>
+                  ) : (
+                    testClassificationData.type !==
+                      TEST_CLASSIFICATION_TYPES.THIRD_PARTY_LAB_TEST &&
+                    item.testRfiData?.samplePrepRequired === 'Yes' && (
+                      <Text style={{ fontWeight: '600', color: 'green' }}>
+                        Sample Prepared
+                      </Text>
+                    )
+                  )}
+
+                  {item.rfiStatus === RFI_STATUS.RE_GENERATED ? (
                         <TouchableOpacity
                           style={[styles.MyWorkCta, styles.StartBorder]}
                           onPress={() => {
@@ -6993,107 +7022,14 @@ export const tasksListing = (
                           </Text>
                         </TouchableOpacity>
                       ) : null}
-
-
-
-                    </View>
                 </View>
               </View>
-        </LinearGradient>
-        <View style={[getStyle(item), {display: 'none'}]}>
-          <View style={styles.leftContainer}>
-            <Text style={styles.HeadText}>{item.name}</Text>
-            {/* <Text style={styles.MyWorkSubHead}>Sub Text</Text> */}
-          </View>
-          {item.rfiStatus === RFI_STATUS.GENERATED ? (
-            <TouchableOpacity
-              style={[styles.MyWorkCta, styles.StartBorder]}
-              onPress={() => {
-                getRFIDataByWorkAssignmentId(item);
-              }}>
-              <Image
-                style={styles.WorkIcon}
-                source={require('../../../../../images/play-icon.png')}
-              />
-              <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>
-                Start
-              </Text>
-            </TouchableOpacity>
-          ) : null}
-
-          {item.rfiStatus === RFI_STATUS.RE_GENERATED ? (
-            <TouchableOpacity
-              style={[styles.MyWorkCta, styles.StartBorder]}
-              onPress={() => {
-                getRFIDataByWorkAssignmentId(item);
-              }}>
-              <Image
-                style={styles.WorkIcon}
-                source={require('../../../../../images/play-icon.png')}
-              />
-              <Text style={[styles.CtaStartText, styles.CtaStartTextColor]}>
-                Re-start
-              </Text>
-            </TouchableOpacity>
-          ) : null}
-
-          {item.rfiStatus === RFI_STATUS.REJECTED ||
-          item.rfiStatus === RFI_STATUS.CANCELLED ? (
-            <TouchableOpacity
-              style={[styles.MyWorkCta, styles.StartRejectBorder]}>
-              {/* <Image style={styles.WorkIcon} source={require('../../../../../images/play-icon.png')} /> */}
-              <Text style={[styles.CtaStartText, styles.CtaRejectTextColor]}>
-                {item.rfiStatus === RFI_STATUS.CANCELLED
-                  ? 'Cancelled'
-                  : 'Rejected'}
-              </Text>
-            </TouchableOpacity>
-          ) : null}
-
-          {item.rfiStatus === RFI_STATUS.IN_PROGRESS ? (
-            <TouchableOpacity
-              style={[styles.MyWorkCta, styles.StartInProgressBorder]}
-              onPress={() => {
-                getRFIDataByWorkAssignmentId(item);
-              }}>
-              <Image
-                style={styles.WorkIcon}
-                source={require('../../../../../images/inprogress.png')}
-              />
-              <Text style={[styles.CtaStartText, styles.CtaInProgressTextColor]}>
-                In Progress
-              </Text>
-            </TouchableOpacity>
-          ) : null}
-
-          {item.rfiStatus === RFI_STATUS.IN_REVIEW ? (
-            <TouchableOpacity
-              style={[styles.MyWorkCta, styles.StartReviewBorder]}>
-              <Image
-                style={styles.WorkIcon}
-                source={require('../../../../../images/review-icon.png')}
-              />
-              <Text style={[styles.CtaStartText, styles.CtaReviewTextColor]}>
-                Under Review
-              </Text>
-            </TouchableOpacity>
-          ) : null}
-
-          {item.rfiStatus === RFI_STATUS.APPROVED ? (
-            <TouchableOpacity
-              style={[styles.MyWorkCta, styles.StartCompleteBorder]}>
-              <Image
-                style={styles.WorkIcon}
-                source={require('../../../../../images/complete-icon.png')}
-              />
-              <Text style={[styles.CtaStartText, styles.CtaCompleteTextColor]}>
-                Completed
-              </Text>
-            </TouchableOpacity>
-          ) : null}
+            </View>
+          </LinearGradient>
         </View>
-      </>
-    ));
+      ))}
+    </View>
+  ));
 };
 
 export type FormSampleTest7thOr28thDayState = {
@@ -7313,4 +7249,24 @@ const style = StyleSheet.create({
     zIndex: 100,
     width: 2,
   },
+  groupHeader: {
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    fontSize: 14,
+    fontWeight: '700',
+    marginBottom: 7,
+    marginLeft: -10,
+    marginRight: -10,
+    color: '#fff',
+    backgroundColor: '#1E3A8A',
+  },
+  groupContainer: {
+    paddingHorizontal: 10,
+    paddingBottom: 5,
+    marginBottom: 15,
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: '#1E3A8A',
+    overflow: 'hidden'
+  }
 });

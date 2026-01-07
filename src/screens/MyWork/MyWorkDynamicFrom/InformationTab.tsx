@@ -93,28 +93,34 @@ const InformationTab = forwardRef<DynamicFormRef, InformationTabProps>(
       <ScrollView contentContainerStyle={styles.tabContent}>
         {/* Render Project Info Section, passing state and setter */}
         {projectInfoSection && (
-          <DynamicForm
-            ref={projectInfoRef}
-            formData={projectInfoSection}
-            globalFormData={projectInfoData}
-            onGlobalValueChange={onProjectInfoChange}
-          />
+          <View>
+            <DynamicForm
+              ref={projectInfoRef}
+              formData={projectInfoSection}
+              globalFormData={projectInfoData}
+              onGlobalValueChange={onProjectInfoChange}
+            />
+          </View>
         )}
         {materialConsumptionData && readOnly && (
-          <DynamicForm
-            ref={materialConsumptionRef}
-            formData={materialConsumptionSection}
-            globalFormData={materialConsumptionData}
-            onGlobalValueChange={onMaterialConsumptionChange}
-          />
+          <View>
+            <DynamicForm
+              ref={materialConsumptionRef}
+              formData={materialConsumptionSection}
+              globalFormData={materialConsumptionData}
+              onGlobalValueChange={onMaterialConsumptionChange}
+            />
+          </View>
         )}
         {!isMaterialRequested && !readOnly && (
-          <MaterialConsumptionForm
-            materialData={prepareMaterialConsumption}
-            rfiId={rfiId}
-            taskId={taskId}
-            onSubmissionSuccess={onMaterialSubmitSuccess}
-          />
+          <View>
+            <MaterialConsumptionForm
+              materialData={prepareMaterialConsumption}
+              rfiId={rfiId}
+              taskId={taskId}
+              onSubmissionSuccess={onMaterialSubmitSuccess}
+            />
+          </View>
         )}
       </ScrollView>
     );

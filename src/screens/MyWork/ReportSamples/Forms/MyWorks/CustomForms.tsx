@@ -19089,7 +19089,28 @@ export const CustomForms = (_v: any, workType: any, taskCategory: any) => {
                   </Text>
                 </TouchableOpacity>
               ) : null}
+              {item.rfiStatus === RFI_STATUS.CORRECTION_REQUEST ? (
+                <TouchableOpacity
+                  style={[styles.MyWorkCta, styles.StartInProgressBorder]}
+                  onPress={() => {
+                    // _event.getRFIDataByWorkAssignmentId(item);
 
+                    console.log('Task Information', item);
+                    navigation.navigate('TaskForm', {taskData: item});
+                  }}>
+                  <Image
+                    style={styles.WorkIcon}
+                    source={require('../../../../../images/inprogress.png')}
+                  />
+                  <Text
+                    style={[
+                      styles.CtaStartText,
+                      styles.CtaInProgressTextColor,
+                    ]}>
+                    Correction Request
+                  </Text>
+                </TouchableOpacity>
+              ) : null}
               {item.rfiStatus === RFI_STATUS.IN_REVIEW ? (
                 <TouchableOpacity
                   style={[styles.MyWorkCta, styles.StartReviewBorder]}>

@@ -1030,7 +1030,7 @@ const MaterialConsumptionForm = ({
             {isSubmitting ? (
               <ActivityIndicator size="small" color="#ffffff" />
             ) : (
-              <Text style={styles.submitButtonText}>Submit Consumption</Text>
+              <Text style={styles.submitButtonText}>Save Consumption</Text>
             )}
           </TouchableOpacity>
         </View>

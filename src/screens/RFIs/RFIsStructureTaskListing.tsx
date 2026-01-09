@@ -30,6 +30,7 @@ import {
   getRFITasks,
   actionGenerateRFI,
 } from './actions';
+import {useSnackbar} from '../../context/SnackbarContext';
 import {
   getDbDateFromDDMMYYYY,
   getDisplayDate,
@@ -52,6 +53,7 @@ const RFIsStructureTaskListing = (props: any) => {
   //const userCategory = PROJECT_TYPE.STRUCTURE_WORK;
   const userCategory = props.projectType;
   const taskCategory = props.taskCategory;
+  const {showSnackbar} = useSnackbar();
 
   const workTypeColors = getWorkTypeColors(userCategory);
   // const rfiType = props.rfiType;

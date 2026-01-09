@@ -102,7 +102,7 @@ const InformationTab = forwardRef<DynamicFormRef, InformationTabProps>(
             />
           </View>
         )}
-        {materialConsumptionData && readOnly && (
+        {materialConsumptionData && isMaterialRequested && !readOnly && (
           <View>
             <DynamicForm
               ref={materialConsumptionRef}

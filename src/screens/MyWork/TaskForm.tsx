@@ -514,23 +514,15 @@ const TaskForm = ({route, navigation, taskData, isReadOnlyRFI}: any) => {
             display: activeTab === TABS.TASK_DETAILS ? 'flex' : 'none',
             flex: 1,
           }}>
-          {taskDetails ? (
-            <TaskDetailsTab
-              ref={taskDetailsRef}
-              formData={taskDetails}
-              header={taskDetailHeader || null}
-              globalFormData={taskDetailsData}
-              onGlobalValueChange={(fieldId, newValue) =>
-                handleUniversalValueChange('taskDetails', fieldId, newValue)
-              }
-            />
-          ) : (
-            <View style={styles.centered}>
-              <Text style={styles.statusText}>
-                Task details data is not available.
-              </Text>
-            </View>
-          )}
+          <TaskDetailsTab
+            ref={taskDetailsRef}
+            formData={taskDetails}
+            header={taskDetailHeader || null}
+            globalFormData={taskDetailsData}
+            onGlobalValueChange={(fieldId, newValue) =>
+              handleUniversalValueChange('taskDetails', fieldId, newValue)
+            }
+          />
         </View>
       </>
     );
@@ -575,20 +567,22 @@ const TaskForm = ({route, navigation, taskData, isReadOnlyRFI}: any) => {
         </TouchableOpacity>
 
         {/* TASK DETAILS Tab */}
-        <TouchableOpacity
-          style={[
-            styles.tabItem,
-            activeTab === TABS.TASK_DETAILS && styles.activeTab,
-          ]}
-          onPress={() => switchTab(TABS.TASK_DETAILS)}>
-          <Text
+        {(taskDetails || taskDetailHeader) && (
+          <TouchableOpacity
             style={[
-              styles.tabText,
-              activeTab === TABS.TASK_DETAILS && styles.activeTabText,
-            ]}>
-            {TABS.TASK_DETAILS}
-          </Text>
-        </TouchableOpacity>
+              styles.tabItem,
+              activeTab === TABS.TASK_DETAILS && styles.activeTab,
+            ]}
+            onPress={() => switchTab(TABS.TASK_DETAILS)}>
+            <Text
+              style={[
+                styles.tabText,
+                activeTab === TABS.TASK_DETAILS && styles.activeTabText,
+              ]}>
+              {TABS.TASK_DETAILS}
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
 
       {/* Scrollable Content Area */}

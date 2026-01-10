@@ -56,3 +56,8 @@ export const editEquipmentsInfo = payload => ({
   type: 'EDIT_EQUIPMENTS_FORM_INFO_REQUEST',
   payload: payload,
 });
+
+export const getPlantsList = payload => ({
+  type: 'GET_PLANTS_LIST_REQUEST',
+  payload: payload,
+});

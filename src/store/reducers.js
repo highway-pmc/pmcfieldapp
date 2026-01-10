@@ -81,6 +81,7 @@ const sourceApprovalsState = {
   sourceByStatusData: null,
   putSourceApprovalData: null,
   postAddSourceData: null,
+  plants: null,
   error: null,
 };
 
@@ -2403,6 +2404,26 @@ const EquimentCalibrationReducer = (state = sourceApprovalsState, action) => {
       return {
         ...state,
         equipmentCalibrationReport: null,
+        error: action.error,
+        loading: false,
+      };
+    case 'GET_PLANTS_LIST_REQUEST':
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case 'GET_PLANTS_LIST_SUCCESS':
+      return {
+        ...state,
+        plants: action.response,
+        error: null,
+        loading: false,
+      };
+    case 'GET_PLANTS_LIST_FAILURE':
+      return {
+        ...state,
+        plants: null,
         error: action.error,
         loading: false,
       };

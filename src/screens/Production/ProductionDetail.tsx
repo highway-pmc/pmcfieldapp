@@ -16,9 +16,15 @@ const TABS = {
   PRODUCTION_SUMMARY: 'Production Summary',
 };
 
-const ProductionDetail = ({navigation}: {navigation: any}) => {
+const ProductionDetail = ({
+  navigation,
+  route,
+}: {
+  navigation: any;
+  route: any;
+}) => {
   const [activeTab, setActiveTab] = useState(TABS.PENDING_REQUEST);
-
+  const {equipment} = route.params || {};
   if (useIsFocused()) {
     const eventEmitter = new NativeEventEmitter();
     eventEmitter.emit('headerEvent', HeaderItems.production);
@@ -63,9 +69,13 @@ const ProductionDetail = ({navigation}: {navigation: any}) => {
       </View>
 
       <View style={styles.tabContent}>
-        {activeTab === TABS.PENDING_REQUEST && <ProductionRequest />}
+        {activeTab === TABS.PENDING_REQUEST && (
+          <ProductionRequest equipmentId={equipment?._id} />
+        )}
 
-        {activeTab === TABS.PRODUCTION_SUMMARY && <ProductionSummary />}
+        {activeTab === TABS.PRODUCTION_SUMMARY && (
+          <ProductionSummary equipmentId={equipment?._id} />
+        )}
       </View>
     </View>
   );

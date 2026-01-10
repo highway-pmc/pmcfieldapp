@@ -1,3 +1,4 @@
+import React, {useEffect} from 'react';
 import {
   View,
   Text,
@@ -5,94 +6,108 @@ import {
   ScrollView,
   TouchableOpacity,
   NativeEventEmitter,
+  ActivityIndicator,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
-import {HeaderItems, STORE_OPTION} from '../../constants/constants';
-import LinearGradient from 'react-native-linear-gradient';
+import {HeaderItems} from '../../constants/constants';
+import {useDispatch, useSelector} from 'react-redux';
+import {getPlantsList} from '../../screens/ManageUsers/QualityWorks/Equipment/actions';
+import {useSnackbar} from '../../context/SnackbarContext';
 
 export default function ProductionHome() {
-  const [activeTab, setActiveTab] = useState(STORE_OPTION.PURCHASING);
   const navigation = useNavigation();
   const focus = useIsFocused();
+  const dispatch = useDispatch();
+  const {showSnackbar} = useSnackbar();
 
-  
+  const {plants, isLoading, error} = useSelector(
+    (state: any) => state.EquipmentsCalibration,
+  );
+  const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
+
   useEffect(() => {
-    if (focus == true) {
+    if (focus) {
+      dispatch(getPlantsList({projectId: loggedInUser.projectId}));
       const eventEmitter = new NativeEventEmitter();
       eventEmitter.emit('headerEvent', HeaderItems.production);
     }
-  }, [focus]);
+  }, [focus, dispatch]);
 
-  const handleEquipmentPress = ()=> {
-    navigation.navigate('ProductionDetail');
+  // Error handling as requested
+  useEffect(() => {
+    if (error) {
+      showSnackbar(error, 'error');
+    }
+  }, [error]);
+
+  const handleEquipmentPress = (equipment: any) => {
+    navigation.navigate('ProductionDetail', {equipment});
   };
 
-  const equipmentData = [
-    {
-      id: 'HPMC RMC 001',
-      plant: 'RMC Plant',
-      location: 'Volte Volte 522 KZ210',
-      contractorId: 'M/s HPMC Testing contractor/Machineries/5812539',
-      pendingRequests: 100,
-    },
-    {
-      id: 'HPMC RMC 002',
-      plant: 'RMC Plant',
-      location: 'Volte Volte 522 KZ210',
-      contractorId: 'M/s HPMC Testing contractor/Machineries/5812539',
-      pendingRequests: 80,
-    },
-    {
-      id: 'HPMC RMP 001',
-      plant: 'RMP Plant',
-      location: 'HMP HMP 522 KZ210',
-      contractorId: 'M/s HPMC Testing contractor/Machineries/5812539',
-      pendingRequests: 80,
-    },
-    {
-      id: 'HPMC WMM 001',
-      plant: 'WMM Plant',
-      location: 'WMM HMP 522 KZ210',
-      contractorId: 'M/s HPMC Testing contractor/Machineries/5812539',
-      pendingRequests: 80,
-    },
-  ];
+  if (isLoading) {
+    return (
+      <View style={styles.centerContainer}>
+        <ActivityIndicator size="large" color="#6366F1" />
+        <Text style={styles.loadingText}>Loading equipment data...</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Plants Equipment List</Text>
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Plants Equipment List</Text>
+        <Text style={styles.headerCount}>
+          {plants?.equipments?.length || 0} Total
+        </Text>
       </View>
+
       <ScrollView
-        style={styles.listContainer}
-        showsVerticalScrollIndicator={false}>
-        {equipmentData.map((equipment, index) => (
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}>
+        {plants?.equipments?.map((item: any, index: number) => (
           <TouchableOpacity
-            key={index}
-            onPress={() => handleEquipmentPress(equipment)}
-            style={styles.equipmentCard}>
-            <LinearGradient
-              colors={['#FFFFFF', '#E0E7FF']}
-              start={{x: 0, y: 0}}
-              end={{x: 1, y: 0}}
-              style={styles.gradientBackground}
-            />
-            <View style={styles.leftBorder} />
-            <View style={styles.equipmentCardContent}>
-              <View style={styles.equipmentInfo}>
-                <Text style={styles.equipmentId}>{equipment.id}</Text>
-                <Text style={styles.equipmentDetails}>
-                  {equipment.plant} {equipment.location}
+            key={item._id || index}
+            onPress={() => handleEquipmentPress(item)}
+            activeOpacity={0.8}
+            style={styles.card}>
+            {/* Header Section */}
+            <View style={styles.cardHeader}>
+              <View style={{flex: 1}}>
+                <Text style={styles.equipmentName} numberOfLines={1}>
+                  {item.name}
                 </Text>
-                <Text style={styles.contractorId}>
-                  ID: {equipment.contractorId}
+                <Text style={styles.uniqueId}>{item.uniqueEquipmentId}</Text>
+              </View>
+            </View>
+
+            {/* Content Section */}
+            <View style={styles.infoGrid}>
+              <View style={styles.infoItem}>
+                <Text style={styles.label}>CATEGORY</Text>
+                <Text style={styles.value}>
+                  {item.testEquipmentCategoryType}
                 </Text>
-                <Text style={styles.pendingText}>
-                  Total no. of pending request :{' '}
-                  <Text style={styles.pendingCount}>
-                    {equipment.pendingRequests}
-                  </Text>
+              </View>
+              <View style={styles.infoItem}>
+                <Text style={styles.label}>EQUIPMENT TYPE</Text>
+                <Text style={styles.value}>{item.testEquipmentType}</Text>
+              </View>
+            </View>
+
+            <View style={styles.divider} />
+
+            {/* Footer Section */}
+            <View style={styles.cardFooter}>
+              <View style={styles.footerInfo}>
+                <Text style={styles.label}>MODEL NO</Text>
+                <Text style={styles.value}>{item.modelNo || 'N/A'}</Text>
+              </View>
+              <View style={[styles.footerInfo, {alignItems: 'flex-end'}]}>
+                <Text style={styles.label}>CREATED BY</Text>
+                <Text style={styles.creatorName}>{item.createdBy?.name}</Text>
+                <Text style={styles.designation}>
+                  {item.createdBy?.designation}
                 </Text>
               </View>
             </View>
@@ -106,87 +121,115 @@ export default function ProductionHome() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
-    padding: 16,
+    backgroundColor: '#F9FAFB', // Clean light background
   },
-  headerContainer: {
+  centerContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 14,
+    color: '#6B7280',
+  },
+  header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 16,
-    paddingHorizontal: 4,
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 10,
   },
-  headerText: {
-    fontSize: 18,
-    fontWeight: '500',
-    color: '#000000',
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#111827',
   },
-  listContainer: {
-    flex: 1,
-    paddingBottom: 20,
-  },
-  equipmentCard: {
+  headerCount: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#6366F1',
+    backgroundColor: '#EEF2FF',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
     borderRadius: 12,
-    marginVertical: 8,
-    overflow: 'hidden',
+  },
+  scrollContent: {
+    padding: 16,
+  },
+  card: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
+    padding: 16,
+    marginBottom: 16,
     borderWidth: 1,
-    borderColor: '#ABBEFD',
-    position: 'relative',
-    maxHeight: 120,
+    borderColor: '#E5E7EB',
+    // Soft shadow for "rich" look
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    elevation: 2,
   },
-  gradientBackground: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
+  cardHeader: {
+    marginBottom: 12,
   },
-  leftBorder: {
-    position: 'absolute',
-    left: 0,
-    top: '15%',
-    bottom: '15%',
-    width: 3,
-    backgroundColor: '#6366F1',
+  equipmentName: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#1F2937',
+    marginBottom: 4,
   },
-  equipmentCardContent: {
+  uniqueId: {
+    fontSize: 12,
+    color: '#6366F1',
+    fontWeight: '600',
+    letterSpacing: 0.3,
+  },
+  infoGrid: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    padding: 10,
-    paddingLeft: 24,
-    height: '100%',
+    marginBottom: 12,
   },
-  equipmentInfo: {
+  infoItem: {
     flex: 1,
-    justifyContent: 'flex-start',
   },
-  equipmentId: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#1F2937',
+  label: {
+    fontSize: 10,
+    fontWeight: '800',
+    color: '#9CA3AF',
     marginBottom: 4,
+    letterSpacing: 0.5,
   },
-  equipmentDetails: {
+  value: {
     fontSize: 14,
-    fontWeight: '400',
-    color: '#6B7280',
-    marginBottom: 4,
-  },
-  contractorId: {
-    fontSize: 12,
-    fontWeight: '400',
-    color: '#6B7280',
-    marginBottom: 8,
-  },
-  pendingText: {
-    fontSize: 12,
-    fontWeight: '400',
-    color: '#6B7280',
-  },
-  pendingCount: {
-    fontSize: 12,
+    color: '#374151',
     fontWeight: '600',
+    textTransform: 'capitalize',
+  },
+  divider: {
+    height: 1,
+    backgroundColor: '#F3F4F6',
+    marginVertical: 12,
+  },
+  cardFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  footerInfo: {
+    flex: 1,
+  },
+  creatorName: {
+    fontSize: 13,
+    fontWeight: '700',
     color: '#1F2937',
+  },
+  designation: {
+    fontSize: 11,
+    color: '#6B7280',
+    fontWeight: '500',
   },
 });

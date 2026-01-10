@@ -112,6 +112,7 @@ import CustomSelectDropdown from '../Common/CustomSelectDropdown';
 import {getThirdPartyTestSampleObject} from './ReportSamples/Forms/QualityWorks/ThirdPartyTest';
 import LinearGradient from 'react-native-linear-gradient';
 import SamplePrepModal from './ReportSamples/Forms/QualityWorks/SamplePrepModal';
+import TasksListingNew from './ReportSamples/Forms/QualityWorks/TasksListingNew';
 const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
   const workType = PROJECT_TYPE.QUALITY_WORK;
@@ -1793,7 +1794,14 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
                     </View>
                   </TouchableOpacity>
                 ))
-            : tasksListing(currentTestTypesData, searchText, getStyle, styles, onOpenSamplePreparePopup, selectedValues)
+            : <TasksListingNew
+  currentTestTypesData={currentTestTypesData}
+  searchText={searchText}
+  getStyle={getStyle}
+  styles={styles}
+  onOpenSamplePreparePopup={onOpenSamplePreparePopup}
+  testClassificationData={selectedValues}
+/>
           : null}
         {currentLevel === 3
           ? currentTestMaterialsData && currentTestMaterialsData.length
@@ -1816,10 +1824,24 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
                     </View>
                   </TouchableOpacity>
                 ))
-            : tasksListing(currentTestTypesData, searchText, getStyle, styles, onOpenSamplePreparePopup, selectedValues)
+            : <TasksListingNew
+  currentTestTypesData={currentTestTypesData}
+  searchText={searchText}
+  getStyle={getStyle}
+  styles={styles}
+  onOpenSamplePreparePopup={onOpenSamplePreparePopup}
+  testClassificationData={selectedValues}
+/>
           : null}
         {currentLevel === 4
-          ? tasksListing(currentTestTypesData, searchText, getStyle, styles, onOpenSamplePreparePopup, selectedValues)
+          ? <TasksListingNew
+  currentTestTypesData={currentTestTypesData}
+  searchText={searchText}
+  getStyle={getStyle}
+  styles={styles}
+  onOpenSamplePreparePopup={onOpenSamplePreparePopup}
+  testClassificationData={selectedValues}
+/>
           : null}
         {currentLevel === 5 && currentSubTestTypesData?.length
           ? currentSubTestTypesData
@@ -1852,7 +1874,14 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
                 currentTestMaterialData.materialType ===
                   TEST_MATERIALS_TYPES.PQC) &&
                 selectedTestSample?.type === TEST_TYPES.CUBE_TEST)) &&
-            tasksListing(currentTestTypesData, searchText, getStyle, styles, onOpenSamplePreparePopup, selectedValues)}
+            <TasksListingNew
+  currentTestTypesData={currentTestTypesData}
+  searchText={searchText}
+  getStyle={getStyle}
+  styles={styles}
+  onOpenSamplePreparePopup={onOpenSamplePreparePopup}
+  testClassificationData={selectedValues}
+/>}
         {currentLevel === 6 ? (
           currentSubTestTypeRFIsData?.length ? (
             <ScrollView style={styles.Height100}>

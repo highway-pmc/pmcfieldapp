@@ -167,7 +167,7 @@ const TasksListingNew = ({
                                     <View style={style.cardFooter}>
                                     <View />
                                     <View style={style.footerButton}>
-                                        {item.rfiStatus === RFI_STATUS.GENERATED && (
+                                        {item.rfiStatus === RFI_STATUS.GENERATED && item.samplePrepared && (
                                         <TouchableOpacity
                                             style={[styles.MyWorkCta, styles.StartBorder]}
                                             disabled={!item.samplePrepared}

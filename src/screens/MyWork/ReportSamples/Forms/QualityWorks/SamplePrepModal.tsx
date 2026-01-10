@@ -9,25 +9,8 @@ export default function SamplePrepModal({ visible, onClose, selectedTaskData, on
   const { height } = Dimensions.get('window');
   const calculatedHeight = height * 7;
   const [samples, setSamples]: any = useState([]);
+  const [sampleCount, setSampleCount]: any = useState();
   const { showSnackbar } = useSnackbar();
-
-  useState(() => {
-    console.log('Selected Task Data in Modal:', selectedTaskData);
-    if (selectedTaskData && selectedTaskData.testRfiData?.metaData?.testCountData?.sampleCount) {
-      const sampleCount = selectedTaskData.testRfiData.metaData.testCountData.sampleCount;
-      const initialSamples = [];
-      for (let i = 1; i <= sampleCount; i++) {
-        initialSamples.push({
-          id: i,
-          name: `Sample ${i}`,
-          isPrepared: false,
-          sampleDate: '',
-          collectedBy: SAMPLE_BY_LIST[0].value
-        });
-      }
-      setSamples(initialSamples);
-    }
-  });
 
   const addSample = () => {
     const newId = samples.length + 1;
@@ -77,6 +60,27 @@ export default function SamplePrepModal({ visible, onClose, selectedTaskData, on
       onClose();
     }
   };
+
+  useState(() => {
+    console.log('Selected Task Data in Modal:', selectedTaskData);
+    const sampCount = selectedTaskData?.testRfiData?.metaData?.testCountData?.sampleCount;
+    setSampleCount(sampCount);
+    if (sampCount === 'var') {
+      addSample();
+    } else {
+      const initialSamples = [];
+      for (let i = 1; i <= sampCount; i++) {
+        initialSamples.push({
+          id: i,
+          name: `Sample ${i}`,
+          isPrepared: false,
+          sampleDate: '',
+          collectedBy: SAMPLE_BY_LIST[0].value
+        });
+      }
+      setSamples(initialSamples);
+    }
+  });
 
   return (
     <Modal
@@ -153,14 +157,6 @@ export default function SamplePrepModal({ visible, onClose, selectedTaskData, on
                         value={sample.sampleDate}
                         onChange={date => updateSample(sample.id, 'sampleDate', date)}
                     />
-                      {/* <Text style={styles.label}>Sample Collected By</Text>
-                      <TextInput
-                        style={styles.input}
-                        value={sample.collectedBy}
-                        onChangeText={(text) => updateSample(sample.id, 'collectedBy', text)}
-                        placeholder="Enter collector name"
-                        placeholderTextColor="#94a3b8"
-                      /> */}
                       <DropdownPicker
                         label="Sampled By"
                         items={SAMPLE_BY_LIST}
@@ -171,9 +167,11 @@ export default function SamplePrepModal({ visible, onClose, selectedTaskData, on
                   </View>
                 ))}
 
-                {/* <TouchableOpacity style={styles.addButton} onPress={addSample}>
-                  <Text style={styles.addButtonText}>+ Add More Sample</Text>
-                </TouchableOpacity> */}
+                {sampleCount === 'var' && (
+                  <TouchableOpacity style={styles.addButton} onPress={addSample}>
+                    <Text style={styles.addButtonText}>+ Add More Sample</Text>
+                  </TouchableOpacity>
+                )}
               </View>
             </View>
           </ScrollView>

@@ -89,6 +89,12 @@ const ProductionRequest = ({equipmentId}: ProductionRequestProps) => {
   }, [isFocused]);
 
   useEffect(() => {
+    return () => {
+      dispatch(clearMaterialRequest());
+    };
+  }, []);
+  
+  useEffect(() => {
     setInventoryRequests([]);
     if (getMeterialRequestToFormData?.length) {
       // Logic from RequestPage.tsx to handle aggregate status

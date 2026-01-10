@@ -20,7 +20,7 @@ export default function ProductionHome() {
   const dispatch = useDispatch();
   const {showSnackbar} = useSnackbar();
 
-  const {plants, isLoading, error} = useSelector(
+  const {plants, loading, error} = useSelector(
     (state: any) => state.EquipmentsCalibration,
   );
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
@@ -44,7 +44,7 @@ export default function ProductionHome() {
     navigation.navigate('ProductionDetail', {equipment});
   };
 
-  if (isLoading) {
+  if (loading) {
     return (
       <View style={styles.centerContainer}>
         <ActivityIndicator size="large" color="#6366F1" />

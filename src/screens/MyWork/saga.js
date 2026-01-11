@@ -1,7 +1,7 @@
 
 import { put, takeLatest } from 'redux-saga/effects';
 import { getMyTestsData, getMyWorksData } from '../../services/my-works/myworks.service';
-import { fillRFIsDataChecklist, fillRFIsDataChecklistForSampleTest, generateTestSampleReportApi, getRFIDataByWaId, updateTestSampleAPi } from '../../services/rfi/rfis.service';
+import { fillRFIsDataChecklist, fillRFIsDataChecklistForSampleTest, generateTestSampleReportApi, getRFIDataByWaId, testSamplePreparedSubmitApi, updateTestSampleAPi } from '../../services/rfi/rfis.service';
 
 function* getMyWorks({ payload }) {
     try {
@@ -39,6 +39,15 @@ function* fillRFIsChecklistForSampleTest({ payload }) {
     }
 }
 
+function* testSamplePreparedSubmit({ payload }) {
+    try {
+        const response = yield (testSamplePreparedSubmitApi(payload.projectId, payload.testRfiId, payload.body));
+        yield put({ type: "TEST_SAMPLE_PREPARED_SUBMIT_SUCCESS", response });
+    } catch (error) {
+        yield put({ type: "TEST_SAMPLE_PREPARED_SUBMIT_FAILURE", error: error.message });
+    }
+}
+
 function* getMyTests({ payload }) {
     try {
         const response = yield (getMyTestsData(payload.projectId, payload.workType, payload.selectedType));
@@ -72,6 +81,7 @@ export default function* myWorksScreenSaga() {
     yield takeLatest("GET_RFI_BY_WA_ID_REQUEST", getRFIByWaId);
     yield takeLatest("FILL_RFI_CHECK_LIST_REQUEST", fillRFIsChecklist);
     yield takeLatest("TEST_SAMPLE_FILL_RFI_CHECK_LIST_REQUEST", fillRFIsChecklistForSampleTest);
+    yield takeLatest("TEST_SAMPLE_PREPARED_SUBMIT_REQUEST", testSamplePreparedSubmit);
     yield takeLatest("UPDATE_TEST_SAMPLE_REQUEST", updateTestSample);
     yield takeLatest("GENERATE_TEST_SAMPLE_REPORT_REQUEST", generateTestSampleReport);
 }

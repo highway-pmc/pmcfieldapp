@@ -91,6 +91,15 @@ export const fillRFIsDataChecklistForSampleTest = async (projectId, rfiId, statu
     });
 }
 
+export const testSamplePreparedSubmitApi = async (projectId, testRfiId, body) => {
+    return apiService.postRequest(`v1/auth/projects/${projectId}/test-rfis/${testRfiId}/sample-prepared`, body).then((response) => {
+        return response;
+    }).catch((err) => {
+        const errorMessge = err.message || 'Unable to submit sample prepared.';
+        throw new Error(errorMessge);
+    });
+}
+
 export const generateRFIReportApi = async (projectId, projectModuleId, rfiId) => {
     return apiService.getRequest(`v1/auth/projects/${projectId}/project-modules/${projectModuleId}/rfis/${rfiId}/report`).then((response) => {
         return response;

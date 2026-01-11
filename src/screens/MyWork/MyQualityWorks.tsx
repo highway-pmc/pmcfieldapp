@@ -37,6 +37,7 @@ import {
   fillRFIsChecklistForTestSample,
   generateTestSampleReport,
   getMyTests,
+  testSamplePreparedSubmit,
   updateTestSample,
 } from './actions';
 import LoadingAnimation from '../Common/LoadingAnimation';
@@ -110,6 +111,8 @@ import {thirdPartySampleTest} from './ReportSamples/Forms/QualityWorks/ThirdPart
 import CustomSelectDropdown from '../Common/CustomSelectDropdown';
 import {getThirdPartyTestSampleObject} from './ReportSamples/Forms/QualityWorks/ThirdPartyTest';
 import LinearGradient from 'react-native-linear-gradient';
+import SamplePrepModal from './ReportSamples/Forms/QualityWorks/SamplePrepModal';
+import TasksListingNew from './ReportSamples/Forms/QualityWorks/TasksListingNew';
 const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
   const workType = PROJECT_TYPE.QUALITY_WORK;
@@ -119,6 +122,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
     testSampleUpdated,
     generatedTestSampleReport,
     rfiChecklistSaved,
+    samplePrepared,
     loading,
     error,
   } = useSelector((state: any) => state.MyWorks);
@@ -242,16 +246,21 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
       }
       setCurrentSubTestTypeRFIsData([]);
       setCurrentSubTestTypeRFIsData(sampleDataTemp);
-      Alert.alert('Info', 'Sample updated');
+      showSnackbar('Sample updated', 'success');
       dispatch(clearMyWorksEvent());
     }
 
     if (rfiChecklistSaved) {
       setOpenPopup(false);
-      Alert.alert('RFIs checklist saved.');
+      showSnackbar('RFIs checklist saved.', 'success');
       setCurrentLevel(1);
       dispatch(clearMyWorksEvent());
       getMyWorksData(selectedValues?.type);
+    }
+
+    if (samplePrepared) {
+      setIsSamplePrepModalVisible(false);
+      showSnackbar('Sample prepared successfully', 'success');
     }
 
     if (error) {
@@ -1381,6 +1390,29 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
   const colors = CARD_COLORS_ARRAY;
   const imageMap: any = CARD_ICONS;
 
+  const [isSamplePrepModalVisible, setIsSamplePrepModalVisible] =
+    useState(false);
+  const [selectedTaskData, setSelectedTaskData]: any = useState(null);
+  const handleSubmitSamplePrepare = (samples: any) => {
+    console.log('Samples prepared payload:', samples);
+    // Handle the submitted data
+    dispatch(
+      testSamplePreparedSubmit({
+        projectId: loggedInUser.projectId,
+        testRfiId: selectedTaskData.testRfiData.id,
+        body: {
+          samplesData: samples,
+        },
+      }),
+    );
+  };
+
+  const onOpenSamplePreparePopup = (data: any) => {
+    setSelectedTaskData(data);
+    setIsSamplePrepModalVisible(true);
+    console.log('Received samples Data:', data);
+  };
+
   return (
     <View style={styles.Container}>
       {breadcrumbData.length ? (
@@ -1461,6 +1493,14 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
         </View>
       ) : null}
       <ScrollView showsVerticalScrollIndicator={false} style={styles.Height100}>
+        {isSamplePrepModalVisible && (
+          <SamplePrepModal
+            onClose={() => setIsSamplePrepModalVisible(false)}
+            selectedTaskData={selectedTaskData}
+            onSubmit={handleSubmitSamplePrepare}
+          />
+        )}
+
         {currentLevel === 0
           ? myTestsDataAll.map((testClassificationItem: any, index: number) => (
               <LinearGradient
@@ -1493,7 +1533,8 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
                 </TouchableOpacity>
               </LinearGradient>
             ))
-          : currentLevel === 1
+          : /*: 
+          currentLevel === 1
           ? myTestsData.map(
               (testClassificationItem: any, testClassificationIndex: number) =>
                 testClassificationItem.assignmentLevel === 1 ? (
@@ -1514,7 +1555,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
                     }>
                     <View style={styles.TaskDetails}>
                       <Text style={styles.HeadingText}>
-                        {testClassificationItem.name}
+                        {testClassificationItem.name}wwww
                       </Text>
                       <View style={{flexDirection: 'row'}}>
                         <Text style={styles.SubHeadingText}>Assigned:</Text>
@@ -1562,7 +1603,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
                           }>
                           <View style={styles.TaskDetails}>
                             <Text style={styles.HeadingText}>
-                              {testClassificationItem.name}
+                              {testClassificationItem.name}111
                             </Text>
                             <View style={{flexDirection: 'row'}}>
                               <Text style={styles.SubHeadingText}>
@@ -1574,7 +1615,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
                                     styles.SubHeadingText,
                                     styles.SubActive,
                                   ]}>
-                                  {workCateItem.name}
+                                  {workCateItem.name}222
                                 </Text>
                               </View>
                             </View>
@@ -1730,8 +1771,8 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
                       ) : null,
                   )
                 ),
-            )
-          : null}
+            )*/
+            null}
         {currentLevel === 2
           ? currentTestWorkCategoryData && currentTestWorkCategoryData.length
             ? currentTestWorkCategoryData
@@ -1753,7 +1794,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
                     </View>
                   </TouchableOpacity>
                 ))
-            : tasksListing(currentTestTypesData, searchText, getStyle, styles)
+            : null
           : null}
         {currentLevel === 3
           ? currentTestMaterialsData && currentTestMaterialsData.length
@@ -1776,202 +1817,17 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
                     </View>
                   </TouchableOpacity>
                 ))
-            : tasksListing(currentTestTypesData, searchText, getStyle, styles)
+            : null
           : null}
-        {currentLevel === 4
-          ? tasksListing(currentTestTypesData, searchText, getStyle, styles)
-          : null}
-        {currentLevel === 5 && currentSubTestTypesData?.length
-          ? currentSubTestTypesData
-              .filter((subTestType: any) => {
-                if (searchText && subTestType.name) {
-                  return subTestType.name
-                    .toLowerCase()
-                    .includes(searchText.toLowerCase());
-                } else {
-                  return true;
-                }
-              })
-              .map((item: any) => (
-                <TouchableOpacity
-                  style={getStyle(item)}
-                  onPress={() => onClickNested(6, item)}>
-                  <View style={styles.leftContainer}>
-                    <Text style={styles.HeadText}>{item.name}</Text>
-                  </View>
-                </TouchableOpacity>
-              ))
-          : ((currentTestMaterialData.materialType ===
-              TEST_MATERIALS_TYPES.CONCRETE &&
-              selectedTestSample?.type === TEST_TYPES.CUBE_TEST) ||
-              (currentTestMaterialData.materialType ===
-                TEST_MATERIALS_TYPES.CEMENT &&
-                selectedTestSample?.type === TEST_TYPES.COMPRESSIVE_STRENGTH) ||
-              ((currentTestMaterialData.materialType ===
-                TEST_MATERIALS_TYPES.DLC ||
-                currentTestMaterialData.materialType ===
-                  TEST_MATERIALS_TYPES.PQC) &&
-                selectedTestSample?.type === TEST_TYPES.CUBE_TEST)) &&
-            tasksListing(currentTestTypesData, searchText, getStyle, styles)}
-        {currentLevel === 6 ? (
-          currentSubTestTypeRFIsData?.length ? (
-            <ScrollView style={styles.Height100}>
-              {currentSubTestTypeRFIsData
-                .filter((testRFI: any) => {
-                  if (searchText && testRFI.name) {
-                    return testRFI.name
-                      .toLowerCase()
-                      .includes(searchText.toLowerCase());
-                  } else {
-                    return true;
-                  }
-                })
-                .map((item: any) => {
-                  if (
-                    currentTestMaterialData.materialType ===
-                      TEST_MATERIALS_TYPES.SMA ||
-                    currentTestMaterialData.materialType ===
-                      TEST_MATERIALS_TYPES.DBM_RAP_DBM ||
-                    currentTestMaterialData.materialType ===
-                      TEST_MATERIALS_TYPES.BC ||
-                    currentTestMaterialData.materialType ===
-                      TEST_MATERIALS_TYPES.COARSE_AGGREGATE_MICRO_SURFACING ||
-                    currentTestMaterialData.materialType ===
-                      TEST_MATERIALS_TYPES.BITUMEN ||
-                    currentTestMaterialData.materialType ===
-                      TEST_MATERIALS_TYPES.COARSE_AGGREGATE_DBM_BC ||
-                    currentTestMaterialData.materialType ===
-                      TEST_MATERIALS_TYPES.COARSE_AGGREGATE_SMA ||
-                    currentTestMaterialData.materialType ===
-                      TEST_MATERIALS_TYPES.EMULSION
-                  ) {
-                    return (
-                      <TouchableOpacity
-                        style={getStyle(item)}
-                        onPress={() => onClickBitumenTestSampleItem(item)}>
-                        <View style={styles.leftContainer}>
-                          <Text style={styles.HeadText}>{item.name}</Text>
-                        </View>
-                      </TouchableOpacity>
-                    );
-                  } else if (
-                    currentTestMaterialData.materialType ===
-                      TEST_MATERIALS_TYPES.SOIL ||
-                    currentTestMaterialData.materialType ===
-                      TEST_MATERIALS_TYPES.FLY_ASH
-                  ) {
-                    return (
-                      <TouchableOpacity
-                        style={getStyle(item)}
-                        onPress={() => onClickEarthworkSampleItem(item)}>
-                        <View style={styles.leftContainer}>
-                          <Text style={styles.HeadText}>{item.name}</Text>
-                        </View>
-                      </TouchableOpacity>
-                    );
-                  } else if (
-                    currentTestMaterialData.materialType ===
-                      TEST_MATERIALS_TYPES.GSB ||
-                    currentTestMaterialData.materialType ===
-                      TEST_MATERIALS_TYPES.CTSB
-                  ) {
-                    return (
-                      <TouchableOpacity
-                        style={getStyle(item)}
-                        onPress={() => onClickSubBaseSampleItem(item)}>
-                        <View style={styles.leftContainer}>
-                          <Text style={styles.HeadText}>{item.name}</Text>
-                        </View>
-                      </TouchableOpacity>
-                    );
-                  } else if (
-                    currentTestMaterialData.materialType ===
-                      TEST_MATERIALS_TYPES.WMM ||
-                    currentTestMaterialData.materialType ===
-                      TEST_MATERIALS_TYPES.FINE_AGGREGATE_WMM ||
-                    currentTestMaterialData.materialType ===
-                      TEST_MATERIALS_TYPES.COARSE_AGGREGATE_WMM
-                  ) {
-                    return (
-                      <TouchableOpacity
-                        style={getStyle(item)}
-                        onPress={() => onClickBaseSubBaseSampleItem(item)}>
-                        <View style={styles.leftContainer}>
-                          <Text style={styles.HeadText}>{item.name}</Text>
-                        </View>
-                      </TouchableOpacity>
-                    );
-                  } else {
-                    return (
-                      <View>
-                        <View
-                          style={
-                            item.sampleStatus !=
-                              TEST_SAMPLE_STATUS.PREPARED && {
-                              borderColor: '#000',
-                              borderWidth: 1,
-                              borderRadius: 10,
-                              marginBottom: 10,
-                            }
-                          }>
-                          <TouchableOpacity
-                            style={getStyle(item)}
-                            disabled={
-                              item.sampleStatus !=
-                                TEST_SAMPLE_STATUS.PREPARED ||
-                              item.rfiStatus === RFI_STATUS.APPROVED
-                            }
-                            onPress={() => onClickTestSampleItem(item)}>
-                            <View style={styles.leftContainer}>
-                              <Text style={styles.HeadText}>{item.name}</Text>
-                            </View>
-                          </TouchableOpacity>
-                          {item.sampleStatus != TEST_SAMPLE_STATUS.PREPARED ? (
-                            <View
-                              style={{
-                                flexDirection: 'row',
-                                alignContent: 'center',
-                                alignItems: 'center',
-                              }}>
-                              <View style={[styles.SectionStyle, {width: 140}]}>
-                                <CustomDropdownPicker
-                                  items={TEST_SAMPLE_STATUS_LIST}
-                                  rowItem={item}
-                                  tempProp={true}
-                                  fieldName={'sampleStatus'}
-                                />
-                              </View>
-                              <View style={{height: 45}}>
-                                <CustomCalendarPicker
-                                  rowItem={item}
-                                  tempProp={true}
-                                  fieldName={
-                                    'rfiDateTime'
-                                  }></CustomCalendarPicker>
-                              </View>
-                              <View style={{height: 45, width: 100}}>
-                                <TouchableOpacity
-                                  style={[
-                                    styles.SubmitSample,
-                                    styles.StartBorder,
-                                  ]}
-                                  onPress={() => onUpdateTestSample(item)}>
-                                  <View style={styles.leftContainer}>
-                                    <Text style={styles.HeadText}>Submit</Text>
-                                  </View>
-                                </TouchableOpacity>
-                              </View>
-                            </View>
-                          ) : null}
-                        </View>
-                      </View>
-                    );
-                  }
-                })}
-            </ScrollView>
-          ) : (
-            <Text>Sample/RFI not found.</Text>
-          ) //tasksListing()
+        {currentLevel === 4 ? (
+          <TasksListingNew
+            currentTestTypesData={currentTestTypesData}
+            searchText={searchText}
+            getStyle={getStyle}
+            styles={styles}
+            onOpenSamplePreparePopup={onOpenSamplePreparePopup}
+            testClassificationData={selectedValues}
+          />
         ) : null}
         {/* No Data Found */}
         {!loading && !myTestsDataAll.length ? (
@@ -1989,7 +1845,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
         ) : null}
       </ScrollView>
 
-      <Modal
+      {/* <Modal
         animationType="fade"
         transparent={true}
         visible={openPopup}
@@ -2119,7 +1975,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
             </View>
           </View>
         </View>
-      </Modal>
+      </Modal> */}
 
       <LoadingAnimation loading={loading}></LoadingAnimation>
     </View>

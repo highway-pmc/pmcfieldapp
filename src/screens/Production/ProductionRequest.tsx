@@ -42,8 +42,10 @@ const statusType = [
   },
   {status: MATERIAL_REQUEST_STATUS.REJECTED, statusText: 'Rejected'},
 ];
-
-const ProductionRequest = () => {
+interface ProductionRequestProps {
+  equipmentId?: string;
+}
+const ProductionRequest = ({equipmentId}: ProductionRequestProps) => {
   const navigation = useNavigation<any>();
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
@@ -74,6 +76,7 @@ const ProductionRequest = () => {
         projectId: loggedInUser.projectId,
         type: 'production',
         requestType: '',
+        testEquipmentId: equipmentId || '',
       }),
     );
   };
@@ -85,6 +88,12 @@ const ProductionRequest = () => {
     }
   }, [isFocused]);
 
+  useEffect(() => {
+    return () => {
+      dispatch(clearMaterialRequest());
+    };
+  }, []);
+  
   useEffect(() => {
     setInventoryRequests([]);
     if (getMeterialRequestToFormData?.length) {

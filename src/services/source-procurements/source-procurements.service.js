@@ -55,18 +55,17 @@ export const getMeterialRequestToFormApi = async (
   projectId,
   type,
   requestType,
+  testEquipmentId,
 ) => {
   console.log('-Suyash--!!!', projectId, type, requestType);
   console.log(
-    `v1/auth/projects/${projectId}/material-requests?requestTo=${type}&requestType=${requestType}`,
+    `v1/auth/projects/${projectId}/material-requests?requestTo=${type}&requestType=${requestType}&testEquipmentId=${testEquipmentId}`,
   );
   return apiService
     .getRequest(
-      `v1/auth/projects/${projectId}/material-requests?requestTo=${type}&requestType=${requestType}`,
+      `v1/auth/projects/${projectId}/material-requests?requestTo=${type}&requestType=${requestType}&testEquipmentId=${testEquipmentId}`,
     )
     .then(response => {
-      console.log('---!!!', response);
-
       return response;
     })
     .catch(err => {

@@ -11,7 +11,20 @@ import {
   editEquipmentFormInfoApi,
   generateEquipmentReportApi,
   generateEquipmentCalibrationReportApi,
+  getPlantsApi,
 } from '../../../../services/equipment/equipment.service';
+
+function* getPlantsList({payload}) {
+  try {
+    const response = yield getPlantsApi(payload.projectId);
+    yield put({type: 'GET_PLANTS_LIST_SUCCESS', response});
+  } catch (error) {
+    yield put({
+      type: 'GET_PLANTS_LIST_FAILURE',
+      error: error.message,
+    });
+  }
+}
 
 function* getEquipmentMasterData() {
   try {
@@ -237,4 +250,5 @@ export default function* equipmentCalibrationScreenSaga() {
     editEquipmentsCalibrationInfo,
   );
   yield takeLatest('EDIT_EQUIPMENTS_FORM_INFO_REQUEST', editEquipmentsInfo);
+  yield takeLatest('GET_PLANTS_LIST_REQUEST', getPlantsList);
 }

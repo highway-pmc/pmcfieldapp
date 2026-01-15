@@ -81,6 +81,7 @@ const sourceApprovalsState = {
   sourceByStatusData: null,
   putSourceApprovalData: null,
   postAddSourceData: null,
+  plants: null,
   error: null,
 };
 
@@ -102,6 +103,7 @@ const meterialRequestFormState = {
   patchDispatchRequestData: null,
   dispatchProductionRequest: null,
   uploadingBatchData: null,
+  getMeterialRequestByRfiData: null,
   error: null,
 };
 
@@ -1401,6 +1403,26 @@ const MyWorkReducer = (state = myWorksState, action) => {
         error: action.error,
         loading: false,
       };
+    case 'TEST_SAMPLE_PREPARED_SUBMIT_REQUEST':
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case 'TEST_SAMPLE_PREPARED_SUBMIT_SUCCESS':
+      return {
+        ...state,
+        samplePrepared: action.response,
+        error: null,
+        loading: false,
+      };
+    case 'TEST_SAMPLE_PREPARED_SUBMIT_FAILURE':
+      return {
+        ...state,
+        samplePrepared: null,
+        error: action.error,
+        loading: false,
+      };
     case 'CLEAR_MY_WORKS':
       return {
         ...state,
@@ -1410,6 +1432,7 @@ const MyWorkReducer = (state = myWorksState, action) => {
         rfiChecklistSaved: null,
         testSampleUpdated: null,
         generatedTestSampleReport: null,
+        samplePrepared: null,
         error: null,
         loading: false,
       };
@@ -2405,6 +2428,26 @@ const EquimentCalibrationReducer = (state = sourceApprovalsState, action) => {
         error: action.error,
         loading: false,
       };
+    case 'GET_PLANTS_LIST_REQUEST':
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case 'GET_PLANTS_LIST_SUCCESS':
+      return {
+        ...state,
+        plants: action.response,
+        error: null,
+        loading: false,
+      };
+    case 'GET_PLANTS_LIST_FAILURE':
+      return {
+        ...state,
+        plants: null,
+        error: action.error,
+        loading: false,
+      };
     case 'CLEAR_EQUIPMENTS_FORM_DATA_REQUEST':
       return {
         ...state,
@@ -2448,7 +2491,6 @@ const ProcurementsReducer = (state = procurementsState, action) => {
         loading: false,
       };
 
-
     case PROCUREMENTS.GET_ALL_PROCUREMENTS_REQUEST:
       return {
         ...state,
@@ -2470,8 +2512,7 @@ const ProcurementsReducer = (state = procurementsState, action) => {
         loading: false,
       };
 
-
-      case PROCUREMENTS.GET_PATCH_PROCUREMENTS_REQUEST:
+    case PROCUREMENTS.GET_PATCH_PROCUREMENTS_REQUEST:
       return {
         ...state,
         error: null,
@@ -2842,6 +2883,26 @@ const MeterialRequestFormReducer = (
         error: action.error,
         loading: false,
       };
+    case METERIAL_REQUEST.GET_MATERIAL_REQUEST_BY_RFI:
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case METERIAL_REQUEST.GET_MATERIAL_REQUEST_BY_RFI_SUCCESS:
+      return {
+        ...state,
+        getMeterialRequestByRfiData: action.response,
+        error: null,
+        loading: false,
+      };
+    case METERIAL_REQUEST.GET_MATERIAL_REQUEST_BY_RFI_FAILURE:
+      return {
+        ...state,
+        getMeterialRequestByRfiData: null,
+        error: action.error,
+        loading: false,
+      };
     case METERIAL_REQUEST.CLEAR_SUBMIT_MATERIAL_FORM_REQUEST:
       return {
         ...state,
@@ -2851,9 +2912,7 @@ const MeterialRequestFormReducer = (
         patchMeterialRequestStatusData: null,
         patchDispatchRequestData: null,
         uploadingBatchData: null,
-        error: action.error,
         error: null,
-        loading: true,
       };
     default:
       return state;

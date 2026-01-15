@@ -38,6 +38,7 @@ import {
   putVendorFormApi,
   deleteVendorFormApi,
   getMeterialRequestFormApi,
+  getMeterialRequestByRfiApi,
   postMeterialRequestFormApi,
   getMeterialRequestToFormApi,
   patchMeterialRequestStatusApi,
@@ -527,9 +528,7 @@ function* getProcurements({payload}) {
 
 function* getAllProcurements({payload}) {
   try {
-    const response = yield getAllProcurementsApi(
-      payload.projectId,
-    );
+    const response = yield getAllProcurementsApi(payload.projectId);
     yield put({type: PROCUREMENTS.GET_ALL_PROCUREMENTS_SUCCESS, response});
   } catch (error) {
     yield put({
@@ -544,7 +543,7 @@ function* patchProcurements({payload}) {
     const response = yield patchProcurementsApi(
       payload.projectId,
       payload.id,
-      payload.body
+      payload.body,
     );
     yield put({type: PROCUREMENTS.GET_PATCH_PROCUREMENTS_SUCCESS, response});
   } catch (error) {
@@ -688,6 +687,24 @@ function* getMeterialRequestForm({payload}) {
   }
 }
 
+function* getMeterialRequestByRfi({payload}) {
+  try {
+    const response = yield getMeterialRequestByRfiApi(
+      payload.projectId,
+      payload.id,
+    );
+    yield put({
+      type: METERIAL_REQUEST.GET_MATERIAL_REQUEST_BY_RFI_SUCCESS,
+      response,
+    });
+  } catch (error) {
+    yield put({
+      type: METERIAL_REQUEST.GET_MATERIAL_REQUEST_BY_RFI_FAILURE,
+      error: error.message,
+    });
+  }
+}
+
 function* postMeterialRequestForm({payload}) {
   try {
     const response = yield postMeterialRequestFormApi(
@@ -708,10 +725,12 @@ function* postMeterialRequestForm({payload}) {
 
 function* getMeterialRequestToForm({payload}) {
   try {
+    console.log('===payload saga===', payload);
     const response = yield getMeterialRequestToFormApi(
       payload.projectId,
       payload.type,
       payload.requestType,
+      payload.testEquipmentId,
     );
     yield put({
       type: METERIAL_REQUEST.GET_MATERIAL_REQUEST_TO_SUCCESS,
@@ -857,6 +876,11 @@ export default function* testAssignmentScreenSaga() {
   );
 
   yield takeLatest(
+    METERIAL_REQUEST.GET_MATERIAL_REQUEST_BY_RFI,
+    getMeterialRequestByRfi,
+  );
+
+  yield takeLatest(
     METERIAL_REQUEST.GET_MATERIAL_REQUEST_TO,
     getMeterialRequestToForm,
   );
@@ -930,8 +954,14 @@ export default function* testAssignmentScreenSaga() {
     deleteSourceDetail,
   );
   yield takeLatest(PROCUREMENTS.GET_PROCUREMENTS_REQUEST, getProcurements);
-  yield takeLatest(PROCUREMENTS.GET_ALL_PROCUREMENTS_REQUEST, getAllProcurements);
-  yield takeLatest(PROCUREMENTS.GET_PATCH_PROCUREMENTS_REQUEST, patchProcurements);
+  yield takeLatest(
+    PROCUREMENTS.GET_ALL_PROCUREMENTS_REQUEST,
+    getAllProcurements,
+  );
+  yield takeLatest(
+    PROCUREMENTS.GET_PATCH_PROCUREMENTS_REQUEST,
+    patchProcurements,
+  );
   yield takeLatest(PROCUREMENTS.ADD_PROCUREMENT_REQUEST, addProcurement);
   yield takeLatest(PROCUREMENTS.ADD_PURCHASE_REQUEST, addPurchase);
   yield takeLatest(PROCUREMENTS.UPDATE_PROCUREMENT_REQUEST, updateProcurement);

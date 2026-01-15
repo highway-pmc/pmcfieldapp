@@ -202,3 +202,15 @@ export const getEquipmentCalibrationListInfoApi = async (
       throw new Error(errorMessge);
     });
 };
+
+export const getPlantsApi = async projectId => {
+  return apiService
+    .getRequest(`v1/auth/projects/${projectId}/plants`)
+    .then(response => {
+      return response;
+    })
+    .catch(err => {
+      const errorMessge = err.message || 'Unable to get Plants.';
+      throw new Error(errorMessge);
+    });
+};

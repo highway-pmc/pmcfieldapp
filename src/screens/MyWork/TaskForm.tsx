@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   NativeEventEmitter,
   ActivityIndicator,
+  RefreshControl,
 } from 'react-native';
 import React, {useEffect, useState, useRef, useMemo} from 'react';
 import {useIsFocused} from '@react-navigation/native';
@@ -16,7 +17,7 @@ import {
   getInspectionChecklist,
   clearFormDetails,
   saveRfiFormData,
-  saveRfiFormDataClear, // Import the new action
+  saveRfiFormDataClear,
 } from './actions';
 import {
   updatedRFIs,
@@ -50,6 +51,7 @@ const TaskForm = ({route, navigation, taskData, isReadOnlyRFI}: any) => {
     route && route.params ? route.params.isReadOnlyRFI : 'false';
   const taskInfo = taskFromRoute || taskData || {};
   const isFocused = useIsFocused();
+
   const dispatch = useDispatch();
   useEffect(() => {
     if (taskInfo) {
@@ -80,6 +82,7 @@ const TaskForm = ({route, navigation, taskData, isReadOnlyRFI}: any) => {
   const RFI_ID = taskInfo.rfiData?._id ?? taskInfo._id;
   const status = taskInfo.rfiData?.rfiStatus ?? taskInfo.rfiStatus;
   const CHECKLIST_NAME = taskInfo.taskId.name;
+  const isCorrectionRequest = status === RFI_STATUS.CORRECTION_REQUEST;
 
   //const CHECKLIST_NAME = 'well-sinking';
   const stateSetters = {
@@ -128,9 +131,23 @@ const TaskForm = ({route, navigation, taskData, isReadOnlyRFI}: any) => {
     return prepareMaterialConsumption;
   }, [prepareMaterialConsumption]);
   //const CHECKLIST_NAME = 'torquing';
-  const [activeTab, setActiveTab] = useState(TABS.INFORMATION);
+  const [activeTab, setActiveTab] = useState(
+    isCorrectionRequest ? TABS.INSPECTION : TABS.INFORMATION,
+  );
   const [isSaving, setIsSaving] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    fetchChecklist();
+  }, []);
+
+  useEffect(() => {
+    if (!loading) {
+      setRefreshing(false);
+    }
+  }, [loading]);
 
   const fetchChecklist = () => {
     dispatch(
@@ -161,8 +178,8 @@ const TaskForm = ({route, navigation, taskData, isReadOnlyRFI}: any) => {
     };
   }, [isFocused, dispatch]);
   const handleMaterialSubmitSuccess = () => {
-    // Trigger the form save logic, which also calls fetchChecklist on success (as per your existing code)
-    handleSave();
+    // Refresh the form data after material submission
+    fetchChecklist();
   };
   // 2. Initialize state with saved data after fetch
   useEffect(() => {
@@ -416,47 +433,52 @@ const TaskForm = ({route, navigation, taskData, isReadOnlyRFI}: any) => {
     return (
       <>
         {/* INFORMATION TAB */}
-        <View
-          style={{
-            display: activeTab === TABS.INFORMATION ? 'flex' : 'none',
-            flex: 1,
-          }}>
-          {projectInfoSection ||
-          materialConsumptionSection ||
-          prepareMaterialConsumption ? (
-            <InformationTab
-              ref={informationRef}
-              projectInfoSection={projectInfoSection}
-              materialConsumptionSection={materialConsumptionSection}
-              prepareMaterialConsumption={memoizedMaterialData}
-              isMaterialRequested={isMaterialRequested}
-              projectInfoData={projectInfoData}
-              rfiId={RFI_ID}
-              onMaterialSubmitSuccess={handleMaterialSubmitSuccess}
-              onProjectInfoChange={(fieldId, newValue) =>
-                handleUniversalValueChange(
-                  'projectInfoSection',
-                  fieldId,
-                  newValue,
-                )
-              }
-              materialConsumptionData={materialConsumptionData}
-              onMaterialConsumptionChange={(fieldId, newValue) =>
-                handleUniversalValueChange(
-                  'materialConsumptionSection',
-                  fieldId,
-                  newValue,
-                )
-              }
-            />
-          ) : (
-            <View style={styles.centered}>
-              <Text style={styles.statusText}>
-                Project info data is not available.
-              </Text>
-            </View>
-          )}
-        </View>
+
+        {!isCorrectionRequest && (
+          <View
+            style={{
+              display: activeTab === TABS.INFORMATION ? 'flex' : 'none',
+              flex: 1,
+            }}>
+            {projectInfoSection ||
+            materialConsumptionSection ||
+            prepareMaterialConsumption ? (
+              <InformationTab
+                ref={informationRef}
+                projectInfoSection={projectInfoSection}
+                materialConsumptionSection={materialConsumptionSection}
+                prepareMaterialConsumption={memoizedMaterialData}
+                isMaterialRequested={isMaterialRequested}
+                projectInfoData={projectInfoData}
+                rfiId={RFI_ID}
+                taskId={taskInfo.taskId}
+                readOnly={isReadOnlyFromRoute}
+                onMaterialSubmitSuccess={handleMaterialSubmitSuccess}
+                onProjectInfoChange={(fieldId, newValue) =>
+                  handleUniversalValueChange(
+                    'projectInfoSection',
+                    fieldId,
+                    newValue,
+                  )
+                }
+                materialConsumptionData={materialConsumptionData}
+                onMaterialConsumptionChange={(fieldId, newValue) =>
+                  handleUniversalValueChange(
+                    'materialConsumptionSection',
+                    fieldId,
+                    newValue,
+                  )
+                }
+              />
+            ) : (
+              <View style={styles.centered}>
+                <Text style={styles.statusText}>
+                  Project info data is not available.
+                </Text>
+              </View>
+            )}
+          </View>
+        )}
 
         {/* INSPECTION TAB */}
         <View
@@ -492,16 +514,9 @@ const TaskForm = ({route, navigation, taskData, isReadOnlyRFI}: any) => {
             display: activeTab === TABS.TASK_DETAILS ? 'flex' : 'none',
             flex: 1,
           }}>
-          {/* <TaskDetailsTabPreTensioningOfWires
-            formData={taskDetails || null}
-            globalFormData={taskDetailsData}
-            onGlobalValueChange={(fieldId, newValue) =>
-              handleUniversalValueChange('taskDetails', fieldId, newValue)
-            }
-          /> */}
           <TaskDetailsTab
             ref={taskDetailsRef}
-            formData={taskDetails || null}
+            formData={taskDetails}
             header={taskDetailHeader || null}
             globalFormData={taskDetailsData}
             onGlobalValueChange={(fieldId, newValue) =>
@@ -519,21 +534,22 @@ const TaskForm = ({route, navigation, taskData, isReadOnlyRFI}: any) => {
     <SafeAreaView style={styles.container}>
       {/* Tab Bar for navigation */}
       <View style={styles.tabBar}>
-        <TouchableOpacity
-          style={[
-            styles.tabItem,
-            activeTab === TABS.INFORMATION && styles.activeTab,
-          ]}
-          onPress={() => switchTab(TABS.INFORMATION)}>
-          <Text
+        {!isCorrectionRequest && (
+          <TouchableOpacity
             style={[
-              styles.tabText,
-              activeTab === TABS.INFORMATION && styles.activeTabText,
-            ]}>
-            {TABS.INFORMATION}
-          </Text>
-        </TouchableOpacity>
-
+              styles.tabItem,
+              activeTab === TABS.INFORMATION && styles.activeTab,
+            ]}
+            onPress={() => switchTab(TABS.INFORMATION)}>
+            <Text
+              style={[
+                styles.tabText,
+                activeTab === TABS.INFORMATION && styles.activeTabText,
+              ]}>
+              {TABS.INFORMATION}
+            </Text>
+          </TouchableOpacity>
+        )}
         {/* INSPECTION Tab */}
         <TouchableOpacity
           style={[
@@ -551,24 +567,30 @@ const TaskForm = ({route, navigation, taskData, isReadOnlyRFI}: any) => {
         </TouchableOpacity>
 
         {/* TASK DETAILS Tab */}
-        <TouchableOpacity
-          style={[
-            styles.tabItem,
-            activeTab === TABS.TASK_DETAILS && styles.activeTab,
-          ]}
-          onPress={() => switchTab(TABS.TASK_DETAILS)}>
-          <Text
+        {(taskDetails || taskDetailHeader) && (
+          <TouchableOpacity
             style={[
-              styles.tabText,
-              activeTab === TABS.TASK_DETAILS && styles.activeTabText,
-            ]}>
-            {TABS.TASK_DETAILS}
-          </Text>
-        </TouchableOpacity>
+              styles.tabItem,
+              activeTab === TABS.TASK_DETAILS && styles.activeTab,
+            ]}
+            onPress={() => switchTab(TABS.TASK_DETAILS)}>
+            <Text
+              style={[
+                styles.tabText,
+                activeTab === TABS.TASK_DETAILS && styles.activeTabText,
+              ]}>
+              {TABS.TASK_DETAILS}
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
 
       {/* Scrollable Content Area */}
-      <ScrollView style={styles.contentContainer}>
+      <ScrollView
+        style={styles.contentContainer}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         {renderTabContent()}
         <View style={styles.scrollViewPadding} />
       </ScrollView>
@@ -607,7 +629,11 @@ const TaskForm = ({route, navigation, taskData, isReadOnlyRFI}: any) => {
             onPress={() => onRFIAction(RFI_STATUS.REJECTED)}>
             <Text style={styles.submitButtonText}>Reject</Text>
           </TouchableOpacity>
-
+          <TouchableOpacity
+            style={[styles.button, styles.correctionButton]}
+            onPress={() => onRFIAction(RFI_STATUS.CORRECTION_REQUEST)}>
+            <Text style={styles.submitButtonText}>Request Correction</Text>
+          </TouchableOpacity>
           <TouchableOpacity
             style={[styles.button, styles.submitButton]}
             onPress={() => onRFIAction(RFI_STATUS.APPROVED)}>
@@ -718,6 +744,9 @@ const styles = StyleSheet.create({
   },
   rejectButton: {
     backgroundColor: '#E53935',
+  },
+  correctionButton: {
+    backgroundColor: '#F57C00',
   },
   saveButtonText: {
     color: '#5A2AAF',

@@ -93,8 +93,10 @@ export default function SourceApprovalForm({
 
   // Form state management
   const [workCategory, setWorkCategory] = useState<string>('');
+  const [workCategoryType, setWorkCategoryType] = useState<string>('');
   const [workCategoryId, setWorkCategoryId] = useState<string>('');
   const [materialName, setMaterialName] = useState<string>('');
+  const [testMaterialType, setTestMaterialType] = useState<string>('');
   const [testMaterialId, setTestMaterialId] = useState<string>('');
   const [materialCategory, setMaterialCategory] = useState<string>('');
   const [sourceName, setSourceName] = useState<string>('');
@@ -153,6 +155,7 @@ export default function SourceApprovalForm({
       unitValue = materialData?.materialUnit || '';
       setTestMaterialId(materialData?._id);
       setWorkCategoryId(materialData?.testWorkCategoryId);
+      setTestMaterialType(materialData?.materialType);
       console.log('Test data', materialData);
     }
 
@@ -166,6 +169,20 @@ export default function SourceApprovalForm({
     processedData,
     testWorkCategoriesData,
   ]);
+
+  const handleWorkCategoryChange = (selectedCategory: string) => {
+    setWorkCategory(selectedCategory);
+    if (selectedCategory) {
+      const categoryData = testWorkCategoriesData.find(
+        (cat: any) => cat.name === selectedCategory,
+      );
+      if (categoryData) {
+        setWorkCategoryType(categoryData.type);
+      }
+    } else {
+      setWorkCategoryType('');
+    }
+  };
 
   const [specificationsFile, setSpecificationsFile] = useState<any>(null);
   const [vendorCredentialsFile, setVendorCredentialsFile] = useState<any>(null);
@@ -227,11 +244,8 @@ export default function SourceApprovalForm({
     const formData = new FormData();
 
     formData.append('testWorkCategoryId', workCategoryId[0]);
-    formData.append(
-      'testMaterialType',
-      materialName.toLowerCase().replace(/\s+/g, '-'),
-    );
-    formData.append('testWorkCategoryType', workCategory);
+    formData.append('testMaterialType', testMaterialType);
+    formData.append('testWorkCategoryType', workCategoryType);
     formData.append('vendorId', selectedVendorId?._id || '');
     formData.append('materialCategory', materialCategory || 'N/A');
     formData.append('name', sourceName);
@@ -278,7 +292,6 @@ export default function SourceApprovalForm({
       setIsSubmitting(false);
       if (postAddSourceData) {
         showSnackbar('Source Approval details submitted!', 'success');
-        // Reset form state
         setWorkCategory('');
         setMaterialName('');
         setMaterialCategory('');
@@ -322,7 +335,7 @@ export default function SourceApprovalForm({
             })),
           ]}
           value={workCategory}
-          onChange={setWorkCategory}
+          onChange={handleWorkCategoryChange}
         />
         <DropdownPicker
           label="Material Name*"
@@ -357,21 +370,6 @@ export default function SourceApprovalForm({
             maxLength={50}
           />
         </View>
-
-        {/* {showSourceProposedFor && (
-          <DropdownPicker
-            label="Source Proposed for"
-            items={[
-              {label: 'Select Proposed Use', value: ''},
-              ...sourceProposedForOptions.map(opt => ({
-                label: opt,
-                value: opt,
-              })),
-            ]}
-            value={sourceProposedFor}
-            onChange={setSourceProposedFor}
-          />
-        )} */}
 
         <View>
           <Text style={styles.label}>Source Proposed For:</Text>

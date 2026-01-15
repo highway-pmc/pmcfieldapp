@@ -12,6 +12,18 @@ export const getMeterialRequestFormApi = async (projectId, id) => {
     });
 };
 
+export const getMeterialRequestByRfiApi = async (projectId, id) => {
+  return apiService
+    .getRequest(`v1/auth/projects/${projectId}/rfi/material-requests/${id}`)
+    .then(response => {
+      return response;
+    })
+    .catch(err => {
+      const errorMessge = err?.message || 'Unable to get material request.';
+      throw new Error(errorMessge);
+    });
+};
+
 export const postUploadBatchSlipApi = async (projectId, id, body) => {
   return apiService
     .postRequest(
@@ -43,18 +55,17 @@ export const getMeterialRequestToFormApi = async (
   projectId,
   type,
   requestType,
+  testEquipmentId,
 ) => {
   console.log('-Suyash--!!!', projectId, type, requestType);
   console.log(
-    `v1/auth/projects/${projectId}/material-requests?requestTo=${type}&requestType=${requestType}`,
+    `v1/auth/projects/${projectId}/material-requests?requestTo=${type}&requestType=${requestType}&testEquipmentId=${testEquipmentId}`,
   );
   return apiService
     .getRequest(
-      `v1/auth/projects/${projectId}/material-requests?requestTo=${type}&requestType=${requestType}`,
+      `v1/auth/projects/${projectId}/material-requests?requestTo=${type}&requestType=${requestType}&testEquipmentId=${testEquipmentId}`,
     )
     .then(response => {
-      console.log('---!!!', response);
-
       return response;
     })
     .catch(err => {
@@ -456,14 +467,9 @@ export const getProcurementsApi = async (
     });
 };
 
-
-export const getAllProcurementsApi = async (
-  projectId
-) => {
+export const getAllProcurementsApi = async projectId => {
   return apiService
-    .getRequest(
-      `v1/auth/projects/${projectId}/procurements`,
-    )
+    .getRequest(`v1/auth/projects/${projectId}/procurements`)
     .then(response => {
       return response;
     })
@@ -472,7 +478,6 @@ export const getAllProcurementsApi = async (
       throw new Error(errorMessge);
     });
 };
-
 
 export const patchProcurementsApi = async (projectId, id, body) => {
   console.log('patch---!!!', projectId, id, body);
@@ -488,7 +493,7 @@ export const patchProcurementsApi = async (projectId, id, body) => {
       const errorMessge = err?.message || 'Unable to Approve status.';
       throw new Error(errorMessge);
     });
-}
+};
 
 export const addProcurementApi = async (
   projectId,

@@ -10,6 +10,8 @@ interface InformationTabProps {
   materialConsumptionSection: any;
   prepareMaterialConsumption: any;
   rfiId: string;
+  taskId: string;
+  readOnly: boolean;
   isMaterialRequested: boolean;
   onMaterialSubmitSuccess?: () => void;
   projectInfoData: Record<string, any>;
@@ -31,6 +33,8 @@ const InformationTab = forwardRef<DynamicFormRef, InformationTabProps>(
       isMaterialRequested,
       onMaterialSubmitSuccess,
       rfiId,
+      taskId,
+      readOnly,
     },
     ref,
   ) => {
@@ -40,10 +44,12 @@ const InformationTab = forwardRef<DynamicFormRef, InformationTabProps>(
     // Use useImperativeHandle to expose the combined logic to the outside world (TaskForm)
     useEffect(() => {
       if (materialConsumptionSection) {
-        // console.log(
-        //   'Material Consumption Section:',
-        //   JSON.stringify(materialConsumptionSection),
-        // );
+        console.log(
+          'Material Consumption Section:',
+          JSON.stringify(materialConsumptionSection),
+        );
+        console.log('readOnly', readOnly);
+        console.log('isMaterialRequested:', isMaterialRequested);
       }
     });
     useImperativeHandle(ref, () => ({
@@ -87,28 +93,34 @@ const InformationTab = forwardRef<DynamicFormRef, InformationTabProps>(
       <ScrollView contentContainerStyle={styles.tabContent}>
         {/* Render Project Info Section, passing state and setter */}
         {projectInfoSection && (
-          <DynamicForm
-            ref={projectInfoRef}
-            formData={projectInfoSection}
-            globalFormData={projectInfoData}
-            onGlobalValueChange={onProjectInfoChange}
-          />
+          <View>
+            <DynamicForm
+              ref={projectInfoRef}
+              formData={projectInfoSection}
+              globalFormData={projectInfoData}
+              onGlobalValueChange={onProjectInfoChange}
+            />
+          </View>
         )}
-
-        {/* Render Material Consumption Section, passing state and setter */}
-        {materialConsumptionSection && isMaterialRequested ? (
-          <DynamicForm
-            ref={materialConsumptionRef}
-            formData={materialConsumptionSection}
-            globalFormData={materialConsumptionData}
-            onGlobalValueChange={onMaterialConsumptionChange}
-          />
-        ) : (
-          <MaterialConsumptionForm
-            materialData={prepareMaterialConsumption}
-            rfiId={rfiId}
-            onSubmissionSuccess={onMaterialSubmitSuccess}
-          />
+        {materialConsumptionData && isMaterialRequested && !readOnly && (
+          <View>
+            <DynamicForm
+              ref={materialConsumptionRef}
+              formData={materialConsumptionSection}
+              globalFormData={materialConsumptionData}
+              onGlobalValueChange={onMaterialConsumptionChange}
+            />
+          </View>
+        )}
+        {!isMaterialRequested && !readOnly && (
+          <View>
+            <MaterialConsumptionForm
+              materialData={prepareMaterialConsumption}
+              rfiId={rfiId}
+              taskId={taskId}
+              onSubmissionSuccess={onMaterialSubmitSuccess}
+            />
+          </View>
         )}
       </ScrollView>
     );

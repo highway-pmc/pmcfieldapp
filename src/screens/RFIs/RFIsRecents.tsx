@@ -9324,10 +9324,13 @@ const RFIsRecents = (props: any) => {
               <TouchableOpacity
                 onPress={() => {
                   console.log('Selected RFI Item:', item);
-                  navigation.navigate('TaskForm', {
-                    taskData: item,
-                    isReadOnlyRFI: true,
-                  });
+                  if (props.rfiType === RFIs_TYPE.GENERATE) {
+                  } else {
+                    navigation.navigate('TaskForm', {
+                      taskData: item,
+                      isReadOnlyRFI: true,
+                    });
+                  }
                   //onSelectRFI(item);
                 }}>
                 <LinearGradient

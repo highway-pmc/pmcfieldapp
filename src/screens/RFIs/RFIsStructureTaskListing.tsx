@@ -43,11 +43,14 @@ import DropDownPicker from 'react-native-dropdown-picker';
 
 import LinearGradient from 'react-native-linear-gradient';
 import {getWorkTypeColors} from '../Common/CommonConstantsTypes';
+import { useSnackbar } from '../../context/SnackbarContext';
+
 const RFIsStructureTaskListing = (props: any) => {
   const loggedInUser = useSelector((state: any) => state.Auth.userInfo);
   //const userCategory = PROJECT_TYPE.STRUCTURE_WORK;
   const userCategory = props.projectType;
   const taskCategory = props.taskCategory;
+  const {showSnackbar} = useSnackbar();
 
   const workTypeColors = getWorkTypeColors(userCategory);
   // const rfiType = props.rfiType;
@@ -116,6 +119,9 @@ const RFIsStructureTaskListing = (props: any) => {
     }
     if (taskUsers) {
       setTaskUsersData(taskUsers);
+    }
+    if (error) {
+      showSnackbar(error, 'error');
     }
   }, [rfisTasks, taskUsers, error]);
 
@@ -595,7 +601,7 @@ const RFIsStructureTaskListing = (props: any) => {
 
   const onGenerateRFI = () => {
     if (selectedTaskData.rfiData && selectedTaskData.rfiData._id) {
-      Alert.alert('Info', 'RFI generated already.');
+      showSnackbar('RFI generated already.', 'info');
       return;
     }
     const reqData = {
@@ -626,7 +632,7 @@ const RFIsStructureTaskListing = (props: any) => {
 
   useEffect(() => {
     if (rfiGenerated) {
-      Alert.alert('Success', 'RFI generated');
+      showSnackbar('RFI generated.', 'success');
       selectedTaskData.rfiData = rfiGenerated;
       delete selectedTaskData.formRFIDate;
       delete selectedTaskData.formRFITime;
@@ -832,6 +838,7 @@ const RFIsStructureTaskListing = (props: any) => {
                       updateLayout(index);
                     }}
                     onGenerateRFI={() => onGenerateRFI()}
+                    showSnackbar={showSnackbar}
                   />
                 ))
           : null}
@@ -874,6 +881,7 @@ const RFIsStructureTaskListing = (props: any) => {
                       updateLayout(index);
                     }}
                     onGenerateRFI={() => onGenerateRFI()}
+                    showSnackbar={showSnackbar}
                   />
                 ))
           : null}
@@ -896,6 +904,7 @@ const RFIsStructureTaskListing = (props: any) => {
                     updateLayout(index);
                   }}
                   onGenerateRFI={() => onGenerateRFI()}
+                  showSnackbar={showSnackbar}
                 />
               ))
           : null}
@@ -924,10 +933,12 @@ const ExpanbableComponent = ({
   item,
   onClickFunction,
   onGenerateRFI,
+  showSnackbar,
 }: {
   item: any;
   onClickFunction: any;
   onGenerateRFI: any;
+  showSnackbar: any;
 }) => {
   const [layoutHeight, setLayoutHeight] = useState(0);
   const [rfiDate, setRFIDate] = useState('');
@@ -957,7 +968,7 @@ const ExpanbableComponent = ({
 
   const onGenerate = () => {
     if (!rfiDate) {
-      Alert.alert('Error', 'RFI Date is required.');
+      showSnackbar('RFI Date is required.', 'error');
       return false;
     }
     item.formRFIDate = rfiDate;

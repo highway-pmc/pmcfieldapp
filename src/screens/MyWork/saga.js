@@ -1,6 +1,6 @@
 
 import { put, takeLatest } from 'redux-saga/effects';
-import { getMyTestsData, getMyWorksData } from '../../services/my-works/myworks.service';
+import { checkAccessRightsApi, getMyTestsData, getMyWorksData } from '../../services/my-works/myworks.service';
 import { fillRFIsDataChecklist, fillRFIsDataChecklistForSampleTest, generateTestSampleReportApi, getRFIDataByWaId, testSamplePreparedSubmitApi, updateTestSampleAPi } from '../../services/rfi/rfis.service';
 
 function* getMyWorks({ payload }) {
@@ -50,10 +50,19 @@ function* testSamplePreparedSubmit({ payload }) {
 
 function* getMyTests({ payload }) {
     try {
-        const response = yield (getMyTestsData(payload.projectId, payload.workType, payload.selectedType));
+        const response = yield (getMyTestsData(payload.projectId, payload.workType, payload.selectedType, payload.hasAccess));
         yield put({ type: "GET_MY_TESTS_SUCCESS", response });
     } catch (error) {
         yield put({ type: "GET_MY_TESTS_FAILURE", error: error.message });
+    }
+}
+
+function* checkAccessRights({ payload }) {
+    try {
+        const response = yield (checkAccessRightsApi(payload.projectId, payload.workType, payload.selectedType));
+        yield put({ type: "CHECK_ACCESS_RIGHTS_SUCCESS", response });
+    } catch (error) {
+        yield put({ type: "CHECK_ACCESS_RIGHTS_FAILURE", error: error.message });
     }
 }
 
@@ -78,6 +87,7 @@ function* generateTestSampleReport({ payload }) {
 export default function* myWorksScreenSaga() {
     yield takeLatest("GET_MY_WORKS_REQUEST", getMyWorks);
     yield takeLatest("GET_MY_TESTS_REQUEST", getMyTests);
+    yield takeLatest("CHECK_ACCESS_RIGHTS_REQUEST", checkAccessRights);
     yield takeLatest("GET_RFI_BY_WA_ID_REQUEST", getRFIByWaId);
     yield takeLatest("FILL_RFI_CHECK_LIST_REQUEST", fillRFIsChecklist);
     yield takeLatest("TEST_SAMPLE_FILL_RFI_CHECK_LIST_REQUEST", fillRFIsChecklistForSampleTest);

@@ -6,6 +6,7 @@ import {
   SOURCE_APPROVALS,
   VENDOR_FORM,
 } from '../screens/ManageUsers/QualityWorks/constants';
+import { checkAccessRights } from '../screens/MyWork/actions';
 
 const initialState = {
   loading: false,
@@ -1363,6 +1364,39 @@ const MyWorkReducer = (state = myWorksState, action) => {
         error: action.error,
         loading: false,
       };
+    case 'CHECK_ACCESS_RIGHTS_REQUEST':
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case 'CHECK_ACCESS_RIGHTS_SUCCESS':
+      return {
+        ...state,
+        checkAccessRightsReponse: action.response,
+        error: null,
+        loading: false,
+      };
+    case 'CHECK_ACCESS_RIGHTS_FAILURE':
+      return {
+        ...state,
+        error: action.error,
+        loading: false,
+      };
+    case 'GET_MY_TESTS_SUCCESS':
+      return {
+        ...state,
+        myTests: action.response,
+        error: null,
+        loading: false,
+      };
+    case 'GET_MY_TESTS_FAILURE':
+      return {
+        ...state,
+        rfiData: null,
+        error: action.error,
+        loading: false,
+      };
     case 'UPDATE_TEST_SAMPLE_REQUEST':
       return {
         ...state,
@@ -1433,6 +1467,7 @@ const MyWorkReducer = (state = myWorksState, action) => {
         testSampleUpdated: null,
         generatedTestSampleReport: null,
         samplePrepared: null,
+        checkAccessRightsReponse: null,
         error: null,
         loading: false,
       };

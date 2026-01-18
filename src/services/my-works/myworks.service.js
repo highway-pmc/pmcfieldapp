@@ -20,3 +20,13 @@ export const getMyTestsData = async (projectId, workType, selectedType) => {
         throw new Error(errorMessge);
     });
 }
+
+export const checkAccessRightsApi = async (projectId, workType, selectedType) => {
+    console.log(`========== v1/auth/projects/${projectId}/users/${workType}/check-access?type=${selectedType}`);
+    return apiService.getRequest(`v1/auth/projects/${projectId}/users/${workType}/check-access?type=${selectedType}`).then((response) => {
+        return response;
+    }).catch((err) => {
+        const errorMessge = err.message || 'Unable to check access rights.';
+        throw new Error(errorMessge);
+    });
+}

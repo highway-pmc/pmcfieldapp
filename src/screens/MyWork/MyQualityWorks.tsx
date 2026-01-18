@@ -33,6 +33,7 @@ import {
 } from '../../constants/constants';
 import {useDispatch, useSelector} from 'react-redux';
 import {
+  checkAccessRights,
   clearMyWorksEvent,
   fillRFIsChecklistForTestSample,
   generateTestSampleReport,
@@ -123,6 +124,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
     generatedTestSampleReport,
     rfiChecklistSaved,
     samplePrepared,
+    checkAccessRightsReponse,
     loading,
     error,
   } = useSelector((state: any) => state.MyWorks);
@@ -194,20 +196,29 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
   const handleApprovalType = (selectedOption: any) => {
     setSelectedValues(selectedOption);
 
-    if (isTestInventoryClassification(selectedOption.type)) {
-      // navigation.navigate('SelectTestWorkCategory', {
-      //   testClassificationId: item.id,
-      //   testClassificationName: item.name,
-      //   testClassificationType: item.type,
-      //   testWorkCategoriesData: item.testWorkCategoriesData,
-      //   workType: workType,
-      // });
-      //navigation.navigate('TestDetailsScreen');
-      navigation.navigate('SourceHome');
-      return;
-    }
+    // if (isTestInventoryClassification(selectedOption.type)) {
+    //   // navigation.navigate('SelectTestWorkCategory', {
+    //   //   testClassificationId: item.id,
+    //   //   testClassificationName: item.name,
+    //   //   testClassificationType: item.type,
+    //   //   testWorkCategoriesData: item.testWorkCategoriesData,
+    //   //   workType: workType,
+    //   // });
+    //   //navigation.navigate('TestDetailsScreen');
+    //   navigation.navigate('SourceHome');
+    //   return;
+    // }
 
-    getMyWorksData(selectedOption?.type);
+    //getMyWorksData(selectedOption?.type);
+    dispatch(clearMyWorksEvent());
+    
+    dispatch(
+      checkAccessRights({
+        projectId: loggedInUser.projectId,
+        workType: workType,
+        selectedType: selectedOption?.type,
+      })
+    );
     console.log('selectedOption', selectedOption);
   };
 
@@ -215,12 +226,13 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
     // getMyWorksData(selectedValues?.type);
   }, [selectedValues]);
 
-  const getMyWorksData = (selectedType: any) => {
+  const getMyWorksData = (selectedType: any, hasAccess = '') => {
     dispatch(
       getMyTests({
         projectId: loggedInUser.projectId,
         workType: workType,
         selectedType: selectedType || '',
+        hasAccess: hasAccess,
       }),
     );
   };
@@ -232,8 +244,17 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
       if (myTests.length > 0) {
         onMyTestClick(myTests[0]);
       }
+      return;
     }
-  }, [myTests]);
+    if (checkAccessRightsReponse) {
+      console.log('checkAccessRightsReponse==========', checkAccessRightsReponse);
+      if (checkAccessRightsReponse.hasAccess) {
+        getMyWorksData(selectedValues?.type);
+      } else {
+        showSnackbar('You do not have permission to access this.', 'info');
+      }
+    }
+  }, [myTests, checkAccessRightsReponse]);
 
   useEffect(() => {
     if (testSampleUpdated) {
@@ -261,12 +282,17 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
     if (samplePrepared) {
       setIsSamplePrepModalVisible(false);
       showSnackbar('Sample prepared successfully', 'success');
+      const selectedTaskData1: any = {...selectedTaskData};
+      selectedTaskData1.samplePrepared = true;
+      setSelectedTaskData(selectedTaskData1);
+      console.log('selectedTaskData==========', selectedTaskData);
+      console.log('samplePrepared============', samplePrepared);
     }
 
     if (error) {
       showSnackbar(error || 'Something went wrong. Please try again.', 'error');
     }
-  }, [testSampleUpdated, rfiChecklistSaved, error]);
+  }, [testSampleUpdated, rfiChecklistSaved, samplePrepared, error]);
 
   // unmount
   useEffect(
@@ -286,7 +312,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
   );
 
   const onMyTestClick = (item: any) => {
-    //setCurrentLevel(1);
+    //setCurrentLevel(1); 
     if (isTestInventoryClassification(item.type)) {
       // navigation.navigate('SelectTestWorkCategory', {
       //   testClassificationId: item.id,
@@ -300,6 +326,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
       return;
     }
     if (isMixDesignClassification(item.type)) {
+      console.log('Mix Design Navigation', item);
       navigation.navigate('MixDesignListing', {
         testClassificationId: item.id,
         testClassificationName: item.name,

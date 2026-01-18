@@ -15,7 +15,6 @@ import {
 import CalendarPicker from '../../../../../components/UI/CalenderPicker';
 import Input from '../../../../../components/UI/Input';
 import LinearGradient from 'react-native-linear-gradient';
-import SamplePrepModal from './SamplePrepModal';
 
 export const CustomDropdownPicker = ({
   items,

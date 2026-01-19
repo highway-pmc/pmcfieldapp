@@ -217,7 +217,7 @@ const RFIsRecents = (props: any) => {
     //   setLayoutHeight(DEFAULT_COMPONENT_HEIGHT)
     // }
   };
-  const calculatedHeight = height * 0.6;
+  const calculatedHeight = height * 0.72;
   // const getHours = () => {
   //   let hours = [];
   //   for (let i = 1; i <= 12; i++) {
@@ -9338,18 +9338,21 @@ const RFIsRecents = (props: any) => {
                   start={{x: 0, y: 0}}
                   end={{x: 1, y: 0}}
                   style={styles.recentWorkCard}>
+                    <View style={[styles.heading]}>
+                      <Text style={styles.headingText}>{item.workAssignmentData.projectModule?.name}</Text>
+                    </View>
                   <View
                     style={[
                       styles.taskCategory,
-                      {flexWrap: 'wrap', paddingBottom: 10},
+                      {flexWrap: 'wrap', paddingBottom: 7},
                     ]}>
-                    <Text style={styles.subHead}>
+                    {/* <Text style={styles.subHead}>
                       {item.workAssignmentData.projectModule?.name}
                     </Text>
                     <Image
                       style={styles.ArrowIcon}
                       source={require('../../images/right-arrow-icon.png')}
-                    />
+                    /> */}
                     <Text style={styles.subHead}>
                       {item.workAssignmentData.segmentId?.name}
                     </Text>
@@ -9358,31 +9361,37 @@ const RFIsRecents = (props: any) => {
                       source={require('../../images/right-arrow-icon.png')}
                     />
                     {item.workAssignmentData.componentId ? (
-                      <View style={styles.taskCategory}>
+                      // <View style={styles.taskCategory}>
                         <Text style={styles.subHead}>
                           {item.workAssignmentData.componentId?.name}
                         </Text>
-                        <Image
-                          style={styles.ArrowIcon}
-                          source={require('../../images/right-arrow-icon.png')}
-                        />
-                      </View>
+                      // </View>
                     ) : null}
 
                     {item.workAssignmentData.subComponentId ? (
-                      <View style={styles.taskCategory}>
-                        <Text style={styles.subHead}>
-                          {item.workAssignmentData.subComponentId?.name}
-                        </Text>
+                      // <View style={styles.taskCategory}>
+                      <>
                         <Image
                           style={styles.ArrowIcon}
                           source={require('../../images/right-arrow-icon.png')}
                         />
-                      </View>
+                        <Text style={styles.subHead}>
+                          {item.workAssignmentData.subComponentId?.name}
+                        </Text>
+                      </>
+                      // </View>
                     ) : null}
-                    <Text style={[styles.subHead, styles.taskCount]}>
-                      {item.workAssignmentData.taskId?.displayName}
-                    </Text>
+                     {item.workAssignmentData.taskId ? (
+                      <>
+                        <Image
+                            style={styles.ArrowIcon}
+                            source={require('../../images/right-arrow-icon.png')}
+                          />
+                        <Text style={[styles.subHead, styles.taskCount]}>
+                          {item.workAssignmentData.taskId?.displayName}
+                        </Text>
+                      </>
+                     ) : null}
                   </View>
                   <View
                     style={{
@@ -9391,7 +9400,8 @@ const RFIsRecents = (props: any) => {
                       alignItems: 'center',
                       backgroundColor: '#FFF',
                       paddingHorizontal: 10,
-                      paddingVertical: 7,
+                      paddingTop: 4,
+                      paddingBottom: 6,
                       borderRadius: 4,
                       borderWidth: 1,
                       borderColor: '#B6C4F5',
@@ -9721,37 +9731,55 @@ const styles = StyleSheet.create({
   recentWorkCard: {
     backgroundColor: '#fff',
     borderRadius: 6,
-    paddingHorizontal: 15,
-    paddingVertical: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 7,
     borderWidth: 1,
     borderColor: '#CDD6F6',
     borderStyle: 'solid',
     marginBottom: 15,
     elevation: 1,
   },
+  horzontalContainer: {
+    paddingLeft: 7,
+    paddingVertical: 5,
+  },
   taskCategory: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
     gap: 2,
-    marginBottom: 2,
+    // backgroundColor: '#f3f1fe',
+    // borderRadius: 10,
+    // paddingHorizontal: 10,
+    // paddingVertical: 10,
   },
   subHead: {
-    color: '#150B3D',
-    fontSize: 14,
+    color: '#666',
+    fontSize: 10,
     fontWeight: '600',
+    backgroundColor: '#ffff',
+    paddingTop: 2,
+    paddingBottom: 1,
+    paddingLeft: 7,
+    paddingRight: 4,
+    borderRadius: 30,
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: '#dddddd',
+    marginBottom: 2,
+    // marginHorizontal: 3,
   },
   ArrowIcon: {
-    width: 18,
-    height: 18,
+    width: 16,
+    height: 16,
   },
   dateText: {
     color: '#150B3D',
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: '300',
   },
   subFontText: {
-    fontSize: 12,
+    fontSize: 10,
     fontWeight: '400',
   },
   footerButton: {
@@ -9938,6 +9966,14 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     height: 45,
   },
+  heading: {
+    marginBottom: 7,
+  },
+  headingText: {
+    fontSize: 14,
+    color: '#150B3D',
+    fontWeight: '600'
+  }
 });
 
 export default RFIsRecents;

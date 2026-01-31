@@ -726,12 +726,7 @@ function* postMeterialRequestForm({payload}) {
 function* getMeterialRequestToForm({payload}) {
   try {
     console.log('===payload saga===', payload);
-    const response = yield getMeterialRequestToFormApi(
-      payload.projectId,
-      payload.type,
-      payload.requestType,
-      payload.testEquipmentId,
-    );
+    const response = yield getMeterialRequestToFormApi(payload);
     yield put({
       type: METERIAL_REQUEST.GET_MATERIAL_REQUEST_TO_SUCCESS,
       response,

@@ -73,6 +73,7 @@ import ContingencyRequestComponent from '../../screens/Store/ContingencyRequestC
 import ProductionRequestFormComponent from '../../screens/Production/ProductionRequestFormComponent';
 import MaterialApprovalProduction from '../../screens/Production/MaterialApprovalProduction';
 import TaskForm from '../../screens/MyWork/TaskForm';
+import TestForm from '../../screens/ManageUsers/QualityWorks/FieldLabTest/TestForm';
 
 const Stack = createStackNavigator();
 
@@ -184,6 +185,11 @@ const MyQualityWorksStackNavigator = () => {
       <Stack.Screen
         name="MyQualityWorks"
         component={MyQualityWorks}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="TestForm"
+        component={TestForm}
         options={{headerShown: false}}
       />
       <Stack.Screen

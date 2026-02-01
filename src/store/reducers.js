@@ -5,6 +5,7 @@ import {
   PROCUREMENTS,
   SOURCE_APPROVALS,
   VENDOR_FORM,
+  TEST_RFIS_FORMS,
 } from '../screens/ManageUsers/QualityWorks/constants';
 
 const initialState = {
@@ -50,6 +51,12 @@ const testAssignmentState = {
   testTypes: null,
   error: null,
   loadingUsers: false,
+};
+
+const testRfisFormsState = {
+  loading: false,
+  testRfisForms: null,
+  error: null,
 };
 
 const myWorksState = {
@@ -2202,6 +2209,34 @@ const SourceApprovalsReducer = (state = sourceApprovalsState, action) => {
       return state;
   }
 };
+
+const TestRfisFormsReducer = (state = testRfisFormsState, action) => {
+  switch (action.type) {
+    case TEST_RFIS_FORMS.GET_TEST_RFIS_FORMS_REQUEST:
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case TEST_RFIS_FORMS.GET_TEST_RFIS_FORMS_SUCCESS:
+      return {
+        ...state,
+        testRfisForms: action.response,
+        error: null,
+        loading: false,
+      };
+    case TEST_RFIS_FORMS.GET_TEST_RFIS_FORMS_FAILURE:
+      return {
+        ...state,
+        testRfisForms: null,
+        error: action.error,
+        loading: false,
+      };
+    default:
+      return state;
+  }
+};
+
 const EquimentCalibrationReducer = (state = sourceApprovalsState, action) => {
   switch (action.type) {
     case 'GET_EQUIPMENTS_CALIBRATION_LISTING_REQUEST':
@@ -3021,6 +3056,7 @@ export const combinedReducers = combineReducers({
   ProjectInfo: ProjectInfoReducer,
   WorkAssignment: WorkAssignmentReducer,
   TestAssignment: TestAssignmentReducer,
+  TestRfisForms: TestRfisFormsReducer,
   MyWorks: MyWorkReducer,
   RFIs: RFIsReducer,
   Reports: RFIsReportsReducer,

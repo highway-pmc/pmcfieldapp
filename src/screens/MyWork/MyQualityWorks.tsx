@@ -1413,6 +1413,11 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
     console.log('Received samples Data:', data);
   };
 
+  const handleStartTest = (item: any) => {
+    console.log('Open test form', item);
+    navigation.navigate('TestForm', {taskData: item});
+  };
+
   return (
     <View style={styles.Container}>
       {breadcrumbData.length ? (
@@ -1827,6 +1832,7 @@ const MyQualityWork = ({route, navigation}: {route: any; navigation: any}) => {
             styles={styles}
             onOpenSamplePreparePopup={onOpenSamplePreparePopup}
             testClassificationData={selectedValues}
+            onStartTest={handleStartTest}
           />
         ) : null}
         {/* No Data Found */}

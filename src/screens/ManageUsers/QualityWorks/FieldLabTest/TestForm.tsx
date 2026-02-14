@@ -1,4 +1,3 @@
-// TestForm component for Quality Works Field Lab Test
 import {
   View,
   Text,
@@ -9,7 +8,7 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from 'react-native';
-import React, {useEffect, useState, useRef, useMemo} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {useIsFocused} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {getTestRfisForms} from '../actions';
@@ -17,12 +16,11 @@ import {useSnackbar} from '../../../../context/SnackbarContext';
 import DynamicForm, {
   DynamicFormRef,
 } from '../../../../components/Form/DynamicForm';
-//import DynamicForm, {DynamicFormRef} from '../../components/Form/DynamicForm';
 
 const TABS = {
   INFORMATION: 'Information',
-  OBSERVATION: 'Observation',
-  RESULT: 'Result',
+  INSPECTION: 'Inspection',
+  TASK_DETAILS: 'Task Details',
 };
 
 const TestForm = ({route, navigation}: any) => {
@@ -34,7 +32,6 @@ const TestForm = ({route, navigation}: any) => {
 
   const taskData = route.params?.taskData || {};
   const {testRfiData} = taskData;
-  const projectId = loggedInUser?.projectId;
   const testRfiId = testRfiData?.id;
 
   const {
@@ -44,13 +41,18 @@ const TestForm = ({route, navigation}: any) => {
   } = useSelector((state: any) => state.TestRfisForms);
 
   // Section-wise centralized state
-  const [generalInfoSection, setGeneralInfoSection] = useState<
+  const [informationData, setInformationData] = useState<Record<string, any>>(
+    {},
+  );
+  const [inspectionHeaderData, setInspectionHeaderData] = useState<
     Record<string, any>
   >({});
-  const [observationSection, setObservationSection] = useState<
+  const [inspectionCardData, setInspectionCardData] = useState<
     Record<string, any>
   >({});
-  const [resultSection, setResultSection] = useState<Record<string, any>>({});
+  const [taskDetailsData, setTaskDetailsData] = useState<Record<string, any>>(
+    {},
+  );
 
   const [activeTab, setActiveTab] = useState(TABS.INFORMATION);
   const [loading, setLoading] = useState(true);
@@ -59,13 +61,14 @@ const TestForm = ({route, navigation}: any) => {
 
   // Refs for DynamicForm components
   const informationRef = useRef<DynamicFormRef>(null);
-  const observationRef = useRef<DynamicFormRef>(null);
-  const resultRef = useRef<DynamicFormRef>(null);
+  const inspectionHeaderRef = useRef<DynamicFormRef>(null);
+  const inspectionCardRef = useRef<(DynamicFormRef | null)[]>([]);
 
   const stateSetters = {
-    generalInfoSection: setGeneralInfoSection,
-    observationSection: setObservationSection,
-    resultSection: setResultSection,
+    informationData: setInformationData,
+    inspectionHeaderData: setInspectionHeaderData,
+    inspectionCardData: setInspectionCardData,
+    taskDetailsData: setTaskDetailsData,
   };
 
   const handleUniversalValueChange = (
@@ -91,8 +94,11 @@ const TestForm = ({route, navigation}: any) => {
 
   useEffect(() => {
     if (testRfisForms) {
-      console.log('API call for getTestRfisForms successful:', testRfisForms);
-      setFormData(testRfisForms.data);
+      console.log(
+        'API call for getTestRfisForms successful:',
+        JSON.stringify(testRfisForms),
+      );
+      setFormData(testRfisForms);
       setLoading(false);
     } else if (error) {
       console.error('API call for getTestRfisForms failed:', error);
@@ -106,14 +112,13 @@ const TestForm = ({route, navigation}: any) => {
     let hasError = false;
 
     // Collect validation errors from DynamicForm refs
-    const refs = {
-      [TABS.INFORMATION]: informationRef.current,
-      [TABS.OBSERVATION]: observationRef.current,
-      [TABS.RESULT]: resultRef.current,
-    };
+    const refs = [
+      informationRef.current,
+      inspectionHeaderRef.current,
+      ...(inspectionCardRef.current || []),
+    ];
 
-    for (const tabName in refs) {
-      const ref = refs[tabName as keyof typeof refs];
+    refs.forEach(ref => {
       if (ref) {
         const {inputErrors} = ref.collectAllInputs();
         allErrors = {...allErrors, ...inputErrors};
@@ -121,22 +126,34 @@ const TestForm = ({route, navigation}: any) => {
           hasError = true;
         }
       }
-    }
+    });
 
     // Aggregate the centralized STATE DATA for the final payload
     const allInputs = {
-      generalInfoSection: generalInfoSection,
-      observationSection: observationSection,
-      resultSection: resultSection,
+      informationSections: informationData,
+      headerSection: inspectionHeaderData,
+      cardSection: inspectionCardData,
+      taskDetails: taskDetailsData,
     };
     return {allInputs, allErrors, hasError};
+  };
+
+  const handleSave = () => {
+    const {allInputs} = getFormDataFromTabs();
+    console.log('Save button payload:', JSON.stringify(allInputs, null, 2));
   };
 
   const handleSubmit = () => {
     if (isSubmitting || loading || apiLoading) return;
     const {allInputs, hasError, allErrors} = getFormDataFromTabs();
 
+    if (hasError) {
+      showSnackbar('Please fix validation errors.', 'error');
+      return;
+    }
+
     setIsSubmitting(true);
+    console.log('Submitting data:', JSON.stringify(allInputs, null, 2));
 
     // Simulate API call
     setTimeout(() => {
@@ -172,81 +189,96 @@ const TestForm = ({route, navigation}: any) => {
             display: activeTab === TABS.INFORMATION ? 'flex' : 'none',
             flex: 1,
           }}>
-          {formData.headerSection ? (
+          {formData.informationSections ? (
             <DynamicForm
               ref={informationRef}
+              formData={formData.informationSections}
+              globalFormData={informationData}
+              onGlobalValueChange={(fieldId, newValue) =>
+                handleUniversalValueChange('informationData', fieldId, newValue)
+              }
+            />
+          ) : (
+            <View style={styles.centered}>
+              <Text style={styles.statusText}>
+                Information section data is not available.
+              </Text>
+            </View>
+          )}
+        </View>
+
+        {/* INSPECTION TAB */}
+        <View
+          style={{
+            display: activeTab === TABS.INSPECTION ? 'flex' : 'none',
+            flex: 1,
+          }}>
+          {formData.headerSection && (
+            <DynamicForm
+              ref={inspectionHeaderRef}
               formData={formData.headerSection}
-              globalFormData={generalInfoSection}
+              globalFormData={inspectionHeaderData}
               onGlobalValueChange={(fieldId, newValue) =>
                 handleUniversalValueChange(
-                  'generalInfoSection',
+                  'inspectionHeaderData',
                   fieldId,
                   newValue,
                 )
               }
             />
-          ) : (
+          )}
+          {formData.cardSection &&
+            formData.cardSection.map((card: any, index: number) => (
+              <DynamicForm
+                key={index}
+                ref={(el: DynamicFormRef | null) => {
+                  inspectionCardRef.current[index] = el;
+                }}
+                formData={card}
+                globalFormData={inspectionCardData}
+                onGlobalValueChange={(fieldId, newValue) =>
+                  handleUniversalValueChange(
+                    'inspectionCardData',
+                    fieldId,
+                    newValue,
+                  )
+                }
+              />
+            ))}
+          {!formData.headerSection && !formData.cardSection && (
             <View style={styles.centered}>
               <Text style={styles.statusText}>
-                Header section data is not available.
+                Inspection data is not available.
               </Text>
             </View>
           )}
         </View>
 
-        {/* OBSERVATION TAB */}
+        {/* TASK DETAILS TAB */}
         <View
           style={{
-            display: activeTab === TABS.OBSERVATION ? 'flex' : 'none',
+            display: activeTab === TABS.TASK_DETAILS ? 'flex' : 'none',
             flex: 1,
           }}>
-          {formData.cardSection ? (
-            <DynamicForm
-              ref={observationRef}
-              formData={{
-                mainTitle: 'Observation',
-                sections: formData.cardSection,
-              }}
-              globalFormData={observationSection}
-              onGlobalValueChange={(fieldId, newValue) =>
-                handleUniversalValueChange(
-                  'observationSection',
-                  fieldId,
-                  newValue,
-                )
-              }
-            />
-          ) : (
-            <View style={styles.centered}>
-              <Text style={styles.statusText}>
-                Card section data is not available.
-              </Text>
+          <View style={styles.taskDetailsContainer}>
+            <Text style={styles.taskDetailTitle}>Task Details</Text>
+            <View style={styles.detailRow}>
+              <Text style={styles.detailLabel}>Task ID:</Text>
+              <Text style={styles.detailValue}>TSK-2024-001</Text>
             </View>
-          )}
-        </View>
-
-        {/* RESULT TAB */}
-        <View
-          style={{
-            display: activeTab === TABS.RESULT ? 'flex' : 'none',
-            flex: 1,
-          }}>
-          {formData.cardSection ? (
-            <DynamicForm
-              ref={resultRef}
-              formData={{mainTitle: 'Result', sections: formData.cardSection}}
-              globalFormData={resultSection}
-              onGlobalValueChange={(fieldId, newValue) =>
-                handleUniversalValueChange('resultSection', fieldId, newValue)
-              }
-            />
-          ) : (
-            <View style={styles.centered}>
-              <Text style={styles.statusText}>
-                Result section data is not available.
-              </Text>
+            <View style={styles.detailRow}>
+              <Text style={styles.detailLabel}>Assigned To:</Text>
+              <Text style={styles.detailValue}>John Doe</Text>
             </View>
-          )}
+            <View style={styles.detailRow}>
+              <Text style={styles.detailLabel}>Status:</Text>
+              <Text style={styles.detailValue}>In Progress</Text>
+            </View>
+            <View style={styles.detailRow}>
+              <Text style={styles.detailLabel}>Priority:</Text>
+              <Text style={styles.detailValue}>High</Text>
+            </View>
+          </View>
         </View>
       </>
     );
@@ -256,48 +288,20 @@ const TestForm = ({route, navigation}: any) => {
     <SafeAreaView style={styles.container}>
       {/* Tab Bar for navigation */}
       <View style={styles.tabBar}>
-        <TouchableOpacity
-          style={[
-            styles.tabItem,
-            activeTab === TABS.INFORMATION && styles.activeTab,
-          ]}
-          onPress={() => setActiveTab(TABS.INFORMATION)}>
-          <Text
-            style={[
-              styles.tabText,
-              activeTab === TABS.INFORMATION && styles.activeTabText,
-            ]}>
-            {TABS.INFORMATION}
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.tabItem,
-            activeTab === TABS.OBSERVATION && styles.activeTab,
-          ]}
-          onPress={() => setActiveTab(TABS.OBSERVATION)}>
-          <Text
-            style={[
-              styles.tabText,
-              activeTab === TABS.OBSERVATION && styles.activeTabText,
-            ]}>
-            {TABS.OBSERVATION}
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.tabItem,
-            activeTab === TABS.RESULT && styles.activeTab,
-          ]}
-          onPress={() => setActiveTab(TABS.RESULT)}>
-          <Text
-            style={[
-              styles.tabText,
-              activeTab === TABS.RESULT && styles.activeTabText,
-            ]}>
-            {TABS.RESULT}
-          </Text>
-        </TouchableOpacity>
+        {Object.values(TABS).map(tab => (
+          <TouchableOpacity
+            key={tab}
+            style={[styles.tabItem, activeTab === tab && styles.activeTab]}
+            onPress={() => setActiveTab(tab)}>
+            <Text
+              style={[
+                styles.tabText,
+                activeTab === tab && styles.activeTabText,
+              ]}>
+              {tab}
+            </Text>
+          </TouchableOpacity>
+        ))}
       </View>
 
       {/* Scrollable Content Area */}
@@ -306,8 +310,14 @@ const TestForm = ({route, navigation}: any) => {
         <View style={styles.scrollViewPadding} />
       </ScrollView>
 
-      {/* Submit Button */}
+      {/* Save and Submit Buttons */}
       <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={[styles.button, styles.saveButton]}
+          onPress={handleSave}
+          disabled={isSubmitting || loading || apiLoading}>
+          <Text style={styles.saveButtonText}>Save</Text>
+        </TouchableOpacity>
         <TouchableOpacity
           style={[styles.button, styles.submitButton]}
           onPress={handleSubmit}
@@ -399,6 +409,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginHorizontal: 8,
   },
+  saveButton: {
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#5A2AAF',
+  },
+  saveButtonText: {
+    color: '#5A2AAF',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
   submitButton: {
     backgroundColor: '#5A2AAF',
     borderWidth: 0,
@@ -407,6 +427,33 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 14,
     fontWeight: 'bold',
+  },
+  taskDetailsContainer: {
+    padding: 20,
+    backgroundColor: '#f9f9f9',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#eee',
+    margin: 10,
+  },
+  taskDetailTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 15,
+    color: '#333',
+  },
+  detailRow: {
+    flexDirection: 'row',
+    marginBottom: 10,
+  },
+  detailLabel: {
+    fontWeight: '600',
+    width: 100,
+    color: '#555',
+  },
+  detailValue: {
+    color: '#333',
+    flex: 1,
   },
 });
 

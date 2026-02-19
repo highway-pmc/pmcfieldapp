@@ -14,6 +14,7 @@ import {
   testMaterialsTestAssignToUsersApi,
   testTypesAssignToUsersApi,
   testWorkCategoryTestAssignToUsersApi,
+  getTestRfisFormsData,
 } from '../../../services/test-assignment/test-assignment.service';
 import {
   addProcurementApi,
@@ -56,6 +57,7 @@ import {
   PROCUREMENTS,
   SOURCE_APPROVALS,
   VENDOR_FORM,
+  TEST_RFIS_FORMS,
 } from './constants';
 function* getUserCategories() {
   try {
@@ -726,12 +728,7 @@ function* postMeterialRequestForm({payload}) {
 function* getMeterialRequestToForm({payload}) {
   try {
     console.log('===payload saga===', payload);
-    const response = yield getMeterialRequestToFormApi(
-      payload.projectId,
-      payload.type,
-      payload.requestType,
-      payload.testEquipmentId,
-    );
+    const response = yield getMeterialRequestToFormApi(payload);
     yield put({
       type: METERIAL_REQUEST.GET_MATERIAL_REQUEST_TO_SUCCESS,
       response,
@@ -821,6 +818,21 @@ function* postUploadBatchSlip({payload}) {
   }
 }
 
+function* getTestRfisForms({payload}) {
+  try {
+    const response = yield getTestRfisFormsData(
+      payload.projectId,
+      payload.testRfiId,
+    );
+    yield put({type: TEST_RFIS_FORMS.GET_TEST_RFIS_FORMS_SUCCESS, response});
+  } catch (error) {
+    yield put({
+      type: TEST_RFIS_FORMS.GET_TEST_RFIS_FORMS_FAILURE,
+      error: error.message,
+    });
+  }
+}
+
 export default function* testAssignmentScreenSaga() {
   yield takeLatest(VENDOR_FORM.POST_VENDOR_FORM_REQUEST, postVendorForm);
   yield takeLatest(VENDOR_FORM.GET_VENDOR_FORM_REQUEST, getVendorForm);
@@ -852,6 +864,7 @@ export default function* testAssignmentScreenSaga() {
     'TEST_TYPES_TEST_ASSIGNMENT_USERS_REQUEST',
     testTypesAssignToUsers,
   );
+  yield takeLatest('GET_TEST_RFIS_FORMS_REQUEST', getTestRfisForms);
   yield takeLatest(
     'GET_TEST_CLASSIFICATION_NEXT_LEVEL_REQUEST',
     getTestClassificationNextLevel,

@@ -2,8 +2,7 @@ const appConfig = {};
 
 //appConfig.API_URL = "https://api.highwaypmc.in"
 // appConfig.API_URL = 'https://client-auth.highwaypmc.in';
-appConfig.API_URL = 'http://10.188.50.184:4000';
-
+appConfig.API_URL = 'http://10.122.218.184:4000';
 //appConfig.API_URL = 'http://10.197.47.184:4000';
 //appConfig.API_URL = 'http://10.200.8.184:4000';
 appConfig.setUserInfo = userInfo => {

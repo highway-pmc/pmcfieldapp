@@ -51,28 +51,55 @@ export const postMeterialRequestFormApi = async (projectId, body) => {
     });
 };
 
-export const getMeterialRequestToFormApi = async (
-  projectId,
-  type,
-  requestType,
-  testEquipmentId,
-) => {
-  console.log('-Suyash--!!!', projectId, type, requestType);
-  console.log(
-    `v1/auth/projects/${projectId}/material-requests?requestTo=${type}&requestType=${requestType}&testEquipmentId=${testEquipmentId}`,
-  );
-  return apiService
-    .getRequest(
-      `v1/auth/projects/${projectId}/material-requests?requestTo=${type}&requestType=${requestType}&testEquipmentId=${testEquipmentId}`,
-    )
-    .then(response => {
-      return response;
-    })
-    .catch(err => {
-      const errorMessge = err?.message || 'Unable to add Vendor.';
-      throw new Error(errorMessge);
-    });
+export const getMeterialRequestToFormApi = async payload => {
+  const {
+    projectId,
+    type,
+    requestType,
+    testEquipmentId,
+    status,
+    fromDateTime,
+    toDateTime,
+  } = payload;
+  let url = `v1/auth/projects/${projectId}/material-requests?`;
+
+  if (type) {
+    url += `requestTo=${type}&`;
+  }
+
+  if (requestType) {
+    url += `requestType=${requestType}&`;
+  }
+
+  if (testEquipmentId) {
+    url += `testEquipmentId=${testEquipmentId}&`;
+  }
+
+  if (status && Array.isArray(status) && status.length > 0) {
+    url += status.map(s => `status=${s}`).join('&') + '&';
+  }
+
+  if (fromDateTime) {
+    url += `fromDateTime=${fromDateTime}&`;
+  }
+
+  if (toDateTime) {
+    url += `toDateTime=${toDateTime}&`;
+  }
+
+  // remove trailing &
+  url = url.endsWith('&') ? url.slice(0, -1) : url;
+
+  console.log(url);
+
+  try {
+    return await apiService.getRequest(url);
+  } catch (err) {
+    const errorMessge = err?.message || 'Unable to add Vendor.';
+    throw new Error(errorMessge);
+  }
 };
+
 
 export const patchMeterialRequestStatusApi = async (projectId, id, body) => {
   console.log('patch---!!!', projectId, id, body);

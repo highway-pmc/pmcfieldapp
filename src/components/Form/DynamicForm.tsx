@@ -18,18 +18,7 @@ import {
 import styles from './DynamicForm.styles';
 import {Section, InputItem, DynamicTestFormProps} from './DynamicForm.types';
 import {validateField} from './utils/formValidation';
-import {
-  subtract3Dec,
-  divide3Dec,
-  square3Dec,
-  addValues,
-  sqrt3Dec,
-  divide2Dec,
-  multiply2Dec,
-  subtractValues,
-  checkRange,
-  overallStatus,
-} from './utils/formula';
+import * as formulas from './utils/formula';
 import ExpandableSection from './SectionRenderers/ExpandableSection';
 import SectionContent from './SectionRenderers/SectionContent';
 
@@ -255,7 +244,9 @@ const reIndexSectionsAndData = (
 const DynamicForm = forwardRef<DynamicFormRef, DynamicFormProps>(
   ({formData, globalFormData, onGlobalValueChange}, ref) => {
     // Guard clause to prevent crash if formData is null or undefined
+
     if (!formData) {
+      console.warn('DynamicForm rendered without formData');
       return null;
     }
     const [isMainExpanded, setIsMainExpanded] = useState<boolean>(true);
@@ -347,44 +338,24 @@ const DynamicForm = forwardRef<DynamicFormRef, DynamicFormProps>(
       currentPrefix: string,
     ) => {
       try {
-        // 1. Helper Functions
-        const utils = {
-          subtract3Dec,
-          divide3Dec,
-          square3Dec,
-          sqrt3Dec,
-          addValues,
-          divide2Dec,
-          multiply2Dec,
-          subtractValues,
-          checkRange,
-          overallStatus,
-        };
+        // 1. Helper Functions — import all exported formula helpers
+        const utils = {...formulas};
 
         // 2. Build Execution Context
-        // We map the global state (scope) to variable names that the formula expects
         const executionContext: Record<string, any> = {...utils};
 
         Object.keys(scope).forEach(key => {
           const rawValue = scope[key];
-          // Ensure we work with numbers for calculation, treating empty strings as 0
           const numValue =
             rawValue === '' || rawValue === null || isNaN(Number(rawValue))
               ? 0
               : parseFloat(rawValue);
 
-          // A. Inject the raw global ID (e.g. "Specimen1_date")
           executionContext[key] = numValue;
 
-          // B. Inject Scoped Variables (e.g. "Specimen1_val_a" -> "val_a")
-          if (key.startsWith(currentPrefix)) {
+          if (currentPrefix && key.startsWith(currentPrefix)) {
             const strippedName = key.replace(currentPrefix, '');
-
-            // Inject exact match
             executionContext[strippedName] = numValue;
-
-            // C. Inject Normalized Match (Handle trailing underscore inconsistency)
-            // Fixes mismatch where ID is "...meter_f_" but formula uses "...meter_f"
             if (strippedName.endsWith('_')) {
               const noTrailingUnderscore = strippedName.slice(0, -1);
               executionContext[noTrailingUnderscore] = numValue;
@@ -396,16 +367,32 @@ const DynamicForm = forwardRef<DynamicFormRef, DynamicFormProps>(
         const args = Object.keys(executionContext);
         const values = Object.values(executionContext);
 
-        // Wrap formula in return statement if it's a simple expression
-        const sanitizedFormula =
-          formula.trim().includes('let ') || formula.trim().includes('const ')
-            ? formula
-            : `return ${formula}`;
+        let sanitizedFormula = formula;
+        const containsLetOrConst =
+          formula.trim().includes('let ') || formula.trim().includes('const ');
+        const containsReturn = /return[\s;]/.test(formula);
+
+        if (containsLetOrConst && !containsReturn) {
+          const declarations = [
+            ...formula.matchAll(/(?:let|const)\s+([a-zA-Z0-9_]+)/g),
+          ];
+          if (declarations.length > 0) {
+            const lastDeclaration = declarations[declarations.length - 1];
+            const varToReturn = lastDeclaration[1];
+            if (varToReturn) {
+              sanitizedFormula = `${formula}; return ${varToReturn};`;
+            }
+          }
+        } else if (!containsLetOrConst && !containsReturn) {
+          sanitizedFormula = `return ${formula}`;
+        }
 
         const runner = new Function(...args, sanitizedFormula);
         return runner(...values);
       } catch (err) {
-        console.warn('Calc Error:', err, formula);
+        console.log(
+          `[Calculation] Formula evaluation failed for prefix '${currentPrefix}'. Error: ${err}`,
+        );
         return null;
       }
     };
@@ -420,9 +407,10 @@ const DynamicForm = forwardRef<DynamicFormRef, DynamicFormProps>(
         [field.id]: newValue,
       };
 
-      // 2. Identify the Specimen Context (e.g., "Specimen1_")
-      // This ensures we don't calculate Specimen 2 based on Specimen 1's inputs
-      const prefixMatch = field.id.match(/Specimen\d+_/);
+      // 2. Identify the prefix of the field that changed.
+      const prefixMatch = field.id.match(
+        /^(Sample\d+_Specimen\d+_|Sample\d+_|Specimen\d+_)/,
+      );
       const currentPrefix = prefixMatch ? prefixMatch[0] : '';
 
       // 3. Recursive Recalculation Loop
@@ -432,15 +420,34 @@ const DynamicForm = forwardRef<DynamicFormRef, DynamicFormProps>(
             sec.items.forEach((item: any) => {
               // Check for calculated type AND logic to ensure we only calc relevant fields
               if (item.type === 'calculated' && item.formula) {
-                // Only calculate if the field belongs to the current Specimen OR is a global calc
-                if (
-                  item.id.startsWith(currentPrefix) ||
-                  !item.id.includes('Specimen')
-                ) {
+                const itemPrefixMatch = item.id.match(
+                  /^(Sample\d+_Specimen\d+_|Sample\d+_|Specimen\d+_)/,
+                );
+                const itemPrefix = itemPrefixMatch ? itemPrefixMatch[0] : '';
+
+                let shouldCalculate = false;
+                if (currentPrefix) {
+                  // Change occurred in a field with a prefix
+                  if (!itemPrefix) {
+                    // The calculated item is global
+                    shouldCalculate = true;
+                  } else if (currentPrefix.startsWith(itemPrefix)) {
+                    // The item is in the same or an ancestor scope
+                    shouldCalculate = true;
+                  }
+                } else {
+                  // Change occurred in a global field
+                  if (!itemPrefix) {
+                    // The calculated item is also global
+                    shouldCalculate = true;
+                  }
+                }
+
+                if (shouldCalculate) {
                   const result = evalFormula(
                     item.formula,
                     updatedData,
-                    currentPrefix,
+                    itemPrefix, // Pass the calculated item's own prefix
                   );
 
                   // Only update if result is valid and changed
@@ -449,6 +456,24 @@ const DynamicForm = forwardRef<DynamicFormRef, DynamicFormProps>(
                     result !== undefined &&
                     !isNaN(result)
                   ) {
+                    const sampleMatch = itemPrefix.match(/Sample(\d+)/);
+                    const specimenMatch = itemPrefix.match(/Specimen(\d+)/);
+
+                    const logData = {
+                      sample: sampleMatch ? `Sample ${sampleMatch[1]}` : 'N/A',
+                      specimen: specimenMatch
+                        ? `Specimen ${specimenMatch[1]}`
+                        : 'N/A',
+                      calculatedField: item.id,
+                      mappingKey: item.mappingkey,
+                      newValue: result,
+                      formulaUsed: item.formula,
+                    };
+                    console.log(
+                      '[Calculation]',
+                      JSON.stringify(logData, null, 2),
+                    );
+
                     // Update the local data scope for subsequent formulas in the chain
                     updatedData[item.id] = result;
                     // Update the UI

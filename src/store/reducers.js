@@ -58,6 +58,10 @@ const testRfisFormsState = {
   loading: false,
   testRfisForms: null,
   error: null,
+  saveLoading: false,
+  saveResponse: null,
+  submitLoading: false,
+  submitResponse: null,
 };
 
 const myWorksState = {
@@ -2266,6 +2270,46 @@ const TestRfisFormsReducer = (state = testRfisFormsState, action) => {
         testRfisForms: null,
         error: action.error,
         loading: false,
+      };
+    case TEST_RFIS_FORMS.SAVE_TEST_RFIS_FORMS_REQUEST:
+      return {
+        ...state,
+        error: null,
+        saveLoading: true,
+      };
+    case TEST_RFIS_FORMS.SAVE_TEST_RFIS_FORMS_SUCCESS:
+      return {
+        ...state,
+        saveResponse: action.response,
+        error: null,
+        saveLoading: false,
+      };
+    case TEST_RFIS_FORMS.SAVE_TEST_RFIS_FORMS_FAILURE:
+      return {
+        ...state,
+        saveResponse: null,
+        error: action.error,
+        saveLoading: false,
+      };
+    case TEST_RFIS_FORMS.SUBMIT_TEST_RFIS_FORMS_REQUEST:
+      return {
+        ...state,
+        error: null,
+        submitLoading: true,
+      };
+    case TEST_RFIS_FORMS.SUBMIT_TEST_RFIS_FORMS_SUCCESS:
+      return {
+        ...state,
+        submitResponse: action.response,
+        error: null,
+        submitLoading: false,
+      };
+    case TEST_RFIS_FORMS.SUBMIT_TEST_RFIS_FORMS_FAILURE:
+      return {
+        ...state,
+        submitResponse: null,
+        error: action.error,
+        submitLoading: false,
       };
     default:
       return state;

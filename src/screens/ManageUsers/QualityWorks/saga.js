@@ -15,6 +15,7 @@ import {
   testTypesAssignToUsersApi,
   testWorkCategoryTestAssignToUsersApi,
   getTestRfisFormsData,
+  saveOrSubmitTestRfisFormsData,
 } from '../../../services/test-assignment/test-assignment.service';
 import {
   addProcurementApi,
@@ -818,16 +819,64 @@ function* postUploadBatchSlip({payload}) {
   }
 }
 
-function* getTestRfisForms({payload}) {
+function* saveOrSubmitTestRfisForms({payload}) {
   try {
-    const response = yield getTestRfisFormsData(
+    const response = yield saveOrSubmitTestRfisFormsData(
       payload.projectId,
       payload.testRfiId,
+      payload.action,
+      payload.formData,
     );
-    yield put({type: TEST_RFIS_FORMS.GET_TEST_RFIS_FORMS_SUCCESS, response});
+    if (payload.action === 'save') {
+      yield put({type: TEST_RFIS_FORMS.SAVE_TEST_RFIS_FORMS_SUCCESS, response});
+    } else {
+      yield put({
+        type: TEST_RFIS_FORMS.SUBMIT_TEST_RFIS_FORMS_SUCCESS,
+        response,
+      });
+    }
+  } catch (error) {
+    if (payload.action === 'save') {
+      yield put({
+        type: TEST_RFIS_FORMS.SAVE_TEST_RFIS_FORMS_FAILURE,
+        error: error.message,
+      });
+    } else {
+      yield put({
+        type: TEST_RFIS_FORMS.SUBMIT_TEST_RFIS_FORMS_FAILURE,
+        error: error.message,
+      });
+    }
+  }
+}
+
+function* saveTestRfisForms({payload}) {
+  try {
+    const response = yield saveTestRfisFormsData(
+      payload.projectId,
+      payload.testRfiId,
+      payload.formData,
+    );
+    yield put({type: TEST_RFIS_FORMS.SAVE_TEST_RFIS_FORMS_SUCCESS, response});
   } catch (error) {
     yield put({
-      type: TEST_RFIS_FORMS.GET_TEST_RFIS_FORMS_FAILURE,
+      type: TEST_RFIS_FORMS.SAVE_TEST_RFIS_FORMS_FAILURE,
+      error: error.message,
+    });
+  }
+}
+
+function* submitTestRfisForms({payload}) {
+  try {
+    const response = yield submitTestRfisFormsData(
+      payload.projectId,
+      payload.testRfiId,
+      payload.formData,
+    );
+    yield put({type: TEST_RFIS_FORMS.SUBMIT_TEST_RFIS_FORMS_SUCCESS, response});
+  } catch (error) {
+    yield put({
+      type: TEST_RFIS_FORMS.SUBMIT_TEST_RFIS_FORMS_FAILURE,
       error: error.message,
     });
   }
@@ -865,6 +914,10 @@ export default function* testAssignmentScreenSaga() {
     testTypesAssignToUsers,
   );
   yield takeLatest('GET_TEST_RFIS_FORMS_REQUEST', getTestRfisForms);
+  yield takeLatest(
+    ['SAVE_TEST_RFIS_FORMS_REQUEST', 'SUBMIT_TEST_RFIS_FORMS_REQUEST'],
+    saveOrSubmitTestRfisForms,
+  );
   yield takeLatest(
     'GET_TEST_CLASSIFICATION_NEXT_LEVEL_REQUEST',
     getTestClassificationNextLevel,

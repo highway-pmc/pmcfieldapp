@@ -65,6 +65,14 @@ export const getTestRfisForms = payload => ({
   payload: payload,
 });
 
+export const saveOrSubmitTestRfisForm = payload => ({
+  type:
+    payload.action === 'save'
+      ? 'SAVE_TEST_RFIS_FORMS_REQUEST'
+      : 'SUBMIT_TEST_RFIS_FORMS_REQUEST',
+  payload: payload,
+});
+
 export const clearTestAssignmentData = () => ({
   type: 'CLEAR_TEST_ASSIGNMENT',
 });

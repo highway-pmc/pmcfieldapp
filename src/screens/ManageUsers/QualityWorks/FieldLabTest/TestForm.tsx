@@ -11,7 +11,7 @@ import {
 import React, {useEffect, useState, useRef} from 'react';
 import {useIsFocused} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
-import {getTestRfisForms} from '../actions';
+import {getTestRfisForms, saveOrSubmitTestRfisForm} from '../actions';
 import {useSnackbar} from '../../../../context/SnackbarContext';
 import DynamicForm, {
   DynamicFormRef,
@@ -38,6 +38,10 @@ const TestForm = ({route, navigation}: any) => {
     testRfisForms,
     loading: apiLoading,
     error,
+    saveLoading,
+    submitLoading,
+    saveResponse,
+    submitResponse,
   } = useSelector((state: any) => state.TestRfisForms);
 
   // Section-wise centralized state
@@ -107,6 +111,28 @@ const TestForm = ({route, navigation}: any) => {
     }
   }, [testRfisForms, error, showSnackbar]);
 
+  useEffect(() => {
+    if (saveResponse) {
+      console.log('Save successful:', saveResponse);
+      showSnackbar('Form saved successfully!', 'success');
+    } else if (error && saveLoading === false) {
+      console.error('Save failed:', error);
+      showSnackbar('Failed to save form', 'error');
+    }
+  }, [saveResponse, error, saveLoading, showSnackbar]);
+
+  useEffect(() => {
+    if (submitResponse) {
+      console.log('Submit successful:', submitResponse);
+      showSnackbar('Form submitted successfully!', 'success');
+      navigation.goBack();
+    } else if (error && submitLoading === false) {
+      console.error('Submit failed:', error);
+      showSnackbar('Failed to submit form', 'error');
+      setIsSubmitting(false);
+    }
+  }, [submitResponse, error, submitLoading, showSnackbar, navigation]);
+
   const getFormDataFromTabs = () => {
     let allErrors: Record<string, any> = {};
     let hasError = false;
@@ -141,6 +167,17 @@ const TestForm = ({route, navigation}: any) => {
   const handleSave = () => {
     const {allInputs} = getFormDataFromTabs();
     console.log('Save button payload:', JSON.stringify(allInputs, null, 2));
+    const projectId = loggedInUser?.projectId;
+    if (projectId && testRfiId) {
+      dispatch(
+        saveOrSubmitTestRfisForm({
+          projectId,
+          testRfiId,
+          action: 'save',
+          formData: allInputs,
+        }),
+      );
+    }
   };
 
   const handleSubmit = () => {
@@ -155,12 +192,17 @@ const TestForm = ({route, navigation}: any) => {
     setIsSubmitting(true);
     console.log('Submitting data:', JSON.stringify(allInputs, null, 2));
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubmitting(false);
-      showSnackbar('Test form submitted successfully!', 'success');
-      navigation.goBack();
-    }, 1000);
+    const projectId = loggedInUser?.projectId;
+    if (projectId && testRfiId) {
+      dispatch(
+        saveOrSubmitTestRfisForm({
+          projectId,
+          testRfiId,
+          action: 'submit',
+          formData: allInputs,
+        }),
+      );
+    }
   };
 
   const renderTabContent = () => {
@@ -315,14 +357,18 @@ const TestForm = ({route, navigation}: any) => {
         <TouchableOpacity
           style={[styles.button, styles.saveButton]}
           onPress={handleSave}
-          disabled={isSubmitting || loading || apiLoading}>
-          <Text style={styles.saveButtonText}>Save</Text>
+          disabled={isSubmitting || loading || apiLoading || saveLoading}>
+          {saveLoading ? (
+            <ActivityIndicator color="#5A2AAF" />
+          ) : (
+            <Text style={styles.saveButtonText}>Save</Text>
+          )}
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.button, styles.submitButton]}
           onPress={handleSubmit}
-          disabled={isSubmitting || loading || apiLoading}>
-          {isSubmitting ? (
+          disabled={isSubmitting || loading || apiLoading || submitLoading}>
+          {isSubmitting || submitLoading ? (
             <ActivityIndicator color="#FFFFFF" />
           ) : (
             <Text style={styles.submitButtonText}>Submit</Text>

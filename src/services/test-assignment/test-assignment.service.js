@@ -200,3 +200,26 @@ export const getTestRfisFormsData = async (projectId, testRfiId) => {
       throw new Error(errorMessge);
     });
 };
+
+export const saveOrSubmitTestRfisFormsData = async (
+  projectId,
+  testRfiId,
+  action,
+  formData,
+) => {
+  return apiService
+    .postRequest(
+      `v1/auth/projects/${projectId}/quality-works/${testRfiId}/save-data`,
+      {
+        action,
+        formData,
+      },
+    )
+    .then(response => {
+      return response;
+    })
+    .catch(err => {
+      const errorMessage = err.message || `Unable to ${action} test rfis form.`;
+      throw new Error(errorMessage);
+    });
+};

@@ -32,6 +32,7 @@ import {
 // --- Constants & Utilities ---
 import {
   HeaderItems,
+  MIX_DESIGN_DETAILS_DATA,
   SAMPLE_BY_LIST,
   TEST_CONDUCTED_BY_LIST,
 } from '../../constants/constants';
@@ -68,6 +69,7 @@ const MixDesign = ({navigation}: {navigation: any}) => {
   const [selectedMaterialType, setSelectedMaterialType] = useState<any>(null);
   const [selectedMaterialCategory, setSelectedMaterialCategory] =
     useState<any>('');
+  const [mixDesignDetails, setMixDesignDetails] = useState<any>({});
 
   const [materialsData, setMaterialsData] = useState<any[]>([]);
 
@@ -167,6 +169,53 @@ const MixDesign = ({navigation}: {navigation: any}) => {
     setMaterialsData(updatedMaterials);
   };
 
+  const handleMixDesignDetailsChange = (field: string, value: any) => {
+    setMixDesignDetails((prev: any) => ({...prev, [field]: value}));
+  };
+
+  const validateMixDesignDetails = () => {
+    const details = MIX_DESIGN_DETAILS_DATA.filter(
+      item =>
+        item.workCategory === selectedWorkCategory?.type &&
+        item.materialName === selectedMaterialType?.name?.toLowerCase(),
+    );
+
+    for (const detail of details) {
+      const value = mixDesignDetails[detail.variableName];
+      if (value === undefined || value === '') {
+        showSnackbar(`Please enter a value for ${detail.displayName}.`, 'error');
+        return false;
+      }
+
+      const numericValue = parseFloat(value);
+      if (isNaN(numericValue)) {
+        showSnackbar(`${detail.displayName} must be a number.`, 'error');
+        return false;
+      }
+
+      const { constraints } = detail;
+      if (constraints.min !== undefined && numericValue <= constraints.min) {
+        showSnackbar(`${detail.displayName} must be greater than ${constraints.min}.`, 'error');
+        return false;
+      }
+
+      if (constraints.max !== undefined && numericValue > constraints.max) {
+        showSnackbar(`${detail.displayName} must be less than or equal to ${constraints.max}.`, 'error');
+        return false;
+      }
+
+      if (constraints.decimal !== undefined) {
+        const decimalPart = (value.split('.')[1] || '').length;
+        if (decimalPart > constraints.decimal) {
+          showSnackbar(`${detail.displayName} can have at most ${constraints.decimal} decimal places.`, 'error');
+          return false;
+        }
+      }
+    }
+
+    return true;
+  };
+
   const onSubmit = () => {
     // --- Validation ---
     if (!mixDesignShortName.trim()) {
@@ -191,6 +240,10 @@ const MixDesign = ({navigation}: {navigation: any}) => {
     if (!totalQty) {
       showSnackbar('Please enter the total quantity.', 'error');
       return;
+    }
+
+    if (!validateMixDesignDetails()) {
+        return;
     }
 
     // --- Payload Preparation ---
@@ -225,6 +278,7 @@ const MixDesign = ({navigation}: {navigation: any}) => {
         conductedBy: mixDesignConductedBy,
         mixDesignData: {
           materialsData: finalMaterialsData,
+          mixDesignDetails: mixDesignDetails,
         },
       },
     };
@@ -235,6 +289,37 @@ const MixDesign = ({navigation}: {navigation: any}) => {
   };
 
   // --- Render Methods ---
+
+  const renderMixDesignDetails = () => {
+    const details = MIX_DESIGN_DETAILS_DATA.filter(
+      item =>
+        item.workCategory === selectedWorkCategory?.type &&
+        item.materialName === selectedMaterialType?.name?.toLowerCase(),
+    );
+
+    if (details.length === 0) {
+      return null;
+    }
+
+    return (
+      <View style={styles.card}>
+        <Text style={styles.sectionTitle}>Mix Design Specification</Text>
+        {details.map(item => (
+          <Input
+            key={item.variableName}
+            label={item.displayName}
+            value={mixDesignDetails[item.variableName] || ''}
+            onChange={(value: string) =>
+              handleMixDesignDetailsChange(item.variableName, value)
+            }
+            keyboardType="numeric"
+            placeholder={item.placeholder}
+          />
+        ))}
+      </View>
+    );
+  };
+
   const renderMaterialsTable = () => (
     <View style={styles.card}>
       <Text style={styles.sectionTitle}>Material Composition</Text>
@@ -409,6 +494,7 @@ const MixDesign = ({navigation}: {navigation: any}) => {
 
 
           {materialsData.length > 0 && renderMaterialsTable()}
+          {renderMixDesignDetails()}
 
 
           <Text style={styles.sectionTitle}>Recommendation</Text>
